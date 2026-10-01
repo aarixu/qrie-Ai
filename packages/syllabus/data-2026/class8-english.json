@@ -1,0 +1,1126 @@
+{
+  "id": "class8-english",
+  "klass": 8,
+  "subject": "English",
+  "source": {
+    "books": [
+      {
+        "title": "Poorvi: Textbook of English for Grade 8",
+        "code": "hepr1",
+        "edition": "Reprint 2026-27 (First Edition May 2025; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/hepr1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "the-wit-that-won-hearts",
+      "title": "The Wit that Won Hearts",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr101.pdf",
+      "topics": [
+        {
+          "id": "reading-the-wit-that-won-hearts",
+          "title": "Reading: The Wit that Won Hearts",
+          "objectives": [
+            "Student can retell how Tenali Rama used the paddy-seed trick to show King Krishnadeva Raya that yawning is natural",
+            "Student can explain how the quarrel between the king and Queen Thirumalambal was resolved",
+            "Student can describe the Vijayanagara court and the Ashtadiggajas from the text"
+          ],
+          "visualIdeas": [
+            "Tenali Rama holding a plate of paddy seeds before the king's court"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can correct false statements about the story using details from the text",
+            "Student can answer extract-based questions about the characters' feelings and actions"
+          ],
+          "visualIdeas": [
+            "a two-column chart of the king's pride and Tenali Rama's wit"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-expressions-sound-words-compound-words-and-conditionals",
+          "title": "Words and Grammar: Expressions, Sound Words, Compound Words and Conditionals",
+          "objectives": [
+            "Student can use expressions from the text such as \"stormed off\" and \"a hush fell over\" in context",
+            "Student can use sound words such as murmur, gasp and groan, and identify closed, hyphenated and open compound words",
+            "Student can complete and write conditional sentences with if-clauses, such as \"If I were a bird, I would ...\""
+          ],
+          "visualIdeas": [
+            "a table of if-clause and main-clause tense patterns with examples from the story"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-a-story-and-question-intonation",
+          "title": "Listening and Speaking: A Story and Question Intonation",
+          "objectives": [
+            "Student can listen to a story and sequence its events",
+            "Student can use rising intonation for yes/no questions and falling intonation for wh-questions"
+          ],
+          "visualIdeas": [
+            "arrows over questions showing rising and falling tone"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-narrative-essay",
+          "title": "Writing: A Narrative Essay",
+          "objectives": [
+            "Student can identify the features of a narrative essay from a sample",
+            "Student can write a narrative essay about a personal or imagined experience"
+          ],
+          "visualIdeas": [
+            "a narrative essay plan: beginning, events, lesson learnt"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "a-concrete-example",
+      "title": "A Concrete Example",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr101.pdf",
+      "topics": [
+        {
+          "id": "reading-a-concrete-example",
+          "title": "Reading: A Concrete Example",
+          "objectives": [
+            "Student can recite the poem and describe Mrs. Jones's garden full of stones",
+            "Student can explain the humour of the twist when the speaker stands on the flower"
+          ],
+          "visualIdeas": [
+            "a stone garden with a crazy path, lily pond, rockery and sundial and a tiny flower underfoot"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can complete a summary of the poem with words from it",
+            "Student can answer questions on extracts about the speaker's view of the garden"
+          ],
+          "visualIdeas": [
+            "the speaker and Mrs. Jones looking down at a tiny flower"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-meanings-in-context-and-word-making",
+          "title": "Words: Meanings in Context and Word Making",
+          "objectives": [
+            "Student can choose synonyms that fit words in the poem, such as strange and nice",
+            "Student can match instruments with their definitions after inferring the meaning of \"device\"",
+            "Student can make new words by changing the first letter of a word"
+          ],
+          "visualIdeas": [
+            "a sundial with the word \"device\" and a list of instruments"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking-the-rock-garden-and-apologising",
+          "title": "Listening and Speaking: The Rock Garden and Apologising",
+          "objectives": [
+            "Student can listen to a presentation on the Rock Garden of Chandigarh and answer with exact words",
+            "Student can apologise and express regret politely in different situations"
+          ],
+          "visualIdeas": [
+            "a sculpture from the Rock Garden of Chandigarh made of waste material"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-notice",
+          "title": "Writing: A Notice",
+          "objectives": [
+            "Student can write a school notice with purpose, date, time, venue and issuing authority",
+            "Student can draft a notice about the inauguration of a herb garden"
+          ],
+          "visualIdeas": [
+            "a notice board with a notice in the correct format"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "wisdom-paves-the-way",
+      "title": "Wisdom Paves the Way",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr101.pdf",
+      "topics": [
+        {
+          "id": "reading-wisdom-paves-the-way-scene-i",
+          "title": "Reading: Wisdom Paves the Way, Scene I",
+          "objectives": [
+            "Student can describe how the four young men studied the camel's tracks on the road to Ujjain",
+            "Student can explain why the merchant accused them of stealing his camel"
+          ],
+          "visualIdeas": [
+            "camel tracks on a dusty road with one faint footprint"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-wisdom-paves-the-way-scene-ii",
+          "title": "Reading: Wisdom Paves the Way, Scene II",
+          "objectives": [
+            "Student can explain how each young man reasoned out a detail about the camel from clues",
+            "Student can explain why the King made the four men his advisers"
+          ],
+          "visualIdeas": [
+            "the King's court with the four young men explaining their reasoning"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-play",
+          "title": "Thinking about the Play",
+          "objectives": [
+            "Student can sequence events in Scene II and give reasons for characters' statements",
+            "Student can explain what the play shows about observation and reasoning"
+          ],
+          "visualIdeas": [
+            "a clue chart linking each observation to its conclusion"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-noun-forms-multiple-meanings-and-modal-verbs",
+          "title": "Words and Grammar: Noun Forms, Multiple Meanings and Modal Verbs",
+          "objectives": [
+            "Student can form nouns from verbs such as deduce and observe",
+            "Student can use words like face and bear with their different meanings",
+            "Student can use modal verbs (may, must, should, can, might, could, need to) to express functions such as advice, possibility and disbelief"
+          ],
+          "visualIdeas": [
+            "a table of modal verbs with the function each expresses"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-witty-characters-word-stress-and-intonation",
+          "title": "Listening and Speaking: Witty Characters, Word Stress and Intonation",
+          "objectives": [
+            "Student can match speakers to their views on witty characters",
+            "Student can show how stressing different words changes the meaning of a sentence",
+            "Student can use a falling tone for statements and exclamations"
+          ],
+          "visualIdeas": [
+            "the sentence \"Look there, friends\" with a different word highlighted each time"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-letter-of-complaint",
+          "title": "Writing: A Letter of Complaint",
+          "objectives": [
+            "Student can write a formal letter of complaint to a civic authority in the correct format",
+            "Student can state the problem, its consequences and the action requested in separate paragraphs"
+          ],
+          "visualIdeas": [
+            "a formal letter layout with sender, date, receiver, subject, body and close"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "a-tale-of-valour-major-somnath-sharma-and-the-battle-of-badgam",
+      "title": "A Tale of Valour: Major Somnath Sharma and the Battle of Badgam",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr102.pdf",
+      "topics": [
+        {
+          "id": "reading-a-tale-of-valour",
+          "title": "Reading: A Tale of Valour",
+          "objectives": [
+            "Student can narrate how Major Somnath Sharma and D Company defended Badgam in 1947",
+            "Student can explain why he was the first recipient of the Param Vir Chakra",
+            "Student can describe how his memory is honoured, for example at the National War Memorial"
+          ],
+          "visualIdeas": [
+            "a map of the Srinagar airfield and Badgam with D Company's position"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can arrange events of Major Somnath Sharma's life in order",
+            "Student can answer extract-based questions about courage and sacrifice"
+          ],
+          "visualIdeas": [
+            "a timeline from his birth in 1923 to the Battle of Badgam"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-expressions-collective-nouns-and-subject-verb-agreement",
+          "title": "Words and Grammar: Expressions, Collective Nouns and Subject-Verb Agreement",
+          "objectives": [
+            "Student can use expressions from the text such as hold their ground and foil the plan",
+            "Student can use collective nouns used for the armed forces and words like overrun, overwhelm and overthrow",
+            "Student can distinguish noun and verb pairs such as advice/advise and make verbs agree with their subjects"
+          ],
+          "visualIdeas": [
+            "a list of collective nouns: a battalion of soldiers, a contingent of troops"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-the-param-vir-chakra-and-serving-the-nation",
+          "title": "Listening and Speaking: The Param Vir Chakra and Serving the Nation",
+          "objectives": [
+            "Student can listen to a talk on the Param Vir Chakra and complete sentences with exact words",
+            "Student can speak in a group about how they would serve the nation"
+          ],
+          "visualIdeas": [
+            "the Param Vir Chakra medal"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-letter-of-enquiry",
+          "title": "Writing: A Letter of Enquiry",
+          "objectives": [
+            "Student can explain the purpose of a letter of enquiry",
+            "Student can write a formal letter of enquiry asking for specific information"
+          ],
+          "visualIdeas": [
+            "a formal letter of enquiry with its parts labelled"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "somebodys-mother",
+      "title": "Somebody's Mother",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr102.pdf",
+      "topics": [
+        {
+          "id": "reading-somebodys-mother",
+          "title": "Reading: Somebody's Mother",
+          "objectives": [
+            "Student can recite the poem and describe the old woman waiting at the crossing",
+            "Student can explain why the boy helped her and what he said to his friends"
+          ],
+          "visualIdeas": [
+            "a boy helping an old woman across a snowy street while other children run past"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can answer questions on extracts about the old woman and the boy",
+            "Student can explain the meaning of the title \"Somebody's Mother\""
+          ],
+          "visualIdeas": [
+            "the old woman praying for the boy at night"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-antonyms-idioms-with-hand-and-analogies",
+          "title": "Words: Antonyms, Idioms with \"Hand\" and Analogies",
+          "objectives": [
+            "Student can find antonyms of words from the poem",
+            "Student can use idioms with \"hand\" such as lend a hand",
+            "Student can complete analogies using words from the poem"
+          ],
+          "visualIdeas": [
+            "a word grid with antonyms circled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking-a-news-broadcast-and-pronouncing-ed-endings",
+          "title": "Listening and Speaking: A News Broadcast and Pronouncing -ed Endings",
+          "objectives": [
+            "Student can listen to a news broadcast and sequence the events of a rescue",
+            "Student can pronounce the -ed endings of verbs correctly",
+            "Student can narrate an incident where they helped someone"
+          ],
+          "visualIdeas": [
+            "three columns for the -ed endings /t/, /d/ and /id/"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-diary-entry",
+          "title": "Writing: A Diary Entry",
+          "objectives": [
+            "Student can write a diary entry about a day they helped someone in need",
+            "Student can include the date, the situation, their feelings and what they learnt"
+          ],
+          "visualIdeas": [
+            "a diary page with date and a short entry"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "verghese-kurien-i-too-had-a-dream",
+      "title": "Verghese Kurien — I Too Had A Dream",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr102.pdf",
+      "topics": [
+        {
+          "id": "reading-verghese-kuriens-letter-to-his-grandson",
+          "title": "Reading: Verghese Kurien's Letter to His Grandson",
+          "objectives": [
+            "Student can explain why Verghese Kurien preferred writing a letter to speaking on the telephone",
+            "Student can describe the values he wanted his grandson to learn from his life of service to farmers",
+            "Student can explain his view that the true rewards come from working for the larger good"
+          ],
+          "visualIdeas": [
+            "an old man writing a letter at a desk with a photo of farmers and milk cans"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can answer questions on extracts about Kurien's message",
+            "Student can relate his advice to their own goals"
+          ],
+          "visualIdeas": [
+            "a list of life lessons drawn from the letter"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-synonyms-punctuation-and-prepositional-phrases",
+          "title": "Words and Grammar: Synonyms, Punctuation and Prepositional Phrases",
+          "objectives": [
+            "Student can replace words with suitable synonyms and match expressions with their meanings",
+            "Student can use the en dash and the em dash correctly and distinguish its/it's, your/you're and their/they're",
+            "Student can identify prepositional phrases and rearrange jumbled words into sentences"
+          ],
+          "visualIdeas": [
+            "sentences with prepositional phrases highlighted"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-evelyn-glennie-word-stress-and-chunking",
+          "title": "Listening and Speaking: Evelyn Glennie, Word Stress and Chunking",
+          "objectives": [
+            "Student can listen to a passage about Evelyn Glennie and answer true/false and short questions",
+            "Student can stress the correct syllable in words like preSENT and pronounce the sound in treasure and pleasure",
+            "Student can use pausing and chunking when speaking"
+          ],
+          "visualIdeas": [
+            "the word PRE-sent and pre-SENT with stress marks"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-letter-to-grandparents",
+          "title": "Writing: A Letter to Grandparents",
+          "objectives": [
+            "Student can write an informal letter thanking grandparents for the lessons they taught",
+            "Student can describe how those lessons shaped their values"
+          ],
+          "visualIdeas": [
+            "an informal letter with greeting and closing"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-case-of-the-fifth-word",
+      "title": "The Case of the Fifth Word",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr103.pdf",
+      "topics": [
+        {
+          "id": "reading-the-case-of-the-fifth-word-part-i",
+          "title": "Reading: The Case of the Fifth Word, Part I",
+          "objectives": [
+            "Student can describe Encyclopedia Brown and how he helps his father solve cases",
+            "Student can explain the background of Nolan's will and the missing jewellery"
+          ],
+          "visualIdeas": [
+            "the Brown family at the dinner table with a notebook"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-the-case-of-the-fifth-word-part-ii",
+          "title": "Reading: The Case of the Fifth Word, Part II",
+          "objectives": [
+            "Student can explain how Encyclopedia decoded \"Nom Utes Sweden Hurts\" as days of the week",
+            "Student can explain why the fifth word, Fir for Friday, revealed where the jewellery was hidden"
+          ],
+          "visualIdeas": [
+            "four calendar days with \"day\" crossed out and a fir tree for Friday"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-text-facts-and-opinions",
+          "title": "Thinking about the Text: Facts and Opinions",
+          "objectives": [
+            "Student can distinguish facts from opinions in the story",
+            "Student can answer extract-based questions and write a short character sketch of Encyclopedia"
+          ],
+          "visualIdeas": [
+            "a two-column table of facts and opinions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-phrasal-verbs-homophones-relative-clauses-and-reported-questions",
+          "title": "Words and Grammar: Phrasal Verbs, Homophones, Relative Clauses and Reported Questions",
+          "objectives": [
+            "Student can use phrasal verbs from the text and choose between homophones such as week/weak and peace/piece",
+            "Student can combine sentences using words such as that, who, where and when",
+            "Student can change direct questions into reported speech"
+          ],
+          "visualIdeas": [
+            "a direct question and its reported form side by side"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-observation-skills-and-a-group-discussion",
+          "title": "Listening and Speaking: Observation Skills and a Group Discussion",
+          "objectives": [
+            "Student can listen to a podcast on observation skills and complete sentences",
+            "Student can pronounce words like jewellery and dessert correctly",
+            "Student can take part in a group discussion on what makes a mystery story interesting"
+          ],
+          "visualIdeas": [
+            "students in a group discussion with a moderator"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-report",
+          "title": "Writing: A Report",
+          "objectives": [
+            "Student can identify the format of a report: title, byline and paragraphs in sequence",
+            "Student can write a report on a school event"
+          ],
+          "visualIdeas": [
+            "a sample report on an inter-school football tournament with its parts labelled"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-magic-brush-of-dreams",
+      "title": "The Magic Brush of Dreams",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr103.pdf",
+      "topics": [
+        {
+          "id": "reading-the-magic-brush-of-dreams",
+          "title": "Reading: The Magic Brush of Dreams",
+          "objectives": [
+            "Student can recite the poem and narrate how Gopi used the magic brush to paint for the poor",
+            "Student can explain how Gopi outwitted the Zamindar"
+          ],
+          "visualIdeas": [
+            "Gopi painting a river that stops the Zamindar and his men"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can sequence the events of the poem",
+            "Student can explain the message of using one's gifts to help others"
+          ],
+          "visualIdeas": [
+            "a strip of panels showing the poem's events"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-meanings-of-draw-crossword-and-expressions-of-feeling",
+          "title": "Words: Meanings of \"Draw\", Crossword and Expressions of Feeling",
+          "objectives": [
+            "Student can use the verb draw with its different meanings",
+            "Student can solve a crossword using words from the poem",
+            "Student can use interjections such as \"Hush!\" to express sudden feelings"
+          ],
+          "visualIdeas": [
+            "speech bubbles with expressions like Hush!, Phew! and Oops!"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking-magical-powers-and-making-requests",
+          "title": "Listening and Speaking: Magical Powers and Making Requests",
+          "objectives": [
+            "Student can match speakers with the magical powers they wish for",
+            "Student can use a falling tone and make formal and informal requests"
+          ],
+          "visualIdeas": [
+            "two speech bubbles, one formal and one informal request"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-an-imaginative-essay",
+          "title": "Writing: An Imaginative Essay",
+          "objectives": [
+            "Student can list the features of an imaginative essay",
+            "Student can write an imaginative essay, for example as a scarf blown away from a clothesline"
+          ],
+          "visualIdeas": [
+            "a scarf flying over towns and fields"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "spectacular-wonders",
+      "title": "Spectacular Wonders",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr103.pdf",
+      "topics": [
+        {
+          "id": "reading-spectacular-wonders",
+          "title": "Reading: Spectacular Wonders",
+          "objectives": [
+            "Student can describe natural wonders of India such as the Valley of Flowers, the living root bridges and the Lonar Crater",
+            "Student can describe mysterious phenomena such as magnetic hills, glowing waters and the disappearing sea at Chandipur"
+          ],
+          "visualIdeas": [
+            "a map of India marking each natural wonder"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can complete a table of each wonder's location and unique feature",
+            "Student can answer extract-based questions about nature and folklore"
+          ],
+          "visualIdeas": [
+            "a table of wonders, places and features"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-binomials-participles-and-gerunds",
+          "title": "Words and Grammar: Binomials, Participles and Gerunds",
+          "objectives": [
+            "Student can use expressions and synonyms such as enigmatic and colossal",
+            "Student can use binomials such as hide-and-seek and flora and fauna",
+            "Student can use participles and gerunds to combine sentences"
+          ],
+          "visualIdeas": [
+            "\"crossing\" used as a gerund and as a participle in two sentences"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-a-natural-phenomenon-and-a-presentation",
+          "title": "Listening and Speaking: A Natural Phenomenon and a Presentation",
+          "objectives": [
+            "Student can identify true statements from a conversation about a natural phenomenon",
+            "Student can make a group presentation on a place of interest in their region"
+          ],
+          "visualIdeas": [
+            "presentation slides about a local place"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-descriptive-essay",
+          "title": "Writing: A Descriptive Essay",
+          "objectives": [
+            "Student can write a descriptive essay about something in nature that attracted their attention",
+            "Student can use vivid details and sensory words"
+          ],
+          "visualIdeas": [
+            "a word web of sights, sounds and smells of a natural place"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-cherry-tree",
+      "title": "The Cherry Tree",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr104.pdf",
+      "topics": [
+        {
+          "id": "reading-the-cherry-tree-part-i",
+          "title": "Reading: The Cherry Tree, Part I",
+          "objectives": [
+            "Student can describe how Rakesh planted a cherry seed and how it grew with his grandfather's help",
+            "Student can describe the setting near Mussoorie"
+          ],
+          "visualIdeas": [
+            "a boy planting a cherry seed on a Himalayan hillside"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-the-cherry-tree-part-ii",
+          "title": "Reading: The Cherry Tree, Part II",
+          "objectives": [
+            "Student can describe how the cherry tree survived setbacks and grew",
+            "Student can explain how Rakesh felt about the tree he had grown"
+          ],
+          "visualIdeas": [
+            "a young cherry tree in blossom with a boy and his grandfather"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can answer questions on extracts about Rakesh and his grandfather",
+            "Student can explain the story's message about patience and caring for nature"
+          ],
+          "visualIdeas": [
+            "the cherry tree's growth shown over the years"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-word-groups-taste-words-tenses-and-punctuation",
+          "title": "Words and Grammar: Word Groups, Taste Words, Tenses and Punctuation",
+          "objectives": [
+            "Student can find the odd word in a group and use taste words such as tangy and bland",
+            "Student can find antonyms for words from the text",
+            "Student can identify tense forms in sentences and punctuate direct speech correctly"
+          ],
+          "visualIdeas": [
+            "a table of tense forms with examples from the story"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-syllables-and-van-mahotsav",
+          "title": "Listening and Speaking: Syllables and Van Mahotsav",
+          "objectives": [
+            "Student can identify true statements from a conversation",
+            "Student can count syllables in words",
+            "Student can speak about Van Mahotsav and its significance"
+          ],
+          "visualIdeas": [
+            "words split into syllables: cher-ry, moun-tains"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-an-article",
+          "title": "Writing: An Article",
+          "objectives": [
+            "Student can identify the features of an article",
+            "Student can write an article with a title, the writer's name and paragraphs presenting views"
+          ],
+          "visualIdeas": [
+            "an article layout with heading, byline and paragraphs"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "harvest-hymn",
+      "title": "Harvest Hymn",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr104.pdf",
+      "topics": [
+        {
+          "id": "reading-harvest-hymn",
+          "title": "Reading: Harvest Hymn",
+          "objectives": [
+            "Student can recite the poem and identify the voices of men, women and all together",
+            "Student can explain how the poem thanks Surya, Varuna, Prithvi and Brahma for the harvest"
+          ],
+          "visualIdeas": [
+            "farmers in a harvested field offering garlands with cymbals and flutes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can answer questions on extracts about gratitude for the harvest",
+            "Student can explain why people celebrate harvest festivals"
+          ],
+          "visualIdeas": [
+            "a collage of harvest festivals from different regions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-farming-implements-meanings-from-context-and-archaic-words",
+          "title": "Words: Farming Implements, Meanings from Context and Archaic Words",
+          "objectives": [
+            "Student can match farming implements with their uses",
+            "Student can infer meanings of words from context",
+            "Student can find modern equivalents of archaic words such as morrow and hither"
+          ],
+          "visualIdeas": [
+            "labelled pictures of a plough, sickle and other implements"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking-paddy-cultivation-silent-letters-and-a-presentation",
+          "title": "Listening and Speaking: Paddy Cultivation, Silent Letters and a Presentation",
+          "objectives": [
+            "Student can sequence the steps of paddy cultivation from a talk",
+            "Student can identify silent letters in words such as knife and know",
+            "Student can present a dish made during a harvest festival"
+          ],
+          "visualIdeas": [
+            "a flow chart from ploughing to threshing paddy"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-slogans",
+          "title": "Writing: Slogans",
+          "objectives": [
+            "Student can explain what makes a slogan effective",
+            "Student can write creative slogans to spread a message"
+          ],
+          "visualIdeas": [
+            "a poster with a short catchy slogan"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "waiting-for-the-rain",
+      "title": "Waiting for the Rain",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr104.pdf",
+      "topics": [
+        {
+          "id": "reading-waiting-for-the-rain-part-i",
+          "title": "Reading: Waiting for the Rain, Part I",
+          "objectives": [
+            "Student can describe Velu the farmer and the drought that stopped his work",
+            "Student can explain why Velu went to the weather office rather than to astrologers, and what he was told there"
+          ],
+          "visualIdeas": [
+            "cracked dry fields under a cloudless sky"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-waiting-for-the-rain-part-ii",
+          "title": "Reading: Waiting for the Rain, Part II",
+          "objectives": [
+            "Student can explain the old woman's idea that the land also needs rest",
+            "Student can describe how Velu's view changed and how the story ends with rain"
+          ],
+          "visualIdeas": [
+            "an old woman and a farmer talking under a large tree"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can answer extract-based questions about Velu and the old woman",
+            "Student can explain the story's message about nature as a mother"
+          ],
+          "visualIdeas": [
+            "the land resting while clouds gather"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-homophones-collocations-tenses-and-determiners",
+          "title": "Words and Grammar: Homophones, Collocations, Tenses and Determiners",
+          "objectives": [
+            "Student can use weather and farming words and choose between homophones such as rain and reign",
+            "Student can form adjective-noun collocations such as favourable conditions",
+            "Student can identify tense forms and use determiners such as articles, demonstratives and possessives"
+          ],
+          "visualIdeas": [
+            "a table of determiners with examples"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-a-weather-forecast-and-a-role-play",
+          "title": "Listening and Speaking: A Weather Forecast and a Role-play",
+          "objectives": [
+            "Student can complete notes from a weather forecast",
+            "Student can say a tongue twister and present a role-play between the Rain and the Earth"
+          ],
+          "visualIdeas": [
+            "a weather map of India with rain symbols"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-formal-letter-on-water-scarcity",
+          "title": "Writing: A Formal Letter on Water Scarcity",
+          "objectives": [
+            "Student can write a formal letter to a ward councillor about water scarcity",
+            "Student can describe the problem and request specific action"
+          ],
+          "visualIdeas": [
+            "a formal letter with its subject line highlighted"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "feathered-friend",
+      "title": "Feathered Friend",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr105.pdf",
+      "topics": [
+        {
+          "id": "reading-feathered-friend-part-i",
+          "title": "Reading: Feathered Friend, Part I",
+          "objectives": [
+            "Student can describe how Sven Olsen brought a canary, Claribel, to the space station",
+            "Student can explain how the crew hid her from visitors"
+          ],
+          "visualIdeas": [
+            "a canary floating in a space station cabin"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-feathered-friend-part-ii",
+          "title": "Reading: Feathered Friend, Part II",
+          "objectives": [
+            "Student can explain how Claribel's collapse warned the crew that the air purifier had failed",
+            "Student can explain the narrator's closing remark that birdsong on a space station means one is doubly safeguarded"
+          ],
+          "visualIdeas": [
+            "a crew member giving oxygen to an unconscious canary"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can answer extract-based questions about life in the space station",
+            "Student can explain the role of the canary in the story"
+          ],
+          "visualIdeas": [
+            "a cut-away of a space station with hiding places marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-adjectives-merged-words-and-talking-about-the-future",
+          "title": "Words and Grammar: Adjectives, Merged Words and Talking about the Future",
+          "objectives": [
+            "Student can pair adjectives with suitable nouns such as nagging worry",
+            "Student can form merged words such as intercom",
+            "Student can express future time using will, going to, the simple present and the present progressive"
+          ],
+          "visualIdeas": [
+            "a timeline with will, going to and present forms marked for future plans"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-a-martian-friend-silent-letters-and-suggestions",
+          "title": "Listening and Speaking: A Martian Friend, Silent Letters and Suggestions",
+          "objectives": [
+            "Student can listen to a conversation between Monika and Toby the Martian and fill in exact words",
+            "Student can identify silent letters in words like whistle and psychologist",
+            "Student can ask for and give suggestions"
+          ],
+          "visualIdeas": [
+            "two friends discussing materials for a solar system model"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-an-article-on-the-internet",
+          "title": "Writing: An Article on the Internet",
+          "objectives": [
+            "Student can complete a social media web of the uses of the internet",
+            "Student can write an article titled \"The Importance of Internet\""
+          ],
+          "visualIdeas": [
+            "a social media web of internet uses"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "magnifying-glass",
+      "title": "Magnifying Glass",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr105.pdf",
+      "topics": [
+        {
+          "id": "reading-magnifying-glass",
+          "title": "Reading: Magnifying Glass",
+          "objectives": [
+            "Student can recite the poem and describe what the speaker sees through the glass",
+            "Student can explain how the glass makes tiny things look marvellous"
+          ],
+          "visualIdeas": [
+            "a spider spinning its web seen through a magnifying glass"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can answer extract-based questions on the poem",
+            "Student can explain the poet's idea that lenses could make the moon seem near"
+          ],
+          "visualIdeas": [
+            "a magnifying glass and a telescope pointed at the moon"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "words-collective-nouns-idioms-with-eye-and-the-suffix-ish",
+          "title": "Words: Collective Nouns, Idioms with \"Eye\" and the Suffix -ish",
+          "objectives": [
+            "Student can use words from the poem such as myriad, deft and surpass",
+            "Student can match collective nouns such as a swarm of bees and idioms with \"eye\"",
+            "Student can form adjectives with the suffix -ish such as tigerish"
+          ],
+          "visualIdeas": [
+            "a list of collective nouns with pictures"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking-indian-inventions-and-the-sounds-v-and-f",
+          "title": "Listening and Speaking: Indian Inventions and the Sounds /v/ and /f/",
+          "objectives": [
+            "Student can identify true statements from a conversation about lesser-known Indian inventions",
+            "Student can pronounce the sounds /v/ and /f/ correctly",
+            "Student can speak about a planet they would visit or an invention they would make"
+          ],
+          "visualIdeas": [
+            "lip positions for /v/ and /f/"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-conversation",
+          "title": "Writing: A Conversation",
+          "objectives": [
+            "Student can write a conversation with engaging dialogues that serve a purpose",
+            "Student can mention where, when and with whom the conversation takes place"
+          ],
+          "visualIdeas": [
+            "a dialogue script between two speakers"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "bibha-chowdhuri-the-beam-of-light-that-lit-the-path-for-women-in-indian-science",
+      "title": "Bibha Chowdhuri: The Beam of Light that Lit the Path for Women in Indian Science",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hepr105.pdf",
+      "topics": [
+        {
+          "id": "reading-bibha-chowdhuri",
+          "title": "Reading: Bibha Chowdhuri",
+          "objectives": [
+            "Student can describe Bibha Chowdhuri as India's first woman physicist and her research on cosmic rays",
+            "Student can explain the barriers she faced and how she overcame them",
+            "Student can explain how her legacy inspires women in science today"
+          ],
+          "visualIdeas": [
+            "a portrait of Bibha Chowdhuri with cosmic ray tracks in the background"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can answer extract-based questions about Bibha Chowdhuri's life",
+            "Student can explain the title \"the beam of light\""
+          ],
+          "visualIdeas": [
+            "a timeline of her life and work"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-suffixes-acronyms-clipping-and-the-passive-voice",
+          "title": "Words and Grammar: Suffixes, Acronyms, Clipping and the Passive Voice",
+          "objectives": [
+            "Student can form words with suffixes such as -ship, -ment and -hood",
+            "Student can identify acronyms such as ISRO and STEM and clipped words such as lab",
+            "Student can change sentences from active to passive voice, for example in a report of an experiment"
+          ],
+          "visualIdeas": [
+            "an active sentence and its passive form with arrows"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-a-podcast-on-ai-and-a-panel-discussion",
+          "title": "Listening and Speaking: A Podcast on AI and a Panel Discussion",
+          "objectives": [
+            "Student can answer questions on a podcast about Artificial Intelligence",
+            "Student can take a role in a panel discussion on whether mobile phones are beneficial or harmful"
+          ],
+          "visualIdeas": [
+            "a panel of five students with a moderator"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-report-on-a-science-exhibition",
+          "title": "Writing: A Report on a Science Exhibition",
+          "objectives": [
+            "Student can write a report on a school science exhibition for the school magazine",
+            "Student can follow the report format: a headline, the reporter's name and three paragraphs in the past tense, passive voice and third person"
+          ],
+          "visualIdeas": [
+            "a report layout with a headline, the reporter's name and three paragraphs"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    }
+  ]
+}

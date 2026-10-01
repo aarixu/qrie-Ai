@@ -1,0 +1,1516 @@
+{
+  "id": "class10-english",
+  "klass": 10,
+  "subject": "English",
+  "source": {
+    "books": [
+      {
+        "title": "First Flight",
+        "code": "jeff1",
+        "edition": "Reprint 2026-27 (First Edition February 2007; Revised Edition October 2022; reprinted October 2025)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/jeff1ps.pdf"
+      },
+      {
+        "title": "Footprints without Feet",
+        "code": "jefp1",
+        "edition": "Reprint 2026-27 (First Edition April 2007; Revised Edition December 2022; reprinted October 2025)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/jefp1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from each book's Contents page (First Flight's poems, listed on its Contents page under the units, are chapters of their own); topics from each chapter PDF's own units: the text, Thinking about the Text/Poem, each titled language exercise, and the speaking, listening and writing tasks"
+  },
+  "chapters": [
+    {
+      "id": "a-letter-to-god",
+      "title": "A Letter to God",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff101.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can narrate how a hailstorm destroyed Lencho's corn field and why he wrote a letter to God",
+            "Student can explain how the postmaster and the post office employees responded to the letter",
+            "Student can explain why Lencho was angry when he counted the money"
+          ],
+          "visualIdeas": [
+            "a lone house on a hill with hailstones falling on the corn field",
+            "a letter addressed \"To God\" on the postmaster's desk"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can explain Lencho's complete faith in God with sentences from the story",
+            "Student can explain the irony of Lencho calling the post office employees crooks",
+            "Student can describe the two kinds of conflict in the story: humans and nature, and humans and humans"
+          ],
+          "visualIdeas": [
+            "a two-column chart: what Lencho expects and what really happened"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-language-words-for-storms-and-the-word-hope",
+          "title": "Thinking about Language: Words for Storms and the Word Hope",
+          "objectives": [
+            "Student can match storm words such as gale, whirlwind, cyclone, hurricane, tornado and typhoon to their descriptions",
+            "Student can distinguish uses of hope as a verb and as a noun and match expressions with hope to their meanings"
+          ],
+          "visualIdeas": [
+            "six storm types drawn as small weather icons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "relative-clauses",
+          "title": "Relative Clauses",
+          "objectives": [
+            "Student can identify non-defining relative clauses that begin with who, whom, whose or which",
+            "Student can join two sentences using a relative pronoun with correct commas",
+            "Student can recognise a relative clause in which the relative pronoun is hidden"
+          ],
+          "visualIdeas": [
+            "a sentence with the relative clause highlighted between commas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "using-negatives-for-emphasis",
+          "title": "Using Negatives for Emphasis",
+          "objectives": [
+            "Student can distinguish negative words that show absence from negative words used for emphasis",
+            "Student can find sentences in the story where negatives emphasise an idea"
+          ],
+          "visualIdeas": [
+            "a sentence card: \"The hail has left nothing\""
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "metaphors",
+          "title": "Metaphors",
+          "objectives": [
+            "Student can explain a metaphor as transferring a quality of one thing to another",
+            "Student can identify metaphors in the story, such as huge mountains of clouds, and the quality compared"
+          ],
+          "visualIdeas": [
+            "clouds drawn as mountains next to the sentence"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "speaking-and-listening",
+          "title": "Speaking and Listening",
+          "objectives": [
+            "Student can speak about a time of great difficulty and how the problem was solved",
+            "Student can listen to a letter and complete a table about who wrote it, to whom and why",
+            "Student can design a poster on saving water during summer and in times of excess"
+          ],
+          "visualIdeas": [
+            "a poster on rainwater harvesting"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "dust-of-snow",
+      "title": "Dust of Snow",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff101.pdf",
+      "topics": [
+        {
+          "id": "reading-and-thinking-about-the-poem",
+          "title": "Reading and Thinking about the Poem",
+          "objectives": [
+            "Student can explain how a crow shaking down a dust of snow from a hemlock tree changed the poet's mood",
+            "Student can explain what the crow and the hemlock usually stand for and why Frost chose them",
+            "Student can explain how a small moment can have a larger significance"
+          ],
+          "visualIdeas": [
+            "a crow on a snowy hemlock branch with snow falling on a person below"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "fire-and-ice",
+      "title": "Fire and Ice",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff101.pdf",
+      "topics": [
+        {
+          "id": "reading-and-thinking-about-the-poem",
+          "title": "Reading and Thinking about the Poem",
+          "objectives": [
+            "Student can explain the two ideas of how the world may end that the poem presents",
+            "Student can explain what fire (desire) and ice (hate) stand for in the poem",
+            "Student can identify the rhyme scheme and how it brings out the contrast"
+          ],
+          "visualIdeas": [
+            "a globe half in flames and half frozen"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "nelson-mandela-long-walk-to-freedom",
+      "title": "Nelson Mandela: Long Walk to Freedom",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff102.pdf",
+      "topics": [
+        {
+          "id": "reading-the-text",
+          "title": "Reading the Text",
+          "objectives": [
+            "Student can describe the inauguration of South Africa's first democratic, non-racial government on 10 May",
+            "Student can explain apartheid and Mandela's idea that the depths of oppression created heights of character",
+            "Student can explain the twin obligations Mandela speaks of and how his idea of freedom changed with age"
+          ],
+          "visualIdeas": [
+            "the Union Buildings in Pretoria with a crowd and jets in the sky",
+            "a timeline of Mandela's idea of freedom from boy to man"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can explain why many international leaders attended the inauguration and what it signified",
+            "Student can explain what Mandela means by being the sum of all those African patriots",
+            "Student can explain how Mandela's hunger for freedom changed his life"
+          ],
+          "visualIdeas": [
+            "a web of Mandela's ideas around the word freedom"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-language-nouns-from-verbs",
+          "title": "Thinking about Language: Nouns from Verbs",
+          "objectives": [
+            "Student can form nouns from verbs with -(at)ion and -ment, such as govern to government",
+            "Student can fill a paragraph with the noun forms of given verbs"
+          ],
+          "visualIdeas": [
+            "verb-to-noun pairs in two columns"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "using-the-definite-article-with-names",
+          "title": "Using the Definite Article with Names",
+          "objectives": [
+            "Student can explain the special meaning of the with proper nouns in the plural, as in the Oliver Tambos",
+            "Student can interpret sentences that use the with names"
+          ],
+          "visualIdeas": [
+            "a name card with \"the\" and an \"s\" added and its meaning"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "idiomatic-expressions",
+          "title": "Idiomatic Expressions",
+          "objectives": [
+            "Student can match idiomatic phrases from the text with their meanings",
+            "Student can use the phrases in context"
+          ],
+          "visualIdeas": [
+            "phrase cards matched to meanings"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "speaking-a-two-minute-speech-on-liberty",
+          "title": "Speaking: A Two-minute Speech on Liberty",
+          "objectives": [
+            "Student can discuss causes of poverty, discrimination and constitutional rights in a group",
+            "Student can make notes and give a two-minute speech on true liberty"
+          ],
+          "visualIdeas": [
+            "a speaker at a podium with note cards"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-looking-at-contrasts-and-expressing-an-opinion",
+          "title": "Writing: Looking at Contrasts and Expressing an Opinion",
+          "objectives": [
+            "Student can complete balanced sentences from the text that contrast two ideas",
+            "Student can find contrasts between the past and the present in the text and the words that signal them",
+            "Student can write a paragraph of 100-150 words on colour prejudice"
+          ],
+          "visualIdeas": [
+            "a two-part sentence shown as a balance scale"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "a-tiger-in-the-zoo",
+      "title": "A Tiger in the Zoo",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff102.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can identify which stanzas describe the tiger in the cage and which describe it in the wild",
+            "Student can describe the tiger's quiet rage inside its concrete cell"
+          ],
+          "visualIdeas": [
+            "a tiger pacing a cage contrasted with a tiger in long grass"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can list words that describe the tiger's movements and the two places in contrasting columns",
+            "Student can explain the effect of repeated words such as quiet and brilliant",
+            "Student can discuss whether zoos are necessary for protecting animals"
+          ],
+          "visualIdeas": [
+            "a two-column chart: cage versus jungle"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "two-stories-about-flying",
+      "title": "Two Stories about Flying",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff103.pdf",
+      "topics": [
+        {
+          "id": "his-first-flight-reading-the-story",
+          "title": "His First Flight: Reading the Story",
+          "objectives": [
+            "Student can narrate how the young seagull, afraid to fly, was left alone on the ledge",
+            "Student can explain how his mother tempted him with food and how he finally flew"
+          ],
+          "visualIdeas": [
+            "a young seagull on a cliff ledge with the sea far below"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "his-first-flight-thinking-about-the-text",
+          "title": "His First Flight: Thinking about the Text",
+          "objectives": [
+            "Student can explain why the young seagull was afraid to fly and what made him fly",
+            "Student can compare the seagull's experience with their own experience of being encouraged by parents"
+          ],
+          "visualIdeas": [
+            "the seagull's mother holding a fish just out of reach"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "black-aeroplane-reading-the-story",
+          "title": "Black Aeroplane: Reading the Story",
+          "objectives": [
+            "Student can narrate the pilot's flight into the storm in his old Dakota",
+            "Student can describe how the strange black aeroplane guided him and what the woman in the control centre said"
+          ],
+          "visualIdeas": [
+            "an old Dakota following a black aeroplane through dark clouds"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "black-aeroplane-thinking-about-the-text",
+          "title": "Black Aeroplane: Thinking about the Text",
+          "objectives": [
+            "Student can explain the risk the narrator took and why",
+            "Student can give reasons for who might have helped the narrator reach safely"
+          ],
+          "visualIdeas": [
+            "an empty radar screen in the control centre"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thinking-about-language-meanings-of-black-and-fly",
+          "title": "Thinking about Language: Meanings of Black and Fly",
+          "objectives": [
+            "Student can guess and check the different meanings of black in sentences",
+            "Student can match phrases with fly to their meanings and pick words close in meaning to fly"
+          ],
+          "visualIdeas": [
+            "the word black in different sentence contexts"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-thunderstorm-experience",
+          "title": "Writing: A Thunderstorm Experience",
+          "objectives": [
+            "Student can narrate in a paragraph an experience of being alone or away from home during a thunderstorm",
+            "Student can organise a narrative paragraph in order of events"
+          ],
+          "visualIdeas": [
+            "a dark sky with lightning over a house"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "how-to-tell-wild-animals",
+      "title": "How to Tell Wild Animals",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff103.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can read the poem aloud with a strong and regular rhythm",
+            "Student can describe the humorous ways the poem suggests for identifying the lion, tiger, bear, hyena, crocodile and chameleon"
+          ],
+          "visualIdeas": [
+            "cartoon animals each with the poem's clue beside it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can explain how the poet bends spelling and grammar, as in lept and nonplus, for rhyme and humour",
+            "Student can explain expressions such as bearhug and crocodile tears",
+            "Student can share lines they find funny and say why"
+          ],
+          "visualIdeas": [
+            "a crocodile weeping and a hyena smiling"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-ball-poem",
+      "title": "The Ball Poem",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff103.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can describe how the boy loses his ball in the harbour and how he reacts",
+            "Student can explain why the poet does not offer money to buy another ball"
+          ],
+          "visualIdeas": [
+            "a ball bouncing down a street into the water while a boy stares"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can explain what the poet means by the world of possessions and the epistemology of loss",
+            "Student can explain what the boy learns from losing the ball",
+            "Student can write a paragraph about losing something they liked"
+          ],
+          "visualIdeas": [
+            "a boy at the harbour edge with the word \"loss\" in the water"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "from-the-diary-of-anne-frank",
+      "title": "From the Diary of Anne Frank",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff104.pdf",
+      "topics": [
+        {
+          "id": "reading-the-text",
+          "title": "Reading the Text",
+          "objectives": [
+            "Student can explain why Anne Frank kept a diary and called it Kitty",
+            "Student can describe Anne's family and her school life",
+            "Student can narrate how Mr Keesing's punishments for talking ended with her poem"
+          ],
+          "visualIdeas": [
+            "a diary with the name Kitty on its cover",
+            "a classroom with a teacher assigning an essay"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can compare Anne's diary with other diary entries",
+            "Student can describe how Anne feels about her father, grandmother, Mrs Kuperus and Mr Keesing",
+            "Student can explain what statements from the diary show about Anne as a person"
+          ],
+          "visualIdeas": [
+            "a character web around Anne"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "compound-words",
+          "title": "Compound Words",
+          "objectives": [
+            "Student can identify compound nouns, adjectives and verbs",
+            "Student can match compound words with their meanings and use them in sentences"
+          ],
+          "visualIdeas": [
+            "two word cards joining into one compound word"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "phrasal-verbs",
+          "title": "Phrasal Verbs",
+          "objectives": [
+            "Student can explain that a phrasal verb can have a meaning different from its parts",
+            "Student can find phrasal verbs such as plunge in and ramble on in the text and match their meanings"
+          ],
+          "visualIdeas": [
+            "a verb card with a particle snapping onto it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "idioms-and-using-a-dictionary",
+          "title": "Idioms and Using a Dictionary",
+          "objectives": [
+            "Student can explain idioms from the text such as quaking in its boots and lose heart",
+            "Student can look up an idiomatic expression in a dictionary under its first meaningful word"
+          ],
+          "visualIdeas": [
+            "a dictionary entry with idioms listed below the meanings"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "contracted-forms",
+          "title": "Contracted Forms",
+          "objectives": [
+            "Student can rewrite contracted forms from the text as full forms",
+            "Student can make a play extract sound like real conversation by using contracted forms"
+          ],
+          "visualIdeas": [
+            "I have -> I've shown with an apostrophe replacing letters"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "writing-a-diary-and-listening",
+          "title": "Writing a Diary and Listening",
+          "objectives": [
+            "Student can keep a diary for a week using features of diary language",
+            "Student can listen to an extract from Samuel Pepys's diary about the Great Fire of London and complete a summary"
+          ],
+          "visualIdeas": [
+            "a week of diary pages",
+            "London burning in 1666"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "amanda",
+      "title": "Amanda!",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff104.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can identify the two voices in the poem: the instructions to Amanda and her thoughts in parentheses",
+            "Student can describe what Amanda imagines being: a mermaid, an orphan and Rapunzel"
+          ],
+          "visualIdeas": [
+            "a girl daydreaming while instructions float around her"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can explain why stanzas 2, 4 and 6 are in parentheses and whether the speaker is listening",
+            "Student can explain what Amanda yearns for and what the poem says about her",
+            "Student can judge whether Amanda is sulking in the last stanza"
+          ],
+          "visualIdeas": [
+            "a tower with Rapunzel looking out"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "glimpses-of-india",
+      "title": "Glimpses of India",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff105.pdf",
+      "topics": [
+        {
+          "id": "a-baker-from-goa-reading-and-thinking-about-the-text",
+          "title": "A Baker from Goa: Reading and Thinking about the Text",
+          "objectives": [
+            "Student can describe the traditional Goan baker (pader) and his role in village life",
+            "Student can explain why elders in Goa are nostalgic about the Portuguese days",
+            "Student can explain the tone of the author in sentences about the baker"
+          ],
+          "visualIdeas": [
+            "a baker with a bamboo staff and a basket of bread"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "a-baker-from-goa-writing",
+          "title": "A Baker from Goa: Writing",
+          "objectives": [
+            "Student can complete a table about bread-baking in the author's childhood and write a paragraph from it",
+            "Student can compare two texts on Goan bakers and write a personal account of a place from a travel brochure",
+            "Student can present a craft-based profession that is dying out"
+          ],
+          "visualIdeas": [
+            "a table with clues and the author's childhood days"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "coorg-reading-and-thinking-about-the-text",
+          "title": "Coorg: Reading and Thinking about the Text",
+          "objectives": [
+            "Student can describe where Coorg is, its people, coffee and wildlife",
+            "Student can explain the stories about the descent of the Kodavu people",
+            "Student can find phrases from the text with given meanings"
+          ],
+          "visualIdeas": [
+            "a misty Coorg hill with coffee plantations"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "coorg-collocations",
+          "title": "Coorg: Collocations",
+          "objectives": [
+            "Student can explain collocations as words that go together",
+            "Student can match nouns from the text with adjectives that collocate with them"
+          ],
+          "visualIdeas": [
+            "word pairs linked by lines: unique culture, sudden surprise"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "tea-from-assam-reading-and-thinking-about-the-text",
+          "title": "Tea from Assam: Reading and Thinking about the Text",
+          "objectives": [
+            "Student can describe Pranjol and Rajvir's journey to the Dhekiabari Tea Estate",
+            "Student can retell the Chinese and Indian legends about the discovery of tea"
+          ],
+          "visualIdeas": [
+            "tea bushes stretching to the horizon"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "tea-from-assam-words-with-particles",
+          "title": "Tea from Assam: Words with Particles",
+          "objectives": [
+            "Student can explain words built from a verb and a particle, such as upkeep and downpour",
+            "Student can use such words in sentences"
+          ],
+          "visualIdeas": [
+            "verb + particle cards forming a new word"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ing-and-ed-adjectives",
+          "title": "-ing and -ed Adjectives",
+          "objectives": [
+            "Student can distinguish -ing adjectives (qualities) from -ed adjectives (feelings)",
+            "Student can use these adjectives to write a paragraph about Coorg"
+          ],
+          "visualIdeas": [
+            "two faces: an interesting game and an interested player"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "speaking-and-writing-a-role-play-and-an-advertisement-on-tea",
+          "title": "Speaking and Writing: A Role Play and an Advertisement on Tea",
+          "objectives": [
+            "Student can take part in a role play of a tea planter, sales agent, consumer, physician and tea-shop owner",
+            "Student can draft an advertisement for a tea brand"
+          ],
+          "visualIdeas": [
+            "an advertisement poster for tea"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-trees",
+      "title": "The Trees",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff105.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can describe how the trees move out of the house into the empty forest",
+            "Student can explain what the roots, leaves and twigs do and what the branches are compared to"
+          ],
+          "visualIdeas": [
+            "trees breaking out of a veranda into the moonlit night"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can explain what cannot happen in a treeless forest",
+            "Student can explain how the moon changes and what happens to the house",
+            "Student can discuss whether the poem presents a conflict between man and nature"
+          ],
+          "visualIdeas": [
+            "a broken moon among moving branches"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "mijbil-the-otter",
+      "title": "Mijbil the Otter",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff106.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can narrate how Maxwell got Mijbil and how the otter settled in",
+            "Student can describe Mij's journey to London by air and the trouble on the plane",
+            "Student can describe the guesses Londoners made about what Mij was"
+          ],
+          "visualIdeas": [
+            "an otter playing with water in a bath tub"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can describe things Mij does that show he is intelligent and friendly",
+            "Student can explain why the species is named Maxwell's otter",
+            "Student can find sentences in which Maxwell describes his pet's feelings"
+          ],
+          "visualIdeas": [
+            "Mij dribbling a rubber ball round the room like a soccer player"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "describing-a-repeated-action-in-the-past",
+          "title": "Describing a Repeated Action in the Past",
+          "objectives": [
+            "Student can use would and used to for actions that happened regularly in the past",
+            "Student can explain why only used to, not would, describes past states or situations with verbs like be, have and believe"
+          ],
+          "visualIdeas": [
+            "a timeline with a repeated action marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "noun-modifiers",
+          "title": "Noun Modifiers",
+          "objectives": [
+            "Student can identify words that modify nouns in phrases from the text",
+            "Student can combine nouns with suitable modifiers"
+          ],
+          "visualIdeas": [
+            "a noun with modifiers added before it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "phrases-of-quantity",
+          "title": "Phrases of Quantity",
+          "objectives": [
+            "Student can explain phrases such as a cloud of dust that show quantity for uncountable nouns",
+            "Student can use a bit of, a piece of, a bunch of, a cloud of and a lump of correctly"
+          ],
+          "visualIdeas": [
+            "a cloud of dust, a pinch of salt and a drop of blood pictured"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "speaking-and-writing",
+          "title": "Speaking and Writing",
+          "objectives": [
+            "Student can express feelings through gestures in dumb charades",
+            "Student can write a description of a person or animal they love"
+          ],
+          "visualIdeas": [
+            "a pet portrait with notes about its habits"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "fog",
+      "title": "Fog",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff106.pdf",
+      "topics": [
+        {
+          "id": "reading-and-thinking-about-the-poem",
+          "title": "Reading and Thinking about the Poem",
+          "objectives": [
+            "Student can explain how the poet compares fog to a cat without saying so",
+            "Student can find metaphors for things such as a storm, train or fire",
+            "Student can explain free verse"
+          ],
+          "visualIdeas": [
+            "fog creeping over a harbour like a cat on silent paws"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "madam-rides-the-bus",
+      "title": "Madam Rides the Bus",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff107.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can narrate how Valli planned and saved for her bus ride to town",
+            "Student can describe her experiences on the bus and her conversation with the conductor",
+            "Student can explain why the dead cow changed her mood on the return journey"
+          ],
+          "visualIdeas": [
+            "a small girl sitting confidently on a bus seat",
+            "a winding road with the view from the window"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can describe Valli's deepest desire and her character using clues from the text",
+            "Student can explain why the conductor called Valli madam",
+            "Student can find evidence that the story is told from an eight-year-old's view"
+          ],
+          "visualIdeas": [
+            "a character web for Valli"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "speaking-mimicking-conversations",
+          "title": "Speaking: Mimicking Conversations",
+          "objectives": [
+            "Student can recall a similar person or situation and act out the conversation",
+            "Student can notice how people in the story speak"
+          ],
+          "visualIdeas": [
+            "speech bubbles of the conductor and Valli"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "writing-a-page-from-experience",
+          "title": "Writing: A Page from Experience",
+          "objectives": [
+            "Student can write about a plan made alone, a memorable journey or road safety",
+            "Student can organise ideas into three paragraphs"
+          ],
+          "visualIdeas": [
+            "a road safety poster"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-tale-of-custard-the-dragon",
+      "title": "The Tale of Custard the Dragon",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff107.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can read the ballad aloud with attention to rhythm",
+            "Student can describe Belinda, her pets and how Custard defeated the pirate"
+          ],
+          "visualIdeas": [
+            "a little dragon with spikes beside a kitten, a mouse and a dog"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thinking-about-the-poem-and-writing-a-ballad",
+          "title": "Thinking about the Poem and Writing a Ballad",
+          "objectives": [
+            "Student can identify poetic devices such as simile and the rhyme scheme of stanzas",
+            "Student can explain why the poem is light-hearted",
+            "Student can write a short ballad with a simple story, rhythm and rhyme"
+          ],
+          "visualIdeas": [
+            "a ballad structure chart"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-sermon-at-benares",
+      "title": "The Sermon at Benares",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff108.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can narrate how Kisa Gotami searched for medicine for her dead son",
+            "Student can explain the Buddha's instruction to get mustard seed from a house where no one had died"
+          ],
+          "visualIdeas": [
+            "a woman going from house to house in a village"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can explain what Kisa Gotami understood the second time and why",
+            "Student can explain the Buddha's teaching about death and grief"
+          ],
+          "visualIdeas": [
+            "two paths: grief and acceptance"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-language-old-fashioned-style-and-joining-clauses",
+          "title": "Thinking about Language: Old-fashioned Style and Joining Clauses",
+          "objectives": [
+            "Student can rephrase old-fashioned words in current language",
+            "Student can use a semicolon or dash to combine clauses"
+          ],
+          "visualIdeas": [
+            "a sentence split with semicolons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "speaking-texts-on-grief",
+          "title": "Speaking: Texts on Grief",
+          "objectives": [
+            "Student can compare two recent texts on grief with the Buddha's sermon",
+            "Student can discuss whether the Buddha's ideas still hold meaning"
+          ],
+          "visualIdeas": [
+            "three texts side by side"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "for-anne-gregory",
+      "title": "For Anne Gregory",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff108.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can describe the conversation between the young man and Anne Gregory about her hair",
+            "Student can explain why Anne wants to dye her hair"
+          ],
+          "visualIdeas": [
+            "a young woman with honey-coloured hair"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can discuss whether people love others for their qualities or for themselves alone",
+            "Student can explain what qualities make objects desirable",
+            "Student can reflect on how relationships change over time"
+          ],
+          "visualIdeas": [
+            "a mirror reflecting an inner and outer self"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-proposal",
+      "title": "The Proposal",
+      "book": "First Flight",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jeff109.pdf",
+      "topics": [
+        {
+          "id": "reading-the-play-the-quarrel-over-oxen-meadows",
+          "title": "Reading the Play: The Quarrel over Oxen Meadows",
+          "objectives": [
+            "Student can describe why Lomov comes to Chubukov's house",
+            "Student can narrate how Lomov and Natalya quarrel about Oxen Meadows"
+          ],
+          "visualIdeas": [
+            "a drawing room with characters arguing"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "reading-the-play-the-quarrel-over-the-dogs",
+          "title": "Reading the Play: The Quarrel over the Dogs",
+          "objectives": [
+            "Student can narrate the quarrel over the dogs Guess and Squeezer",
+            "Student can explain how the play ends with the engagement"
+          ],
+          "visualIdeas": [
+            "two dogs with their owners arguing"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can explain Chubukov's suspicion and his sincerity",
+            "Student can describe each character using words from the play"
+          ],
+          "visualIdeas": [
+            "a character chart"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-language-translation-and-pronunciation",
+          "title": "Thinking about Language: Translation and Pronunciation",
+          "objectives": [
+            "Student can find expressions that sound translated from Russian",
+            "Student can find word stress using a dictionary"
+          ],
+          "visualIdeas": [
+            "a dictionary entry with stress marks"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "reported-speech",
+          "title": "Reported Speech",
+          "objectives": [
+            "Student can change direct speech into reported speech",
+            "Student can apply rules for reporting verbs, tense, pronouns and place words"
+          ],
+          "visualIdeas": [
+            "a direct speech bubble turned into a reported sentence"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "speaking-and-writing",
+          "title": "Speaking and Writing",
+          "objectives": [
+            "Student can discuss anger management and qualities in a marriage partner",
+            "Student can prepare a short script with stage directions"
+          ],
+          "visualIdeas": [
+            "a short script page"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "a-triumph-of-surgery",
+      "title": "A Triumph of Surgery",
+      "book": "Footprints without Feet",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jefp101.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can narrate how Mrs Pumphrey's overfeeding made Tricki ill",
+            "Student can describe how the vet treated Tricki"
+          ],
+          "visualIdeas": [
+            "a fat dog on a cushion"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "think-about-it",
+          "title": "Think about it",
+          "objectives": [
+            "Student can describe the narrator as a person",
+            "Student can discuss whether the story is real or fiction"
+          ],
+          "visualIdeas": [
+            "a vet holding a recovered dog"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "talk-about-it",
+          "title": "Talk about it",
+          "objectives": [
+            "Student can discuss whether silly rich behaviour can cause harm",
+            "Student can say what they would do in the narrator's place"
+          ],
+          "visualIdeas": [
+            "a discussion circle"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "the-thiefs-story",
+      "title": "The Thief's Story",
+      "book": "Footprints without Feet",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jefp102.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can narrate how Hari Singh befriends Anil and steals his money",
+            "Student can explain why Hari Singh returns the money"
+          ],
+          "visualIdeas": [
+            "a young thief at a railway station"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "think-about-it",
+          "title": "Think about it",
+          "objectives": [
+            "Student can describe Hari Singh's reactions to receiving an education",
+            "Student can explain why Anil does not hand the thief to the police"
+          ],
+          "visualIdeas": [
+            "a wet bundle of notes"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "talk-about-it",
+          "title": "Talk about it",
+          "objectives": [
+            "Student can discuss whether people like Anil and Hari Singh exist",
+            "Student can discuss the setting and language of the story"
+          ],
+          "visualIdeas": [
+            "a map of the story setting"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "the-midnight-visitor",
+      "title": "The Midnight Visitor",
+      "book": "Footprints without Feet",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jefp103.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can narrate how Ausable outwitted Max with an invented balcony",
+            "Student can describe how Ausable differed from a typical secret agent"
+          ],
+          "visualIdeas": [
+            "a hotel room with a window and no balcony"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "think-about-it",
+          "title": "Think about it",
+          "objectives": [
+            "Student can explain how Ausable made Max believe in the balcony",
+            "Student can discuss when Ausable thought up his plan"
+          ],
+          "visualIdeas": [
+            "a timeline of the night"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "talk-about-it",
+          "title": "Talk about it",
+          "objectives": [
+            "Student can discuss presence of mind with examples",
+            "Student can discuss what they would do in a dangerous situation"
+          ],
+          "visualIdeas": [
+            "a person staying calm in danger"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "a-question-of-trust",
+      "title": "A Question of Trust",
+      "book": "Footprints without Feet",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jefp104.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can narrate Horace Danby's planned theft",
+            "Student can explain how the lady tricked Horace"
+          ],
+          "visualIdeas": [
+            "a safe behind a painting"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "think-about-it",
+          "title": "Think about it",
+          "objectives": [
+            "Student can describe how the lady deceived Horace",
+            "Student can explain where Horace's planning failed"
+          ],
+          "visualIdeas": [
+            "a pair of gloves left behind"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "talk-about-it",
+          "title": "Talk about it",
+          "objectives": [
+            "Student can discuss whether Horace was unfairly punished",
+            "Student can discuss whether intentions justify actions"
+          ],
+          "visualIdeas": [
+            "a balance scale of intentions and actions"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "footprints-without-feet",
+      "title": "Footprints without Feet",
+      "book": "Footprints without Feet",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jefp105.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can narrate how Griffin became invisible",
+            "Student can describe his adventures in London and Iping"
+          ],
+          "visualIdeas": [
+            "footprints on a pavement with no person"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "think-about-it",
+          "title": "Think about it",
+          "objectives": [
+            "Student can explain why Griffin was a lawless person",
+            "Student can assess Griffin as a scientist"
+          ],
+          "visualIdeas": [
+            "a lab bench with bottles"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "talk-about-it",
+          "title": "Talk about it",
+          "objectives": [
+            "Student can discuss advantages and disadvantages of invisibility",
+            "Student can discuss invisible forces around us"
+          ],
+          "visualIdeas": [
+            "a list of invisible forces"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "the-making-of-a-scientist",
+      "title": "The Making of a Scientist",
+      "book": "Footprints without Feet",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jefp106.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-1",
+          "title": "Reading the Story: Part 1",
+          "objectives": [
+            "Student can describe Richard Ebright's childhood interest in butterflies",
+            "Student can explain how a book about monarch butterflies inspired him"
+          ],
+          "visualIdeas": [
+            "a boy with a butterfly net"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-story-part-2",
+          "title": "Reading the Story: Part 2",
+          "objectives": [
+            "Student can describe Ebright's science fair projects and research",
+            "Student can explain the qualities that make a scientist"
+          ],
+          "visualIdeas": [
+            "a science fair display"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "think-about-it",
+          "title": "Think about it",
+          "objectives": [
+            "Student can discuss how one becomes a scientist",
+            "Student can explain Ebright's ideas about cells and DNA"
+          ],
+          "visualIdeas": [
+            "a DNA double helix"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "talk-about-it",
+          "title": "Talk about it",
+          "objectives": [
+            "Student can share things they wonder about",
+            "Student can discuss how curiosity leads to discovery"
+          ],
+          "visualIdeas": [
+            "a question mark cloud"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "the-necklace",
+      "title": "The Necklace",
+      "book": "Footprints without Feet",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jefp107.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-1",
+          "title": "Reading the Story: Part 1",
+          "objectives": [
+            "Student can describe Matilda's dissatisfaction with her life",
+            "Student can narrate how she borrowed a necklace for the ball"
+          ],
+          "visualIdeas": [
+            "a woman admiring a necklace"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-story-part-2",
+          "title": "Reading the Story: Part 2",
+          "objectives": [
+            "Student can narrate how the Loisels repaid the debt over ten years",
+            "Student can explain the twist at the end"
+          ],
+          "visualIdeas": [
+            "a tired woman doing housework"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "think-about-it",
+          "title": "Think about it",
+          "objectives": [
+            "Student can explain how the necklace changed the Loisels' life",
+            "Student can discuss what Matilda should have done"
+          ],
+          "visualIdeas": [
+            "a cause and effect chain"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "talk-about-it",
+          "title": "Talk about it",
+          "objectives": [
+            "Student can discuss honesty as the best policy",
+            "Student can discuss contentment"
+          ],
+          "visualIdeas": [
+            "a discussion circle"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "bholi",
+      "title": "Bholi",
+      "book": "Footprints without Feet",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jefp108.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-1",
+          "title": "Reading the Story: Part 1",
+          "objectives": [
+            "Student can describe Bholi's childhood and why she was neglected",
+            "Student can narrate how she went to school"
+          ],
+          "visualIdeas": [
+            "a shy girl entering a classroom"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-story-part-2",
+          "title": "Reading the Story: Part 2",
+          "objectives": [
+            "Student can narrate how Bholi refused to marry Bishamber",
+            "Student can explain how education changed her"
+          ],
+          "visualIdeas": [
+            "a girl standing up confidently"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "think-about-it",
+          "title": "Think about it",
+          "objectives": [
+            "Student can explain the teacher's role in changing Bholi",
+            "Student can explain why Bholi first agreed and then refused the match"
+          ],
+          "visualIdeas": [
+            "a teacher encouraging a student"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "talk-about-it",
+          "title": "Talk about it",
+          "objectives": [
+            "Student can discuss social barriers for girls",
+            "Student can discuss girls' rights"
+          ],
+          "visualIdeas": [
+            "a poster on girls' education"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "the-book-that-saved-the-earth",
+      "title": "The Book That Saved the Earth",
+      "book": "Footprints without Feet",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jefp109.pdf",
+      "topics": [
+        {
+          "id": "reading-the-play-part-1",
+          "title": "Reading the Play: Part 1",
+          "objectives": [
+            "Student can describe the Martian plan to invade Earth",
+            "Student can describe Think-Tank and his crew"
+          ],
+          "visualIdeas": [
+            "a Martian control room"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-play-part-2",
+          "title": "Reading the Play: Part 2",
+          "objectives": [
+            "Student can explain how Think-Tank misread Mother Goose rhymes",
+            "Student can explain how a book saved the Earth"
+          ],
+          "visualIdeas": [
+            "a nursery rhyme book on a spaceship screen"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "think-about-it",
+          "title": "Think about it",
+          "objectives": [
+            "Student can explain how Noodle handles Think-Tank",
+            "Student can discuss whether books are being replaced by electronic media"
+          ],
+          "visualIdeas": [
+            "a book and a tablet side by side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "talk-about-it",
+          "title": "Talk about it",
+          "objectives": [
+            "Student can discuss misinterpretations",
+            "Student can discuss why the aliens speak English"
+          ],
+          "visualIdeas": [
+            "speech bubbles with misread words"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

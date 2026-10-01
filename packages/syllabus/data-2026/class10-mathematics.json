@@ -1,0 +1,577 @@
+{
+  "id": "class10-mathematics",
+  "klass": 10,
+  "subject": "Mathematics",
+  "source": {
+    "books": [
+      {
+        "title": "Mathematics",
+        "code": "jemh1",
+        "edition": "Reprint 2026-27 (First Edition December 2006; Revised Edition October 2022; reprinted December 2025)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/jemh1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles and section headings from the book's Contents page, checked against each chapter PDF (Introduction and Summary sections are not topics; sections 6.4 and 13.2 are split by the criteria/methods they name, keeping the section heading in the topic title)"
+  },
+  "chapters": [
+    {
+      "id": "real-numbers",
+      "title": "Real Numbers",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh101.pdf",
+      "topics": [
+        {
+          "id": "the-fundamental-theorem-of-arithmetic",
+          "title": "The Fundamental Theorem of Arithmetic",
+          "objectives": [
+            "Student can express a composite number as a product of primes using a factor tree",
+            "Student can state the Fundamental Theorem of Arithmetic and explain that the prime factorisation is unique apart from order",
+            "Student can find the HCF and LCM of numbers by prime factorisation and use HCF x LCM = product of two numbers",
+            "Student can decide whether a number such as 4^n can end with the digit zero"
+          ],
+          "visualIdeas": [
+            "a factor tree breaking a number into primes",
+            "two numbers' prime factors shown in overlapping circles for HCF and LCM"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "revisiting-irrational-numbers",
+          "title": "Revisiting Irrational Numbers",
+          "objectives": [
+            "Student can use the theorem that if a prime p divides a^2 then p divides a",
+            "Student can prove that root 2, root 3 and similar numbers are irrational by contradiction",
+            "Student can show that sums and products involving an irrational number, such as 5 - root 3, are irrational"
+          ],
+          "visualIdeas": [
+            "a proof by contradiction laid out step by step"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "polynomials",
+      "title": "Polynomials",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh102.pdf",
+      "topics": [
+        {
+          "id": "geometrical-meaning-of-the-zeroes-of-a-polynomial",
+          "title": "Geometrical Meaning of the Zeroes of a Polynomial",
+          "objectives": [
+            "Student can explain that the zeroes of a polynomial are the x-coordinates where its graph meets the x-axis",
+            "Student can recognise that a linear polynomial has one zero and a quadratic polynomial has at most two zeroes from its parabola",
+            "Student can read the number of zeroes of a polynomial from a given graph"
+          ],
+          "visualIdeas": [
+            "parabolas opening upward and downward cutting the x-axis at two, one or no points",
+            "a cubic curve meeting the x-axis three times"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "relationship-between-zeroes-and-coefficients-of-a-polynomial",
+          "title": "Relationship between Zeroes and Coefficients of a Polynomial",
+          "objectives": [
+            "Student can find the zeroes of a quadratic polynomial by factorisation and verify the relationships with its coefficients",
+            "Student can use sum of zeroes = -b/a and product of zeroes = c/a",
+            "Student can form a quadratic polynomial when the sum and product of its zeroes are given"
+          ],
+          "visualIdeas": [
+            "a table of polynomial, zeroes, sum and product"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "pair-of-linear-equations-in-two-variables",
+      "title": "Pair of Linear Equations in Two Variables",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh103.pdf",
+      "topics": [
+        {
+          "id": "graphical-method-of-solution-of-a-pair-of-linear-equations",
+          "title": "Graphical Method of Solution of a Pair of Linear Equations",
+          "objectives": [
+            "Student can represent a pair of linear equations graphically as two lines",
+            "Student can identify intersecting, coincident and parallel lines and relate them to a unique solution, infinitely many solutions and no solution",
+            "Student can use the ratios a1/a2, b1/b2 and c1/c2 to decide whether a pair is consistent or inconsistent"
+          ],
+          "visualIdeas": [
+            "two lines intersecting, overlapping and running parallel on graph paper",
+            "a ratio table linked to each line picture"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "substitution-method",
+          "title": "Substitution Method",
+          "objectives": [
+            "Student can solve a pair of linear equations by expressing one variable in terms of the other and substituting",
+            "Student can recognise from the result when a pair has no solution or infinitely many solutions",
+            "Student can form and solve a pair of equations from a word problem"
+          ],
+          "visualIdeas": [
+            "the substitution steps shown as a flow"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "elimination-method",
+          "title": "Elimination Method",
+          "objectives": [
+            "Student can make the coefficients of one variable equal and eliminate it by adding or subtracting",
+            "Student can solve word problems such as the ratio of incomes and savings by elimination",
+            "Student can interpret a false statement or an identity obtained during elimination"
+          ],
+          "visualIdeas": [
+            "two equations aligned with matching coefficients cancelling"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "quadratic-equations",
+      "title": "Quadratic Equations",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh104.pdf",
+      "topics": [
+        {
+          "id": "quadratic-equations",
+          "title": "Quadratic Equations",
+          "objectives": [
+            "Student can identify a quadratic equation as ax^2 + bx + c = 0 with a not equal to 0",
+            "Student can represent word situations, such as the marbles of John and Jivanti or the toys made by a cottage industry, as quadratic equations",
+            "Student can check whether a given equation is quadratic after simplifying it"
+          ],
+          "visualIdeas": [
+            "a rectangle with sides x and 2x + 1 and its area"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "solution-of-a-quadratic-equation-by-factorisation",
+          "title": "Solution of a Quadratic Equation by Factorisation",
+          "objectives": [
+            "Student can define a root of a quadratic equation and check a root by substitution",
+            "Student can find the roots of a quadratic equation by splitting the middle term and factorising",
+            "Student can solve a word problem by forming and factorising a quadratic equation"
+          ],
+          "visualIdeas": [
+            "the middle term split into two parts and factors grouped"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "nature-of-roots",
+          "title": "Nature of Roots",
+          "objectives": [
+            "Student can use the quadratic formula and the discriminant b^2 - 4ac",
+            "Student can decide whether roots are two distinct real, two equal real or not real from the discriminant",
+            "Student can use the discriminant to answer questions such as whether a pole can be erected at a given point"
+          ],
+          "visualIdeas": [
+            "a parabola crossing, touching or missing the x-axis matched to discriminant signs"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "arithmetic-progressions",
+      "title": "Arithmetic Progressions",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh105.pdf",
+      "topics": [
+        {
+          "id": "arithmetic-progressions",
+          "title": "Arithmetic Progressions",
+          "objectives": [
+            "Student can define an arithmetic progression, its first term and its common difference",
+            "Student can decide whether a given list of numbers is an AP and write an AP from its first term and common difference",
+            "Student can distinguish finite and infinite APs"
+          ],
+          "visualIdeas": [
+            "equally spaced steps on a staircase",
+            "number lists with the difference between terms highlighted"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "nth-term-of-an-ap",
+          "title": "nth Term of an AP",
+          "objectives": [
+            "Student can use a_n = a + (n - 1)d to find any term of an AP",
+            "Student can find the number of terms in a finite AP and decide whether a given number is a term",
+            "Student can solve word problems such as yearly salary increments using the nth term"
+          ],
+          "visualIdeas": [
+            "terms placed on a number line with jumps of d"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "sum-of-first-n-terms-of-an-ap",
+          "title": "Sum of First n Terms of an AP",
+          "objectives": [
+            "Student can derive S = n/2[2a + (n - 1)d] by writing the sum forwards and backwards",
+            "Student can use S = n/2(a + l) when the last term is known",
+            "Student can solve word problems such as total savings or prizes using the sum formula"
+          ],
+          "visualIdeas": [
+            "the sum written forwards and backwards with pairs adding to the same total"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    },
+    {
+      "id": "triangles",
+      "title": "Triangles",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh106.pdf",
+      "topics": [
+        {
+          "id": "similar-figures",
+          "title": "Similar Figures",
+          "objectives": [
+            "Student can distinguish similar figures from congruent figures",
+            "Student can state the conditions for two polygons with the same number of sides to be similar",
+            "Student can explain why all circles, all squares and all equilateral triangles are similar"
+          ],
+          "visualIdeas": [
+            "a photo and its enlargement side by side",
+            "a square and a rhombus with equal sides but different angles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "similarity-of-triangles",
+          "title": "Similarity of Triangles",
+          "objectives": [
+            "Student can state the conditions for two triangles to be similar",
+            "Student can prove and apply the Basic Proportionality Theorem (Theorem 6.1)",
+            "Student can apply its converse (Theorem 6.2) to show that a line is parallel to a side"
+          ],
+          "visualIdeas": [
+            "a triangle cut by a line parallel to its base with ratios marked"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "criteria-for-similarity-of-triangles-aaa-and-aa",
+          "title": "Criteria for Similarity of Triangles: AAA and AA",
+          "objectives": [
+            "Student can state the AAA similarity criterion (Theorem 6.3)",
+            "Student can explain why two pairs of equal angles (AA) are enough for similarity",
+            "Student can use AA similarity in problems such as the shadow of a girl under a lamp-post"
+          ],
+          "visualIdeas": [
+            "two triangles with matching angles coloured the same"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "criteria-for-similarity-of-triangles-sss-and-sas",
+          "title": "Criteria for Similarity of Triangles: SSS and SAS",
+          "objectives": [
+            "Student can state the SSS similarity criterion (Theorem 6.4)",
+            "Student can state the SAS similarity criterion (Theorem 6.5)",
+            "Student can choose the right criterion to prove two triangles similar"
+          ],
+          "visualIdeas": [
+            "two triangles with proportional sides labelled"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "coordinate-geometry",
+      "title": "Coordinate Geometry",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh107.pdf",
+      "topics": [
+        {
+          "id": "distance-formula",
+          "title": "Distance Formula",
+          "objectives": [
+            "Student can derive the distance formula using Pythagoras theorem",
+            "Student can find the distance between two points and from a point to the origin",
+            "Student can use distances to decide whether points are collinear or form a particular figure"
+          ],
+          "visualIdeas": [
+            "two points on a grid joined by a right triangle"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "section-formula",
+          "title": "Section Formula",
+          "objectives": [
+            "Student can derive the section formula for a point dividing a segment internally in the ratio m1 : m2",
+            "Student can find the midpoint of a segment",
+            "Student can find the ratio in which a point divides a segment and the points of trisection"
+          ],
+          "visualIdeas": [
+            "a segment divided at P in ratio m1:m2 on a grid"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    },
+    {
+      "id": "introduction-to-trigonometry",
+      "title": "Introduction to Trigonometry",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh108.pdf",
+      "topics": [
+        {
+          "id": "trigonometric-ratios",
+          "title": "Trigonometric Ratios",
+          "objectives": [
+            "Student can define sin, cos, tan, cosec, sec and cot of an acute angle in a right triangle",
+            "Student can explain why the ratios depend only on the angle",
+            "Student can find all trigonometric ratios when one ratio is given"
+          ],
+          "visualIdeas": [
+            "a right triangle with opposite, adjacent and hypotenuse labelled"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "trigonometric-ratios-of-some-specific-angles",
+          "title": "Trigonometric Ratios of Some Specific Angles",
+          "objectives": [
+            "Student can find the trigonometric ratios of 45, 30 and 60 degrees using geometry",
+            "Student can state the ratios of 0 and 90 degrees",
+            "Student can use the table of values to evaluate expressions and find angles"
+          ],
+          "visualIdeas": [
+            "an equilateral triangle bisected to show 30 and 60 degrees",
+            "the standard values table"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "trigonometric-identities",
+          "title": "Trigonometric Identities",
+          "objectives": [
+            "Student can prove sin^2 A + cos^2 A = 1 and the two related identities",
+            "Student can express ratios in terms of each other using identities",
+            "Student can prove trigonometric identities"
+          ],
+          "visualIdeas": [
+            "a unit right triangle showing the Pythagoras link"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "some-applications-of-trigonometry",
+      "title": "Some Applications of Trigonometry",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh109.pdf",
+      "topics": [
+        {
+          "id": "heights-and-distances",
+          "title": "Heights and Distances",
+          "objectives": [
+            "Student can define line of sight, angle of elevation and angle of depression",
+            "Student can draw a diagram for a heights-and-distances problem",
+            "Student can find heights and distances such as a tower or a building using trigonometric ratios"
+          ],
+          "visualIdeas": [
+            "an observer looking up at a tower with the angle of elevation marked",
+            "a person on a balcony looking down with the angle of depression"
+          ],
+          "estMinutes": 40
+        }
+      ]
+    },
+    {
+      "id": "circles",
+      "title": "Circles",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh110.pdf",
+      "topics": [
+        {
+          "id": "tangent-to-a-circle",
+          "title": "Tangent to a Circle",
+          "objectives": [
+            "Student can define a tangent as a line meeting a circle at exactly one point",
+            "Student can prove that the tangent at any point is perpendicular to the radius through the point of contact"
+          ],
+          "visualIdeas": [
+            "a line rotating about a point until it touches the circle"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "number-of-tangents-from-a-point-on-a-circle",
+          "title": "Number of Tangents from a Point on a Circle",
+          "objectives": [
+            "Student can state the number of tangents from a point inside, on and outside a circle",
+            "Student can prove that tangents from an external point are equal in length",
+            "Student can use these results to solve problems"
+          ],
+          "visualIdeas": [
+            "two tangents from an external point with equal lengths marked"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "areas-related-to-circles",
+      "title": "Areas Related to Circles",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh111.pdf",
+      "topics": [
+        {
+          "id": "areas-of-sector-and-segment-of-a-circle",
+          "title": "Areas of Sector and Segment of a Circle",
+          "objectives": [
+            "Student can identify minor and major sectors and segments of a circle",
+            "Student can find the area of a sector and the length of an arc using the angle of the sector",
+            "Student can find the area of a segment by subtracting the triangle's area from the sector's area"
+          ],
+          "visualIdeas": [
+            "a circle with a sector and segment shaded"
+          ],
+          "estMinutes": 40
+        }
+      ]
+    },
+    {
+      "id": "surface-areas-and-volumes",
+      "title": "Surface Areas and Volumes",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh112.pdf",
+      "topics": [
+        {
+          "id": "surface-area-of-a-combination-of-solids",
+          "title": "Surface Area of a Combination of Solids",
+          "objectives": [
+            "Student can identify the basic solids that make up a combined solid",
+            "Student can find the total surface area of a combination of solids by adding only the visible curved surfaces"
+          ],
+          "visualIdeas": [
+            "a toy made of a cone on a hemisphere"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "volume-of-a-combination-of-solids",
+          "title": "Volume of a Combination of Solids",
+          "objectives": [
+            "Student can find the volume of a combination of solids by adding the volumes of its parts",
+            "Student can explain why volumes are simply added while surface areas are not",
+            "Student can solve problems such as the volume of air in a shed shaped as a cuboid with a half cylinder on top"
+          ],
+          "visualIdeas": [
+            "a shed made of a cuboid with a half cylinder on top"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "statistics",
+      "title": "Statistics",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh113.pdf",
+      "topics": [
+        {
+          "id": "mean-of-grouped-data-direct-method",
+          "title": "Mean of Grouped Data: Direct Method",
+          "objectives": [
+            "Student can find class marks as midpoints of class intervals",
+            "Student can find the mean of grouped data by the direct method"
+          ],
+          "visualIdeas": [
+            "a frequency table with a class-mark column"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mean-of-grouped-data-assumed-mean-method",
+          "title": "Mean of Grouped Data: Assumed Mean Method",
+          "objectives": [
+            "Student can choose an assumed mean and find deviations",
+            "Student can find the mean by the assumed mean method"
+          ],
+          "visualIdeas": [
+            "a table with a deviations column"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mean-of-grouped-data-step-deviation-method",
+          "title": "Mean of Grouped Data: Step-deviation Method",
+          "objectives": [
+            "Student can find the mean by the step-deviation method",
+            "Student can choose an appropriate method for given data"
+          ],
+          "visualIdeas": [
+            "a table with step-deviation values"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mode-of-grouped-data",
+          "title": "Mode of Grouped Data",
+          "objectives": [
+            "Student can identify the modal class",
+            "Student can find the mode using the formula"
+          ],
+          "visualIdeas": [
+            "a histogram with the modal class highlighted"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "median-of-grouped-data",
+          "title": "Median of Grouped Data",
+          "objectives": [
+            "Student can make a cumulative frequency table",
+            "Student can make less than and more than cumulative frequency distributions",
+            "Student can find the median class and use the median formula for grouped data"
+          ],
+          "visualIdeas": [
+            "a cumulative frequency table"
+          ],
+          "estMinutes": 40
+        }
+      ]
+    },
+    {
+      "id": "probability",
+      "title": "Probability",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jemh114.pdf",
+      "topics": [
+        {
+          "id": "probability-a-theoretical-approach",
+          "title": "Probability - A Theoretical Approach",
+          "objectives": [
+            "Student can define theoretical probability as favourable outcomes over all outcomes",
+            "Student can identify elementary events, sure events and impossible events",
+            "Student can use P(E) + P(not E) = 1",
+            "Student can find probabilities in problems with coins, dice and cards"
+          ],
+          "visualIdeas": [
+            "a die with outcomes listed",
+            "a deck of cards sorted by suits"
+          ],
+          "estMinutes": 40
+        }
+      ]
+    }
+  ]
+}

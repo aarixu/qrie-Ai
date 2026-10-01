@@ -1,0 +1,1862 @@
+{
+  "id": "class10-science",
+  "klass": 10,
+  "subject": "Science",
+  "source": {
+    "books": [
+      {
+        "title": "Science",
+        "code": "jesc1",
+        "edition": "Reprint 2026-27 (First Edition December 2006; Revised Edition October 2022; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/jesc1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's numbered section headings (a parent heading that is only a short lead-in to its subsections is not a separate topic; Summary/Exercises are not topics)"
+  },
+  "chapters": [
+    {
+      "id": "chemical-reactions-and-equations",
+      "title": "Chemical Reactions and Equations",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc101.pdf",
+      "topics": [
+        {
+          "id": "chemical-equations",
+          "title": "Chemical Equations",
+          "objectives": [
+            "Student can name the observations (change in state, colour, temperature, evolution of a gas) that show a chemical reaction has taken place",
+            "Student can write a word equation identifying reactants and products, as for magnesium burning in oxygen"
+          ],
+          "visualIdeas": [
+            "magnesium ribbon burning with a dazzling white flame into white magnesium oxide powder",
+            "reactants on the left, an arrow, products on the right"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-chemical-equation",
+          "title": "Writing a Chemical Equation",
+          "objectives": [
+            "Student can convert a word equation into a skeletal chemical equation using chemical formulae",
+            "Student can explain why a skeletal equation such as Mg + O2 -> MgO is not yet balanced"
+          ],
+          "visualIdeas": [
+            "word equation turning into a formula equation line by line"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "balanced-chemical-equations",
+          "title": "Balanced Chemical Equations",
+          "objectives": [
+            "Student can state that mass is neither created nor destroyed in a reaction, so atoms of each element must be equal on both sides",
+            "Student can balance an equation step by step, as for Fe + H2O -> Fe3O4 + H2",
+            "Student can add state symbols (s), (l), (g), (aq) and reaction conditions to an equation"
+          ],
+          "visualIdeas": [
+            "a two-pan balance with atoms counted on each side",
+            "a table counting atoms of each element before and after balancing"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "combination-reaction",
+          "title": "Combination Reaction",
+          "objectives": [
+            "Student can define a combination reaction as one in which a single product forms from two or more reactants",
+            "Student can explain the reaction of quicklime with water to form slaked lime and why it releases heat",
+            "Student can distinguish exothermic reactions and give examples such as burning of natural gas and respiration"
+          ],
+          "visualIdeas": [
+            "calcium oxide in a beaker of water with a hand feeling heat",
+            "two reactant boxes merging into one product box"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "decomposition-reaction",
+          "title": "Decomposition Reaction",
+          "objectives": [
+            "Student can define a decomposition reaction as a single reactant breaking down into simpler products",
+            "Student can distinguish thermal decomposition, electrolysis of water, and light-driven decomposition of silver chloride",
+            "Student can explain why decomposition reactions are generally endothermic and give the use of silver bromide in black and white photography"
+          ],
+          "visualIdeas": [
+            "ferrous sulphate crystals heated in a boiling tube, colour change and smell of burning sulphur",
+            "electrolysis of water with hydrogen volume twice the oxygen volume"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "displacement-reaction",
+          "title": "Displacement Reaction",
+          "objectives": [
+            "Student can explain why an iron nail placed in copper sulphate solution turns brownish and the blue colour fades",
+            "Student can identify a displacement reaction as a more reactive element displacing a less reactive one from its compound"
+          ],
+          "visualIdeas": [
+            "iron nail in blue copper sulphate solution turning brown over time"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "double-displacement-reaction",
+          "title": "Double Displacement Reaction",
+          "objectives": [
+            "Student can describe the white precipitate of barium sulphate formed when sodium sulphate and barium chloride solutions are mixed",
+            "Student can define a double displacement reaction as an exchange of ions between reactants and define a precipitation reaction"
+          ],
+          "visualIdeas": [
+            "two solutions poured together forming a white precipitate",
+            "ion partners swapping places"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "oxidation-and-reduction",
+          "title": "Oxidation and Reduction",
+          "objectives": [
+            "Student can explain the black copper oxide formed on heating copper as oxidation and its reaction with hydrogen as reduction",
+            "Student can define oxidation as gain of oxygen or loss of hydrogen and reduction as loss of oxygen or gain of hydrogen",
+            "Student can identify the substance oxidised and the substance reduced in a redox reaction such as ZnO + C -> Zn + CO"
+          ],
+          "visualIdeas": [
+            "copper powder in a china dish turning black on heating",
+            "arrows labelling oxygen gained and oxygen lost in one equation"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "corrosion",
+          "title": "Corrosion",
+          "objectives": [
+            "Student can explain corrosion as a metal being attacked by substances around it such as moisture and acids",
+            "Student can describe examples: black coating on silver, green coating on copper and rusting of iron, and why corrosion is costly"
+          ],
+          "visualIdeas": [
+            "a rusted iron gate beside a tarnished silver spoon and a green copper vessel"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "rancidity",
+          "title": "Rancidity",
+          "objectives": [
+            "Student can explain rancidity as the oxidation of fats and oils that changes their smell and taste",
+            "Student can describe ways to prevent rancidity: antioxidants, airtight containers, and flushing chip bags with nitrogen"
+          ],
+          "visualIdeas": [
+            "a chips packet being filled with nitrogen gas"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "acids-bases-and-salts",
+      "title": "Acids, Bases and Salts",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc102.pdf",
+      "topics": [
+        {
+          "id": "acids-and-bases-in-the-laboratory",
+          "title": "Acids and Bases in the Laboratory",
+          "objectives": [
+            "Student can use litmus, methyl orange and phenolphthalein to tell acids from bases",
+            "Student can explain olfactory indicators such as onion, vanilla and clove oil that change smell in acid or base"
+          ],
+          "visualIdeas": [
+            "test tubes of acids and bases with litmus colours shown",
+            "a table of indicator colours in acid and base"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-do-acids-and-bases-react-with-metals",
+          "title": "How do Acids and Bases React with Metals?",
+          "objectives": [
+            "Student can describe how an acid reacts with zinc to give a salt and hydrogen gas, tested with a burning candle",
+            "Student can describe the reaction of sodium hydroxide with zinc to form sodium zincate and hydrogen"
+          ],
+          "visualIdeas": [
+            "zinc granules in dilute sulphuric acid with bubbles collected into soap bubbles that pop near a flame"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-do-metal-carbonates-and-metal-hydrogencarbonates-react-with-acids",
+          "title": "How do Metal Carbonates and Metal Hydrogencarbonates React with Acids?",
+          "objectives": [
+            "Student can write the general reaction: metal carbonate or hydrogencarbonate + acid -> salt + carbon dioxide + water",
+            "Student can describe how carbon dioxide turns lime water milky and how excess gas makes it clear again"
+          ],
+          "visualIdeas": [
+            "gas from a test tube bubbling through lime water turning milky"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-do-acids-and-bases-react-with-each-other",
+          "title": "How do Acids and Bases React with each other?",
+          "objectives": [
+            "Student can explain neutralisation as acid + base -> salt + water",
+            "Student can describe how phenolphthalein shows neutralisation when acid is added to pink sodium hydroxide solution"
+          ],
+          "visualIdeas": [
+            "pink solution turning colourless drop by drop"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "reaction-of-metallic-oxides-with-acids",
+          "title": "Reaction of Metallic Oxides with Acids",
+          "objectives": [
+            "Student can describe copper oxide dissolving in dilute hydrochloric acid to form a blue-green copper chloride solution",
+            "Student can explain why metallic oxides are called basic oxides"
+          ],
+          "visualIdeas": [
+            "black copper oxide powder dissolving into a blue-green solution"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "reaction-of-a-non-metallic-oxide-with-base",
+          "title": "Reaction of a Non-metallic Oxide with Base",
+          "objectives": [
+            "Student can describe carbon dioxide reacting with calcium hydroxide to form salt and water",
+            "Student can conclude that non-metallic oxides are acidic in nature"
+          ],
+          "visualIdeas": [
+            "side-by-side cards: metal oxide is basic, non-metal oxide is acidic"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-do-all-acids-and-all-bases-have-in-common",
+          "title": "What do all Acids and all Bases have in Common?",
+          "objectives": [
+            "Student can describe the activity showing that acid solutions conduct electricity while glucose and alcohol solutions do not",
+            "Student can explain that acids produce H+ ions in solution, which gives them their acidic properties"
+          ],
+          "visualIdeas": [
+            "a bulb glowing in a circuit dipped into dilute HCl but not into glucose solution"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-happens-to-an-acid-or-a-base-in-a-water-solution",
+          "title": "What Happens to an Acid or a Base in a Water Solution?",
+          "objectives": [
+            "Student can explain why dry HCl gas does not change the colour of dry litmus paper while wet litmus does, so acids give H+ ions only in water",
+            "Student can explain that acids give hydronium ions (H3O+) and bases give hydroxide ions (OH-) in water",
+            "Student can define alkalis as bases that are soluble in water",
+            "Student can explain why the acid must be added slowly to water while diluting, and not water to acid"
+          ],
+          "visualIdeas": [
+            "acid being poured slowly into a beaker of water with a warning sign"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-strong-are-acid-or-base-solutions",
+          "title": "How Strong are Acid or Base Solutions?",
+          "objectives": [
+            "Student can use the pH scale from 0 to 14 to classify solutions as acidic, neutral or basic",
+            "Student can use universal indicator colours to estimate pH",
+            "Student can distinguish strong and weak acids and bases by the concentration of H+ or OH- ions they produce"
+          ],
+          "visualIdeas": [
+            "a coloured pH scale strip with common substances placed on it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "importance-of-ph-in-everyday-life",
+          "title": "Importance of pH in Everyday Life",
+          "objectives": [
+            "Student can explain why living things survive only in a narrow pH range, with acid rain as an example",
+            "Student can explain how antacids relieve acidity and how tooth decay starts below pH 5.5",
+            "Student can describe self-defence by bee stings and nettle leaves and how they are treated with a mild base"
+          ],
+          "visualIdeas": [
+            "a mouth with pH dropping below 5.5 near teeth",
+            "a bee sting being treated with baking soda"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "family-of-salts",
+          "title": "Family of Salts",
+          "objectives": [
+            "Student can write the formulae of salts and identify the acid and base each came from",
+            "Student can group salts into families sharing the same positive or negative radical"
+          ],
+          "visualIdeas": [
+            "a grid of salts sorted by sodium salts and chloride salts"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ph-of-salts",
+          "title": "pH of Salts",
+          "objectives": [
+            "Student can explain that salts of a strong acid and strong base are neutral",
+            "Student can explain that salts of a strong acid and weak base are acidic and salts of a strong base and weak acid are basic"
+          ],
+          "visualIdeas": [
+            "three beakers of salt solutions with pH paper showing neutral, acidic and basic"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chemicals-from-common-salt",
+          "title": "Chemicals from Common Salt",
+          "objectives": [
+            "Student can describe the chlor-alkali process producing sodium hydroxide, chlorine and hydrogen and their uses",
+            "Student can describe the preparation and uses of bleaching powder",
+            "Student can explain the uses of baking soda (sodium hydrogencarbonate) and washing soda (sodium carbonate decahydrate)"
+          ],
+          "visualIdeas": [
+            "an electrolysis cell of brine with chlorine at the anode and hydrogen at the cathode",
+            "a cake rising because of baking powder releasing carbon dioxide"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "are-the-crystals-of-salts-really-dry",
+          "title": "Are the Crystals of Salts really Dry?",
+          "objectives": [
+            "Student can explain water of crystallisation using blue copper sulphate turning white on heating",
+            "Student can describe how Plaster of Paris is made from gypsum and why it sets hard when mixed with water",
+            "Student can list uses of Plaster of Paris such as supporting fractured bones and making toys"
+          ],
+          "visualIdeas": [
+            "blue crystals turning white when heated and blue again when water is added",
+            "a plaster cast on an arm"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "metals-and-non-metals",
+      "title": "Metals and Non-metals",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc103.pdf",
+      "topics": [
+        {
+          "id": "physical-properties-metals",
+          "title": "Physical Properties: Metals",
+          "objectives": [
+            "Student can describe the physical properties of metals: lustre, hardness, malleability, ductility and conduction of heat and electricity",
+            "Student can name exceptions such as sodium and potassium being soft and mercury being liquid"
+          ],
+          "visualIdeas": [
+            "a metal sheet being hammered thin and a wire drawn out"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "physical-properties-non-metals",
+          "title": "Physical Properties: Non-metals",
+          "objectives": [
+            "Student can describe the physical properties of non-metals and name examples such as carbon, sulphur, iodine and oxygen",
+            "Student can name exceptions such as iodine having lustre and graphite conducting electricity",
+            "Student can classify elements as metals or non-metals using their properties"
+          ],
+          "visualIdeas": [
+            "a sorting chart of elements into metals and non-metals"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-happens-when-metals-are-burnt-in-air",
+          "title": "What happens when Metals are burnt in Air?",
+          "objectives": [
+            "Student can explain that metals combine with oxygen to form metal oxides",
+            "Student can describe amphoteric oxides such as aluminium oxide and zinc oxide that react with both acids and bases"
+          ],
+          "visualIdeas": [
+            "a magnesium ribbon burning to a white oxide"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-happens-when-metals-react-with-water",
+          "title": "What happens when Metals react with Water?",
+          "objectives": [
+            "Student can compare how potassium and sodium react violently with cold water, calcium less violently and magnesium with hot water",
+            "Student can explain that aluminium, iron and zinc react only with steam and lead, copper, silver and gold do not react"
+          ],
+          "visualIdeas": [
+            "metals arranged by how vigorously they react with water"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-happens-when-metals-react-with-acids",
+          "title": "What happens when Metals react with Acids?",
+          "objectives": [
+            "Student can explain that metals react with dilute acids to give a salt and hydrogen gas",
+            "Student can explain why hydrogen is not evolved when a metal reacts with nitric acid, except with magnesium and manganese in very dilute acid",
+            "Student can describe aqua regia and its ability to dissolve gold and platinum"
+          ],
+          "visualIdeas": [
+            "test tubes of metals in dilute acid with different bubbling rates"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-do-metals-react-with-solutions-of-other-metal-salts",
+          "title": "How do Metals react with Solutions of other Metal Salts?",
+          "objectives": [
+            "Student can explain that a more reactive metal displaces a less reactive metal from its salt solution",
+            "Student can predict whether a displacement will occur from the relative reactivity of two metals"
+          ],
+          "visualIdeas": [
+            "a copper wire in silver nitrate solution growing silver crystals"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-reactivity-series",
+          "title": "The Reactivity Series",
+          "objectives": [
+            "Student can describe the reactivity series as a list of metals in decreasing order of activity",
+            "Student can use the series to predict reactions of metals with water, acids and salt solutions"
+          ],
+          "visualIdeas": [
+            "a vertical ladder of metals from potassium at the top to gold at the bottom"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-do-metals-and-non-metals-react",
+          "title": "How do Metals and Non-metals React?",
+          "objectives": [
+            "Student can explain the formation of sodium chloride and magnesium chloride by transfer of electrons",
+            "Student can draw electron-dot structures for ionic compounds",
+            "Student can define ionic (electrovalent) compounds"
+          ],
+          "visualIdeas": [
+            "electron-dot diagram of Na giving one electron to Cl",
+            "shells of noble gases showing stable octets"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "properties-of-ionic-compounds",
+          "title": "Properties of Ionic Compounds",
+          "objectives": [
+            "Student can describe physical properties of ionic compounds: solid, hard, brittle and with high melting and boiling points",
+            "Student can explain why ionic compounds dissolve in water and conduct electricity in solution or molten state"
+          ],
+          "visualIdeas": [
+            "a crystal lattice of alternating positive and negative ions"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "occurrence-of-metals",
+          "title": "Occurrence of Metals",
+          "objectives": [
+            "Student can name the earth's crust and sea water (with soluble salts such as sodium chloride and magnesium chloride) as sources of metals",
+            "Student can distinguish minerals from ores: ores are minerals with a high enough percentage of a metal to extract it profitably"
+          ],
+          "visualIdeas": [
+            "a layered earth crust showing ore deposits"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "extraction-of-metals",
+          "title": "Extraction of Metals",
+          "objectives": [
+            "Student can explain why metals low in the activity series, such as gold, silver, platinum and copper, are often found free in nature",
+            "Student can group metals by reactivity into those at the bottom, middle and top of the activity series",
+            "Student can outline the steps of extracting a metal from its ore"
+          ],
+          "visualIdeas": [
+            "a flow chart from ore to pure metal"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "enrichment-of-ores",
+          "title": "Enrichment of Ores",
+          "objectives": [
+            "Student can explain gangue as the impurities mixed with ores",
+            "Student can explain that ores are enriched by removing gangue using differences in physical or chemical properties"
+          ],
+          "visualIdeas": [
+            "ore being separated from sand and soil"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "extracting-metals-low-in-the-activity-series",
+          "title": "Extracting Metals Low in the Activity Series",
+          "objectives": [
+            "Student can explain how mercury is obtained by heating cinnabar in air",
+            "Student can explain how copper is obtained from copper sulphide by heating"
+          ],
+          "visualIdeas": [
+            "cinnabar heated to release mercury droplets"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "extracting-metals-in-the-middle-of-the-activity-series",
+          "title": "Extracting Metals in the Middle of the Activity Series",
+          "objectives": [
+            "Student can distinguish roasting of sulphide ores and calcination of carbonate ores",
+            "Student can explain reduction of metal oxides with carbon and the thermit reaction used to join railway tracks"
+          ],
+          "visualIdeas": [
+            "a thermit reaction with molten iron flowing between rail ends"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "extracting-metals-towards-the-top-of-the-activity-series",
+          "title": "Extracting Metals towards the Top of the Activity Series",
+          "objectives": [
+            "Student can explain why highly reactive metals such as sodium, magnesium and aluminium cannot be obtained by reducing their oxides with carbon",
+            "Student can describe electrolytic reduction of molten chlorides, with metal at the cathode and chlorine at the anode"
+          ],
+          "visualIdeas": [
+            "electrolysis cell for molten sodium chloride"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "refining-of-metals",
+          "title": "Refining of Metals",
+          "objectives": [
+            "Student can describe electrolytic refining of copper with impure metal as anode and pure metal as cathode",
+            "Student can explain what anode mud is"
+          ],
+          "visualIdeas": [
+            "impure copper anode thinning while the pure cathode grows"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "corrosion",
+          "title": "Corrosion",
+          "objectives": [
+            "Student can describe the corrosion of silver, copper and iron",
+            "Student can describe the activity showing that both air and water are needed for iron to rust"
+          ],
+          "visualIdeas": [
+            "three test tubes with nails in dry air, boiled water under oil and ordinary water"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "prevention-of-corrosion",
+          "title": "Prevention of Corrosion",
+          "objectives": [
+            "Student can list ways to prevent rusting: painting, oiling, greasing, galvanising, chrome plating, anodising and making alloys",
+            "Student can explain alloys such as steel, brass, bronze and solder and why pure gold is alloyed for jewellery"
+          ],
+          "visualIdeas": [
+            "a galvanised iron sheet with a zinc coat",
+            "an alloy shown as a mixture of two kinds of atoms"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "carbon-and-its-compounds",
+      "title": "Carbon and its Compounds",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc104.pdf",
+      "topics": [
+        {
+          "id": "bonding-in-carbon-the-covalent-bond",
+          "title": "Bonding in Carbon - The Covalent Bond",
+          "objectives": [
+            "Student can explain why carbon cannot easily gain or lose four electrons and instead shares electrons",
+            "Student can draw electron-dot structures for hydrogen, oxygen, nitrogen and methane molecules showing single, double and triple bonds",
+            "Student can describe properties of covalent compounds: low melting and boiling points and poor conduction of electricity",
+            "Student can describe diamond, graphite and fullerenes as allotropes of carbon"
+          ],
+          "visualIdeas": [
+            "electron-dot diagram of methane with four shared pairs",
+            "diamond 3D lattice next to graphite hexagonal layers"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "versatile-nature-of-carbon",
+          "title": "Versatile Nature of Carbon",
+          "objectives": [
+            "Student can explain catenation as the ability of carbon to form bonds with other carbon atoms",
+            "Student can explain tetravalency and how strong carbon bonds make compounds stable"
+          ],
+          "visualIdeas": [
+            "a long chain of carbon atoms linked like beads"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "saturated-and-unsaturated-carbon-compounds",
+          "title": "Saturated and Unsaturated Carbon Compounds",
+          "objectives": [
+            "Student can draw structures of ethane, ethene and ethyne",
+            "Student can distinguish saturated compounds (single bonds) from unsaturated compounds (double or triple bonds)"
+          ],
+          "visualIdeas": [
+            "ethane, ethene, ethyne structures side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "chains-branches-and-rings",
+          "title": "Chains, Branches and Rings",
+          "objectives": [
+            "Student can draw straight-chain and branched structures of butane (structural isomers)",
+            "Student can describe cyclic compounds such as cyclohexane and benzene",
+            "Student can define hydrocarbons, alkanes, alkenes and alkynes"
+          ],
+          "visualIdeas": [
+            "butane and isobutane drawn with the same formula",
+            "a benzene ring"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "will-you-be-my-friend",
+          "title": "Will you be my Friend?",
+          "objectives": [
+            "Student can explain that carbon bonds with heteroatoms such as halogens, oxygen, nitrogen and sulphur",
+            "Student can identify functional groups such as halo, alcohol, aldehyde, ketone and carboxylic acid"
+          ],
+          "visualIdeas": [
+            "a carbon chain with different functional groups attached at the end"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "homologous-series",
+          "title": "Homologous Series",
+          "objectives": [
+            "Student can define a homologous series as compounds with the same functional group differing by CH2",
+            "Student can explain how physical properties change gradually and chemical properties stay similar in a series"
+          ],
+          "visualIdeas": [
+            "a ladder of alcohols each step adding CH2"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nomenclature-of-carbon-compounds",
+          "title": "Nomenclature of Carbon Compounds",
+          "objectives": [
+            "Student can name carbon compounds by counting carbon atoms and adding the prefix or suffix of the functional group",
+            "Student can name compounds such as bromopropane, propanal, propanone and propanoic acid"
+          ],
+          "visualIdeas": [
+            "a naming flow chart: count carbons, find functional group, add suffix"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "combustion",
+          "title": "Combustion",
+          "objectives": [
+            "Student can explain that carbon and its compounds burn in oxygen to give carbon dioxide, heat and light",
+            "Student can explain why saturated hydrocarbons burn with a clean blue flame and unsaturated ones with a sooty yellow flame"
+          ],
+          "visualIdeas": [
+            "a blue gas stove flame next to a sooty yellow flame"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "oxidation",
+          "title": "Oxidation",
+          "objectives": [
+            "Student can describe the oxidation of alcohols to carboxylic acids by alkaline potassium permanganate or acidified potassium dichromate",
+            "Student can define oxidising agents"
+          ],
+          "visualIdeas": [
+            "purple permanganate decolourising when added to warm ethanol"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "addition-reaction",
+          "title": "Addition Reaction",
+          "objectives": [
+            "Student can explain hydrogenation of unsaturated hydrocarbons in the presence of nickel or palladium catalysts",
+            "Student can explain the hydrogenation of vegetable oils and why oils with unsaturated fatty acids are healthier"
+          ],
+          "visualIdeas": [
+            "a double bond opening as two hydrogen atoms are added"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "substitution-reaction",
+          "title": "Substitution Reaction",
+          "objectives": [
+            "Student can explain the substitution of hydrogen atoms in methane by chlorine in sunlight",
+            "Student can contrast substitution with addition"
+          ],
+          "visualIdeas": [
+            "hydrogen atoms in methane being swapped for chlorine one by one"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "properties-of-ethanol",
+          "title": "Properties of Ethanol",
+          "objectives": [
+            "Student can describe the physical properties and uses of ethanol",
+            "Student can describe the reaction of ethanol with sodium and its dehydration with concentrated sulphuric acid to form ethene",
+            "Student can explain the harmful effects of drinking alcohol"
+          ],
+          "visualIdeas": [
+            "ethanol and sodium reaction releasing hydrogen bubbles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-ethanoic-acid",
+          "title": "Properties of Ethanoic Acid",
+          "objectives": [
+            "Student can describe ethanoic acid (acetic acid) and vinegar and why glacial acetic acid freezes in cold weather",
+            "Student can describe esterification and saponification",
+            "Student can describe reactions of ethanoic acid with bases, carbonates and hydrogencarbonates"
+          ],
+          "visualIdeas": [
+            "a test tube warmed to make a sweet-smelling ester"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "soaps-and-detergents",
+          "title": "Soaps and Detergents",
+          "objectives": [
+            "Student can explain how soap molecules form micelles with ionic ends facing water and carbon chains trapping oil",
+            "Student can explain why soap forms scum in hard water and why detergents work in hard water"
+          ],
+          "visualIdeas": [
+            "a micelle with tails holding an oil drop in the centre",
+            "two test tubes with soap in soft and hard water showing foam and scum"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "life-processes",
+      "title": "Life Processes",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc105.pdf",
+      "topics": [
+        {
+          "id": "what-are-life-processes",
+          "title": "What are Life Processes?",
+          "objectives": [
+            "Student can explain that maintenance processes such as nutrition, respiration, transportation and excretion keep living things alive",
+            "Student can explain why molecular movement is a sign of life"
+          ],
+          "visualIdeas": [
+            "a dog sleeping with arrows showing processes still going on inside"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "autotrophic-nutrition",
+          "title": "Autotrophic Nutrition",
+          "objectives": [
+            "Student can write the equation of photosynthesis and describe its three events: absorbing light, splitting water and reducing carbon dioxide",
+            "Student can describe stomata and how guard cells open and close them",
+            "Student can explain the activities showing that chlorophyll and carbon dioxide are needed for photosynthesis"
+          ],
+          "visualIdeas": [
+            "a leaf cross-section with chloroplasts and stomata",
+            "a variegated leaf stained with iodine showing starch only in green parts"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "heterotrophic-nutrition",
+          "title": "Heterotrophic Nutrition",
+          "objectives": [
+            "Student can explain that heterotrophs depend on other organisms for food",
+            "Student can give examples of breaking down food outside the body (fungi) and of parasites such as cuscuta, ticks and tapeworms"
+          ],
+          "visualIdeas": [
+            "bread mould growing on bread",
+            "a cuscuta vine on a host plant"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-do-organisms-obtain-their-nutrition",
+          "title": "How do Organisms obtain their Nutrition?",
+          "objectives": [
+            "Student can describe how Amoeba takes in food using temporary finger-like extensions of the cell surface that fuse around it to form a food vacuole",
+            "Student can describe how Paramoecium uses cilia to move food to a specific spot"
+          ],
+          "visualIdeas": [
+            "an amoeba engulfing a food particle"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "nutrition-in-human-beings",
+          "title": "Nutrition in Human Beings",
+          "objectives": [
+            "Student can trace the path of food through the alimentary canal from mouth to anus",
+            "Student can explain the roles of saliva, gastric juice, bile, pancreatic juice and intestinal juices",
+            "Student can explain how villi in the small intestine increase surface area for absorption"
+          ],
+          "visualIdeas": [
+            "a labelled human digestive system",
+            "a close-up of villi on the small intestine wall"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "respiration",
+          "title": "Respiration",
+          "objectives": [
+            "Student can compare aerobic and anaerobic breakdown of glucose in yeast, muscle cells and mitochondria",
+            "Student can explain ATP as the energy currency of the cell",
+            "Student can trace the path of air in human lungs to the alveoli and explain how haemoglobin carries oxygen",
+            "Student can explain why aquatic animals breathe faster than land animals"
+          ],
+          "visualIdeas": [
+            "flow chart of glucose breaking into pyruvate and then three paths",
+            "branching tubes ending in balloon-like alveoli with capillaries"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "transportation-in-human-beings",
+          "title": "Transportation in Human Beings",
+          "objectives": [
+            "Student can describe the four-chambered human heart and double circulation",
+            "Student can distinguish arteries, veins and capillaries",
+            "Student can explain the roles of platelets in clotting and of lymph"
+          ],
+          "visualIdeas": [
+            "a schematic of the heart with oxygenated and deoxygenated blood in two colours",
+            "a flow map of blood from heart to lungs to body"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "transportation-in-plants",
+          "title": "Transportation in Plants",
+          "objectives": [
+            "Student can explain how xylem transports water and minerals from roots to leaves",
+            "Student can explain how transpiration pull helps water move up",
+            "Student can explain translocation of food in phloem using energy from ATP"
+          ],
+          "visualIdeas": [
+            "a plant with blue arrows up the xylem and orange arrows through the phloem"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "excretion-in-human-beings",
+          "title": "Excretion in Human Beings",
+          "objectives": [
+            "Student can describe the excretory system: kidneys, ureters, urinary bladder and urethra",
+            "Student can explain how nephrons filter blood and reabsorb useful substances",
+            "Student can describe artificial kidney (haemodialysis)"
+          ],
+          "visualIdeas": [
+            "a nephron with glomerulus, Bowman's capsule and tubule",
+            "a dialysis machine with blood flowing through tubes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "excretion-in-plants",
+          "title": "Excretion in Plants",
+          "objectives": [
+            "Student can explain how plants get rid of excess water and oxygen and store wastes in old leaves, vacuoles, resins and gums",
+            "Student can explain that plants excrete some wastes into the soil around them"
+          ],
+          "visualIdeas": [
+            "old leaves falling carrying stored wastes"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "control-and-coordination",
+      "title": "Control and Coordination",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc106.pdf",
+      "topics": [
+        {
+          "id": "animals-nervous-system",
+          "title": "Animals - Nervous System",
+          "objectives": [
+            "Student can explain how receptors pick up information and nerve impulses travel along a neuron",
+            "Student can describe the parts of a neuron (dendrite, cell body, axon) and the synapse"
+          ],
+          "visualIdeas": [
+            "a labelled neuron with an impulse travelling as a glow",
+            "a synapse with chemicals crossing the gap"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-happens-in-reflex-actions",
+          "title": "What happens in Reflex Actions?",
+          "objectives": [
+            "Student can explain a reflex action as a quick automatic response, as when touching a flame",
+            "Student can trace a reflex arc from receptor through the spinal cord to the effector muscle"
+          ],
+          "visualIdeas": [
+            "a reflex arc diagram from hand to spinal cord and back"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "human-brain",
+          "title": "Human Brain",
+          "objectives": [
+            "Student can distinguish the central nervous system (brain and spinal cord) from the peripheral nervous system (cranial and spinal nerves)",
+            "Student can name the fore-brain, mid-brain and hind-brain and explain that the fore-brain is the main thinking part, receiving sensory impulses",
+            "Student can explain the roles of the medulla in involuntary actions such as blood pressure, salivation and vomiting, and of the cerebellum in precise voluntary actions, posture and balance",
+            "Student can distinguish voluntary actions from involuntary actions"
+          ],
+          "visualIdeas": [
+            "a labelled human brain with colour-coded regions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-are-these-tissues-protected",
+          "title": "How are these Tissues protected?",
+          "objectives": [
+            "Student can explain how the brain is protected by the skull and fluid",
+            "Student can explain how the spinal cord is protected by the vertebral column"
+          ],
+          "visualIdeas": [
+            "the brain floating in fluid inside the skull"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-does-the-nervous-tissue-cause-action",
+          "title": "How does the Nervous Tissue cause Action?",
+          "objectives": [
+            "Student can explain that the final job of a nerve impulse is to make muscle cells move",
+            "Student can explain how special proteins in muscle cells change their shape and arrangement so the cell becomes shorter"
+          ],
+          "visualIdeas": [
+            "a muscle cell contracting when an impulse arrives"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "immediate-response-to-stimulus",
+          "title": "Immediate Response to Stimulus",
+          "objectives": [
+            "Student can describe how the leaves of the touch-me-not (sensitive) plant fold on touch",
+            "Student can explain that plant cells change shape by changing the amount of water in them"
+          ],
+          "visualIdeas": [
+            "sensitive plant leaflets folding in a sequence"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "movement-due-to-growth",
+          "title": "Movement Due to Growth",
+          "objectives": [
+            "Student can explain phototropism and geotropism with examples from shoots and roots",
+            "Student can explain hydrotropism and chemotropism, such as pollen tubes growing towards ovules",
+            "Student can explain the two limitations of electrical impulses and why cells also use chemical communication",
+            "Student can explain the roles of auxin, gibberellins, cytokinins and abscisic acid"
+          ],
+          "visualIdeas": [
+            "a seedling bending towards a window",
+            "a tendril coiling around a support"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "hormones-in-animals",
+          "title": "Hormones in Animals",
+          "objectives": [
+            "Student can describe how adrenaline prepares the body for an emergency",
+            "Student can explain the roles of thyroxin, growth hormone, testosterone, oestrogen and insulin",
+            "Student can explain why iodised salt is needed and how a feedback mechanism regulates hormone release"
+          ],
+          "visualIdeas": [
+            "a human outline with endocrine glands labelled",
+            "a feedback loop of blood sugar and insulin"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "how-do-organisms-reproduce",
+      "title": "How do Organisms Reproduce?",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc107.pdf",
+      "topics": [
+        {
+          "id": "do-organisms-create-exact-copies-of-themselves",
+          "title": "Do Organisms Create Exact Copies of Themselves?",
+          "objectives": [
+            "Student can explain that DNA copying is the basic event of reproduction",
+            "Student can explain why DNA copying is never perfectly accurate and leads to variation"
+          ],
+          "visualIdeas": [
+            "a cell dividing with two DNA copies showing a small difference"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-importance-of-variation",
+          "title": "The Importance of Variation",
+          "objectives": [
+            "Student can explain how variation helps a species survive changes in its niche",
+            "Student can give the example of bacteria surviving a rise in water temperature"
+          ],
+          "visualIdeas": [
+            "a population of bacteria with a few surviving heat"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fission",
+          "title": "Fission",
+          "objectives": [
+            "Student can explain fission in unicellular organisms such as bacteria and protozoa as splitting into new individuals",
+            "Student can compare binary fission in Amoeba (any plane) and Leishmania (definite orientation) with multiple fission in Plasmodium"
+          ],
+          "visualIdeas": [
+            "amoeba splitting into two",
+            "plasmodium dividing into many daughter cells"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fragmentation",
+          "title": "Fragmentation",
+          "objectives": [
+            "Student can describe how Spirogyra breaks into pieces that grow into new individuals",
+            "Student can explain why complex organisms cannot reproduce by fragmentation"
+          ],
+          "visualIdeas": [
+            "a spirogyra filament breaking into fragments"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "regeneration",
+          "title": "Regeneration",
+          "objectives": [
+            "Student can describe regeneration in Hydra and Planaria",
+            "Student can explain that regeneration is carried out by specialised cells"
+          ],
+          "visualIdeas": [
+            "planaria cut into pieces each growing into a whole"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "budding",
+          "title": "Budding",
+          "objectives": [
+            "Student can describe how a bud develops in Hydra as an outgrowth from repeated cell division at one site",
+            "Student can explain how the mature bud detaches to become an independent individual and that budding uses regenerative cells"
+          ],
+          "visualIdeas": [
+            "hydra with a bud developing and detaching"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "vegetative-propagation",
+          "title": "Vegetative Propagation",
+          "objectives": [
+            "Student can describe vegetative propagation by roots, stems and leaves, as in Bryophyllum",
+            "Student can explain the advantages of layering, grafting and tissue culture"
+          ],
+          "visualIdeas": [
+            "bryophyllum leaf with buds along its margin"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "spore-formation",
+          "title": "Spore Formation",
+          "objectives": [
+            "Student can describe how Rhizopus produces spores in sporangia",
+            "Student can explain how thick walls protect spores until they find moist surfaces"
+          ],
+          "visualIdeas": [
+            "bread mould with sporangia on hyphae"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "why-the-sexual-mode-of-reproduction",
+          "title": "Why the Sexual Mode of Reproduction?",
+          "objectives": [
+            "Student can explain that sexual reproduction combines DNA from two individuals and creates new combinations of variations",
+            "Student can explain why germ cells must have half the chromosomes and DNA"
+          ],
+          "visualIdeas": [
+            "two germ cells combining to make a zygote"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sexual-reproduction-in-flowering-plants",
+          "title": "Sexual Reproduction in Flowering Plants",
+          "objectives": [
+            "Student can identify stamens and pistil as the reproductive parts of a flower",
+            "Student can distinguish self-pollination and cross-pollination",
+            "Student can describe fertilisation and the development of seed and fruit"
+          ],
+          "visualIdeas": [
+            "a longitudinal section of a flower",
+            "a pollen tube growing down to the ovule"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reproduction-in-human-beings",
+          "title": "Reproduction in Human Beings",
+          "objectives": [
+            "Student can describe the changes at puberty in boys and girls",
+            "Student can explain why the body becomes ready for sexual reproduction only after puberty"
+          ],
+          "visualIdeas": [
+            "a timeline showing growth from childhood to adulthood"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "male-reproductive-system",
+          "title": "Male Reproductive System",
+          "objectives": [
+            "Student can describe the testes, vas deferens, urethra and associated glands",
+            "Student can explain the role of testosterone and why testes lie outside the abdominal cavity"
+          ],
+          "visualIdeas": [
+            "a labelled diagram of the male reproductive system"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "female-reproductive-system",
+          "title": "Female Reproductive System",
+          "objectives": [
+            "Student can describe the ovaries, oviducts and uterus",
+            "Student can explain fertilisation, implantation and how the placenta nourishes the embryo"
+          ],
+          "visualIdeas": [
+            "a labelled diagram of the female reproductive system",
+            "an embryo attached to the placenta"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-happens-when-the-egg-is-not-fertilised",
+          "title": "What happens when the Egg is not Fertilised?",
+          "objectives": [
+            "Student can explain that the uterus lining thickens every month to receive a fertilised egg",
+            "Student can explain why the lining breaks down and comes out as menstruation when the egg is not fertilised, roughly every month for two to eight days"
+          ],
+          "visualIdeas": [
+            "a monthly cycle diagram of the uterine lining thickening and shedding"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "reproductive-health",
+          "title": "Reproductive Health",
+          "objectives": [
+            "Student can name sexually transmitted diseases such as gonorrhoea, syphilis and HIV-AIDS",
+            "Student can describe contraceptive methods and why prenatal sex determination is prohibited by law"
+          ],
+          "visualIdeas": [
+            "a simple chart of methods to prevent pregnancy and infection"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "heredity",
+      "title": "Heredity",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc108.pdf",
+      "topics": [
+        {
+          "id": "accumulation-of-variation-during-reproduction",
+          "title": "Accumulation of Variation During Reproduction",
+          "objectives": [
+            "Student can explain how variations accumulate over generations",
+            "Student can explain why sexual reproduction creates more diversity than asexual reproduction"
+          ],
+          "visualIdeas": [
+            "a family tree of organisms showing variation in each generation"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "inherited-traits",
+          "title": "Inherited Traits",
+          "objectives": [
+            "Student can explain that a child has all the basic features of a human being but does not look exactly like its parents",
+            "Student can describe inherited traits such as free and attached earlobes"
+          ],
+          "visualIdeas": [
+            "free and attached earlobes compared"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "rules-for-the-inheritance-of-traits-mendels-contributions",
+          "title": "Rules for the Inheritance of Traits - Mendel's Contributions",
+          "objectives": [
+            "Student can explain that both parents contribute practically equal amounts of genetic material, so each trait can be influenced by paternal and maternal DNA",
+            "Student can describe Mendel's experiments with tall and short pea plants",
+            "Student can explain dominant and recessive traits using F1 and F2 generations",
+            "Student can explain Mendel's cross of plants differing in two traits, such as round green and wrinkled yellow seeds, and how new combinations in the F2 show the traits are inherited independently"
+          ],
+          "visualIdeas": [
+            "a Punnett square of Tt x Tt",
+            "pea plants in F1 and F2 generations"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "how-do-these-traits-get-expressed",
+          "title": "How do these Traits get Expressed?",
+          "objectives": [
+            "Student can explain that a gene is a section of DNA that provides information for a protein",
+            "Student can explain how a hormone level controlled by a gene can decide plant height",
+            "Student can explain that each germ cell carries one copy of each chromosome pair"
+          ],
+          "visualIdeas": [
+            "DNA to protein to trait flow diagram"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sex-determination",
+          "title": "Sex Determination",
+          "objectives": [
+            "Student can describe how sex is determined by temperature in some reptiles",
+            "Student can explain how human sex is determined by X and Y chromosomes from the father"
+          ],
+          "visualIdeas": [
+            "a cross showing XX and XY giving equal chances of boy and girl"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "light-reflection-and-refraction",
+      "title": "Light - Reflection and Refraction",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc109.pdf",
+      "topics": [
+        {
+          "id": "reflection-of-light",
+          "title": "Reflection of Light",
+          "objectives": [
+            "Student can state the laws of reflection of light",
+            "Student can describe the image formed by a plane mirror"
+          ],
+          "visualIdeas": [
+            "a ray reflecting off a mirror with equal angles marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "spherical-mirrors",
+          "title": "Spherical Mirrors",
+          "objectives": [
+            "Student can distinguish concave and convex mirrors",
+            "Student can define pole, centre of curvature, radius of curvature, principal axis, principal focus and focal length",
+            "Student can state that R = 2f for spherical mirrors of small aperture"
+          ],
+          "visualIdeas": [
+            "a concave mirror with labelled pole, centre and focus"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "image-formation-by-spherical-mirrors",
+          "title": "Image Formation by Spherical Mirrors",
+          "objectives": [
+            "Student can describe the nature, position and size of images formed by a concave mirror for different object positions",
+            "Student can use the activity of focusing sunlight to find focus"
+          ],
+          "visualIdeas": [
+            "a table of object positions and images for a concave mirror"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "representation-of-images-formed-by-spherical-mirrors-using-ray-diagrams",
+          "title": "Representation of Images Formed by Spherical Mirrors Using Ray Diagrams",
+          "objectives": [
+            "Student can draw ray diagrams using the four standard rays",
+            "Student can draw image formation for concave and convex mirrors",
+            "Student can list uses of concave and convex mirrors"
+          ],
+          "visualIdeas": [
+            "step-by-step ray diagram drawing",
+            "a convex mirror used as a rear-view mirror"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "sign-convention-for-reflection-by-spherical-mirrors",
+          "title": "Sign Convention for Reflection by Spherical Mirrors",
+          "objectives": [
+            "Student can apply the New Cartesian sign convention with the pole as origin",
+            "Student can assign signs to object distance, image distance and focal length"
+          ],
+          "visualIdeas": [
+            "a sign-convention axis with positive and negative directions"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mirror-formula-and-magnification",
+          "title": "Mirror Formula and Magnification",
+          "objectives": [
+            "Student can use the mirror formula 1/v + 1/u = 1/f",
+            "Student can calculate magnification and interpret its sign"
+          ],
+          "visualIdeas": [
+            "a worked example with u, v and f labelled on a diagram"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "refraction-of-light",
+          "title": "Refraction of Light",
+          "objectives": [
+            "Student can explain refraction as the bending of light when it passes between media",
+            "Student can describe everyday examples such as a pencil appearing bent in water"
+          ],
+          "visualIdeas": [
+            "a pencil in a glass of water appearing bent"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "refraction-through-a-rectangular-glass-slab",
+          "title": "Refraction through a Rectangular Glass Slab",
+          "objectives": [
+            "Student can trace a ray through a glass slab and identify the lateral shift",
+            "Student can state the laws of refraction including Snell's law"
+          ],
+          "visualIdeas": [
+            "a ray through a glass slab with incident and emergent rays parallel"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-refractive-index",
+          "title": "The Refractive Index",
+          "objectives": [
+            "Student can define refractive index as the ratio of speeds of light",
+            "Student can compare optically denser and rarer media"
+          ],
+          "visualIdeas": [
+            "a table of refractive indices"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "refraction-by-spherical-lenses",
+          "title": "Refraction by Spherical Lenses",
+          "objectives": [
+            "Student can distinguish convex and concave lenses",
+            "Student can define optical centre, principal axis, principal focus and focal length of a lens"
+          ],
+          "visualIdeas": [
+            "convex and concave lenses converging and diverging parallel rays"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "image-formation-by-lenses",
+          "title": "Image Formation by Lenses",
+          "objectives": [
+            "Student can describe images formed by a convex lens for different object positions",
+            "Student can describe images formed by a concave lens"
+          ],
+          "visualIdeas": [
+            "a table of object positions and images for a convex lens"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "image-formation-in-lenses-using-ray-diagrams",
+          "title": "Image Formation in Lenses Using Ray Diagrams",
+          "objectives": [
+            "Student can draw ray diagrams for convex and concave lenses",
+            "Student can predict image nature from a ray diagram"
+          ],
+          "visualIdeas": [
+            "ray diagrams for lenses drawn step by step"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "sign-convention-for-spherical-lenses",
+          "title": "Sign Convention for Spherical Lenses",
+          "objectives": [
+            "Student can apply the sign convention with the optical centre as origin",
+            "Student can assign signs to focal lengths of convex and concave lenses"
+          ],
+          "visualIdeas": [
+            "an axis through a lens with signs labelled"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "lens-formula-and-magnification",
+          "title": "Lens Formula and Magnification",
+          "objectives": [
+            "Student can use the lens formula 1/v - 1/u = 1/f",
+            "Student can calculate magnification of a lens"
+          ],
+          "visualIdeas": [
+            "a worked example for a convex lens"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "power-of-a-lens",
+          "title": "Power of a Lens",
+          "objectives": [
+            "Student can define power of a lens as 1/f and its unit dioptre",
+            "Student can calculate the power of a combination of lenses"
+          ],
+          "visualIdeas": [
+            "an optician's prescription with dioptre values"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "the-human-eye-and-the-colourful-world",
+      "title": "The Human Eye and the Colourful World",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc110.pdf",
+      "topics": [
+        {
+          "id": "the-human-eye",
+          "title": "The Human Eye",
+          "objectives": [
+            "Student can describe the parts of the eye: cornea, iris, pupil, lens, ciliary muscles and retina",
+            "Student can explain how images form on the retina"
+          ],
+          "visualIdeas": [
+            "a labelled cross-section of the human eye"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "power-of-accommodation",
+          "title": "Power of Accommodation",
+          "objectives": [
+            "Student can explain how ciliary muscles change the focal length of the eye lens",
+            "Student can state the near point and far point of a normal eye"
+          ],
+          "visualIdeas": [
+            "the eye lens thinning and thickening"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "defects-of-vision-and-their-correction",
+          "title": "Defects of Vision and their Correction",
+          "objectives": [
+            "Student can explain myopia, hypermetropia and presbyopia",
+            "Student can describe how concave, convex and bifocal lenses correct these defects"
+          ],
+          "visualIdeas": [
+            "ray diagrams of a myopic eye before and after correction"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "refraction-of-light-through-a-prism",
+          "title": "Refraction of Light through a Prism",
+          "objectives": [
+            "Student can trace a ray through a triangular glass prism",
+            "Student can define the angle of deviation"
+          ],
+          "visualIdeas": [
+            "a ray passing through a prism with the angle of deviation marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dispersion-of-white-light-by-a-glass-prism",
+          "title": "Dispersion of White Light by a Glass Prism",
+          "objectives": [
+            "Student can explain the splitting of white light into a spectrum",
+            "Student can explain how a rainbow forms"
+          ],
+          "visualIdeas": [
+            "a prism splitting white light into VIBGYOR",
+            "a rainbow with raindrops acting as prisms"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "atmospheric-refraction",
+          "title": "Atmospheric Refraction",
+          "objectives": [
+            "Student can explain the twinkling of stars",
+            "Student can explain advanced sunrise and delayed sunset"
+          ],
+          "visualIdeas": [
+            "a star's light bending through atmosphere layers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tyndall-effect",
+          "title": "Tyndall Effect",
+          "objectives": [
+            "Student can explain the Tyndall effect as scattering of light by colloidal particles",
+            "Student can explain how the colour of scattered light depends on particle size"
+          ],
+          "visualIdeas": [
+            "a beam of sunlight visible through dust in a room"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "why-is-the-colour-of-the-clear-sky-blue",
+          "title": "Why is the colour of the clear Sky Blue?",
+          "objectives": [
+            "Student can explain that fine particles in air scatter blue light (shorter wavelength) more strongly than red light",
+            "Student can explain why the sky would look dark without an atmosphere and appears dark to passengers flying at very high altitudes",
+            "Student can explain why danger signal lights are red"
+          ],
+          "visualIdeas": [
+            "sunlight scattering blue in the atmosphere",
+            "a red signal light visible through fog"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "electricity",
+      "title": "Electricity",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc111.pdf",
+      "topics": [
+        {
+          "id": "electric-current-and-circuit",
+          "title": "Electric Current and Circuit",
+          "objectives": [
+            "Student can define electric current as the rate of flow of charge",
+            "Student can use the unit ampere and relate current to coulomb and second"
+          ],
+          "visualIdeas": [
+            "electrons flowing in a closed circuit"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electric-potential-and-potential-difference",
+          "title": "Electric Potential and Potential Difference",
+          "objectives": [
+            "Student can define potential difference as work done per unit charge",
+            "Student can use the unit volt and describe a voltmeter"
+          ],
+          "visualIdeas": [
+            "water flowing between two tanks at different heights"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "circuit-diagram",
+          "title": "Circuit Diagram",
+          "objectives": [
+            "Student can draw circuit symbols for cells, keys, bulbs, resistors and meters",
+            "Student can draw a simple circuit diagram"
+          ],
+          "visualIdeas": [
+            "a table of circuit symbols"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ohms-law",
+          "title": "Ohm's Law",
+          "objectives": [
+            "Student can state Ohm's law V = IR",
+            "Student can plot a V-I graph and define resistance in ohms"
+          ],
+          "visualIdeas": [
+            "a straight-line V-I graph"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "factors-on-which-the-resistance-of-a-conductor-depends",
+          "title": "Factors on which the Resistance of a Conductor Depends",
+          "objectives": [
+            "Student can explain how resistance depends on length, area of cross-section and material",
+            "Student can define resistivity and explain why alloys are used in heating devices"
+          ],
+          "visualIdeas": [
+            "wires of different lengths and thicknesses"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "resistors-in-series",
+          "title": "Resistors in Series",
+          "objectives": [
+            "Student can derive the equivalent resistance of resistors in series",
+            "Student can explain that current is the same throughout a series circuit"
+          ],
+          "visualIdeas": [
+            "three resistors in series with an ammeter"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "resistors-in-parallel",
+          "title": "Resistors in Parallel",
+          "objectives": [
+            "Student can derive the equivalent resistance of resistors in parallel",
+            "Student can explain the advantages of parallel circuits in homes"
+          ],
+          "visualIdeas": [
+            "three resistors in parallel"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "heating-effect-of-electric-current",
+          "title": "Heating Effect of Electric Current",
+          "objectives": [
+            "Student can derive Joule's law of heating H = I^2Rt",
+            "Student can explain how electrical energy changes to heat"
+          ],
+          "visualIdeas": [
+            "a glowing heater coil"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "practical-applications-of-heating-effect-of-electric-current",
+          "title": "Practical Applications of Heating Effect of Electric Current",
+          "objectives": [
+            "Student can explain how bulbs, heaters, irons and fuses use the heating effect",
+            "Student can explain why fuses protect circuits"
+          ],
+          "visualIdeas": [
+            "a fuse melting when current is too high"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "electric-power",
+          "title": "Electric Power",
+          "objectives": [
+            "Student can define electric power P = VI",
+            "Student can calculate electrical energy in kilowatt hours"
+          ],
+          "visualIdeas": [
+            "an electricity bill with kWh units"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "magnetic-effects-of-electric-current",
+      "title": "Magnetic Effects of Electric Current",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc112.pdf",
+      "topics": [
+        {
+          "id": "magnetic-field-and-field-lines",
+          "title": "Magnetic Field and Field Lines",
+          "objectives": [
+            "Student can describe magnetic field lines around a bar magnet",
+            "Student can state properties of magnetic field lines"
+          ],
+          "visualIdeas": [
+            "iron filings around a bar magnet"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "magnetic-field-due-to-a-current-carrying-conductor",
+          "title": "Magnetic Field due to a Current-Carrying Conductor",
+          "objectives": [
+            "Student can explain how a current-carrying wire deflects a compass needle",
+            "Student can explain that reversing current reverses the deflection"
+          ],
+          "visualIdeas": [
+            "a compass needle deflecting under a current-carrying wire"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "magnetic-field-due-to-a-current-through-a-straight-conductor",
+          "title": "Magnetic Field due to a Current through a Straight Conductor",
+          "objectives": [
+            "Student can describe concentric circular field lines around a straight wire",
+            "Student can explain how the field changes with current and distance"
+          ],
+          "visualIdeas": [
+            "concentric circles around a straight wire"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "right-hand-thumb-rule",
+          "title": "Right-Hand Thumb Rule",
+          "objectives": [
+            "Student can state the right-hand thumb rule: thumb along the current, fingers wrap in the direction of the field lines",
+            "Student can use the rule to find the field direction around a power line carrying current in a given direction"
+          ],
+          "visualIdeas": [
+            "a right hand gripping a wire"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "magnetic-field-due-to-a-current-through-a-circular-loop",
+          "title": "Magnetic Field due to a Current through a Circular Loop",
+          "objectives": [
+            "Student can describe the field pattern around a circular loop",
+            "Student can explain how more turns strengthen the field"
+          ],
+          "visualIdeas": [
+            "field lines around a circular loop"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "magnetic-field-due-to-a-current-in-a-solenoid",
+          "title": "Magnetic Field due to a Current in a Solenoid",
+          "objectives": [
+            "Student can describe the uniform field inside a solenoid",
+            "Student can explain how a solenoid makes an electromagnet"
+          ],
+          "visualIdeas": [
+            "a solenoid with field lines like a bar magnet"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "force-on-a-current-carrying-conductor-in-a-magnetic-field",
+          "title": "Force on a Current-Carrying Conductor in a Magnetic Field",
+          "objectives": [
+            "Student can describe the activity showing a force on a rod in a magnetic field",
+            "Student can apply Fleming's left-hand rule"
+          ],
+          "visualIdeas": [
+            "Fleming's left-hand rule with three fingers"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "domestic-electric-circuits",
+          "title": "Domestic Electric Circuits",
+          "objectives": [
+            "Student can describe live, neutral and earth wires",
+            "Student can explain short-circuiting, overloading and the role of fuses and earthing"
+          ],
+          "visualIdeas": [
+            "a schematic of a domestic circuit"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "our-environment",
+      "title": "Our Environment",
+      "book": "Science",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jesc113.pdf",
+      "topics": [
+        {
+          "id": "eco-system-what-are-its-components",
+          "title": "Eco-system - What are its Components?",
+          "objectives": [
+            "Student can identify biotic and abiotic components of an ecosystem",
+            "Student can classify organisms as producers, consumers and decomposers"
+          ],
+          "visualIdeas": [
+            "a pond ecosystem with labelled components"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "food-chains-and-webs",
+          "title": "Food Chains and Webs",
+          "objectives": [
+            "Student can describe trophic levels in a food chain",
+            "Student can explain the 10% law of energy transfer",
+            "Student can explain biological magnification"
+          ],
+          "visualIdeas": [
+            "a food chain with energy decreasing at each level",
+            "a food web of interlinked chains"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "ozone-layer-and-how-it-is-getting-depleted",
+          "title": "Ozone Layer and How it is Getting Depleted",
+          "objectives": [
+            "Student can explain how ozone forms and protects us from UV radiation",
+            "Student can explain how CFCs deplete ozone"
+          ],
+          "visualIdeas": [
+            "a globe with ozone layer shielding UV rays"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "managing-the-garbage-we-produce",
+          "title": "Managing the Garbage we Produce",
+          "objectives": [
+            "Student can distinguish biodegradable and non-biodegradable waste",
+            "Student can describe ways of managing garbage"
+          ],
+          "visualIdeas": [
+            "a sorted dustbin with wet and dry waste"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

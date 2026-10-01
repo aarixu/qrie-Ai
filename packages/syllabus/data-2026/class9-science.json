@@ -1,0 +1,1635 @@
+{
+  "id": "class9-science",
+  "klass": 9,
+  "subject": "Science",
+  "source": {
+    "books": [
+      {
+        "title": "Exploration: Textbook of Science for Grade 9",
+        "code": "iesc1",
+        "edition": "First Edition, April 2026 (Chaitra 1948) — new NCERT book for the 2026-27 session",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/iesc1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "exploration-entering-the-world-of-secondary-science",
+      "title": "Exploration: Entering the World of Secondary Science",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc101.pdf",
+      "topics": [
+        {
+          "id": "models-simplifying-the-real-world",
+          "title": "Models: Simplifying the Real World",
+          "objectives": [
+            "Student can explain why science uses simplified models that keep only what matters for a given question",
+            "Student can decide which details to keep and which to ignore when modelling an everyday situation such as a cricket shot or a bicycle ride home",
+            "Student can explain why ignoring some details (like air resistance) is a deliberate choice, not a mistake"
+          ],
+          "visualIdeas": [
+            "a cricket ball hit for a six, with labels for the details kept (mass, speed, direction) and the details ignored (bat brand, ball colour)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-language-of-science-terms-symbols-units-and-mathematics",
+          "title": "The Language of Science: Terms, Symbols, Units and Mathematics",
+          "objectives": [
+            "Student can explain why everyday words like force, work and cell have precise meanings in science",
+            "Student can explain why standard (SI) units matter, using the aircraft fuel mix-up between pounds and kilograms",
+            "Student can describe an equation as a compact statement of how quantities are related, not just a calculation tool"
+          ],
+          "visualIdeas": [
+            "a pan balance with a 1 kg weight beside a table of quantities, symbols and units (m, v, F, I)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "laws-theories-principles-and-predictions",
+          "title": "Laws, Theories, Principles and Predictions",
+          "objectives": [
+            "Student can distinguish a law (a regular pattern), a theory (an evidence-based explanation) and a principle (a broad guiding idea)",
+            "Student can explain that a scientific theory is not a guess and can change when new evidence appears",
+            "Student can turn an everyday prediction (such as rain from dark clouds) into questions that ask for measurable evidence"
+          ],
+          "visualIdeas": [
+            "a three-column card: law, theory, principle with one example each"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "estimation-and-connected-branches-of-science",
+          "title": "Estimation and Connected Branches of Science",
+          "objectives": [
+            "Student can make a rough estimate (such as litres of air breathed in a day) and check whether it is reasonable",
+            "Student can explain why careful reasoning and approximate estimates are valued in science",
+            "Student can show how ideas from physics, chemistry, biology, earth science and mathematics connect in one real problem, such as how a mask works"
+          ],
+          "visualIdeas": [
+            "a web diagram linking a face mask to physics, chemistry, biology and mathematics"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "cell-the-building-block-of-life",
+      "title": "Cell: The Building Block of Life",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc102.pdf",
+      "topics": [
+        {
+          "id": "how-to-study-cells",
+          "title": "How to Study Cells?",
+          "objectives": [
+            "Student can define resolution and magnification and explain why a microscope is needed to see cells",
+            "Student can compare what light microscopes and electron microscopes can resolve, using a size scale from eggs to cell parts"
+          ],
+          "visualIdeas": [
+            "a size ladder from 1 mm (fish egg) down to 1 µm with markers for the limits of the eye, light microscope and electron microscope"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "cell-membrane-the-universal-feature-of-a-cell",
+          "title": "Cell Membrane — The Universal Feature of a Cell",
+          "objectives": [
+            "Student can describe the cell membrane as a selectively permeable boundary made largely of lipids",
+            "Student can explain diffusion and osmosis across the cell membrane",
+            "Student can predict what happens to a cell placed in isotonic, hypotonic and hypertonic solutions"
+          ],
+          "visualIdeas": [
+            "three cells side by side in isotonic, hypotonic and hypertonic solutions with arrows showing water movement"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "cell-wall-the-outer-covering-of-cells",
+          "title": "Cell Wall — The Outer Covering of Cells",
+          "objectives": [
+            "Student can explain why plant cells need a rigid cell wall made mainly of cellulose",
+            "Student can state that the cell wall is permeable while the membrane inside it is selectively permeable"
+          ],
+          "visualIdeas": [
+            "a plant cell with the cell wall and cell membrane drawn as two separate labelled layers"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-cell-interior-a-coordinated-working-system",
+          "title": "The Cell Interior — A Coordinated Working System",
+          "objectives": [
+            "Student can name the three basic parts of a cell: plasma membrane, cytoplasm and nucleus",
+            "Student can distinguish prokaryotic cells (nucleoid, no membrane-bound organelles) from eukaryotic cells"
+          ],
+          "visualIdeas": [
+            "side-by-side diagrams of a bacterial (prokaryotic) cell and an animal (eukaryotic) cell"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "organelles-nucleus-ribosomes-er-golgi-apparatus-and-lysosomes",
+          "title": "Organelles: Nucleus, Ribosomes, ER, Golgi Apparatus and Lysosomes",
+          "objectives": [
+            "Student can explain why eukaryotic cells have organelles that carry out different life processes at the same time",
+            "Student can describe the nucleus as holding DNA in chromosomes and ribosomes as protein factories",
+            "Student can describe the roles of the endoplasmic reticulum (manufacturing), Golgi apparatus (packaging and shipping) and lysosomes (clean-up)"
+          ],
+          "visualIdeas": [
+            "a cell drawn as a factory with labelled departments: nucleus office, ribosome workbenches, ER production line, Golgi shipping, lysosome clean-up"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "organelles-mitochondria-plastids-and-vacuoles",
+          "title": "Organelles: Mitochondria, Plastids and Vacuoles",
+          "objectives": [
+            "Student can describe mitochondria as the powerhouse of the cell",
+            "Student can describe plastids such as chloroplasts as centres for food synthesis in plant cells",
+            "Student can explain the role of vacuoles in storage and support, especially in plant cells"
+          ],
+          "visualIdeas": [
+            "a plant cell highlighting mitochondria, chloroplasts and a large central vacuole"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-do-normal-cells-grow-and-divide",
+          "title": "How do Normal Cells Grow and Divide?",
+          "objectives": [
+            "Student can explain that organisms grow mainly because cells divide, not only because cells get bigger",
+            "Student can describe how an onion root tip is used to observe dividing cells"
+          ],
+          "visualIdeas": [
+            "an onion bulb with growing roots and a zoomed-in root tip showing cells at different stages"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "cell-division-mitosis-and-meiosis",
+          "title": "Cell Division: Mitosis and Meiosis",
+          "objectives": [
+            "Student can define cell division as the formation of new cells from pre-existing cells",
+            "Student can state that mitosis supports growth, repair and asexual reproduction",
+            "Student can state that meiosis is needed for sexual reproduction and creates genetic diversity"
+          ],
+          "visualIdeas": [
+            "a two-branch flowchart: one parent cell to two identical cells (mitosis) and to four different cells (meiosis)"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "cell-theory-the-unifying-principle-of-biology",
+          "title": "Cell Theory — The Unifying Principle of Biology",
+          "objectives": [
+            "Student can state the cell theory and name the contributions of Schleiden, Schwann and Virchow",
+            "Student can explain that every cell has a definite life span and that cells which do not die when they should can lead to problems such as cancer"
+          ],
+          "visualIdeas": [
+            "a timeline 1838–1855 with Schleiden, Schwann and Virchow and their statements"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "tissues-in-action",
+      "title": "Tissues in Action",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc103.pdf",
+      "topics": [
+        {
+          "id": "why-are-plant-and-animal-tissues-different",
+          "title": "Why are Plant and Animal Tissues Different?",
+          "objectives": [
+            "Student can explain how being fixed in one place versus moving about leads to different tissues in plants and animals",
+            "Student can relate the rigid cell wall of plant cells to support and the flexible animal cell to movement"
+          ],
+          "visualIdeas": [
+            "a tree and a running deer with their key tissue needs listed beside each"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "apical-meristem-how-do-plants-grow-in-length",
+          "title": "Apical Meristem — How Do Plants Grow in Length?",
+          "objectives": [
+            "Student can describe meristematic tissue as dividing tissue responsible for plant growth",
+            "Student can explain, using the onion root experiment, that growth in length happens at the tips of roots and shoots"
+          ],
+          "visualIdeas": [
+            "an onion bulb in a jar with roots measured on day 1, 2 and 3, and the root tip highlighted"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "lateral-meristem-how-do-plants-grow-in-girth",
+          "title": "Lateral Meristem — How Do Plants Grow in Girth?",
+          "objectives": [
+            "Student can explain that lateral meristem increases the girth of dicot stems",
+            "Student can relate annual rings in a cut tree trunk to yearly growth in girth"
+          ],
+          "visualIdeas": [
+            "a cut tree trunk showing annual rings with a counter for the age of the tree"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "intercalary-meristem-how-do-plants-grow-after-being-cut",
+          "title": "Intercalary Meristem — How Do Plants Grow After Being Cut?",
+          "objectives": [
+            "Student can locate intercalary meristem at the base of internodes or just above nodes",
+            "Student can explain how grass grows again after being grazed or cut"
+          ],
+          "visualIdeas": [
+            "a grass stem with nodes and internodes labelled and regrowth arrows after cutting"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "permanent-tissues-simple-tissues",
+          "title": "Permanent Tissues — Simple Tissues",
+          "objectives": [
+            "Student can explain that permanent tissues form when cells stop dividing and become specialised",
+            "Student can compare parenchyma, collenchyma and sclerenchyma by structure and function",
+            "Student can describe the epidermis and stomata as protective and exchange structures of the plant"
+          ],
+          "visualIdeas": [
+            "a transverse section of a sunflower stem with parenchyma, collenchyma and sclerenchyma labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "permanent-tissues-complex-tissues-xylem-and-phloem",
+          "title": "Permanent Tissues — Complex Tissues: Xylem and Phloem",
+          "objectives": [
+            "Student can describe xylem as the tissue that carries water and minerals",
+            "Student can describe phloem as the tissue that carries food made in the leaves"
+          ],
+          "visualIdeas": [
+            "a plant outline with blue arrows up the xylem and orange arrows through the phloem"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "epithelial-tissues-structure-and-functions",
+          "title": "Epithelial Tissues — Structure and Functions",
+          "objectives": [
+            "Student can describe epithelial tissue as closely packed cells covering the body and lining internal organs",
+            "Student can explain how the structure of epithelium protects against germs and controls exchange"
+          ],
+          "visualIdeas": [
+            "skin and the lining of the intestine shown as layers of tightly packed cells"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-are-various-parts-connected-in-our-body-connective-tissues",
+          "title": "How Are Various Parts Connected in Our Body? (Connective Tissues)",
+          "objectives": [
+            "Student can name blood, bone, cartilage, tendons and ligaments as connective tissues",
+            "Student can explain how each connects, supports or transports in the body"
+          ],
+          "visualIdeas": [
+            "a knee joint with bone, cartilage, tendon and ligament labelled, and a drop of blood beside it"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "can-we-control-movement-in-our-body-muscular-tissue",
+          "title": "Can We Control Movement in Our Body? (Muscular Tissue)",
+          "objectives": [
+            "Student can distinguish voluntary movements (skeletal muscle) from involuntary movements (smooth and cardiac muscle)",
+            "Student can describe skeletal muscle fibres as long, unbranched, multinucleate and striated"
+          ],
+          "visualIdeas": [
+            "three muscle cell types drawn side by side: skeletal, smooth and cardiac"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-does-the-body-sense-communicate-and-respond-nervous-tissue",
+          "title": "How Does the Body Sense, Communicate and Respond? (Nervous Tissue)",
+          "objectives": [
+            "Student can describe nervous tissue as the body’s control and coordination network with the brain as control centre",
+            "Student can label the parts of a neuron such as dendrites, axon and axon terminals"
+          ],
+          "visualIdeas": [
+            "a labelled neuron with a signal travelling from dendrites to axon terminals"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-musculoskeletal-system",
+          "title": "The Musculoskeletal System",
+          "objectives": [
+            "Student can name the parts of the musculoskeletal system: bones, muscles, joints, cartilage, tendons and ligaments",
+            "Student can explain that muscles pull on bones through tendons to produce movement under the control of the nervous system"
+          ],
+          "visualIdeas": [
+            "an arm with the biceps, tendon and bones labelled, contracting to lift the forearm"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "types-of-joints",
+          "title": "Types of Joints",
+          "objectives": [
+            "Student can describe ball and socket, hinge, pivot and fixed joints with an example of each",
+            "Student can relate the type of joint to the movement it allows, such as the shoulder versus the elbow"
+          ],
+          "visualIdeas": [
+            "four mini-diagrams: shoulder (ball and socket), elbow (hinge), neck (pivot), skull (fixed)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "skeletal-system",
+          "title": "Skeletal System",
+          "objectives": [
+            "Student can describe the skeleton as a framework that supports the body and protects organs",
+            "Student can describe the skull, vertebral column with cartilage discs, and the rib cage and what each protects",
+            "Student can relate good posture to the health of the spine"
+          ],
+          "visualIdeas": [
+            "a front view of the human skeleton with the skull, spine and rib cage highlighted"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "describing-motion-around-us",
+      "title": "Describing Motion Around Us",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc104.pdf",
+      "topics": [
+        {
+          "id": "describing-position",
+          "title": "Describing Position",
+          "objectives": [
+            "Student can describe the position of an object using a reference point (origin), distance and direction",
+            "Student can use positive and negative signs to show positions on either side of the origin along a straight line"
+          ],
+          "visualIdeas": [
+            "a number line road with the school as origin and houses at +200 m and −150 m"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "distance-travelled-and-displacement",
+          "title": "Distance Travelled and Displacement",
+          "objectives": [
+            "Student can distinguish distance travelled (a scalar) from displacement (a vector)",
+            "Student can calculate distance and displacement for an object that moves forward and back along a straight line"
+          ],
+          "visualIdeas": [
+            "an athlete’s path from start to a turning point and back, with distance and displacement arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "average-speed-and-average-velocity",
+          "title": "Average Speed and Average Velocity",
+          "objectives": [
+            "Student can calculate average speed as total distance divided by total time",
+            "Student can calculate average velocity as displacement divided by time and explain when it differs from average speed",
+            "Student can relate a speedometer reading to instantaneous speed"
+          ],
+          "visualIdeas": [
+            "a speedometer next to a trip with distance, displacement and time labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "average-acceleration",
+          "title": "Average Acceleration",
+          "objectives": [
+            "Student can define average acceleration as the change in velocity divided by the time taken",
+            "Student can state that acceleration is along the velocity when speed increases and opposite to it when speed decreases"
+          ],
+          "visualIdeas": [
+            "a bus speeding up and then braking, with velocity and acceleration arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "plotting-graphs-of-motion",
+          "title": "Plotting Graphs of Motion",
+          "objectives": [
+            "Student can choose axes and scales to plot motion data from a table",
+            "Student can read values from a plotted graph"
+          ],
+          "visualIdeas": [
+            "a data table turning into points on a graph with labelled axes"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "position-time-graphs",
+          "title": "Position-Time Graphs",
+          "objectives": [
+            "Student can draw position-time graphs for objects at rest and in uniform motion",
+            "Student can find velocity from the slope of a position-time graph"
+          ],
+          "visualIdeas": [
+            "a position-time graph with a straight line and a slope triangle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "velocity-time-graphs",
+          "title": "Velocity-Time Graphs",
+          "objectives": [
+            "Student can draw velocity-time graphs for increasing and decreasing velocity",
+            "Student can find acceleration from the slope of a velocity-time graph and displacement from the area under it"
+          ],
+          "visualIdeas": [
+            "a velocity-time graph with the slope and the shaded area under the line labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "kinematic-equations-for-motion-in-a-straight-line-with-constant-acceleration",
+          "title": "Kinematic Equations for Motion in a Straight Line with Constant Acceleration",
+          "objectives": [
+            "Student can derive v = u + at, s = ut + ½at² and v² = u² + 2as",
+            "Student can use the equations to solve problems such as the stopping distance of a braking vehicle"
+          ],
+          "visualIdeas": [
+            "three equation cards linked to a velocity-time graph",
+            "a car braking with its reaction distance and braking distance marked"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "motion-in-a-plane-uniform-circular-motion",
+          "title": "Motion in a Plane: Uniform Circular Motion",
+          "objectives": [
+            "Student can define uniform circular motion as motion along a circle at constant speed",
+            "Student can explain that the direction of velocity changes continuously, so uniform circular motion is accelerated",
+            "Student can calculate the speed of an object in a circle from its radius and time period"
+          ],
+          "visualIdeas": [
+            "a ball on a circular path with velocity arrows drawn tangent at several points"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "exploring-mixtures-and-their-separation",
+      "title": "Exploring Mixtures and their Separation",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc105.pdf",
+      "topics": [
+        {
+          "id": "how-can-we-classify-mixtures",
+          "title": "How Can We Classify Mixtures?",
+          "objectives": [
+            "Student can classify mixtures as homogeneous or heterogeneous with everyday examples",
+            "Student can explain the difference between a mixture and a pure substance"
+          ],
+          "visualIdeas": [
+            "two beakers: salt water (uniform) and sand in water (visible particles)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "solutions-and-concentration",
+          "title": "Solutions and Concentration",
+          "objectives": [
+            "Student can identify the solute and solvent in a solution",
+            "Student can express concentration as mass by mass, mass by volume and volume by volume percentage",
+            "Student can calculate the concentration of a solution from given amounts"
+          ],
+          "visualIdeas": [
+            "a beaker of sugar solution with solute and solvent labelled and a percentage calculation beside it"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "solubility-of-substances",
+          "title": "Solubility of Substances",
+          "objectives": [
+            "Student can define solubility and a saturated solution",
+            "Student can describe how temperature affects the solubility of a substance"
+          ],
+          "visualIdeas": [
+            "a solubility versus temperature curve for a salt"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "crystallization",
+          "title": "Crystallization",
+          "objectives": [
+            "Student can describe crystallization as a method to obtain a pure solid from its solution",
+            "Student can explain why crystallization gives purer products than simple evaporation"
+          ],
+          "visualIdeas": [
+            "a hot saturated solution cooling to form crystals in a dish"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "distillation",
+          "title": "Distillation",
+          "objectives": [
+            "Student can describe distillation for separating a solvent from a solution, and label the condenser and its role",
+            "Student can explain when fractional distillation is used to separate miscible liquids with close boiling points"
+          ],
+          "visualIdeas": [
+            "a labelled distillation apparatus with a flask, thermometer, condenser and receiver"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "paper-chromatography",
+          "title": "Paper Chromatography",
+          "objectives": [
+            "Student can describe paper chromatography as a way to separate the components of a coloured mixture such as ink",
+            "Student can explain why different components travel different distances up the paper"
+          ],
+          "visualIdeas": [
+            "a strip of filter paper in a jar showing ink separated into bands of colour"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "separation-of-two-immiscible-liquids",
+          "title": "Separation of Two Immiscible Liquids",
+          "objectives": [
+            "Student can identify immiscible liquids that form separate layers, such as mustard oil and water",
+            "Student can explain how a separating funnel separates two immiscible liquids by letting the lower layer run out through the stopcock"
+          ],
+          "visualIdeas": [
+            "a separating funnel with an oil layer above a water layer and the stopcock open"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sublimation",
+          "title": "Sublimation",
+          "objectives": [
+            "Student can define sublimation and name substances that sublime",
+            "Student can describe how sublimation separates a sublimable solid from a mixture"
+          ],
+          "visualIdeas": [
+            "a china dish with a mixture heated under an inverted funnel, vapours solidifying on the funnel"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "suspensions",
+          "title": "Suspensions",
+          "objectives": [
+            "Student can describe the properties of a suspension: particles that are visible, settle on standing and can be filtered",
+            "Student can explain how centrifugation separates the components of a suspension"
+          ],
+          "visualIdeas": [
+            "a centrifuge tube before and after spinning, with solids packed at the bottom"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "colloids",
+          "title": "Colloids",
+          "objectives": [
+            "Student can describe colloids as heterogeneous mixtures whose particles do not settle and pass through filter paper",
+            "Student can identify the dispersed phase and dispersion medium in common colloids such as emulsions"
+          ],
+          "visualIdeas": [
+            "three jars compared: solution, colloid and suspension with particle sizes marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tyndall-effect",
+          "title": "Tyndall Effect",
+          "objectives": [
+            "Student can describe the Tyndall effect as the scattering of a light beam by colloid particles",
+            "Student can use the Tyndall effect to tell a colloid from a true solution"
+          ],
+          "visualIdeas": [
+            "a torch beam passing through milky water (visible path) and salt water (no visible path)"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "how-forces-affect-motion",
+      "title": "How Forces Affect Motion",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc106.pdf",
+      "topics": [
+        {
+          "id": "the-concept-of-force-and-measuring-it",
+          "title": "The Concept of Force and Measuring It",
+          "objectives": [
+            "Student can recall that a force can start or stop motion, change speed or direction, and change shape",
+            "Student can measure the magnitude of a force with a spring balance and state its unit, the newton"
+          ],
+          "visualIdeas": [
+            "a spring balance pulling a block with the force reading in newtons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "balanced-and-unbalanced-forces",
+          "title": "Balanced and Unbalanced Forces",
+          "objectives": [
+            "Student can find the net force when several forces act on an object",
+            "Student can explain that balanced forces do not change motion while an unbalanced (net) force does"
+          ],
+          "visualIdeas": [
+            "a tug of war with equal and unequal teams and net-force arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-force-of-friction-often-overlooked-but-always-present",
+          "title": "The Force of Friction: Often Overlooked but Always Present",
+          "objectives": [
+            "Student can explain why an object does not move until the applied force exceeds friction",
+            "Student can explain why a moving object slows down and stops when the applied force is removed",
+            "Student can compare the force of friction on different surfaces using a spring balance"
+          ],
+          "visualIdeas": [
+            "a stack of coins sliding on wood, laminate and marble with different stopping distances"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "newtons-first-law-of-motion",
+          "title": "Newton's First Law of Motion",
+          "objectives": [
+            "Student can state Newton's first law of motion",
+            "Student can explain that zero net force means no change in velocity, including constant non-zero velocity",
+            "Student can describe inertia and how Galileo’s thought experiment on a frictionless surface led to the idea"
+          ],
+          "visualIdeas": [
+            "a block sliding forever on an imagined frictionless floor",
+            "position-time and velocity-time graphs for an object with no net force"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "newtons-second-law-of-motion",
+          "title": "Newton's Second Law of Motion",
+          "objectives": [
+            "Student can state Newton's second law as F = ma and define one newton",
+            "Student can describe how cart activities show that acceleration grows with net force and falls with mass",
+            "Student can use F = mg with g = 9.8 m s⁻² and explain why a fielder pulls the hands back while catching a fast ball"
+          ],
+          "visualIdeas": [
+            "a cart pulled with two different forces and its acceleration compared",
+            "a fielder pulling hands back while catching a cricket ball"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "newtons-third-law-of-motion",
+          "title": "Newton's Third Law of Motion",
+          "objectives": [
+            "Student can state Newton's third law: forces act in equal and opposite pairs on two different objects",
+            "Student can identify action-reaction pairs in examples such as pushing a table from a wheeled chair, recoil of a gun and a rocket"
+          ],
+          "visualIdeas": [
+            "a girl on a wheeled chair pushing a table, with paired force arrows on each object",
+            "a rocket with exhaust gases pushed down and the rocket pushed up"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "forces-acting-on-a-system-of-objects",
+          "title": "Forces Acting on a System of Objects",
+          "objectives": [
+            "Student can apply Newton's laws to two objects connected by a string",
+            "Student can find the acceleration of the system and the tension in the string"
+          ],
+          "visualIdeas": [
+            "two boxes joined by a string on a smooth surface with forces F and T marked"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "work-energy-and-simple-machines",
+      "title": "Work, Energy, and Simple Machines",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc107.pdf",
+      "topics": [
+        {
+          "id": "work-done-by-a-constant-force",
+          "title": "Work Done by a Constant Force",
+          "objectives": [
+            "Student can define work done by a constant force as force multiplied by displacement in the direction of the force",
+            "Student can state the unit of work, the joule"
+          ],
+          "visualIdeas": [
+            "a box pushed across a floor with force and displacement arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "when-is-work-done-zero-positive-or-negative",
+          "title": "When is Work Done Zero, Positive or Negative?",
+          "objectives": [
+            "Student can identify situations where work done is zero even though a force acts",
+            "Student can distinguish positive work (force along displacement) from negative work (force opposite to displacement)"
+          ],
+          "visualIdeas": [
+            "three panels: holding a bag still (zero), lifting it (positive), friction on a sliding block (negative)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-work-energy-theorem",
+          "title": "The Work-Energy Theorem",
+          "objectives": [
+            "Student can state that the net work done on an object equals the change in its kinetic energy",
+            "Student can use the work-energy theorem in simple numerical problems"
+          ],
+          "visualIdeas": [
+            "a ball being pushed and speeding up, with work equal to the gain in kinetic energy"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "forms-of-energy",
+          "title": "Forms of Energy",
+          "objectives": [
+            "Student can list different forms of energy around us",
+            "Student can give examples of energy changing from one form to another"
+          ],
+          "visualIdeas": [
+            "an icon grid of energy forms: mechanical, heat, light, sound, chemical, electrical"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "kinetic-energy",
+          "title": "Kinetic Energy",
+          "objectives": [
+            "Student can derive the expression for kinetic energy, ½mv²",
+            "Student can calculate the kinetic energy of a moving object"
+          ],
+          "visualIdeas": [
+            "two balls of different speed and mass with their kinetic energies compared"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "potential-energy",
+          "title": "Potential Energy",
+          "objectives": [
+            "Student can explain potential energy as energy stored because of position or shape",
+            "Student can calculate gravitational potential energy as mgh"
+          ],
+          "visualIdeas": [
+            "a book on a shelf at height h above the floor with mgh marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conservation-of-mechanical-energy",
+          "title": "Conservation of Mechanical Energy",
+          "objectives": [
+            "Student can state that mechanical energy is conserved when only gravity does work",
+            "Student can track kinetic and potential energy for a falling or swinging object"
+          ],
+          "visualIdeas": [
+            "a falling ball with bars for kinetic and potential energy at several heights"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "power",
+          "title": "Power",
+          "objectives": [
+            "Student can define power as the rate of doing work and state its unit, the watt",
+            "Student can calculate power from work done and time taken"
+          ],
+          "visualIdeas": [
+            "two people climbing the same stairs in different times"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "simple-machines-pulley-and-inclined-plane",
+          "title": "Simple Machines: Pulley and Inclined Plane",
+          "objectives": [
+            "Student can define the mechanical advantage of a simple machine as load divided by effort",
+            "Student can explain how a pulley and an inclined plane make raising a load easier"
+          ],
+          "visualIdeas": [
+            "a pulley lifting a bucket from a well",
+            "a ramp used to push a barrel onto a truck"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "simple-machines-lever",
+          "title": "Simple Machines: Lever",
+          "objectives": [
+            "Student can identify the fulcrum, effort and load in a lever",
+            "Student can classify levers by the positions of fulcrum, effort and load and give an everyday example of each"
+          ],
+          "visualIdeas": [
+            "a seesaw lever with fulcrum, effort arm and load arm labelled"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "journey-inside-the-atom",
+      "title": "Journey Inside the Atom",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc108.pdf",
+      "topics": [
+        {
+          "id": "rediscovering-the-roots-of-atomic-theory",
+          "title": "Rediscovering the Roots of Atomic Theory",
+          "objectives": [
+            "Student can describe the early ideas of indivisible particles from Acharya Kanada (parmanu) in India and Leucippus and Democritus (atomos) in Greece",
+            "Student can explain how Dalton’s atomic theory turned the idea of atoms into a scientific theory"
+          ],
+          "visualIdeas": [
+            "a timeline from Kanada and Democritus to Dalton (1808) with one idea under each name"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "a-short-historical-journey-through-atomic-models-thomsons-model",
+          "title": "A Short Historical Journey Through Atomic Models: Thomson’s Model",
+          "objectives": [
+            "Student can describe how experiments with cathode rays led to the discovery of the electron",
+            "Student can describe Thomson’s model of the atom and what it got right and wrong"
+          ],
+          "visualIdeas": [
+            "a cathode ray tube with the beam bending near a magnet",
+            "Thomson’s model drawn as a positive sphere with embedded electrons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "testing-thomsons-model-the-gold-foil-experiment",
+          "title": "Testing Thomson’s Model: The Gold Foil Experiment",
+          "objectives": [
+            "Student can describe Rutherford’s alpha particle scattering experiment and its observations",
+            "Student can explain how the observations led to a small, dense, positively charged nucleus",
+            "Student can state a limitation of Rutherford’s model"
+          ],
+          "visualIdeas": [
+            "alpha particles fired at gold foil: most pass through, a few deflect, very few bounce back"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "bohrs-model-of-the-atom",
+          "title": "Bohr’s Model of the Atom",
+          "objectives": [
+            "Student can describe Bohr’s model with electrons in fixed orbits or shells (energy levels)",
+            "Student can explain how Bohr’s model addressed the problem with Rutherford’s model"
+          ],
+          "visualIdeas": [
+            "a nucleus with concentric shells labelled K, L, M and electrons on them"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-components-contribute-to-the-mass-of-an-atom-discovery-of-the-neutron",
+          "title": "What Components Contribute to the Mass of an Atom? Discovery of the Neutron",
+          "objectives": [
+            "Student can explain why the mass of an atom is mostly in its nucleus",
+            "Student can describe Chadwick’s discovery of the neutron and compare the charge and mass of protons, neutrons and electrons"
+          ],
+          "visualIdeas": [
+            "a table comparing proton, neutron and electron by charge, mass and location"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "symbols-of-elements",
+          "title": "Symbols of Elements",
+          "objectives": [
+            "Student can describe how symbols for elements developed from Dalton’s pictures to Berzelius’s letters",
+            "Student can write the IUPAC symbols of common elements, including those from Latin names"
+          ],
+          "visualIdeas": [
+            "Dalton’s circle symbols beside modern letter symbols for the same elements"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "atomic-number-and-mass-number",
+          "title": "Atomic Number and Mass Number",
+          "objectives": [
+            "Student can define atomic number as the number of protons and mass number as protons plus neutrons",
+            "Student can find the numbers of protons, neutrons and electrons from the atomic number and mass number"
+          ],
+          "visualIdeas": [
+            "an element box showing the symbol with mass number above and atomic number below"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-are-electrons-distributed-in-different-energy-levels",
+          "title": "How Are Electrons Distributed in Different Energy Levels?",
+          "objectives": [
+            "Student can state the rule that a shell holds at most 2n² electrons and that shells fill in order",
+            "Student can write the electronic configuration of elements with small atomic numbers, such as sodium (2, 8, 1) and chlorine (2, 8, 7)"
+          ],
+          "visualIdeas": [
+            "shell diagrams for sodium and chlorine with electrons placed 2, 8, 1 and 2, 8, 7"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "combining-capacity-of-an-atom-valency",
+          "title": "Combining Capacity of an Atom: Valency",
+          "objectives": [
+            "Student can explain the octet rule and why atoms lose, gain or share electrons",
+            "Student can work out the valency of an element from its electronic configuration"
+          ],
+          "visualIdeas": [
+            "a sodium atom giving one electron and a chlorine atom completing its octet"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-deeper-look-into-atomic-structure-isotopes-and-isobars",
+          "title": "A Deeper Look into Atomic Structure: Isotopes and Isobars",
+          "objectives": [
+            "Student can define isotopes and isobars with examples",
+            "Student can calculate the average atomic mass of an element from the abundance of its isotopes",
+            "Student can give uses of isotopes such as cobalt and iodine in medicine and uranium as a fuel"
+          ],
+          "visualIdeas": [
+            "three hydrogen isotopes side by side with their protons and neutrons",
+            "two isobars with the same mass number and different atomic numbers"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "atomic-foundations-of-matter",
+      "title": "Atomic Foundations of Matter",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc109.pdf",
+      "topics": [
+        {
+          "id": "law-of-conservation-of-mass",
+          "title": "Law of Conservation of Mass",
+          "objectives": [
+            "Student can show that mass is conserved in physical changes such as dissolving salt in water",
+            "Student can describe the vinegar and baking soda experiment in a closed set-up that shows mass is conserved in a chemical change",
+            "Student can state the law of conservation of mass and Lavoisier’s role in it"
+          ],
+          "visualIdeas": [
+            "a flask on a balance with a balloon of baking soda over vinegar, reading the same before and after"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "law-of-constant-proportions",
+          "title": "Law of Constant Proportions",
+          "objectives": [
+            "Student can state the law of constant proportions and Proust’s role in it",
+            "Student can calculate the mass ratio of elements in a compound such as water"
+          ],
+          "visualIdeas": [
+            "water from a river and a lab shown with the same 1:8 hydrogen to oxygen mass ratio"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "daltons-atomic-theory",
+          "title": "Dalton’s Atomic Theory",
+          "objectives": [
+            "Student can list the postulates of Dalton’s atomic theory",
+            "Student can explain how the theory accounts for the laws of chemical combination"
+          ],
+          "visualIdeas": [
+            "a list of Dalton’s postulates with a small picture beside each"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-atoms-combine-covalent-bonds",
+          "title": "How Atoms Combine: Covalent Bonds",
+          "objectives": [
+            "Student can explain that atoms share electrons to form covalent bonds and molecules",
+            "Student can draw electron dot structures for molecules with single, double and triple bonds"
+          ],
+          "visualIdeas": [
+            "electron dot diagrams for H₂, O₂ and N₂ showing single, double and triple bonds"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-atoms-combine-ionic-bonds",
+          "title": "How Atoms Combine: Ionic Bonds",
+          "objectives": [
+            "Student can explain how the transfer of electrons forms cations and anions",
+            "Student can describe the formation of an ionic compound such as sodium chloride"
+          ],
+          "visualIdeas": [
+            "sodium giving an electron to chlorine to form Na⁺ and Cl⁻ held together"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-chemical-formulae",
+          "title": "Writing Chemical Formulae",
+          "objectives": [
+            "Student can write chemical formulae of covalent compounds from valencies",
+            "Student can write chemical formulae of ionic compounds, including those with polyatomic ions, using the criss-cross method"
+          ],
+          "visualIdeas": [
+            "a criss-cross diagram for aluminium oxide with valencies swapped into subscripts"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "properties-of-ionic-and-covalent-compounds",
+          "title": "Properties of Ionic and Covalent Compounds",
+          "objectives": [
+            "Student can compare ionic and covalent compounds by melting point, solubility and electrical conductivity",
+            "Student can explain why salt solution conducts electricity while sugar solution does not"
+          ],
+          "visualIdeas": [
+            "a bulb glowing in salt solution and staying dark in sugar solution"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "molecular-mass-and-formula-unit-mass",
+          "title": "Molecular Mass and Formula Unit Mass",
+          "objectives": [
+            "Student can calculate the molecular mass of a covalent compound from atomic masses in u",
+            "Student can calculate the formula unit mass of an ionic compound"
+          ],
+          "visualIdeas": [
+            "a worked calculation of the mass of H₂O and of NaCl using atomic masses"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "sound-waves-characteristics-and-applications",
+      "title": "Sound Waves: Characteristics and Applications",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc110.pdf",
+      "topics": [
+        {
+          "id": "production-of-sound",
+          "title": "Production of Sound",
+          "objectives": [
+            "Student can explain that sound is produced by vibrating objects",
+            "Student can use a tuning fork to show the vibrations that produce sound"
+          ],
+          "visualIdeas": [
+            "a tuning fork touching water and making splashes"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "propagation-of-sound",
+          "title": "Propagation of Sound",
+          "objectives": [
+            "Student can explain that sound needs a material medium to travel",
+            "Student can describe the bell jar experiment showing that sound cannot travel through a vacuum"
+          ],
+          "visualIdeas": [
+            "a ringing bell inside a jar as the air is pumped out and the sound fades"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sound-waves",
+          "title": "Sound Waves",
+          "objectives": [
+            "Student can describe sound as a mechanical, longitudinal wave of compressions and rarefactions",
+            "Student can distinguish longitudinal waves from transverse waves"
+          ],
+          "visualIdeas": [
+            "a slinky showing compressions and rarefactions beside a rope showing a transverse wave"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "energy-of-sound-waves",
+          "title": "Energy of Sound Waves",
+          "objectives": [
+            "Student can explain that sound waves carry energy from the source through the medium",
+            "Student can explain, using grains on a stretched sheet that jump when a loud sound is made nearby, that energy is transferred while the particles of the medium are not carried along"
+          ],
+          "visualIdeas": [
+            "grains on a rubber sheet stretched over a bowl, jumping when a metal plate is struck nearby"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "graphical-representation-of-a-sound-wave",
+          "title": "Graphical Representation of a Sound Wave",
+          "objectives": [
+            "Student can plot how the density of the medium varies with distance at an instant, with crests above and troughs below the average density",
+            "Student can relate compressions and rarefactions to the crests and troughs of the graph"
+          ],
+          "visualIdeas": [
+            "a row of air particles above a wave graph, with compressions lined up with peaks"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "wavelength-frequency-time-period-and-amplitude",
+          "title": "Wavelength, Frequency, Time Period and Amplitude",
+          "objectives": [
+            "Student can define wavelength, frequency (in hertz), time period and amplitude of a sound wave",
+            "Student can relate the amplitude of a wave to the intensity of sound"
+          ],
+          "visualIdeas": [
+            "a labelled wave with wavelength and amplitude marked and a clock for the time period"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "speed-of-sound",
+          "title": "Speed of Sound",
+          "objectives": [
+            "Student can use the relation speed = frequency × wavelength",
+            "Student can explain how the speed of sound depends on the medium and on temperature"
+          ],
+          "visualIdeas": [
+            "a table of the speed of sound in air, water and steel"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "human-perception-of-sound",
+          "title": "Human Perception of Sound",
+          "objectives": [
+            "Student can relate loudness to amplitude and pitch to frequency",
+            "Student can state the audible range of humans as about 20 Hz to 20 kHz and the decibel as a unit of loudness",
+            "Student can explain how quality (timbre) lets us tell two sounds of the same pitch apart"
+          ],
+          "visualIdeas": [
+            "two waves with the same frequency but different amplitudes, and two with different frequencies"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reflection-of-sound-echo-and-reverberation",
+          "title": "Reflection of Sound: Echo and Reverberation",
+          "objectives": [
+            "Student can explain how an echo is formed and the minimum distance needed to hear one",
+            "Student can explain reverberation and how halls are designed to reduce it"
+          ],
+          "visualIdeas": [
+            "a person shouting at a cliff with the sound returning",
+            "an auditorium with sound-absorbing panels"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "ultrasonic-and-infrasonic-waves-and-their-applications",
+          "title": "Ultrasonic and Infrasonic Waves, and their Applications",
+          "objectives": [
+            "Student can distinguish ultrasound and infrasound from audible sound by frequency",
+            "Student can describe echolocation by bats and dolphins and the working of SONAR"
+          ],
+          "visualIdeas": [
+            "a ship sending SONAR pulses to the sea bed and timing the echo",
+            "a bat locating an insect by echoes"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "reproduction-how-life-continues",
+      "title": "Reproduction: How Life Continues",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc111.pdf",
+      "topics": [
+        {
+          "id": "asexual-reproduction-and-vegetative-propagation",
+          "title": "Asexual Reproduction and Vegetative Propagation",
+          "objectives": [
+            "Student can define asexual reproduction as producing offspring from a single parent",
+            "Student can describe vegetative propagation by cutting, layering, grafting and tissue culture",
+            "Student can explain why vegetative propagation is helpful in agriculture"
+          ],
+          "visualIdeas": [
+            "a rose cutting rooting in soil, a layered branch and a graft joint side by side"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "budding-and-spore-formation",
+          "title": "Budding and Spore Formation",
+          "objectives": [
+            "Student can describe budding in yeast and hydra",
+            "Student can describe spore formation in bread mould and the conditions spores need to grow"
+          ],
+          "visualIdeas": [
+            "a hydra with a bud, and bread mould with hyphae and spore sacs"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sexual-reproduction-and-meiosis",
+          "title": "Sexual Reproduction and Meiosis",
+          "objectives": [
+            "Student can explain that sexual reproduction involves the fusion of male and female gametes to form a zygote",
+            "Student can explain how meiosis creates variations in sexual reproduction"
+          ],
+          "visualIdeas": [
+            "two gametes fusing into a zygote with the halved chromosome number shown"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sexual-reproduction-in-flowering-plants",
+          "title": "Sexual Reproduction in Flowering Plants",
+          "objectives": [
+            "Student can label the stamen (anther, filament) and pistil (stigma, style, ovary, ovule) of a flower",
+            "Student can describe the flower as the reproductive organ of flowering plants"
+          ],
+          "visualIdeas": [
+            "a labelled cut-away flower showing stamens and pistil"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pollination-and-pollination-strategies",
+          "title": "Pollination and Pollination Strategies",
+          "objectives": [
+            "Student can distinguish self-pollination from cross-pollination",
+            "Student can describe how agents and flower features help pollination and reproductive success"
+          ],
+          "visualIdeas": [
+            "a bee carrying pollen from one flower to another"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fertilisation-and-seed-formation",
+          "title": "Fertilisation and Seed Formation",
+          "objectives": [
+            "Student can describe how a pollen tube carries the male gamete to the ovule for fertilisation",
+            "Student can explain how the ovule becomes the seed and the ovary becomes the fruit"
+          ],
+          "visualIdeas": [
+            "a pollen tube growing down the style to the ovule",
+            "an ovary developing into a fruit with seeds"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sexual-reproduction-and-its-variations-in-animals",
+          "title": "Sexual Reproduction and its Variations in Animals",
+          "objectives": [
+            "Student can distinguish external fertilisation (fish, frogs) from internal fertilisation (reptiles, birds, mammals)",
+            "Student can relate the number of eggs and the care of young to the chances of survival",
+            "Student can describe the larva and pupa stages in the life cycle of a butterfly"
+          ],
+          "visualIdeas": [
+            "a table of fish, frog, lizard and bird with eggs laid and survival",
+            "the life cycle of a butterfly"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reproductive-maturity-and-the-human-reproductive-systems",
+          "title": "Reproductive Maturity and the Human Reproductive Systems",
+          "objectives": [
+            "Student can describe reproductive maturity (puberty) in humans",
+            "Student can name the parts of the male and female reproductive systems and their functions"
+          ],
+          "visualIdeas": [
+            "labelled diagrams of the male and female reproductive systems"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reproductive-cells-fertilisation-and-the-menstrual-cycle",
+          "title": "Reproductive Cells, Fertilisation and the Menstrual Cycle",
+          "objectives": [
+            "Student can describe how sperm and eggs are made",
+            "Student can explain what happens when a sperm meets an egg and when an egg is not fertilised (menstruation)"
+          ],
+          "visualIdeas": [
+            "a timeline of the menstrual cycle with ovulation marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pregnancy-childbirth-and-the-mothers-health",
+          "title": "Pregnancy, Childbirth and the Mother’s Health",
+          "objectives": [
+            "Student can describe the three trimesters of pregnancy, from embryo to foetus, and how the uterus protects and nourishes the baby",
+            "Student can explain why nutritious food, rest and avoiding harmful habits matter for the mother, and why breastfeeding matters for the newborn"
+          ],
+          "visualIdeas": [
+            "the three trimesters of pregnancy shown as a growing foetus in the uterus"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sexual-maturity-and-preventing-unwanted-pregnancies-and-infections",
+          "title": "Sexual Maturity and Preventing Unwanted Pregnancies and Infections",
+          "objectives": [
+            "Student can explain what it means to be sexually mature, physically and emotionally",
+            "Student can describe ways to prevent unwanted pregnancies and sexually transmitted infections such as HIV"
+          ],
+          "visualIdeas": [
+            "an infographic of prevention methods and where to seek reliable health advice"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "patterns-in-life-diversity-and-classification",
+      "title": "Patterns in Life: Diversity and Classification",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc112.pdf",
+      "topics": [
+        {
+          "id": "india-as-a-biodiversity-hotspot",
+          "title": "India as a Biodiversity Hotspot",
+          "objectives": [
+            "Student can explain what a biodiversity hotspot is and name the hotspots in India",
+            "Student can define endemic species with an Indian example"
+          ],
+          "visualIdeas": [
+            "a map of India with the Himalaya, Western Ghats, Indo-Burma and Sundaland hotspots marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-has-the-biodiversity-evolved",
+          "title": "How has the Biodiversity Evolved?",
+          "objectives": [
+            "Student can explain that small differences among individuals, accumulated over many generations, gave rise to new forms of life",
+            "Student can describe traditions such as the Sangam Tiṇai classification of landscapes and sacred groves that helped preserve diversity"
+          ],
+          "visualIdeas": [
+            "a branching tree of life from a common ancestor"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-to-classify-organisms",
+          "title": "How to Classify Organisms?",
+          "objectives": [
+            "Student can list criteria used to classify living organisms, such as cell type, number of cells, mode of nutrition and body organisation",
+            "Student can group organisms using these criteria"
+          ],
+          "visualIdeas": [
+            "a sorting tree splitting organisms by one criterion at each branch"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-need-for-classification",
+          "title": "The Need for Classification",
+          "objectives": [
+            "Student can explain why classification makes the study of diverse organisms easier, using the example of a library",
+            "Student can use the case study of the four hornbill species of Pakke Tiger Reserve to show how classifying helps answer questions about biodiversity"
+          ],
+          "visualIdeas": [
+            "a library of scattered books becoming neat labelled shelves",
+            "the four hornbills of Pakke Tiger Reserve side by side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "biological-classification-systems-over-time",
+          "title": "Biological Classification Systems Over Time",
+          "objectives": [
+            "Student can trace classification from Aristotle and Linnaeus’s two kingdoms to Haeckel’s three kingdoms and Whittaker’s five kingdoms",
+            "Student can explain why classification changes as new evidence appears"
+          ],
+          "visualIdeas": [
+            "a timeline of classification systems from two to five kingdoms"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "five-kingdom-classification-monera-protista-and-fungi",
+          "title": "Five Kingdom Classification: Monera, Protista and Fungi",
+          "objectives": [
+            "Student can describe the five kingdoms proposed by Whittaker",
+            "Student can describe Monera (unicellular prokaryotes), Protista (unicellular eukaryotes) and Fungi (heterotrophic eukaryotes with a cell wall) with examples"
+          ],
+          "visualIdeas": [
+            "a five-kingdom chart with example organisms for Monera, Protista and Fungi"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "kingdom-plantae",
+          "title": "Kingdom Plantae",
+          "objectives": [
+            "Student can classify plants into thallophytes, bryophytes, pteridophytes, gymnosperms and angiosperms",
+            "Student can describe the key feature of each plant group, such as seeds enclosed in fruits in angiosperms",
+            "Student can distinguish monocots from dicots"
+          ],
+          "visualIdeas": [
+            "a plant-group ladder from algae to flowering plants with one example each"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "kingdom-animalia-invertebrates",
+          "title": "Kingdom Animalia: Invertebrates",
+          "objectives": [
+            "Student can describe the invertebrate groups from Porifera to Echinodermata with examples",
+            "Student can explain the pattern of increasing complexity of body organisation across invertebrates"
+          ],
+          "visualIdeas": [
+            "a row of invertebrates (sponge, hydra, flatworm, roundworm, earthworm, insect, snail, starfish) with habitats"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "kingdom-animalia-chordates-and-vertebrates",
+          "title": "Kingdom Animalia: Chordates and Vertebrates",
+          "objectives": [
+            "Student can describe the notochord in protochordates as a key change in body organisation",
+            "Student can describe the backbone of vertebrates and name the five vertebrate groups: fish, amphibians, reptiles, birds and mammals"
+          ],
+          "visualIdeas": [
+            "a backbone diagram beside the five vertebrate groups"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "adaptations-and-the-hierarchical-nature-of-classification",
+          "title": "Adaptations and the Hierarchical Nature of Classification",
+          "objectives": [
+            "Student can relate structural features such as fins, feathers, fat storage and fur to survival in different environments",
+            "Student can arrange the levels of classification from kingdom to species"
+          ],
+          "visualIdeas": [
+            "a nested-boxes diagram: Kingdom > Phylum > Class > Order > Family > Genus > Species"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "scientific-naming-the-binomial-system",
+          "title": "Scientific Naming — The Binomial System",
+          "objectives": [
+            "Student can explain binomial nomenclature with genus and species names",
+            "Student can apply the rules for writing scientific names"
+          ],
+          "visualIdeas": [
+            "a scientific name written correctly with the genus capitalised and the species in small letters"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fossils-as-evidence-and-biodiversity-under-threat",
+          "title": "Fossils as Evidence and Biodiversity Under Threat",
+          "objectives": [
+            "Student can explain how fossils in rock layers show how life has changed over time",
+            "Student can describe human activities that reduce biodiversity and why the loss of one species affects others"
+          ],
+          "visualIdeas": [
+            "layers of rock with simpler fossils below and more complex fossils above",
+            "the Sangai deer on a floating phumdi"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "earth-as-a-system-energy-matter-and-life",
+      "title": "Earth as a System: Energy, Matter, and Life",
+      "book": "Exploration",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iesc113.pdf",
+      "topics": [
+        {
+          "id": "the-earths-interacting-spheres",
+          "title": "The Earth’s Interacting Spheres",
+          "objectives": [
+            "Student can name the geosphere, hydrosphere, cryosphere, atmosphere and biosphere with Indian examples",
+            "Student can explain how a change in one sphere affects the others"
+          ],
+          "visualIdeas": [
+            "a mountain landscape with snow, lake, air, rocks and grazing sheep labelled by sphere"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "uneven-heating-of-the-earth",
+          "title": "Uneven Heating of the Earth",
+          "objectives": [
+            "Student can explain that the Sun is the main source of energy for the Earth system and define insolation",
+            "Student can explain albedo and how different surfaces absorb or reflect solar radiation"
+          ],
+          "visualIdeas": [
+            "sunlight hitting snow, ocean, forest and desert with different reflected fractions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "latitude-the-earths-shape-and-the-role-of-the-atmosphere",
+          "title": "Latitude, the Earth’s Shape and the Role of the Atmosphere",
+          "objectives": [
+            "Student can explain why the equator receives more solar energy than the poles",
+            "Student can describe how the atmosphere and greenhouse gases trap outgoing heat and how ozone absorbs ultraviolet rays"
+          ],
+          "visualIdeas": [
+            "sun rays spreading over a larger area near the poles than at the equator"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "local-winds",
+          "title": "Local Winds",
+          "objectives": [
+            "Student can explain that wind blows from high to low pressure because of uneven heating",
+            "Student can explain valley breezes and mountain breezes"
+          ],
+          "visualIdeas": [
+            "a valley in daytime with air rising up the slopes and at night with air sinking down"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "planetary-winds",
+          "title": "Planetary Winds",
+          "objectives": [
+            "Student can describe the pressure belts at the equator, 30°, 60° and the poles",
+            "Student can explain how the Earth’s rotation deflects planetary winds to the right in the Northern Hemisphere and to the left in the Southern Hemisphere"
+          ],
+          "visualIdeas": [
+            "a globe with pressure belts and curved wind arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ocean-currents",
+          "title": "Ocean Currents",
+          "objectives": [
+            "Student can explain how winds, temperature, salinity, the Earth’s rotation and land masses drive ocean currents",
+            "Student can explain how ocean currents such as the Gulf Stream carry heat and regulate climate"
+          ],
+          "visualIdeas": [
+            "a world map with warm and cold currents and the gyres"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "biogeochemical-cycles-water-and-carbon",
+          "title": "Biogeochemical Cycles: Water and Carbon",
+          "objectives": [
+            "Student can describe the water cycle through evaporation, transpiration, condensation and precipitation",
+            "Student can describe the carbon cycle through photosynthesis, respiration, decomposition and the burning of fossil fuels"
+          ],
+          "visualIdeas": [
+            "a cycle diagram for water and one for carbon"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "biogeochemical-cycles-nitrogen-and-oxygen",
+          "title": "Biogeochemical Cycles: Nitrogen and Oxygen",
+          "objectives": [
+            "Student can describe nitrogen fixation by bacteria such as Rhizobium and by lightning, nitrification and denitrification",
+            "Student can describe how oxygen is cycled by photosynthesis and respiration"
+          ],
+          "visualIdeas": [
+            "a nitrogen cycle with root nodules, lightning and soil bacteria"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "human-impact-on-earths-processes",
+          "title": "Human Impact on Earth’s Processes",
+          "objectives": [
+            "Student can explain how burning fossil fuels and deforestation add greenhouse gases and drive global warming and climate change",
+            "Student can suggest actions that reduce human impact on the Earth system"
+          ],
+          "visualIdeas": [
+            "a balance with human activities on one side and natural cycles on the other"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

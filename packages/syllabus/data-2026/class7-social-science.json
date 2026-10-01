@@ -1,0 +1,1756 @@
+{
+  "id": "class7-social-science",
+  "klass": 7,
+  "subject": "Social Science",
+  "source": {
+    "books": [
+      {
+        "title": "Exploring Society: India and Beyond, Social Science Textbook for Grade 7, Part 1",
+        "code": "gees1",
+        "edition": "Reprint 2026-27 (First Edition April 2025; reprinted February 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/gees1ps.pdf"
+      },
+      {
+        "title": "Exploring Society: India and Beyond, Social Science Textbook for Grade 7, Part 2",
+        "code": "gees2",
+        "edition": "Reprint 2026-27 (First Edition November 2025)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/gees2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "geographical-diversity-of-india",
+      "title": "Geographical Diversity of India",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees101.pdf",
+      "topics": [
+        {
+          "id": "the-himalayas",
+          "title": "The Himalayas",
+          "objectives": [
+            "Student can locate the Himalayas on a map and explain why they are like a massive wall with peaks over 8000 m",
+            "Student can explain how the Himalayas formed when the Indian landmass, which broke away from Gondwana, collided with Eurasia",
+            "Student can explain how snowmelt from the Himalayas feeds rivers such as the Ganga, Indus and Brahmaputra"
+          ],
+          "visualIdeas": [
+            "a physical map with the Himalayan range highlighted",
+            "a carpet wrinkling as it is pushed, compared with colliding landmasses"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-cold-desert-of-india",
+          "title": "The Cold Desert of India",
+          "objectives": [
+            "Student can describe Ladakh as a cold desert with very low winter temperatures, little rain and rugged terrain",
+            "Student can name wildlife of Ladakh and explain why yaks are important to people in the Himalayas"
+          ],
+          "visualIdeas": [
+            "a rocky Ladakh landscape with Pangong Tso"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-gangetic-plains",
+          "title": "The Gangetic Plains",
+          "objectives": [
+            "Student can explain why the Gangetic Plains are fertile and important for agriculture and civilisation",
+            "Student can explain why a large share of India's population lives in the plains and how the flat land helps transport networks"
+          ],
+          "visualIdeas": [
+            "rivers flowing from the Himalayas across the plains"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-great-indian-desert-or-thar-desert",
+          "title": "The Great Indian Desert or Thar Desert",
+          "objectives": [
+            "Student can describe the Thar Desert, how wind shapes sand dunes, and the states it spans",
+            "Student can explain how people in the Thar have adapted their food, clothing and lifestyle to harsh conditions"
+          ],
+          "visualIdeas": [
+            "sand dunes being shaped by wind arrows"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-aravalli-hills",
+          "title": "The Aravalli Hills",
+          "objectives": [
+            "Student can describe the Aravallis as among the oldest mountains in the world and trace the states they span",
+            "Student can explain how the Aravallis act as a natural barrier against the eastward spread of the Thar Desert and are rich in minerals"
+          ],
+          "visualIdeas": [
+            "the Aravalli range on a map between the Thar Desert and Delhi"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-peninsular-plateau",
+          "title": "The Peninsular Plateau",
+          "objectives": [
+            "Student can define a plateau and describe the triangular Peninsular Plateau bordered by the Western and Eastern Ghats",
+            "Student can describe the Deccan Plateau and rivers like the Godavari, Krishna and Kaveri that flow across it from west to east"
+          ],
+          "visualIdeas": [
+            "a triangular plateau with the Western and Eastern Ghats on its sides"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "indias-amazing-coastlines",
+          "title": "India's Amazing Coastlines",
+          "objectives": [
+            "Student can compare the West Coast (estuaries, Western Ghats rivers) and the East Coast (wide plains and deltas)",
+            "Student can define a delta and a lagoon with examples like Chilika and Pulicat"
+          ],
+          "visualIdeas": [
+            "a map of India's coastline with deltas and estuaries marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "indian-islands",
+          "title": "Indian Islands",
+          "objectives": [
+            "Student can compare Lakshadweep (coral islands in the Arabian Sea) with the Andaman and Nicobar Islands (volcanic islands in the Bay of Bengal)",
+            "Student can explain the strategic and historical importance of the Andaman and Nicobar Islands"
+          ],
+          "visualIdeas": [
+            "two island groups on either side of the peninsula"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-delta-in-west-bengal-and-the-sundarbans",
+          "title": "The Delta in West Bengal and the Sundarbans",
+          "objectives": [
+            "Student can describe the Sundarbans in the delta of the Ganga and Brahmaputra, shared with Bangladesh and home to the Royal Bengal Tiger",
+            "Student can locate the Sundarbans delta on a map and explain why it is a unique combination of river, sea and land"
+          ],
+          "visualIdeas": [
+            "a mangrove delta with a tiger"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-hills-of-the-northeast",
+          "title": "The Hills of the Northeast",
+          "objectives": [
+            "Student can describe the Garo, Khasi and Jaintia hills of the Meghalaya Plateau and their very high rainfall",
+            "Student can explain how India's diverse geography shapes life, economy and culture"
+          ],
+          "visualIdeas": [
+            "green hills with waterfalls and heavy rain clouds"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "understanding-the-weather",
+      "title": "Understanding the Weather",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees102.pdf",
+      "topics": [
+        {
+          "id": "weather-and-its-elements",
+          "title": "Weather and its Elements",
+          "objectives": [
+            "Student can define weather as the state of the atmosphere at a particular time and place",
+            "Student can describe the troposphere as the layer of the atmosphere where almost all weather occurs",
+            "Student can describe how people read nature's clues to predict the weather"
+          ],
+          "visualIdeas": [
+            "a layered cake of the atmosphere with the troposphere at the bottom"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "weather-instruments-temperature-and-precipitation",
+          "title": "Weather Instruments: Temperature and Precipitation",
+          "objectives": [
+            "Student can explain how temperature is measured with a thermometer and recognise the Celsius and Fahrenheit scales",
+            "Student can explain how a rain gauge measures rainfall in millimetres"
+          ],
+          "visualIdeas": [
+            "a thermometer next to a rain gauge with a funnel and scale"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "weather-instruments-atmospheric-pressure-and-wind",
+          "title": "Weather Instruments: Atmospheric Pressure and Wind",
+          "objectives": [
+            "Student can explain atmospheric pressure, why it is lower at higher altitudes, and that it is measured with a barometer",
+            "Student can define wind as air moving from high to low pressure and name the wind vane and anemometer used for its direction and speed"
+          ],
+          "visualIdeas": [
+            "air moving from a high-pressure area to a low-pressure area",
+            "a wind vane"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "weather-instruments-humidity",
+          "title": "Weather Instruments: Humidity",
+          "objectives": [
+            "Student can define humidity as the amount of water vapour in the air and compare places like Kochi and Jaipur",
+            "Student can name the hygrometer as the instrument that measures humidity"
+          ],
+          "visualIdeas": [
+            "a coastal city and a desert city with water vapour icons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "weather-stations",
+          "title": "Weather Stations",
+          "objectives": [
+            "Student can explain how a weather station brings instruments together and how an Automated Weather Station works",
+            "Student can explain how an Automated Weather Station gives early warnings, as at a glacial lake in Sikkim"
+          ],
+          "visualIdeas": [
+            "a weather station enclosure with its instruments"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "predicting-the-weather",
+          "title": "Predicting the Weather",
+          "objectives": [
+            "Student can explain how meteorologists use long-term data to predict weather and why forecasts matter as extreme weather becomes more frequent",
+            "Student can read colour-coded weather warnings"
+          ],
+          "visualIdeas": [
+            "a weather warning map with colour codes"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "climates-of-india",
+      "title": "Climates of India",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees103.pdf",
+      "topics": [
+        {
+          "id": "weather-seasons-and-the-climate",
+          "title": "Weather, Seasons and the Climate",
+          "objectives": [
+            "Student can distinguish weather (short-term), seasons (recurring yearly) and climate (long-term patterns over decades)",
+            "Student can explain how seasons are related to both weather and climate"
+          ],
+          "visualIdeas": [
+            "a timeline from an hour to a year to decades"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "types-of-climates-in-india",
+          "title": "Types of Climates in India",
+          "objectives": [
+            "Student can describe the variety of climates in India, such as the alpine climate of the Himalayas",
+            "Student can match regions of India with their climates, such as subtropical northern plains, arid Thar and tropical wet west coast"
+          ],
+          "visualIdeas": [
+            "a climate map of India"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "factors-determining-the-climate",
+          "title": "Factors Determining the Climate",
+          "objectives": [
+            "Student can explain how latitude and altitude affect climate",
+            "Student can explain how proximity to the sea, winds and topography affect climate"
+          ],
+          "visualIdeas": [
+            "a hill station at high altitude and a coastal town by the sea",
+            "the Himalayas blocking cold winds"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-monsoons",
+          "title": "The Monsoons",
+          "objectives": [
+            "Student can explain that monsoons are seasonal winds caused by land and sea heating and cooling at different rates",
+            "Student can explain why the monsoon is central to life and agriculture in India"
+          ],
+          "visualIdeas": [
+            "summer and winter wind directions over India"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "climate-and-our-lives",
+          "title": "Climate and our Lives",
+          "objectives": [
+            "Student can give examples of festivals and cultural practices linked to seasons and agriculture",
+            "Student can explain how climate affects the economy, for example through monsoon failure"
+          ],
+          "visualIdeas": [
+            "harvest festival scenes from different states"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "climates-and-disasters",
+          "title": "Climates and Disasters",
+          "objectives": [
+            "Student can describe cyclones, floods, landslides and forest fires and where they are common in India",
+            "Student can suggest ways to prepare for climate-related disasters"
+          ],
+          "visualIdeas": [
+            "icons of a cyclone, a flood, a landslide and a forest fire on a map of India"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "climate-change",
+          "title": "Climate Change",
+          "objectives": [
+            "Student can define climate change and explain how human activities such as burning fossil fuels and deforestation have driven it since the 19th century",
+            "Student can explain the terms mitigation, resilience and sustainable in the context of climate change"
+          ],
+          "visualIdeas": [
+            "a factory chimney and cut forest beside a rising thermometer"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "new-beginnings-cities-and-states",
+      "title": "New Beginnings: Cities and States",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees104.pdf",
+      "topics": [
+        {
+          "id": "janapadas-and-mahajanapadas",
+          "title": "Janapadas and Mahajanapadas",
+          "objectives": [
+            "Student can explain how janapadas and the 16 mahajanapadas arose and why many were in the Ganga plains",
+            "Student can explain the term Second Urbanisation of India",
+            "Student can name powerful mahajanapadas such as Magadha, Kosala, Vatsa and Avanti"
+          ],
+          "visualIdeas": [
+            "a map of the sixteen mahajanapadas"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "early-democratic-traditions",
+          "title": "Early Democratic Traditions",
+          "objectives": [
+            "Student can describe the sabha and samiti assemblies and how a raja was expected to take their advice",
+            "Student can explain how Vajji and Malla took decisions through discussion and vote, including selecting the raja"
+          ],
+          "visualIdeas": [
+            "an assembly of elders in discussion"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "more-innovations",
+          "title": "More Innovations",
+          "objectives": [
+            "Student can explain how iron metallurgy changed agriculture and warfare",
+            "Student can describe the first use of coins in India and the spread of new schools of thought"
+          ],
+          "visualIdeas": [
+            "an iron ploughshare and early silver punch-marked coins"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-varna-jati-system",
+          "title": "The Varna-Jati System",
+          "objectives": [
+            "Student can describe the varna and jati groupings in society of the 1st millennium BCE",
+            "Student can discuss inequalities in society and the value of equality"
+          ],
+          "visualIdeas": [
+            "a chart of occupations in a complex society"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "developments-elsewhere-in-india",
+          "title": "Developments Elsewhere in India",
+          "objectives": [
+            "Student can describe the Uttarapatha and Dakshinapatha routes and their role in trade and pilgrimage",
+            "Student can describe cities in the east such as Sisupalgarh and the early southern kingdoms of the Cholas, Cheras and Pandyas"
+          ],
+          "visualIdeas": [
+            "a route map of the Uttarapatha and Dakshinapatha"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-rise-of-empires",
+      "title": "The Rise of Empires",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees105.pdf",
+      "topics": [
+        {
+          "id": "what-is-an-empire",
+          "title": "What is an Empire?",
+          "objectives": [
+            "Student can define an empire and list its features, such as tributary kings under a central emperor",
+            "Student can explain why rulers wanted to expand kingdoms into empires",
+            "Student can explain why trade, trade routes and guilds were key to maintaining an empire"
+          ],
+          "visualIdeas": [
+            "an emperor at the centre with tributary kingdoms around",
+            "trade routes across an empire"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-rise-of-magadha",
+          "title": "The Rise of Magadha",
+          "objectives": [
+            "Student can explain how Magadha rose to power under rulers like Ajatashatru and set the stage for India's first empire",
+            "Student can explain how fertile land, forests, elephants and iron helped Magadha grow"
+          ],
+          "visualIdeas": [
+            "Magadha highlighted among the mahajanapadas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-arrival-of-the-greeks",
+          "title": "The Arrival of the Greeks",
+          "objectives": [
+            "Student can describe Alexander's campaign in the northwest and the satraps he left behind",
+            "Student can explain why the campaign had limited political impact but opened the door to Indo-Greek cultural contacts"
+          ],
+          "visualIdeas": [
+            "a map of Alexander's route into the northwest"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-mighty-mauryas",
+          "title": "The Mighty Mauryas",
+          "objectives": [
+            "Student can describe how Chandragupta Maurya, guided by Kautilya, overthrew the Nandas and built an empire from Pataliputra",
+            "Student can explain Kautilya's Arthashastra and his saptanga, the seven parts of a kingdom"
+          ],
+          "visualIdeas": [
+            "the saptanga as seven connected parts of a kingdom"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-king-who-chose-peace",
+          "title": "The King Who Chose Peace",
+          "objectives": [
+            "Student can explain how the Kalinga war led Ashoka to give up violence",
+            "Student can describe how Ashoka used edicts to spread dharma"
+          ],
+          "visualIdeas": [
+            "an Ashokan pillar with an edict inscription"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "life-in-the-mauryan-period",
+          "title": "Life in the Mauryan Period",
+          "objectives": [
+            "Student can describe city life, administration and taxation in the Mauryan period",
+            "Student can describe Mauryan contributions to art and architecture, including the Lion Capital that became India's national emblem"
+          ],
+          "visualIdeas": [
+            "the Lion Capital of Sarnath",
+            "a stupa with its anda"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-fragile-nature-of-empires",
+          "title": "The Fragile Nature of Empires",
+          "objectives": [
+            "Student can list reasons why empires decline, such as regions seeking independence and weak successors",
+            "Student can explain why empires are something of a paradox, bringing political unity yet being hard to hold together"
+          ],
+          "visualIdeas": [
+            "an empire map breaking into smaller kingdoms"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "the-age-of-reorganisation",
+      "title": "The Age of Reorganisation",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees106.pdf",
+      "topics": [
+        {
+          "id": "surge-of-the-shungas",
+          "title": "Surge of the Shungas",
+          "objectives": [
+            "Student can describe the Shunga dynasty founded by Pushyamitra Shunga after the Mauryas",
+            "Student can describe Shunga-period art such as the Bharhut Stupa panels"
+          ],
+          "visualIdeas": [
+            "a panel from the Bharhut Stupa"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-satavahanas",
+          "title": "The Satavahanas",
+          "objectives": [
+            "Student can describe the Satavahanas who ruled much of the Deccan and their flourishing trade",
+            "Student can explain the tradition of princes being named after their mothers and the role of queens like Gautami Balashri"
+          ],
+          "visualIdeas": [
+            "a Satavahana coin with a ship"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "coming-of-the-chedis",
+          "title": "Coming of the Chedis",
+          "objectives": [
+            "Student can describe Kharavela of the Chedi dynasty in Kalinga and the Udayagiri-Khandagiri caves",
+            "Student can explain what the Hathigumpha inscription records about Kharavela"
+          ],
+          "visualIdeas": [
+            "rock-cut caves at Udayagiri-Khandagiri"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "kingdoms-and-life-in-the-south",
+          "title": "Kingdoms and Life in the South",
+          "objectives": [
+            "Student can describe the Cholas, Cheras and Pandyas and their trade connections",
+            "Student can retell the story of the Silappadikaram, the Tale of the Anklet"
+          ],
+          "visualIdeas": [
+            "a map of the three southern kingdoms",
+            "Kannagi holding her anklet"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "invasions-of-the-indo-greeks",
+          "title": "Invasions of the Indo-Greeks",
+          "objectives": [
+            "Student can explain how the Indo-Greeks arose from Alexander's satraps and blended Greek and Indian culture",
+            "Student can describe the Heliodorus pillar and Indo-Greek coins as evidence"
+          ],
+          "visualIdeas": [
+            "the Heliodorus pillar near Vidisha",
+            "an Indo-Greek coin"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-emergence-of-the-kushanas",
+          "title": "The Emergence of the Kushanas",
+          "objectives": [
+            "Student can describe the Kushana empire under Kanishka and its control of parts of the Silk Route",
+            "Student can describe the Gandhara and Mathura schools of art"
+          ],
+          "visualIdeas": [
+            "Kanishka's coins with the Buddha and Shiva",
+            "a Gandhara Buddha sculpture"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-gupta-era-an-age-of-tireless-creativity",
+      "title": "The Gupta Era: An Age of Tireless Creativity",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees107.pdf",
+      "topics": [
+        {
+          "id": "a-new-power-emerges",
+          "title": "A New Power Emerges",
+          "objectives": [
+            "Student can describe the rise of the Guptas as the Kushana empire weakened",
+            "Student can describe Samudragupta's conquests as recorded in Harisena's Prayaga Prashasti, and Chandragupta II"
+          ],
+          "visualIdeas": [
+            "the iron pillar in Delhi",
+            "a coin of Samudragupta playing the veena"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "a-travellers-account-of-indian-society-in-the-gupta-age",
+          "title": "A Traveller's Account of Indian Society in the Gupta Age",
+          "objectives": [
+            "Student can describe what the Chinese traveller Faxian observed about society in the Gupta era",
+            "Student can explain why Faxian came to India and why his travelogue is a useful source for historians"
+          ],
+          "visualIdeas": [
+            "a traveller with manuscripts walking along a road"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "glimpses-of-the-gupta-empire",
+          "title": "Glimpses of the Gupta Empire",
+          "objectives": [
+            "Student can explain how Gupta rulers consolidated power through conquests, diplomacy and matrimonial alliances",
+            "Student can describe Gupta revenue and trade with the Mediterranean, Southeast Asia and China"
+          ],
+          "visualIdeas": [
+            "a map of Gupta trade routes across the Indian Ocean"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "new-ideas-and-wonders-the-classical-age",
+          "title": "New Ideas and Wonders: The Classical Age",
+          "objectives": [
+            "Student can explain why the Gupta period is called the classical age, with achievements in literature, mathematics, astronomy and metallurgy",
+            "Student can name figures like Kalidasa, Aryabhata and Varahamihira"
+          ],
+          "visualIdeas": [
+            "the remains of Nalanda University"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-quest-for-beauty",
+          "title": "The Quest for Beauty",
+          "objectives": [
+            "Student can describe Gupta art at centres like Sarnath, Ajanta and Udayagiri",
+            "Student can identify deities in Gupta sculptures from their attributes"
+          ],
+          "visualIdeas": [
+            "an Ajanta cave painting",
+            "a Sarnath Buddha"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-decline-of-the-guptas",
+          "title": "The Decline of the Guptas",
+          "objectives": [
+            "Student can explain how Huna invasions and regional rivals weakened the Gupta empire",
+            "Student can explain how the rise of powerful regional rulers led to internal conflicts"
+          ],
+          "visualIdeas": [
+            "Huna horsemen at the edge of the empire"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "meanwhile-in-the-south-and-northeast",
+          "title": "Meanwhile in the South and Northeast ...",
+          "objectives": [
+            "Student can describe the Pallavas of Kanchipuram and the Kamarupa kingdom in the northeast",
+            "Student can explain why Kanchipuram became a major centre of learning in the south"
+          ],
+          "visualIdeas": [
+            "a temple at Kanchipuram"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "how-the-land-becomes-sacred",
+      "title": "How the Land Becomes Sacred",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees108.pdf",
+      "topics": [
+        {
+          "id": "what-is-sacredness",
+          "title": "What is 'Sacredness'?",
+          "objectives": [
+            "Student can explain what makes a place or object sacred in the context of the chapter",
+            "Student can give examples of things regarded as sacred, such as places, rivers and trees"
+          ],
+          "visualIdeas": [
+            "sacred places of different faiths"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "pilgrimages",
+          "title": "Pilgrimages",
+          "objectives": [
+            "Student can explain tirthayatra as both a physical and an inner journey",
+            "Student can explain how many belief systems regard mountains, rivers, trees and animals as sacred"
+          ],
+          "visualIdeas": [
+            "pilgrims walking to a riverside shrine"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "becoming-aware-of-sacred-geography",
+          "title": "Becoming Aware of Sacred Geography",
+          "objectives": [
+            "Student can locate sacred places across India on a map and explain how they are interconnected, as in the char dham yatra",
+            "Student can describe networks such as the 12 jyotirlingas and the 51 Shakti pithas that cover the map of India"
+          ],
+          "visualIdeas": [
+            "a map of India with pilgrimage sites joined by routes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sacred-ecology",
+          "title": "Sacred Ecology",
+          "objectives": [
+            "Student can explain how seeing landscapes as sacred has helped protect nature",
+            "Student can explain the importance of rivers and sangams (confluences) in Indian traditions"
+          ],
+          "visualIdeas": [
+            "a sangam of two rivers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mountains-and-forests",
+          "title": "Mountains and Forests",
+          "objectives": [
+            "Student can explain why many tirthas and temples are located on mountains",
+            "Student can name some sacred mountain sites and explain the journey to them as a test of physical and mental strength"
+          ],
+          "visualIdeas": [
+            "a hilltop temple"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "trees-forests-and-sacred-groves",
+          "title": "Trees, Forests and Sacred Groves",
+          "objectives": [
+            "Student can explain the sacredness of trees like the peepul and the role of sacred groves",
+            "Student can explain how pilgrimage routes and trade routes often overlapped"
+          ],
+          "visualIdeas": [
+            "a sacred grove with a peepul tree"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sacred-geography-beyond-india",
+          "title": "Sacred Geography beyond India",
+          "objectives": [
+            "Student can give examples of sacred geography in other cultures",
+            "Student can suggest ways to restore and conserve sacred places that are being polluted"
+          ],
+          "visualIdeas": [
+            "a polluted river beside a clean-up drive"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "from-the-rulers-to-the-ruled-types-of-governments",
+      "title": "From the Rulers to the Ruled: Types of Governments",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees109.pdf",
+      "topics": [
+        {
+          "id": "what-is-government-what-are-its-functions",
+          "title": "What is Government? What are its Functions?",
+          "objectives": [
+            "Student can list the roles of a government, such as maintaining law and order and ensuring peace and security",
+            "Student can explain that different countries have different forms of government"
+          ],
+          "visualIdeas": [
+            "a government building with icons of its roles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-is-democracy",
+          "title": "What is Democracy?",
+          "objectives": [
+            "Student can explain democracy as 'rule of the people', where the people are the source of power and authority",
+            "Student can compare three ways of forming a school student committee and explain why students choosing representatives from each grade by voting is the democratic way"
+          ],
+          "visualIdeas": [
+            "a school election with ballot boxes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "functions-of-government",
+          "title": "Functions of Government",
+          "objectives": [
+            "Student can name the three functions of government: creating rules (legislative), implementing them and administering the country (executive), and ensuring the rules are followed (judicial)",
+            "Student can compare these functions with the work of a school student committee"
+          ],
+          "visualIdeas": [
+            "three pillars labelled legislative, executive and judicial, each with a school-committee example"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-makes-governments-different",
+          "title": "What Makes Governments Different?",
+          "objectives": [
+            "Student can explain key differences between governments, such as who decides \"this is the government\" and what values it follows",
+            "Student can compare how governments are formed and who gives them authority in a democracy and in a theocracy"
+          ],
+          "visualIdeas": [
+            "a comparison table of questions about governments"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "democratic-governments-around-the-world",
+          "title": "Democratic Governments around the World",
+          "objectives": [
+            "Student can explain the fundamental principles of democracy such as equality and freedom",
+            "Student can distinguish direct democracy from representative democracy and presidential from parliamentary democracy"
+          ],
+          "visualIdeas": [
+            "a tree diagram of forms of democracy"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "a-peek-into-history",
+          "title": "A Peek into History",
+          "objectives": [
+            "Student can describe the Vajji (Vriji) mahajanapada, where the Lichchhavi clan chose leaders on merit and filled key positions through elections, as an early republic",
+            "Student can describe what the 10th-century Uttaramerur inscriptions of the Chola period tell us about electing members to the village sabha",
+            "Student can explain that ancient Rome and Greece had republics in which only some people could vote"
+          ],
+          "visualIdeas": [
+            "a timeline from the Vajji republic to the Uttaramerur inscriptions",
+            "a sealed ballot box for a village sabha election"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "other-forms-of-government",
+          "title": "Other Forms of Government",
+          "objectives": [
+            "Student can describe monarchy, theocracy, dictatorship and oligarchy with examples",
+            "Student can explain how kings in India relied on councils and officials, and how in some places kings held all power"
+          ],
+          "visualIdeas": [
+            "four cards: monarchy, theocracy, dictatorship, oligarchy"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "why-democracy-matters",
+          "title": "Why Democracy Matters",
+          "objectives": [
+            "Student can compare democracy with other forms of government and explain why citizens must remain vigilant about challenges to democracy",
+            "Student can compare forms of government on universal adult franchise, equality, freedom of speech and separation of powers"
+          ],
+          "visualIdeas": [
+            "a balance weighing democracy against other forms"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "the-constitution-of-india-an-introduction",
+      "title": "The Constitution of India — An Introduction",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees110.pdf",
+      "topics": [
+        {
+          "id": "what-is-a-constitution",
+          "title": "What Is a Constitution?",
+          "objectives": [
+            "Student can explain that a constitution spells out a nation's basic principles, laws and the framework of its government",
+            "Student can explain why we need a constitution using the example of rules in a kabaddi match"
+          ],
+          "visualIdeas": [
+            "a rulebook beside a kabaddi court"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-the-constitution-of-india",
+          "title": "Writing the Constitution of India",
+          "objectives": [
+            "Student can describe how the Constituent Assembly, formed on 9 December 1946, drafted the Constitution over almost three years",
+            "Student can list the questions the Constitution makers had to answer, such as what type of government India should have"
+          ],
+          "visualIdeas": [
+            "the Constituent Assembly in session"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-shaped-and-influenced-the-indian-constitution",
+          "title": "What Shaped and Influenced the Indian Constitution?",
+          "objectives": [
+            "Student can explain how the freedom movement, India's civilisational heritage and constitutions of other countries influenced the Constitution",
+            "Student can name ideals from the freedom struggle, such as equality, justice, freedom and fraternity, that were enshrined in the Constitution"
+          ],
+          "visualIdeas": [
+            "three streams flowing into one book"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "key-features-of-the-constitution-of-india",
+          "title": "Key Features of the Constitution of India",
+          "objectives": [
+            "Student can describe key features such as the three organs of government and separation of powers",
+            "Student can explain Fundamental Rights, Directive Principles of State Policy and Fundamental Duties"
+          ],
+          "visualIdeas": [
+            "three pillars labelled legislature, executive and judiciary"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-constitution-is-a-living-document",
+          "title": "The Constitution is a Living Document",
+          "objectives": [
+            "Student can explain that the Constitution can be amended through a defined process, as when Fundamental Duties were added in 1976",
+            "Student can give examples of changes such as the inclusion of the Panchayati Raj system in 1992 and the right to fly the national flag"
+          ],
+          "visualIdeas": [
+            "a book with added pages labelled amendments"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "understanding-the-preamble-the-guiding-values-of-the-constitution-of-india",
+          "title": "Understanding the Preamble: The Guiding Values of the Constitution of India",
+          "objectives": [
+            "Student can explain the guiding values of the Preamble and how citizens can practise them",
+            "Student can explain words of the Preamble such as \"We, the people of India\", sovereign, socialist and secular"
+          ],
+          "visualIdeas": [
+            "the Preamble with key values highlighted"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "from-barter-to-money",
+      "title": "From Barter to Money",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees111.pdf",
+      "topics": [
+        {
+          "id": "why-do-we-need-money",
+          "title": "Why Do we Need Money?",
+          "objectives": [
+            "Student can explain the barter system and its limitations, such as the need for a double coincidence of wants",
+            "Student can describe the difficulties a farmer faces when exchanging an ox for many different goods"
+          ],
+          "visualIdeas": [
+            "a farmer trying to exchange an ox for shoes, a sweater and medicines"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "basic-functions-of-money",
+          "title": "Basic Functions of Money",
+          "objectives": [
+            "Student can explain the functions of money, such as a medium of exchange, and use examples like buying a book",
+            "Student can explain money as a store of value and a common measure of the value of goods and services"
+          ],
+          "visualIdeas": [
+            "a chart of the functions of money"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-journey-of-money-coinage",
+          "title": "The Journey of Money: Coinage",
+          "objectives": [
+            "Student can trace the journey of money from commodities to coins",
+            "Student can describe early Indian coins and how coins were minted from metals and alloys"
+          ],
+          "visualIdeas": [
+            "a timeline from shells to coins"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "paper-money",
+          "title": "Paper Money",
+          "objectives": [
+            "Student can explain why paper money developed and identify the motifs on Indian banknotes",
+            "Student can state that paper money was first used in China and introduced in India in the late 18th century"
+          ],
+          "visualIdeas": [
+            "a Rs 50 and a Rs 100 note with motifs labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "new-forms-of-money",
+          "title": "New Forms of Money",
+          "objectives": [
+            "Student can describe digital money and payment methods like debit cards, net banking and QR code payments",
+            "Student can explain that digital money is an intangible, electronic form of money"
+          ],
+          "visualIdeas": [
+            "a fruit cart with a QR code being scanned"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "understanding-markets",
+      "title": "Understanding Markets",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees112.pdf",
+      "topics": [
+        {
+          "id": "what-is-a-market",
+          "title": "What is a Market?",
+          "objectives": [
+            "Student can define a market as a place, physical or online, where people buy and sell goods",
+            "Student can describe the Hampi Bazaar of the Vijayanagara Empire as an example of a prosperous market"
+          ],
+          "visualIdeas": [
+            "a weekly haat and an online shopping screen"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "prices-and-markets",
+          "title": "Prices and Markets",
+          "objectives": [
+            "Student can explain how prices are set by the interaction of buyers and sellers, through demand and supply",
+            "Student can predict what happens when a seller fixes a price too high or too low"
+          ],
+          "visualIdeas": [
+            "a seller and buyers bargaining over guavas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "markets-around-us",
+          "title": "Markets Around Us",
+          "objectives": [
+            "Student can compare physical and online markets",
+            "Student can compare domestic and international markets"
+          ],
+          "visualIdeas": [
+            "a map showing goods moving within and across countries"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "wholesale-and-retail-markets",
+          "title": "Wholesale and Retail Markets",
+          "objectives": [
+            "Student can trace the flow of goods from producer to wholesaler, distributor, retailer and consumer",
+            "Student can explain the role of warehouses and cold storage in markets"
+          ],
+          "visualIdeas": [
+            "a supply chain diagram"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-role-of-markets-in-peoples-lives",
+          "title": "The Role of Markets in People's Lives",
+          "objectives": [
+            "Student can explain how markets connect producers and consumers and benefit society",
+            "Student can explain why some products, like artwork, have fewer buyers and sellers"
+          ],
+          "visualIdeas": [
+            "a market as a meeting place of people"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "governments-role-in-the-market",
+          "title": "Government's Role in the Market",
+          "objectives": [
+            "Student can explain how the government controls prices, ensures quality and safety standards, mitigates external effects like pollution and provides public goods",
+            "Student can explain how consumers assess quality through certification marks and reviews"
+          ],
+          "visualIdeas": [
+            "certification marks on product packages"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-story-of-indian-farming",
+      "title": "The Story of Indian Farming",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees201.pdf",
+      "topics": [
+        {
+          "id": "indias-agricultural-landscape-and-echoes-from-the-past",
+          "title": "India's Agricultural Landscape and Echoes from the Past",
+          "objectives": [
+            "Student can describe what agriculture includes, from soil preparation to livestock",
+            "Student can trace the long history of farming in India, from early rice and barley cultivation to the Harappans"
+          ],
+          "visualIdeas": [
+            "a timeline of crops from prehistory to the Harappans"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "climate-seasons-and-crops-what-grows-where-and-when",
+          "title": "Climate, Seasons, and Crops: What Grows Where and When?",
+          "objectives": [
+            "Student can explain the role of the southwest and northeast monsoons in agriculture",
+            "Student can name the kharif, rabi and zaid cropping seasons with examples of crops"
+          ],
+          "visualIdeas": [
+            "a cropping calendar for kharif, rabi and zaid"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "soil-the-foundation-of-cultivation",
+          "title": "Soil, the Foundation of Cultivation",
+          "objectives": [
+            "Student can explain how soil forms from rocks and organic matter",
+            "Student can name the six major soil types of India and link soils with crops",
+            "Student can describe ways of nurturing soil, such as crop rotation"
+          ],
+          "visualIdeas": [
+            "soil layers forming from bedrock",
+            "a soil map of India"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "water-rain-fed-vs-irrigated-agriculture",
+          "title": "Water: Rain-Fed vs. Irrigated Agriculture",
+          "objectives": [
+            "Student can compare rain-fed and irrigated agriculture and their challenges",
+            "Student can give examples of traditional water structures and irrigation in India"
+          ],
+          "visualIdeas": [
+            "a rain-fed field and an irrigated field side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "seeds",
+          "title": "Seeds",
+          "objectives": [
+            "Student can explain how seeds were traditionally preserved and shared, and the shift to buying high-yield seeds",
+            "Student can describe seed treatments from the Arthashastra and modern methods like beejamrit"
+          ],
+          "visualIdeas": [
+            "a family seed store with labelled jars"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "agricultural-practices-traditional-wisdom-and-modern-innovations",
+          "title": "Agricultural Practices: Traditional Wisdom and Modern Innovations",
+          "objectives": [
+            "Student can compare traditional farming systems with contemporary agriculture and the Green Revolution",
+            "Student can describe sustainable practices such as organic farming"
+          ],
+          "visualIdeas": [
+            "terrace farming beside a tractor on a large field"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-role-of-the-government-and-challenges",
+          "title": "The Role of the Government and Challenges",
+          "objectives": [
+            "Student can describe how the government supports farmers through inputs, crop insurance and purchase of crops",
+            "Student can explain challenges such as small landholdings, climate change and market difficulties"
+          ],
+          "visualIdeas": [
+            "a small farm plot compared with a football field"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "india-and-her-neighbours",
+      "title": "India and Her Neighbours",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees202.pdf",
+      "topics": [
+        {
+          "id": "framing-the-neighbourhood",
+          "title": "Framing the Neighbourhood",
+          "objectives": [
+            "Student can name India's land-based and maritime neighbours on a map",
+            "Student can define a maritime neighbour and explain India's wider neighbourhood as a maritime nation"
+          ],
+          "visualIdeas": [
+            "a map of India and her neighbours"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "india-and-her-land-based-neighbours-china-pakistan-and-bangladesh",
+          "title": "India and Her Land-based Neighbours: China, Pakistan and Bangladesh",
+          "objectives": [
+            "Student can describe India's relationship with China shaped by history, geography and trade",
+            "Student can describe India's ties with Pakistan and Bangladesh in the light of Partition and 1971"
+          ],
+          "visualIdeas": [
+            "a map of India's northern and eastern borders"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "nepal-bhutan-myanmar-and-afghanistan",
+          "title": "Nepal, Bhutan, Myanmar and Afghanistan",
+          "objectives": [
+            "Student can describe India's close ties with Nepal and Bhutan in the Himalayas",
+            "Student can explain why Myanmar is India's gateway to Southeast Asia and describe ties with Afghanistan"
+          ],
+          "visualIdeas": [
+            "Himalayan neighbours on a relief map"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "indias-maritime-neighbours",
+          "title": "India's Maritime Neighbours",
+          "objectives": [
+            "Student can describe India's ties with Sri Lanka and the Maldives",
+            "Student can describe historical links with Thailand, Malaysia, Singapore and Indonesia through sea trade and culture"
+          ],
+          "visualIdeas": [
+            "sea routes from India to Southeast Asia"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "an-ancient-neighbour-and-the-land-of-copper",
+          "title": "An Ancient Neighbour and the Land of Copper",
+          "objectives": [
+            "Student can describe India's ancient ties with Iran and its strategic relationship with Oman",
+            "Student can explain how ancient trade routes connected India with its neighbours"
+          ],
+          "visualIdeas": [
+            "ancient land and sea routes to Iran and Oman"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "empires-and-kingdoms-6th-to-10th-centuries",
+      "title": "Empires and Kingdoms: 6th to 10th Centuries",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees203.pdf",
+      "topics": [
+        {
+          "id": "the-great-king-of-kings",
+          "title": "The 'Great King of Kings'",
+          "objectives": [
+            "Student can describe Harshavardhana's rule from Kannauj from 606 CE",
+            "Student can explain how Harsha's coins, inscriptions and plays help historians learn about his times"
+          ],
+          "visualIdeas": [
+            "a map of Harsha's kingdom"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-tripartite-struggle-for-kannauj",
+          "title": "A Tripartite Struggle for Kannauj",
+          "objectives": [
+            "Student can explain the struggle for Kannauj between the Palas, the Gurjara-Pratiharas and the Rashtrakutas",
+            "Student can describe the Pala dynasty founded by Gopala and its patronage of Buddhism"
+          ],
+          "visualIdeas": [
+            "three armies converging on Kannauj"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "kashmir",
+          "title": "Kashmir",
+          "objectives": [
+            "Student can describe the Kashmir kingdom and Kalhana's Rajatarangini as a source",
+            "Student can describe rulers of Kashmir such as Lalitaditya Muktapida and Queen Didda"
+          ],
+          "visualIdeas": [
+            "a manuscript page of the Rajatarangini"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-deccan-and-beyond",
+          "title": "The Deccan and Beyond",
+          "objectives": [
+            "Student can describe the Chalukyas and the Pallavas and the kingdoms further south",
+            "Student can describe how Pulakeshin II of the Chalukyas stood in the way of Harsha's southward ambitions"
+          ],
+          "visualIdeas": [
+            "a map of the Deccan kingdoms"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "other-developments",
+          "title": "Other Developments",
+          "objectives": [
+            "Student can describe polity and administration, land grants, trade and urbanisation in this period",
+            "Student can describe social and cultural life, including the multiplication of jatis and the rise of the Bhakti tradition",
+            "Student can name mathematicians and astronomers of the period, such as Brahmagupta"
+          ],
+          "visualIdeas": [
+            "a land grant copper plate"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "foreign-invasions",
+          "title": "Foreign Invasions",
+          "objectives": [
+            "Student can describe the challenge of the Hunas and the arrival of the Arabs on India's shores",
+            "Student can explain why the northwestern frontier was strategically important"
+          ],
+          "visualIdeas": [
+            "the northwest frontier with arrows of invasions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "taking-stock",
+          "title": "Taking Stock",
+          "objectives": [
+            "Student can summarise how regional kingdoms rose after the Guptas and why no single power stayed supreme",
+            "Student can name the chief dynasties of the period and their approximate regions"
+          ],
+          "visualIdeas": [
+            "a summary timeline of dynasties"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "turning-tides-11th-and-12th-centuries",
+      "title": "Turning Tides: 11th and 12th Centuries",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees204.pdf",
+      "topics": [
+        {
+          "id": "the-ghaznavid-invasions",
+          "title": "The Ghaznavid Invasions",
+          "objectives": [
+            "Student can describe Mahmud of Ghazni's raids into north India after defeating the Hindu Shahis",
+            "Student can explain that scientific work continued in other regions, as with Bhaskaracharya"
+          ],
+          "visualIdeas": [
+            "a map of the Ghaznavid raids"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "eastern-india",
+          "title": "Eastern India",
+          "objectives": [
+            "Student can describe the Sena dynasty that followed the Palas in the east",
+            "Student can describe the Eastern Gangas of Kalinga and the Senas' patronage of poets like Jayadeva"
+          ],
+          "visualIdeas": [
+            "a map of eastern India in the 11th century"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "further-south",
+          "title": "Further South",
+          "objectives": [
+            "Student can describe the Kakatiyas, the Hoysalas and the Cholas as masters of the seas",
+            "Student can explain how the Kakatiyas and Hoysalas grew stronger as the Western Chalukyas faded"
+          ],
+          "visualIdeas": [
+            "Chola ships crossing to Southeast Asia",
+            "the Warangal fort gateway"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "back-to-the-north",
+          "title": "Back to the North",
+          "objectives": [
+            "Student can describe the Paramaras of Malwa",
+            "Student can explain why the Ghurid conquest of Delhi and the Gangetic plains was a turning point"
+          ],
+          "visualIdeas": [
+            "a map of the Ghurid conquests"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "governance-trade-and-cultural-life",
+          "title": "Governance, Trade and Cultural Life",
+          "objectives": [
+            "Student can describe how kingdoms kept armies and administrations, and how trade, art and literature continued to thrive",
+            "Student can explain why powerful kings needed efficient administrations to support large armies"
+          ],
+          "visualIdeas": [
+            "a temple and a trading port of the period"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "taking-stock",
+          "title": "Taking Stock",
+          "objectives": [
+            "Student can summarise the changes and continuities of the 11th and 12th centuries",
+            "Student can explain that large parts of north India and all of south India remained outside Turkic rule in this period"
+          ],
+          "visualIdeas": [
+            "a change-and-continuity chart"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "india-a-home-to-many",
+      "title": "India, a Home to Many",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees205.pdf",
+      "topics": [
+        {
+          "id": "the-story-of-indian-jews-and-the-syriac-christian-community",
+          "title": "The Story of Indian Jews and the Syriac Christian Community",
+          "objectives": [
+            "Student can describe how Jewish communities found a safe haven in India",
+            "Student can describe how Syriac Christian groups settled in India"
+          ],
+          "visualIdeas": [
+            "a synagogue and a church in Kerala"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-legend-of-the-parsi-wise-man-milk-and-sugar",
+          "title": "The Legend of the Parsi Wise Man, Milk, and Sugar",
+          "objectives": [
+            "Student can retell the legend of how the Parsis came to India and were welcomed",
+            "Student can explain why Zoroastrians left Persia after the 7th century and settled on India's western coast"
+          ],
+          "visualIdeas": [
+            "a bowl of milk with sugar dissolved in it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-arab-merchant-community-and-the-african-connection",
+          "title": "The Arab Merchant Community and the African Connection",
+          "objectives": [
+            "Student can describe how Arab merchants settled on the west coast",
+            "Student can describe the history of the Siddis of African origin in India"
+          ],
+          "visualIdeas": [
+            "a map of the west coast trading towns"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-armenians-and-the-bahai-community-in-india",
+          "title": "The Armenians and the Baha'i Community in India",
+          "objectives": [
+            "Student can describe the Armenian merchants and the Baha'i community who made India their home",
+            "Student can explain why Baha'is came to India and what the faith teaches about unity"
+          ],
+          "visualIdeas": [
+            "the Lotus Temple"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-good-maharaja-and-the-polish-children",
+          "title": "The 'Good Maharaja' and the Polish Children",
+          "objectives": [
+            "Student can retell how a Maharaja gave shelter to Polish children during the Second World War",
+            "Student can explain why a square in Warsaw honours the Maharaja of Nawanagar"
+          ],
+          "visualIdeas": [
+            "the Good Maharaja Square monument in Warsaw"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "tibetan-refugees-in-india",
+          "title": "Tibetan Refugees in India",
+          "objectives": [
+            "Student can describe how Tibetan refugees found a home in India",
+            "Student can describe how Buddhism spread to Tibet and the long links between India and Tibet"
+          ],
+          "visualIdeas": [
+            "a Tibetan settlement in the hills"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-whole-world-is-family-and-indian-values-beyond-india",
+          "title": "\"The Whole World is Family\" and Indian Values Beyond India",
+          "objectives": [
+            "Student can explain values like vasudhaiva kutumbakam and atithi devo bhava that underlie India's acceptance of others",
+            "Student can describe how Indian communities abroad practise similar values"
+          ],
+          "visualIdeas": [
+            "a globe with people holding hands"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-state-the-government-and-you",
+      "title": "The State, the Government, and You",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees206.pdf",
+      "topics": [
+        {
+          "id": "what-is-a-state-what-is-a-government",
+          "title": "What is a State? What is a Government?",
+          "objectives": [
+            "Student can define a state and its four parts, and explain how the state differs from the government",
+            "Student can describe the government as the system that makes and enforces laws and resolves disputes"
+          ],
+          "visualIdeas": [
+            "a diagram of the state: territory, population, government, sovereignty"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "democracy-and-republic",
+          "title": "Democracy and Republic",
+          "objectives": [
+            "Student can explain the difference between a democracy, where people choose their government through free and fair elections, and a republic, where the head of state is elected and not hereditary",
+            "Student can explain why the Constitution uses 'democratic' and 'republic' together, and why some democracies such as the UK are not republics"
+          ],
+          "visualIdeas": [
+            "the Preamble with \"democratic republic\" highlighted"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "india-a-republic-that-protects-the-rights-of-all",
+          "title": "India, a Republic that Protects the Rights of All",
+          "objectives": [
+            "Student can explain how the Constitution and the law ensure that rule by a representative majority does not violate the fundamental rights of any citizen",
+            "Student can explain the 'dominance of the majority' using the example of a residents' association that banned deliveries after 9 pm",
+            "Student can give an example of rights protected by law, such as the Dongria Kondh tribe and their sacred hills"
+          ],
+          "visualIdeas": [
+            "a majority and a minority group with the Constitution as a shield between them"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "legislature-the-lawmaking-body",
+          "title": "Legislature: The Lawmaking Body",
+          "objectives": [
+            "Student can explain the role of the legislature in making laws",
+            "Student can explain that states have their own legislatures that make laws for the state"
+          ],
+          "visualIdeas": [
+            "Parliament in session"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "executive-the-law-implementing-and-policymaking-body",
+          "title": "Executive: The Law-Implementing and Policymaking Body",
+          "objectives": [
+            "Student can distinguish the political executive from the permanent executive",
+            "Student can describe how the permanent executive, civil servants selected through examinations such as those of the UPSC, implements laws and schemes, links citizens with the government and keeps records"
+          ],
+          "visualIdeas": [
+            "a chart of political and permanent executive"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-government-and-you",
+          "title": "The Government and You",
+          "objectives": [
+            "Student can describe the government's triple role of protector, provider and regulator, with examples",
+            "Student can list ways citizens can get the government to act, such as grievance redressal, the Right to Information Act, the media, civil society organisations, writing to representatives and voting",
+            "Student can explain how citizens of Bagepalli used an RTI request to get roadwork completed properly"
+          ],
+          "visualIdeas": [
+            "a citizen's toolkit: grievance portal, RTI request, newspaper, NGO, letter and ballot"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "judiciary-guardian-of-the-constitution",
+          "title": "Judiciary: Guardian of the Constitution",
+          "objectives": [
+            "Student can explain what the judiciary does and why it is important for the rule of law",
+            "Student can explain why an independent judiciary keeps justice fair for all"
+          ],
+          "visualIdeas": [
+            "a court with scales of justice"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tiers-of-government",
+          "title": "Tiers of Government",
+          "objectives": [
+            "Student can describe the union, state and local tiers of government",
+            "Student can explain decentralisation"
+          ],
+          "visualIdeas": [
+            "three tiers stacked: union, state, local"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "infrastructure-engine-of-indias-development",
+      "title": "Infrastructure: Engine of India's Development",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees207.pdf",
+      "topics": [
+        {
+          "id": "introduction-why-is-physical-infrastructure-important",
+          "title": "Introduction: Why is Physical Infrastructure Important?",
+          "objectives": [
+            "Student can explain what infrastructure is and why it matters for daily life and the economy",
+            "Student can trace how a journey or a farmer's produce depends on bridges, metros, railways, buses and phones"
+          ],
+          "visualIdeas": [
+            "a town with and without roads, power and water"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "transportation-infrastructure-roads-and-railways",
+          "title": "Transportation Infrastructure: Roads and Railways",
+          "objectives": [
+            "Student can describe India's road and highway network and the Indian railway network",
+            "Student can explain why the British introduced railways in India in 1853 and how railways became a lifeline"
+          ],
+          "visualIdeas": [
+            "a highway and a railway line across a map of India"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "transportation-infrastructure-metro-air-shipping-and-ports",
+          "title": "Transportation Infrastructure: Metro, Air, Shipping and Ports",
+          "objectives": [
+            "Student can describe metro systems, air transport, and shipping and ports, and what each is best suited for",
+            "Student can explain why ships are used for heavy goods and air transport for urgent or perishable goods"
+          ],
+          "visualIdeas": [
+            "a metro train, a plane and a cargo ship"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "communications-infrastructure",
+          "title": "Communications Infrastructure",
+          "objectives": [
+            "Student can describe the cables, towers, satellites and data centres that enable communication",
+            "Student can trace the journey of a voice note through towers, fibre cables and satellites"
+          ],
+          "visualIdeas": [
+            "a voice note travelling via towers and cables"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "collective-responsibility-towards-infrastructure",
+          "title": "Collective Responsibility Towards Infrastructure",
+          "objectives": [
+            "Student can explain why caring for public infrastructure is every citizen's responsibility",
+            "Student can suggest ways to improve services like waste management, traffic management and safe drinking water"
+          ],
+          "visualIdeas": [
+            "children cleaning a public park"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "banks-and-the-magic-of-finance",
+      "title": "Banks and the Magic of Finance",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gees208.pdf",
+      "topics": [
+        {
+          "id": "what-are-banks-and-what-do-they-do",
+          "title": "What are Banks and What Do They Do?",
+          "objectives": [
+            "Student can describe savings, current and fixed deposit accounts",
+            "Student can explain how banks give loans and earn from the difference between interest on loans and on deposits"
+          ],
+          "visualIdeas": [
+            "money flowing from depositors to borrowers through a bank"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "other-financial-institutions",
+          "title": "Other Financial Institutions",
+          "objectives": [
+            "Student can describe financial services of post offices and institutions like NABARD",
+            "Student can explain the role of the Reserve Bank of India as the regulator"
+          ],
+          "visualIdeas": [
+            "a post office and the RBI building"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "payment-modes-and-systems",
+          "title": "Payment Modes and Systems",
+          "objectives": [
+            "Student can explain how cash is withdrawn and how money is transferred by cheque, debit card and UPI",
+            "Student can identify the parts of a cheque and explain how a cheque payment is debited and credited"
+          ],
+          "visualIdeas": [
+            "a cheque with its parts labelled",
+            "a UPI payment on a phone"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "stock-market",
+          "title": "Stock Market",
+          "objectives": [
+            "Student can explain that a share is part-ownership in a company and that the stock market is where shares are bought and sold",
+            "Student can explain that buying a share makes a person a part-owner of a company"
+          ],
+          "visualIdeas": [
+            "a company pie divided into shares"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

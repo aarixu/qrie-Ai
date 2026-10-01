@@ -1,0 +1,2892 @@
+{
+  "id": "class10-social-science",
+  "klass": 10,
+  "subject": "Social Science",
+  "source": {
+    "books": [
+      {
+        "title": "India and the Contemporary World - II",
+        "code": "jess3",
+        "edition": "Reprint 2026-27 (First Edition March 2007; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/jess3ps.pdf"
+      },
+      {
+        "title": "Contemporary India - II",
+        "code": "jess1",
+        "edition": "Reprint 2026-27 (First Edition January 2006; Revised Edition November 2022; reprinted December 2025)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/jess1ps.pdf"
+      },
+      {
+        "title": "Democratic Politics - II",
+        "code": "jess4",
+        "edition": "Reprint 2026-27 (First Edition March 2007; Revised Edition (rationalised); reprinted December 2025)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/jess4ps.pdf"
+      },
+      {
+        "title": "Understanding Economic Development",
+        "code": "jess2",
+        "edition": "Reprint 2026-27 (First Edition December 2006; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/jess2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from each book's Contents page, books in the order History, Geography, Political Science, Economics; topics from each chapter PDF's section headings (numbered in History; unnumbered, sometimes run-in, in the other three books; a short lead-in heading is folded into the next topic; exercises are not topics; some topics come from titled boxes, for example Project Tiger, Bamboo Drip Irrigation System, Bhoodan - Gramdan and Popular participation in political parties)"
+  },
+  "chapters": [
+    {
+      "id": "the-rise-of-nationalism-in-europe",
+      "title": "The Rise of Nationalism in Europe",
+      "book": "India and the Contemporary World - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess301.pdf",
+      "topics": [
+        {
+          "id": "the-french-revolution-and-the-idea-of-the-nation",
+          "title": "The French Revolution and the Idea of the Nation",
+          "objectives": [
+            "Student can describe Sorrieu's vision of a world of democratic and social republics",
+            "Student can list the measures French revolutionaries took to create a sense of collective identity, such as la patrie, le citoyen and the tricolour",
+            "Student can explain the main changes of the Napoleonic Code of 1804 and the mixed reactions to French rule in conquered areas"
+          ],
+          "visualIdeas": [
+            "Sorrieu's print of peoples marching towards the Statue of Liberty",
+            "a list of revolutionary measures: flag, anthem, uniform laws, weights and measures"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-making-of-nationalism-in-europe",
+          "title": "The Making of Nationalism in Europe",
+          "objectives": [
+            "Student can explain why there were no nation-states in Germany, Italy and Switzerland in the mid-eighteenth century",
+            "Student can describe the diversity of peoples and languages within the Habsburg Empire"
+          ],
+          "visualIdeas": [
+            "a map of Europe in 1797 with many small states"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-aristocracy-and-the-new-middle-class",
+          "title": "The Aristocracy and the New Middle Class",
+          "objectives": [
+            "Student can describe the aristocracy as the dominant class, united by a common way of life",
+            "Student can explain how industrialisation created a working class and a middle class that supported national unity"
+          ],
+          "visualIdeas": [
+            "a social pyramid of aristocracy, middle class and peasants"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-did-liberal-nationalism-stand-for",
+          "title": "What did Liberal Nationalism Stand for?",
+          "objectives": [
+            "Student can explain what liberalism meant for the middle classes: individual freedom, equality before law and government by consent",
+            "Student can explain why voting rights were limited to property-owning men",
+            "Student can explain how the Zollverein of 1834 promoted economic unity in the German states"
+          ],
+          "visualIdeas": [
+            "a customs barrier being lifted between German states"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-new-conservatism-after-1815",
+          "title": "A New Conservatism after 1815",
+          "objectives": [
+            "Student can describe the aims of the Treaty of Vienna (1815) hosted by Duke Metternich",
+            "Student can explain how conservative regimes curbed liberty through censorship"
+          ],
+          "visualIdeas": [
+            "a map of Europe after the Congress of Vienna"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-revolutionaries",
+          "title": "The Revolutionaries",
+          "objectives": [
+            "Student can describe secret societies formed by liberal-nationalists after 1815",
+            "Student can explain Giuseppe Mazzini's ideas and why Metternich called him the most dangerous enemy of the social order"
+          ],
+          "visualIdeas": [
+            "portrait of Mazzini with Young Italy and Young Europe labels"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-age-of-revolutions-1830-1848",
+          "title": "The Age of Revolutions: 1830-1848",
+          "objectives": [
+            "Student can describe the July Revolution of 1830 in France and Belgium's break from the Netherlands",
+            "Student can explain how the Greek war of independence mobilised nationalist feelings across Europe"
+          ],
+          "visualIdeas": [
+            "a timeline of revolts from 1821 to 1848"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-romantic-imagination-and-national-feeling",
+          "title": "The Romantic Imagination and National Feeling",
+          "objectives": [
+            "Student can explain how Romanticism used folk culture, music and language to create national feeling",
+            "Student can explain Herder's idea of the spirit of the nation (volksgeist) and the importance of language, using Poland as an example"
+          ],
+          "visualIdeas": [
+            "Grimm's fairy tale book next to a folk musician"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "hunger-hardship-and-popular-revolt",
+          "title": "Hunger, Hardship and Popular Revolt",
+          "objectives": [
+            "Student can explain the economic hardship in Europe in the 1830s and the revolt of the Silesian weavers",
+            "Student can describe the 1848 revolution of the liberals and the Frankfurt Parliament",
+            "Student can explain why the Frankfurt Parliament failed and the reforms monarchs introduced after 1848"
+          ],
+          "visualIdeas": [
+            "the Frankfurt parliament in the Church of St Paul"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "germany-can-the-army-be-the-architect-of-a-nation",
+          "title": "Germany - Can the Army be the Architect of a Nation?",
+          "objectives": [
+            "Student can explain how Prussia under Otto von Bismarck unified Germany through three wars",
+            "Student can describe the proclamation of Kaiser William I at Versailles in January 1871"
+          ],
+          "visualIdeas": [
+            "the Hall of Mirrors ceremony",
+            "a map of German unification"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "italy-unified",
+          "title": "Italy Unified",
+          "objectives": [
+            "Student can explain how Italians were scattered over several dynastic states and the Habsburg Empire",
+            "Student can explain the roles of Mazzini, Cavour and Garibaldi in unifying Italy and how Victor Emmanuel II was proclaimed king in 1861",
+            "Student can explain why much of the Italian population, with high illiteracy, remained unaware of liberal-nationalist ideology"
+          ],
+          "visualIdeas": [
+            "a map of Italian states before unification"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-strange-case-of-britain",
+          "title": "The Strange Case of Britain",
+          "objectives": [
+            "Student can explain how the British nation was formed through a long process rather than a sudden revolution",
+            "Student can describe the Act of Union 1707 and the incorporation of Ireland in 1801",
+            "Student can name symbols of the new Britain such as the Union Jack and the English language"
+          ],
+          "visualIdeas": [
+            "the Union Jack made from three crosses"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "visualising-the-nation",
+          "title": "Visualising the Nation",
+          "objectives": [
+            "Student can explain how artists personified nations as female figures",
+            "Student can describe Marianne and Germania and the meaning of their symbols"
+          ],
+          "visualIdeas": [
+            "Marianne and Germania side by side",
+            "a table of symbols and their meanings"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nationalism-and-imperialism",
+          "title": "Nationalism and Imperialism",
+          "objectives": [
+            "Student can explain how nationalism became narrow and aggressive after 1871",
+            "Student can explain why the Balkans became the source of tension leading to the First World War",
+            "Student can explain how nationalism joined with imperialism and later inspired anti-imperial movements"
+          ],
+          "visualIdeas": [
+            "a map of the Balkans with rival powers"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "nationalism-in-india",
+      "title": "Nationalism in India",
+      "book": "India and the Contemporary World - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess302.pdf",
+      "topics": [
+        {
+          "id": "the-first-world-war-khilafat-and-non-cooperation",
+          "title": "The First World War, Khilafat and Non-Cooperation",
+          "objectives": [
+            "Student can explain how the First World War created a new economic and political situation in India",
+            "Student can explain how defence expenditure, war loans, increased taxes, doubled prices and forced recruitment caused hardship",
+            "Student can explain how crop failures and an influenza epidemic added to the suffering in 1918-21"
+          ],
+          "visualIdeas": [
+            "a chart of rising prices 1913-18"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-idea-of-satyagraha",
+          "title": "The Idea of Satyagraha",
+          "objectives": [
+            "Student can explain the idea of satyagraha as the power of truth and non-violence",
+            "Student can describe Gandhi's satyagraha movements in Champaran, Kheda and Ahmedabad"
+          ],
+          "visualIdeas": [
+            "a map of Champaran, Kheda and Ahmedabad"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-rowlatt-act",
+          "title": "The Rowlatt Act",
+          "objectives": [
+            "Student can explain why the Rowlatt Act of 1919 was opposed",
+            "Student can describe the Jallianwala Bagh incident of 13 April 1919",
+            "Student can explain how the Khilafat issue brought Hindus and Muslims together"
+          ],
+          "visualIdeas": [
+            "a walled garden with a narrow exit"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "why-non-cooperation",
+          "title": "Why Non-cooperation?",
+          "objectives": [
+            "Student can explain Gandhi's argument in Hind Swaraj that British rule survived because of Indian cooperation",
+            "Student can describe the proposed stages of non-cooperation adopted at Nagpur in 1920"
+          ],
+          "visualIdeas": [
+            "a staircase of non-cooperation stages"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-movement-in-the-towns",
+          "title": "The Movement in the Towns",
+          "objectives": [
+            "Student can describe middle-class participation in the movement in the towns",
+            "Student can explain the economic effects of boycotting foreign goods",
+            "Student can explain why the movement slowed down in the cities"
+          ],
+          "visualIdeas": [
+            "a bonfire of foreign cloth"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rebellion-in-the-countryside",
+          "title": "Rebellion in the Countryside",
+          "objectives": [
+            "Student can describe the peasants' movement in Awadh led by Baba Ramchandra",
+            "Student can describe the tribal movement in the Gudem Hills led by Alluri Sitaram Raju"
+          ],
+          "visualIdeas": [
+            "a village meeting of peasants"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "swaraj-in-the-plantations",
+          "title": "Swaraj in the Plantations",
+          "objectives": [
+            "Student can explain how the Inland Emigration Act of 1859 restricted plantation workers in Assam",
+            "Student can explain how plantation workers understood swaraj as the right to move freely and return to their villages"
+          ],
+          "visualIdeas": [
+            "a tea garden with workers leaving"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "towards-civil-disobedience",
+          "title": "Towards Civil Disobedience",
+          "objectives": [
+            "Student can explain why Gandhi withdrew the Non-Cooperation Movement in 1922",
+            "Student can describe the Simon Commission and the Lahore Congress demand for Purna Swaraj"
+          ],
+          "visualIdeas": [
+            "a protest banner: Go back Simon"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-salt-march-and-the-civil-disobedience-movement",
+          "title": "The Salt March and the Civil Disobedience Movement",
+          "objectives": [
+            "Student can explain why Gandhi found salt a powerful symbol that could unite the nation",
+            "Student can describe Gandhi's letter to Viceroy Irwin with eleven demands and the Salt March from Sabarmati to Dandi",
+            "Student can explain how the Civil Disobedience Movement spread, the Gandhi-Irwin Pact and the Second Round Table Conference"
+          ],
+          "visualIdeas": [
+            "a map of the route from Sabarmati to Dandi"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-participants-saw-the-movement",
+          "title": "How Participants saw the Movement",
+          "objectives": [
+            "Student can explain why rich peasant communities such as the Patidars and Jats joined the movement and why poor peasants wanted rent remission",
+            "Student can explain why business classes, organised in FICCI, and some industrial workers supported the movement",
+            "Student can describe the large-scale participation of women and its limits"
+          ],
+          "visualIdeas": [
+            "a chart of social groups and their expectations"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-limits-of-civil-disobedience",
+          "title": "The Limits of Civil Disobedience",
+          "objectives": [
+            "Student can explain why Dr B.R. Ambedkar demanded separate electorates for dalits and what the Poona Pact of 1932 provided",
+            "Student can explain why large sections of Muslims felt alienated from the Congress and the movement"
+          ],
+          "visualIdeas": [
+            "Ambedkar and Gandhi with the Poona Pact"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-sense-of-collective-belonging",
+          "title": "The Sense of Collective Belonging",
+          "objectives": [
+            "Student can explain how the image of Bharat Mata, from Bankim Chandra Chattopadhyay's Vande Mataram to Abanindranath Tagore's painting, gave the nation an identity",
+            "Student can explain how folklore, songs and icons such as flags were used to build nationalism",
+            "Student can explain how the reinterpretation of history created a sense of pride in India's past"
+          ],
+          "visualIdeas": [
+            "Abanindranath Tagore's Bharat Mata",
+            "a flag with a spinning wheel"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-making-of-a-global-world",
+      "title": "The Making of a Global World",
+      "book": "India and the Contemporary World - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess303.pdf",
+      "topics": [
+        {
+          "id": "the-pre-modern-world",
+          "title": "The Pre-modern World",
+          "objectives": [
+            "Student can explain that the making of the global world has a long history of trade, migration, movement of people and exchange of ideas",
+            "Student can give early examples of links between distant regions, such as Indus valley trade with West Asia and cowries from the Maldives"
+          ],
+          "visualIdeas": [
+            "cowrie shells travelling from the Maldives to distant markets"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "silk-routes-link-the-world",
+          "title": "Silk Routes Link the World",
+          "objectives": [
+            "Student can describe the silk routes linking Asia with Europe and northern Africa and the goods carried along them",
+            "Student can explain how missionaries and preachers also travelled these routes, so trade and cultural exchange went together"
+          ],
+          "visualIdeas": [
+            "a map of land and sea silk routes across Asia, Europe and Africa"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "food-travels-spaghetti-and-potato",
+          "title": "Food Travels: Spaghetti and Potato",
+          "objectives": [
+            "Student can explain how foods such as noodles travelled and how crops like potatoes, maize, tomatoes and chillies reached the rest of the world from America",
+            "Student can explain how the potato improved the diet of Europe's poor and why Ireland suffered a famine when the potato crop failed in the mid-1840s"
+          ],
+          "visualIdeas": [
+            "a plate of spaghetti and a potato with arrows showing their journeys"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conquest-disease-and-trade",
+          "title": "Conquest, Disease and Trade",
+          "objectives": [
+            "Student can explain how the world shrank after European sailors found a sea route to Asia and crossed the ocean to America in the sixteenth century",
+            "Student can explain how American silver enriched Europe and how germs such as smallpox helped the Spanish conquest",
+            "Student can explain why, until the eighteenth century, China and India were among the world's richest countries and how the centre of world trade shifted west"
+          ],
+          "visualIdeas": [
+            "a European ship crossing the Atlantic towards America"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-nineteenth-century-1815-1914",
+          "title": "The Nineteenth Century (1815-1914)",
+          "objectives": [
+            "Student can name the three flows of international economic exchange: trade, labour and capital",
+            "Student can explain how these flows were interwoven in the nineteenth century"
+          ],
+          "visualIdeas": [
+            "three arrows labelled goods, people and money circling the globe"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "a-world-economy-takes-shape",
+          "title": "A World Economy Takes Shape",
+          "objectives": [
+            "Student can explain why the abolition of the Corn Laws made Britain import food and how British agriculture was affected",
+            "Student can explain how lands in America and Australia were cleared, railways and ports built, and people migrated to meet the demand for food",
+            "Student can describe the canal colonies of west Punjab as an example of this change in India"
+          ],
+          "visualIdeas": [
+            "a flow chart from the Corn Laws ending to migration across the Atlantic"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "role-of-technology",
+          "title": "Role of Technology",
+          "objectives": [
+            "Student can explain the role of railways, steamships and the telegraph in transforming the nineteenth-century world",
+            "Student can explain how refrigerated ships changed the meat trade and lowered meat prices in Europe"
+          ],
+          "visualIdeas": [
+            "a refrigerated ship carrying frozen meat from Australia to Europe"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "late-nineteenth-century-colonialism",
+          "title": "Late nineteenth-century Colonialism",
+          "objectives": [
+            "Student can explain the darker side of expanding trade: loss of freedom and livelihoods in the colonies",
+            "Student can explain how European powers drew the borders of Africa among themselves and which powers gained new territories"
+          ],
+          "visualIdeas": [
+            "a map of Africa with straight colonial borders"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "rinderpest-or-the-cattle-plague",
+          "title": "Rinderpest, or the Cattle Plague",
+          "objectives": [
+            "Student can explain why Europeans in Africa faced a shortage of labour willing to work for wages and the methods they used to recruit labour",
+            "Student can explain how rinderpest spread in the 1890s, destroyed cattle and forced Africans into the labour market"
+          ],
+          "visualIdeas": [
+            "a map of rinderpest moving across Africa like forest fire"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "indentured-labour-migration-from-india",
+          "title": "Indentured Labour Migration from India",
+          "objectives": [
+            "Student can explain what indentured labour was and the regions Indian migrants came from",
+            "Student can name the main destinations, such as the Caribbean islands, Mauritius and Fiji, and describe how agents recruited migrants",
+            "Student can explain the harsh conditions of indenture and the new cultural forms workers created, and when the system was abolished"
+          ],
+          "visualIdeas": [
+            "a ship carrying indentured workers to Trinidad",
+            "a map of migrant destinations"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "indian-entrepreneurs-abroad",
+          "title": "Indian Entrepreneurs Abroad",
+          "objectives": [
+            "Student can describe how the Shikaripuri shroffs and Nattukottai Chettiars financed export agriculture in Central and Southeast Asia",
+            "Student can describe how Hyderabadi Sindhi traders set up emporia at busy ports worldwide"
+          ],
+          "visualIdeas": [
+            "a map of Indian bankers and traders in Asia and Africa"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "indian-trade-colonialism-and-the-global-system",
+          "title": "Indian Trade, Colonialism and the Global System",
+          "objectives": [
+            "Student can explain why the share of cotton textiles in India's exports declined in the nineteenth century",
+            "Student can explain how opium exports to China and raw material exports from India fitted Britain's trade",
+            "Student can explain how Britain's trade surplus with India paid for home charges"
+          ],
+          "visualIdeas": [
+            "a diagram of trade among Britain, India and China"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "wartime-transformations",
+          "title": "Wartime Transformations",
+          "objectives": [
+            "Student can describe the First World War as the first modern industrial war fought between the Allies and the Central Powers",
+            "Student can explain how the war changed economies, made Britain borrow from the US and turned the US into an international creditor"
+          ],
+          "visualIdeas": [
+            "a factory producing war supplies"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "post-war-recovery",
+          "title": "Post-war Recovery",
+          "objectives": [
+            "Student can explain Britain's post-war economic difficulties, such as debt and unemployment",
+            "Student can explain the crisis faced by agricultural economies when wheat production rose and prices fell"
+          ],
+          "visualIdeas": [
+            "a graph of falling wheat prices"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "rise-of-mass-production-and-consumption",
+          "title": "Rise of Mass Production and Consumption",
+          "objectives": [
+            "Student can describe Henry Ford's assembly line and how it lowered the cost of the T-model car",
+            "Student can explain how mass production, hire purchase and housing booms raised consumption in the USA in the 1920s"
+          ],
+          "visualIdeas": [
+            "a car moving along an assembly line"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-great-depression",
+          "title": "The Great Depression",
+          "objectives": [
+            "Student can explain the factors behind the Great Depression: agricultural overproduction and the withdrawal of US loans",
+            "Student can describe its effects on banks, production, employment and trade around the world"
+          ],
+          "visualIdeas": [
+            "a queue of unemployed people outside a closed bank"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "india-and-the-great-depression",
+          "title": "India and the Great Depression",
+          "objectives": [
+            "Student can explain how the Depression halved India's exports and imports and caused agricultural prices to fall",
+            "Student can explain why peasants suffered and why the Depression proved less grim for urban India"
+          ],
+          "visualIdeas": [
+            "a peasant with falling crop prices"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rebuilding-a-world-economy-the-post-war-era",
+          "title": "Rebuilding a World Economy: The Post-war Era",
+          "objectives": [
+            "Student can describe the scale of destruction in the Second World War between the Axis and Allied powers",
+            "Student can explain the two influences that shaped post-war reconstruction"
+          ],
+          "visualIdeas": [
+            "a map of Axis and Allied powers"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "post-war-settlement-and-the-bretton-woods-institutions",
+          "title": "Post-war Settlement and the Bretton Woods Institutions",
+          "objectives": [
+            "Student can explain why the Bretton Woods conference of 1944 set up the IMF and the World Bank",
+            "Student can explain the system of fixed exchange rates with the dollar anchored to gold"
+          ],
+          "visualIdeas": [
+            "a chart of the Bretton Woods twins"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-early-post-war-years",
+          "title": "The Early Post-war Years",
+          "objectives": [
+            "Student can explain the unprecedented growth of trade and incomes in the post-war decades",
+            "Student can explain how technology and enterprise spread worldwide and why developing countries invested heavily in importing modern industrial plant and equipment"
+          ],
+          "visualIdeas": [
+            "a rising graph of world trade"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "decolonisation-and-independence",
+          "title": "Decolonisation and Independence",
+          "objectives": [
+            "Student can explain why newly independent countries found the IMF and World Bank designed for industrial countries",
+            "Student can explain why developing countries organised as the Group of 77 and demanded a New International Economic Order"
+          ],
+          "visualIdeas": [
+            "a world map of newly independent countries"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "end-of-bretton-woods-and-the-beginning-of-globalisation",
+          "title": "End of Bretton Woods and the Beginning of Globalisation",
+          "objectives": [
+            "Student can explain why the Bretton Woods system of fixed exchange rates ended and floating rates began",
+            "Student can explain why companies relocated production to low-wage Asian countries such as China"
+          ],
+          "visualIdeas": [
+            "a factory shifting from a western country to Asia"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-age-of-industrialisation",
+      "title": "The Age of Industrialisation",
+      "book": "India and the Contemporary World - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess304.pdf",
+      "topics": [
+        {
+          "id": "before-the-industrial-revolution",
+          "title": "Before the Industrial Revolution",
+          "objectives": [
+            "Student can explain proto-industrialisation: large-scale production for international markets before factories",
+            "Student can explain why merchants from towns gave work to peasants and artisans in the countryside and how this suited both"
+          ],
+          "visualIdeas": [
+            "a merchant clothier handing wool to a cottage family"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-coming-up-of-the-factory",
+          "title": "The Coming Up of the Factory",
+          "objectives": [
+            "Student can describe how the earliest factories came up in England and how cotton became the first symbol of the new era",
+            "Student can explain how the factory brought all processes under one roof and allowed supervision of production and labour"
+          ],
+          "visualIdeas": [
+            "an early cotton mill beside a river"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-pace-of-industrial-change",
+          "title": "The Pace of Industrial Change",
+          "objectives": [
+            "Student can explain why cotton and metal industries grew fastest while traditional industries were not displaced",
+            "Student can explain why new technology spread slowly, using the steam engine of James Watt as an example"
+          ],
+          "visualIdeas": [
+            "a slow-moving steam engine timeline"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "hand-labour-and-steam-power",
+          "title": "Hand Labour and Steam Power",
+          "objectives": [
+            "Student can explain why industrialists in Victorian Britain preferred abundant, low-wage hand labour to machines",
+            "Student can explain why many products and upper-class buyers depended on hand work"
+          ],
+          "visualIdeas": [
+            "a hand-made product in a shop window labelled refinement"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "life-of-the-workers",
+          "title": "Life of the Workers",
+          "objectives": [
+            "Student can describe how workers tramped to cities in search of seasonal work",
+            "Student can explain why workers feared unemployment and attacked the Spinning Jenny"
+          ],
+          "visualIdeas": [
+            "a spinning jenny with many spindles worked by one wheel"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "industrialisation-in-the-colonies-the-age-of-indian-textiles",
+          "title": "Industrialisation in the Colonies: The Age of Indian Textiles",
+          "objectives": [
+            "Student can describe India's dominance in the international textile market before machine industries",
+            "Student can explain how the European companies' power led to the decline of Surat and Hoogly and the rise of Bombay and Calcutta"
+          ],
+          "visualIdeas": [
+            "a map of textile trade routes from Indian ports"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-happened-to-weavers",
+          "title": "What Happened to Weavers?",
+          "objectives": [
+            "Student can explain how the East India Company used gomasthas and the system of advances to control weavers",
+            "Student can describe the clashes between weavers and gomasthas and how weavers resisted"
+          ],
+          "visualIdeas": [
+            "a gomastha supervising a weaver at his loom"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "manchester-comes-to-india",
+          "title": "Manchester Comes to India",
+          "objectives": [
+            "Student can explain how Manchester goods flooded India and the share of cotton piece goods in exports fell",
+            "Student can explain the problems weavers faced in the supply of raw cotton and the loss of markets"
+          ],
+          "visualIdeas": [
+            "bales of Manchester cloth unloaded at an Indian port"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "factories-come-up",
+          "title": "Factories Come Up",
+          "objectives": [
+            "Student can describe the first cotton mill in Bombay and the first jute mill in Bengal",
+            "Student can name early factory centres such as Kanpur and Madras"
+          ],
+          "visualIdeas": [
+            "a timeline of the first mills in India"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-early-entrepreneurs",
+          "title": "The Early Entrepreneurs",
+          "objectives": [
+            "Student can explain how trade with China helped early Indian entrepreneurs accumulate capital",
+            "Student can name early entrepreneurs such as Dwarkanath Tagore and Jamsetjee Jeejeebhoy and explain the limits colonial control placed on them"
+          ],
+          "visualIdeas": [
+            "portrait gallery of early entrepreneurs"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "where-did-the-workers-come-from",
+          "title": "Where Did the Workers Come From?",
+          "objectives": [
+            "Student can explain that most mill workers came from neighbouring districts",
+            "Student can explain the role and power of the jobber"
+          ],
+          "visualIdeas": [
+            "a jobber recruiting workers at a village"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-peculiarities-of-industrial-growth",
+          "title": "The Peculiarities of Industrial Growth",
+          "objectives": [
+            "Student can explain how European managing agencies dominated industrial production",
+            "Student can explain how the swadeshi movement and the First World War helped Indian industries grow"
+          ],
+          "visualIdeas": [
+            "a wartime mill making uniforms"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "small-scale-industries-predominate",
+          "title": "Small-scale Industries Predominate",
+          "objectives": [
+            "Student can explain why small-scale and handloom production continued to grow",
+            "Student can explain how technologies such as the fly shuttle helped weavers"
+          ],
+          "visualIdeas": [
+            "a fly shuttle loom"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "market-for-goods",
+          "title": "Market for Goods",
+          "objectives": [
+            "Student can explain how advertisements created markets for new products",
+            "Student can analyse labels, calendars and images of gods used to sell goods, and nationalist messages in advertisements"
+          ],
+          "visualIdeas": [
+            "a Manchester cloth label with an image of a god"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "print-culture-and-the-modern-world",
+      "title": "Print Culture and the Modern World",
+      "book": "India and the Contemporary World - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess305.pdf",
+      "topics": [
+        {
+          "id": "the-first-printed-books",
+          "title": "The First Printed Books",
+          "objectives": [
+            "Student can describe early hand printing with wooden blocks in China",
+            "Student can explain how the uses of print diversified in China, including for the civil service examinations and urban readers"
+          ],
+          "visualIdeas": [
+            "woodblock printing on rubbed paper"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "print-in-japan",
+          "title": "Print in Japan",
+          "objectives": [
+            "Student can explain how Buddhist missionaries brought hand printing to Japan",
+            "Student can describe the Diamond Sutra and printing of visual material in Edo, including Kitagawa Utamaro's ukiyo art"
+          ],
+          "visualIdeas": [
+            "an ukiyo print of urban life"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "print-comes-to-europe",
+          "title": "Print Comes to Europe",
+          "objectives": [
+            "Student can explain how paper and printing knowledge reached Europe",
+            "Student can explain why handwritten manuscripts could not satisfy the growing demand for books"
+          ],
+          "visualIdeas": [
+            "a scribe copying a book by hand"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "gutenberg-and-the-printing-press",
+          "title": "Gutenberg and the Printing Press",
+          "objectives": [
+            "Student can describe how Gutenberg developed the printing press using his knowledge of olive and wine presses",
+            "Student can explain the spread of printing presses across Europe between 1450 and 1550"
+          ],
+          "visualIdeas": [
+            "the parts of Gutenberg's press labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-print-revolution-and-its-impact-a-new-reading-public",
+          "title": "The Print Revolution and Its Impact: A New Reading Public",
+          "objectives": [
+            "Student can explain how printing reduced the cost of books and created a new reading public",
+            "Student can explain how oral culture entered print and printed books were read aloud"
+          ],
+          "visualIdeas": [
+            "a group listening to a book read aloud in a tavern"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "religious-debates-and-the-fear-of-print",
+          "title": "Religious Debates and the Fear of Print",
+          "objectives": [
+            "Student can explain why some people feared the effects of easy access to printed books",
+            "Student can explain how Martin Luther's Ninety Five Theses and print led to the Protestant Reformation"
+          ],
+          "visualIdeas": [
+            "Luther's theses posted on a church door"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "print-and-dissent",
+          "title": "Print and Dissent",
+          "objectives": [
+            "Student can explain how print stimulated new interpretations of faith",
+            "Student can describe the story of Menocchio and the Roman Church's response"
+          ],
+          "visualIdeas": [
+            "a miller reading a book"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-reading-mania",
+          "title": "The Reading Mania",
+          "objectives": [
+            "Student can explain how literacy rates rose in Europe in the seventeenth and eighteenth centuries",
+            "Student can describe almanacs, chapbooks, periodicals and the ideas of scientists reaching common people"
+          ],
+          "visualIdeas": [
+            "a pedlar selling penny chapbooks"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tremble-therefore-tyrants-of-the-world",
+          "title": "Tremble, therefore, tyrants of the world!",
+          "objectives": [
+            "Student can explain the belief that books could spread progress and enlightenment",
+            "Student can explain Louise-Sebastien Mercier's view of the printing press"
+          ],
+          "visualIdeas": [
+            "a printing press shown as a force of progress"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "print-culture-and-the-french-revolution",
+          "title": "Print Culture and the French Revolution",
+          "objectives": [
+            "Student can explain the three arguments that print created conditions for the French Revolution",
+            "Student can explain the limits of these arguments about the influence of print"
+          ],
+          "visualIdeas": [
+            "a pre-revolution cartoon of nobility and common people"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-nineteenth-century-children-women-and-workers",
+          "title": "The Nineteenth Century: Children, Women and Workers",
+          "objectives": [
+            "Student can explain how print reached new readers among children, women and workers",
+            "Student can describe women writers and lending libraries in the nineteenth century"
+          ],
+          "visualIdeas": [
+            "a penny magazine for women"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "further-innovations",
+          "title": "Further Innovations",
+          "objectives": [
+            "Student can describe innovations such as the power-driven cylindrical press and the offset press",
+            "Student can explain new strategies publishers used to sell books, such as serialised novels and cheap series"
+          ],
+          "visualIdeas": [
+            "a cylindrical press"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "india-and-the-world-of-print-manuscripts-before-the-age-of-print",
+          "title": "India and the World of Print: Manuscripts Before the Age of Print",
+          "objectives": [
+            "Student can describe India's tradition of handwritten manuscripts in many languages",
+            "Student can explain why manuscripts were not widely used in everyday life"
+          ],
+          "visualIdeas": [
+            "a palm-leaf manuscript"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "print-comes-to-india",
+          "title": "Print Comes to India",
+          "objectives": [
+            "Student can explain how the printing press came to Goa with Portuguese missionaries",
+            "Student can describe James Augustus Hickey's Bengal Gazette and early Indian newspapers"
+          ],
+          "visualIdeas": [
+            "the Bengal Gazette front page"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "religious-reform-and-public-debates",
+          "title": "Religious Reform and Public Debates",
+          "objectives": [
+            "Student can explain how print allowed reformers and orthodox groups to debate religious and social issues",
+            "Student can give examples such as Rammohun Roy's Sambad Kaumudi, the Deoband Seminary's fatwas and printed religious texts"
+          ],
+          "visualIdeas": [
+            "two newspapers debating an issue"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "new-forms-of-publication",
+          "title": "New Forms of Publication",
+          "objectives": [
+            "Student can explain how the novel and new literary forms developed",
+            "Student can describe the new visual culture of prints and cartoons, including the work of Raja Ravi Varma"
+          ],
+          "visualIdeas": [
+            "a Ravi Varma print"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "women-and-print",
+          "title": "Women and Print",
+          "objectives": [
+            "Student can explain how women became readers and writers in India",
+            "Student can name women writers such as Rashsundari Debi and explain the fears some families had"
+          ],
+          "visualIdeas": [
+            "a woman reading a book secretly"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "print-and-the-poor-people",
+          "title": "Print and the Poor People",
+          "objectives": [
+            "Student can explain how cheap books and public libraries reached poor people",
+            "Student can explain how writers such as Jyotiba Phule and B.R. Ambedkar wrote on caste discrimination"
+          ],
+          "visualIdeas": [
+            "a public library in a town"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "print-and-censorship",
+          "title": "Print and Censorship",
+          "objectives": [
+            "Student can explain how the colonial state controlled the press",
+            "Student can describe the Vernacular Press Act of 1878 and its use against nationalist newspapers"
+          ],
+          "visualIdeas": [
+            "a newspaper being seized by the police"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "resources-and-development",
+      "title": "Resources and Development",
+      "book": "Contemporary India - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess101.pdf",
+      "topics": [
+        {
+          "id": "classification-of-resources",
+          "title": "Classification of Resources",
+          "objectives": [
+            "Student can define a resource as anything in the environment that is technologically accessible, economically feasible and culturally acceptable",
+            "Student can explain the interdependent relationship between nature, technology and institutions",
+            "Student can classify resources by origin, exhaustibility, ownership and status of development"
+          ],
+          "visualIdeas": [
+            "a tree diagram of resource classification (Fig. 1.2)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "development-of-resources",
+          "title": "Development of Resources",
+          "objectives": [
+            "Student can explain the problems caused by indiscriminate use of resources: depletion, accumulation in few hands and global ecological crises",
+            "Student can explain sustainable development, the Rio de Janeiro Earth Summit of 1992 and Agenda 21"
+          ],
+          "visualIdeas": [
+            "a globe showing depletion and a divided society of haves and have-nots"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "resource-planning",
+          "title": "Resource Planning",
+          "objectives": [
+            "Student can explain why resource planning is essential in a country with enormous diversity in resources",
+            "Student can describe the steps of resource planning in India: inventory, planning structure and matching with national development plans"
+          ],
+          "visualIdeas": [
+            "a three-step flow chart of resource planning"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conservation-of-resources",
+          "title": "Conservation of Resources",
+          "objectives": [
+            "Student can explain why irrational consumption and over-utilisation of resources must be checked",
+            "Student can explain Gandhiji's view that there is enough for everybody's need and not for anybody's greed"
+          ],
+          "visualIdeas": [
+            "Gandhiji with his quote on need and greed"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "land-resources",
+          "title": "Land Resources",
+          "objectives": [
+            "Student can explain why land is a natural resource of utmost importance",
+            "Student can describe the shares of plains, mountains and plateaus in India's land area and what each supports"
+          ],
+          "visualIdeas": [
+            "a pie chart of India's relief: plains, mountains, plateaus"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "land-utilisation",
+          "title": "Land Utilisation",
+          "objectives": [
+            "Student can classify land into forests, land not available for cultivation, other uncultivated land, fallow lands and net sown area",
+            "Student can define net sown area and gross cropped area"
+          ],
+          "visualIdeas": [
+            "a land use classification chart"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "land-use-pattern-in-india",
+          "title": "Land Use Pattern in India",
+          "objectives": [
+            "Student can explain the factors that decide land use in India",
+            "Student can explain why net sown area varies from state to state and why forest area is below the desired level"
+          ],
+          "visualIdeas": [
+            "a map of net sown area by state"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "land-degradation-and-conservation-measures",
+          "title": "Land Degradation and Conservation Measures",
+          "objectives": [
+            "Student can explain human activities that cause land degradation, such as deforestation, overgrazing, mining and over-irrigation",
+            "Student can describe measures such as afforestation, grazing management, shelter belts and stabilising sand dunes"
+          ],
+          "visualIdeas": [
+            "degraded land beside a green shelter belt"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "soil-as-a-resource",
+          "title": "Soil as a Resource",
+          "objectives": [
+            "Student can explain that soil takes millions of years to form",
+            "Student can name the factors in soil formation: relief, parent rock, climate, vegetation and time"
+          ],
+          "visualIdeas": [
+            "a soil profile with layers"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "classification-of-soils-alluvial-and-black-soils",
+          "title": "Classification of Soils: Alluvial and Black Soils",
+          "objectives": [
+            "Student can describe alluvial soils, where they are found, and the difference between khadar and bangar",
+            "Student can describe black (regur) soil, its formation and why it suits cotton"
+          ],
+          "visualIdeas": [
+            "a map of India's major soil types"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "red-and-yellow-laterite-arid-and-forest-soils",
+          "title": "Red and Yellow, Laterite, Arid and Forest Soils",
+          "objectives": [
+            "Student can describe red and yellow soils and why they look red or yellow",
+            "Student can explain how laterite soil forms and how it can be made useful for crops such as cashew",
+            "Student can describe arid soils and forest soils and where they are found"
+          ],
+          "visualIdeas": [
+            "soil samples side by side with their colours"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "soil-erosion-and-soil-conservation",
+          "title": "Soil Erosion and Soil Conservation",
+          "objectives": [
+            "Student can explain soil erosion and its forms: gullies, bad land (ravines), sheet erosion and wind erosion",
+            "Student can describe conservation methods: contour ploughing, terrace cultivation, strip cropping and shelter belts"
+          ],
+          "visualIdeas": [
+            "contour ploughing and terraces on a hillside"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "forest-and-wildlife-resources",
+      "title": "Forest and Wildlife Resources",
+      "book": "Contemporary India - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess102.pdf",
+      "topics": [
+        {
+          "id": "flora-and-fauna-in-india",
+          "title": "Flora and Fauna in India",
+          "objectives": [
+            "Student can explain biodiversity and how humans and other living beings form an interdependent web",
+            "Student can explain that India is one of the world's richest countries in biological diversity"
+          ],
+          "visualIdeas": [
+            "a montage of Indian plants and animals"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conservation-of-forest-and-wildlife-in-india",
+          "title": "Conservation of Forest and Wildlife in India",
+          "objectives": [
+            "Student can explain why we need to conserve forests and wildlife",
+            "Student can describe the Indian Wildlife (Protection) Act of 1972 and the protected species list"
+          ],
+          "visualIdeas": [
+            "a wildlife sanctuary signboard"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "project-tiger",
+          "title": "Project Tiger",
+          "objectives": [
+            "Student can explain why Project Tiger was launched in 1973",
+            "Student can name tiger reserves such as Corbett and Sunderbans and explain why conservation now focuses on biodiversity as a whole"
+          ],
+          "visualIdeas": [
+            "a map of tiger reserves"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "types-and-distribution-of-forest-and-wildlife-resources",
+          "title": "Types and Distribution of Forest and Wildlife Resources",
+          "objectives": [
+            "Student can classify forests into reserved, protected and unclassed forests",
+            "Student can explain why reserved and protected forests are called permanent forest estates and which states have large unclassed forests"
+          ],
+          "visualIdeas": [
+            "a pie chart of forest types"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "community-and-conservation",
+          "title": "Community and Conservation",
+          "objectives": [
+            "Student can explain how traditional communities protect their forests and wildlife, as in the Chipko movement",
+            "Student can explain the Joint Forest Management programme started in Odisha in 1988",
+            "Student can explain how sacred groves have preserved rare species"
+          ],
+          "visualIdeas": [
+            "villagers hugging trees",
+            "a sacred grove"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "water-resources",
+      "title": "Water Resources",
+      "book": "Contemporary India - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess103.pdf",
+      "topics": [
+        {
+          "id": "water-scarcity-and-the-need-for-water-conservation-and-management",
+          "title": "Water Scarcity and the Need for Water Conservation and Management",
+          "objectives": [
+            "Student can explain why water scarcity occurs even though water is renewable: over-exploitation, excessive use and unequal access",
+            "Student can explain how irrigation, industrialisation and urbanisation increase the demand for water",
+            "Student can explain that scarcity can also be caused by bad quality of water"
+          ],
+          "visualIdeas": [
+            "a dry tap beside a crowded city"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "multi-purpose-river-projects-and-integrated-water-resources-management",
+          "title": "Multi-purpose River Projects and Integrated Water Resources Management",
+          "objectives": [
+            "Student can describe hydraulic structures built in ancient India",
+            "Student can explain what dams are, their uses, and why Nehru called them the temples of modern India",
+            "Student can explain the objections to large dams: displacement, sedimentation, floods, changed cropping patterns and inter-state disputes"
+          ],
+          "visualIdeas": [
+            "a dam with a reservoir and canals",
+            "a timeline of ancient water structures"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "rainwater-harvesting",
+          "title": "Rainwater Harvesting",
+          "objectives": [
+            "Student can describe traditional rainwater harvesting methods such as guls, kuls, inundation channels and tankas",
+            "Student can describe rooftop rainwater harvesting in Shillong, Gendathur and Tamil Nadu"
+          ],
+          "visualIdeas": [
+            "a rooftop rainwater harvesting diagram"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "bamboo-drip-irrigation-system",
+          "title": "Bamboo Drip Irrigation System",
+          "objectives": [
+            "Student can describe the 200-year-old bamboo drip irrigation of Meghalaya",
+            "Student can explain how spring water is carried by gravity through bamboo pipes to plants"
+          ],
+          "visualIdeas": [
+            "bamboo pipes carrying water down a hill"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "agriculture",
+      "title": "Agriculture",
+      "book": "Contemporary India - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess104.pdf",
+      "topics": [
+        {
+          "id": "types-of-farming-primitive-subsistence-farming",
+          "title": "Types of Farming: Primitive Subsistence Farming",
+          "objectives": [
+            "Student can describe primitive subsistence farming as slash and burn agriculture on small patches of land",
+            "Student can name its regional names such as jhumming in the north-eastern states"
+          ],
+          "visualIdeas": [
+            "a forest patch being cleared and burned"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "intensive-subsistence-farming",
+          "title": "Intensive Subsistence Farming",
+          "objectives": [
+            "Student can describe intensive subsistence farming in areas of high population pressure on land",
+            "Student can explain how the right of inheritance has made land holdings small"
+          ],
+          "visualIdeas": [
+            "small fragmented fields"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "commercial-farming",
+          "title": "Commercial Farming",
+          "objectives": [
+            "Student can describe commercial farming and its use of modern inputs",
+            "Student can explain plantation agriculture with examples such as tea, coffee, rubber and sugarcane"
+          ],
+          "visualIdeas": [
+            "a tea plantation"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "cropping-pattern",
+          "title": "Cropping Pattern",
+          "objectives": [
+            "Student can distinguish the rabi, kharif and zaid seasons and the crops grown in each",
+            "Student can name states known for rabi and kharif crops"
+          ],
+          "visualIdeas": [
+            "a calendar of cropping seasons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rice-wheat-millets-and-maize",
+          "title": "Rice, Wheat, Millets and Maize",
+          "objectives": [
+            "Student can describe the conditions for growing rice and wheat and where they are grown",
+            "Student can describe jowar, bajra and ragi and their nutritional value",
+            "Student can describe maize as a food and fodder crop"
+          ],
+          "visualIdeas": [
+            "maps of rice and wheat distribution"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "pulses-sugarcane-and-oil-seeds",
+          "title": "Pulses, Sugarcane and Oil Seeds",
+          "objectives": [
+            "Student can explain why pulses are important and how leguminous crops restore soil fertility",
+            "Student can describe the conditions for sugarcane and the major oil seeds such as groundnut"
+          ],
+          "visualIdeas": [
+            "a chart of oil seeds"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tea-coffee-and-horticulture-crops",
+          "title": "Tea, Coffee and Horticulture Crops",
+          "objectives": [
+            "Student can describe the conditions and labour needed for tea and where it is grown",
+            "Student can describe coffee in the Nilgiris and India's position as a producer of fruits and vegetables"
+          ],
+          "visualIdeas": [
+            "a tea garden and a coffee estate"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "non-food-crops-rubber-and-fibre-crops",
+          "title": "Non-Food Crops: Rubber and Fibre Crops",
+          "objectives": [
+            "Student can describe the conditions for growing rubber and where it is grown",
+            "Student can describe cotton and jute, the golden fibre, and their growing conditions"
+          ],
+          "visualIdeas": [
+            "a cotton boll and jute fibres"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "technological-and-institutional-reforms",
+          "title": "Technological and Institutional Reforms",
+          "objectives": [
+            "Student can explain why land reforms and technical reforms were needed in agriculture",
+            "Student can describe schemes such as the Kisan Credit Card, crop insurance and minimum support prices"
+          ],
+          "visualIdeas": [
+            "a farmer with a Kisan Credit Card"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bhoodan-gramdan",
+          "title": "Bhoodan - Gramdan",
+          "objectives": [
+            "Student can explain Vinoba Bhave's Bhoodan-Gramdan movement",
+            "Student can describe how Ram Chandra Reddy's gift of 80 acres began Bhoodan and how gifts of whole villages became Gramdan, a movement also known as the Bloodless Revolution"
+          ],
+          "visualIdeas": [
+            "Vinoba Bhave walking through villages"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "minerals-and-energy-resources",
+      "title": "Minerals and Energy Resources",
+      "book": "Contemporary India - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess105.pdf",
+      "topics": [
+        {
+          "id": "what-is-a-mineral",
+          "title": "What is a Mineral?",
+          "objectives": [
+            "Student can define a mineral as a homogeneous, naturally occurring substance with a definable internal structure",
+            "Student can explain how minerals are part of everyday life and of living things"
+          ],
+          "visualIdeas": [
+            "minerals in toothpaste and a light bulb"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mode-of-occurrence-of-minerals",
+          "title": "Mode of Occurrence of Minerals",
+          "objectives": [
+            "Student can explain what an ore is",
+            "Student can describe the forms in which minerals occur: veins and lodes, beds, residual mass, alluvial deposits and ocean waters"
+          ],
+          "visualIdeas": [
+            "rock layers with mineral veins and beds"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ferrous-minerals-iron-ore-and-manganese",
+          "title": "Ferrous Minerals: Iron Ore and Manganese",
+          "objectives": [
+            "Student can distinguish magnetite and hematite iron ores",
+            "Student can name the major iron ore belts of India",
+            "Student can explain the uses of manganese and where it is produced"
+          ],
+          "visualIdeas": [
+            "a map of iron ore belts"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "non-ferrous-minerals-copper-and-bauxite",
+          "title": "Non-Ferrous Minerals: Copper and Bauxite",
+          "objectives": [
+            "Student can explain India's deficiency in copper and its uses",
+            "Student can describe bauxite deposits and why aluminium is important"
+          ],
+          "visualIdeas": [
+            "a map of copper and bauxite deposits"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rock-minerals-and-non-metallic-minerals",
+          "title": "Rock Minerals and Non-Metallic Minerals",
+          "objectives": [
+            "Student can describe limestone and its use in the cement industry",
+            "Student can describe mica and where it is found"
+          ],
+          "visualIdeas": [
+            "thin sheets of mica"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "hazards-of-mining",
+          "title": "Hazards of Mining",
+          "objectives": [
+            "Student can explain the health hazards faced by miners",
+            "Student can explain the environmental damage caused by mining"
+          ],
+          "visualIdeas": [
+            "a mine worker in a dusty mine"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "conservation-of-minerals",
+          "title": "Conservation of Minerals",
+          "objectives": [
+            "Student can explain why minerals must be conserved",
+            "Student can suggest ways to conserve minerals such as recycling and using substitutes"
+          ],
+          "visualIdeas": [
+            "recycling of scrap metal"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "conventional-sources-of-energy",
+          "title": "Conventional Sources of Energy",
+          "objectives": [
+            "Student can describe the types of coal and India's coalfields",
+            "Student can describe how petroleum and natural gas occur and where they are produced"
+          ],
+          "visualIdeas": [
+            "a map of coal, oil and natural gas fields"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "electricity",
+          "title": "Electricity",
+          "objectives": [
+            "Student can distinguish hydro electricity and thermal electricity",
+            "Student can name river valley projects that generate hydro electricity"
+          ],
+          "visualIdeas": [
+            "a hydro power dam beside a thermal power plant"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "non-conventional-sources-of-energy",
+          "title": "Non-Conventional Sources of Energy",
+          "objectives": [
+            "Student can describe nuclear, solar, wind, biogas, tidal and geothermal energy in India",
+            "Student can explain why India needs non-conventional sources of energy"
+          ],
+          "visualIdeas": [
+            "solar panels and wind turbines"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "conservation-of-energy-resources",
+          "title": "Conservation of Energy Resources",
+          "objectives": [
+            "Student can explain why energy must be used carefully for sustainable development",
+            "Student can suggest ways to save energy such as public transport and switching off appliances"
+          ],
+          "visualIdeas": [
+            "a family switching off lights"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "manufacturing-industries",
+      "title": "Manufacturing Industries",
+      "book": "Contemporary India - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess106.pdf",
+      "topics": [
+        {
+          "id": "importance-of-manufacturing",
+          "title": "Importance of Manufacturing",
+          "objectives": [
+            "Student can explain why manufacturing is considered the backbone of development",
+            "Student can explain how agriculture and industry help each other"
+          ],
+          "visualIdeas": [
+            "a flow from raw cotton to finished cloth"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "classification-of-industries",
+          "title": "Classification of Industries",
+          "objectives": [
+            "Student can classify industries by source of raw materials, main role, capital investment, ownership and bulk of raw materials",
+            "Student can give examples of each type"
+          ],
+          "visualIdeas": [
+            "a classification chart of industries"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "agro-based-industries-textile-industry-and-cotton-textiles",
+          "title": "Agro-based Industries: Textile Industry and Cotton Textiles",
+          "objectives": [
+            "Student can explain the importance of the textile industry in the Indian economy",
+            "Student can describe the growth and location of the cotton textile industry",
+            "Student can explain the role of handspun khadi"
+          ],
+          "visualIdeas": [
+            "a cotton mill and a handloom"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "jute-textiles",
+          "title": "Jute Textiles",
+          "objectives": [
+            "Student can describe the jute industry and its concentration in the Hugli basin",
+            "Student can explain the factors for its location"
+          ],
+          "visualIdeas": [
+            "jute mills on the Hugli river"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sugar-industry",
+          "title": "Sugar Industry",
+          "objectives": [
+            "Student can describe the sugar industry and where mills are located",
+            "Student can explain why mills are shifting to southern and western states"
+          ],
+          "visualIdeas": [
+            "a sugar mill with cane trucks"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mineral-based-industries-iron-and-steel-industry",
+          "title": "Mineral-based Industries: Iron and Steel Industry",
+          "objectives": [
+            "Student can explain why iron and steel is a basic industry",
+            "Student can describe the raw materials and processes of steel making",
+            "Student can explain why the Chhotanagpur plateau has many iron and steel plants"
+          ],
+          "visualIdeas": [
+            "a steel plant with raw materials"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "aluminium-smelting",
+          "title": "Aluminium Smelting",
+          "objectives": [
+            "Student can describe aluminium smelting and its raw material bauxite",
+            "Student can explain the factors for locating smelters"
+          ],
+          "visualIdeas": [
+            "bauxite being smelted"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chemical-industries",
+          "title": "Chemical Industries",
+          "objectives": [
+            "Student can describe inorganic and organic chemical industries",
+            "Student can explain why the chemical industry is its own largest consumer"
+          ],
+          "visualIdeas": [
+            "a chemical plant"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fertilizer-industry",
+          "title": "Fertilizer Industry",
+          "objectives": [
+            "Student can describe the fertilizer industry",
+            "Student can explain its expansion after the Green Revolution"
+          ],
+          "visualIdeas": [
+            "fertilizer bags"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "cement-industry",
+          "title": "Cement Industry",
+          "objectives": [
+            "Student can explain why cement is essential for construction",
+            "Student can describe the raw materials and location of cement plants"
+          ],
+          "visualIdeas": [
+            "a cement plant"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "automobile-industry",
+          "title": "Automobile Industry",
+          "objectives": [
+            "Student can describe the automobile industry and its growth after liberalisation",
+            "Student can name automobile centres"
+          ],
+          "visualIdeas": [
+            "a car assembly line"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "information-technology-and-electronics-industry",
+          "title": "Information Technology and Electronics Industry",
+          "objectives": [
+            "Student can describe the electronics industry",
+            "Student can explain the importance of software technology parks"
+          ],
+          "visualIdeas": [
+            "a map of software technology parks"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "industrial-pollution-and-environmental-degradation",
+          "title": "Industrial Pollution and Environmental Degradation",
+          "objectives": [
+            "Student can describe air, water, thermal, land and noise pollution caused by industries",
+            "Student can explain their effects on health and environment"
+          ],
+          "visualIdeas": [
+            "a factory emitting smoke and effluents"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "control-of-environmental-degradation",
+          "title": "Control of Environmental Degradation",
+          "objectives": [
+            "Student can describe measures to reduce industrial pollution",
+            "Student can explain how NTPC shows the way"
+          ],
+          "visualIdeas": [
+            "a water treatment plant"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "lifelines-of-national-economy",
+      "title": "Lifelines of National Economy",
+      "book": "Contemporary India - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess107.pdf",
+      "topics": [
+        {
+          "id": "transport-roadways",
+          "title": "Transport: Roadways",
+          "objectives": [
+            "Student can explain why roads are important",
+            "Student can classify roads in India such as Golden Quadrilateral, National Highways, State Highways, District Roads, Other Roads and Border Roads"
+          ],
+          "visualIdeas": [
+            "a map of National Highways"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "railways",
+          "title": "Railways",
+          "objectives": [
+            "Student can explain the importance of railways in India",
+            "Student can explain how relief affects the distribution of railways"
+          ],
+          "visualIdeas": [
+            "a railway map"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pipelines",
+          "title": "Pipelines",
+          "objectives": [
+            "Student can explain the uses of pipelines",
+            "Student can describe the important pipeline networks"
+          ],
+          "visualIdeas": [
+            "a gas pipeline"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "waterways",
+          "title": "Waterways",
+          "objectives": [
+            "Student can explain the advantages of waterways",
+            "Student can name national waterways"
+          ],
+          "visualIdeas": [
+            "a barge on a river"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "major-sea-ports",
+          "title": "Major Sea Ports",
+          "objectives": [
+            "Student can name the major ports of India and their features",
+            "Student can explain the role of ports in trade"
+          ],
+          "visualIdeas": [
+            "a map of major ports"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "airways",
+          "title": "Airways",
+          "objectives": [
+            "Student can explain why air travel is important",
+            "Student can explain why it is preferred in the north-eastern states"
+          ],
+          "visualIdeas": [
+            "an airplane over mountains"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "communication",
+          "title": "Communication",
+          "objectives": [
+            "Student can describe personal and mass communication",
+            "Student can explain the Digital India programme"
+          ],
+          "visualIdeas": [
+            "a mobile tower"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "international-trade",
+          "title": "International Trade",
+          "objectives": [
+            "Student can explain international trade and balance of trade",
+            "Student can describe India's exports and imports"
+          ],
+          "visualIdeas": [
+            "a cargo ship"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "tourism-as-a-trade",
+          "title": "Tourism as a Trade",
+          "objectives": [
+            "Student can explain how tourism contributes to the economy",
+            "Student can describe types of tourism in India"
+          ],
+          "visualIdeas": [
+            "tourists at a monument"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "power-sharing",
+      "title": "Power-sharing",
+      "book": "Democratic Politics - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess401.pdf",
+      "topics": [
+        {
+          "id": "belgium-and-sri-lanka",
+          "title": "Belgium and Sri Lanka",
+          "objectives": [
+            "Student can describe the ethnic composition of Belgium: Dutch-speaking, French-speaking and German-speaking communities",
+            "Student can explain the tensions between the communities in Belgium and the special position of Brussels",
+            "Student can describe the ethnic composition of Sri Lanka: Sinhala speakers (74 per cent) and Tamil speakers (18 per cent), the latter divided into Sri Lankan Tamils and Indian Tamils"
+          ],
+          "visualIdeas": [
+            "a map of Belgium's language regions with Brussels highlighted"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "majoritarianism-in-sri-lanka",
+          "title": "Majoritarianism in Sri Lanka",
+          "objectives": [
+            "Student can explain majoritarian measures such as the 1956 Act making Sinhala the only official language",
+            "Student can explain how distrust between the communities turned into a civil war"
+          ],
+          "visualIdeas": [
+            "a map of Sri Lanka with Tamil-majority regions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "accommodation-in-belgium",
+          "title": "Accommodation in Belgium",
+          "objectives": [
+            "Student can describe the Belgian model: equal Dutch and French-speaking ministers, powers for state governments, a separate government for Brussels and the community government",
+            "Student can compare how Belgium and Sri Lanka dealt with diversity and what we learn from the two stories"
+          ],
+          "visualIdeas": [
+            "a diagram of Belgium's power-sharing arrangements"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "why-power-sharing-is-desirable",
+          "title": "Why power sharing is desirable?",
+          "objectives": [
+            "Student can explain the prudential reason for power sharing: it reduces the possibility of conflict between social groups",
+            "Student can explain the moral reason: power sharing is the very spirit of democracy"
+          ],
+          "visualIdeas": [
+            "a balance showing prudential and moral reasons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "forms-of-power-sharing",
+          "title": "Forms of power-sharing",
+          "objectives": [
+            "Student can explain horizontal distribution of power among the legislature, executive and judiciary with checks and balances",
+            "Student can explain vertical division of power among governments at different levels",
+            "Student can explain power sharing among social groups and among political parties, pressure groups and movements"
+          ],
+          "visualIdeas": [
+            "a chart of the four forms of power sharing"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "federalism",
+      "title": "Federalism",
+      "book": "Democratic Politics - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess402.pdf",
+      "topics": [
+        {
+          "id": "what-is-federalism",
+          "title": "What is federalism?",
+          "objectives": [
+            "Student can define federalism as a system in which power is divided between a central authority and its constituent units",
+            "Student can list the key features of federalism",
+            "Student can distinguish coming together federations from holding together federations"
+          ],
+          "visualIdeas": [
+            "a world map of federal countries"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-makes-india-a-federal-country",
+          "title": "What makes India a federal country?",
+          "objectives": [
+            "Student can explain the three-fold distribution of legislative powers: Union List, State List and Concurrent List",
+            "Student can explain residuary subjects and why not all units of the Indian Union have equal powers",
+            "Student can explain why changes to the power-sharing arrangement are difficult and the role of the courts"
+          ],
+          "visualIdeas": [
+            "the Union, State and Concurrent Lists side by side"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-is-federalism-practised-linguistic-states",
+          "title": "How is federalism practised? Linguistic States",
+          "objectives": [
+            "Student can explain how and why linguistic states were created",
+            "Student can explain how this made the country more united and administration easier"
+          ],
+          "visualIdeas": [
+            "a map of linguistic states"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "language-policy",
+          "title": "Language policy",
+          "objectives": [
+            "Student can explain why Hindi was not given the status of national language",
+            "Student can explain the role of Scheduled Languages and the continued use of English"
+          ],
+          "visualIdeas": [
+            "a chart of Scheduled Languages"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "centre-state-relations",
+          "title": "Centre-State relations",
+          "objectives": [
+            "Student can explain how the central government once misused its power over state governments",
+            "Student can explain how the rise of regional parties and coalition governments strengthened federal power sharing"
+          ],
+          "visualIdeas": [
+            "a coalition government diagram"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "decentralisation-in-india",
+          "title": "Decentralisation in India",
+          "objectives": [
+            "Student can explain decentralisation and why local governments are needed",
+            "Student can describe the 1992 constitutional amendment: regular elections, reserved seats and State Election Commissions",
+            "Student can describe gram panchayat, gram sabha, panchayat samiti, zila parishad and urban local bodies"
+          ],
+          "visualIdeas": [
+            "a three-tier panchayati raj diagram"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "gender-religion-and-caste",
+      "title": "Gender, Religion and Caste",
+      "book": "Democratic Politics - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess403.pdf",
+      "topics": [
+        {
+          "id": "gender-and-politics-public-private-division",
+          "title": "Gender and politics: Public/private division",
+          "objectives": [
+            "Student can explain the sexual division of labour between household work and public life",
+            "Student can explain how the political expression of gender division and women's movements improved women's role in public life",
+            "Student can give examples of the disadvantages women face in India"
+          ],
+          "visualIdeas": [
+            "a split image of household work and public work"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "womens-political-representation",
+          "title": "Women's political representation",
+          "objectives": [
+            "Student can explain why the share of women in elected bodies is low",
+            "Student can explain the reservation of one-third seats for women in local government bodies and the demand for similar reservation in Lok Sabha and State Assemblies"
+          ],
+          "visualIdeas": [
+            "a bar chart of women in legislatures by region"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "religion-communalism-and-politics",
+          "title": "Religion, communalism and politics",
+          "objectives": [
+            "Student can explain how religious differences are expressed in politics",
+            "Student can explain that ideas and values from religion can play a role in politics without being a problem"
+          ],
+          "visualIdeas": [
+            "a set of news headlines involving religion"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "communalism",
+          "title": "Communalism",
+          "objectives": [
+            "Student can explain communalism as the belief that religion is the principal basis of community",
+            "Student can describe the forms communalism can take in politics, from everyday beliefs to communal violence"
+          ],
+          "visualIdeas": [
+            "a chart of forms of communalism"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "secular-state",
+          "title": "Secular state",
+          "objectives": [
+            "Student can explain the constitutional provisions that make India a secular state",
+            "Student can explain why secularism is one of the foundations of India's idea of a country"
+          ],
+          "visualIdeas": [
+            "the Preamble of the Constitution"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "caste-and-politics-caste-inequalities",
+          "title": "Caste and politics: Caste inequalities",
+          "objectives": [
+            "Student can explain how the caste system was based on exclusion and discrimination",
+            "Student can explain how caste structure is changing and why caste continues to be linked to economic status"
+          ],
+          "visualIdeas": [
+            "a chart of caste groups and economic status"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "caste-in-politics",
+          "title": "Caste in politics",
+          "objectives": [
+            "Student can describe the forms caste can take in politics",
+            "Student can explain why elections are not all about caste"
+          ],
+          "visualIdeas": [
+            "a voter with many identities"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "politics-in-caste",
+          "title": "Politics in caste",
+          "objectives": [
+            "Student can explain how politics affects the caste system and caste identities",
+            "Student can explain how caste groups form coalitions and how politics brings new kinds of caste groups"
+          ],
+          "visualIdeas": [
+            "caste groups forming coalitions"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "political-parties",
+      "title": "Political Parties",
+      "book": "Democratic Politics - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess404.pdf",
+      "topics": [
+        {
+          "id": "why-do-we-need-political-parties-meaning",
+          "title": "Why do we need political parties? Meaning",
+          "objectives": [
+            "Student can define a political party as a group of people who come together to contest elections and hold power",
+            "Student can explain why parties involve partisanship and name the three components of a party: leaders, active members and followers"
+          ],
+          "visualIdeas": [
+            "a party with leaders, members and followers"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "functions",
+          "title": "Functions",
+          "objectives": [
+            "Student can list the functions of political parties: contesting elections, putting forward policies, making laws, forming governments, playing opposition, shaping public opinion and giving access to welfare schemes",
+            "Student can give an example of each function"
+          ],
+          "visualIdeas": [
+            "a chart of party functions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "necessity",
+          "title": "Necessity",
+          "objectives": [
+            "Student can explain why modern representative democracies cannot exist without political parties",
+            "Student can explain what would happen if there were no parties, using non-party panchayat elections as an example"
+          ],
+          "visualIdeas": [
+            "a legislature without parties"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-many-parties-should-we-have",
+          "title": "How many parties should we have?",
+          "objectives": [
+            "Student can distinguish one-party, two-party and multiparty systems with examples",
+            "Student can explain alliances or fronts and why a party system is not something a country can choose"
+          ],
+          "visualIdeas": [
+            "icons for party systems"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "popular-participation-in-political-parties",
+          "title": "Popular participation in political parties",
+          "objectives": [
+            "Student can explain survey evidence that parties are not much trusted in South Asia",
+            "Student can explain that participation in party activities in India is fairly high and rising"
+          ],
+          "visualIdeas": [
+            "a graph of trust and party membership"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "national-parties",
+          "title": "National parties",
+          "objectives": [
+            "Student can explain how the Election Commission recognises national parties",
+            "Student can describe the recognised national parties listed in the text, such as the AAP, BSP, BJP, CPI(M), INC and NPP"
+          ],
+          "visualIdeas": [
+            "party symbols of national parties"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "state-parties",
+          "title": "State parties",
+          "objectives": [
+            "Student can explain what state (regional) parties are",
+            "Student can explain how their number and strength have grown and made Parliament more diverse"
+          ],
+          "visualIdeas": [
+            "a map of state parties"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "challenges-to-political-parties",
+          "title": "Challenges to political parties",
+          "objectives": [
+            "Student can describe the four challenges: lack of internal democracy, dynastic succession, money and muscle power, and lack of meaningful choice",
+            "Student can give examples of these challenges"
+          ],
+          "visualIdeas": [
+            "a list of four challenges"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-can-parties-be-reformed",
+          "title": "How can parties be reformed?",
+          "objectives": [
+            "Student can describe recent reforms such as the anti-defection law and affidavits by candidates",
+            "Student can evaluate suggestions for reforming parties and the role of public pressure"
+          ],
+          "visualIdeas": [
+            "a reform checklist"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "outcomes-of-democracy",
+      "title": "Outcomes of Democracy",
+      "book": "Democratic Politics - II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess405.pdf",
+      "topics": [
+        {
+          "id": "how-do-we-assess-democracys-outcomes",
+          "title": "How do we assess democracy's outcomes?",
+          "objectives": [
+            "Student can list the reasons why democracy is considered a better form of government",
+            "Student can explain why democracy's outcomes should be assessed realistically"
+          ],
+          "visualIdeas": [
+            "a scorecard of democracy"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "accountable-responsive-and-legitimate-government",
+          "title": "Accountable, responsive and legitimate government",
+          "objectives": [
+            "Student can explain why democracy produces a government that is accountable to citizens and responsive to their needs",
+            "Student can explain transparency and why a democratic government is a legitimate government"
+          ],
+          "visualIdeas": [
+            "citizens checking a government's decisions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "economic-growth-and-development",
+          "title": "Economic growth and development",
+          "objectives": [
+            "Student can compare rates of economic growth in democracies and dictatorships from the data in the box \"Economic outcomes of democracy\"",
+            "Student can explain why democracy is still preferable even if it does not guarantee higher growth"
+          ],
+          "visualIdeas": [
+            "a growth rate table"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reduction-of-inequality-and-poverty",
+          "title": "Reduction of inequality and poverty",
+          "objectives": [
+            "Student can explain the evidence that democracies have not reduced economic inequality much",
+            "Student can explain why democracies do not always meet the needs of the poor"
+          ],
+          "visualIdeas": [
+            "an inequality chart of the top 20% and bottom 20%"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "accommodation-of-social-diversity",
+          "title": "Accommodation of social diversity",
+          "objectives": [
+            "Student can explain how democracies accommodate social diversity",
+            "Student can explain the two conditions: majority rule working with minorities and rule by majority not becoming rule by a majority community"
+          ],
+          "visualIdeas": [
+            "a diverse group sitting together"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dignity-and-freedom-of-the-citizens",
+          "title": "Dignity and freedom of the citizens",
+          "objectives": [
+            "Student can explain how democracy promotes the dignity and freedom of the individual",
+            "Student can explain how struggles for the dignity of women and of disadvantaged castes have gained strength in democracy"
+          ],
+          "visualIdeas": [
+            "a person standing tall with rights"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "development",
+      "title": "Development",
+      "book": "Understanding Economic Development",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess201.pdf",
+      "topics": [
+        {
+          "id": "what-development-promises-different-people-different-goals",
+          "title": "What Development Promises - Different People, Different Goals",
+          "objectives": [
+            "Student can explain why different people have different and sometimes conflicting developmental goals",
+            "Student can give examples of goals of a landless rural labourer, a prosperous farmer and others"
+          ],
+          "visualIdeas": [
+            "a table of people and their goals"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "income-and-other-goals",
+          "title": "Income and Other Goals",
+          "objectives": [
+            "Student can explain that people seek both more income and non-material things such as equal treatment, freedom, security and respect",
+            "Student can give examples where factors other than income matter"
+          ],
+          "visualIdeas": [
+            "a person weighing a job offer by income and other factors"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "national-development",
+          "title": "National Development",
+          "objectives": [
+            "Student can explain why people have different notions of national development",
+            "Student can discuss what a fair and just path of development would be"
+          ],
+          "visualIdeas": [
+            "a demonstration against raising the height of a dam"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-to-compare-different-countries-or-states",
+          "title": "How to Compare Different Countries or States?",
+          "objectives": [
+            "Student can explain why per capita (average) income is used to compare countries",
+            "Student can explain the World Bank's classification of countries by per capita income",
+            "Student can explain how averages can hide disparities"
+          ],
+          "visualIdeas": [
+            "two countries with the same average income but different distributions"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "income-and-other-criteria",
+          "title": "Income and Other Criteria",
+          "objectives": [
+            "Student can compare states using indicators such as infant mortality rate, literacy rate and net attendance ratio",
+            "Student can explain why a state with higher per capita income may not do better on these indicators"
+          ],
+          "visualIdeas": [
+            "a comparison table of Haryana, Kerala and Bihar"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "public-facilities",
+          "title": "Public Facilities",
+          "objectives": [
+            "Student can explain why money cannot buy all goods and services needed to live well",
+            "Student can explain the role of public facilities such as health, education and the Public Distribution System"
+          ],
+          "visualIdeas": [
+            "a public health centre and a ration shop"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "human-development-report",
+          "title": "Human Development Report",
+          "objectives": [
+            "Student can explain how the UNDP Human Development Report compares countries",
+            "Student can explain the indicators used in the Human Development Index"
+          ],
+          "visualIdeas": [
+            "a table of HDI ranks of India and its neighbours"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sustainability-of-development",
+          "title": "Sustainability of Development",
+          "objectives": [
+            "Student can explain why development must be sustainable",
+            "Student can give examples such as overuse of groundwater and limited crude oil reserves"
+          ],
+          "visualIdeas": [
+            "a falling groundwater level"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "sectors-of-the-indian-economy",
+      "title": "Sectors of the Indian Economy",
+      "book": "Understanding Economic Development",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess202.pdf",
+      "topics": [
+        {
+          "id": "sectors-of-economic-activities",
+          "title": "Sectors of Economic Activities",
+          "objectives": [
+            "Student can distinguish primary, secondary and tertiary sectors with examples",
+            "Student can explain how the three sectors depend on each other"
+          ],
+          "visualIdeas": [
+            "a chart linking cotton farming, textile mills and transport"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "comparing-the-three-sectors",
+          "title": "Comparing the Three Sectors",
+          "objectives": [
+            "Student can explain why only final goods and services are counted to measure production",
+            "Student can explain Gross Domestic Product and how sectors' shares changed in developed countries"
+          ],
+          "visualIdeas": [
+            "a value-added chain from wheat to biscuits"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "rising-importance-of-the-tertiary-sector-in-production",
+          "title": "Rising Importance of the Tertiary Sector in Production",
+          "objectives": [
+            "Student can explain why the tertiary sector has become the largest producing sector in India",
+            "Student can give the four reasons for the growth of the tertiary sector"
+          ],
+          "visualIdeas": [
+            "a graph of GVA by sector over forty years"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "where-are-most-of-the-people-employed",
+          "title": "Where are most of the people employed?",
+          "objectives": [
+            "Student can explain why employment did not shift out of the primary sector as much as production",
+            "Student can explain underemployment or disguised unemployment with the example of Laxmi's family"
+          ],
+          "visualIdeas": [
+            "a small farm with more workers than needed"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-to-create-more-employment",
+          "title": "How to Create More Employment?",
+          "objectives": [
+            "Student can suggest ways to create jobs such as irrigation, roads, cheap credit and storage facilities",
+            "Student can explain the right to work under MGNREGA 2005"
+          ],
+          "visualIdeas": [
+            "a village work site under MGNREGA"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "division-of-sectors-as-organised-and-unorganised",
+          "title": "Division of Sectors as Organised and Unorganised",
+          "objectives": [
+            "Student can distinguish organised and unorganised sectors by terms of employment and protection",
+            "Student can explain why workers in the unorganised sector are exploited"
+          ],
+          "visualIdeas": [
+            "two workers: one with a contract and one without"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-to-protect-workers-in-the-unorganised-sector",
+          "title": "How to Protect Workers in the Unorganised Sector?",
+          "objectives": [
+            "Student can identify the workers who need protection in rural and urban areas",
+            "Student can suggest ways the government can protect them"
+          ],
+          "visualIdeas": [
+            "a casual worker at a construction site"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sectors-in-terms-of-ownership-public-and-private-sectors",
+          "title": "Sectors in terms of Ownership: Public and Private Sectors",
+          "objectives": [
+            "Student can distinguish public and private sectors by ownership and motive",
+            "Student can explain why the government provides some services and supports activities"
+          ],
+          "visualIdeas": [
+            "a government hospital and a private hospital"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "money-and-credit",
+      "title": "Money and Credit",
+      "book": "Understanding Economic Development",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess203.pdf",
+      "topics": [
+        {
+          "id": "money-as-a-medium-of-exchange",
+          "title": "Money as a Medium of Exchange",
+          "objectives": [
+            "Student can explain double coincidence of wants in a barter system",
+            "Student can explain how money acts as a medium of exchange"
+          ],
+          "visualIdeas": [
+            "a shoe-maker and a wheat farmer trying to barter"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "modern-forms-of-money",
+          "title": "Modern Forms of Money",
+          "objectives": [
+            "Student can explain currency as a medium of exchange authorised by the government and issued by the Reserve Bank of India",
+            "Student can explain demand deposits and how cheques transfer money"
+          ],
+          "visualIdeas": [
+            "a cheque with its parts labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "loan-activities-of-banks",
+          "title": "Loan Activities of Banks",
+          "objectives": [
+            "Student can explain how banks use deposits to give loans",
+            "Student can explain how banks earn from the difference in interest"
+          ],
+          "visualIdeas": [
+            "a flow from depositors through a bank to borrowers"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "two-different-credit-situations",
+          "title": "Two Different Credit Situations",
+          "objectives": [
+            "Student can explain how credit helps Salim increase earnings",
+            "Student can explain how credit pushes Swapna into a debt trap"
+          ],
+          "visualIdeas": [
+            "two stories side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "terms-of-credit",
+          "title": "Terms of Credit",
+          "objectives": [
+            "Student can explain interest, collateral, documentation and mode of repayment",
+            "Student can explain how terms of credit vary"
+          ],
+          "visualIdeas": [
+            "a house loan document"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "variety-of-credit-arrangements",
+          "title": "Variety of Credit Arrangements",
+          "objectives": [
+            "Student can describe sources of credit in a village",
+            "Student can compare the terms of different lenders"
+          ],
+          "visualIdeas": [
+            "a chart of lenders in a village"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "formal-sector-credit-in-india",
+          "title": "Formal Sector Credit in India",
+          "objectives": [
+            "Student can distinguish formal and informal sources of credit",
+            "Student can explain why cheap and affordable credit is important and why poor households depend on informal sources"
+          ],
+          "visualIdeas": [
+            "a pie chart of formal and informal credit"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "self-help-groups-for-the-poor",
+          "title": "Self-Help Groups for the Poor",
+          "objectives": [
+            "Student can explain how self-help groups work",
+            "Student can explain how SHGs help women and the poor"
+          ],
+          "visualIdeas": [
+            "a women's self-help group meeting"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "globalisation-and-the-indian-economy",
+      "title": "Globalisation and the Indian Economy",
+      "book": "Understanding Economic Development",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess204.pdf",
+      "topics": [
+        {
+          "id": "production-across-countries",
+          "title": "Production across Countries",
+          "objectives": [
+            "Student can explain what a multinational corporation is",
+            "Student can explain why MNCs set up production where costs are low"
+          ],
+          "visualIdeas": [
+            "a world map of an MNC's production"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "interlinking-production-across-countries",
+          "title": "Interlinking Production across Countries",
+          "objectives": [
+            "Student can explain foreign investment and how MNCs buy up local companies",
+            "Student can explain how MNCs place orders with small producers"
+          ],
+          "visualIdeas": [
+            "a football made in Ludhiana for a global brand"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "foreign-trade-and-integration-of-markets",
+          "title": "Foreign Trade and Integration of Markets",
+          "objectives": [
+            "Student can explain how foreign trade connects markets",
+            "Student can explain the example of Chinese toys in India"
+          ],
+          "visualIdeas": [
+            "Chinese toys in an Indian shop"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-is-globalisation",
+          "title": "What is Globalisation?",
+          "objectives": [
+            "Student can define globalisation as rapid integration of countries",
+            "Student can explain movements of goods, services, investment, technology and people"
+          ],
+          "visualIdeas": [
+            "a globe with connecting lines"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "factors-that-have-enabled-globalisation",
+          "title": "Factors that have Enabled Globalisation",
+          "objectives": [
+            "Student can explain the role of technology and information technology",
+            "Student can explain liberalisation of foreign trade and investment policy"
+          ],
+          "visualIdeas": [
+            "a container ship and a computer network"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "world-trade-organisation",
+          "title": "World Trade Organisation",
+          "objectives": [
+            "Student can explain the aims of the WTO",
+            "Student can explain why developing countries see trade rules as unfair"
+          ],
+          "visualIdeas": [
+            "a debate on farm subsidies"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "impact-of-globalisation-in-india",
+          "title": "Impact of Globalisation in India",
+          "objectives": [
+            "Student can explain how globalisation benefited consumers and some Indian companies",
+            "Student can explain its effect on small producers and workers"
+          ],
+          "visualIdeas": [
+            "a factory facing competition"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-struggle-for-a-fair-globalisation",
+          "title": "The Struggle for a Fair Globalisation",
+          "objectives": [
+            "Student can explain what fair globalisation means",
+            "Student can explain the role of government and people in making it fair"
+          ],
+          "visualIdeas": [
+            "a balanced scale"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "consumer-rights",
+      "title": "Consumer Rights",
+      "book": "Understanding Economic Development",
+      "pdf": "https://ncert.nic.in/textbook/pdf/jess205.pdf",
+      "topics": [
+        {
+          "id": "the-consumer-in-the-marketplace",
+          "title": "The Consumer in the Marketplace",
+          "objectives": [
+            "Student can explain why rules are needed to protect consumers",
+            "Student can give examples of exploitation such as under-weighing and adulteration"
+          ],
+          "visualIdeas": [
+            "a shopkeeper weighing less"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "consumer-movement",
+          "title": "Consumer Movement",
+          "objectives": [
+            "Student can explain how the consumer movement arose",
+            "Student can explain the role of consumer groups and the Consumer Protection Act"
+          ],
+          "visualIdeas": [
+            "a protest by consumers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "safety-is-everyones-right",
+          "title": "Safety is Everyone's Right",
+          "objectives": [
+            "Student can explain the right to safety",
+            "Student can explain Reji's case"
+          ],
+          "visualIdeas": [
+            "a hospital bed"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "information-about-goods-and-services",
+          "title": "Information about Goods and Services",
+          "objectives": [
+            "Student can explain the right to information",
+            "Student can explain the Right to Information Act"
+          ],
+          "visualIdeas": [
+            "a product label with MRP"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "when-choice-is-denied",
+          "title": "When Choice is Denied",
+          "objectives": [
+            "Student can explain the right to choose",
+            "Student can explain Abirami's case"
+          ],
+          "visualIdeas": [
+            "a refund receipt"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "where-should-consumers-go-to-get-justice",
+          "title": "Where should Consumers go to get Justice?",
+          "objectives": [
+            "Student can explain the right to seek redressal",
+            "Student can describe the three-tier consumer commissions"
+          ],
+          "visualIdeas": [
+            "a three-tier commission diagram"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "learning-to-become-well-informed-consumers",
+          "title": "Learning to become Well-informed Consumers",
+          "objectives": [
+            "Student can explain the right to consumer education",
+            "Student can recognise standardisation marks such as ISI and Agmark"
+          ],
+          "visualIdeas": [
+            "ISI and Agmark logos"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "taking-the-consumer-movement-forward",
+          "title": "Taking the Consumer Movement Forward",
+          "objectives": [
+            "Student can explain the progress of the consumer movement",
+            "Student can explain challenges that remain"
+          ],
+          "visualIdeas": [
+            "a timeline of the movement"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

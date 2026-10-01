@@ -1,0 +1,1872 @@
+{
+  "id": "class12-physics",
+  "klass": 12,
+  "subject": "Physics",
+  "source": {
+    "books": [
+      {
+        "title": "Physics Part I",
+        "code": "leph1",
+        "edition": "Reprint 2026-27 (First Edition December 2006; Revised Edition November 2022; reprinted February 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/leph1ps.pdf"
+      },
+      {
+        "title": "Physics Part II",
+        "code": "leph2",
+        "edition": "Revised Edition November 2022, reprinted December 2025 (First Edition March 2007); chapter PDFs 9-13 are footed \"Reprint 2026-27\", chapter 14 is footed \"Reprint 2025-26\", the prelims carry no reprint footer",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/leph2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from each book's Contents page; topics from each chapter PDF's numbered section and subsection headings (Introduction, Summary, Points to Ponder and Exercises are not topics; a parent heading that is only a lead-in to its subsections is merged with them; short subsections are grouped under their section heading)"
+  },
+  "chapters": [
+    {
+      "id": "electric-charges-and-fields",
+      "title": "Electric Charges and Fields",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph101.pdf",
+      "topics": [
+        {
+          "id": "electric-charge",
+          "title": "Electric Charge",
+          "objectives": [
+            "Student can state that there are two kinds of charge, positive and negative, and that like charges repel and unlike charges attract",
+            "Student can explain why a glass rod rubbed with silk and the silk acquire opposite charges",
+            "Student can describe how a gold-leaf electroscope detects charge on a body"
+          ],
+          "visualIdeas": [
+            "two glass rods repelling and a glass rod attracting a plastic rod",
+            "gold-leaf electroscope with leaves diverging"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conductors-and-insulators",
+          "title": "Conductors and Insulators",
+          "objectives": [
+            "Student can distinguish conductors, which allow charge to move through them, from insulators, which do not",
+            "Student can explain why charge given to a conductor spreads over its whole surface while charge on an insulator stays where it is put",
+            "Student can explain why a metal rod held in the hand does not show charging but a plastic comb does"
+          ],
+          "visualIdeas": [
+            "charge spreading over a metal sphere vs staying in a patch on a plastic rod"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "basic-properties-of-electric-charge",
+          "title": "Basic Properties of Electric Charge",
+          "objectives": [
+            "Student can treat small charged bodies as point charges",
+            "Student can state that charges add algebraically (additivity) and that the total charge of an isolated system is conserved",
+            "Student can explain quantisation of charge, q = ne, and calculate the number of electrons in a given charge"
+          ],
+          "visualIdeas": [
+            "number line adding +q and -q charges",
+            "electrons transferring from one body to another during rubbing"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "coulombs-law",
+          "title": "Coulomb's Law",
+          "objectives": [
+            "Student can state Coulomb's law for the force between two point charges and write it with the constant 1/(4 pi epsilon0)",
+            "Student can write Coulomb's law in vector form and identify that F12 = -F21",
+            "Student can compare the electric force with the gravitational force between an electron and a proton",
+            "Student can define the SI unit of charge using Coulomb's law"
+          ],
+          "visualIdeas": [
+            "two point charges with force arrows along the line joining them",
+            "graph of force falling as 1/r^2"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "forces-between-multiple-charges",
+          "title": "Forces between Multiple Charges",
+          "objectives": [
+            "Student can state the superposition principle for electrostatic forces",
+            "Student can find the net force on one charge due to several charges by adding the individual Coulomb forces as vectors"
+          ],
+          "visualIdeas": [
+            "three charges at the corners of a triangle with vector addition of forces"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "electric-field",
+          "title": "Electric Field",
+          "objectives": [
+            "Student can define electric field as force per unit positive test charge and write the field of a point charge",
+            "Student can find the electric field at a point due to a system of charges using superposition",
+            "Student can explain why the field is a physical quantity in its own right, not just a calculating device, for time-dependent situations"
+          ],
+          "visualIdeas": [
+            "radial field vectors around a positive and a negative point charge",
+            "field vectors from two charges added at a point"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "electric-field-lines",
+          "title": "Electric Field Lines",
+          "objectives": [
+            "Student can describe field lines as curves whose tangent gives the field direction and whose density gives its strength",
+            "Student can state the properties of field lines: they start on positive and end on negative charges, do not cross and do not form closed loops in electrostatics",
+            "Student can sketch field lines for a single charge, a dipole and two equal positive charges"
+          ],
+          "visualIdeas": [
+            "field line patterns for +q, -q, a dipole and two like charges"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electric-flux",
+          "title": "Electric Flux",
+          "objectives": [
+            "Student can define electric flux through a small area as E . dS and relate it to the number of field lines crossing the area",
+            "Student can explain how the flux depends on the angle between the field and the area vector",
+            "Student can state the SI unit of electric flux"
+          ],
+          "visualIdeas": [
+            "field lines crossing a flat surface tilted at an angle theta",
+            "liquid flowing through a tilted ring as an analogy"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electric-dipole",
+          "title": "Electric Dipole",
+          "objectives": [
+            "Student can define an electric dipole and its dipole moment p = q x 2a pointing from -q to +q",
+            "Student can derive the field of a dipole at a point on its axis and on its equatorial plane",
+            "Student can explain that at large distances the dipole field falls as 1/r^3",
+            "Student can distinguish polar molecules such as water from non-polar molecules such as CO2 and CH4"
+          ],
+          "visualIdeas": [
+            "dipole with field vectors on its axis and its equatorial line",
+            "water molecule with its permanent dipole moment"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "dipole-in-a-uniform-external-field",
+          "title": "Dipole in a Uniform External Field",
+          "objectives": [
+            "Student can show that the net force on a dipole in a uniform field is zero",
+            "Student can derive the torque on a dipole, tau = p x E, and explain how it tends to align the dipole with the field",
+            "Student can explain why a dipole in a non-uniform field also feels a net force, as when a charged comb attracts bits of paper"
+          ],
+          "visualIdeas": [
+            "dipole in a uniform field with equal and opposite forces forming a couple"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "continuous-charge-distribution",
+          "title": "Continuous Charge Distribution",
+          "objectives": [
+            "Student can define linear, surface and volume charge densities with their units",
+            "Student can write the field of a continuous charge distribution as a sum over small charge elements"
+          ],
+          "visualIdeas": [
+            "charged wire, sheet and solid split into small elements dq"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "gausss-law",
+          "title": "Gauss's Law",
+          "objectives": [
+            "Student can state Gauss's law: the total flux through a closed surface equals the enclosed charge divided by epsilon0",
+            "Student can show that the flux through a sphere around a point charge is q/epsilon0, independent of the radius",
+            "Student can explain that charges outside a closed surface give zero net flux through it",
+            "Student can choose a Gaussian surface and apply Gauss's law to find enclosed charge from a given field"
+          ],
+          "visualIdeas": [
+            "closed Gaussian surface with charges inside and outside",
+            "field lines entering and leaving a cylinder"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "field-due-to-an-infinitely-long-straight-uniformly-charged-wire",
+          "title": "Field due to an Infinitely Long Straight Uniformly Charged Wire",
+          "objectives": [
+            "Student can use symmetry to argue that the field of a long charged wire is radial",
+            "Student can apply Gauss's law with a cylindrical Gaussian surface to obtain E = lambda / (2 pi epsilon0 r)"
+          ],
+          "visualIdeas": [
+            "charged wire inside a coaxial cylindrical Gaussian surface"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "field-due-to-a-uniformly-charged-infinite-plane-sheet",
+          "title": "Field due to a Uniformly Charged Infinite Plane Sheet",
+          "objectives": [
+            "Student can use a box-shaped Gaussian surface to show that the field of an infinite charged sheet is sigma / (2 epsilon0)",
+            "Student can explain why this field does not depend on the distance from the sheet"
+          ],
+          "visualIdeas": [
+            "infinite sheet with a pillbox Gaussian surface through it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "field-due-to-a-uniformly-charged-thin-spherical-shell",
+          "title": "Field due to a Uniformly Charged Thin Spherical Shell",
+          "objectives": [
+            "Student can show with Gauss's law that outside a charged spherical shell the field is as if all the charge were at its centre",
+            "Student can show that the field inside a uniformly charged thin shell is zero"
+          ],
+          "visualIdeas": [
+            "spherical shell with Gaussian spheres inside and outside",
+            "graph of E against r for a charged shell"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "electrostatic-potential-and-capacitance",
+      "title": "Electrostatic Potential and Capacitance",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph102.pdf",
+      "topics": [
+        {
+          "id": "electrostatic-potential",
+          "title": "Electrostatic Potential",
+          "objectives": [
+            "Student can explain that the Coulomb force is conservative, so work done against it is stored as potential energy",
+            "Student can define electrostatic potential at a point as the work done by an external force in bringing a unit positive charge from infinity to that point",
+            "Student can explain that only potential difference is physically significant and state the unit volt"
+          ],
+          "visualIdeas": [
+            "test charge pushed slowly from infinity towards a charge Q",
+            "hill analogy for potential"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "potential-due-to-a-point-charge",
+          "title": "Potential due to a Point Charge",
+          "objectives": [
+            "Student can derive V = Q / (4 pi epsilon0 r) for a point charge",
+            "Student can compare how potential (1/r) and field (1/r^2) fall with distance"
+          ],
+          "visualIdeas": [
+            "graph of V and E against r for a point charge"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "potential-due-to-an-electric-dipole",
+          "title": "Potential due to an Electric Dipole",
+          "objectives": [
+            "Student can derive the potential of a dipole at a general point, V = p cos theta / (4 pi epsilon0 r^2)",
+            "Student can explain why the potential is zero on the equatorial plane and why the dipole potential falls as 1/r^2"
+          ],
+          "visualIdeas": [
+            "dipole with a point P at angle theta from its axis"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "potential-due-to-a-system-of-charges",
+          "title": "Potential due to a System of Charges",
+          "objectives": [
+            "Student can find the potential at a point due to several charges by adding their potentials algebraically",
+            "Student can state the potential outside and inside a uniformly charged spherical shell"
+          ],
+          "visualIdeas": [
+            "several charges around a point P with their distances marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "equipotential-surfaces",
+          "title": "Equipotential Surfaces",
+          "objectives": [
+            "Student can define an equipotential surface and draw equipotentials for a point charge, a uniform field and a dipole",
+            "Student can explain why the field is always normal to an equipotential surface and no work is done moving a charge along it",
+            "Student can use E = -dV/dl to relate field to potential and state that the field points in the direction of steepest fall of potential"
+          ],
+          "visualIdeas": [
+            "concentric equipotential spheres around a point charge",
+            "equipotential planes perpendicular to a uniform field"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "potential-energy-of-a-system-of-charges",
+          "title": "Potential Energy of a System of Charges",
+          "objectives": [
+            "Student can calculate the work done in assembling two charges and write their potential energy q1 q2 / (4 pi epsilon0 r12)",
+            "Student can extend the result to three or more charges by summing over all pairs",
+            "Student can interpret the sign of the potential energy for like and unlike charges"
+          ],
+          "visualIdeas": [
+            "three charges being brought in from infinity one at a time"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "potential-energy-in-an-external-field",
+          "title": "Potential Energy in an External Field",
+          "objectives": [
+            "Student can write the potential energy of a single charge q in an external potential V as qV",
+            "Student can write the potential energy of two charges in an external field including their mutual interaction term",
+            "Student can use the electron volt as a unit of energy"
+          ],
+          "visualIdeas": [
+            "charge placed in a region of external potential V(r)"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "potential-energy-of-a-dipole-in-an-external-field",
+          "title": "Potential Energy of a Dipole in an External Field",
+          "objectives": [
+            "Student can calculate the work done in rotating a dipole in a uniform field",
+            "Student can write the potential energy of a dipole as U = -p . E and identify its stable and unstable orientations"
+          ],
+          "visualIdeas": [
+            "dipole rotated from angle theta0 to theta1 in a uniform field"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electrostatics-of-conductors",
+          "title": "Electrostatics of Conductors",
+          "objectives": [
+            "Student can state that the electrostatic field is zero inside a conductor and normal to its surface just outside",
+            "Student can explain that excess charge resides on the surface and that the potential is constant throughout a conductor",
+            "Student can relate the field at the surface to surface charge density, E = sigma / epsilon0",
+            "Student can explain electrostatic shielding: the field inside a cavity in a conductor is zero"
+          ],
+          "visualIdeas": [
+            "conductor with charges on the surface and field lines meeting it at right angles",
+            "cavity inside a conductor shielded from outside fields"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "dielectrics-and-polarisation",
+          "title": "Dielectrics and Polarisation",
+          "objectives": [
+            "Student can contrast how conductors and dielectrics respond to an external field",
+            "Student can distinguish polar and non-polar molecules and explain how each becomes polarised",
+            "Student can define polarisation and explain how a polarised slab produces surface charges that reduce the field inside it"
+          ],
+          "visualIdeas": [
+            "non-polar molecules stretched into dipoles by a field",
+            "polarised slab with induced surface charges"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "capacitors-and-capacitance",
+          "title": "Capacitors and Capacitance",
+          "objectives": [
+            "Student can describe a capacitor as two conductors separated by an insulator",
+            "Student can define capacitance C = Q/V and state the unit farad",
+            "Student can explain why a large capacitance lets a capacitor hold a large charge at a small potential difference"
+          ],
+          "visualIdeas": [
+            "two plates with charges +Q and -Q and potential difference V"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-parallel-plate-capacitor",
+          "title": "The Parallel Plate Capacitor",
+          "objectives": [
+            "Student can find the field between and outside the plates of a parallel plate capacitor",
+            "Student can derive C = epsilon0 A / d for a parallel plate capacitor with vacuum between the plates"
+          ],
+          "visualIdeas": [
+            "parallel plates with uniform field between and fringing at the edges"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "effect-of-dielectric-on-capacitance",
+          "title": "Effect of Dielectric on Capacitance",
+          "objectives": [
+            "Student can explain how a dielectric filling the gap reduces the field and increases capacitance",
+            "Student can define dielectric constant K as C/C0 and write C = K epsilon0 A / d"
+          ],
+          "visualIdeas": [
+            "capacitor with a dielectric slab and induced surface charges"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "capacitors-in-series",
+          "title": "Capacitors in Series",
+          "objectives": [
+            "Student can explain that capacitors in series carry the same charge",
+            "Student can derive 1/C = 1/C1 + 1/C2 + ... and find the equivalent capacitance of a series combination"
+          ],
+          "visualIdeas": [
+            "two capacitors in series across a battery"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "capacitors-in-parallel",
+          "title": "Capacitors in Parallel",
+          "objectives": [
+            "Student can explain that capacitors in parallel have the same potential difference",
+            "Student can derive C = C1 + C2 + ... and solve problems on mixed combinations"
+          ],
+          "visualIdeas": [
+            "two capacitors in parallel across a battery"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "energy-stored-in-a-capacitor",
+          "title": "Energy Stored in a Capacitor",
+          "objectives": [
+            "Student can derive the energy stored in a capacitor as Q^2 / 2C = CV^2 / 2 = QV / 2",
+            "Student can express the stored energy as energy density of the field, u = epsilon0 E^2 / 2"
+          ],
+          "visualIdeas": [
+            "graph of V against Q with the area under it shaded as stored energy"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "current-electricity",
+      "title": "Current Electricity",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph103.pdf",
+      "topics": [
+        {
+          "id": "electric-current",
+          "title": "Electric Current",
+          "objectives": [
+            "Student can define electric current as the rate of flow of net charge across an area, I = dq/dt",
+            "Student can state the SI unit ampere and give typical orders of magnitude of currents"
+          ],
+          "visualIdeas": [
+            "charges crossing a small area normal to their flow"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "electric-currents-in-conductors",
+          "title": "Electric Currents in Conductors",
+          "objectives": [
+            "Student can explain why free electrons in a conductor give no net current without an applied field",
+            "Student can describe how an electric field across a conductor produces a steady current"
+          ],
+          "visualIdeas": [
+            "free electrons moving randomly inside a wire"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ohms-law",
+          "title": "Ohm's Law",
+          "objectives": [
+            "Student can state Ohm's law, V = IR, and the unit ohm",
+            "Student can show that R = rho l / A and explain resistivity as a property of the material",
+            "Student can define current density and write Ohm's law as j = sigma E"
+          ],
+          "visualIdeas": [
+            "slab of conductor doubled in length and in area",
+            "V-I straight-line graph"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "drift-of-electrons-and-the-origin-of-resistivity",
+          "title": "Drift of Electrons and the Origin of Resistivity",
+          "objectives": [
+            "Student can explain drift velocity as the small average velocity electrons gain between collisions in an electric field",
+            "Student can derive I = n e A vd and the expression for resistivity in terms of relaxation time",
+            "Student can define mobility as drift velocity per unit field and state its unit"
+          ],
+          "visualIdeas": [
+            "zig-zag path of an electron with a small drift opposite to E"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "limitations-of-ohms-law",
+          "title": "Limitations of Ohm's Law",
+          "objectives": [
+            "Student can give examples where V is not proportional to I, where the relation depends on the sign of V, or where V is not a unique function of I",
+            "Student can interpret non-linear V-I graphs such as that of a diode or GaAs"
+          ],
+          "visualIdeas": [
+            "non-linear V-I characteristic curves"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "resistivity-of-various-materials",
+          "title": "Resistivity of Various Materials",
+          "objectives": [
+            "Student can classify materials as conductors, semiconductors and insulators by their resistivity ranges",
+            "Student can compare resistivities of metals, alloys, semiconductors and insulators from a table"
+          ],
+          "visualIdeas": [
+            "log-scale bar chart of resistivities"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "temperature-dependence-of-resistivity",
+          "title": "Temperature Dependence of Resistivity",
+          "objectives": [
+            "Student can write rho_T = rho_0 [1 + alpha (T - T0)] and define the temperature coefficient of resistivity",
+            "Student can explain why the resistivity of metals rises and that of semiconductors falls with temperature",
+            "Student can explain why alloys like nichrome and manganin are used for resistors"
+          ],
+          "visualIdeas": [
+            "resistivity against temperature graphs for copper, nichrome and a semiconductor"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electrical-energy-power",
+          "title": "Electrical Energy, Power",
+          "objectives": [
+            "Student can derive the power dissipated in a resistor, P = VI = I^2 R = V^2 / R",
+            "Student can explain why power is transmitted at high voltage to reduce line losses"
+          ],
+          "visualIdeas": [
+            "power line from a station to a town with I^2 R loss shown as heat"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "cells-emf-internal-resistance",
+          "title": "Cells, emf, Internal Resistance",
+          "objectives": [
+            "Student can define emf of a cell and its internal resistance",
+            "Student can show that the terminal voltage is V = epsilon - Ir when current flows",
+            "Student can find the maximum current a cell can supply"
+          ],
+          "visualIdeas": [
+            "cell with electrodes, electrolyte and an external resistor R"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "cells-in-series-and-in-parallel",
+          "title": "Cells in Series and in Parallel",
+          "objectives": [
+            "Student can find the equivalent emf and internal resistance of cells connected in series",
+            "Student can find the equivalent emf and internal resistance of cells connected in parallel"
+          ],
+          "visualIdeas": [
+            "two cells in series and two cells in parallel with their equivalent cell"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "kirchhoffs-rules",
+          "title": "Kirchhoff's Rules",
+          "objectives": [
+            "Student can state the junction rule as conservation of charge and the loop rule as conservation of energy",
+            "Student can apply Kirchhoff's rules with sign conventions to find currents in a multi-loop network"
+          ],
+          "visualIdeas": [
+            "network with junction currents and loop directions marked"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "wheatstone-bridge",
+          "title": "Wheatstone Bridge",
+          "objectives": [
+            "Student can derive the balance condition R2/R1 = R4/R3 of a Wheatstone bridge from Kirchhoff's rules",
+            "Student can use the balanced bridge to find an unknown resistance"
+          ],
+          "visualIdeas": [
+            "Wheatstone bridge with four resistors and a galvanometer"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "moving-charges-and-magnetism",
+      "title": "Moving Charges and Magnetism",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph104.pdf",
+      "topics": [
+        {
+          "id": "magnetic-field-lorentz-force",
+          "title": "Magnetic Field, Lorentz Force",
+          "objectives": [
+            "Student can recall that charges produce fields and that a moving charge also produces a magnetic field B",
+            "Student can write the Lorentz force F = q[E + v x B] and explain each term",
+            "Student can explain why the magnetic force does no work and is zero for a charge at rest or moving along B",
+            "Student can define the tesla from the magnetic force on a moving charge"
+          ],
+          "visualIdeas": [
+            "dot and cross notation for fields out of and into the page",
+            "right-hand rule for F = q v x B"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "magnetic-force-on-a-current-carrying-conductor",
+          "title": "Magnetic Force on a Current-carrying Conductor",
+          "objectives": [
+            "Student can derive F = I l x B for a straight current-carrying rod in a uniform field",
+            "Student can solve problems such as the field needed to suspend a current-carrying wire"
+          ],
+          "visualIdeas": [
+            "straight wire in a magnetic field with force arrow upward"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "motion-in-a-magnetic-field",
+          "title": "Motion in a Magnetic Field",
+          "objectives": [
+            "Student can show that a charge moving perpendicular to B moves in a circle and derive its radius r = mv / qB",
+            "Student can find the angular frequency and period of the circular motion",
+            "Student can describe the helical path when the velocity has a component along B and find its pitch"
+          ],
+          "visualIdeas": [
+            "circular orbit of a charge in a field into the page",
+            "helical path along field lines"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "magnetic-field-due-to-a-current-element-biot-savart-law",
+          "title": "Magnetic Field due to a Current Element, Biot-Savart Law",
+          "objectives": [
+            "Student can state the Biot-Savart law for the field dB of a current element I dl",
+            "Student can compare the Biot-Savart law with Coulomb's law",
+            "Student can relate mu0 and epsilon0 to the speed of light"
+          ],
+          "visualIdeas": [
+            "current element with dB at a point P perpendicular to both dl and r"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "magnetic-field-on-the-axis-of-a-circular-current-loop",
+          "title": "Magnetic Field on the Axis of a Circular Current Loop",
+          "objectives": [
+            "Student can use the Biot-Savart law to derive the field on the axis of a circular loop",
+            "Student can find the field at the centre of a loop, B = mu0 I / 2R",
+            "Student can use the right-hand thumb rule to find the direction of the field of a loop"
+          ],
+          "visualIdeas": [
+            "circular loop with field lines threading through its centre"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "amperes-circuital-law",
+          "title": "Ampere's Circuital Law",
+          "objectives": [
+            "Student can state Ampere's circuital law relating the line integral of B round a closed loop to the enclosed current",
+            "Student can use Ampere's law to find the field of a long straight wire, B = mu0 I / 2 pi r",
+            "Student can apply the right-hand rule for the direction of the field around a straight wire"
+          ],
+          "visualIdeas": [
+            "circular Amperian loop around a straight current"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-solenoid",
+          "title": "The Solenoid",
+          "objectives": [
+            "Student can describe the field pattern of a long solenoid: uniform inside and nearly zero outside",
+            "Student can apply Ampere's law to derive B = mu0 n I inside a long solenoid"
+          ],
+          "visualIdeas": [
+            "solenoid with field lines and a rectangular Amperian loop"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "force-between-two-parallel-currents-the-ampere",
+          "title": "Force between Two Parallel Currents, the Ampere",
+          "objectives": [
+            "Student can derive the force per unit length between two long parallel currents",
+            "Student can explain why parallel currents attract and antiparallel currents repel",
+            "Student can state the definition of the ampere from this force"
+          ],
+          "visualIdeas": [
+            "two parallel wires with field and force arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "torque-on-a-rectangular-current-loop-in-a-uniform-magnetic-field",
+          "title": "Torque on a Rectangular Current Loop in a Uniform Magnetic Field",
+          "objectives": [
+            "Student can show that the net force on a current loop in a uniform field is zero but the torque is not",
+            "Student can derive tau = m x B with magnetic moment m = NIA",
+            "Student can identify the stable and unstable equilibrium orientations of the loop"
+          ],
+          "visualIdeas": [
+            "rectangular loop in a field with forces on its arms forming a couple"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "circular-current-loop-as-a-magnetic-dipole",
+          "title": "Circular Current Loop as a Magnetic Dipole",
+          "objectives": [
+            "Student can show that the axial field of a loop at large distance has the form of a dipole field",
+            "Student can compare the magnetic dipole of a current loop with the electric dipole"
+          ],
+          "visualIdeas": [
+            "field lines of a current loop beside those of a bar magnet"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-moving-coil-galvanometer",
+          "title": "The Moving Coil Galvanometer",
+          "objectives": [
+            "Student can explain the working of a moving coil galvanometer using the torque on a coil in a radial field",
+            "Student can define current sensitivity and voltage sensitivity of a galvanometer",
+            "Student can explain how a galvanometer is converted into an ammeter with a small shunt resistance and into a voltmeter with a large series resistance"
+          ],
+          "visualIdeas": [
+            "moving coil galvanometer with radial magnetic field and spring",
+            "galvanometer with a shunt and with a series resistor"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "magnetism-and-matter",
+      "title": "Magnetism and Matter",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph105.pdf",
+      "topics": [
+        {
+          "id": "the-bar-magnet",
+          "title": "The Bar Magnet",
+          "objectives": [
+            "Student can describe the pattern of iron filings around a bar magnet and draw its magnetic field lines",
+            "Student can state the properties of magnetic field lines, including that they form closed loops",
+            "Student can explain why a bar magnet behaves like an equivalent solenoid"
+          ],
+          "visualIdeas": [
+            "iron filings around a bar magnet and around a solenoid side by side"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-dipole-in-a-uniform-magnetic-field",
+          "title": "The Dipole in a Uniform Magnetic Field",
+          "objectives": [
+            "Student can write the restoring torque on a compass needle of moment m in a uniform field, tau = m x B, and explain why it oscillates",
+            "Student can write the magnetic potential energy U = -m . B and identify the most stable and most unstable positions"
+          ],
+          "visualIdeas": [
+            "compass needle oscillating about the field direction"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-electrostatic-analog",
+          "title": "The Electrostatic Analog",
+          "objectives": [
+            "Student can obtain the axial and equatorial fields of a bar magnet by analogy with the electric dipole",
+            "Student can compare corresponding electric and magnetic dipole quantities from a table"
+          ],
+          "visualIdeas": [
+            "table pairing electric dipole formulas with magnetic dipole formulas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "magnetism-and-gausss-law",
+          "title": "Magnetism and Gauss's Law",
+          "objectives": [
+            "Student can state Gauss's law for magnetism: the net magnetic flux through any closed surface is zero",
+            "Student can explain that this means isolated magnetic poles (monopoles) do not exist"
+          ],
+          "visualIdeas": [
+            "closed surface around a bar magnet with as many lines entering as leaving"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "magnetisation-and-magnetic-intensity",
+          "title": "Magnetisation and Magnetic Intensity",
+          "objectives": [
+            "Student can define magnetisation M as net magnetic moment per unit volume",
+            "Student can define magnetic intensity H and write B = mu0 (H + M)",
+            "Student can define magnetic susceptibility and relative permeability and relate them"
+          ],
+          "visualIdeas": [
+            "solenoid with a material core and arrows for H, M and B"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "magnetic-properties-of-materials",
+          "title": "Magnetic Properties of Materials",
+          "objectives": [
+            "Student can classify materials as diamagnetic, paramagnetic or ferromagnetic by their susceptibility",
+            "Student can explain diamagnetism and the perfect diamagnetism of superconductors",
+            "Student can explain paramagnetism as the partial alignment of permanent atomic dipoles against thermal agitation",
+            "Student can explain ferromagnetism using domains, distinguish hard and soft ferromagnets, and state that a ferromagnet becomes a paramagnet at high enough temperature"
+          ],
+          "visualIdeas": [
+            "field lines expelled by a diamagnet and concentrated in a paramagnet",
+            "randomly oriented and aligned ferromagnetic domains"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "electromagnetic-induction",
+      "title": "Electromagnetic Induction",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph106.pdf",
+      "topics": [
+        {
+          "id": "the-experiments-of-faraday-and-henry",
+          "title": "The Experiments of Faraday and Henry",
+          "objectives": [
+            "Student can describe the experiments with a magnet moved near a coil and with two coils where current is switched or changed",
+            "Student can conclude that relative motion or a changing current induces a current in a coil"
+          ],
+          "visualIdeas": [
+            "bar magnet pushed into a coil connected to a galvanometer",
+            "two coils with a key in the primary circuit"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "magnetic-flux",
+          "title": "Magnetic Flux",
+          "objectives": [
+            "Student can define magnetic flux through a surface as B . A = BA cos theta",
+            "Student can state the SI unit of flux, the weber"
+          ],
+          "visualIdeas": [
+            "plane area tilted in a uniform magnetic field"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "faradays-law-of-induction",
+          "title": "Faraday's Law of Induction",
+          "objectives": [
+            "Student can state Faraday's law: the induced emf equals the rate of change of magnetic flux",
+            "Student can calculate induced emf for a coil of N turns whose flux changes",
+            "Student can list ways of changing flux: changing B, area or orientation"
+          ],
+          "visualIdeas": [
+            "graph of flux against time with the slope as emf"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "lenzs-law-and-conservation-of-energy",
+          "title": "Lenz's Law and Conservation of Energy",
+          "objectives": [
+            "Student can state Lenz's law: the induced current opposes the change in flux that produces it",
+            "Student can find the direction of induced current when a magnet approaches or recedes from a coil",
+            "Student can explain Lenz's law as a consequence of conservation of energy"
+          ],
+          "visualIdeas": [
+            "coil facing an approaching north pole with induced current direction"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "motional-electromotive-force",
+          "title": "Motional Electromotive Force",
+          "objectives": [
+            "Student can derive the emf epsilon = Blv induced in a rod moving across a magnetic field",
+            "Student can explain motional emf using the Lorentz force on free charges in the rod",
+            "Student can calculate the emf and current for a rod moving on rails or rotating in a field"
+          ],
+          "visualIdeas": [
+            "rod sliding on rails in a magnetic field with induced current"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mutual-inductance",
+          "title": "Mutual Inductance",
+          "objectives": [
+            "Student can define inductance as flux linkage per unit current",
+            "Student can derive the mutual inductance of two long co-axial solenoids",
+            "Student can write the induced emf in one coil due to changing current in another, epsilon = -M dI/dt"
+          ],
+          "visualIdeas": [
+            "two co-axial solenoids, one inside the other"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "self-inductance",
+          "title": "Self-inductance",
+          "objectives": [
+            "Student can define self-inductance and derive the self-inductance of a long solenoid",
+            "Student can explain the back emf that opposes a change of current in a coil",
+            "Student can derive the energy stored in an inductor, LI^2 / 2"
+          ],
+          "visualIdeas": [
+            "solenoid with current rising and back emf opposing it"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "ac-generator",
+          "title": "AC Generator",
+          "objectives": [
+            "Student can describe the parts of an ac generator and how rotating a coil in a field induces an emf",
+            "Student can derive the sinusoidal emf epsilon = NBA omega sin(omega t)"
+          ],
+          "visualIdeas": [
+            "coil rotating between magnet poles with slip rings",
+            "sine graph of induced emf with coil positions"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "alternating-current",
+      "title": "Alternating Current",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph107.pdf",
+      "topics": [
+        {
+          "id": "ac-voltage-applied-to-a-resistor",
+          "title": "AC Voltage Applied to a Resistor",
+          "objectives": [
+            "Student can show that current and voltage in a resistor are in phase",
+            "Student can derive average power I_m^2 R / 2 and define rms current and voltage",
+            "Student can relate peak and rms values, for example 220 V rms mains"
+          ],
+          "visualIdeas": [
+            "in-phase sine graphs of v and i for a resistor"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "representation-of-ac-current-and-voltage-by-rotating-vectors-phasors",
+          "title": "Representation of AC Current and Voltage by Rotating Vectors - Phasors",
+          "objectives": [
+            "Student can represent an alternating voltage and current as rotating phasors",
+            "Student can read phase difference from a phasor diagram"
+          ],
+          "visualIdeas": [
+            "phasors rotating anticlockwise with their projections as sine waves"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ac-voltage-applied-to-an-inductor",
+          "title": "AC Voltage Applied to an Inductor",
+          "objectives": [
+            "Student can show that current in a pure inductor lags the voltage by pi/2",
+            "Student can define inductive reactance X_L = omega L",
+            "Student can show that the average power over a cycle in a pure inductor is zero"
+          ],
+          "visualIdeas": [
+            "phasor diagram and v, i graphs for an inductor"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "ac-voltage-applied-to-a-capacitor",
+          "title": "AC Voltage Applied to a Capacitor",
+          "objectives": [
+            "Student can show that current in a capacitor leads the voltage by pi/2",
+            "Student can define capacitive reactance X_C = 1/(omega C)",
+            "Student can show that the average power over a cycle in a pure capacitor is zero"
+          ],
+          "visualIdeas": [
+            "phasor diagram and v, i graphs for a capacitor"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "ac-voltage-applied-to-a-series-lcr-circuit",
+          "title": "AC Voltage Applied to a Series LCR Circuit",
+          "objectives": [
+            "Student can draw the phasor diagram for a series LCR circuit",
+            "Student can derive the impedance Z = sqrt(R^2 + (X_C - X_L)^2) and the phase angle between voltage and current"
+          ],
+          "visualIdeas": [
+            "series LCR phasor diagram with the impedance triangle"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "resonance",
+          "title": "Resonance",
+          "objectives": [
+            "Student can find the resonant frequency omega0 = 1/sqrt(LC) where current is maximum",
+            "Student can interpret the variation of current amplitude with frequency",
+            "Student can describe the use of resonance in tuning a radio"
+          ],
+          "visualIdeas": [
+            "current amplitude against frequency peaking at omega0"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "power-in-ac-circuit-the-power-factor",
+          "title": "Power in AC Circuit: The Power Factor",
+          "objectives": [
+            "Student can derive the average power P = V I cos phi in an ac circuit",
+            "Student can define power factor and evaluate it for resistive, purely reactive and LCR circuits",
+            "Student can explain wattless current and why a low power factor causes losses in transmission"
+          ],
+          "visualIdeas": [
+            "phasor diagram with the current split into active and wattless components"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "transformers",
+          "title": "Transformers",
+          "objectives": [
+            "Student can describe the construction and working of a transformer using mutual induction",
+            "Student can derive Vs/Vp = Ns/Np and Ip/Is = Ns/Np for an ideal transformer and distinguish step-up from step-down",
+            "Student can list the energy losses in a real transformer: flux leakage, resistance of windings, eddy currents and hysteresis"
+          ],
+          "visualIdeas": [
+            "primary and secondary coils on a soft-iron core"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "electromagnetic-waves",
+      "title": "Electromagnetic Waves",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph108.pdf",
+      "topics": [
+        {
+          "id": "displacement-current",
+          "title": "Displacement Current",
+          "objectives": [
+            "Student can show the inconsistency of Ampere's circuital law when a capacitor is being charged",
+            "Student can define Maxwell's displacement current, epsilon0 dPhi_E/dt",
+            "Student can state the generalised Ampere-Maxwell law and explain that a changing electric field produces a magnetic field"
+          ],
+          "visualIdeas": [
+            "charging capacitor with two surfaces bounded by the same loop"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "sources-of-electromagnetic-waves",
+          "title": "Sources of Electromagnetic Waves",
+          "objectives": [
+            "Student can explain that accelerated charges produce electromagnetic waves",
+            "Student can describe an oscillating charge producing oscillating electric and magnetic fields that propagate"
+          ],
+          "visualIdeas": [
+            "oscillating charge radiating wavefronts"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "nature-of-electromagnetic-waves",
+          "title": "Nature of Electromagnetic Waves",
+          "objectives": [
+            "Student can describe an electromagnetic wave as perpendicular E and B fields transverse to the direction of propagation",
+            "Student can write the speed c = 1/sqrt(mu0 epsilon0) and the relation E0/B0 = c",
+            "Student can explain that electromagnetic waves need no material medium, travel at 1/sqrt(mu epsilon) in a medium, and carry energy"
+          ],
+          "visualIdeas": [
+            "3D sketch of E and B oscillating at right angles along the direction of travel"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "electromagnetic-spectrum-radio-waves-microwaves-and-infrared-waves",
+          "title": "Electromagnetic Spectrum: Radio Waves, Microwaves and Infrared Waves",
+          "objectives": [
+            "Student can arrange the electromagnetic spectrum in order of wavelength and frequency",
+            "Student can describe the production and uses of radio waves, microwaves (radar, microwave ovens) and infrared waves (heat, remote controls)"
+          ],
+          "visualIdeas": [
+            "spectrum bar from radio to gamma with wavelength labels"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electromagnetic-spectrum-visible-ultraviolet-x-rays-and-gamma-rays",
+          "title": "Electromagnetic Spectrum: Visible, Ultraviolet, X-rays and Gamma Rays",
+          "objectives": [
+            "Student can state the wavelength range of visible light",
+            "Student can describe the sources and uses of ultraviolet rays, X-rays and gamma rays and the ozone layer's role in absorbing UV"
+          ],
+          "visualIdeas": [
+            "table of wave types with production and detection"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "ray-optics-and-optical-instruments",
+      "title": "Ray Optics and Optical Instruments",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph201.pdf",
+      "topics": [
+        {
+          "id": "reflection-of-light-by-spherical-mirrors",
+          "title": "Reflection of Light by Spherical Mirrors",
+          "objectives": [
+            "Student can state the laws of reflection and apply them to curved mirrors using the normal along the radius",
+            "Student can use the Cartesian sign convention for distances measured from the pole"
+          ],
+          "visualIdeas": [
+            "concave mirror with pole, centre of curvature and principal axis",
+            "sign convention axes on a mirror diagram"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "focal-length-of-spherical-mirrors",
+          "title": "Focal Length of Spherical Mirrors",
+          "objectives": [
+            "Student can define principal focus and focal length for concave and convex mirrors",
+            "Student can show that f = R/2 for a spherical mirror with paraxial rays"
+          ],
+          "visualIdeas": [
+            "parallel rays converging at F for a concave mirror and diverging from F for a convex mirror"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-mirror-equation",
+          "title": "The Mirror Equation",
+          "objectives": [
+            "Student can derive the mirror equation 1/v + 1/u = 1/f",
+            "Student can define and calculate linear magnification m = -v/u",
+            "Student can locate images by ray diagrams for different object positions"
+          ],
+          "visualIdeas": [
+            "ray diagram for an object beyond C in a concave mirror"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "refraction",
+          "title": "Refraction",
+          "objectives": [
+            "Student can state the laws of refraction (Snell's law) and define relative refractive index",
+            "Student can explain lateral shift through a glass slab and the apparent depth of an object under water"
+          ],
+          "visualIdeas": [
+            "ray bending at an air-glass boundary",
+            "coin in water appearing raised"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "total-internal-reflection",
+          "title": "Total Internal Reflection",
+          "objectives": [
+            "Student can explain total internal reflection and the conditions for it",
+            "Student can define the critical angle and relate it to refractive index, sin ic = 1/n"
+          ],
+          "visualIdeas": [
+            "rays at increasing angles from water to air reaching the critical angle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "total-internal-reflection-in-nature-and-its-technological-applications",
+          "title": "Total Internal Reflection in Nature and its Technological Applications",
+          "objectives": [
+            "Student can explain how totally reflecting prisms bend light by 90 or 180 degrees or invert an image",
+            "Student can explain how optical fibres carry light signals by repeated total internal reflection"
+          ],
+          "visualIdeas": [
+            "right-angled prisms turning rays",
+            "light zig-zagging along an optical fibre"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "refraction-at-a-spherical-surface",
+          "title": "Refraction at a Spherical Surface",
+          "objectives": [
+            "Student can derive n2/v - n1/u = (n2 - n1)/R for refraction at a spherical surface",
+            "Student can apply the relation to find the image formed by a single spherical glass surface"
+          ],
+          "visualIdeas": [
+            "object, image and spherical refracting surface with centre C"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "refraction-by-a-lens",
+          "title": "Refraction by a Lens",
+          "objectives": [
+            "Student can derive the lens maker's formula by treating a lens as two refracting surfaces",
+            "Student can derive the thin lens formula 1/v - 1/u = 1/f and the magnification m = v/u",
+            "Student can draw ray diagrams for images formed by convex and concave lenses"
+          ],
+          "visualIdeas": [
+            "double convex lens with the image from the first surface acting as object for the second"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "power-of-a-lens",
+          "title": "Power of a Lens",
+          "objectives": [
+            "Student can define the power of a lens P = 1/f and its unit dioptre",
+            "Student can state the sign of power for converging and diverging lenses"
+          ],
+          "visualIdeas": [
+            "thick and thin lenses bending rays by different amounts"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "combination-of-thin-lenses-in-contact",
+          "title": "Combination of Thin Lenses in Contact",
+          "objectives": [
+            "Student can derive the effective focal length of thin lenses in contact, 1/f = 1/f1 + 1/f2",
+            "Student can add powers and multiply magnifications for a lens combination"
+          ],
+          "visualIdeas": [
+            "two thin lenses in contact with the intermediate image"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "refraction-through-a-prism",
+          "title": "Refraction through a Prism",
+          "objectives": [
+            "Student can trace a ray through a prism and derive A = r1 + r2 and the angle of deviation",
+            "Student can explain the angle of minimum deviation and derive n = sin[(A + Dm)/2] / sin(A/2)",
+            "Student can find the deviation produced by a thin prism"
+          ],
+          "visualIdeas": [
+            "ray through a triangular prism with angles marked",
+            "graph of deviation against angle of incidence"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-microscope",
+          "title": "The Microscope",
+          "objectives": [
+            "Student can explain how a simple microscope (magnifier) gives angular magnification m = 1 + D/f",
+            "Student can describe the compound microscope with objective and eyepiece and write its magnification",
+            "Student can explain why both lenses of a compound microscope have short focal lengths"
+          ],
+          "visualIdeas": [
+            "ray diagram of a compound microscope with intermediate image"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "telescope",
+          "title": "Telescope",
+          "objectives": [
+            "Student can describe the refracting telescope and write its magnifying power fo/fe",
+            "Student can explain the need for large aperture objectives and the working of a reflecting (Cassegrain) telescope"
+          ],
+          "visualIdeas": [
+            "refracting telescope ray diagram",
+            "Cassegrain reflecting telescope with primary and secondary mirrors"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "wave-optics",
+      "title": "Wave Optics",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph202.pdf",
+      "topics": [
+        {
+          "id": "huygens-principle",
+          "title": "Huygens Principle",
+          "objectives": [
+            "Student can define a wavefront and identify spherical and plane wavefronts",
+            "Student can use Huygens principle to construct a new wavefront from secondary wavelets"
+          ],
+          "visualIdeas": [
+            "secondary wavelets from points on a wavefront and their envelope"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "refraction-of-a-plane-wave",
+          "title": "Refraction of a Plane Wave",
+          "objectives": [
+            "Student can use Huygens construction to derive Snell's law, n1 sin i = n2 sin r",
+            "Student can explain that frequency stays the same while wavelength and speed change on refraction"
+          ],
+          "visualIdeas": [
+            "plane wavefront entering a denser medium with wavelets drawn"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "refraction-at-a-rarer-medium",
+          "title": "Refraction at a Rarer Medium",
+          "objectives": [
+            "Student can construct the refracted wavefront for light entering a rarer medium",
+            "Student can derive the critical angle condition from the construction"
+          ],
+          "visualIdeas": [
+            "wavefront bending away from the normal into a rarer medium"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "reflection-of-a-plane-wave-by-a-plane-surface",
+          "title": "Reflection of a Plane Wave by a Plane Surface",
+          "objectives": [
+            "Student can use Huygens construction to show that the angle of reflection equals the angle of incidence",
+            "Student can describe how a prism, a lens and a mirror change the shape of a plane wavefront"
+          ],
+          "visualIdeas": [
+            "incident and reflected wavefronts at a mirror"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "coherent-and-incoherent-addition-of-waves",
+          "title": "Coherent and Incoherent Addition of Waves",
+          "objectives": [
+            "Student can explain superposition of two waves and the resultant intensity in terms of phase difference",
+            "Student can state the conditions for constructive and destructive interference in terms of path difference",
+            "Student can distinguish coherent sources, whose phase difference is constant, from incoherent sources"
+          ],
+          "visualIdeas": [
+            "ripple tank pattern from two dipping needles",
+            "two waves adding in phase and out of phase"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "interference-of-light-waves-and-youngs-experiment",
+          "title": "Interference of Light Waves and Young's Experiment",
+          "objectives": [
+            "Student can explain why two independent sources do not give an interference pattern and how Young obtained coherent sources",
+            "Student can derive the positions of bright and dark fringes and the fringe width beta = lambda D / d",
+            "Student can describe the fringe pattern and how it changes with wavelength and slit separation"
+          ],
+          "visualIdeas": [
+            "Young's double-slit set-up with fringes on a screen"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "diffraction-the-single-slit",
+          "title": "Diffraction: The Single Slit",
+          "objectives": [
+            "Student can explain diffraction as the bending of light around obstacles and slits",
+            "Student can find the angles of minima for a single slit, a sin theta = n lambda, and explain the broad central maximum",
+            "Student can contrast the single-slit pattern with the double-slit interference pattern"
+          ],
+          "visualIdeas": [
+            "single slit with the intensity pattern on a screen"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "seeing-the-single-slit-diffraction-pattern",
+          "title": "Seeing the Single Slit Diffraction Pattern",
+          "objectives": [
+            "Student can set up a simple single-slit experiment with two razor blades and a bulb filament",
+            "Student can relate the observed pattern to the slit width"
+          ],
+          "visualIdeas": [
+            "two razor blades forming a slit in front of the eye viewing a filament"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "polarisation",
+          "title": "Polarisation",
+          "objectives": [
+            "Student can explain polarisation using transverse waves on a string",
+            "Student can describe how a polaroid produces plane-polarised light and how its pass-axis acts",
+            "Student can state that the intensity through two polaroids varies as cos^2 theta (Malus' law)"
+          ],
+          "visualIdeas": [
+            "unpolarised light through two polaroids at angle theta"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "dual-nature-of-radiation-and-matter",
+      "title": "Dual Nature of Radiation and Matter",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph203.pdf",
+      "topics": [
+        {
+          "id": "electron-emission",
+          "title": "Electron Emission",
+          "objectives": [
+            "Student can explain why free electrons need a minimum energy, the work function, to leave a metal",
+            "Student can distinguish thermionic emission, field emission and photoelectric emission"
+          ],
+          "visualIdeas": [
+            "electron held back at a metal surface by a potential barrier"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "photoelectric-effect",
+          "title": "Photoelectric Effect",
+          "objectives": [
+            "Student can describe Hertz's observation that ultraviolet light helps sparks jump",
+            "Student can describe Hallwachs' and Lenard's observations, including the threshold frequency below which no emission occurs"
+          ],
+          "visualIdeas": [
+            "zinc plate on an electroscope discharged by UV light"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "experimental-study-of-photoelectric-effect",
+          "title": "Experimental Study of Photoelectric Effect",
+          "objectives": [
+            "Student can describe the evacuated-tube apparatus for studying photoelectric effect",
+            "Student can explain that photocurrent is proportional to the intensity of incident light"
+          ],
+          "visualIdeas": [
+            "photocell with emitter C, collector A and variable potential",
+            "photocurrent against intensity straight line"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "effect-of-potential-on-photoelectric-current",
+          "title": "Effect of Potential on Photoelectric Current",
+          "objectives": [
+            "Student can explain saturation current and stopping potential from the photocurrent-potential graph",
+            "Student can relate the stopping potential to the maximum kinetic energy of photoelectrons, K_max = e V0"
+          ],
+          "visualIdeas": [
+            "photocurrent against collector potential for two intensities"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "effect-of-frequency-of-incident-radiation-on-stopping-potential",
+          "title": "Effect of Frequency of Incident Radiation on Stopping Potential",
+          "objectives": [
+            "Student can explain from the graph that stopping potential increases linearly with frequency",
+            "Student can identify the threshold frequency as the intercept on the frequency axis"
+          ],
+          "visualIdeas": [
+            "stopping potential against frequency for two metals"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "photoelectric-effect-and-wave-theory-of-light",
+          "title": "Photoelectric Effect and Wave Theory of Light",
+          "objectives": [
+            "Student can state what the wave picture predicts: K_max rising with intensity and no threshold frequency, and compare this with the observations",
+            "Student can explain why the wave picture predicts a delay of hours before emission while the observed emission is instantaneous"
+          ],
+          "visualIdeas": [
+            "table comparing wave-theory predictions with observations"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "einsteins-photoelectric-equation-energy-quantum-of-radiation",
+          "title": "Einstein's Photoelectric Equation: Energy Quantum of Radiation",
+          "objectives": [
+            "Student can write Einstein's equation K_max = h nu - phi0 and explain each term",
+            "Student can use the equation to explain all the observed features of photoelectric effect",
+            "Student can find Planck's constant from the slope of the V0-nu graph"
+          ],
+          "visualIdeas": [
+            "photon hitting a metal, part of its energy used as work function"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "particle-nature-of-light-the-photon",
+          "title": "Particle Nature of Light: The Photon",
+          "objectives": [
+            "Student can state the properties of photons: energy h nu, momentum h nu / c and speed c, with Compton's X-ray scattering as further evidence",
+            "Student can explain that photon number, not photon energy, increases with intensity",
+            "Student can calculate the number of photons emitted per second by a source of given power"
+          ],
+          "visualIdeas": [
+            "beam of light drawn as a stream of photons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "wave-nature-of-matter",
+          "title": "Wave Nature of Matter",
+          "objectives": [
+            "Student can state de Broglie's hypothesis and write lambda = h/p",
+            "Student can calculate the de Broglie wavelength of a moving electron and of a moving ball",
+            "Student can explain why the wave nature of everyday objects is not observed while that of electrons is comparable to X-ray wavelengths"
+          ],
+          "visualIdeas": [
+            "comparison of de Broglie wavelengths of a ball and an electron"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "atoms",
+      "title": "Atoms",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph204.pdf",
+      "topics": [
+        {
+          "id": "alpha-particle-scattering-and-rutherfords-nuclear-model-of-atom",
+          "title": "Alpha-particle Scattering and Rutherford's Nuclear Model of Atom",
+          "objectives": [
+            "Student can describe the Geiger-Marsden alpha-particle scattering experiment and its observations",
+            "Student can explain how the few large-angle deflections led Rutherford to a small, dense, positively charged nucleus",
+            "Student can estimate the size of the nucleus relative to the atom"
+          ],
+          "visualIdeas": [
+            "gold foil with most alpha particles passing straight and a few bouncing back"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "alpha-particle-trajectory",
+          "title": "Alpha-particle Trajectory",
+          "objectives": [
+            "Student can define impact parameter and relate it to the scattering angle",
+            "Student can find the distance of closest approach from energy conservation"
+          ],
+          "visualIdeas": [
+            "alpha-particle paths for different impact parameters around a nucleus"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electron-orbits",
+          "title": "Electron Orbits",
+          "objectives": [
+            "Student can equate the Coulomb force to the centripetal force for an electron orbit in hydrogen",
+            "Student can derive the total energy of the electron and explain why it is negative"
+          ],
+          "visualIdeas": [
+            "electron orbiting a nucleus with the electrostatic pull as centripetal force"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "atomic-spectra",
+          "title": "Atomic Spectra",
+          "objectives": [
+            "Student can describe emission and absorption line spectra of atomic gases",
+            "Student can explain that each element has a characteristic line spectrum"
+          ],
+          "visualIdeas": [
+            "emission line spectrum of hydrogen beside its absorption spectrum"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "bohr-model-of-the-hydrogen-atom",
+          "title": "Bohr Model of the Hydrogen Atom",
+          "objectives": [
+            "Student can explain why, by classical electromagnetic theory, an orbiting electron in the Rutherford model would radiate energy and spiral into the nucleus, so the atom could not be stable",
+            "Student can state Bohr's three postulates",
+            "Student can derive the radius of the nth orbit and the energy of the electron in it",
+            "Student can express the energy of the electron in electron volts"
+          ],
+          "visualIdeas": [
+            "nested Bohr orbits with n = 1, 2, 3"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "energy-levels",
+          "title": "Energy Levels",
+          "objectives": [
+            "Student can draw the energy level diagram of hydrogen with E_n = -13.6/n^2 eV",
+            "Student can define ground state, excited states and the Bohr radius a0",
+            "Student can explain why the ionisation energy of hydrogen is 13.6 eV"
+          ],
+          "visualIdeas": [
+            "energy level ladder for hydrogen"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-line-spectra-of-the-hydrogen-atom",
+          "title": "The Line Spectra of the Hydrogen Atom",
+          "objectives": [
+            "Student can explain emission lines as transitions between energy levels with h nu = Ei - Ef",
+            "Student can calculate the wavelength of a line from the energy levels",
+            "Student can explain absorption lines in terms of upward transitions"
+          ],
+          "visualIdeas": [
+            "downward arrows between levels producing spectral lines"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "de-broglies-explanation-of-bohrs-second-postulate-of-quantisation",
+          "title": "De Broglie's Explanation of Bohr's Second Postulate of Quantisation",
+          "objectives": [
+            "Student can explain that a stationary orbit holds a whole number of de Broglie wavelengths, 2 pi r = n lambda",
+            "Student can derive the quantisation of angular momentum, mvr = nh/2pi, from this condition",
+            "Student can state the limitations of the Bohr model"
+          ],
+          "visualIdeas": [
+            "standing wave fitted around a circular orbit"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "nuclei",
+      "title": "Nuclei",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph205.pdf",
+      "topics": [
+        {
+          "id": "atomic-masses-and-composition-of-nucleus",
+          "title": "Atomic Masses and Composition of Nucleus",
+          "objectives": [
+            "Student can define the atomic mass unit and use it for atomic masses",
+            "Student can describe the discovery of the neutron and the composition of a nucleus as Z protons and N neutrons",
+            "Student can define isotopes, isobars and isotones with examples"
+          ],
+          "visualIdeas": [
+            "nucleus drawn as a cluster of protons and neutrons with Z, N, A labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "size-of-the-nucleus",
+          "title": "Size of the Nucleus",
+          "objectives": [
+            "Student can state that the nuclear radius is R = R0 A^(1/3)",
+            "Student can show that nuclear density is nearly the same for all nuclei and compare it with ordinary matter"
+          ],
+          "visualIdeas": [
+            "spheres of different nuclei with radii growing as A^(1/3)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mass-energy",
+          "title": "Mass - Energy",
+          "objectives": [
+            "Student can state Einstein's mass-energy relation E = mc^2",
+            "Student can calculate the energy equivalent of a given mass, for example of 1 g or 1 u"
+          ],
+          "visualIdeas": [
+            "mass on one side of a balance and energy on the other"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "nuclear-binding-energy",
+          "title": "Nuclear Binding Energy",
+          "objectives": [
+            "Student can define mass defect and binding energy of a nucleus",
+            "Student can interpret the binding energy per nucleon curve and its flat middle region",
+            "Student can explain from the curve why fission of heavy nuclei and fusion of light nuclei release energy"
+          ],
+          "visualIdeas": [
+            "binding energy per nucleon against mass number curve"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "nuclear-force",
+          "title": "Nuclear Force",
+          "objectives": [
+            "Student can state the main features of the nuclear force: strong, short-range, nearly charge-independent and repulsive at very short distances",
+            "Student can interpret the potential energy curve of a pair of nucleons"
+          ],
+          "visualIdeas": [
+            "potential energy of two nucleons against separation"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "radioactivity",
+          "title": "Radioactivity",
+          "objectives": [
+            "Student can describe Becquerel's discovery of radioactivity as a nuclear phenomenon",
+            "Student can name the three types of decay: alpha, beta and gamma"
+          ],
+          "visualIdeas": [
+            "nucleus emitting alpha, beta and gamma radiation"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "nuclear-energy-fission",
+          "title": "Nuclear Energy: Fission",
+          "objectives": [
+            "Student can explain why nuclear energy is released when nuclei move towards the middle of the binding energy curve",
+            "Student can describe neutron-induced fission of uranium-235 and estimate the energy released per fission",
+            "Student can state that the fission fragments are radioactive and that fission is the source of energy in nuclear reactors that produce electricity"
+          ],
+          "visualIdeas": [
+            "neutron splitting a U-235 nucleus into two fragments and more neutrons"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "nuclear-fusion-energy-generation-in-stars",
+          "title": "Nuclear Fusion - Energy Generation in Stars",
+          "objectives": [
+            "Student can explain fusion of light nuclei and why it needs very high temperatures",
+            "Student can describe the proton-proton cycle by which the sun produces energy"
+          ],
+          "visualIdeas": [
+            "proton-proton cycle in the sun's core"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "controlled-thermonuclear-fusion",
+          "title": "Controlled Thermonuclear Fusion",
+          "objectives": [
+            "Student can explain the aim of a controlled fusion reactor: heating fuel to about 10^8 K to produce steady power",
+            "Student can explain why confining the hot plasma is the main challenge and that several countries, including India, are developing techniques for it"
+          ],
+          "visualIdeas": [
+            "plasma held in a doughnut-shaped magnetic chamber"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "semiconductor-electronics-materials-devices-and-simple-circuits",
+      "title": "Semiconductor Electronics: Materials, Devices and Simple Circuits",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/leph206.pdf",
+      "topics": [
+        {
+          "id": "classification-of-metals-conductors-and-semiconductors",
+          "title": "Classification of Metals, Conductors and Semiconductors",
+          "objectives": [
+            "Student can classify solids as metals, semiconductors and insulators by conductivity and resistivity",
+            "Student can explain energy bands: valence band, conduction band and energy gap",
+            "Student can compare band diagrams of metals, insulators and semiconductors"
+          ],
+          "visualIdeas": [
+            "band diagrams for a metal, an insulator and a semiconductor"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "intrinsic-semiconductor",
+          "title": "Intrinsic Semiconductor",
+          "objectives": [
+            "Student can describe the covalent bonding in Si and Ge crystals",
+            "Student can explain how thermal energy creates electron-hole pairs, with ne = nh = ni",
+            "Student can explain conduction by both electrons and holes"
+          ],
+          "visualIdeas": [
+            "2D lattice of Si with a broken bond, a free electron and a hole"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "extrinsic-semiconductor",
+          "title": "Extrinsic Semiconductor",
+          "objectives": [
+            "Student can explain doping and distinguish n-type (pentavalent donor) and p-type (trivalent acceptor) semiconductors",
+            "Student can identify majority and minority carriers in each type",
+            "Student can state that ne nh = ni^2 and draw donor and acceptor levels in band diagrams"
+          ],
+          "visualIdeas": [
+            "Si lattice with a phosphorus donor and with a boron acceptor"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "p-n-junction-formation",
+          "title": "p-n Junction Formation",
+          "objectives": [
+            "Student can explain diffusion and drift of carriers at a p-n junction",
+            "Student can explain how the depletion region and barrier potential form"
+          ],
+          "visualIdeas": [
+            "p-n junction with depletion layer and barrier potential graph"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "p-n-junction-diode-under-forward-bias",
+          "title": "p-n Junction Diode under Forward Bias",
+          "objectives": [
+            "Student can describe a semiconductor diode as a p-n junction with metal contacts and draw its circuit symbol",
+            "Student can explain how forward bias reduces the barrier height and the depletion width so that majority carriers diffuse across the junction"
+          ],
+          "visualIdeas": [
+            "diode in forward bias with a narrowed depletion layer"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "p-n-junction-diode-under-reverse-bias",
+          "title": "p-n Junction Diode under Reverse Bias",
+          "objectives": [
+            "Student can explain how reverse bias raises the barrier and widens the depletion region so that only a small drift current flows",
+            "Student can describe the circuit for measuring V-I characteristics and identify the threshold (cut-in) voltage, about 0.7 V for Si and 0.2 V for Ge",
+            "Student can define dynamic resistance and reverse saturation current and note the sudden rise of current at the breakdown voltage"
+          ],
+          "visualIdeas": [
+            "full V-I characteristic of a diode with forward and reverse parts"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "application-of-junction-diode-as-a-rectifier",
+          "title": "Application of Junction Diode as a Rectifier",
+          "objectives": [
+            "Student can explain half-wave rectification with one diode and draw its output waveform",
+            "Student can explain full-wave rectification with two diodes and a centre-tap transformer",
+            "Student can explain how a capacitor filter smooths the rectified output"
+          ],
+          "visualIdeas": [
+            "half-wave and full-wave rectifier circuits with output waveforms",
+            "filtered output with small ripple"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    }
+  ]
+}

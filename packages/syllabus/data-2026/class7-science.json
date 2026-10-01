@@ -1,0 +1,1076 @@
+{
+  "id": "class7-science",
+  "klass": 7,
+  "subject": "Science",
+  "source": {
+    "books": [
+      {
+        "title": "Curiosity: Textbook of Science for Grade 7",
+        "code": "gecu1",
+        "edition": "Reprint 2026-27 (First Edition April 2025; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/gecu1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "the-ever-evolving-world-of-science",
+      "title": "The Ever-Evolving World of Science",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu101.pdf",
+      "topics": [
+        {
+          "id": "the-ever-evolving-world-of-science",
+          "title": "The Ever-Evolving World of Science",
+          "objectives": [
+            "Student can explain that science is a process and a way of thinking that welcomes curiosity, questions and the unknown",
+            "Student can explain why the fields of science in the book (physics, chemistry, biology, earth sciences) are interconnected",
+            "Student can name some of the themes the book explores, such as materials, changes, heat, life processes, time, light and the Earth, Moon and Sun"
+          ],
+          "visualIdeas": [
+            "a paper plane and a butterfly flying across pages linked to the chapter themes",
+            "a web joining physics, chemistry, biology and earth science bubbles"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "happy-exploring",
+          "title": "Happy Exploring!",
+          "objectives": [
+            "Student can explain why asking interesting questions is as important as finding answers in science",
+            "Student can make up creative questions that could lead to a given answer, as in the Question the Answer activity"
+          ],
+          "visualIdeas": [
+            "an answer card such as \"Just add some milk\" with several different question bubbles leading to it"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "exploring-substances-acidic-basic-and-neutral",
+      "title": "Exploring Substances: Acidic, Basic, and Neutral",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu102.pdf",
+      "topics": [
+        {
+          "id": "litmus-as-an-indicator",
+          "title": "Litmus as an Indicator",
+          "objectives": [
+            "Student can test everyday samples such as lemon juice, soap solution and sugar solution with blue and red litmus paper",
+            "Student can classify substances as acidic (blue litmus turns red), basic (red litmus turns blue) or neutral (no change)",
+            "Student can state that litmus is a natural substance obtained from lichens and is used as an acid-base indicator"
+          ],
+          "visualIdeas": [
+            "a white tile with drops of different samples on blue and red litmus pieces",
+            "a three-column sorting chart: acidic, basic, neutral"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "red-rose-as-an-indicator",
+          "title": "Red Rose as an Indicator",
+          "objectives": [
+            "Student can describe how an indicator is prepared from red rose petals",
+            "Student can state that red rose extract gives a red colour in acidic solutions and a green colour in basic solutions"
+          ],
+          "visualIdeas": [
+            "crushed red rose petals in hot water turning into an extract",
+            "two test tubes showing red and green colours"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "turmeric-as-an-indicator",
+          "title": "Turmeric as an Indicator",
+          "objectives": [
+            "Student can prepare turmeric paper strips and use them to test samples",
+            "Student can state that turmeric turns red in basic solutions and stays yellow in acidic and neutral solutions",
+            "Student can explain the hidden message at the science fair using turmeric and a soap solution"
+          ],
+          "visualIdeas": [
+            "a yellow turmeric strip turning red where soap solution touches it",
+            "a white sheet revealing a hidden message when sprayed"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-happens-when-acidic-substances-mix-with-basic-substances",
+          "title": "What Happens When Acidic Substances Mix with Basic Substances?",
+          "objectives": [
+            "Student can describe the colour change of an indicator as lime water is added drop by drop to diluted lemon juice",
+            "Student can define neutralisation as the reaction between an acid and a base that forms salt and water and gives out heat"
+          ],
+          "visualIdeas": [
+            "a test tube with litmus solution changing colour as drops of lime water are added",
+            "acid + base -> salt + water + heat as a word equation"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "neutralisation-in-daily-life",
+          "title": "Neutralisation in Daily Life",
+          "objectives": [
+            "Student can explain why moist baking soda relieves the sting of a red ant bite, which injects formic acid",
+            "Student can explain how acidic soil is treated with lime and basic soil with organic matter",
+            "Student can suggest neutralising acidic factory waste before it is released into a lake"
+          ],
+          "visualIdeas": [
+            "three situation cards: ant bite, soil treatment, factory waste entering a lake"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "electricity-circuits-and-their-components",
+      "title": "Electricity: Circuits and their Components",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu103.pdf",
+      "topics": [
+        {
+          "id": "a-torchlight",
+          "title": "A Torchlight",
+          "objectives": [
+            "Student can identify the lamp, cells and switch of a torchlight",
+            "Student can explain that the torch lamp glows in one position of the switch and not in the other"
+          ],
+          "visualIdeas": [
+            "a torch with its lamp, cells and switch labelled"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "electric-cell-and-battery",
+          "title": "Electric Cell and Battery",
+          "objectives": [
+            "Student can identify the positive terminal (metal cap) and negative terminal (flat metal disc) of an electric cell",
+            "Student can explain that a battery is a combination of cells placed with the positive terminal of one next to the negative terminal of the next"
+          ],
+          "visualIdeas": [
+            "an electric cell with + and - terminals marked",
+            "two cells joined in a row inside a torch compartment"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electric-lamp",
+          "title": "Electric Lamp",
+          "objectives": [
+            "Student can describe the filament of an incandescent lamp, which gets hot and glows when current passes through it",
+            "Student can explain that an LED has a longer positive wire and a shorter negative wire and lets current pass in one direction only"
+          ],
+          "visualIdeas": [
+            "cut-away of an incandescent bulb showing the filament and its two terminals",
+            "an LED with long (+) and short (-) legs"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "an-electrical-circuit",
+          "title": "An Electrical Circuit",
+          "objectives": [
+            "Student can connect a cell, wires and a lamp so that the lamp glows",
+            "Student can explain that a circuit is a complete path from one terminal of the cell, through the lamp, to the other terminal",
+            "Student can state that the direction of current is taken from the positive to the negative terminal of the cell"
+          ],
+          "visualIdeas": [
+            "a cell holder, lamp holder and wires forming a closed loop with arrows showing current"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "electric-switch",
+          "title": "Electric Switch",
+          "objectives": [
+            "Student can make a simple switch using drawing pins and a safety pin",
+            "Student can explain that a switch completes or breaks a circuit"
+          ],
+          "visualIdeas": [
+            "a homemade switch shown in OFF and ON positions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "circuit-diagrams",
+          "title": "Circuit Diagrams",
+          "objectives": [
+            "Student can draw the symbols for a cell, battery, lamp, LED, switch (ON and OFF) and wire",
+            "Student can draw the circuit diagram of a simple circuit such as a torch"
+          ],
+          "visualIdeas": [
+            "a table of circuit symbols",
+            "a torch circuit redrawn as a circuit diagram"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "electrical-conductors-and-insulators",
+          "title": "Electrical Conductors and Insulators",
+          "objectives": [
+            "Student can use a tester circuit to sort materials into conductors and insulators",
+            "Student can explain why wires are made of metal and covered with plastic or rubber",
+            "Student can list safety precautions with electricity, such as never touching switches with wet hands"
+          ],
+          "visualIdeas": [
+            "a tester circuit with a gap where different objects are placed",
+            "a sorting chart of conductors and insulators"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-world-of-metals-and-non-metals",
+      "title": "The World of Metals and Non-metals",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu104.pdf",
+      "topics": [
+        {
+          "id": "malleability",
+          "title": "Malleability",
+          "objectives": [
+            "Student can observe lustre and hardness of materials such as copper, aluminium, iron, coal and sulfur",
+            "Student can define malleability as the property of being beaten into thin sheets and identify it as a property of metals"
+          ],
+          "visualIdeas": [
+            "a hammer flattening an aluminium piece next to a piece of coal that crumbles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ductility-and-sonority",
+          "title": "Ductility and Sonority",
+          "objectives": [
+            "Student can define ductility as the property of being drawn into wires and give examples like copper wires",
+            "Student can describe sonority as the ringing sound metals make when struck, compared with wood or coal"
+          ],
+          "visualIdeas": [
+            "metal wires used in a sitar or veena",
+            "a metal spoon and a block of wood dropped side by side with sound waves"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conduction-of-heat-and-electricity",
+          "title": "Conduction of Heat and Electricity",
+          "objectives": [
+            "Student can explain why cooking vessels are made of metals, based on how a metal spoon and a wooden spoon heat up in hot water",
+            "Student can use a tester circuit to show that metals are good conductors of electricity and materials like sulfur, coal and wood are poor conductors"
+          ],
+          "visualIdeas": [
+            "a metal spoon and a wooden spoon standing in hot water",
+            "a tester circuit with a bulb glowing for an iron nail"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "effect-of-air-and-water-on-metals-iron",
+          "title": "Effect of Air and Water on Metals: Iron",
+          "objectives": [
+            "Student can describe the three-bottle experiment showing that iron forms a brown deposit (rust) only when both air and water are present",
+            "Student can define corrosion as the damage to metal objects exposed to moist air"
+          ],
+          "visualIdeas": [
+            "three bottles: nail with silica gel, nail in boiled water under oil, nail partly in water and open to air"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "effect-of-air-and-water-on-other-metals",
+          "title": "Effect of Air and Water on Other Metals",
+          "objectives": [
+            "Student can describe how a magnesium ribbon burns with a dazzling white flame to form magnesium oxide",
+            "Student can show with litmus that the solution of a metal oxide is basic",
+            "Student can explain why sodium is stored in kerosene"
+          ],
+          "visualIdeas": [
+            "a burning magnesium ribbon held with tongs",
+            "red litmus turning blue in magnesium oxide solution"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "substances-that-behave-differently-from-metals-in-air-and-water",
+          "title": "Substances that Behave Differently from Metals in Air and Water",
+          "objectives": [
+            "Student can describe how burning sulfur forms sulfur dioxide whose solution in water is acidic",
+            "Student can state that sulfur does not react with water and that phosphorus is stored in water",
+            "Student can list properties of non-metals: usually soft, dull, not malleable or ductile, and poor conductors"
+          ],
+          "visualIdeas": [
+            "sulfur burning in a deflagrating spoon inside a covered gas jar",
+            "blue litmus turning red"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "are-non-metals-essential-in-everyday-life",
+          "title": "Are Non-metals Essential in Everyday Life?",
+          "objectives": [
+            "Student can explain why non-metals such as oxygen and carbon are essential for life",
+            "Student can list some everyday uses of metals and non-metals"
+          ],
+          "visualIdeas": [
+            "a chart of everyday uses of metals and non-metals"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "changes-around-us-physical-and-chemical",
+      "title": "Changes Around Us: Physical and Chemical",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu105.pdf",
+      "topics": [
+        {
+          "id": "a-substance-may-change-in-appearance-but-remain-the-same",
+          "title": "A Substance May Change in Appearance but Remain the Same!",
+          "objectives": [
+            "Student can explain, using examples like folding paper or melting ice, that a change in shape, size or state need not form a new substance",
+            "Student can define a physical change as one in which no new substance is formed"
+          ],
+          "visualIdeas": [
+            "paper folded into a boat and unfolded back",
+            "ice melting and water freezing in a cycle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-substance-may-change-in-appearance-and-not-remain-the-same",
+          "title": "A Substance May Change in Appearance and Not Remain the Same!",
+          "objectives": [
+            "Student can describe how exhaled air turns lime water milky, showing a new substance is formed",
+            "Student can define a chemical change as one in which one or more new substances are formed, represented by a chemical equation"
+          ],
+          "visualIdeas": [
+            "two tumblers, tap water and lime water, with a straw blowing exhaled air into each"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "rusting-and-combustion",
+          "title": "Rusting and Combustion",
+          "objectives": [
+            "Student can explain why rusting of iron and burning of a magnesium ribbon are chemical changes",
+            "Student can state that combustion gives out heat and/or light and define ignition temperature",
+            "Student can name the three things needed for fire using the fire triangle: fuel, oxygen and heat"
+          ],
+          "visualIdeas": [
+            "the fire triangle with fuel, oxygen and heat on its sides",
+            "a rusted iron nail beside a burning magnesium ribbon"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "can-physical-and-chemical-changes-occur-in-the-same-process",
+          "title": "Can Physical and Chemical Changes Occur in the Same Process?",
+          "objectives": [
+            "Student can explain how a burning candle involves both a physical change (melting of wax) and a chemical change (burning of wax)",
+            "Student can classify the melting of wax as a physical change and the burning of wax as a chemical change"
+          ],
+          "visualIdeas": [
+            "a lit candle with melting wax labelled physical and the flame labelled chemical"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "are-changes-permanent",
+          "title": "Are Changes Permanent?",
+          "objectives": [
+            "Student can sort everyday changes into those that can be reversed and those that cannot",
+            "Student can explain, with examples like melting and cooking, why some changes cannot be reversed"
+          ],
+          "visualIdeas": [
+            "a two-column table: reversible (melting) and irreversible (cooking)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "are-all-changes-desirable",
+          "title": "Are All Changes Desirable?",
+          "objectives": [
+            "Student can give examples of desirable changes such as curdling of milk and ripening of fruit",
+            "Student can give examples of undesirable changes such as rusting and decay of stored food"
+          ],
+          "visualIdeas": [
+            "two baskets labelled desirable and undesirable with picture cards"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "some-slow-natural-changes",
+          "title": "Some Slow Natural Changes",
+          "objectives": [
+            "Student can explain weathering as the breaking of rocks into sediments by temperature changes, roots and freezing water, along with chemical changes",
+            "Student can explain erosion as the movement of broken rock and soil by wind and flowing water"
+          ],
+          "visualIdeas": [
+            "a mountain base with heaps of sediments",
+            "a river carrying pebbles that become smooth"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "adolescence-a-stage-of-growth-and-change",
+      "title": "Adolescence: A Stage of Growth and Change",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu106.pdf",
+      "topics": [
+        {
+          "id": "growing-with-age-the-teenage-years",
+          "title": "Growing With Age: The Teenage Years",
+          "objectives": [
+            "Student can define adolescence as the period of change from childhood to adulthood, generally from about 10 to 19 years",
+            "Student can list physical changes during adolescence and explain secondary sexual characteristics",
+            "Student can define puberty"
+          ],
+          "visualIdeas": [
+            "a growth timeline from childhood through adolescence to adulthood"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "changes-that-indicate-reproductive-capability",
+          "title": "Changes that Indicate Reproductive Capability",
+          "objectives": [
+            "Student can explain that internal changes in adolescence include the maturing of parts involved in reproduction",
+            "Student can describe menstruation as the discharge of blood generally every 28-30 days, beginning at puberty"
+          ],
+          "visualIdeas": [
+            "a calendar marking a 28-30 day cycle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "emotional-and-behavioural-changes-in-adolescents",
+          "title": "Emotional and Behavioural Changes in Adolescents",
+          "objectives": [
+            "Student can list emotional changes in adolescence and their possible effects on behaviour",
+            "Student can suggest positive ways to handle these changes"
+          ],
+          "visualIdeas": [
+            "a table of emotional changes, effects and positive responses"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "meeting-nutritional-needs-and-personal-hygiene",
+          "title": "Meeting Nutritional Needs and Personal Hygiene",
+          "objectives": [
+            "Student can explain why a balanced diet with proteins, carbohydrates, fats, vitamins and minerals matters during adolescence",
+            "Student can describe personal hygiene practices, including menstrual hygiene"
+          ],
+          "visualIdeas": [
+            "a balanced plate for an adolescent",
+            "a hygiene checklist"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "physical-activities-and-a-balanced-social-life",
+          "title": "Physical Activities and a Balanced Social Life",
+          "objectives": [
+            "Student can explain how regular exercise keeps the body and mind fit and boosts mood",
+            "Student can describe respectful and responsible behaviour in person and on social media"
+          ],
+          "visualIdeas": [
+            "children playing sports",
+            "a respectful conversation between friends"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "avoiding-harmful-substances-learn-to-say-no",
+          "title": "Avoiding Harmful Substances: Learn to Say NO",
+          "objectives": [
+            "Student can explain the harmful effects of tobacco, alcohol and drugs on body and mind",
+            "Student can practise ways to say NO to peer pressure"
+          ],
+          "visualIdeas": [
+            "a speech bubble saying NO to a hand offering a cigarette"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-why-question-for-adolescence",
+          "title": "The 'Why' Question for Adolescence",
+          "objectives": [
+            "Student can explain that changes in adolescence are mainly controlled by hormones, chemicals produced in the body",
+            "Student can explain how guidance and awareness help adolescents manage these changes"
+          ],
+          "visualIdeas": [
+            "a body outline with arrows from glands to the changes they control"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "heat-transfer-in-nature",
+      "title": "Heat Transfer in Nature",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu107.pdf",
+      "topics": [
+        {
+          "id": "conduction-of-heat",
+          "title": "Conduction of Heat",
+          "objectives": [
+            "Student can explain the pins-on-a-metal-strip activity, where the pin nearest the flame falls first",
+            "Student can define conduction as heat transfer from the hotter to the colder part of an object without the particles moving from their positions",
+            "Student can classify materials as good conductors (metals) or poor conductors (insulators) of heat such as wood, glass and clay"
+          ],
+          "visualIdeas": [
+            "a metal strip with wax-stuck pins falling one by one away from a candle"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "convection",
+          "title": "Convection",
+          "objectives": [
+            "Student can explain why hot air rises using the paper cups balanced over a candle",
+            "Student can describe convection currents in heated water shown by potassium permanganate",
+            "Student can state that in liquids and gases heat is transferred mainly by convection, through the movement of particles"
+          ],
+          "visualIdeas": [
+            "two paper cups on a stick, one rising over a candle",
+            "a beaker with a coloured streak rising in the middle and sinking at the sides"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "land-and-sea-breeze",
+          "title": "Land and Sea Breeze",
+          "objectives": [
+            "Student can explain from an experiment that soil heats up and cools down faster than water",
+            "Student can explain how the sea breeze blows during the day and the land breeze at night"
+          ],
+          "visualIdeas": [
+            "day and night coastal diagrams with arrows for sea breeze and land breeze"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "radiation",
+          "title": "Radiation",
+          "objectives": [
+            "Student can explain that radiation transfers heat without a medium, as from the Sun or a fire",
+            "Student can explain why light-coloured clothes are comfortable in summer and dark ones in winter",
+            "Student can identify conduction, convection and radiation when water is heated in a pan"
+          ],
+          "visualIdeas": [
+            "a pan of water on a flame with arrows labelled conduction, convection and radiation"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "water-cycle",
+          "title": "Water Cycle",
+          "objectives": [
+            "Student can describe the water cycle: evaporation, transpiration, condensation into clouds and precipitation",
+            "Student can explain how the water cycle redistributes and replenishes water in rivers, lakes and oceans"
+          ],
+          "visualIdeas": [
+            "a water cycle diagram with the Sun, sea, clouds, rain and plants"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "seepage-of-water-beneath-the-earth",
+          "title": "Seepage of Water Beneath the Earth",
+          "objectives": [
+            "Student can explain why water seeps fastest through gravel and slowest through clay",
+            "Student can define infiltration, groundwater and aquifers",
+            "Student can explain why groundwater is depleting and how rainwater harvesting and recharge pits help"
+          ],
+          "visualIdeas": [
+            "three bottles of clay, sand and gravel dripping water into beakers",
+            "a cross-section of soil showing an aquifer and a well"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "measurement-of-time-and-motion",
+      "title": "Measurement of Time and Motion",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu108.pdf",
+      "topics": [
+        {
+          "id": "measurement-of-time",
+          "title": "Measurement of Time",
+          "objectives": [
+            "Student can explain how people used repeating natural events such as day and night, phases of the Moon and seasons to keep time",
+            "Student can describe how sundials, water clocks, hourglasses and candle clocks measured time"
+          ],
+          "visualIdeas": [
+            "a sundial casting a shadow",
+            "an hourglass and a floating-bowl water clock"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-simple-pendulum",
+          "title": "A Simple Pendulum",
+          "objectives": [
+            "Student can describe a simple pendulum, its bob, mean position and extreme positions, and one oscillation",
+            "Student can define the time period of a pendulum and measure it with a stopwatch",
+            "Student can state that the time period of a pendulum of a given length is constant at a place"
+          ],
+          "visualIdeas": [
+            "a pendulum swinging between extreme positions A and B through mean position O"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "si-unit-of-time",
+          "title": "SI Unit of Time",
+          "objectives": [
+            "Student can state that the SI unit of time is the second (s) and convert between seconds, minutes and hours",
+            "Student can write units of time and their symbols correctly"
+          ],
+          "visualIdeas": [
+            "a clock face with 60 s = 1 min and 60 min = 1 h"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "slow-or-fast",
+          "title": "Slow or Fast",
+          "objectives": [
+            "Student can decide who is faster in a race by comparing distances covered in the same time or times taken for the same distance",
+            "Student can explain that comparing who is faster needs both the distance covered and the time taken"
+          ],
+          "visualIdeas": [
+            "runners on a straight track at the same moment"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "speed",
+          "title": "Speed",
+          "objectives": [
+            "Student can define speed as the distance covered in unit time and calculate average speed as total distance divided by total time",
+            "Student can use the relationship to find distance or time when speed and the other quantity are known"
+          ],
+          "visualIdeas": [
+            "a speed-distance-time triangle",
+            "a car with an odometer and a clock"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "uniform-and-non-uniform-linear-motion",
+          "title": "Uniform and Non-uniform Linear Motion",
+          "objectives": [
+            "Student can define linear motion and tell uniform linear motion (constant speed) from non-uniform linear motion (changing speed)",
+            "Student can identify uniform or non-uniform motion from a table of distances covered in equal time intervals"
+          ],
+          "visualIdeas": [
+            "a train between two stations with equally and unequally spaced markers"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "life-processes-in-animals",
+      "title": "Life Processes in Animals",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu109.pdf",
+      "topics": [
+        {
+          "id": "digestion-in-human-beings-mouth-to-stomach",
+          "title": "Digestion in Human Beings: Mouth to Stomach",
+          "objectives": [
+            "Student can name the parts of the alimentary canal in order and the associated liver and pancreas",
+            "Student can explain mechanical digestion by teeth and how saliva starts digesting starch (chapati tastes sweet on chewing)",
+            "Student can describe the role of the stomach and its digestive juice, acid and mucus"
+          ],
+          "visualIdeas": [
+            "an outline of the human digestive system with labels"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "digestion-in-human-beings-intestines-and-absorption",
+          "title": "Digestion in Human Beings: Intestines and Absorption",
+          "objectives": [
+            "Student can explain that digested food is mainly absorbed through the walls of the small intestine and carried by blood",
+            "Student can state that the large intestine absorbs most of the remaining water and some salts"
+          ],
+          "visualIdeas": [
+            "the small intestine with nutrients passing into blood vessels"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "do-all-animals-digest-food-the-same-way-as-humans-do",
+          "title": "Do All Animals Digest Food the Same Way as Humans Do?",
+          "objectives": [
+            "Student can explain rumination in grass-eating animals such as cows",
+            "Student can explain how birds break food in the gizzard with the help of grit"
+          ],
+          "visualIdeas": [
+            "a cow chewing cud with its rumen marked",
+            "a bird digestive system showing the gizzard"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "respiration-in-humans-how-do-we-breathe",
+          "title": "Respiration in Humans: How Do We Breathe?",
+          "objectives": [
+            "Student can trace the path of air through the nostrils, windpipe and lungs to the alveoli",
+            "Student can explain inhalation and exhalation using the movement of the ribs and diaphragm (balloon model)"
+          ],
+          "visualIdeas": [
+            "a bell-jar balloon model of the lungs and diaphragm",
+            "a labelled respiratory system"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "respiration-in-humans-gas-exchange-respiration-and-circulation",
+          "title": "Respiration in Humans: Gas Exchange, Respiration and Circulation",
+          "objectives": [
+            "Student can describe gas exchange between the alveoli and blood",
+            "Student can write the word equation of respiration (glucose + oxygen -> carbon dioxide + water + energy) and explain that breathing is physical while respiration is chemical",
+            "Student can describe the circulatory system: heart, blood and blood vessels transporting nutrients and oxygen"
+          ],
+          "visualIdeas": [
+            "an alveolus surrounded by a blood vessel with O2 and CO2 arrows",
+            "a heart pumping blood through vessels"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "do-other-animals-breathe-the-same-way-as-humans-do",
+          "title": "Do Other Animals Breathe the Same Way as Humans Do?",
+          "objectives": [
+            "Student can explain how fish breathe through gills and earthworms through moist skin",
+            "Student can explain how frogs use gills as tadpoles and lungs and skin as adults"
+          ],
+          "visualIdeas": [
+            "a fish with gills highlighted",
+            "the life stages of a frog with their breathing organs"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "life-processes-in-plants",
+      "title": "Life Processes in Plants",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu110.pdf",
+      "topics": [
+        {
+          "id": "how-do-plants-grow",
+          "title": "How Do Plants Grow?",
+          "objectives": [
+            "Student can design and interpret a three-pot experiment testing the role of sunlight and water in plant growth",
+            "Student can record changes in height, number and colour of leaves to conclude that sunlight and water are needed for growth"
+          ],
+          "visualIdeas": [
+            "three potted saplings: in sunlight with water, without water, and in the dark"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "leaves-the-food-factories-of-plants",
+          "title": "Leaves: the Food Factories of Plants",
+          "objectives": [
+            "Student can explain that leaves contain the green pigment chlorophyll and produce starch",
+            "Student can describe the iodine test for starch in a leaf (blue-black colour)"
+          ],
+          "visualIdeas": [
+            "a decolourised leaf turning blue-black with iodine"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "role-of-air-in-the-preparation-of-food",
+          "title": "Role of Air in the Preparation of Food",
+          "objectives": [
+            "Student can describe the experiment with a destarched leaf half inside a bottle of caustic soda",
+            "Student can conclude that carbon dioxide from air is needed to make food"
+          ],
+          "visualIdeas": [
+            "a leaf half inside a bottle with caustic soda, half outside"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "photosynthesis-in-a-nutshell",
+          "title": "Photosynthesis: In a Nutshell",
+          "objectives": [
+            "Student can write the word equation of photosynthesis: carbon dioxide + water -> glucose + oxygen in the presence of sunlight and chlorophyll",
+            "Student can explain that glucose is a source of energy and is stored as starch"
+          ],
+          "visualIdeas": [
+            "the photosynthesis word equation with a sun and a green leaf"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-do-leaves-exchange-gases-during-photosynthesis",
+          "title": "How Do Leaves Exchange Gases during Photosynthesis?",
+          "objectives": [
+            "Student can observe stomata in a leaf peel under a microscope",
+            "Student can explain the role of stomata in the exchange of carbon dioxide and oxygen"
+          ],
+          "visualIdeas": [
+            "a magnified leaf peel showing stomata"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "transport-of-water-and-minerals",
+          "title": "Transport of Water and Minerals",
+          "objectives": [
+            "Student can explain from the red-ink twig experiment how water moves up the stem",
+            "Student can state that xylem transports water and minerals from the roots"
+          ],
+          "visualIdeas": [
+            "a white flower twig in red ink water turning red"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "transport-of-food",
+          "title": "Transport of Food",
+          "objectives": [
+            "Student can state that phloem carries food from the leaves to all parts of the plant and that food may be stored in seeds and roots",
+            "Student can compare the roles of xylem (water and minerals) and phloem (food)"
+          ],
+          "visualIdeas": [
+            "a plant with phloem arrows from leaves to roots and seeds"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "do-plants-respire",
+          "title": "Do Plants Respire?",
+          "objectives": [
+            "Student can describe the germinating-seeds experiment where lime water turns milky",
+            "Student can explain that plants use oxygen and release carbon dioxide during respiration"
+          ],
+          "visualIdeas": [
+            "a flask of germinating moong seeds connected to a lime water test tube"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "light-shadows-and-reflections",
+      "title": "Light: Shadows and Reflections",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu111.pdf",
+      "topics": [
+        {
+          "id": "sources-of-light",
+          "title": "Sources of Light",
+          "objectives": [
+            "Student can classify objects as luminous or non-luminous",
+            "Student can explain that the Moon only reflects sunlight"
+          ],
+          "visualIdeas": [
+            "the Sun, a candle and a bulb next to the Moon and a book"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "does-light-travel-in-a-straight-line",
+          "title": "Does Light Travel in a Straight Line?",
+          "objectives": [
+            "Student can explain the matchbox activity in which light reaches the screen only when the holes are in a straight line",
+            "Student can conclude from the activity that light travels in a straight line"
+          ],
+          "visualIdeas": [
+            "three matchboxes with holes in a line between a torch and a screen"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "light-through-transparent-translucent-and-opaque-materials",
+          "title": "Light through Transparent, Translucent, and Opaque Materials",
+          "objectives": [
+            "Student can classify materials as transparent, translucent or opaque by how much light passes through them",
+            "Student can predict and then test whether light passes fully, partially or not at all through materials like glass, tracing paper and cardboard"
+          ],
+          "visualIdeas": [
+            "a torch beam passing through glass, tracing paper and cardboard"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "shadow-formation",
+          "title": "Shadow Formation",
+          "objectives": [
+            "Student can explain that a shadow forms when an object blocks light",
+            "Student can compare shadows of opaque, translucent and transparent objects"
+          ],
+          "visualIdeas": [
+            "a torch, an object and its shadow on a screen"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reflection-of-light",
+          "title": "Reflection of Light",
+          "objectives": [
+            "Student can use a mirror or a shiny plate to change the direction of sunlight",
+            "Student can define reflection of light"
+          ],
+          "visualIdeas": [
+            "a mirror redirecting a sunbeam onto a wall"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "images-formed-in-a-plane-mirror",
+          "title": "Images Formed in a Plane Mirror",
+          "objectives": [
+            "Student can state that the image in a plane mirror is the same size as the object, erect, cannot be obtained on a screen and is laterally inverted",
+            "Student can describe lateral inversion using the image of a word such as AMBULANCE in a mirror"
+          ],
+          "visualIdeas": [
+            "a pen in front of a mirror with its image behind",
+            "the word AMBULANCE seen in a mirror"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pinhole-camera",
+          "title": "Pinhole Camera",
+          "objectives": [
+            "Student can make a pinhole camera and explain why it forms an inverted image",
+            "Student can explain that the inverted image is formed because light from the object travels in straight lines through the pinhole"
+          ],
+          "visualIdeas": [
+            "a candle flame forming an upside-down image through a pinhole"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "making-some-useful-items",
+          "title": "Making Some Useful Items",
+          "objectives": [
+            "Student can explain how a periscope uses two plane mirrors to see objects not directly visible",
+            "Student can make a kaleidoscope and explain how mirrors create its patterns"
+          ],
+          "visualIdeas": [
+            "a Z-shaped periscope with two mirrors",
+            "a kaleidoscope pattern"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "earth-moon-and-the-sun",
+      "title": "Earth, Moon, and the Sun",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gecu112.pdf",
+      "topics": [
+        {
+          "id": "rotation-of-the-earth-day-and-night",
+          "title": "Rotation of the Earth: Day and Night",
+          "objectives": [
+            "Student can explain that the Earth rotates from West to East on its axis in about 24 hours",
+            "Student can use a globe and a torch to explain the day-night cycle"
+          ],
+          "visualIdeas": [
+            "a globe lit by a torch with the lit half marked day"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "rotation-of-the-earth-apparent-motion-of-the-sun-and-stars",
+          "title": "Rotation of the Earth: Apparent Motion of the Sun and Stars",
+          "objectives": [
+            "Student can explain why the Sun, the Moon and the stars appear to move from East to West",
+            "Student can explain why the Pole Star appears nearly stationary while other stars appear to move around it"
+          ],
+          "visualIdeas": [
+            "a merry-go-round rider seeing trees move the other way",
+            "star trails around the Pole Star"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "revolution-of-the-earth",
+          "title": "Revolution of the Earth",
+          "objectives": [
+            "Student can define revolution and orbit",
+            "Student can state that the Earth completes one revolution around the Sun in about 365 days and 6 hours"
+          ],
+          "visualIdeas": [
+            "a top view of the Earth's nearly circular orbit around the Sun"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "changing-view-of-night-sky-from-the-earth",
+          "title": "Changing View of Night Sky from the Earth",
+          "objectives": [
+            "Student can explain why different stars are seen at sunset in different months",
+            "Student can explain that this change is caused by the Earth's revolution around the Sun"
+          ],
+          "visualIdeas": [
+            "the Earth at four points of its orbit with different stars rising at sunset"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "seasons-on-the-earth",
+          "title": "Seasons on the Earth",
+          "objectives": [
+            "Student can explain that seasons occur because of the tilt of the Earth's axis and its spherical shape",
+            "Student can explain why the Northern Hemisphere has summer in June and winter in December, and the Southern Hemisphere the reverse",
+            "Student can name the solstices and equinoxes"
+          ],
+          "visualIdeas": [
+            "the tilted Earth in June and December positions around the Sun",
+            "sunrays spread over a small and a large area"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "solar-eclipse",
+          "title": "Solar Eclipse",
+          "objectives": [
+            "Student can explain that a solar eclipse occurs when the Moon blocks sunlight from reaching the Earth",
+            "Student can explain apparent size using the thumb activity",
+            "Student can explain why one must not look directly at the Sun even during a solar eclipse"
+          ],
+          "visualIdeas": [
+            "Sun, Moon and Earth in a line with the Moon's shadow on the Earth"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "lunar-eclipse",
+          "title": "Lunar Eclipse",
+          "objectives": [
+            "Student can explain that a lunar eclipse occurs when the Earth comes between the Sun and the Moon",
+            "Student can tell a total lunar eclipse from a partial one"
+          ],
+          "visualIdeas": [
+            "the Moon passing through the Earth's shadow, turning dark red"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1209 @@
+{
+  "id": "class9-english",
+  "klass": 9,
+  "subject": "English",
+  "source": {
+    "books": [
+      {
+        "title": "Kaveri: Textbook of English for Grade 9",
+        "code": "iebe1",
+        "edition": "First Edition, January 2026 (Pausha 1947) — new NCERT book for the 2026-27 session; replaces Beehive and Moments",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/iebe1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "how-i-taught-my-grandmother-to-read",
+      "title": "How I Taught My Grandmother to Read",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe101.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-i",
+          "title": "Reading the Story (Part I)",
+          "objectives": [
+            "Student can describe how the narrator read the serial Kashi Yatre aloud to her grandmother, who had never been to school",
+            "Student can explain the causes and effects of the grandmother’s tears when the narrator returned from the wedding"
+          ],
+          "visualIdeas": [
+            "a girl reading a Kannada magazine aloud to her grandmother on a village verandah"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-story-part-ii",
+          "title": "Reading the Story (Part II)",
+          "objectives": [
+            "Student can describe how the grandmother decided to learn the Kannada alphabet and set Saraswati Puja as her deadline",
+            "Student can explain why the narrator says her student ‘passed with flying colours’"
+          ],
+          "visualIdeas": [
+            "a grandmother tracing letters on a slate while her granddaughter teaches"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the story with evidence from the text",
+            "Student can reflect on the value of literacy and the grandmother’s determination to learn at sixty-two"
+          ],
+          "visualIdeas": [
+            "an extract card with questions on the grandmother’s feelings"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-and-structures-binomials-prefixes-idioms-and-the-past-perfect-tense",
+          "title": "Vocabulary and Structures: Binomials, Prefixes, Idioms and the Past Perfect Tense",
+          "objectives": [
+            "Student can use binomials such as ‘hide and seek’ and ‘sooner or later’ in sentences",
+            "Student can form opposites with prefixes such as un-, in-, im-, ir-, dis- and mis-",
+            "Student can use idioms related to learning, such as ‘burn the midnight oil’",
+            "Student can use the past perfect with the simple past to show which of two past actions happened first"
+          ],
+          "visualIdeas": [
+            "a timeline with two past actions: the earlier in past perfect, the later in simple past"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-digital-literacy-and-the-turncoat-debate",
+          "title": "Listening and Speaking: Digital Literacy and the Turncoat Debate",
+          "objectives": [
+            "Student can listen to a talk on digital literacy and complete sentences with the exact words heard",
+            "Student can argue for and against a topic in a turncoat (solo) debate using suitable phrases"
+          ],
+          "visualIdeas": [
+            "a speaker switching between ‘for’ and ‘against’ signs"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task-letter-to-the-editor",
+          "title": "Writing Task: Letter to the Editor",
+          "objectives": [
+            "Student can write a formal letter to the editor in the correct format",
+            "Student can argue for student participation in adult literacy camps with causes, consequences and suggestions"
+          ],
+          "visualIdeas": [
+            "a letter-to-the-editor template with sender, date, subject, salutation and body"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "bharat-our-land",
+      "title": "Bharat Our Land",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe101.pdf",
+      "topics": [
+        {
+          "id": "reading-and-appreciating-the-poem",
+          "title": "Reading and Appreciating the Poem",
+          "objectives": [
+            "Student can summarise how the poem praises India’s mountains, rivers, scriptures, warriors, sages and music",
+            "Student can identify the rhyme scheme, the refrain ‘she’s peerless, let’s praise her!’ and its effect",
+            "Student can identify personification, metaphor, symbolism, imagery, hyperbole and allusion, and explain why the poem is an ode"
+          ],
+          "visualIdeas": [
+            "a map of India with the Himalaya and the Ganga highlighted beside lines from the poem"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the poem",
+            "Student can explain how the poet expresses pride in the land"
+          ],
+          "visualIdeas": [
+            "an extract from the poem with guiding questions beside it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-in-context",
+          "title": "Vocabulary in Context",
+          "objectives": [
+            "Student can identify suffixes in words from the poem and their meanings",
+            "Student can form new words by adding different suffixes and use them in sentences"
+          ],
+          "visualIdeas": [
+            "a root word with different suffix tiles attached"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to four speakers talk about places they like to travel to and match statements to speakers",
+            "Student can speak in pairs about the assets of their village, town or city, using phrases of praise and admiration"
+          ],
+          "visualIdeas": [
+            "four speech bubbles about favourite travel places"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task",
+          "title": "Writing Task",
+          "objectives": [
+            "Student can write a descriptive paragraph about a memorable place they have visited",
+            "Student can include why they went, who they travelled with, where they stayed and what they did"
+          ],
+          "visualIdeas": [
+            "a postcard of a memorable place with notes around it"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-pot-maker",
+      "title": "The Pot Maker",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe102.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-i",
+          "title": "Reading the Story (Part I)",
+          "objectives": [
+            "Student can describe Sentila’s dream of becoming a pot maker and why her mother Arenla wanted her to become a weaver",
+            "Student can describe the steps of pot making that Sentila watched"
+          ],
+          "visualIdeas": [
+            "a girl watching a potter shape a pot with a spatula"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-story-part-ii",
+          "title": "Reading the Story (Part II)",
+          "objectives": [
+            "Student can describe how Onula’s support helped Sentila learn pot making",
+            "Student can arrange the events of the story in order and explain how Sentila proved her skill"
+          ],
+          "visualIdeas": [
+            "a sequence of panels from digging clay to firing pots in a kiln"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the story with evidence from the text",
+            "Student can reflect on the value of passing traditional skills from one generation to the next"
+          ],
+          "visualIdeas": [
+            "an extract card with questions on Sentila’s determination"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-and-structures-noun-clauses-relative-clauses-and-determiners",
+          "title": "Vocabulary and Structures: Noun Clauses, Relative Clauses and Determiners",
+          "objectives": [
+            "Student can explain words for the tools and materials of pot making used in the story",
+            "Student can identify main and subordinate clauses and use noun clauses and relative (adjectival) clauses",
+            "Student can use determiners such as articles, demonstratives and possessives correctly"
+          ],
+          "visualIdeas": [
+            "a sentence diagram with the main clause underlined and the subordinate clause circled"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-making-stone-statues-and-a-role-play",
+          "title": "Listening and Speaking: Making Stone Statues and a Role-Play",
+          "objectives": [
+            "Student can listen to a talk on making stone statues and pick the correct steps",
+            "Student can role-play a conversation between Sentila and another character from the story"
+          ],
+          "visualIdeas": [
+            "a sculptor chiselling a stone statue"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task-skills-and-passions",
+          "title": "Writing Task: Skills and Passions",
+          "objectives": [
+            "Student can write a structured piece about their own skills and passions",
+            "Student can explain how a passion could become a profession"
+          ],
+          "visualIdeas": [
+            "a three-step plan: introduction, skills, passion into profession"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "gifts-of-grace-honouring-our-vocations",
+      "title": "Gifts of Grace: Honouring Our Vocations",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe102.pdf",
+      "topics": [
+        {
+          "id": "reading-and-appreciating-the-poem",
+          "title": "Reading and Appreciating the Poem",
+          "objectives": [
+            "Student can describe the vocations the poet celebrates and how each contributes to society",
+            "Student can decide whether the poem follows a rhyme scheme or is in free verse",
+            "Student can identify imagery (including auditory imagery), metaphor, personification, repetition and alliteration in the poem"
+          ],
+          "visualIdeas": [
+            "a collage of a farmer, a weaver, a cook and an artisan with musical notes around them"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the poem",
+            "Student can explain the line ‘The voice of their vocation is the voice of their identity’"
+          ],
+          "visualIdeas": [
+            "an extract from the poem with guiding questions beside it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-in-context",
+          "title": "Vocabulary in Context",
+          "objectives": [
+            "Student can match vocations to their descriptions in the poem",
+            "Student can identify synonyms and pick the word that is not a synonym"
+          ],
+          "visualIdeas": [
+            "vocation cards matched to short descriptions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to two friends discuss their parents’ occupations and answer questions",
+            "Student can speak for one to two minutes in the role of a vocation from the poem"
+          ],
+          "visualIdeas": [
+            "students in a group each holding a vocation name card"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task",
+          "title": "Writing Task",
+          "objectives": [
+            "Student can complete a poster for a school Career Mela within 50 words",
+            "Student can use poster features such as a box, varied fonts and proportionate spacing"
+          ],
+          "visualIdeas": [
+            "a Career Mela poster with title, date, venue and highlights"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "winds-of-change",
+      "title": "Winds of Change",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe103.pdf",
+      "topics": [
+        {
+          "id": "reading-the-text-the-story-of-the-pankha",
+          "title": "Reading the Text: The Story of the Pankha",
+          "objectives": [
+            "Student can trace the history of the pankha in India from the pankhi in Ajanta paintings to traditional regional fans",
+            "Student can describe the materials and designs of pankhas across regions and their place in culture and livelihoods"
+          ],
+          "visualIdeas": [
+            "a row of hand fans made of bamboo, palm leaf, silk and brass"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the text with evidence",
+            "Student can reflect on how traditional crafts can support sustainable livelihoods"
+          ],
+          "visualIdeas": [
+            "an extract card with questions on crafts and livelihoods"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-and-structures-fixed-expressions-collocations-and-the-present-perfect-tense",
+          "title": "Vocabulary and Structures: Fixed Expressions, Collocations and the Present Perfect Tense",
+          "objectives": [
+            "Student can identify word pairs and fixed expressions and give their meanings",
+            "Student can choose appropriate collocations such as ‘sustainable livelihood’",
+            "Student can use the present perfect tense for past actions with present relevance"
+          ],
+          "visualIdeas": [
+            "a collocation web around the word ‘sustainable’"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-choosing-a-pankha",
+          "title": "Listening and Speaking: Choosing a Pankha",
+          "objectives": [
+            "Student can listen to a dialogue about choosing a pankha as a gift and identify true statements",
+            "Student can speak in role as a type of fan, describing itself"
+          ],
+          "visualIdeas": [
+            "four kinds of fans with speech bubbles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task-describing-an-artefact",
+          "title": "Writing Task: Describing an Artefact",
+          "objectives": [
+            "Student can describe an artefact they have made or learnt to make, including the materials used",
+            "Student can explain the steps of making it in a clear order"
+          ],
+          "visualIdeas": [
+            "a handmade artefact with labelled materials"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "canvas-of-soil",
+      "title": "Canvas of Soil",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe103.pdf",
+      "topics": [
+        {
+          "id": "reading-and-appreciating-the-poem",
+          "title": "Reading and Appreciating the Poem",
+          "objectives": [
+            "Student can explain how the poem presents a garden as a painting on a canvas of soil",
+            "Student can summarise each stanza and match it to a suitable title",
+            "Student can identify imagery, metaphor such as ‘brushstrokes of seeds’, alliteration and the rhyme scheme"
+          ],
+          "visualIdeas": [
+            "a garden drawn as a painting on an easel, with seeds as brushstrokes"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the poem",
+            "Student can explain how the metaphor of painting helps us see gardening as an art form"
+          ],
+          "visualIdeas": [
+            "an extract from the poem with guiding questions beside it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-in-context",
+          "title": "Vocabulary in Context",
+          "objectives": [
+            "Student can name different shades of green, red and blue",
+            "Student can use painting-related words such as palette, hue, canvas and brushstrokes in context"
+          ],
+          "visualIdeas": [
+            "swatches of different shades of green, red and blue"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a girl describe her school garden and answer questions",
+            "Student can express a preference between a flower garden and a vegetable garden with reasons"
+          ],
+          "visualIdeas": [
+            "a flower garden and a vegetable garden side by side"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task",
+          "title": "Writing Task",
+          "objectives": [
+            "Student can write a descriptive piece of two to three paragraphs about the colours and details of a garden they have visited",
+            "Student can describe how shades, textures and light interact to bring the garden to life"
+          ],
+          "visualIdeas": [
+            "a garden scene with notes on colours, textures and light"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "vitamin-m",
+      "title": "Vitamin-M",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe104.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-i",
+          "title": "Reading the Story (Part I)",
+          "objectives": [
+            "Student can describe why Ravi’s mother wishes for a memory vitamin and why Grandpa dislikes living in the city",
+            "Student can explain the promise Ravi makes to his mother"
+          ],
+          "visualIdeas": [
+            "an old man in a rocking chair reading a newspaper held close to his face"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-story-part-ii",
+          "title": "Reading the Story (Part II)",
+          "objectives": [
+            "Student can describe Grandpa’s day out and Ravi’s attempt to follow him",
+            "Student can predict how Ravi and his mother will react"
+          ],
+          "visualIdeas": [
+            "a flow chart of Grandpa’s day out"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-story-part-iii",
+          "title": "Reading the Story (Part III)",
+          "objectives": [
+            "Student can explain what Ravi’s reaction on finding Grandpa safe reveals about his feelings",
+            "Student can explain the significance of Grandpa giving gifts on his birthday and choosing a detective story book for Ravi"
+          ],
+          "visualIdeas": [
+            "a wrapped detective story book with a birthday card"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the story with evidence",
+            "Student can reflect on how the elderly should be treated and what we can learn from them"
+          ],
+          "visualIdeas": [
+            "an extract card with questions on Grandpa and Ravi"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-and-structures-prepositions-and-reported-speech",
+          "title": "Vocabulary and Structures: Prepositions and Reported Speech",
+          "objectives": [
+            "Student can classify movement words and sound words and give synonyms and antonyms",
+            "Student can use prepositions of direction, location, time and manner correctly",
+            "Student can change direct speech into reported speech"
+          ],
+          "visualIdeas": [
+            "a direct speech bubble turning into a reported speech sentence"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-meditation-podcast-and-intonation",
+          "title": "Listening and Speaking: Meditation Podcast and Intonation",
+          "objectives": [
+            "Student can listen to a podcast on meditation and complete sentences with exact words",
+            "Student can use rising and falling intonation in questions and question tags",
+            "Student can present a short personal experience of caring for an older person"
+          ],
+          "visualIdeas": [
+            "arrows showing rising and falling intonation over example questions"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task-article-for-the-school-magazine",
+          "title": "Writing Task: Article for the School Magazine",
+          "objectives": [
+            "Student can write an article for the school magazine titled ‘Our Inspiring Elderly’",
+            "Student can organise the article with a title, an introduction, body paragraphs on lessons learnt and a conclusion"
+          ],
+          "visualIdeas": [
+            "a magazine page layout with title, byline and three paragraphs"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "i-cannot-remember-my-mother",
+      "title": "I Cannot Remember My Mother",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe104.pdf",
+      "topics": [
+        {
+          "id": "reading-and-appreciating-the-poem",
+          "title": "Reading and Appreciating the Poem",
+          "objectives": [
+            "Student can explain how the poet recalls his mother through sounds, smells and sights rather than her face",
+            "Student can identify alliteration, onomatopoeia, imagery, symbolism and the refrain ‘I cannot remember my mother’",
+            "Student can explain why the poem is enjoyable even without a rhyme scheme"
+          ],
+          "visualIdeas": [
+            "a child’s memory shown as icons for a song, a fragrance and the morning sky"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the poem",
+            "Student can explain the emotional impact of the refrain"
+          ],
+          "visualIdeas": [
+            "an extract from the poem with guiding questions beside it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-in-context",
+          "title": "Vocabulary in Context",
+          "objectives": [
+            "Student can classify sensory words by the sense they appeal to",
+            "Student can use sensory words to complete a descriptive passage"
+          ],
+          "visualIdeas": [
+            "five sense icons with words sorted under each"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to four people share childhood memories and match statements to speakers",
+            "Student can speak about a memorable object, song or place"
+          ],
+          "visualIdeas": [
+            "four speakers with thought bubbles of childhood memories"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task",
+          "title": "Writing Task",
+          "objectives": [
+            "Student can write a diary entry in the correct format with date and time",
+            "Student can describe a place visited on a school trip using sensory details and explain why it was memorable"
+          ],
+          "visualIdeas": [
+            "a diary page with date, time and a sensory description"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-world-of-limitless-possibilities",
+      "title": "The World of Limitless Possibilities",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe105.pdf",
+      "topics": [
+        {
+          "id": "reading-the-interview-with-dr-deepa-malik",
+          "title": "Reading the Interview with Dr. Deepa Malik",
+          "objectives": [
+            "Student can describe Dr. Deepa Malik’s journey as a Paralympian through the interview",
+            "Student can explain her choice to ‘transform it to a world of limitless possibilities’ instead of living in remorse"
+          ],
+          "visualIdeas": [
+            "a timeline of Dr. Deepa Malik’s sporting achievements"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the interview with evidence",
+            "Student can reflect on courage, inclusion and the role of sport for persons with disabilities"
+          ],
+          "visualIdeas": [
+            "an extract card with questions on resilience"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-and-structures-modal-auxiliaries-and-reported-speech",
+          "title": "Vocabulary and Structures: Modal Auxiliaries and Reported Speech",
+          "objectives": [
+            "Student can use phrases and movement words from the text in sentences",
+            "Student can identify the functions of modal auxiliaries such as could (possibility, past ability, request, suggestion), should (advice, obligation) and would (request, past habit)",
+            "Student can change a conversation into reported speech"
+          ],
+          "visualIdeas": [
+            "a table of modals with their functions and example sentences"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-school-announcement-and-interview",
+          "title": "Listening and Speaking: School Announcement and Interview",
+          "objectives": [
+            "Student can listen to a school announcement and fill in missing words",
+            "Student can plan and conduct an interview with the school’s Sports Captain and Sports Coach"
+          ],
+          "visualIdeas": [
+            "two students interviewing a coach with a question list"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task-notice",
+          "title": "Writing Task: Notice",
+          "objectives": [
+            "Student can draft a notice of not more than 50 words in the correct format",
+            "Student can write a notice inviting students to register for an inter-school athletic meet"
+          ],
+          "visualIdeas": [
+            "a notice template in a box with heading, date and signature"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "nine-gold-medals",
+      "title": "Nine Gold Medals",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe105.pdf",
+      "topics": [
+        {
+          "id": "reading-and-appreciating-the-poem",
+          "title": "Reading and Appreciating the Poem",
+          "objectives": [
+            "Student can narrate how the athletes in the poem stop to help a fallen runner and finish together",
+            "Student can identify the gist of each stanza",
+            "Student can identify alliteration and visual and auditory imagery in the poem"
+          ],
+          "visualIdeas": [
+            "nine runners crossing the finish line arm in arm"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the poem",
+            "Student can distinguish empathy, sympathy and compassion and relate them to the poem"
+          ],
+          "visualIdeas": [
+            "an extract from the poem with guiding questions beside it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-in-context",
+          "title": "Vocabulary in Context",
+          "objectives": [
+            "Student can identify adjective–noun collocations such as ‘standing ovation’ in the poem",
+            "Student can form collocations by pairing adjectives with suitable nouns"
+          ],
+          "visualIdeas": [
+            "adjective cards linked to matching noun cards"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a radio talk about a coach of special athletes and answer questions",
+            "Student can express a point of view about the Special Olympics"
+          ],
+          "visualIdeas": [
+            "a radio with a coach and athletes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task",
+          "title": "Writing Task",
+          "objectives": [
+            "Student can write short, creative slogans about the Special Olympics",
+            "Student can use catchy language to convey inclusion and empathy"
+          ],
+          "visualIdeas": [
+            "three slogan banners on a stadium wall"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "twin-melodies",
+      "title": "Twin Melodies",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe106.pdf",
+      "topics": [
+        {
+          "id": "reading-the-play-act-i",
+          "title": "Reading the Play: Act I",
+          "objectives": [
+            "Student can identify the characters of the play and their relationships",
+            "Student can explain why Shruti is afraid to tell her father about the Indo-Western fusion concert"
+          ],
+          "visualIdeas": [
+            "a cast list with Shruti, her violinist father and the fusion group"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-play-act-ii",
+          "title": "Reading the Play: Act II",
+          "objectives": [
+            "Student can summarise how Shruti speaks to her father and how he reacts",
+            "Student can predict whether Shruti and her parents will understand one another"
+          ],
+          "visualIdeas": [
+            "a father and daughter in conversation with a violin between them"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-play-act-iii",
+          "title": "Reading the Play: Act III",
+          "objectives": [
+            "Student can explain how Shruti’s father comes to support her fusion group after her mother reminds him of his own past",
+            "Student can explain the message of the play about tradition and new forms of music"
+          ],
+          "visualIdeas": [
+            "two melody lines joining into one"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the play with evidence",
+            "Student can reflect on respecting tradition while exploring new ideas"
+          ],
+          "visualIdeas": [
+            "an extract card with questions on Shruti and her father"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-and-structures-stage-terms-music-words-and-reported-speech",
+          "title": "Vocabulary and Structures: Stage Terms, Music Words and Reported Speech",
+          "objectives": [
+            "Student can explain stage terms such as an aside and non-lexical fillers",
+            "Student can use music words such as notes and crescendo correctly",
+            "Student can report dialogues from the play in indirect speech"
+          ],
+          "visualIdeas": [
+            "a script page with an aside marked and a reported version beside it"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-the-yazh-and-dialogue-delivery",
+          "title": "Listening and Speaking: The Yazh and Dialogue Delivery",
+          "objectives": [
+            "Student can listen to a musician describe the yazh and complete notes",
+            "Student can use stress and intonation to bring out feelings while reading dialogues from the play"
+          ],
+          "visualIdeas": [
+            "a yazh with its parts labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task-completing-a-story",
+          "title": "Writing Task: Completing a Story",
+          "objectives": [
+            "Student can complete a story about a young tabla player from a given beginning",
+            "Student can develop a clear plot with a conflict and a suitable ending"
+          ],
+          "visualIdeas": [
+            "a story map: beginning given, middle and end to be filled"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "a-friend-found-in-music",
+      "title": "A Friend Found in Music",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe106.pdf",
+      "topics": [
+        {
+          "id": "reading-and-appreciating-the-poem",
+          "title": "Reading and Appreciating the Poem",
+          "objectives": [
+            "Student can describe how the poet finds in music a friend, a therapy and a source of strength",
+            "Student can identify the metaphors for music and rewrite them as similes",
+            "Student can identify the rhyme scheme and its effect"
+          ],
+          "visualIdeas": [
+            "musical notes forming the shape of a friend’s hand"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the poem",
+            "Student can explain what the poem says about music in happy and sad times"
+          ],
+          "visualIdeas": [
+            "an extract from the poem with guiding questions beside it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-in-context",
+          "title": "Vocabulary in Context",
+          "objectives": [
+            "Student can identify phrases denoting happiness and sadness",
+            "Student can explain and use phrasal verbs such as ‘pull through’ and create phrasal verbs with put, get, look and break"
+          ],
+          "visualIdeas": [
+            "verb cards combined with preposition cards to form phrasal verbs"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can predict answers before listening and check them against a conversation",
+            "Student can present a role-play in a group using given cues"
+          ],
+          "visualIdeas": [
+            "a group of four performing a role-play"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task",
+          "title": "Writing Task",
+          "objectives": [
+            "Student can draft an informal invitation letter to grandparents for a recital on World Music Day",
+            "Student can include the event, date, venue and a warm personal request"
+          ],
+          "visualIdeas": [
+            "an invitation card for a musical evening on 21 June"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "carrier-of-words",
+      "title": "Carrier of Words",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe107.pdf",
+      "topics": [
+        {
+          "id": "reading-the-text-part-i",
+          "title": "Reading the Text (Part I)",
+          "objectives": [
+            "Student can describe the work of Khetaram, a Gramin Dak Sewak in the Thar desert",
+            "Student can explain why village postmen are the sole link for families in remote areas"
+          ],
+          "visualIdeas": [
+            "a postman with a mailbag walking across desert dunes to a village"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reading-the-text-part-ii",
+          "title": "Reading the Text (Part II)",
+          "objectives": [
+            "Student can explain how villagers respond to the news Khetaram brings, such as offering jaggery for good news",
+            "Student can discuss how phone lines would affect Khetaram’s job"
+          ],
+          "visualIdeas": [
+            "a villager offering jaggery to a postman delivering a letter"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the text with evidence",
+            "Student can reflect on dedication to duty in difficult conditions"
+          ],
+          "visualIdeas": [
+            "an extract card with questions on Khetaram"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-and-structures-present-perfect-tense-and-active-and-passive-voice",
+          "title": "Vocabulary and Structures: Present Perfect Tense and Active and Passive Voice",
+          "objectives": [
+            "Student can identify alliteration and metaphor in an extract",
+            "Student can identify the functions of verbs in the present perfect tense",
+            "Student can change sentences between active and passive voice"
+          ],
+          "visualIdeas": [
+            "an active sentence turning into its passive form with the subject and object swapping places"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-an-event-and-a-role-play",
+          "title": "Listening and Speaking: An Event and a Role-Play",
+          "objectives": [
+            "Student can listen to a girl talk about an event and answer questions",
+            "Student can take part in a discussion in role as a postcard, inland letter, envelope or money order form"
+          ],
+          "visualIdeas": [
+            "a postcard, inland letter, envelope and money order form as talking characters"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task-condolence-message",
+          "title": "Writing Task: Condolence Message",
+          "objectives": [
+            "Student can read a model condolence message and identify its tone and expressions of sympathy",
+            "Student can write a short condolence message of their own"
+          ],
+          "visualIdeas": [
+            "a short condolence note on a card"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "words",
+      "title": "Words",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe107.pdf",
+      "topics": [
+        {
+          "id": "reading-and-appreciating-the-poem",
+          "title": "Reading and Appreciating the Poem",
+          "objectives": [
+            "Student can explain the poet’s view that a few sincere words touch the heart more than many empty words",
+            "Student can identify the rhyming words, rhyme scheme and repetition, and explain why the poet repeats words",
+            "Student can identify hyperbole and describe the rhythm and metre of a line"
+          ],
+          "visualIdeas": [
+            "words floating out of a speaker’s mouth, some heavy, some light"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer questions on lines from the poem",
+            "Student can reflect on when words fail to comfort and when a few true words bring joy"
+          ],
+          "visualIdeas": [
+            "an extract from the poem with guiding questions beside it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-in-context",
+          "title": "Vocabulary in Context",
+          "objectives": [
+            "Student can explain figurative phrases from the poem and use them in sentences",
+            "Student can build a word map with meaning, synonyms, antonyms and a sentence"
+          ],
+          "visualIdeas": [
+            "a word map with meaning, synonym, antonym, sentence and sketch boxes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a conversation and identify true statements",
+            "Student can explain a chosen quotation and the reason for choosing it"
+          ],
+          "visualIdeas": [
+            "quotation cards on a board"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task",
+          "title": "Writing Task",
+          "objectives": [
+            "Student can write an essay explaining a chosen quotation",
+            "Student can organise the essay with an introduction, supporting examples and a conclusion"
+          ],
+          "visualIdeas": [
+            "an essay plan: introduction, body paragraphs and conclusion"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "follow-that-dream",
+      "title": "Follow That Dream",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe108.pdf",
+      "topics": [
+        {
+          "id": "reading-the-letter",
+          "title": "Reading the Letter",
+          "objectives": [
+            "Student can explain the context of the letter from Irene Chua to her daughter Ming",
+            "Student can summarise the mother’s advice on following a dream and the dedication it needs"
+          ],
+          "visualIdeas": [
+            "a handwritten letter dated 19 June 1995 beginning ‘Dear Ming’"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the letter with evidence",
+            "Student can reflect on the role of parents and community in helping children achieve their dreams"
+          ],
+          "visualIdeas": [
+            "an extract card with questions on dreams and effort"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-and-structures-the-first-conditional-and-uses-of-could",
+          "title": "Vocabulary and Structures: The First Conditional and Uses of ‘Could’",
+          "objectives": [
+            "Student can explain expressions from the text and use them in sentences",
+            "Student can use the first conditional for real or possible future situations",
+            "Student can identify the functions of ‘could’ in different sentences"
+          ],
+          "visualIdeas": [
+            "an if-clause card linked to a will-clause card"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking-vocational-courses-and-a-role-play",
+          "title": "Listening and Speaking: Vocational Courses and a Role-Play",
+          "objectives": [
+            "Student can listen to an announcement about vocational courses and complete it with exact words",
+            "Student can present a role-play about following a dream using sentence prompts"
+          ],
+          "visualIdeas": [
+            "a dreamer, a parent and a friend in a role-play"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task-formal-email",
+          "title": "Writing Task: Formal Email",
+          "objectives": [
+            "Student can write a formal email to the Director of a design institute about joining a summer workshop",
+            "Student can use the email format with a clear subject line, polite greeting, purpose and sign-off"
+          ],
+          "visualIdeas": [
+            "an email layout with To, Subject, greeting, body and sign-off"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "believe-in-yourself",
+      "title": "Believe in Yourself",
+      "book": "Kaveri",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iebe108.pdf",
+      "topics": [
+        {
+          "id": "reading-and-appreciating-the-poem",
+          "title": "Reading and Appreciating the Poem",
+          "objectives": [
+            "Student can identify the central idea of each stanza of the poem",
+            "Student can identify the rhyme scheme, tone and speaker of the poem",
+            "Student can explain the imagery, symbolism, the metaphor ‘The first step is the hardest’ and the use of antithesis"
+          ],
+          "visualIdeas": [
+            "a person at the foot of a staircase with the first step highlighted"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "critical-reflection",
+          "title": "Critical Reflection",
+          "objectives": [
+            "Student can answer extract-based questions on the poem",
+            "Student can explain the significance of the first step in personal growth"
+          ],
+          "visualIdeas": [
+            "an extract from the poem with guiding questions beside it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vocabulary-in-context",
+          "title": "Vocabulary in Context",
+          "objectives": [
+            "Student can explain and use the Latin expression ‘status quo’",
+            "Student can identify and use a rhetorical question"
+          ],
+          "visualIdeas": [
+            "the phrase ‘status quo’ with its meaning and example sentence"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a conversation between two friends and answer questions",
+            "Student can use a saying or proverb in a role-play about a real-life situation"
+          ],
+          "visualIdeas": [
+            "two friends talking with proverb cards"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-task",
+          "title": "Writing Task",
+          "objectives": [
+            "Student can draft a speech for the morning assembly on ‘Turning Challenges into Opportunities’",
+            "Student can structure a speech with a greeting, an engaging opening, main points and a closing"
+          ],
+          "visualIdeas": [
+            "a speech outline: greeting, opening, main points and closing"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    }
+  ]
+}

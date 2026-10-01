@@ -1,0 +1,888 @@
+{
+  "id": "class6-mathematics",
+  "klass": 6,
+  "subject": "Mathematics",
+  "source": {
+    "books": [
+      {
+        "title": "Ganita Prakash: Textbook of Mathematics for Grade 6",
+        "code": "fegp1",
+        "edition": "Reprint 2026-27 (First Edition August 2024; reprinted December 2024 and January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/fegp1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "patterns-in-mathematics",
+      "title": "Patterns in Mathematics",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp101.pdf",
+      "topics": [
+        {
+          "id": "what-is-mathematics",
+          "title": "What is Mathematics?",
+          "objectives": [
+            "Student can describe mathematics as the search for patterns and for explanations of why those patterns exist",
+            "Student can give examples of how mathematics helps in everyday life"
+          ],
+          "visualIdeas": [
+            "patterns in nature, buildings and numbers arranged as a collage"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "patterns-in-numbers",
+          "title": "Patterns in Numbers",
+          "objectives": [
+            "Student can recognise and extend number sequences: counting, odd, even, triangular, square and cube numbers, Virahanka numbers and powers of 2",
+            "Student can describe the rule behind each sequence in words"
+          ],
+          "visualIdeas": [
+            "a table of number sequences with the next few terms left blank"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "visualising-number-sequences",
+          "title": "Visualising Number Sequences",
+          "objectives": [
+            "Student can draw dot pictures that show why triangular, square and cube numbers get their names",
+            "Student can use a picture to predict the next term of a sequence"
+          ],
+          "visualIdeas": [
+            "dot triangles, dot squares and stacked cubes growing step by step"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "relations-among-number-sequences",
+          "title": "Relations among Number Sequences",
+          "objectives": [
+            "Student can show that adding consecutive odd numbers starting from 1 gives square numbers",
+            "Student can explain such a relation using a picture rather than only calculation"
+          ],
+          "visualIdeas": [
+            "an L-shaped layer of dots added to a square to make the next square"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "patterns-in-shapes",
+          "title": "Patterns in Shapes",
+          "objectives": [
+            "Student can recognise and extend shape sequences: regular polygons, complete graphs, stacked squares, stacked triangles and Koch snowflake iterations",
+            "Student can describe the rule that takes each shape in a sequence to the next one"
+          ],
+          "visualIdeas": [
+            "regular polygons from triangle upward in a row",
+            "first steps of the Koch snowflake"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "relation-to-number-sequences",
+          "title": "Relation to Number Sequences",
+          "objectives": [
+            "Student can relate a shape sequence to a number sequence, such as the sides of regular polygons to the counting numbers from 3",
+            "Student can count the parts of shapes in a sequence (sides, lines, small squares or triangles) and name the number sequence they form"
+          ],
+          "visualIdeas": [
+            "complete graphs with their line counts written underneath"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "lines-and-angles",
+      "title": "Lines and Angles",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp102.pdf",
+      "topics": [
+        {
+          "id": "point",
+          "title": "Point",
+          "objectives": [
+            "Student can explain that a point determines a location and is named by a capital letter",
+            "Student can mark and label points on paper and identify points in everyday objects such as the tip of a compass"
+          ],
+          "visualIdeas": [
+            "a map with places marked as labelled points"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "line-segment",
+          "title": "Line Segment",
+          "objectives": [
+            "Student can explain that a line segment is the shortest path between two points and name it by its end points",
+            "Student can draw and measure line segments"
+          ],
+          "visualIdeas": [
+            "two points joined by a straight path and by a curved path for comparison"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "line",
+          "title": "Line",
+          "objectives": [
+            "Student can explain that a line is a line segment extended indefinitely in both directions",
+            "Student can find how many lines pass through one point and through two given points"
+          ],
+          "visualIdeas": [
+            "a line segment with arrows extending at both ends"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ray",
+          "title": "Ray",
+          "objectives": [
+            "Student can explain that a ray starts at a point and goes on indefinitely in one direction, and name it correctly",
+            "Student can distinguish between a line segment, a line and a ray"
+          ],
+          "visualIdeas": [
+            "a torch beam drawn as a ray from its starting point"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "angle",
+          "title": "Angle",
+          "objectives": [
+            "Student can describe an angle as two rays starting from a common point, and name its vertex and arms",
+            "Student can name an angle using three letters with the vertex in the middle"
+          ],
+          "visualIdeas": [
+            "two rays OP and OM forming angle POM with vertex and arms labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "comparing-angles",
+          "title": "Comparing Angles",
+          "objectives": [
+            "Student can compare two angles by placing one over the other",
+            "Student can explain that the size of an angle is the amount of turn about the vertex, not the length of its arms"
+          ],
+          "visualIdeas": [
+            "two angles with long and short arms superimposed to compare openings"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "making-rotating-arms",
+          "title": "Making Rotating Arms",
+          "objectives": [
+            "Student can make rotating arms with paper straws and a clip and show angles of different sizes",
+            "Student can arrange angles from smallest to largest by comparing them"
+          ],
+          "visualIdeas": [
+            "two straws joined by a clip opening through different angles"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "special-types-of-angles",
+          "title": "Special Types of Angles",
+          "objectives": [
+            "Student can identify a straight angle as a half turn and a right angle as a quarter turn",
+            "Student can recognise perpendicular lines as lines that meet at a right angle"
+          ],
+          "visualIdeas": [
+            "a book cover opened through a half turn and a quarter turn"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "measuring-angles",
+          "title": "Measuring Angles",
+          "objectives": [
+            "Student can explain that one full turn is 360 degrees and use this to find degree measures of other turns",
+            "Student can measure an angle using a protractor"
+          ],
+          "visualIdeas": [
+            "a protractor placed on an angle with the baseline and vertex aligned"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "drawing-angles",
+          "title": "Drawing Angles",
+          "objectives": [
+            "Student can draw an angle of a given measure using a ruler and a protractor",
+            "Student can place the protractor centre on the vertex and align the base arm with the 0 line before marking the turn"
+          ],
+          "visualIdeas": [
+            "steps to draw a 30 degree angle TIN with a protractor"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "types-of-angles-and-their-measures",
+          "title": "Types of Angles and their Measures",
+          "objectives": [
+            "Student can classify angles as acute, right, obtuse, straight or reflex from their measures",
+            "Student can estimate whether an angle is acute, obtuse or reflex before measuring it"
+          ],
+          "visualIdeas": [
+            "a fan of angles labelled acute, right, obtuse, straight and reflex with degree ranges"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "number-play",
+      "title": "Number Play",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp103.pdf",
+      "topics": [
+        {
+          "id": "numbers-can-tell-us-things",
+          "title": "Numbers can Tell us Things",
+          "objectives": [
+            "Student can work out what a number says when children call out how many taller neighbours they have",
+            "Student can reason about which arrangements of children are possible or impossible"
+          ],
+          "visualIdeas": [
+            "a line of children of different heights each holding up a number"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "supercells",
+          "title": "Supercells",
+          "objectives": [
+            "Student can identify a supercell as a cell whose number is larger than its adjacent cells",
+            "Student can fill a table so that it has a required number of supercells and explain why"
+          ],
+          "visualIdeas": [
+            "a number grid with supercells coloured"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "patterns-of-numbers-on-the-number-line",
+          "title": "Patterns of Numbers on the Number Line",
+          "objectives": [
+            "Student can place large numbers at their approximate positions on a number line",
+            "Student can identify the numbers marked on a number line and pick the smallest and largest in a sequence"
+          ],
+          "visualIdeas": [
+            "a number line from 1000 to 10000 with numbers placed on it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "playing-with-digits",
+          "title": "Playing with Digits",
+          "objectives": [
+            "Student can count how many numbers have one, two, three, four and five digits",
+            "Student can find digit sums and look for numbers with a given digit sum"
+          ],
+          "visualIdeas": [
+            "a table of 1-digit to 5-digit number ranges with counts"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pretty-palindromic-patterns",
+          "title": "Pretty Palindromic Patterns",
+          "objectives": [
+            "Student can identify palindromic numbers",
+            "Student can use the reverse-and-add process to reach a palindrome"
+          ],
+          "visualIdeas": [
+            "a reverse-and-add chain ending in a palindrome"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-magic-number-of-kaprekar",
+          "title": "The Magic Number of Kaprekar",
+          "objectives": [
+            "Student can carry out Kaprekar's routine on a 4-digit number, subtracting the smallest arrangement of its digits from the largest, and observe that it reaches 6174",
+            "Student can state that D.R. Kaprekar, a school teacher from Devlali, discovered this pattern in 1949"
+          ],
+          "visualIdeas": [
+            "a chain of Kaprekar steps converging on 6174"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "clock-and-calendar-numbers",
+          "title": "Clock and Calendar Numbers",
+          "objectives": [
+            "Student can find all times of a given pattern, such as 4:44 or 12:21, on a 12-hour clock",
+            "Student can find dates with digit patterns, such as palindromic dates, and reason about when a calendar can be reused"
+          ],
+          "visualIdeas": [
+            "a digital clock showing a palindromic time like 12:21"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mental-math",
+          "title": "Mental Math",
+          "objectives": [
+            "Student can make target numbers by adding and subtracting given numbers mentally",
+            "Student can use number combinations to calculate sums and differences quickly"
+          ],
+          "visualIdeas": [
+            "number cards combined to hit a target number"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "playing-with-number-patterns",
+          "title": "Playing with Number Patterns",
+          "objectives": [
+            "Student can find the sum of numbers arranged in a pattern using a quicker method than adding one by one",
+            "Student can share and compare different methods of finding the same sum"
+          ],
+          "visualIdeas": [
+            "a dot arrangement grouped into equal rows for quick adding"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "an-unsolved-mystery-the-collatz-conjecture",
+          "title": "An Unsolved Mystery — the Collatz Conjecture!",
+          "objectives": [
+            "Student can generate a Collatz sequence by halving even numbers and applying 3n + 1 to odd numbers",
+            "Student can explain that it is still unknown whether every starting number reaches 1"
+          ],
+          "visualIdeas": [
+            "a branching diagram of Collatz sequences ending at 1"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "simple-estimation",
+          "title": "Simple Estimation",
+          "objectives": [
+            "Student can make reasonable estimates of large quantities from everyday life",
+            "Student can explain how they arrived at an estimate"
+          ],
+          "visualIdeas": [
+            "an estimation card asking how many students are in the school"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "games-and-winning-strategies",
+          "title": "Games and Winning Strategies",
+          "objectives": [
+            "Student can play the game of 21 and discover a strategy that guarantees a win",
+            "Student can explain why the winning strategy works"
+          ],
+          "visualIdeas": [
+            "a game board counting up to 21 with winning numbers highlighted"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "data-handling-and-presentation",
+      "title": "Data Handling and Presentation",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp104.pdf",
+      "topics": [
+        {
+          "id": "collecting-and-organising-data",
+          "title": "Collecting and Organising Data",
+          "objectives": [
+            "Student can collect data and organise it in a table using tally marks",
+            "Student can find frequencies and answer questions from a frequency table"
+          ],
+          "visualIdeas": [
+            "a tally table of favourite fruits in a class"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "pictographs",
+          "title": "Pictographs",
+          "objectives": [
+            "Student can read a pictograph in which one picture may stand for more than one item",
+            "Student can draw a pictograph with a stated scale"
+          ],
+          "visualIdeas": [
+            "a pictograph of books read with one symbol standing for 5 books"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "bar-graphs",
+          "title": "Bar Graphs",
+          "objectives": [
+            "Student can read and interpret bar graphs with a stated scale",
+            "Student can draw conclusions from a bar graph"
+          ],
+          "visualIdeas": [
+            "a vertical bar graph of students' modes of travel to school"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "drawing-a-bar-graph",
+          "title": "Drawing a Bar Graph",
+          "objectives": [
+            "Student can choose a suitable scale and draw a bar graph with bars of uniform width",
+            "Student can label axes and title a bar graph"
+          ],
+          "visualIdeas": [
+            "steps to draw a bar graph with gridlines and scale chosen"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "artistic-and-aesthetic-considerations",
+          "title": "Artistic and Aesthetic Considerations",
+          "objectives": [
+            "Student can explain how colour, pictures and bar direction affect how clearly a graph conveys data",
+            "Student can recognise when a fancy graph is misleading"
+          ],
+          "visualIdeas": [
+            "two graphs of the same data, one clear and one misleading"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "prime-time",
+      "title": "Prime Time",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp105.pdf",
+      "topics": [
+        {
+          "id": "common-multiples-and-common-factors",
+          "title": "Common Multiples and Common Factors",
+          "objectives": [
+            "Student can find common multiples of two numbers through games like Idli-Vada",
+            "Student can find common factors of two numbers"
+          ],
+          "visualIdeas": [
+            "a number line with jumps of two sizes landing on common multiples"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "prime-numbers",
+          "title": "Prime Numbers",
+          "objectives": [
+            "Student can define prime and composite numbers by their number of factors",
+            "Student can use the Sieve of Eratosthenes to find primes up to 100"
+          ],
+          "visualIdeas": [
+            "a 1-to-100 grid with multiples crossed out leaving the primes"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "co-prime-numbers-for-safekeeping-treasures",
+          "title": "Co-prime Numbers for Safekeeping Treasures",
+          "objectives": [
+            "Student can identify co-prime pairs as numbers with no common factor other than 1",
+            "Student can check whether a pair of numbers is co-prime"
+          ],
+          "visualIdeas": [
+            "a treasure game where two numbers cannot both be reached by one jump size"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "prime-factorisation",
+          "title": "Prime Factorisation",
+          "objectives": [
+            "Student can express a number as a product of prime factors",
+            "Student can use prime factorisations to check whether two numbers are co-prime, and explain why a single factor pair is not enough"
+          ],
+          "visualIdeas": [
+            "a factor tree splitting a number into primes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "divisibility-tests",
+          "title": "Divisibility Tests",
+          "objectives": [
+            "Student can use divisibility tests for 10, 5, 2, 4 and 8",
+            "Student can explain why the tests for 4 and 8 depend only on the last two or three digits"
+          ],
+          "visualIdeas": [
+            "a number with its last digits highlighted for each test"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "fun-with-numbers",
+          "title": "Fun with Numbers",
+          "objectives": [
+            "Student can explain what makes a number special in different ways, such as being prime or a square",
+            "Student can solve puzzles involving primes"
+          ],
+          "visualIdeas": [
+            "a box of numbers with reasons each could be special"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "perimeter-and-area",
+      "title": "Perimeter and Area",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp106.pdf",
+      "topics": [
+        {
+          "id": "perimeter",
+          "title": "Perimeter",
+          "objectives": [
+            "Student can define the perimeter of a polygon as the sum of the lengths of its sides",
+            "Student can find the perimeter of a rectangle as twice the sum of length and width and of a square as four times its side",
+            "Student can solve problems involving perimeter, such as finding a missing side"
+          ],
+          "visualIdeas": [
+            "a rectangle with its sides being walked around and added"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "area",
+          "title": "Area",
+          "objectives": [
+            "Student can define area as the measure of the region enclosed by a closed figure, in square units",
+            "Student can find areas of rectangles and squares and estimate areas of irregular shapes on squared paper",
+            "Student can show that two figures can have the same area with different perimeters, or the same perimeter with different areas"
+          ],
+          "visualIdeas": [
+            "a shape on squared grid paper with full and half squares counted",
+            "two rectangles with equal area but different perimeters"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "area-of-a-triangle",
+          "title": "Area of a Triangle",
+          "objectives": [
+            "Student can show by cutting a rectangle along a diagonal that each triangle is half the rectangle's area",
+            "Student can find areas of triangles on squared paper by fitting them into rectangles"
+          ],
+          "visualIdeas": [
+            "a rectangle cut along its diagonal into two matching triangles"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "fractions",
+      "title": "Fractions",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp107.pdf",
+      "topics": [
+        {
+          "id": "fractional-units-and-equal-shares",
+          "title": "Fractional Units and Equal Shares",
+          "objectives": [
+            "Student can share a whole equally and name each share as a fractional unit such as one-half or one-third",
+            "Student can explain why 1/9 is smaller than 1/5 by thinking of a roti shared among more children"
+          ],
+          "visualIdeas": [
+            "a roti divided into equal shares among children"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fractional-units-as-parts-of-a-whole",
+          "title": "Fractional Units as Parts of a Whole",
+          "objectives": [
+            "Student can identify the fractional unit for a part of a whole and write fractions like 3/4 as three one-fourths",
+            "Student can measure a piece of a whole, such as a piece of chikki, using a suitable fractional unit"
+          ],
+          "visualIdeas": [
+            "a rectangle divided into equal parts with some shaded"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "measuring-using-fractional-units",
+          "title": "Measuring Using Fractional Units",
+          "objectives": [
+            "Student can fold a paper strip into equal parts and measure lengths in fractional units",
+            "Student can express the length of each part of a folded unit strip as a fraction of one unit"
+          ],
+          "visualIdeas": [
+            "a paper strip folded into halves, quarters and eighths"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "marking-fraction-lengths-on-the-number-line",
+          "title": "Marking Fraction Lengths on the Number Line",
+          "objectives": [
+            "Student can mark fractions on a number line by dividing a unit into equal parts",
+            "Student can read the length of a line on a number line as a fraction, including lengths more than one unit"
+          ],
+          "visualIdeas": [
+            "a number line from 0 to 2 with quarters marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mixed-fractions",
+          "title": "Mixed Fractions",
+          "objectives": [
+            "Student can tell fractions less than 1 from fractions greater than 1 by comparing numerator and denominator",
+            "Student can convert between fractions greater than 1 and mixed fractions"
+          ],
+          "visualIdeas": [
+            "7/4 shown as one whole and three quarters"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "equivalent-fractions",
+          "title": "Equivalent Fractions",
+          "objectives": [
+            "Student can find equivalent fractions by multiplying or dividing numerator and denominator by the same number",
+            "Student can write a fraction in its lowest terms"
+          ],
+          "visualIdeas": [
+            "fraction strips showing 1/2 = 2/4 = 3/6 aligned"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "comparing-fractions",
+          "title": "Comparing Fractions",
+          "objectives": [
+            "Student can compare fractions with the same denominator or the same numerator",
+            "Student can compare fractions with different denominators by converting them to equivalent fractions with a common denominator"
+          ],
+          "visualIdeas": [
+            "4/5 and 7/9 both rewritten over 45 for comparison"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "addition-and-subtraction-of-fractions",
+          "title": "Addition and Subtraction of Fractions",
+          "objectives": [
+            "Student can add and subtract fractions with the same denominator",
+            "Student can add and subtract fractions with different denominators using equivalent fractions"
+          ],
+          "visualIdeas": [
+            "fraction strips placed end to end to show a sum"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "a-pinch-of-history",
+          "title": "A Pinch of History",
+          "objectives": [
+            "Student can state that a fraction was called bhinna in ancient India",
+            "Student can explain that the way we write fractions today originated in India, as seen in the Bakshali manuscript, and that the bar between numerator and denominator was added later by Al-Hassar"
+          ],
+          "visualIdeas": [
+            "the Bakshali-manuscript way of writing one-half beside the modern form"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "playing-with-constructions",
+      "title": "Playing with Constructions",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp108.pdf",
+      "topics": [
+        {
+          "id": "artwork",
+          "title": "Artwork",
+          "objectives": [
+            "Student can use a compass to draw circles and explain that all points of a circle are at the same distance (the radius) from its centre",
+            "Student can construct wave patterns from half circles drawn on a line"
+          ],
+          "visualIdeas": [
+            "a compass drawing a circle with the radius marked",
+            "a wave made of alternating half circles"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "squares-and-rectangles",
+          "title": "Squares and Rectangles",
+          "objectives": [
+            "Student can state the properties of rectangles and squares: opposite sides equal and all angles right angles, with all sides equal for a square",
+            "Student can name a rectangle correctly by going around its vertices in order"
+          ],
+          "visualIdeas": [
+            "a rectangle PQRS with equal opposite sides and right angles marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "constructing-squares-and-rectangles",
+          "title": "Constructing Squares and Rectangles",
+          "objectives": [
+            "Student can construct a rectangle or square of given side lengths using a ruler, compass and protractor",
+            "Student can draw a rough diagram first to plan a construction"
+          ],
+          "visualIdeas": [
+            "construction steps for a 5 cm by 3 cm rectangle"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "an-exploration-in-rectangles",
+          "title": "An Exploration in Rectangles",
+          "objectives": [
+            "Student can predict where points moving along two sides of a rectangle will be closest and farthest, then check by measuring",
+            "Student can construct a rectangle of given sides and place points on its sides to meet a given condition"
+          ],
+          "visualIdeas": [
+            "a rectangle with points X and Y sliding along two sides"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "exploring-diagonals-of-rectangles-and-squares",
+          "title": "Exploring Diagonals of Rectangles and Squares",
+          "objectives": [
+            "Student can show by construction and measurement that the diagonals of a rectangle are equal",
+            "Student can construct a rectangle given one side and a diagonal"
+          ],
+          "visualIdeas": [
+            "a rectangle with both diagonals drawn and the angles they make marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "points-equidistant-from-two-given-points",
+          "title": "Points Equidistant from Two Given Points",
+          "objectives": [
+            "Student can use intersecting arcs to find a point at a given distance from two given points",
+            "Student can plan and construct a figure such as a house shape from given lengths"
+          ],
+          "visualIdeas": [
+            "two arcs from two points meeting at a point",
+            "the house figure with all border lines of 5 cm"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "symmetry",
+      "title": "Symmetry",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp109.pdf",
+      "topics": [
+        {
+          "id": "line-of-symmetry",
+          "title": "Line of Symmetry",
+          "objectives": [
+            "Student can identify lines of symmetry in figures by folding or reflecting",
+            "Student can complete a figure given half of it and its line of symmetry",
+            "Student can recognise that a figure may have several lines of symmetry or none"
+          ],
+          "visualIdeas": [
+            "a butterfly, a rangoli and a pinwheel with their lines of symmetry drawn"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "rotational-symmetry",
+          "title": "Rotational Symmetry",
+          "objectives": [
+            "Student can identify the angles of symmetry and centre of rotation of a figure",
+            "Student can decide whether a figure has rotational symmetry, line symmetry, both or neither"
+          ],
+          "visualIdeas": [
+            "a pinwheel rotated in steps about its centre with angles marked"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "the-other-side-of-zero",
+      "title": "The Other Side of Zero",
+      "book": "Ganita Prakash",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fegp110.pdf",
+      "topics": [
+        {
+          "id": "belas-building-of-fun",
+          "title": "Bela's Building of Fun",
+          "objectives": [
+            "Student can use floors above and below ground in a building to represent positive and negative numbers",
+            "Student can read and write integers and place them on a number line",
+            "Student can interpret addition as starting position plus movement and subtraction as target minus starting position"
+          ],
+          "visualIdeas": [
+            "a building with lift buttons from -3 to +5 drawn as a vertical number line"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-token-model",
+          "title": "The Token Model",
+          "objectives": [
+            "Student can use positive and negative tokens, with zero pairs, to add integers",
+            "Student can use tokens to subtract integers, adding zero pairs when needed"
+          ],
+          "visualIdeas": [
+            "positive and negative tokens with zero pairs cancelling"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "integers-in-other-places",
+          "title": "Integers in Other Places",
+          "objectives": [
+            "Student can use integers for credits and debits in a bank account",
+            "Student can represent heights above and below sea level in a geographical cross section and temperatures below zero using integers"
+          ],
+          "visualIdeas": [
+            "a bank passbook page with deposits and withdrawals as signed numbers",
+            "a geographical cross section with sea level marked as 0 m"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "explorations-with-integers",
+          "title": "Explorations with Integers",
+          "objectives": [
+            "Student can complete integer grids whose rows and columns add up to a given sum",
+            "Student can find patterns in integer grids, such as rows and columns that add up to zero"
+          ],
+          "visualIdeas": [
+            "a hollow integer grid with rows and columns summing to zero"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "a-pinch-of-history",
+          "title": "A Pinch of History",
+          "objectives": [
+            "Student can state that integers including zero and negative numbers were first conceived and used in Asia",
+            "Student can apply Brahmagupta's rules for adding and subtracting positive numbers, negative numbers and zero"
+          ],
+          "visualIdeas": [
+            "Brahmagupta's rules for addition written beside number-line examples"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

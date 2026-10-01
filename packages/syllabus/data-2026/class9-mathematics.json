@@ -1,0 +1,1226 @@
+{
+  "id": "class9-mathematics",
+  "klass": 9,
+  "subject": "Mathematics",
+  "source": {
+    "books": [
+      {
+        "title": "Ganita Manjari: Textbook of Mathematics for Grade 9 (Part I)",
+        "code": "iemh1",
+        "edition": "First Edition, April 2026 (Chaitra 1948) — new NCERT book for the 2026-27 session",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/iemh1ps.pdf"
+      },
+      {
+        "title": "Ganita Manjari: Textbook of Mathematics for Grade 9 (Part II)",
+        "code": "iemh2",
+        "edition": "First Edition, August 2026 (Shravana 1948) — new NCERT book for the 2026-27 session",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/iemh2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "orienting-yourself-the-use-of-coordinates",
+      "title": "Orienting Yourself: The Use of Coordinates",
+      "book": "Ganita Manjari Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh101.pdf",
+      "topics": [
+        {
+          "id": "introduction-grid-based-thinking-and-coordinates",
+          "title": "Introduction: Grid-Based Thinking and Coordinates",
+          "objectives": [
+            "Student can explain how a system of coordinates uses numbers to describe exact locations",
+            "Student can describe early uses of grids, such as the street plans of the Sindhu-Sarasvatī Civilisation and the use of latitude and longitude for navigation"
+          ],
+          "visualIdeas": [
+            "a city street grid with North-South and East-West lines at equal spacing"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "settling-in-locating-places-using-coordinates",
+          "title": "Settling In: Locating Places Using Coordinates",
+          "objectives": [
+            "Student can describe the position of a place relative to a chosen origin using two directions at right angles",
+            "Student can give and follow directions on a grid, as Shalini does to guide Reiaan around his new school"
+          ],
+          "visualIdeas": [
+            "a school campus map on a grid with the gate as origin"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-2-d-cartesian-coordinate-system",
+          "title": "The 2-D Cartesian Coordinate System",
+          "objectives": [
+            "Student can identify the x-axis, y-axis, origin and the four quadrants",
+            "Student can read and plot points with positive and negative coordinates",
+            "Student can predict the quadrant of a point from the signs of its coordinates"
+          ],
+          "visualIdeas": [
+            "a Cartesian plane with points plotted in each quadrant and their coordinates labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "distance-between-two-points-in-the-2-d-plane",
+          "title": "Distance Between Two Points in the 2-D Plane",
+          "objectives": [
+            "Student can find the distance between two points using the Baudhāyana-Pythagoras theorem",
+            "Student can show that reflecting a figure in an axis preserves the lengths of its sides"
+          ],
+          "visualIdeas": [
+            "two points joined by a segment with a right triangle drawn on the grid beneath it"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "introduction-to-linear-polynomials",
+      "title": "Introduction to Linear Polynomials",
+      "book": "Ganita Manjari Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh102.pdf",
+      "topics": [
+        {
+          "id": "algebraic-expressions-terms-variables-and-coefficients",
+          "title": "Algebraic Expressions: Terms, Variables and Coefficients",
+          "objectives": [
+            "Student can identify the terms, variables, coefficients and constant of an algebraic expression",
+            "Student can write an algebraic expression for an everyday situation, such as pens and pencils in boxes"
+          ],
+          "visualIdeas": [
+            "boxes of pens and pencils with the expression 4x + 5y + 3 built beneath them"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "linear-polynomials",
+          "title": "Linear Polynomials",
+          "objectives": [
+            "Student can define the degree of a polynomial and recognise a linear polynomial",
+            "Student can find the value of a linear polynomial for given values of the variables"
+          ],
+          "visualIdeas": [
+            "a sorting board of expressions: linear and not linear"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "exploring-linear-patterns",
+          "title": "Exploring Linear Patterns",
+          "objectives": [
+            "Student can describe a growing pattern that adds the same number at each stage using a linear expression",
+            "Student can use a linear expression to predict a later stage, such as a taxi fare for a given distance"
+          ],
+          "visualIdeas": [
+            "a growing pattern of square tiles, stages 1 to 4, with a table of tile counts"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "linear-growth-and-linear-decay",
+          "title": "Linear Growth and Linear Decay",
+          "objectives": [
+            "Student can distinguish linear growth from linear decay with real-life examples",
+            "Student can model linear decay, such as the value of an item that depreciates by a fixed amount each year"
+          ],
+          "visualIdeas": [
+            "two bar sequences: one rising by a fixed step, one falling by a fixed step"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "linear-relationships",
+          "title": "Linear Relationships",
+          "objectives": [
+            "Student can recognise a linear relationship of the form y = ax + b between two quantities",
+            "Student can use a linear relationship such as the conversion between Celsius and Fahrenheit"
+          ],
+          "visualIdeas": [
+            "a thermometer with Celsius and Fahrenheit scales side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "visualising-linear-relationships",
+          "title": "Visualising Linear Relationships",
+          "objectives": [
+            "Student can draw the graph of a linear relationship and see that it is a straight line",
+            "Student can relate the slope of the line to the rate at which one quantity changes with the other"
+          ],
+          "visualIdeas": [
+            "a straight-line graph of y = 2x + 1 with a rise-over-run triangle"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-world-of-numbers",
+      "title": "The World of Numbers",
+      "book": "Ganita Manjari Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh103.pdf",
+      "topics": [
+        {
+          "id": "the-dawn-of-mathematics-the-human-need-to-count",
+          "title": "The Dawn of Mathematics: The Human Need to Count",
+          "objectives": [
+            "Student can describe early evidence of counting, such as tally marks on the Ishango bone",
+            "Student can explain how trade and astronomy in India drove the development of numbers"
+          ],
+          "visualIdeas": [
+            "a bone with notched tally marks beside a merchant’s counting tally"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-revolution-of-shunya-when-nothing-became-something",
+          "title": "The Revolution of Śhūnya: When Nothing Became Something",
+          "objectives": [
+            "Student can explain how the idea of śhūnya moved from philosophy into mathematics as the number zero",
+            "Student can state Brahmagupta’s rules for zero and describe the Bakhśhālī manuscript as an early record of zero"
+          ],
+          "visualIdeas": [
+            "a timeline from śhūnyatā to the Bakhśhālī dot to Brahmagupta’s rules"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "integers-expanding-the-horizon",
+          "title": "Integers: Expanding the Horizon",
+          "objectives": [
+            "Student can explain how negative numbers arose, for example through Brahmagupta’s ideas of fortunes and debts",
+            "Student can apply the rules of arithmetic for integers"
+          ],
+          "visualIdeas": [
+            "a number line with fortunes to the right and debts to the left of zero"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fractions-and-rational-numbers",
+          "title": "Fractions and Rational Numbers",
+          "objectives": [
+            "Student can define a rational number as p/q with integers p, q and q ≠ 0",
+            "Student can write a rational number in its lowest terms"
+          ],
+          "visualIdeas": [
+            "a number line between 0 and 1 divided into halves, thirds and quarters"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "representation-of-rational-numbers-on-the-number-line",
+          "title": "Representation of Rational Numbers on the Number Line",
+          "objectives": [
+            "Student can locate rational numbers on the number line",
+            "Student can find the absolute value of a rational number as its distance from zero"
+          ],
+          "visualIdeas": [
+            "a number line with −3/4 and 5/2 marked and their distances from zero"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-density-of-rational-numbers",
+          "title": "The Density of Rational Numbers",
+          "objectives": [
+            "Student can show that there is a rational number between any two rational numbers",
+            "Student can find several rational numbers between two given rational numbers"
+          ],
+          "visualIdeas": [
+            "a zoom sequence on a number line revealing more and more rationals between two numbers"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "irrational-numbers-and-the-proof-that-root-2-is-irrational",
+          "title": "Irrational Numbers and the Proof that √2 is Irrational",
+          "objectives": [
+            "Student can explain what an irrational number is",
+            "Student can follow the proof by contradiction that √2 is irrational"
+          ],
+          "visualIdeas": [
+            "a unit square with its diagonal labelled √2"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "construction-of-lengths-like-root-2-and-root-3",
+          "title": "Construction of Lengths Like √2 and √3",
+          "objectives": [
+            "Student can construct lengths such as √2 and √3 using right triangles and a compass",
+            "Student can locate such lengths on the number line"
+          ],
+          "visualIdeas": [
+            "a square-root spiral built from right triangles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-story-of-pi-and-madhavas-infinite-series",
+          "title": "The Story of Pi (π) and Madhava’s Infinite Series",
+          "objectives": [
+            "Student can explain that π is irrational (proved by Lambert) and describe Āryabhaṭa’s approximation 3.1416",
+            "Student can describe Madhava’s infinite series as a way to compute π"
+          ],
+          "visualIdeas": [
+            "a circle with its circumference unrolled beside its diameter"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "rational-decimals-terminating-and-repeating",
+          "title": "Rational Decimals: Terminating and Repeating",
+          "objectives": [
+            "Student can show that every rational number has a terminating or repeating decimal expansion",
+            "Student can predict from the denominator in lowest terms whether a decimal will terminate",
+            "Student can convert a repeating decimal into the form p/q"
+          ],
+          "visualIdeas": [
+            "long division of 1/7 showing the remainders repeating"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-magic-of-cyclic-numbers",
+          "title": "The Magic of Cyclic Numbers",
+          "objectives": [
+            "Student can identify 142857 as the repeating block of the decimal for 1/7",
+            "Student can show that multiplying 142857 by 1 to 6 only rotates its digits in a cycle"
+          ],
+          "visualIdeas": [
+            "a circle of the digits 1-4-2-8-5-7 with multiples of 142857 read around it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "irrational-decimals-and-real-numbers",
+          "title": "Irrational Decimals and Real Numbers",
+          "objectives": [
+            "Student can explain that irrational numbers have non-terminating, non-repeating decimal expansions",
+            "Student can describe the real numbers as all rational and irrational numbers together"
+          ],
+          "visualIdeas": [
+            "a nested diagram: natural numbers inside whole numbers inside integers inside rationals, with irrationals completing the reals"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "exploring-algebraic-identities",
+      "title": "Exploring Algebraic Identities",
+      "book": "Ganita Manjari Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh104.pdf",
+      "topics": [
+        {
+          "id": "visualising-identities",
+          "title": "Visualising Identities",
+          "objectives": [
+            "Student can explain the difference between an equation and an identity",
+            "Student can show (a + b)² = a² + 2ab + b² and (a − b)² = a² − 2ab + b² using areas of squares and rectangles",
+            "Student can use these identities to square numbers quickly"
+          ],
+          "visualIdeas": [
+            "a square of side a + b split into a², b² and two ab rectangles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "factorisation-of-algebraic-expressions-using-identities",
+          "title": "Factorisation of Algebraic Expressions Using Identities",
+          "objectives": [
+            "Student can factorise expressions by taking out common factors and recognising perfect squares",
+            "Student can use a² − b² = (a + b)(a − b) to factorise"
+          ],
+          "visualIdeas": [
+            "an expression 25p² + 30pq + 9q² rewritten as (5p + 3q)²"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "more-identities-square-of-a-plus-b-plus-c",
+          "title": "More Identities: (a + b + c)²",
+          "objectives": [
+            "Student can derive and use the identity (a + b + c)² = a² + b² + c² + 2ab + 2bc + 2ca",
+            "Student can use it to compute squares such as 119² mentally"
+          ],
+          "visualIdeas": [
+            "a square of side a + b + c divided into nine regions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "factorisation-using-algebra-tiles",
+          "title": "Factorisation Using Algebra Tiles",
+          "objectives": [
+            "Student can represent products such as (x + 2)(x + 3) with algebra tiles",
+            "Student can arrange tiles for a quadratic expression into a rectangle to find its factors"
+          ],
+          "visualIdeas": [
+            "algebra tiles arranged as a rectangle for x² + 5x + 6"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "factorisation-without-using-algebra-tiles",
+          "title": "Factorisation Without Using Algebra Tiles",
+          "objectives": [
+            "Student can factorise x² + px + q by finding two numbers a and b with a + b = p and ab = q",
+            "Student can extend the method of splitting the middle term to other quadratic expressions"
+          ],
+          "visualIdeas": [
+            "a split of 5x into 2x + 3x with grouping arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "finding-new-identities-cubes",
+          "title": "Finding New Identities: Cubes",
+          "objectives": [
+            "Student can derive (a + b)³ and (a − b)³ and show (a + b)³ with a cube cut into smaller cubes and cuboids",
+            "Student can use x³ − y³ = (x − y)(x² + xy + y²) and x³ + y³ + z³ − 3xyz = (x + y + z)(x² + y² + z² − xy − yz − zx)"
+          ],
+          "visualIdeas": [
+            "a cube of edge a + b split into two cubes and six cuboids"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "simplifying-rational-expressions",
+          "title": "Simplifying Rational Expressions",
+          "objectives": [
+            "Student can factorise the numerator and denominator of a rational expression using identities",
+            "Student can simplify a rational expression by cancelling common factors, assuming the denominator is non-zero"
+          ],
+          "visualIdeas": [
+            "a fraction of polynomials with matching factors struck out"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "im-up-and-down-and-round-and-round",
+      "title": "I'm Up and Down, and Round and Round",
+      "book": "Ganita Manjari Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh105.pdf",
+      "topics": [
+        {
+          "id": "definitions-and-symmetries-of-a-circle",
+          "title": "Definitions and Symmetries of a Circle",
+          "objectives": [
+            "Student can define a circle, its centre, radius, diameter, chord, arc and segment",
+            "Student can describe the reflection and rotation symmetries of a circle"
+          ],
+          "visualIdeas": [
+            "a labelled circle with radius, diameter, chord and arc",
+            "a circle with several lines of symmetry through its centre"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-many-circles",
+          "title": "How Many Circles?",
+          "objectives": [
+            "Student can explain how many circles pass through one point, two points and three points",
+            "Student can construct the unique circle through three non-collinear points using perpendicular bisectors"
+          ],
+          "visualIdeas": [
+            "three non-collinear points with perpendicular bisectors meeting at the circumcentre"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chords-and-the-angles-they-subtend",
+          "title": "Chords and the Angles They Subtend",
+          "objectives": [
+            "Student can describe a chord and the angle it subtends at the centre using a thread tied across a wheel",
+            "Student can prove that equal chords subtend equal angles at the centre, and the converse"
+          ],
+          "visualIdeas": [
+            "two equal chords with their central angles shaded"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "midpoints-and-perpendicular-bisectors-of-chords",
+          "title": "Midpoints and Perpendicular Bisectors of Chords",
+          "objectives": [
+            "Student can prove that the perpendicular from the centre to a chord bisects it, and the converse",
+            "Student can use the result to find a chord length or the distance of a chord from the centre"
+          ],
+          "visualIdeas": [
+            "a chord with a perpendicular from the centre meeting it at its midpoint"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "distance-of-chords-from-the-centre",
+          "title": "Distance of Chords from the Centre",
+          "objectives": [
+            "Student can prove that equal chords are equidistant from the centre, and the converse",
+            "Student can decide which of two unequal chords is farther from the centre"
+          ],
+          "visualIdeas": [
+            "a long chord near the centre and a short chord far from it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angles-subtended-by-an-arc",
+          "title": "Angles Subtended by an Arc",
+          "objectives": [
+            "Student can prove that the angle subtended by an arc at the centre is twice the angle at any point on the remaining part of the circle",
+            "Student can use the result for angles in the same segment and the angle in a semicircle"
+          ],
+          "visualIdeas": [
+            "an arc with its central angle and an inscribed angle drawn, the central angle double"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "concyclicity-of-points",
+          "title": "Concyclicity of Points",
+          "objectives": [
+            "Student can state the condition for four points to be concyclic",
+            "Student can prove and use that opposite angles of a cyclic quadrilateral add up to 180°"
+          ],
+          "visualIdeas": [
+            "a cyclic quadrilateral with opposite angles labelled summing to 180°"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "measuring-space-perimeter-and-area",
+      "title": "Measuring Space: Perimeter and Area",
+      "book": "Ganita Manjari Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh106.pdf",
+      "topics": [
+        {
+          "id": "perimeter-of-a-shape",
+          "title": "Perimeter of a Shape",
+          "objectives": [
+            "Student can find the perimeter of polygons and composite shapes",
+            "Student can explain why runners start at staggered positions on an athletics track"
+          ],
+          "visualIdeas": [
+            "a 400 m athletics track with staggered starting lines"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "perimeter-of-a-circle-the-c-d-ratio",
+          "title": "Perimeter of a Circle: The C/D Ratio",
+          "objectives": [
+            "Student can measure the circumference and diameter of round objects and find that C/D is roughly constant",
+            "Student can use C = πd and C = 2πr and describe how Archimedes bounded π using polygons"
+          ],
+          "visualIdeas": [
+            "a circle squeezed between an inscribed and a circumscribed hexagon"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "pi-is-irrational",
+          "title": "π (Pi) is Irrational",
+          "objectives": [
+            "Student can explain that π cannot be written as a ratio of two integers and has no repeating pattern in its digits",
+            "Student can explain why 22/7 and 355/113 are only approximations of π"
+          ],
+          "visualIdeas": [
+            "π written to many decimal places beside 22/7 = 3.142857…"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "length-of-an-arc-of-a-circle",
+          "title": "Length of an Arc of a Circle",
+          "objectives": [
+            "Student can find the length of an arc from its central angle and the radius",
+            "Student can apply arc length to the curved parts of a 400 m athletics track"
+          ],
+          "visualIdeas": [
+            "a sector with the arc highlighted and its angle θ marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "problems-puzzles-and-paradoxes-on-perimeter",
+          "title": "Problems, Puzzles, and Paradoxes on Perimeter",
+          "objectives": [
+            "Student can find the perimeter of shapes made of circular arcs, such as two equal circles passing through each other’s centres",
+            "Student can show that a path of three small semicircles on a diameter has the same length as the large semicircle on it"
+          ],
+          "visualIdeas": [
+            "a large semicircle above a line and three smaller semicircles below it joining the same two points"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "area-of-a-rectangle-and-a-parallelogram",
+          "title": "Area of a Rectangle and a Parallelogram",
+          "objectives": [
+            "Student can find the area of a rectangle and of a parallelogram as base × height",
+            "Student can explain, by cutting and moving a triangle, why a parallelogram has the same area as a rectangle with the same base and height"
+          ],
+          "visualIdeas": [
+            "a parallelogram with a triangle cut off one end and moved to form a rectangle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "area-of-a-triangle-and-herons-formula",
+          "title": "Area of a Triangle and Heron’s Formula",
+          "objectives": [
+            "Student can find the area of a triangle as ½ × base × height",
+            "Student can use Heron’s formula to find the area of a triangle from its three sides"
+          ],
+          "visualIdeas": [
+            "a triangle with sides a, b, c and its semi-perimeter s"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "brahmaguptas-formula-for-a-cyclic-quadrilateral",
+          "title": "Brahmagupta’s Formula for a Cyclic Quadrilateral",
+          "objectives": [
+            "Student can use Brahmagupta’s formula for the area of a cyclic quadrilateral",
+            "Student can explain how Heron’s formula is a special case of Brahmagupta’s formula"
+          ],
+          "visualIdeas": [
+            "a cyclic quadrilateral whose fourth side shrinks to zero to become a triangle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "squaring-a-rectangle",
+          "title": "Squaring a Rectangle",
+          "objectives": [
+            "Student can explain what it means to square a shape",
+            "Student can follow Baudhāyana’s construction from the Śhulba-sūtra to build a square equal in area to a given rectangle"
+          ],
+          "visualIdeas": [
+            "a rectangle and an equal-area square built from it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "area-of-a-circle-and-a-sector",
+          "title": "Area of a Circle and a Sector",
+          "objectives": [
+            "Student can explain the formula πr² for the area of a circle by rearranging sectors",
+            "Student can find the area of a sector of a circle"
+          ],
+          "visualIdeas": [
+            "a circle cut into thin sectors and rearranged into a near-rectangle"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-mathematics-of-maybe-introduction-to-probability",
+      "title": "The Mathematics of Maybe: Introduction to Probability",
+      "book": "Ganita Manjari Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh107.pdf",
+      "topics": [
+        {
+          "id": "what-is-probability-randomness-and-the-probability-scale",
+          "title": "What is Probability? Randomness and the Probability Scale",
+          "objectives": [
+            "Student can describe random events whose outcomes cannot be predicted with certainty",
+            "Student can place events on a probability scale from 0 (impossible) to 1 (certain)"
+          ],
+          "visualIdeas": [
+            "a 0-to-1 scale with impossible, unlikely, even chance, likely and certain marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "experimental-probability",
+          "title": "Experimental Probability",
+          "objectives": [
+            "Student can find experimental probability as the relative frequency of an outcome over many trials",
+            "Student can carry out a coin or die experiment and record outcomes"
+          ],
+          "visualIdeas": [
+            "a tally chart of 50 coin tosses with the fraction of heads"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "theoretical-probability",
+          "title": "Theoretical Probability",
+          "objectives": [
+            "Student can find theoretical probability for equally likely outcomes",
+            "Student can compare experimental and theoretical probability as the number of trials grows"
+          ],
+          "visualIdeas": [
+            "a fair die with each face labelled 1/6"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "analysing-statistical-data-using-probability",
+          "title": "Analysing Statistical Data Using Probability",
+          "objectives": [
+            "Student can use data from surveys and records to estimate probabilities",
+            "Student can explain the gambler’s fallacy and what makes a coin or die fair and unbiased"
+          ],
+          "visualIdeas": [
+            "a streak of five heads with a speech bubble asking whether tails is now due"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "sample-spaces-and-events",
+          "title": "Sample Spaces and Events",
+          "objectives": [
+            "Student can list the sample space of an experiment",
+            "Student can describe an event as a subset of the sample space and find its probability"
+          ],
+          "visualIdeas": [
+            "the sample space of rolling a die with an event circled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tree-diagrams",
+          "title": "Tree Diagrams",
+          "objectives": [
+            "Student can draw a tree diagram to list the outcomes of an experiment done in stages",
+            "Student can use a tree diagram to find probabilities, such as for tossing two coins"
+          ],
+          "visualIdeas": [
+            "a two-level tree diagram for tossing two coins"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "predicting-what-comes-next-exploring-sequences-and-progressions",
+      "title": "Predicting What Comes Next: Exploring Sequences and Progressions",
+      "book": "Ganita Manjari Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh108.pdf",
+      "topics": [
+        {
+          "id": "introduction-to-sequences",
+          "title": "Introduction to Sequences",
+          "objectives": [
+            "Student can recognise sequences and their terms, such as square and triangular numbers",
+            "Student can predict the next terms of a sequence from its pattern"
+          ],
+          "visualIdeas": [
+            "dot patterns for triangular and square numbers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "explicit-rule-for-a-sequence",
+          "title": "Explicit Rule for a Sequence",
+          "objectives": [
+            "Student can write the nth term of a sequence as an explicit rule",
+            "Student can find any term of a sequence from its explicit rule"
+          ],
+          "visualIdeas": [
+            "a table of n and the nth term with an arrow to the formula"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "recursive-rule-for-a-sequence",
+          "title": "Recursive Rule for a Sequence",
+          "objectives": [
+            "Student can write a recursive rule that gives each term from the previous terms",
+            "Student can generate the Virahāṅka-Fibonacci sequence from its recursive rule"
+          ],
+          "visualIdeas": [
+            "a chain of terms where each term is the sum of the two before it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "arithmetic-progressions",
+          "title": "Arithmetic Progressions",
+          "objectives": [
+            "Student can identify an arithmetic progression and its common difference",
+            "Student can find the nth term of an AP and visualise it as points on a straight line"
+          ],
+          "visualIdeas": [
+            "an AP shown as equally spaced bars rising by the same step"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "sum-of-the-first-n-natural-numbers",
+          "title": "Sum of the First n Natural Numbers",
+          "objectives": [
+            "Student can find 1 + 2 + … + n = n(n + 1)/2 by pairing terms",
+            "Student can use this to find the sum of terms of an AP"
+          ],
+          "visualIdeas": [
+            "a staircase of blocks doubled to form a rectangle n by n + 1"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "geometric-progressions",
+          "title": "Geometric Progressions",
+          "objectives": [
+            "Student can identify a geometric progression and its common ratio",
+            "Student can find the nth term of a GP"
+          ],
+          "visualIdeas": [
+            "a sequence of squares doubling in number at each step"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fun-with-fractals-and-visualising-a-gp",
+          "title": "Fun with Fractals and Visualising a GP",
+          "objectives": [
+            "Student can describe fractals such as the snowflake built by repeating a rule, and see GPs in them",
+            "Student can visualise the terms of a GP with diagrams"
+          ],
+          "visualIdeas": [
+            "the first three stages of a snowflake fractal"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "propositions-and-their-converses",
+      "title": "Propositions and their Converses",
+      "book": "Ganita Manjari Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh201.pdf",
+      "topics": [
+        {
+          "id": "propositions-and-their-converses",
+          "title": "Propositions and their Converses",
+          "objectives": [
+            "Student can define a proposition as a statement that is either true or false",
+            "Student can write the converse of a proposition of the form ‘if X then Y’, also expressed as ‘X implies Y’ or ‘Y when X’"
+          ],
+          "visualIdeas": [
+            "two arrows: X → Y for the proposition and Y → X for its converse"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "counterexamples",
+          "title": "Counterexamples",
+          "objectives": [
+            "Student can explain how a single counterexample shows that a proposition is false",
+            "Student can find counterexamples, such as for “if a number is a multiple of 3, then it is a multiple of 6”",
+            "Student can describe how Euler disproved Fermat’s claim about numbers of the form 2^(2^n) + 1"
+          ],
+          "visualIdeas": [
+            "a wet road with a tanker, as a counterexample to “if the road is wet, it has rained”"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "when-both-a-proposition-and-its-converse-are-true",
+          "title": "When Both a Proposition and its Converse are True",
+          "objectives": [
+            "Student can show that a number is a perfect square exactly when it has an odd number of factors",
+            "Student can prove the converse of the Baudhāyana-Pythagoras theorem using SSS congruence",
+            "Student can give examples where a proposition is true but its converse is false"
+          ],
+          "visualIdeas": [
+            "factor-partner pairs of 36 with the repeated pair (6, 6) highlighted"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "how-quantities-combine-understanding-data",
+      "title": "How Quantities Combine: Understanding Data",
+      "book": "Ganita Manjari Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh202.pdf",
+      "topics": [
+        {
+          "id": "average-of-averages",
+          "title": "Average of Averages",
+          "objectives": [
+            "Student can explain why the average of two group averages is not always the average of the whole group",
+            "Student can find the correct combined average using group sizes"
+          ],
+          "visualIdeas": [
+            "two groups of different sizes with their averages and the combined average"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mixtures",
+          "title": "Mixtures",
+          "objectives": [
+            "Student can find the concentration of a mixture, such as lemonade with different amounts of jaggery",
+            "Student can explain why the concentration of a mixture is a simple average only when equal quantities are mixed"
+          ],
+          "visualIdeas": [
+            "two jugs of different strengths poured into one"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "custom-weights-weighted-average",
+          "title": "Custom Weights: Weighted Average",
+          "objectives": [
+            "Student can compute a weighted average when items carry different weights",
+            "Student can apply weighted averages to marks and other real situations"
+          ],
+          "visualIdeas": [
+            "a balance beam with values placed at weighted positions"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "stacking-columns-stacked-bar-charts",
+          "title": "Stacking Columns: Stacked Bar Charts",
+          "objectives": [
+            "Student can read and draw stacked bar charts",
+            "Student can compare totals and parts across categories using a stacked bar chart"
+          ],
+          "visualIdeas": [
+            "a stacked bar chart of family expenditure split into food, housing, healthcare and recreation"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "an-alternative-to-pie-charts-100-stacked-bar-charts",
+          "title": "An Alternative to Pie Charts: 100% Stacked Bar Charts",
+          "objectives": [
+            "Student can draw a 100% stacked bar chart to compare shares across groups",
+            "Student can choose between pie charts and 100% stacked bars to answer a question",
+            "Student can draw inferences from data such as a typical day’s time use"
+          ],
+          "visualIdeas": [
+            "three pie charts beside one 100% stacked bar chart of the same data"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-world-of-algorithms",
+      "title": "The World of Algorithms",
+      "book": "Ganita Manjari Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh203.pdf",
+      "topics": [
+        {
+          "id": "adding-numbers-digit-by-digit",
+          "title": "Adding Numbers Digit by Digit",
+          "objectives": [
+            "Student can describe an algorithm as a precise, step-by-step procedure",
+            "Student can write the column-addition method with carries as an algorithm"
+          ],
+          "visualIdeas": [
+            "column addition with carry digits highlighted step by step"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "greatest-common-divisor-divisors-and-a-first-algorithm",
+          "title": "Greatest Common Divisor: Divisors and a First Algorithm",
+          "objectives": [
+            "Student can list the divisors of a number systematically",
+            "Student can write an algorithm to find the gcd by listing divisors"
+          ],
+          "visualIdeas": [
+            "two lists of divisors with the common ones circled and the greatest starred"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "data-structures-lists-and-improving-the-algorithm",
+          "title": "Data Structures: Lists and Improving the Algorithm",
+          "objectives": [
+            "Student can explain how a list is used to store data in an algorithm",
+            "Student can improve the gcd algorithm by computing common divisors directly and doing away with lists",
+            "Student can compare algorithms by the number of steps they take"
+          ],
+          "visualIdeas": [
+            "three versions of the gcd algorithm side by side with their step counts"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "euclids-subtraction-algorithm",
+          "title": "Euclid’s Subtraction Algorithm",
+          "objectives": [
+            "Student can find the gcd by repeatedly subtracting the smaller number from the larger",
+            "Student can explain the idea of reducing a problem to a simpler one"
+          ],
+          "visualIdeas": [
+            "a pair of numbers shrinking step by step as the smaller is subtracted from the larger"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "aryabhatas-division-algorithm",
+          "title": "Āryabhaṭa’s Division Algorithm",
+          "objectives": [
+            "Student can find the gcd using repeated division with remainders",
+            "Student can explain why the division algorithm takes fewer steps than repeated subtraction"
+          ],
+          "visualIdeas": [
+            "a ladder of divisions with remainders shrinking to zero"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "quadrilaterals",
+      "title": "Quadrilaterals",
+      "book": "Ganita Manjari Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh204.pdf",
+      "topics": [
+        {
+          "id": "what-exactly-is-a-quadrilateral",
+          "title": "What Exactly is a Quadrilateral?",
+          "objectives": [
+            "Student can define a quadrilateral and distinguish convex from non-convex quadrilaterals",
+            "Student can show that the angles of a quadrilateral add up to 360°"
+          ],
+          "visualIdeas": [
+            "a convex and a non-convex quadrilateral with their diagonals drawn"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "parallelograms",
+          "title": "Parallelograms",
+          "objectives": [
+            "Student can prove the properties of a parallelogram: opposite sides equal, opposite angles equal and diagonals bisecting each other",
+            "Student can use the conditions that make a quadrilateral a parallelogram",
+            "Student can relate rectangles, rhombuses and squares as special parallelograms"
+          ],
+          "visualIdeas": [
+            "a parallelogram with equal sides, equal angles and bisecting diagonals marked"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "an-important-property-of-triangles-the-midpoint-theorem",
+          "title": "An Important Property of Triangles: The Midpoint Theorem",
+          "objectives": [
+            "Student can prove that the segment joining the midpoints of two sides of a triangle is parallel to the third side and half its length",
+            "Student can show that joining the midpoints of the sides of any quadrilateral gives a parallelogram (Varignon)"
+          ],
+          "visualIdeas": [
+            "a triangle with its midpoint segment drawn parallel to the base"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "a-surprising-property-of-medians",
+          "title": "A Surprising Property of Medians",
+          "objectives": [
+            "Student can show that the three medians of a triangle meet at one point, the centroid",
+            "Student can state that the centroid divides each median in the ratio 2 : 1"
+          ],
+          "visualIdeas": [
+            "a triangle with three medians meeting at the centroid"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tiling-the-plane-using-any-4-gon",
+          "title": "Tiling the Plane Using Any 4-gon",
+          "objectives": [
+            "Student can explain why copies of any quadrilateral can tile the plane",
+            "Student can describe the recent discovery of an aperiodic tile"
+          ],
+          "visualIdeas": [
+            "a plane tiled with copies of an irregular quadrilateral"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "two-variables-one-line",
+      "title": "Two Variables, One Line",
+      "book": "Ganita Manjari Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh205.pdf",
+      "topics": [
+        {
+          "id": "linear-equations-in-two-variables-and-their-standard-form",
+          "title": "Linear Equations in Two Variables and their Standard Form",
+          "objectives": [
+            "Student can write a situation as a linear equation in two variables",
+            "Student can write a linear equation in the standard form ax + by + c = 0"
+          ],
+          "visualIdeas": [
+            "a word problem turned into ax + by + c = 0"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "solutions-of-a-linear-equation-in-two-variables",
+          "title": "Solutions of a Linear Equation in Two Variables",
+          "objectives": [
+            "Student can check whether an ordered pair is a solution of a linear equation",
+            "Student can explain that a linear equation in two variables has infinitely many solutions that lie on a straight line"
+          ],
+          "visualIdeas": [
+            "a line on a grid with several solution points marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "understanding-slope",
+          "title": "Understanding Slope",
+          "objectives": [
+            "Student can find the slope of a line as rise over run",
+            "Student can relate steepness and direction of a line to its slope"
+          ],
+          "visualIdeas": [
+            "three lines of different steepness with their rise-run triangles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "slope-intercept-form",
+          "title": "Slope-Intercept Form",
+          "objectives": [
+            "Student can write a linear equation in the form y = mx + c and read the slope and y-intercept",
+            "Student can draw a line from its slope and y-intercept"
+          ],
+          "visualIdeas": [
+            "a line crossing the y-axis at c with slope m marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pair-of-linear-equations-in-two-variables",
+          "title": "Pair of Linear Equations in Two Variables",
+          "objectives": [
+            "Student can form a pair of linear equations from a word problem",
+            "Student can explain what a solution of a pair of linear equations means"
+          ],
+          "visualIdeas": [
+            "two lines on one grid crossing at a point"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "algebraic-methods-substitution-and-elimination",
+          "title": "Algebraic Methods: Substitution and Elimination",
+          "objectives": [
+            "Student can solve a pair of linear equations by substitution",
+            "Student can solve a pair of linear equations by elimination"
+          ],
+          "visualIdeas": [
+            "two equations stacked with one variable eliminated"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "graphical-method-for-solving-a-pair-of-linear-equations",
+          "title": "Graphical Method for Solving a Pair of Linear Equations",
+          "objectives": [
+            "Student can solve a pair of linear equations by drawing their graphs",
+            "Student can relate intersecting, parallel and coincident lines to a unique solution, no solution and infinitely many solutions"
+          ],
+          "visualIdeas": [
+            "three small graphs: intersecting, parallel and coincident lines"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "math-of-space-surface-area-and-volume",
+      "title": "Math of Space: Surface Area and Volume",
+      "book": "Ganita Manjari Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iemh206.pdf",
+      "topics": [
+        {
+          "id": "cuboids-and-cubes",
+          "title": "Cuboids and Cubes",
+          "objectives": [
+            "Student can find the lateral and total surface area of cuboids and cubes using their nets",
+            "Student can find the volume of cuboids and cubes"
+          ],
+          "visualIdeas": [
+            "a cuboid unfolded into its net with face areas labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "right-circular-cylinder",
+          "title": "Right Circular Cylinder",
+          "objectives": [
+            "Student can find the curved and total surface area of a cylinder using its net",
+            "Student can find the volume of a cylinder"
+          ],
+          "visualIdeas": [
+            "a cylinder unrolled into a rectangle and two circles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "cones",
+          "title": "Cones",
+          "objectives": [
+            "Student can find the slant height, curved surface area and total surface area of a cone",
+            "Student can find the volume of a cone as one-third of the cylinder with the same base and height"
+          ],
+          "visualIdeas": [
+            "a cone and a cylinder of the same base and height, the cylinder filled by three cones"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "pyramidal-shapes",
+          "title": "Pyramidal Shapes",
+          "objectives": [
+            "Student can describe a pyramidal shape by its base and apex and give examples such as the pyramids of Egypt",
+            "Student can find the volume of a pyramid as one-third of base area × height and relate it to the volume of a cone"
+          ],
+          "visualIdeas": [
+            "a square pyramid with its net"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "spheres-and-hemispheres",
+          "title": "Spheres and Hemispheres",
+          "objectives": [
+            "Student can find the surface area of a sphere and verify the formula with the hands-on string activity",
+            "Student can find the volume of a sphere and the surface area and volume of a hemisphere"
+          ],
+          "visualIdeas": [
+            "a ball wound with string, and the same string filling four circles of the same radius"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "areas-and-volumes-around-us-guesstimates",
+          "title": "Areas and Volumes Around Us: Guesstimates",
+          "objectives": [
+            "Student can make reasonable guesstimates of areas and volumes of everyday objects",
+            "Student can apply surface area and volume formulas to real-life problems"
+          ],
+          "visualIdeas": [
+            "a water tank with a question about how many litres it holds"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

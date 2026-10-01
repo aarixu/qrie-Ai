@@ -1,0 +1,892 @@
+{
+  "id": "class6-social-science",
+  "klass": 6,
+  "subject": "Social Science",
+  "source": {
+    "books": [
+      {
+        "title": "Exploring Society: India and Beyond (Social Science Textbook for Grade 6)",
+        "code": "fees1",
+        "edition": "First Edition June 2024; reprinted February 2025 and February 2026 (the PDF carries no 'Reprint 2026-27' text)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/fees1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "locating-places-on-the-earth",
+      "title": "Locating Places on the Earth",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees101.pdf",
+      "topics": [
+        {
+          "id": "a-map-and-its-components",
+          "title": "A Map and Its Components",
+          "objectives": [
+            "Student can explain what a map is and how it is used to find places",
+            "Student can name the three main components of a map: distance (scale), direction and symbols",
+            "Student can use the cardinal and intermediate directions and conventional symbols to read a map"
+          ],
+          "visualIdeas": [
+            "a compass rose with the eight directions",
+            "a small map with a scale bar and a legend of conventional symbols"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "understanding-coordinates",
+          "title": "Understanding Coordinates",
+          "objectives": [
+            "Student can explain that a globe is a model of the Earth and that a grid of coordinates fixes any location",
+            "Student can locate a square on a grid, such as a chessboard, using a pair of coordinates"
+          ],
+          "visualIdeas": [
+            "a chessboard with rows and columns labelled and a piece located by its coordinates"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "latitudes",
+          "title": "Latitudes",
+          "objectives": [
+            "Student can describe latitudes as imaginary lines running east to west, parallel to the Equator, measured in degrees north or south",
+            "Student can relate latitude to climate and name the Northern and Southern Hemispheres"
+          ],
+          "visualIdeas": [
+            "a globe with the Equator and parallels of latitude marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "longitudes",
+          "title": "Longitudes",
+          "objectives": [
+            "Student can describe longitudes as imaginary lines from pole to pole measured in degrees east or west of the Prime Meridian at Greenwich",
+            "Student can use latitude and longitude together to give the location of a place",
+            "Student can explain that ancient Indian astronomers used a prime meridian of their own, the madhya rekha through Ujjayini"
+          ],
+          "visualIdeas": [
+            "a globe with meridians and the Greenwich Prime Meridian highlighted",
+            "a map of the Ujjayini meridian with ancient cities on it"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "understanding-time-zones",
+          "title": "Understanding Time Zones",
+          "objectives": [
+            "Student can explain that local time changes by one hour for every 15 degrees of longitude",
+            "Student can explain standard time and why Indian Standard Time is 5 hours 30 minutes ahead of Greenwich Mean Time",
+            "Student can explain what happens to the date when crossing the International Date Line at about 180 degrees longitude"
+          ],
+          "visualIdeas": [
+            "a world strip of time zones with clocks at 15-degree intervals",
+            "a globe centred on India showing standard times of a few countries"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "oceans-and-continents",
+      "title": "Oceans and Continents",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees102.pdf",
+      "topics": [
+        {
+          "id": "the-distribution-of-water-and-land-on-the-earth",
+          "title": "The Distribution of Water and Land on the Earth",
+          "objectives": [
+            "Student can explain that most of the Earth's surface is covered by water",
+            "Student can compare the share of land in the Northern and Southern Hemispheres"
+          ],
+          "visualIdeas": [
+            "the Earth seen from space centred on the Indian Ocean"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "oceans",
+          "title": "Oceans",
+          "objectives": [
+            "Student can name and locate the major oceans on a world map",
+            "Student can explain that the oceans are interconnected"
+          ],
+          "visualIdeas": [
+            "a world map with the oceans labelled and their connections shown"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "oceans-and-disasters",
+          "title": "Oceans and Disasters",
+          "objectives": [
+            "Student can explain that the monsoon rains India depends on originate over the ocean",
+            "Student can describe disasters that oceans can give rise to, such as storms and tsunamis"
+          ],
+          "visualIdeas": [
+            "clouds rising from the ocean and moving over land as monsoon rain",
+            "a tsunami wave approaching a coast"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "continents",
+          "title": "Continents",
+          "objectives": [
+            "Student can name and locate the seven continents in the most common count",
+            "Student can explain that continents may be counted in different ways",
+            "Student can define an island and give examples"
+          ],
+          "visualIdeas": [
+            "a world map with the seven continents coloured",
+            "an island surrounded by ocean"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "oceans-and-life",
+          "title": "Oceans and Life",
+          "objectives": [
+            "Student can explain the role of oceans in the water cycle, in producing oxygen and in the world's climate",
+            "Student can describe the marine life oceans support and how human activity threatens it",
+            "Student can suggest why oceans need our collective protection"
+          ],
+          "visualIdeas": [
+            "an ocean food web from tiny organisms to whales",
+            "plastic waste floating in the sea"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "landforms-and-life",
+      "title": "Landforms and Life",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees103.pdf",
+      "topics": [
+        {
+          "id": "introduction-to-landforms",
+          "title": "Introduction to Landforms",
+          "objectives": [
+            "Student can name the three main types of landforms: mountains, plateaus and plains",
+            "Student can explain terms such as altitude used to describe landforms"
+          ],
+          "visualIdeas": [
+            "a cross section showing a mountain, a plateau and a plain side by side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mountains",
+          "title": "Mountains",
+          "objectives": [
+            "Student can describe the physical features of mountains and the mountain environment",
+            "Student can describe life in the mountains, including terrace farming, herding and tourism",
+            "Student can explain the challenges and opportunities of living in the mountains"
+          ],
+          "visualIdeas": [
+            "terrace farming cut into a mountain slope",
+            "a mountain village with herders and tourists"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "plateaus",
+          "title": "Plateaus",
+          "objectives": [
+            "Student can define a plateau as a raised landform with a more or less flat top and steep sides",
+            "Student can give examples such as the Tibetan Plateau and the Deccan Plateau and describe how people use plateaus"
+          ],
+          "visualIdeas": [
+            "a plateau with a flat top and steep sides",
+            "India map marking the Deccan Plateau"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "plains",
+          "title": "Plains",
+          "objectives": [
+            "Student can describe plains as flat, low-lying lands often formed by rivers",
+            "Student can explain why the first civilisations and large populations grew in fertile river plains such as the Ganga plain",
+            "Student can describe occupations of people in the plains"
+          ],
+          "visualIdeas": [
+            "the Ganga plain with rivers, fields and towns"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "timeline-and-sources-of-history",
+      "title": "Timeline and Sources of History",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees104.pdf",
+      "topics": [
+        {
+          "id": "how-do-we-learn-about-the-past",
+          "title": "How Do We Learn About the Past?",
+          "objectives": [
+            "Student can explain what history is and why we study the human past",
+            "Student can describe how palaeontologists, anthropologists and archaeologists study the past"
+          ],
+          "visualIdeas": [
+            "a museum hall with statues, coins and ornaments",
+            "an archaeologist digging up pots, beads and tools"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-is-time-measured-in-history",
+          "title": "How Is Time Measured in History?",
+          "objectives": [
+            "Student can place dates in BCE and CE on a timeline",
+            "Student can use units of historical time such as years, decades, centuries and millenniums",
+            "Student can explain that the Gregorian calendar is now used the world over"
+          ],
+          "visualIdeas": [
+            "a timeline with BCE on the left, CE on the right and year 1 in the middle"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "what-are-the-sources-of-history",
+          "title": "What Are the Sources of History?",
+          "objectives": [
+            "Student can name different sources of history: archaeological sources, inscriptions, manuscripts and other texts, and oral sources",
+            "Student can explain how sources help us reconstruct and interpret past events",
+            "Student can build a family tree from available sources"
+          ],
+          "visualIdeas": [
+            "a family tree with three generations and the source of each fact"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-beginnings-of-human-history",
+          "title": "The Beginnings of Human History",
+          "objectives": [
+            "Student can state that modern humans have lived on Earth for about 300,000 years",
+            "Student can describe how early humans lived, including their life in rock shelters"
+          ],
+          "visualIdeas": [
+            "rock-shelter paintings showing activities of early humans"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-first-crops",
+          "title": "The First Crops",
+          "objectives": [
+            "Student can explain how the end of the last Ice Age, about 12,000 years ago, improved living conditions for humans",
+            "Student can explain how humans began to settle down and cultivate crops"
+          ],
+          "visualIdeas": [
+            "a timeline from the last Ice Age to early farming settlements"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "india-that-is-bharat",
+      "title": "India, That Is Bharat",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees105.pdf",
+      "topics": [
+        {
+          "id": "how-indians-named-india",
+          "title": "How Indians Named India",
+          "objectives": [
+            "Student can explain names given to India or its regions by its ancient inhabitants, such as Sapta Sindhava, Jambudvipa and Bharata",
+            "Student can explain how Bharata became the name of India in most Indian languages"
+          ],
+          "visualIdeas": [
+            "a map of the northwest region labelled Sapta Sindhava",
+            "a list of names of India in different Indian languages"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "how-foreigners-named-india",
+          "title": "How Foreigners Named India",
+          "objectives": [
+            "Student can explain how the Persians' name Hindu came from the Sindhu river and was a geographical term",
+            "Student can trace how foreign names like Indoi and India were derived from Sindhu"
+          ],
+          "visualIdeas": [
+            "a word chain from Sindhu to Hindu to Indoi to India"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-beginnings-of-indian-civilisation",
+      "title": "The Beginnings of Indian Civilisation",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees106.pdf",
+      "topics": [
+        {
+          "id": "what-is-a-civilisation",
+          "title": "What Is a Civilisation?",
+          "objectives": [
+            "Student can explain what makes a society a civilisation",
+            "Student can name the Indus, Harappan or Sindhu-Sarasvati civilisation as one of the oldest in the world"
+          ],
+          "visualIdeas": [
+            "a checklist of the features of a civilisation"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "from-village-to-city",
+          "title": "From Village to City",
+          "objectives": [
+            "Student can describe how villages grew into cities in the Harappan civilisation",
+            "Student can locate major Harappan sites and the Sarasvati river on a map"
+          ],
+          "visualIdeas": [
+            "a map of Harappan sites along the Indus and Sarasvati rivers"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "town-planning",
+          "title": "Town-Planning",
+          "objectives": [
+            "Student can describe the features of planned Harappan cities",
+            "Student can explain what town-planning tells us about the Harappans"
+          ],
+          "visualIdeas": [
+            "a plan of a Harappan city with streets laid out in a grid"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "water-management",
+          "title": "Water Management",
+          "objectives": [
+            "Student can describe Harappan water management: bathing areas, covered drains, wells and reservoirs",
+            "Student can explain what reservoirs such as those at Dholavira reflect about the Harappans"
+          ],
+          "visualIdeas": [
+            "the drainage system at Lothal",
+            "a reservoir at Dholavira"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-did-the-harappans-eat",
+          "title": "What Did the Harappans Eat?",
+          "objectives": [
+            "Student can name the crops the Harappans grew: barley, wheat, some millets, sometimes rice, pulses and vegetables",
+            "Student can explain why settlements along rivers suited agriculture and that the Harappans were the first in Eurasia to grow cotton",
+            "Student can describe Harappan farming tools such as the plough"
+          ],
+          "visualIdeas": [
+            "a clay model of a Harappan plough",
+            "fields of barley, wheat and cotton beside a river settlement"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-brisk-trade",
+          "title": "A Brisk Trade",
+          "objectives": [
+            "Student can describe what the Harappans traded, such as carnelian beads and ornaments",
+            "Student can explain that the Harappans traded within their civilisation and with distant cultures"
+          ],
+          "visualIdeas": [
+            "trade routes from Harappan cities to distant regions with goods carried"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-lives-of-the-ancients",
+          "title": "The Lives of the Ancients",
+          "objectives": [
+            "Student can describe objects of daily use found at Harappan sites",
+            "Student can describe cultural and symbolic objects of the Harappans and compare them with things still used today"
+          ],
+          "visualIdeas": [
+            "Harappan pottery, ornaments, toys and seals displayed together"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-end-or-a-new-beginning",
+          "title": "The End or a New Beginning?",
+          "objectives": [
+            "Student can explain the likely reasons for the decline of the Harappan cities, such as climatic and environmental changes",
+            "Student can describe how people moved to small rural settlements after the cities were abandoned"
+          ],
+          "visualIdeas": [
+            "an abandoned Harappan city beside small new villages"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "indias-cultural-roots",
+      "title": "India's Cultural Roots",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees107.pdf",
+      "topics": [
+        {
+          "id": "the-vedas-and-vedic-culture",
+          "title": "The Vedas and Vedic Culture",
+          "objectives": [
+            "Student can explain what the Vedas are and that they are India's earliest texts",
+            "Student can describe features of Vedic society, including the professions mentioned in Vedic texts"
+          ],
+          "visualIdeas": [
+            "a gurukula scene with students learning Vedic hymns orally"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "vedic-schools-of-thought",
+          "title": "Vedic Schools of Thought",
+          "objectives": [
+            "Student can explain the Upanishadic ideas of brahman, atman, rebirth and karma",
+            "Student can name Vedanta and Yoga as schools of thought that grew out of the Vedas",
+            "Student can retell an Upanishadic story such as Nachiketa's quest and explain its message about asking questions"
+          ],
+          "visualIdeas": [
+            "a story panel of Nachiketa questioning Yama",
+            "a concept map linking the Vedas to Vedanta and Yoga"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "buddhism",
+          "title": "Buddhism",
+          "objectives": [
+            "Student can explain that Buddhism did not accept the authority of the Vedas and was founded by Siddhartha Gautama",
+            "Student can explain a few central ideas of Buddhism"
+          ],
+          "visualIdeas": [
+            "a map of places linked to the Buddha's life starting at Lumbini"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "jainism",
+          "title": "Jainism",
+          "objectives": [
+            "Student can explain a few central ideas of Jainism",
+            "Student can explain the message of a Jain story from the chapter"
+          ],
+          "visualIdeas": [
+            "a chart of central Jain values with simple illustrations"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "folk-and-tribal-roots",
+          "title": "Folk and Tribal Roots",
+          "objectives": [
+            "Student can explain what a tribe is",
+            "Student can describe how tribal belief systems regard the land as sacred and how they have interacted with Hinduism"
+          ],
+          "visualIdeas": [
+            "tribal art beside a hill and a river that a tribal community regards as sacred"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "unity-in-diversity-or-many-in-the-one",
+      "title": "Unity in Diversity, or 'Many in the One'",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees108.pdf",
+      "topics": [
+        {
+          "id": "a-rich-diversity",
+          "title": "A Rich Diversity",
+          "objectives": [
+            "Student can describe India's diversity in landscapes, people, languages, dresses, foods, festivals and customs",
+            "Student can explain the idea of unity in diversity"
+          ],
+          "visualIdeas": [
+            "a train journey across India with changing landscapes, dress and languages"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "food-for-all",
+          "title": "Food for All",
+          "objectives": [
+            "Student can describe the diversity of Indian food across regions",
+            "Student can name staple grains common to almost every part of India: cereals such as rice and wheat, millets such as bajra, jowar and ragi, and pulses"
+          ],
+          "visualIdeas": [
+            "an India map of cereals and pulses from different regions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "textiles-and-clothing",
+          "title": "Textiles and Clothing",
+          "objectives": [
+            "Student can describe the variety of textiles and clothing across India",
+            "Student can explain how the sari, an unstitched length of cloth in hundreds of varieties, is a commonality across most of India"
+          ],
+          "visualIdeas": [
+            "famous saris such as Banarasi, Kanjivaram and Paithani placed on an India map"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "festivals-galore",
+          "title": "Festivals Galore",
+          "objectives": [
+            "Student can describe festivals celebrated in different parts of India",
+            "Student can explain, using Makara Sankranti, how similar festivals are celebrated across India at about the same time under different names such as Pongal, Lohri, Magh Bihu and Uttarayan"
+          ],
+          "visualIdeas": [
+            "an India map of the regional names of the mid-January harvest festival"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "an-epic-spread",
+          "title": "An Epic Spread",
+          "objectives": [
+            "Student can explain how stories such as the Panchatantra have been adapted in almost every Indian language and travelled beyond India",
+            "Student can explain how the epics, the Ramayana and the Mahabharata, spread across India in many versions and show unity in diversity"
+          ],
+          "visualIdeas": [
+            "a map of Panchatantra adaptations travelling from India to Southeast Asia, the Arab world and Europe"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "family-and-community",
+      "title": "Family and Community",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees109.pdf",
+      "topics": [
+        {
+          "id": "family",
+          "title": "Family",
+          "objectives": [
+            "Student can explain why the family is the fundamental unit of society",
+            "Student can distinguish joint families from nuclear families"
+          ],
+          "visualIdeas": [
+            "a family tree of a joint family beside a nuclear family"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "roles-and-responsibilities",
+          "title": "Roles and Responsibilities",
+          "objectives": [
+            "Student can describe the roles and responsibilities of family members and how they support each other",
+            "Student can discuss rules followed in their family and why they matter"
+          ],
+          "visualIdeas": [
+            "a chart of family members and the tasks each takes on"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "community",
+          "title": "Community",
+          "objectives": [
+            "Student can define a community and give examples of different kinds of community",
+            "Student can describe situations where community support makes a difference",
+            "Student can explain that communities are interdependent"
+          ],
+          "visualIdeas": [
+            "a neighbourhood map showing people helping one another"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "grassroots-democracy-part-1-governance",
+      "title": "Grassroots Democracy — Part 1: Governance",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees110.pdf",
+      "topics": [
+        {
+          "id": "introduction-why-we-need-governance",
+          "title": "Introduction: Why We Need Governance",
+          "objectives": [
+            "Student can explain the meaning of governance and why rules are needed when many people live together",
+            "Student can explain why we need a government"
+          ],
+          "visualIdeas": [
+            "a crowded community with and without agreed rules"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "three-organs-of-government",
+          "title": "Three Organs of Government",
+          "objectives": [
+            "Student can name the three organs of government: legislative, executive and judiciary",
+            "Student can describe the role of each organ and why they need to work together"
+          ],
+          "visualIdeas": [
+            "a three-pillar diagram of legislature, executive and judiciary with their roles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "three-levels-of-government",
+          "title": "Three Levels of Government",
+          "objectives": [
+            "Student can explain that the Indian government functions at three levels: national (Central), State and local",
+            "Student can match matters such as defence, police or local services to the right level of government",
+            "Student can explain that the President of India and a State's Governor are nominal heads, as illustrated by Dr. A.P.J. Abdul Kalam's presidency"
+          ],
+          "visualIdeas": [
+            "a three-tier chart of Central, State and local government with example functions"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "democracy",
+          "title": "Democracy",
+          "objectives": [
+            "Student can explain the meaning of democracy and why it is important",
+            "Student can distinguish direct democracy from representative democracy"
+          ],
+          "visualIdeas": [
+            "citizens voting for representatives who then sit in an assembly"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "grassroots-democracy-part-2-local-government-in-rural-areas",
+      "title": "Grassroots Democracy — Part 2: Local Government in Rural Areas",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees111.pdf",
+      "topics": [
+        {
+          "id": "panchayati-raj-system",
+          "title": "Panchayati Raj System",
+          "objectives": [
+            "Student can describe the Panchayati Raj system as a three-tier system of local government in rural areas",
+            "Student can explain why local self-government matters in a country with about 600,000 villages"
+          ],
+          "visualIdeas": [
+            "a three-tier diagram of Gram Panchayat, Panchayat Samiti and Zila Parishad"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "gram-panchayat",
+          "title": "Gram Panchayat",
+          "objectives": [
+            "Student can describe how the Gram Panchayat works, including the role of the Sarpanch and the Gram Sabha",
+            "Student can list functions of the Gram Panchayat"
+          ],
+          "visualIdeas": [
+            "a Gram Sabha meeting with villagers and the Sarpanch"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "exemplary-sarpanchs",
+          "title": "Exemplary Sarpanchs",
+          "objectives": [
+            "Student can describe what exemplary Sarpanchs have done for their villages",
+            "Student can discuss what qualities make a good Gram Panchayat member"
+          ],
+          "visualIdeas": [
+            "before-and-after pictures of a village improved by its Panchayat"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "child-friendly-panchayat-initiative",
+          "title": "Child-Friendly Panchayat Initiative",
+          "objectives": [
+            "Student can explain the aim of the Child-Friendly Panchayat initiative",
+            "Student can suggest how children can take part in village governance"
+          ],
+          "visualIdeas": [
+            "children presenting suggestions at a Panchayat meeting"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "panchayat-samiti-and-zila-parishad",
+          "title": "Panchayat Samiti and Zila Parishad",
+          "objectives": [
+            "Student can describe the Panchayat Samiti at the block level and the Zila Parishad at the district level",
+            "Student can explain the key functions of each tier of the Panchayati Raj system"
+          ],
+          "visualIdeas": [
+            "a district map divided into blocks and villages with the three tiers"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "grassroots-democracy-part-3-local-government-in-urban-areas",
+      "title": "Grassroots Democracy — Part 3: Local Government in Urban Areas",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees112.pdf",
+      "topics": [
+        {
+          "id": "introduction-governing-towns-and-cities",
+          "title": "Introduction: Governing Towns and Cities",
+          "objectives": [
+            "Student can explain why towns and cities need their own local government",
+            "Student can give examples of civic problems handled at the local level in urban areas"
+          ],
+          "visualIdeas": [
+            "a city street with a leaking pipe, a blocked drain and a damaged road"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "urban-local-bodies-types-and-ward-committees",
+          "title": "Urban Local Bodies: Types and Ward Committees",
+          "objectives": [
+            "Student can distinguish a Municipal Corporation, a Municipal Council and a Nagar Panchayat by the population of the city or town they serve",
+            "Student can explain that cities are divided into wards and describe what ward committees do"
+          ],
+          "visualIdeas": [
+            "a chart of urban local bodies by city population",
+            "a city divided into wards with a ward committee"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "urban-local-bodies-functions-and-citizens-duties",
+          "title": "Urban Local Bodies: Functions and Citizens' Duties",
+          "objectives": [
+            "Student can list services provided by urban local bodies, such as those of the Indore Municipal Corporation, and how they are funded",
+            "Student can explain that urban local bodies have elected members who represent local citizens",
+            "Student can describe citizens' duties, such as segregating waste and reporting water leaks, that help urban local bodies work efficiently"
+          ],
+          "visualIdeas": [
+            "a services wheel of a Municipal Corporation",
+            "a citizen reporting a water leak"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-value-of-work",
+      "title": "The Value of Work",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees113.pdf",
+      "topics": [
+        {
+          "id": "economic-and-non-economic-activities",
+          "title": "Economic and Non-Economic Activities",
+          "objectives": [
+            "Student can list the different activities people around them engage in",
+            "Student can distinguish economic activities, performed for money or money's worth, from non-economic activities"
+          ],
+          "visualIdeas": [
+            "a table of characters from a neighbourhood story and their activities, sorted into two groups"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "types-of-economic-activities",
+          "title": "Types of Economic Activities",
+          "objectives": [
+            "Student can describe the ways people are paid for economic activities: salary, wage, fee and payment in kind",
+            "Student can explain value addition at each stage of turning something into another form"
+          ],
+          "visualIdeas": [
+            "a chain from raw material to finished product with value added at each step"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-importance-of-non-economic-activities",
+          "title": "The Importance of Non-Economic Activities",
+          "objectives": [
+            "Student can explain how non-economic activities contribute to social welfare and personal wellbeing",
+            "Student can explain seva, selfless service, and the strength of community participation"
+          ],
+          "visualIdeas": [
+            "volunteers at a community kitchen or cleanliness drive"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "economic-activities-around-us",
+      "title": "Economic Activities Around Us",
+      "book": "Exploring Society: India and Beyond",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fees114.pdf",
+      "topics": [
+        {
+          "id": "primary-activities",
+          "title": "Primary Activities",
+          "objectives": [
+            "Student can define primary activities as those that use natural resources directly",
+            "Student can give examples of primary activities such as farming, fishing and mining"
+          ],
+          "visualIdeas": [
+            "farming, fishing and mining scenes grouped as the primary sector"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "secondary-activities",
+          "title": "Secondary Activities",
+          "objectives": [
+            "Student can define secondary activities as those that turn raw materials into products",
+            "Student can explain how the secondary sector depends on the primary sector"
+          ],
+          "visualIdeas": [
+            "raw cotton turning into cloth in a mill"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tertiary-activities",
+          "title": "Tertiary Activities",
+          "objectives": [
+            "Student can define tertiary activities as services that support the other sectors",
+            "Student can give examples such as transport, banking and trade"
+          ],
+          "visualIdeas": [
+            "a truck, a bank and a shop grouped as the tertiary sector"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "interdependence-among-sectors",
+          "title": "Interdependence Among Sectors",
+          "objectives": [
+            "Student can explain how the primary, secondary and tertiary sectors depend on each other",
+            "Student can trace a product through all three sectors using the example of a dairy cooperative from farm to plate"
+          ],
+          "visualIdeas": [
+            "a flow diagram of milk from farm to processing plant to shop to home"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    }
+  ]
+}

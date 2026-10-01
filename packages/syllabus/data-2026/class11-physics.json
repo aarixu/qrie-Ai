@@ -1,0 +1,1975 @@
+{
+  "id": "class11-physics",
+  "klass": 11,
+  "subject": "Physics",
+  "source": {
+    "books": [
+      {
+        "title": "Physics Part I",
+        "code": "keph1",
+        "edition": "Reprint 2026-27 (first edition February 2006; revised edition November 2022; reprinted March 2024, June 2024, December 2024 and April 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/keph1ps.pdf"
+      },
+      {
+        "title": "Physics Part II",
+        "code": "keph2",
+        "edition": "Reprint 2026-27 (first edition April 2006; revised edition January 2023; reprinted March 2024, June 2024, January 2025 and April 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/keph2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from each book's Contents page; topics from each chapter PDF's numbered section headings (Introduction sections are not topics unless they hold a numbered subsection, as 5.1.1 and 6.1.1 do; a parent heading that is only a short lead-in to its subsections is not a separate topic; a few very short adjacent subsections are joined under one title naming them; sections listed in a chapter's opening box but absent from the chapter body are left out)"
+  },
+  "chapters": [
+    {
+      "id": "units-and-measurements",
+      "title": "Units and Measurements",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph101.pdf",
+      "topics": [
+        {
+          "id": "the-international-system-of-units",
+          "title": "The International System of Units",
+          "objectives": [
+            "Student can distinguish base quantities and base units from derived quantities and derived units",
+            "Student can name the CGS, FPS and MKS systems and state that SI with seven base units is the accepted system today",
+            "Student can list the seven SI base quantities with their units and symbols, and the two more units, radian and steradian, defined for plane angle and solid angle"
+          ],
+          "visualIdeas": [
+            "a table of the seven SI base quantities, units and symbols",
+            "an arc ds on a circle of radius r showing a plane angle and a cone showing a solid angle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "significant-figures",
+          "title": "Significant Figures",
+          "objectives": [
+            "Student can explain significant figures as the reliable digits plus the first uncertain digit of a measurement",
+            "Student can count significant figures using the rules for zeros, decimal points and scientific notation",
+            "Student can explain why a change of units does not change the number of significant figures"
+          ],
+          "visualIdeas": [
+            "a reading on a scale with the reliable digits and the one uncertain digit highlighted"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rules-for-arithmetic-operations-with-significant-figures",
+          "title": "Rules for Arithmetic Operations with Significant Figures",
+          "objectives": [
+            "Student can apply the rule that a product or quotient keeps as many significant figures as the least precise factor",
+            "Student can apply the rule that a sum or difference keeps as many decimal places as the number with the fewest decimal places"
+          ],
+          "visualIdeas": [
+            "a worked density calculation with each quantity's significant figures underlined"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rounding-off-the-uncertain-digits",
+          "title": "Rounding off the Uncertain Digits",
+          "objectives": [
+            "Student can round a computed number to the required significant figures using the conventional rules",
+            "Student can apply the rule for an insignificant digit of exactly 5, raising the preceding digit only if it is odd"
+          ],
+          "visualIdeas": [
+            "a number line showing 2.746 rounding to 2.75 and 1.743 to 1.74"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "rules-for-determining-the-uncertainty-in-the-results-of-arithmetic-calculations",
+          "title": "Rules for Determining the Uncertainty in the Results of Arithmetic Calculations",
+          "objectives": [
+            "Student can show how the uncertainty of measured lengths carries into a computed area",
+            "Student can explain why intermediate results in a multi-step calculation should keep one extra significant figure"
+          ],
+          "visualIdeas": [
+            "a rectangle with sides 16.2 +/- 0.1 cm and 10.1 +/- 0.1 cm and its area range"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dimensions-of-physical-quantities",
+          "title": "Dimensions of Physical Quantities",
+          "objectives": [
+            "Student can describe the dimensions of a quantity as the powers of the base quantities [M], [L], [T] and others that represent it",
+            "Student can find the dimensions of volume, velocity, acceleration and force from their definitions"
+          ],
+          "visualIdeas": [
+            "force broken down into mass x length / time squared with the powers shown"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "dimensional-formulae-and-dimensional-equations",
+          "title": "Dimensional Formulae and Dimensional Equations",
+          "objectives": [
+            "Student can write the dimensional formula of a physical quantity such as velocity [M0 L T-1] or density [M L-3 T0]",
+            "Student can write a dimensional equation equating a quantity with its dimensional formula"
+          ],
+          "visualIdeas": [
+            "a table of quantities beside their dimensional formulae"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "checking-the-dimensional-consistency-of-equations",
+          "title": "Checking the Dimensional Consistency of Equations",
+          "objectives": [
+            "Student can state the principle of homogeneity of dimensions: only quantities with the same dimensions can be added, subtracted or equated",
+            "Student can check whether an equation of motion is dimensionally consistent",
+            "Student can explain that a dimensionally correct equation need not be exactly correct, while a dimensionally wrong one must be wrong"
+          ],
+          "visualIdeas": [
+            "each term of x = x0 + v0t + (1/2)at^2 reduced to [L]"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "deducing-relation-among-the-physical-quantities",
+          "title": "Deducing Relation among the Physical Quantities",
+          "objectives": [
+            "Student can use the method of dimensions to deduce how a quantity depends on up to three others, as for the period of a simple pendulum",
+            "Student can state that this method cannot give the dimensionless constants in the relation"
+          ],
+          "visualIdeas": [
+            "a simple pendulum with length, mass of bob and g labelled as possible variables for its period"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "motion-in-a-straight-line",
+      "title": "Motion in a Straight Line",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph102.pdf",
+      "topics": [
+        {
+          "id": "instantaneous-velocity-and-speed",
+          "title": "Instantaneous Velocity and Speed",
+          "objectives": [
+            "Student can define instantaneous velocity as the limit of average velocity as the time interval tends to zero, v = dx/dt",
+            "Student can find velocity at an instant as the slope of the tangent to the position-time graph",
+            "Student can relate instantaneous speed to the magnitude of instantaneous velocity"
+          ],
+          "visualIdeas": [
+            "a position-time curve with secants shrinking into the tangent at t = 4 s"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "acceleration",
+          "title": "Acceleration",
+          "objectives": [
+            "Student can define average and instantaneous acceleration, a = dv/dt, and read it as the slope of a velocity-time graph",
+            "Student can interpret position-time and velocity-time graphs for motion with positive, negative and zero acceleration",
+            "Student can find displacement as the area under a velocity-time graph"
+          ],
+          "visualIdeas": [
+            "velocity-time graphs for positive, negative and zero acceleration",
+            "shaded area under a v-t graph equal to displacement"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "kinematic-equations-for-uniformly-accelerated-motion",
+          "title": "Kinematic Equations for Uniformly Accelerated Motion",
+          "objectives": [
+            "Student can derive v = v0 + at, x = v0t + (1/2)at^2 and v^2 = v0^2 + 2ax using the area under the v-t graph",
+            "Student can apply the kinematic equations to problems such as free fall and stopping distance",
+            "Student can use the calculus method to obtain the same equations"
+          ],
+          "visualIdeas": [
+            "a v-t graph split into a rectangle and a triangle to show x = v0t + (1/2)at^2",
+            "a ball dropped from rest with positions marked at equal time intervals"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "motion-in-a-plane",
+      "title": "Motion in a Plane",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph103.pdf",
+      "topics": [
+        {
+          "id": "scalars-and-vectors",
+          "title": "Scalars and Vectors",
+          "objectives": [
+            "Student can distinguish scalar quantities (magnitude only) from vector quantities (magnitude and direction obeying the triangle law)",
+            "Student can describe position and displacement vectors and explain why displacement does not depend on the path taken",
+            "Student can state when two vectors are equal"
+          ],
+          "visualIdeas": [
+            "position vectors OP and OP' with the displacement vector PP'",
+            "several different paths between P and Q with the same displacement"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "multiplication-of-vectors-by-real-numbers",
+          "title": "Multiplication of Vectors by Real Numbers",
+          "objectives": [
+            "Student can describe the effect of multiplying a vector by a positive or negative real number on its magnitude and direction",
+            "Student can explain that multiplying by a dimensional scalar such as time changes the physical quantity, as velocity x time gives displacement"
+          ],
+          "visualIdeas": [
+            "vector A with 2A, -A and -1.5A drawn beside it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "addition-and-subtraction-of-vectors-graphical-method",
+          "title": "Addition and Subtraction of Vectors - Graphical Method",
+          "objectives": [
+            "Student can add vectors by the head-to-tail (triangle) method and the parallelogram method",
+            "Student can show that vector addition is commutative and associative, and describe the null vector",
+            "Student can subtract vectors as A - B = A + (-B)"
+          ],
+          "visualIdeas": [
+            "triangle and parallelogram constructions of A + B",
+            "A - B drawn as A + (-B)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "resolution-of-vectors",
+          "title": "Resolution of Vectors",
+          "objectives": [
+            "Student can express a vector as a sum of multiples of two given non-parallel vectors in a plane",
+            "Student can use unit vectors i, j, k and resolve a vector into rectangular components Ax = A cos(theta), Ay = A sin(theta)",
+            "Student can find the magnitude and direction of a vector from its components"
+          ],
+          "visualIdeas": [
+            "a vector resolved into x and y components on axes with unit vectors i and j"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vector-addition-analytical-method",
+          "title": "Vector Addition - Analytical Method",
+          "objectives": [
+            "Student can add vectors by adding their components, Rx = Ax + Bx and Ry = Ay + By",
+            "Student can find the magnitude and direction of the resultant of two vectors with the law of cosines and law of sines"
+          ],
+          "visualIdeas": [
+            "two vectors and their resultant with components added along each axis"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "motion-in-a-plane",
+          "title": "Motion in a Plane",
+          "objectives": [
+            "Student can write the position vector r = x i + y j and the displacement of a particle moving in a plane",
+            "Student can define average and instantaneous velocity in a plane and explain that velocity is along the tangent to the path",
+            "Student can define average and instantaneous acceleration in a plane in component form"
+          ],
+          "visualIdeas": [
+            "a curved path with position vectors at t and t + dt and the velocity drawn tangent to it"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "motion-in-a-plane-with-constant-acceleration",
+          "title": "Motion in a Plane with Constant Acceleration",
+          "objectives": [
+            "Student can write v = v0 + at and r = r0 + v0t + (1/2)at^2 for constant acceleration in a plane",
+            "Student can treat motion in a plane as two independent straight-line motions along perpendicular axes"
+          ],
+          "visualIdeas": [
+            "x and y motions plotted separately and combined into a curved path"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "projectile-motion",
+          "title": "Projectile Motion",
+          "objectives": [
+            "Student can describe projectile motion as uniform horizontal motion combined with uniformly accelerated vertical motion",
+            "Student can derive the parabolic path equation, time of flight, maximum height and horizontal range of a projectile",
+            "Student can show that the horizontal range is maximum for a projection angle of 45 degrees, ignoring air resistance"
+          ],
+          "visualIdeas": [
+            "a parabolic trajectory with velocity components drawn at several points",
+            "trajectories for different launch angles showing equal ranges for complementary angles"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "uniform-circular-motion",
+          "title": "Uniform Circular Motion",
+          "objectives": [
+            "Student can explain why an object in uniform circular motion accelerates even though its speed is constant",
+            "Student can derive the centripetal acceleration a = v^2/R directed towards the centre",
+            "Student can relate angular speed, period and frequency to linear speed, v = R omega"
+          ],
+          "visualIdeas": [
+            "a particle on a circle with velocity vectors at two points and the change in velocity pointing to the centre"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "laws-of-motion",
+      "title": "Laws of Motion",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph104.pdf",
+      "topics": [
+        {
+          "id": "aristotles-fallacy",
+          "title": "Aristotle's Fallacy",
+          "objectives": [
+            "Student can state Aristotle's view that a force is needed to keep a body in uniform motion",
+            "Student can explain that in practice a force is needed only to counter opposing forces such as friction"
+          ],
+          "visualIdeas": [
+            "a cart pushed along a road with friction opposing the push"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-law-of-inertia",
+          "title": "The Law of Inertia",
+          "objectives": [
+            "Student can describe Galileo's inclined plane experiments and how he concluded that on a frictionless plane a body keeps moving with constant velocity",
+            "Student can explain inertia as the resistance of a body to a change in its state of motion"
+          ],
+          "visualIdeas": [
+            "a ball rolling down one smooth incline and up another, reaching the same height for smaller slopes"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "newtons-first-law-of-motion",
+          "title": "Newton's First Law of Motion",
+          "objectives": [
+            "Student can state Newton's first law: if the net external force on a body is zero, its acceleration is zero",
+            "Student can explain everyday examples such as passengers jerking backward when a bus starts suddenly"
+          ],
+          "visualIdeas": [
+            "a passenger in a bus that starts suddenly, body tilting backward"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "newtons-second-law-of-motion",
+          "title": "Newton's Second Law of Motion",
+          "objectives": [
+            "Student can define momentum p = mv and state the second law F = dp/dt = ma, with the newton as the SI unit of force",
+            "Student can apply the second law in component form and explain why it is a local, vector law",
+            "Student can define impulse as force x time duration equal to the change in momentum and apply it to impulsive forces"
+          ],
+          "visualIdeas": [
+            "a cricket ball being hit back by a bat with momentum arrows before and after",
+            "a catcher drawing hands back to catch a fast ball"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "newtons-third-law-of-motion",
+          "title": "Newton's Third Law of Motion",
+          "objectives": [
+            "Student can state the third law: to every action there is an equal and opposite reaction",
+            "Student can explain that action and reaction act on different bodies, at the same instant, and do not cancel each other"
+          ],
+          "visualIdeas": [
+            "a gun and bullet with equal and opposite force arrows",
+            "a book on a table with the force pairs labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conservation-of-momentum",
+          "title": "Conservation of Momentum",
+          "objectives": [
+            "Student can derive the conservation of total momentum of an isolated system from the second and third laws",
+            "Student can apply momentum conservation to the recoil of a gun and to collisions"
+          ],
+          "visualIdeas": [
+            "a gun recoiling as a bullet leaves, with momentum arrows of equal size"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "equilibrium-of-a-particle",
+          "title": "Equilibrium of a Particle",
+          "objectives": [
+            "Student can state that a particle is in equilibrium when the net external force on it is zero",
+            "Student can use the components of concurrent forces, or a triangle of forces, to solve equilibrium problems such as a mass hung by two strings"
+          ],
+          "visualIdeas": [
+            "a mass suspended by two strings with the three forces drawn as a closed triangle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "common-forces-in-mechanics",
+          "title": "Common Forces in Mechanics",
+          "objectives": [
+            "Student can distinguish gravitational force, which acts at a distance, from contact forces",
+            "Student can identify normal reaction, friction, tension and spring force as contact forces and state Hooke's law F = -kx for a spring"
+          ],
+          "visualIdeas": [
+            "a block on a table hung from a spring with weight, normal reaction, tension and spring force labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "friction",
+          "title": "Friction",
+          "objectives": [
+            "Student can distinguish static friction, which adjusts up to a limiting value mu_s N, from kinetic friction mu_k N",
+            "Student can explain why kinetic friction is nearly independent of contact area and speed, and solve problems with blocks on inclined planes",
+            "Student can describe rolling friction and how lubricants and ball bearings reduce friction"
+          ],
+          "visualIdeas": [
+            "a graph of friction force rising with applied force to the limiting value then dropping to kinetic friction",
+            "a block on an incline with friction, normal force and weight components"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "circular-motion",
+          "title": "Circular Motion",
+          "objectives": [
+            "Student can identify the centripetal force mv^2/R needed for circular motion and the forces that provide it",
+            "Student can derive the maximum safe speed of a car on a level road using static friction",
+            "Student can explain how banking a road reduces reliance on friction and find the optimum speed on a banked road"
+          ],
+          "visualIdeas": [
+            "a car on a level road and on a banked road with normal force and friction resolved"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "solving-problems-in-mechanics",
+          "title": "Solving Problems in Mechanics",
+          "objectives": [
+            "Student can choose a system and draw a free-body diagram showing all forces on it",
+            "Student can apply Newton's laws to connected bodies such as blocks joined by strings to find acceleration and tension"
+          ],
+          "visualIdeas": [
+            "two blocks joined by a string with separate free-body diagrams for each"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "work-energy-and-power",
+      "title": "Work, Energy and Power",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph105.pdf",
+      "topics": [
+        {
+          "id": "the-scalar-product",
+          "title": "The Scalar Product",
+          "objectives": [
+            "Student can define the scalar (dot) product A.B = AB cos(theta) and interpret it as one vector times the component of the other along it",
+            "Student can use the commutative and distributive laws and i.i = 1, i.j = 0 to compute dot products in component form"
+          ],
+          "visualIdeas": [
+            "vector A with the projection of B along it marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "notions-of-work-and-kinetic-energy-the-work-energy-theorem",
+          "title": "Notions of Work and Kinetic Energy: The Work-Energy Theorem",
+          "objectives": [
+            "Student can derive the work-energy theorem for constant acceleration from v^2 - u^2 = 2as",
+            "Student can state that the change in kinetic energy of a particle equals the work done on it by the net force"
+          ],
+          "visualIdeas": [
+            "a block speeding up under a force with initial and final kinetic energies shown"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "work",
+          "title": "Work",
+          "objectives": [
+            "Student can define the work done by a constant force as W = F.d = Fd cos(theta)",
+            "Student can explain when work done is positive, negative or zero, using examples like friction and a person holding a load"
+          ],
+          "visualIdeas": [
+            "a force at an angle to the displacement of a block with its component along the motion highlighted"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "kinetic-energy",
+          "title": "Kinetic Energy",
+          "objectives": [
+            "Student can define kinetic energy K = (1/2)mv^2 as a scalar measure of the work a body can do by virtue of its motion",
+            "Student can compare typical kinetic energies of moving objects using the book's table"
+          ],
+          "visualIdeas": [
+            "a bullet, a running athlete and a car ranked by kinetic energy"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "work-done-by-a-variable-force",
+          "title": "Work Done by a Variable Force",
+          "objectives": [
+            "Student can find the work done by a variable force as the area under the force-displacement graph, W = integral of F dx",
+            "Student can compute work from a force-displacement graph made of simple shapes"
+          ],
+          "visualIdeas": [
+            "a force-displacement curve divided into thin rectangles that approach the area under the curve"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-work-energy-theorem-for-a-variable-force",
+          "title": "The Work-Energy Theorem for a Variable Force",
+          "objectives": [
+            "Student can prove the work-energy theorem for a variable force in one dimension using dK/dt = Fv",
+            "Student can explain why the theorem is an integral form of Newton's second law"
+          ],
+          "visualIdeas": [
+            "kinetic energy rising as a variable force acts over a displacement"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-concept-of-potential-energy",
+          "title": "The Concept of Potential Energy",
+          "objectives": [
+            "Student can describe potential energy as stored energy due to the position or configuration of a body",
+            "Student can find the gravitational potential energy mgh of a body and relate a conservative force to the potential energy by F = -dV/dx"
+          ],
+          "visualIdeas": [
+            "a stretched bow-string and a ball lifted to height h"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-conservation-of-mechanical-energy",
+          "title": "The Conservation of Mechanical Energy",
+          "objectives": [
+            "Student can state that total mechanical energy K + V stays constant when only conservative forces act",
+            "Student can define a conservative force as one whose work is path independent or zero around a closed path",
+            "Student can apply energy conservation to a body falling from a height or moving in a vertical circle"
+          ],
+          "visualIdeas": [
+            "bar charts of kinetic and potential energy at the top, middle and bottom of a fall"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-potential-energy-of-a-spring",
+          "title": "The Potential Energy of a Spring",
+          "objectives": [
+            "Student can show that the work done in stretching a spring by x is (1/2)kx^2 and that the spring force is conservative",
+            "Student can analyse a block on a spring exchanging kinetic and elastic potential energy"
+          ],
+          "visualIdeas": [
+            "a block attached to a spring on a smooth surface at compression, natural length and extension",
+            "parabolic potential energy curve V = (1/2)kx^2"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "power",
+          "title": "Power",
+          "objectives": [
+            "Student can define average and instantaneous power, P = dW/dt = F.v, and use the watt and horsepower",
+            "Student can explain the kilowatt hour as a unit of energy used in electricity bills"
+          ],
+          "visualIdeas": [
+            "an elevator lifting a load at constant speed with force and velocity arrows"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "elastic-and-inelastic-collisions",
+          "title": "Elastic and Inelastic Collisions",
+          "objectives": [
+            "Student can state that total linear momentum is conserved in all collisions",
+            "Student can distinguish elastic collisions, where kinetic energy is conserved, from inelastic and completely inelastic collisions"
+          ],
+          "visualIdeas": [
+            "two carrom coins before and after a collision"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "collisions-in-one-dimension",
+          "title": "Collisions in One Dimension",
+          "objectives": [
+            "Student can find the common final velocity and kinetic energy lost in a completely inelastic collision in one dimension",
+            "Student can derive the final velocities in an elastic collision in one dimension and discuss equal masses and very unequal masses"
+          ],
+          "visualIdeas": [
+            "two balls on a line before and after an elastic collision, with equal masses exchanging velocities"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "collisions-in-two-dimensions",
+          "title": "Collisions in Two Dimensions",
+          "objectives": [
+            "Student can write momentum conservation along two axes for a collision in a plane",
+            "Student can explain why the outcome of a two-dimensional collision needs more information than the conservation laws alone"
+          ],
+          "visualIdeas": [
+            "a moving ball striking a stationary ball with the two outgoing directions at angles theta1 and theta2"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "system-of-particles-and-rotational-motion",
+      "title": "System of Particles and Rotational Motion",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph106.pdf",
+      "topics": [
+        {
+          "id": "what-kind-of-motion-can-a-rigid-body-have",
+          "title": "What Kind of Motion Can a Rigid Body Have?",
+          "objectives": [
+            "Student can define an ideal rigid body and distinguish pure translation from rotation about a fixed axis",
+            "Student can describe rolling as a combination of translation and rotation, and precession of a spinning top as rotation about a fixed point"
+          ],
+          "visualIdeas": [
+            "a block sliding down an incline beside a cylinder rolling down it",
+            "a ceiling fan and a potter's wheel rotating about fixed axes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "centre-of-mass",
+          "title": "Centre of Mass",
+          "objectives": [
+            "Student can define the centre of mass of a system of particles, R = sum(m_i r_i)/M, starting from two particles on a line",
+            "Student can find the centre of mass of three particles and of uniform symmetric bodies such as a rod or a triangular lamina"
+          ],
+          "visualIdeas": [
+            "two masses on a line with the centre of mass closer to the heavier one",
+            "a triangular lamina with its medians meeting at the centre of mass"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "motion-of-centre-of-mass",
+          "title": "Motion of Centre of Mass",
+          "objectives": [
+            "Student can show that M A = F_ext: the centre of mass moves as if all the mass and all external forces were concentrated there",
+            "Student can explain why internal forces, such as in an exploding shell, do not change the motion of the centre of mass"
+          ],
+          "visualIdeas": [
+            "a projectile exploding mid-air while its centre of mass continues along the parabola"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "linear-momentum-of-a-system-of-particles",
+          "title": "Linear Momentum of a System of Particles",
+          "objectives": [
+            "Student can show that the total momentum of a system is P = M V and that dP/dt = F_ext",
+            "Student can state that the total linear momentum of a system is conserved when the external force is zero, as in the radioactive decay of a moving unstable nucleus"
+          ],
+          "visualIdeas": [
+            "a nucleus at rest splitting into two fragments flying apart with equal and opposite momenta"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vector-product-of-two-vectors",
+          "title": "Vector Product of Two Vectors",
+          "objectives": [
+            "Student can define the vector (cross) product with magnitude ab sin(theta) and direction by the right-hand rule",
+            "Student can use the properties a x b = -b x a, a x a = 0 and the cross products of unit vectors i, j, k"
+          ],
+          "visualIdeas": [
+            "right-hand rule with fingers curling from a to b and thumb along a x b"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angular-velocity-and-its-relation-with-linear-velocity",
+          "title": "Angular Velocity and its Relation with Linear Velocity",
+          "objectives": [
+            "Student can describe angular velocity as a vector along the axis of rotation",
+            "Student can relate linear and angular velocity of a particle in a rotating body by v = omega x r, so v = omega r",
+            "Student can define angular acceleration alpha = d(omega)/dt"
+          ],
+          "visualIdeas": [
+            "a rotating disc with particles at different radii and their linear velocity arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "moment-of-force-torque",
+          "title": "Moment of Force (Torque)",
+          "objectives": [
+            "Student can define torque as tau = r x F with magnitude r F sin(theta)",
+            "Student can explain torque as the rotational analogue of force and compute it for a force applied at a distance from a pivot"
+          ],
+          "visualIdeas": [
+            "a spanner turning a nut with the force and perpendicular distance marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angular-momentum-of-a-particle",
+          "title": "Angular Momentum of a Particle",
+          "objectives": [
+            "Student can define angular momentum l = r x p and show that its rate of change equals the torque",
+            "Student can extend this to a system of particles: dL/dt equals the total external torque",
+            "Student can state that angular momentum is conserved when the external torque is zero"
+          ],
+          "visualIdeas": [
+            "a particle moving past an origin with r, p and l = r x p drawn"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "equilibrium-of-a-rigid-body",
+          "title": "Equilibrium of a Rigid Body",
+          "objectives": [
+            "Student can state the conditions for translational and rotational equilibrium of a rigid body: zero net force and zero net torque",
+            "Student can describe a couple as two equal and opposite forces with different lines of action that produce rotation without translation"
+          ],
+          "visualIdeas": [
+            "fingers turning a bottle lid as a couple",
+            "a compass needle with equal and opposite forces at its poles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "principle-of-moments",
+          "title": "Principle of Moments",
+          "objectives": [
+            "Student can state the principle of moments for a lever in equilibrium: load arm x load = effort arm x effort",
+            "Student can explain mechanical advantage of a lever and solve balance problems with levers"
+          ],
+          "visualIdeas": [
+            "a lever with a fulcrum, load and effort and their arms marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "centre-of-gravity",
+          "title": "Centre of Gravity",
+          "objectives": [
+            "Student can define the centre of gravity as the point where the total gravitational torque on a body is zero",
+            "Student can explain why the centre of gravity coincides with the centre of mass in a uniform gravitational field and locate it by suspension"
+          ],
+          "visualIdeas": [
+            "an irregular cardboard balanced on a pencil tip and suspended from two points with plumb lines"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "moment-of-inertia",
+          "title": "Moment of Inertia",
+          "objectives": [
+            "Student can define moment of inertia I = sum(m_i r_i^2) as the rotational analogue of mass",
+            "Student can use the book's table of moments of inertia of a ring, disc, rod and sphere about given axes",
+            "Student can define the radius of gyration and explain the use of a flywheel"
+          ],
+          "visualIdeas": [
+            "a ring and a disc of equal mass with mass distribution shown relative to the axis"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "kinematics-of-rotational-motion-about-a-fixed-axis",
+          "title": "Kinematics of Rotational Motion about a Fixed Axis",
+          "objectives": [
+            "Student can write the equations of rotational motion with constant angular acceleration, omega = omega0 + alpha t and so on",
+            "Student can compare these equations with the kinematic equations of linear motion"
+          ],
+          "visualIdeas": [
+            "a table pairing linear and rotational kinematic equations"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dynamics-of-rotational-motion-about-a-fixed-axis",
+          "title": "Dynamics of Rotational Motion about a Fixed Axis",
+          "objectives": [
+            "Student can derive tau = I alpha for rotation about a fixed axis",
+            "Student can find work done by a torque and rotational kinetic energy (1/2)I omega^2, and power = tau omega"
+          ],
+          "visualIdeas": [
+            "a flywheel driven by a cord wound on its rim"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "angular-momentum-in-case-of-rotation-about-a-fixed-axis",
+          "title": "Angular Momentum in Case of Rotation about a Fixed Axis",
+          "objectives": [
+            "Student can write the angular momentum about a fixed axis as L = I omega and dL/dt = tau",
+            "Student can apply conservation of angular momentum to a girl on a swivel chair stretching out or pulling in her arms, and to an acrobat or a diver"
+          ],
+          "visualIdeas": [
+            "a person on a swivel chair with arms stretched out and then pulled in, spinning faster"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "gravitation",
+      "title": "Gravitation",
+      "book": "Physics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph107.pdf",
+      "topics": [
+        {
+          "id": "keplers-laws",
+          "title": "Kepler's Laws",
+          "objectives": [
+            "Student can state Kepler's laws of orbits, areas and periods",
+            "Student can explain the law of areas as a consequence of conservation of angular momentum under a central force"
+          ],
+          "visualIdeas": [
+            "an elliptical orbit with the Sun at one focus and equal areas swept in equal times"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "universal-law-of-gravitation",
+          "title": "Universal Law of Gravitation",
+          "objectives": [
+            "Student can state Newton's law of gravitation F = G m1 m2 / r^2 in vector form",
+            "Student can find the net gravitational force on a mass due to several masses by vector addition",
+            "Student can state the results for a uniform spherical shell: outside it acts as a point mass at its centre, inside the force is zero"
+          ],
+          "visualIdeas": [
+            "two masses with equal and opposite attraction arrows",
+            "a point mass inside and outside a spherical shell"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-gravitational-constant",
+          "title": "The Gravitational Constant",
+          "objectives": [
+            "Student can describe Cavendish's torsion balance experiment to measure G",
+            "Student can state the accepted value of G, about 6.67 x 10^-11 N m^2 kg^-2"
+          ],
+          "visualIdeas": [
+            "Cavendish apparatus with large and small lead spheres on a torsion wire"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "acceleration-due-to-gravity-of-the-earth",
+          "title": "Acceleration due to Gravity of the Earth",
+          "objectives": [
+            "Student can derive g = G M_E / R_E^2 by treating the earth as concentric spherical shells",
+            "Student can use g to estimate the mass of the earth"
+          ],
+          "visualIdeas": [
+            "the earth drawn as concentric shells with a mass on its surface"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "acceleration-due-to-gravity-below-and-above-the-surface-of-earth",
+          "title": "Acceleration due to Gravity below and above the Surface of Earth",
+          "objectives": [
+            "Student can derive how g decreases with height h, approximately g(1 - 2h/R_E) for small h",
+            "Student can derive how g decreases with depth d, g(1 - d/R_E), and explain why g is greatest at the earth's surface"
+          ],
+          "visualIdeas": [
+            "a graph of g against distance from the earth's centre rising linearly inside and falling as 1/r^2 outside"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "gravitational-potential-energy",
+          "title": "Gravitational Potential Energy",
+          "objectives": [
+            "Student can find the work done in lifting a mass near the earth's surface as mg(h2 - h1)",
+            "Student can derive the gravitational potential energy -G M_E m / r with zero at infinity",
+            "Student can define gravitational potential as potential energy per unit mass"
+          ],
+          "visualIdeas": [
+            "a curve of gravitational potential energy against distance, negative and rising towards zero at infinity"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "escape-speed",
+          "title": "Escape Speed",
+          "objectives": [
+            "Student can derive the escape speed from the earth, v = sqrt(2 g R_E), about 11.2 km/s",
+            "Student can explain why the moon has no atmosphere using its low escape speed"
+          ],
+          "visualIdeas": [
+            "a rocket launched at different speeds: falling back, orbiting and escaping"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "earth-satellites",
+          "title": "Earth Satellites",
+          "objectives": [
+            "Student can derive the orbital speed of a satellite in a circular orbit and its period",
+            "Student can relate the period of a satellite to its orbital radius as in Kepler's third law"
+          ],
+          "visualIdeas": [
+            "a satellite in a circular orbit with gravity providing the centripetal force"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "energy-of-an-orbiting-satellite",
+          "title": "Energy of an Orbiting Satellite",
+          "objectives": [
+            "Student can show that a satellite in a circular orbit has kinetic energy G M m / 2r and total energy -G M m / 2r",
+            "Student can explain why the negative total energy means the satellite is bound to the earth"
+          ],
+          "visualIdeas": [
+            "bar chart of kinetic, potential and total energy of an orbiting satellite"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "mechanical-properties-of-solids",
+      "title": "Mechanical Properties of Solids",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph201.pdf",
+      "topics": [
+        {
+          "id": "stress-and-strain",
+          "title": "Stress and Strain",
+          "objectives": [
+            "Student can define stress as restoring force per unit area and strain as fractional change in dimension",
+            "Student can distinguish tensile (or compressive), shearing and hydraulic stress and the corresponding longitudinal, shearing and volume strain"
+          ],
+          "visualIdeas": [
+            "a cylinder under tensile, shearing and hydraulic stress side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "hookes-law",
+          "title": "Hooke's Law",
+          "objectives": [
+            "Student can state Hooke's law: for small deformations stress is proportional to strain",
+            "Student can identify the proportionality constant as the modulus of elasticity"
+          ],
+          "visualIdeas": [
+            "a straight-line stress-strain graph for small deformation"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "stress-strain-curve",
+          "title": "Stress-Strain Curve",
+          "objectives": [
+            "Student can describe the stress-strain curve of a metal: proportional limit, yield point, elastic and plastic regions, ultimate tensile strength and fracture",
+            "Student can distinguish ductile and brittle materials, and elastomers that do not obey Hooke's law"
+          ],
+          "visualIdeas": [
+            "a labelled stress-strain curve of a metal",
+            "stress-strain curve of rubber-like elastic tissue"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "youngs-modulus",
+          "title": "Young's Modulus",
+          "objectives": [
+            "Student can define Young's modulus as tensile (or compressive) stress divided by longitudinal strain, Y = (F/A)/(dL/L)",
+            "Student can calculate the extension of a wire or rod using Young's modulus",
+            "Student can explain why steel is preferred in heavy-duty machines using its higher Young's modulus"
+          ],
+          "visualIdeas": [
+            "a loaded wire stretching with its original length and extension marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "shear-modulus",
+          "title": "Shear Modulus",
+          "objectives": [
+            "Student can define shear modulus (modulus of rigidity) G = shearing stress / shearing strain",
+            "Student can calculate the sideways displacement of a block under a shearing force"
+          ],
+          "visualIdeas": [
+            "a block with its top face pushed sideways by a tangential force"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "bulk-modulus",
+          "title": "Bulk Modulus",
+          "objectives": [
+            "Student can define bulk modulus B = -p/(dV/V) and compressibility as its reciprocal",
+            "Student can compare bulk moduli of solids, liquids and gases"
+          ],
+          "visualIdeas": [
+            "a cube shrinking uniformly when submerged under hydraulic pressure"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "poissons-ratio",
+          "title": "Poisson's Ratio",
+          "objectives": [
+            "Student can define lateral strain and Poisson's ratio as lateral strain divided by longitudinal strain",
+            "Student can explain why Poisson's ratio has no units"
+          ],
+          "visualIdeas": [
+            "a wire stretching longer and thinner with both changes marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "elastic-potential-energy-in-a-stretched-wire",
+          "title": "Elastic Potential Energy in a Stretched Wire",
+          "objectives": [
+            "Student can derive the elastic potential energy stored in a stretched wire, (1/2) x stress x strain x volume",
+            "Student can calculate the energy stored per unit volume of a stretched wire"
+          ],
+          "visualIdeas": [
+            "area under the force-extension line representing stored energy"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "applications-of-elastic-behaviour-of-materials",
+          "title": "Applications of Elastic Behaviour of Materials",
+          "objectives": [
+            "Student can explain how elastic properties guide the design of crane ropes, beams and columns",
+            "Student can explain from the sag of a loaded beam why increasing its depth reduces bending more than increasing its breadth, and why a mountain on earth can be only about 10 km high"
+          ],
+          "visualIdeas": [
+            "a crane lifting a load with a thick steel rope",
+            "a beam supported near its ends and loaded at the centre, sagging"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "mechanical-properties-of-fluids",
+      "title": "Mechanical Properties of Fluids",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph202.pdf",
+      "topics": [
+        {
+          "id": "pressure",
+          "title": "Pressure",
+          "objectives": [
+            "Student can define pressure as normal force per unit area and use the pascal as its SI unit",
+            "Student can explain everyday observations such as a sharp needle piercing skin using pressure",
+            "Student can define density and relative density of a fluid"
+          ],
+          "visualIdeas": [
+            "a blunt spoon and a sharp needle pressed with the same force on skin"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pascals-law",
+          "title": "Pascal's Law",
+          "objectives": [
+            "Student can state Pascal's law that pressure in a fluid at rest is the same at all points at the same height",
+            "Student can explain why the pressure at a point in a fluid acts equally in all directions"
+          ],
+          "visualIdeas": [
+            "a small prism-shaped fluid element with equal pressures on its faces"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "variation-of-pressure-with-depth",
+          "title": "Variation of Pressure with Depth",
+          "objectives": [
+            "Student can derive P = Pa + rho g h for a fluid at rest",
+            "Student can explain the hydrostatic paradox: pressure depends on depth, not on the shape of the vessel"
+          ],
+          "visualIdeas": [
+            "vessels of different shapes filled to the same height showing equal pressure at the base"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "atmospheric-pressure-and-gauge-pressure",
+          "title": "Atmospheric Pressure and Gauge Pressure",
+          "objectives": [
+            "Student can describe the mercury barometer and the value of atmospheric pressure at sea level",
+            "Student can distinguish gauge pressure from absolute pressure and read an open-tube manometer"
+          ],
+          "visualIdeas": [
+            "Torricelli's mercury barometer with a 76 cm column",
+            "an open-tube manometer"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "hydraulic-machines",
+          "title": "Hydraulic Machines",
+          "objectives": [
+            "Student can state that a change in pressure applied to an enclosed fluid is transmitted undiminished",
+            "Student can explain how a hydraulic lift and hydraulic brakes multiply force"
+          ],
+          "visualIdeas": [
+            "a hydraulic lift with a small piston and a large piston carrying a car"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "streamline-flow",
+          "title": "Streamline Flow",
+          "objectives": [
+            "Student can describe steady (streamline) flow and turbulent flow",
+            "Student can derive the equation of continuity A v = constant for an incompressible fluid"
+          ],
+          "visualIdeas": [
+            "streamlines crowding together where a pipe narrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bernoullis-principle",
+          "title": "Bernoulli's Principle",
+          "objectives": [
+            "Student can derive Bernoulli's equation P + (1/2)rho v^2 + rho g h = constant along a streamline from work and energy",
+            "Student can state the assumptions of Bernoulli's principle and apply it to fluid at rest"
+          ],
+          "visualIdeas": [
+            "a pipe rising and narrowing with pressure, speed and height marked at two sections"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "speed-of-efflux-torricellis-law",
+          "title": "Speed of Efflux: Torricelli's Law",
+          "objectives": [
+            "Student can derive the speed of efflux from a hole in a tank, v = sqrt(2 g h) for an open tank",
+            "Student can explain that this speed equals that of a body falling freely through the same height"
+          ],
+          "visualIdeas": [
+            "water jets from a hole near the bottom of a tank"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "dynamic-lift",
+          "title": "Dynamic Lift",
+          "objectives": [
+            "Student can explain dynamic lift on a spinning ball (Magnus effect) using Bernoulli's principle",
+            "Student can explain the lift on an aerofoil from the faster flow above the wing"
+          ],
+          "visualIdeas": [
+            "streamlines around an aircraft wing",
+            "a spinning ball with air flow faster on one side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "viscosity",
+          "title": "Viscosity",
+          "objectives": [
+            "Student can describe viscosity as internal friction between fluid layers in relative motion",
+            "Student can define the coefficient of viscosity as shearing stress divided by strain rate and explain its variation with temperature"
+          ],
+          "visualIdeas": [
+            "layers of liquid flowing in a pipe with the speed largest at the centre"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "stokes-law",
+          "title": "Stokes' Law",
+          "objectives": [
+            "Student can state Stokes' law for the viscous drag on a sphere, F = 6 pi eta a v",
+            "Student can derive the terminal velocity of a sphere falling through a viscous fluid"
+          ],
+          "visualIdeas": [
+            "a raindrop falling with weight, buoyancy and viscous drag balancing at terminal velocity"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "surface-energy",
+          "title": "Surface Energy",
+          "objectives": [
+            "Student can explain why molecules at a liquid surface have extra energy compared with those inside",
+            "Student can explain why a liquid tends to reduce its surface area"
+          ],
+          "visualIdeas": [
+            "molecules inside a liquid and at its surface with attraction arrows"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "surface-energy-and-surface-tension",
+          "title": "Surface Energy and Surface Tension",
+          "objectives": [
+            "Student can define surface tension as force per unit length or surface energy per unit area",
+            "Student can describe the experiment of a movable bar on a soap film to relate surface energy and surface tension"
+          ],
+          "visualIdeas": [
+            "a soap film on a wire frame with a sliding bar"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angle-of-contact",
+          "title": "Angle of Contact",
+          "objectives": [
+            "Student can define the angle of contact and relate it to the surface tensions at the solid-liquid-air boundary",
+            "Student can explain why water wets glass while mercury does not, and why soaps and detergents act as wetting agents"
+          ],
+          "visualIdeas": [
+            "a water drop spreading and a mercury drop beading on glass with contact angles marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "drops-and-bubbles",
+          "title": "Drops and Bubbles",
+          "objectives": [
+            "Student can explain why free drops and bubbles are spherical",
+            "Student can derive the excess pressure inside a drop (2S/r) and inside a soap bubble (4S/r)"
+          ],
+          "visualIdeas": [
+            "a liquid drop and a soap bubble with inside and outside pressures marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "capillary-rise",
+          "title": "Capillary Rise",
+          "objectives": [
+            "Student can derive the height of capillary rise h = 2S cos(theta)/(rho g a)",
+            "Student can explain why water rises and mercury falls in a narrow glass tube"
+          ],
+          "visualIdeas": [
+            "narrow tubes dipped in water and mercury with a concave and a convex meniscus"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "thermal-properties-of-matter",
+      "title": "Thermal Properties of Matter",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph203.pdf",
+      "topics": [
+        {
+          "id": "temperature-and-heat",
+          "title": "Temperature and Heat",
+          "objectives": [
+            "Student can describe temperature as a relative measure of hotness and heat as energy transferred because of a temperature difference",
+            "Student can state that heat flows until thermal equilibrium is reached"
+          ],
+          "visualIdeas": [
+            "a cup of tea cooling and a glass of ice water warming to room temperature"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "measurement-of-temperature",
+          "title": "Measurement of Temperature",
+          "objectives": [
+            "Student can explain how a thermometer uses a thermometric property and two fixed points",
+            "Student can convert between Celsius and Fahrenheit scales using tF = (9/5)tC + 32"
+          ],
+          "visualIdeas": [
+            "Celsius and Fahrenheit scales side by side with ice and steam points"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ideal-gas-equation-and-absolute-temperature",
+          "title": "Ideal-Gas Equation and Absolute Temperature",
+          "objectives": [
+            "Student can state Boyle's and Charles' laws and combine them into the ideal-gas equation PV = mu R T",
+            "Student can explain how extrapolating pressure-temperature lines of a gas gives absolute zero and the Kelvin scale, T = tC + 273.15"
+          ],
+          "visualIdeas": [
+            "pressure-temperature graphs of a gas extrapolated to meet at -273.15 degrees C"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thermal-expansion",
+          "title": "Thermal Expansion",
+          "objectives": [
+            "Student can define coefficients of linear, area and volume expansion",
+            "Student can show that alpha_v = 3 alpha_l for an isotropic solid",
+            "Student can explain the anomalous expansion of water between 0 and 4 degrees C and why lakes freeze from the top"
+          ],
+          "visualIdeas": [
+            "a rod lengthening on heating",
+            "a graph of water's volume against temperature with a minimum at 4 degrees C"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "specific-heat-capacity",
+          "title": "Specific Heat Capacity",
+          "objectives": [
+            "Student can define heat capacity, specific heat capacity and molar specific heat capacity",
+            "Student can distinguish molar specific heat at constant pressure and constant volume for gases, and explain the high specific heat of water"
+          ],
+          "visualIdeas": [
+            "equal masses of water and oil heated with different temperature rises"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "calorimetry",
+          "title": "Calorimetry",
+          "objectives": [
+            "Student can apply the principle of calorimetry: heat lost by the hot body equals heat gained by the cold body in an isolated system",
+            "Student can find the specific heat of a substance using a calorimeter"
+          ],
+          "visualIdeas": [
+            "a calorimeter with a hot metal ball dropped into water"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "change-of-state",
+          "title": "Change of State",
+          "objectives": [
+            "Student can describe melting, freezing, boiling and condensation and explain why temperature stays constant during a change of state",
+            "Student can explain regelation and the effect of pressure on boiling point, as in a pressure cooker",
+            "Student can describe sublimation and the triple point"
+          ],
+          "visualIdeas": [
+            "a temperature-time graph for heating ice to steam with flat melting and boiling sections"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "latent-heat",
+          "title": "Latent Heat",
+          "objectives": [
+            "Student can define latent heat of fusion and vaporisation, Q = mL",
+            "Student can explain why steam at 100 degrees C causes more severe burns than water at 100 degrees C"
+          ],
+          "visualIdeas": [
+            "heat added during flat parts of a heating curve labelled L_f and L_v"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conduction",
+          "title": "Conduction",
+          "objectives": [
+            "Student can describe conduction as heat transfer between adjacent parts of a body due to temperature difference",
+            "Student can use H = K A (T_C - T_D)/L with thermal conductivity K",
+            "Student can explain practical uses of good and poor conductors such as copper-bottomed cooking pots"
+          ],
+          "visualIdeas": [
+            "a metal bar between a hot and a cold reservoir with heat current arrows"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "convection",
+          "title": "Convection",
+          "objectives": [
+            "Student can describe convection as heat transfer by bulk motion of a fluid, natural or forced",
+            "Student can explain sea breeze, land breeze and trade winds as convection"
+          ],
+          "visualIdeas": [
+            "sea breeze by day and land breeze by night"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "radiation",
+          "title": "Radiation",
+          "objectives": [
+            "Student can describe radiation as heat transfer by electromagnetic waves that needs no medium",
+            "Student can explain why dark surfaces absorb and emit better and why a thermos flask limits heat loss"
+          ],
+          "visualIdeas": [
+            "a thermos flask cut-away with its double walls and silvered surfaces"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "blackbody-radiation",
+          "title": "Blackbody Radiation",
+          "objectives": [
+            "Student can describe the continuous spectrum of thermal radiation and state Wien's displacement law, lambda_m T = constant",
+            "Student can state the Stefan-Boltzmann law for the energy emitted by a body, H = e sigma A T^4"
+          ],
+          "visualIdeas": [
+            "blackbody spectra at several temperatures with peaks shifting to shorter wavelength"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "newtons-law-of-cooling",
+          "title": "Newton's Law of Cooling",
+          "objectives": [
+            "Student can state Newton's law of cooling: rate of heat loss is proportional to the excess temperature over the surroundings",
+            "Student can describe the experiment to verify the law and use it to estimate cooling times"
+          ],
+          "visualIdeas": [
+            "a cooling curve of hot water in a calorimeter against time"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "thermodynamics",
+      "title": "Thermodynamics",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph204.pdf",
+      "topics": [
+        {
+          "id": "thermal-equilibrium",
+          "title": "Thermal Equilibrium",
+          "objectives": [
+            "Student can describe thermal equilibrium as a state in which macroscopic variables such as pressure, volume and temperature do not change in time",
+            "Student can distinguish adiabatic and diathermic walls"
+          ],
+          "visualIdeas": [
+            "two gases separated by an adiabatic wall and by a diathermic wall"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "zeroth-law-of-thermodynamics",
+          "title": "Zeroth Law of Thermodynamics",
+          "objectives": [
+            "Student can state the zeroth law: two systems in thermal equilibrium with a third are in thermal equilibrium with each other",
+            "Student can explain how the zeroth law leads to the concept of temperature"
+          ],
+          "visualIdeas": [
+            "systems A, B and C with C in contact with both A and B"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "heat-internal-energy-and-work",
+          "title": "Heat, Internal Energy and Work",
+          "objectives": [
+            "Student can describe internal energy as the sum of molecular kinetic and potential energies, a state variable",
+            "Student can explain that heat and work are two modes of energy transfer and not state variables"
+          ],
+          "visualIdeas": [
+            "a gas in a cylinder with a piston gaining heat from a flame and doing work on the piston"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "first-law-of-thermodynamics",
+          "title": "First Law of Thermodynamics",
+          "objectives": [
+            "Student can state the first law dQ = dU + dW as energy conservation",
+            "Student can find the work done by a gas at constant pressure, dW = P dV, and apply the first law to 1 g of water changing from liquid to vapour"
+          ],
+          "visualIdeas": [
+            "an energy flow diagram: heat in, internal energy increase and work out"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "specific-heat-capacity",
+          "title": "Specific Heat Capacity",
+          "objectives": [
+            "Student can define specific heat capacity and molar specific heat at constant pressure and constant volume",
+            "Student can derive Cp - Cv = R for an ideal gas using the first law"
+          ],
+          "visualIdeas": [
+            "two identical gas samples heated at constant volume and at constant pressure"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thermodynamic-state-variables-and-equation-of-state",
+          "title": "Thermodynamic State Variables and Equation of State",
+          "objectives": [
+            "Student can describe state variables such as pressure, volume, temperature and internal energy for a system in equilibrium",
+            "Student can explain an equation of state such as PV = mu R T and distinguish extensive from intensive variables"
+          ],
+          "visualIdeas": [
+            "a P-V diagram with an isotherm as an example of the equation of state"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "quasi-static-process",
+          "title": "Quasi-static Process",
+          "objectives": [
+            "Student can describe a quasi-static process as an infinitely slow process passing through equilibrium states",
+            "Student can explain why real processes are only approximately quasi-static"
+          ],
+          "visualIdeas": [
+            "a piston loaded with sand removed grain by grain"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "isothermal-process",
+          "title": "Isothermal Process",
+          "objectives": [
+            "Student can describe an isothermal process for an ideal gas and why dU = 0 so heat absorbed equals work done",
+            "Student can derive the work done in an isothermal expansion, W = mu R T ln(V2/V1)"
+          ],
+          "visualIdeas": [
+            "an isotherm on a P-V diagram with the area under it shaded"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "adiabatic-process",
+          "title": "Adiabatic Process",
+          "objectives": [
+            "Student can describe an adiabatic process as one with no heat exchange and state PV^gamma = constant",
+            "Student can derive the work done in an adiabatic process and explain why the gas cools when it expands adiabatically"
+          ],
+          "visualIdeas": [
+            "an isotherm and a steeper adiabat through the same point on a P-V diagram"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "isochoric-isobaric-and-cyclic-processes",
+          "title": "Isochoric, Isobaric and Cyclic Processes",
+          "objectives": [
+            "Student can describe isochoric (constant volume) and isobaric (constant pressure) processes and apply the first law to each",
+            "Student can explain that in a cyclic process the change in internal energy is zero, so net heat absorbed equals net work done"
+          ],
+          "visualIdeas": [
+            "a P-V diagram with a vertical line, a horizontal line and a closed cycle"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "second-law-of-thermodynamics",
+          "title": "Second Law of Thermodynamics",
+          "objectives": [
+            "Student can state the Kelvin-Planck and Clausius statements of the second law",
+            "Student can explain why no heat engine can have 100% efficiency and no refrigerator can work without input work"
+          ],
+          "visualIdeas": [
+            "a heat engine and a refrigerator drawn as reservoirs with heat and work arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reversible-and-irreversible-processes",
+          "title": "Reversible and Irreversible Processes",
+          "objectives": [
+            "Student can define a reversible process and explain why spontaneous processes in nature are irreversible",
+            "Student can identify dissipative effects such as friction and free expansion as causes of irreversibility"
+          ],
+          "visualIdeas": [
+            "free expansion of a gas into vacuum when a partition is removed"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "carnot-engine",
+          "title": "Carnot Engine",
+          "objectives": [
+            "Student can describe the four steps of the Carnot cycle: isothermal expansion, adiabatic expansion, isothermal compression, adiabatic compression",
+            "Student can derive the Carnot efficiency 1 - T2/T1 and state that no engine between two temperatures can be more efficient"
+          ],
+          "visualIdeas": [
+            "the Carnot cycle on a P-V diagram with the four steps labelled"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "kinetic-theory",
+      "title": "Kinetic Theory",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph205.pdf",
+      "topics": [
+        {
+          "id": "molecular-nature-of-matter",
+          "title": "Molecular Nature of Matter",
+          "objectives": [
+            "Student can describe the atomic hypothesis and Dalton's explanation of the laws of chemical combination",
+            "Student can contrast the arrangement and motion of molecules in solids, liquids and gases"
+          ],
+          "visualIdeas": [
+            "particles tightly packed in a solid, close but moving in a liquid and far apart in a gas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "behaviour-of-gases",
+          "title": "Behaviour of Gases",
+          "objectives": [
+            "Student can state the ideal gas equation PV = mu R T = k_B N T and how real gases approach ideal behaviour at low pressure and high temperature",
+            "Student can derive Boyle's law, Charles' law and Dalton's law of partial pressures from the ideal gas equation"
+          ],
+          "visualIdeas": [
+            "PV against P curves for real gases approaching the ideal straight line"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "kinetic-theory-of-an-ideal-gas",
+          "title": "Kinetic Theory of an Ideal Gas",
+          "objectives": [
+            "Student can list the assumptions of the kinetic theory: molecules in random motion, negligible interaction except during collisions, and elastic collisions",
+            "Student can explain why molecules can be treated as moving freely in straight lines between collisions"
+          ],
+          "visualIdeas": [
+            "gas molecules moving randomly in a box and bouncing off its walls"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "pressure-of-an-ideal-gas",
+          "title": "Pressure of an Ideal Gas",
+          "objectives": [
+            "Student can derive P = (1/3) n m v^2 (mean square speed) from momentum transferred by molecules hitting a wall",
+            "Student can explain why the pressure is the same on all walls of the container"
+          ],
+          "visualIdeas": [
+            "a molecule rebounding from a wall of a cube with its x-component of momentum reversed"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "kinetic-interpretation-of-temperature",
+          "title": "Kinetic Interpretation of Temperature",
+          "objectives": [
+            "Student can show that the average kinetic energy of a molecule is (3/2) k_B T",
+            "Student can find the root mean square speed of gas molecules and explain Dalton's law from the kinetic picture"
+          ],
+          "visualIdeas": [
+            "molecular speeds increasing as a gas is heated"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "law-of-equipartition-of-energy",
+          "title": "Law of Equipartition of Energy",
+          "objectives": [
+            "Student can define degrees of freedom for translational, rotational and vibrational motion of molecules",
+            "Student can state the law of equipartition: each quadratic energy term has an average energy (1/2) k_B T in thermal equilibrium"
+          ],
+          "visualIdeas": [
+            "a monatomic, a diatomic and a polyatomic molecule with their translational and rotational degrees of freedom"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "specific-heat-capacity-of-monatomic-diatomic-and-polyatomic-gases",
+          "title": "Specific Heat Capacity of Monatomic, Diatomic and Polyatomic Gases",
+          "objectives": [
+            "Student can use equipartition to find Cv, Cp and gamma for monatomic gases",
+            "Student can find Cv and Cp for rigid and vibrating diatomic molecules and for polyatomic gases"
+          ],
+          "visualIdeas": [
+            "a table of predicted and measured specific heats of gases"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "specific-heat-capacity-of-solids",
+          "title": "Specific Heat Capacity of Solids",
+          "objectives": [
+            "Student can use equipartition to show the molar specific heat of a solid is 3R",
+            "Student can explain why some solids such as carbon deviate from 3R at room temperature"
+          ],
+          "visualIdeas": [
+            "atoms in a solid lattice vibrating about their positions like masses on springs"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mean-free-path",
+          "title": "Mean Free Path",
+          "objectives": [
+            "Student can define mean free path as the average distance a molecule travels between collisions",
+            "Student can use l = 1/(sqrt(2) n pi d^2) and estimate the mean free path of a water molecule in water vapour"
+          ],
+          "visualIdeas": [
+            "the zigzag path of one molecule among many others"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "oscillations",
+      "title": "Oscillations",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph206.pdf",
+      "topics": [
+        {
+          "id": "periodic-and-oscillatory-motions",
+          "title": "Periodic and Oscillatory Motions",
+          "objectives": [
+            "Student can distinguish periodic motion from oscillatory (to and fro) motion with examples",
+            "Student can explain that oscillations happen about an equilibrium position where the net force is zero"
+          ],
+          "visualIdeas": [
+            "height-time graphs of a ball bouncing between palm and floor and other periodic motions"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "period-and-frequency",
+          "title": "Period and Frequency",
+          "objectives": [
+            "Student can define the period T and frequency nu = 1/T of a periodic motion",
+            "Student can use the hertz as the unit of frequency"
+          ],
+          "visualIdeas": [
+            "one complete cycle marked on a periodic graph"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "displacement",
+          "title": "Displacement",
+          "objectives": [
+            "Student can describe displacement as a general variable that changes with time in periodic motion",
+            "Student can represent periodic functions with sine and cosine and combinations of them"
+          ],
+          "visualIdeas": [
+            "sine and cosine curves with the same period",
+            "a block on a spring with displacement from equilibrium marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "simple-harmonic-motion",
+          "title": "Simple Harmonic Motion",
+          "objectives": [
+            "Student can define simple harmonic motion as x(t) = A cos(omega t + phi)",
+            "Student can identify amplitude, phase, phase constant and angular frequency omega = 2 pi / T"
+          ],
+          "visualIdeas": [
+            "x(t) graphs for different amplitudes and phase constants"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "simple-harmonic-motion-and-uniform-circular-motion",
+          "title": "Simple Harmonic Motion and Uniform Circular Motion",
+          "objectives": [
+            "Student can show that the projection of uniform circular motion on a diameter is simple harmonic motion",
+            "Student can use the reference circle to read the phase of an oscillating particle"
+          ],
+          "visualIdeas": [
+            "a particle on a circle with its shadow moving back and forth on the diameter"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "velocity-and-acceleration-in-simple-harmonic-motion",
+          "title": "Velocity and Acceleration in Simple Harmonic Motion",
+          "objectives": [
+            "Student can derive v = -omega A sin(omega t + phi) and a = -omega^2 x for simple harmonic motion",
+            "Student can explain that velocity is maximum at the mean position and acceleration is maximum at the extremes"
+          ],
+          "visualIdeas": [
+            "displacement, velocity and acceleration graphs one above another"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "force-law-for-simple-harmonic-motion",
+          "title": "Force Law for Simple Harmonic Motion",
+          "objectives": [
+            "Student can state the force law F = -k x with k = m omega^2 for simple harmonic motion",
+            "Student can find the period of a mass on a spring, T = 2 pi sqrt(m/k)"
+          ],
+          "visualIdeas": [
+            "a block attached to a spring with the restoring force always pointing to the mean position"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "energy-in-simple-harmonic-motion",
+          "title": "Energy in Simple Harmonic Motion",
+          "objectives": [
+            "Student can derive the kinetic and potential energy of a particle in simple harmonic motion",
+            "Student can show that the total energy (1/2) k A^2 stays constant"
+          ],
+          "visualIdeas": [
+            "kinetic, potential and total energy curves against displacement"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-simple-pendulum",
+          "title": "The Simple Pendulum",
+          "objectives": [
+            "Student can derive the period of a simple pendulum, T = 2 pi sqrt(L/g), for small angles using torque",
+            "Student can explain why the small-angle approximation is needed for simple harmonic motion of a pendulum"
+          ],
+          "visualIdeas": [
+            "a pendulum bob displaced by a small angle with the restoring force component"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "waves",
+      "title": "Waves",
+      "book": "Physics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/keph207.pdf",
+      "topics": [
+        {
+          "id": "transverse-and-longitudinal-waves",
+          "title": "Transverse and Longitudinal Waves",
+          "objectives": [
+            "Student can describe a wave as a disturbance that carries energy without the medium moving as a whole",
+            "Student can distinguish transverse waves on a string from longitudinal sound waves in air"
+          ],
+          "visualIdeas": [
+            "a pulse travelling along a string",
+            "compressions and rarefactions in a gas column pushed by a piston"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "displacement-relation-in-a-progressive-wave",
+          "title": "Displacement Relation in a Progressive Wave",
+          "objectives": [
+            "Student can write y(x, t) = a sin(kx - omega t + phi) for a harmonic wave travelling along +x",
+            "Student can define amplitude and phase of a wave"
+          ],
+          "visualIdeas": [
+            "a sinusoidal wave shown at successive instants moving to the right"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "wavelength-and-angular-wave-number",
+          "title": "Wavelength and Angular Wave Number",
+          "objectives": [
+            "Student can define wavelength as the minimum distance between points in the same phase",
+            "Student can relate the angular wave number to wavelength, k = 2 pi / lambda"
+          ],
+          "visualIdeas": [
+            "a wave snapshot with crest-to-crest distance marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "period-angular-frequency-and-frequency",
+          "title": "Period, Angular Frequency and Frequency",
+          "objectives": [
+            "Student can define the period, angular frequency and frequency of a wave and relate them, omega = 2 pi nu",
+            "Student can find these quantities from a given wave equation"
+          ],
+          "visualIdeas": [
+            "one element of a string oscillating up and down over one period"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-speed-of-a-travelling-wave",
+          "title": "The Speed of a Travelling Wave",
+          "objectives": [
+            "Student can show that a wave travels with speed v = omega/k = lambda nu by following a point of constant phase",
+            "Student can explain that wave speed is set by the properties of the medium"
+          ],
+          "visualIdeas": [
+            "a crest moving a distance in time dt"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "speed-of-a-transverse-wave-on-stretched-string",
+          "title": "Speed of a Transverse Wave on Stretched String",
+          "objectives": [
+            "Student can state that the speed of a transverse wave on a string is v = sqrt(T/mu)",
+            "Student can justify this formula using dimensional analysis"
+          ],
+          "visualIdeas": [
+            "a stretched string with tension and mass per unit length labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "speed-of-a-longitudinal-wave-speed-of-sound",
+          "title": "Speed of a Longitudinal Wave (Speed of Sound)",
+          "objectives": [
+            "Student can state that the speed of a longitudinal wave is sqrt(B/rho)",
+            "Student can explain Newton's isothermal formula for the speed of sound in air and Laplace's adiabatic correction"
+          ],
+          "visualIdeas": [
+            "a table comparing the speed of sound in gases, liquids and solids"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-principle-of-superposition-of-waves",
+          "title": "The Principle of Superposition of Waves",
+          "objectives": [
+            "Student can state the principle of superposition: overlapping waves add algebraically",
+            "Student can describe constructive and destructive interference of two harmonic waves of equal amplitude"
+          ],
+          "visualIdeas": [
+            "two pulses crossing on a string",
+            "two waves in phase and out of phase with their resultant"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reflection-of-waves",
+          "title": "Reflection of Waves",
+          "objectives": [
+            "Student can describe reflection of a pulse at a rigid boundary (phase change of pi) and at an open boundary (no phase change)",
+            "Student can relate these boundaries to a string tied to a wall and the open end of an organ pipe"
+          ],
+          "visualIdeas": [
+            "a pulse reflecting inverted from a fixed end and upright from a free end"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "standing-waves-and-normal-modes",
+          "title": "Standing Waves and Normal Modes",
+          "objectives": [
+            "Student can explain how two identical waves travelling in opposite directions form a standing wave with nodes and antinodes",
+            "Student can find the normal modes of a string fixed at both ends, lambda = 2L/n, and the harmonics",
+            "Student can find the normal modes of an air column closed at one end, with only odd harmonics"
+          ],
+          "visualIdeas": [
+            "the first three modes of a string fixed at both ends",
+            "modes of an air column closed at one end"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "beats",
+          "title": "Beats",
+          "objectives": [
+            "Student can explain beats as the periodic rise and fall of loudness when two sounds of slightly different frequencies combine",
+            "Student can use beat frequency = nu1 - nu2 and explain how musicians tune instruments with beats"
+          ],
+          "visualIdeas": [
+            "two waves of close frequencies and their sum showing an envelope"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

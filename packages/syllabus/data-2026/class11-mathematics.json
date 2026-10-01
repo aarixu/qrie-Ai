@@ -1,0 +1,1386 @@
+{
+  "id": "class11-mathematics",
+  "klass": 11,
+  "subject": "Mathematics",
+  "source": {
+    "books": [
+      {
+        "title": "Mathematics",
+        "code": "kemh1",
+        "edition": "Reprint 2026-27 (first edition February 2006; revised edition November 2022; reprinted March 2024, June 2024, January 2025 and February 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/kemh1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's numbered section and subsection headings (Introduction sections are not topics; a parent heading that is only a short lead-in to its subsections is not a separate topic; very short adjacent subsections are joined under one title naming them; section 3.4, which has no sub-headings, is split into two topics at its double-angle identities; where several subsections share a heading such as 'Latus rectum', the topic title adds the curve)"
+  },
+  "chapters": [
+    {
+      "id": "sets",
+      "title": "Sets",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh101.pdf",
+      "topics": [
+        {
+          "id": "sets-and-their-representations",
+          "title": "Sets and their Representations",
+          "objectives": [
+            "Student can decide whether a collection is a well-defined set and use the symbols for \"belongs to\" and \"does not belong to\"",
+            "Student can write a set in roster form and in set-builder form and convert between them"
+          ],
+          "visualIdeas": [
+            "the same set written in roster form and set-builder form side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-empty-set",
+          "title": "The Empty Set",
+          "objectives": [
+            "Student can define the empty (null or void) set and denote it by phi or { }",
+            "Student can decide whether a set described by a property is empty"
+          ],
+          "visualIdeas": [
+            "an empty box labelled { }"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "finite-and-infinite-sets",
+          "title": "Finite and Infinite Sets",
+          "objectives": [
+            "Student can distinguish finite sets from infinite sets with examples",
+            "Student can state the number of elements of a finite set"
+          ],
+          "visualIdeas": [
+            "a list that ends beside one that continues with three dots"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "equal-sets",
+          "title": "Equal Sets",
+          "objectives": [
+            "Student can define equal sets as sets having exactly the same elements",
+            "Student can explain that repeating or reordering elements does not change a set"
+          ],
+          "visualIdeas": [
+            "two sets with the same elements in a different order shown equal"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "subsets",
+          "title": "Subsets",
+          "objectives": [
+            "Student can define a subset and a proper subset and use the symbol for \"is a subset of\"",
+            "Student can identify subsets of the set of real numbers such as N, Z, Q and the irrationals"
+          ],
+          "visualIdeas": [
+            "nested circles for N inside Z inside Q inside R"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "intervals-as-subsets-of-r",
+          "title": "Intervals as Subsets of R",
+          "objectives": [
+            "Student can write open, closed and half-open intervals using bracket notation",
+            "Student can represent an interval on the number line and convert it to set-builder form"
+          ],
+          "visualIdeas": [
+            "a number line with open and closed circles at the ends of intervals"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "universal-set",
+          "title": "Universal Set",
+          "objectives": [
+            "Student can define a universal set as the basic set in a given context",
+            "Student can choose a suitable universal set for given sets"
+          ],
+          "visualIdeas": [
+            "a rectangle containing several sets as the universal set"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "venn-diagrams",
+          "title": "Venn Diagrams",
+          "objectives": [
+            "Student can represent sets and the universal set by Venn diagrams",
+            "Student can show relationships between sets, such as a subset, in a Venn diagram"
+          ],
+          "visualIdeas": [
+            "a rectangle U with circles A and B and their elements placed in regions"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "union-of-sets",
+          "title": "Union of Sets",
+          "objectives": [
+            "Student can find the union of two sets and shade it in a Venn diagram",
+            "Student can use the properties of union: commutative, associative, identity, idempotent and the law of U"
+          ],
+          "visualIdeas": [
+            "two overlapping circles with their union shaded"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "intersection-of-sets",
+          "title": "Intersection of Sets",
+          "objectives": [
+            "Student can find the intersection of two sets and identify disjoint sets",
+            "Student can use the properties of intersection, including the distributive law of intersection over union"
+          ],
+          "visualIdeas": [
+            "two overlapping circles with the common region shaded",
+            "two separate circles as disjoint sets"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "difference-of-sets",
+          "title": "Difference of Sets",
+          "objectives": [
+            "Student can find A - B as the set of elements of A not in B",
+            "Student can shade A - B and B - A in Venn diagrams"
+          ],
+          "visualIdeas": [
+            "a Venn diagram with only the part of A outside B shaded"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "complement-of-a-set",
+          "title": "Complement of a Set",
+          "objectives": [
+            "Student can find the complement of a set with respect to a universal set",
+            "Student can state and verify De Morgan's laws and the properties of complement"
+          ],
+          "visualIdeas": [
+            "a Venn diagram with everything outside A shaded"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "relations-and-functions",
+      "title": "Relations and Functions",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh102.pdf",
+      "topics": [
+        {
+          "id": "cartesian-products-of-sets",
+          "title": "Cartesian Products of Sets",
+          "objectives": [
+            "Student can define an ordered pair and the Cartesian product A x B of two sets",
+            "Student can find the number of elements in A x B and form products such as R x R and A x A x A"
+          ],
+          "visualIdeas": [
+            "a grid of ordered pairs formed from two small sets"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "relations",
+          "title": "Relations",
+          "objectives": [
+            "Student can define a relation from A to B as a subset of A x B",
+            "Student can find the domain, codomain and range of a relation and draw its arrow diagram",
+            "Student can count the total number of relations from A to B"
+          ],
+          "visualIdeas": [
+            "an arrow diagram from set A to set B"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "functions",
+          "title": "Functions",
+          "objectives": [
+            "Student can define a function as a relation in which every element of A has exactly one image",
+            "Student can find the domain and range of a real function"
+          ],
+          "visualIdeas": [
+            "an arrow diagram where each element of the domain has exactly one arrow"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "some-functions-and-their-graphs",
+          "title": "Some Functions and their Graphs",
+          "objectives": [
+            "Student can draw the graphs of the identity, constant, polynomial and rational functions",
+            "Student can draw the graphs of the modulus, signum and greatest integer functions and state their domains and ranges"
+          ],
+          "visualIdeas": [
+            "graphs of |x|, the signum function and the greatest integer function as steps"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "algebra-of-real-functions",
+          "title": "Algebra of Real Functions",
+          "objectives": [
+            "Student can add, subtract, multiply and divide two real functions and find the domain of the result",
+            "Student can multiply a real function by a scalar"
+          ],
+          "visualIdeas": [
+            "two functions f and g and the graph of f + g"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "trigonometric-functions",
+      "title": "Trigonometric Functions",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh103.pdf",
+      "topics": [
+        {
+          "id": "angles-and-degree-measure",
+          "title": "Angles and Degree Measure",
+          "objectives": [
+            "Student can describe an angle as a rotation of a ray from its initial side to its terminal side, positive anticlockwise",
+            "Student can use degrees, minutes and seconds to measure angles"
+          ],
+          "visualIdeas": [
+            "a ray rotating from the initial side with positive and negative angles marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "radian-measure",
+          "title": "Radian Measure",
+          "objectives": [
+            "Student can define one radian as the angle subtended at the centre by an arc equal to the radius",
+            "Student can use the relation between radian and real numbers on a unit circle and l = r theta"
+          ],
+          "visualIdeas": [
+            "a unit circle with an arc equal to the radius subtending one radian"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "relation-between-degree-and-radian",
+          "title": "Relation between Degree and Radian",
+          "objectives": [
+            "Student can use pi radians = 180 degrees to convert between degree and radian measure",
+            "Student can solve problems on arc length and angles using radian measure"
+          ],
+          "visualIdeas": [
+            "a table of common angles in degrees and radians"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "trigonometric-functions",
+          "title": "Trigonometric Functions",
+          "objectives": [
+            "Student can define the six trigonometric functions of any real number using the unit circle",
+            "Student can find where sin x and cos x are zero (x = n pi and x = (2n + 1) pi/2) and the values of the trigonometric functions at multiples of pi/2"
+          ],
+          "visualIdeas": [
+            "a unit circle with a point (cos x, sin x) and the angle x"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "sign-of-trigonometric-functions",
+          "title": "Sign of Trigonometric Functions",
+          "objectives": [
+            "Student can find the sign of each trigonometric function in the four quadrants",
+            "Student can find the values of the other functions given one function and the quadrant"
+          ],
+          "visualIdeas": [
+            "four quadrants marked with which functions are positive in each"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "domain-and-range-of-trigonometric-functions",
+          "title": "Domain and Range of Trigonometric Functions",
+          "objectives": [
+            "Student can state the domains and ranges of the six trigonometric functions",
+            "Student can describe how sin x and cos x change in each quadrant and draw the graphs of the trigonometric functions"
+          ],
+          "visualIdeas": [
+            "graphs of sin x, cos x and tan x over several periods"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "trigonometric-functions-of-sum-and-difference-of-two-angles",
+          "title": "Trigonometric Functions of Sum and Difference of Two Angles",
+          "objectives": [
+            "Student can derive cos(x + y) using the unit circle and obtain cos(x - y), sin(x + y) and sin(x - y)",
+            "Student can use identities such as sin(pi/2 - x) = cos x and sin(pi - x) = sin x",
+            "Student can use the formulae for tan(x + y), tan(x - y), cot(x + y) and cot(x - y)"
+          ],
+          "visualIdeas": [
+            "a unit circle with points for angles x, y and x + y used to prove cos(x + y)"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "multiple-angle-sum-and-product-formulae",
+          "title": "Multiple Angle, Sum and Product Formulae",
+          "objectives": [
+            "Student can use the formulae for cos 2x, sin 2x, tan 2x and for sin 3x, cos 3x, tan 3x",
+            "Student can convert sums of sines and cosines into products and products into sums",
+            "Student can prove trigonometric identities using these formulae"
+          ],
+          "visualIdeas": [
+            "a chain of identities derived from the sum formulae"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "complex-numbers-and-quadratic-equations",
+      "title": "Complex Numbers and Quadratic Equations",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh104.pdf",
+      "topics": [
+        {
+          "id": "complex-numbers",
+          "title": "Complex Numbers",
+          "objectives": [
+            "Student can explain the need for complex numbers from equations such as x^2 + 1 = 0 and define i = sqrt(-1)",
+            "Student can write a complex number as a + ib and identify its real and imaginary parts, and state when two complex numbers are equal"
+          ],
+          "visualIdeas": [
+            "the number line extended to a plane of numbers a + ib"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "addition-and-difference-of-two-complex-numbers",
+          "title": "Addition and Difference of Two Complex Numbers",
+          "objectives": [
+            "Student can add and subtract complex numbers",
+            "Student can use the properties of addition: closure, commutative, associative, additive identity and inverse"
+          ],
+          "visualIdeas": [
+            "two complex numbers added part by part"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "multiplication-and-division-of-two-complex-numbers",
+          "title": "Multiplication and Division of Two Complex Numbers",
+          "objectives": [
+            "Student can multiply complex numbers and use the properties of multiplication",
+            "Student can find the multiplicative inverse and divide one complex number by another"
+          ],
+          "visualIdeas": [
+            "(a + ib)(c + id) expanded with i^2 replaced by -1"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "power-of-i-and-the-square-roots-of-a-negative-real-number",
+          "title": "Power of i and the Square Roots of a Negative Real Number",
+          "objectives": [
+            "Student can simplify any integral power of i using i^4 = 1",
+            "Student can find the square roots of a negative real number and explain why sqrt(a) sqrt(b) = sqrt(ab) fails when both are negative",
+            "Student can use identities such as (z1 + z2)^2 for complex numbers"
+          ],
+          "visualIdeas": [
+            "the cycle i, -1, -i, 1 repeating"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-modulus-and-the-conjugate-of-a-complex-number",
+          "title": "The Modulus and the Conjugate of a Complex Number",
+          "objectives": [
+            "Student can find the modulus |z| and the conjugate of a complex number",
+            "Student can use z times its conjugate equals |z|^2 to find the inverse of z and to simplify quotients"
+          ],
+          "visualIdeas": [
+            "z and its conjugate as mirror images in the real axis"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "argand-plane-and-polar-representation",
+          "title": "Argand Plane and Polar Representation",
+          "objectives": [
+            "Student can plot complex numbers in the Argand plane with real and imaginary axes",
+            "Student can write a complex number in polar form r(cos theta + i sin theta) and find its modulus and argument"
+          ],
+          "visualIdeas": [
+            "a point z in the Argand plane with its modulus r and argument theta"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "linear-inequalities",
+      "title": "Linear Inequalities",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh105.pdf",
+      "topics": [
+        {
+          "id": "inequalities",
+          "title": "Inequalities",
+          "objectives": [
+            "Student can form inequalities from real-life situations described in words",
+            "Student can distinguish strict and slack inequalities and linear inequalities in one and two variables"
+          ],
+          "visualIdeas": [
+            "a word problem turned into an inequality such as 30x < 200"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "algebraic-solutions-of-linear-inequalities-in-one-variable-and-their-graphical-representation",
+          "title": "Algebraic Solutions of Linear Inequalities in One Variable and their Graphical Representation",
+          "objectives": [
+            "Student can state the rules for adding, subtracting, multiplying or dividing both sides of an inequality, including reversing the sign for negative numbers",
+            "Student can solve linear inequalities in one variable for x in N, Z or R",
+            "Student can represent the solution set on the number line"
+          ],
+          "visualIdeas": [
+            "a number line with the solution x < 5 shaded and an open circle at 5"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "permutations-and-combinations",
+      "title": "Permutations and Combinations",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh106.pdf",
+      "topics": [
+        {
+          "id": "fundamental-principle-of-counting",
+          "title": "Fundamental Principle of Counting",
+          "objectives": [
+            "Student can state the fundamental principle of counting (multiplication principle)",
+            "Student can count the number of ways of doing successive tasks, such as choosing a pant and a shirt from those available"
+          ],
+          "visualIdeas": [
+            "a tree diagram of choices of pants and shirts"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "permutations-when-all-the-objects-are-distinct",
+          "title": "Permutations when all the Objects are Distinct",
+          "objectives": [
+            "Student can define a permutation as an arrangement in a definite order",
+            "Student can count arrangements of n distinct objects taken r at a time with and without repetition"
+          ],
+          "visualIdeas": [
+            "three letters arranged in all possible orders"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "factorial-notation",
+          "title": "Factorial Notation",
+          "objectives": [
+            "Student can define n! and 0! = 1",
+            "Student can simplify expressions with factorials"
+          ],
+          "visualIdeas": [
+            "n! written as a product of the first n natural numbers"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "derivation-of-the-formula-for-npr",
+          "title": "Derivation of the Formula for nPr",
+          "objectives": [
+            "Student can derive nPr = n!/(n - r)!",
+            "Student can use the formula and n^r for arrangements with repetition allowed"
+          ],
+          "visualIdeas": [
+            "r boxes filled in turn with n, n - 1, n - 2 ... choices"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "permutations-when-all-the-objects-are-not-distinct-objects",
+          "title": "Permutations when all the Objects are not Distinct Objects",
+          "objectives": [
+            "Student can find the number of arrangements of n objects of which p are alike, n!/p!",
+            "Student can solve word-arrangement problems with repeated letters, such as ALLAHABAD"
+          ],
+          "visualIdeas": [
+            "the letters of a word with repeated letters highlighted"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "combinations",
+          "title": "Combinations",
+          "objectives": [
+            "Student can define a combination as a selection where order does not matter and derive nCr = n!/(r!(n - r)!)",
+            "Student can use nCr = nC(n-r) and nCr + nC(r-1) = (n+1)Cr",
+            "Student can solve selection problems such as choosing a committee or team"
+          ],
+          "visualIdeas": [
+            "selecting 2 of 4 objects with pairs listed and arrangements grouped together"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "binomial-theorem",
+      "title": "Binomial Theorem",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh107.pdf",
+      "topics": [
+        {
+          "id": "binomial-theorem-for-positive-integral-indices",
+          "title": "Binomial Theorem for Positive Integral Indices",
+          "objectives": [
+            "Student can observe the pattern of terms, powers and coefficients in expansions of (a + b)^n for small n",
+            "Student can build Pascal's triangle and use it to write coefficients"
+          ],
+          "visualIdeas": [
+            "Pascal's triangle with each number as the sum of the two above"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "binomial-theorem-for-any-positive-integer-n",
+          "title": "Binomial Theorem for any Positive Integer n",
+          "objectives": [
+            "Student can state the binomial theorem using nCr coefficients",
+            "Student can expand expressions such as (x + 2)^6 and use the theorem to compute numbers like (98)^5"
+          ],
+          "visualIdeas": [
+            "the expansion of (a + b)^n written with nC0, nC1, ... nCn"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "some-special-cases",
+          "title": "Some Special Cases",
+          "objectives": [
+            "Student can write the expansions of (x - y)^n and (1 + x)^n",
+            "Student can show that the sum of the binomial coefficients is 2^n"
+          ],
+          "visualIdeas": [
+            "alternating signs in the expansion of (x - y)^n"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "sequences-and-series",
+      "title": "Sequences and Series",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh108.pdf",
+      "topics": [
+        {
+          "id": "sequences",
+          "title": "Sequences",
+          "objectives": [
+            "Student can define a sequence, its terms and its nth term, and distinguish finite and infinite sequences",
+            "Student can write terms of a sequence from a formula or a recurrence such as the Fibonacci sequence"
+          ],
+          "visualIdeas": [
+            "the first terms of the Fibonacci sequence growing"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "series",
+          "title": "Series",
+          "objectives": [
+            "Student can define a series as the sum of the terms of a sequence",
+            "Student can write a series in sigma notation"
+          ],
+          "visualIdeas": [
+            "a series written in sigma notation and expanded"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "geometric-progression-g-p",
+          "title": "Geometric Progression (G.P.)",
+          "objectives": [
+            "Student can identify a geometric progression by a constant ratio between successive terms",
+            "Student can find the common ratio of a G.P."
+          ],
+          "visualIdeas": [
+            "a sequence 2, 6, 18, 54 with x3 arrows between terms"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "general-term-of-a-g-p",
+          "title": "General Term of a G.P.",
+          "objectives": [
+            "Student can use the nth term a r^(n-1) of a G.P.",
+            "Student can find a particular term or the number of terms of a G.P."
+          ],
+          "visualIdeas": [
+            "a table of n and a r^(n-1)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sum-to-n-terms-of-a-g-p",
+          "title": "Sum to n Terms of a G.P.",
+          "objectives": [
+            "Student can derive the sum to n terms of a G.P., Sn = a(r^n - 1)/(r - 1)",
+            "Student can apply the formula to problems such as growth and population"
+          ],
+          "visualIdeas": [
+            "the sum written above r times the sum and the two subtracted"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "geometric-mean-g-m",
+          "title": "Geometric Mean (G.M.)",
+          "objectives": [
+            "Student can find the geometric mean of two positive numbers as sqrt(ab)",
+            "Student can insert geometric means between two given numbers"
+          ],
+          "visualIdeas": [
+            "two numbers with geometric means inserted between them"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "relationship-between-a-m-and-g-m",
+          "title": "Relationship Between A.M. and G.M.",
+          "objectives": [
+            "Student can prove that the arithmetic mean of two positive numbers is at least their geometric mean",
+            "Student can find two numbers given their A.M. and G.M."
+          ],
+          "visualIdeas": [
+            "A.M. and G.M. of two numbers on a number line with A.M. to the right"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "straight-lines",
+      "title": "Straight Lines",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh109.pdf",
+      "topics": [
+        {
+          "id": "slope-of-a-line",
+          "title": "Slope of a Line",
+          "objectives": [
+            "Student can define the inclination of a line and its slope m = tan(theta)",
+            "Student can state that a vertical line has undefined slope and a horizontal line has slope zero"
+          ],
+          "visualIdeas": [
+            "a line making angle theta with the positive x-axis"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "slope-of-a-line-when-coordinates-of-any-two-points-on-the-line-are-given",
+          "title": "Slope of a Line when Coordinates of any Two Points on the Line are Given",
+          "objectives": [
+            "Student can find the slope of a line through two points, m = (y2 - y1)/(x2 - x1)",
+            "Student can use the slope to check whether three points are collinear"
+          ],
+          "visualIdeas": [
+            "a rise-over-run triangle between two points on a line"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "conditions-for-parallelism-and-perpendicularity-of-lines-in-terms-of-their-slopes",
+          "title": "Conditions for Parallelism and Perpendicularity of Lines in terms of their Slopes",
+          "objectives": [
+            "Student can state that non-vertical parallel lines have equal slopes",
+            "Student can state that non-vertical perpendicular lines have slopes whose product is -1"
+          ],
+          "visualIdeas": [
+            "two parallel lines and two perpendicular lines with their slopes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angle-between-two-lines",
+          "title": "Angle between Two Lines",
+          "objectives": [
+            "Student can find the acute angle between two lines using tan(theta) = |(m2 - m1)/(1 + m1 m2)|",
+            "Student can find a slope given another slope and the angle between the lines"
+          ],
+          "visualIdeas": [
+            "two intersecting lines with the angle between them marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "horizontal-and-vertical-lines",
+          "title": "Horizontal and Vertical Lines",
+          "objectives": [
+            "Student can write the equations y = a and x = b of horizontal and vertical lines",
+            "Student can find the equation of a line parallel to an axis through a given point"
+          ],
+          "visualIdeas": [
+            "horizontal and vertical lines on axes with their equations"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "point-slope-form",
+          "title": "Point-slope Form",
+          "objectives": [
+            "Student can derive y - y0 = m(x - x0) for a line through a given point with a given slope",
+            "Student can find the equation of a line from a point and its slope"
+          ],
+          "visualIdeas": [
+            "a line through a fixed point with its slope triangle"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "two-point-form",
+          "title": "Two-point Form",
+          "objectives": [
+            "Student can derive the equation of a line through two given points",
+            "Student can find the equation of a line through two points"
+          ],
+          "visualIdeas": [
+            "a line through two marked points"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "slope-intercept-form",
+          "title": "Slope-intercept Form",
+          "objectives": [
+            "Student can write the equation of a line as y = mx + c using the y-intercept, or y = m(x - d) using the x-intercept",
+            "Student can read the slope and intercepts from an equation"
+          ],
+          "visualIdeas": [
+            "a line crossing the y-axis at c with slope m"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "intercept-form",
+          "title": "Intercept Form",
+          "objectives": [
+            "Student can derive x/a + y/b = 1 for a line with intercepts a and b",
+            "Student can find a line from its intercepts on the axes"
+          ],
+          "visualIdeas": [
+            "a line cutting the axes at (a, 0) and (0, b)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "distance-of-a-point-from-a-line",
+          "title": "Distance of a Point From a Line",
+          "objectives": [
+            "Student can derive the perpendicular distance of a point from the line Ax + By + C = 0 using the area of a triangle",
+            "Student can find the distance of a point from a given line"
+          ],
+          "visualIdeas": [
+            "a point with a perpendicular dropped to a line"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "distance-between-two-parallel-lines",
+          "title": "Distance between Two Parallel Lines",
+          "objectives": [
+            "Student can find the distance between two parallel lines y = mx + c1 and y = mx + c2",
+            "Student can find the distance between parallel lines given in general form"
+          ],
+          "visualIdeas": [
+            "two parallel lines with a perpendicular segment between them"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "conic-sections",
+      "title": "Conic Sections",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh110.pdf",
+      "topics": [
+        {
+          "id": "sections-of-a-cone",
+          "title": "Sections of a Cone",
+          "objectives": [
+            "Student can describe a double-napped cone and how a plane cutting it at different angles gives a circle, ellipse, parabola or hyperbola",
+            "Student can describe the degenerate conic sections: a point, a line and a pair of intersecting lines"
+          ],
+          "visualIdeas": [
+            "a double-napped cone cut by planes at different angles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "circle",
+          "title": "Circle",
+          "objectives": [
+            "Student can define a circle as the set of points at a fixed distance from a fixed point",
+            "Student can write the equation of a circle with given centre and radius and find the centre and radius from its equation"
+          ],
+          "visualIdeas": [
+            "a circle with centre (h, k) and radius r on coordinate axes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "standard-equations-of-parabola",
+          "title": "Standard Equations of Parabola",
+          "objectives": [
+            "Student can define a parabola using its focus and directrix",
+            "Student can write the four standard equations of a parabola and find the focus, axis and directrix"
+          ],
+          "visualIdeas": [
+            "a parabola with its focus, directrix and a point equidistant from both"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "latus-rectum-of-a-parabola",
+          "title": "Latus Rectum of a Parabola",
+          "objectives": [
+            "Student can define the latus rectum of a parabola",
+            "Student can show that the length of the latus rectum of y^2 = 4ax is 4a"
+          ],
+          "visualIdeas": [
+            "a parabola with its latus rectum drawn through the focus"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ellipse",
+          "title": "Ellipse",
+          "objectives": [
+            "Student can define an ellipse as the set of points whose distances from two fixed foci add to a constant",
+            "Student can identify the centre, major axis, minor axis and vertices of an ellipse"
+          ],
+          "visualIdeas": [
+            "an ellipse drawn with a string fixed at two pins"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "relationship-between-semi-major-axis-semi-minor-axis-and-distance-of-the-focus-and-eccentricity-of-an-ellipse",
+          "title": "Relationship between Semi-major Axis, Semi-minor Axis and Distance of the Focus, and Eccentricity of an Ellipse",
+          "objectives": [
+            "Student can derive a^2 = b^2 + c^2 for an ellipse",
+            "Student can define the eccentricity e = c/a of an ellipse and explain why it is less than 1"
+          ],
+          "visualIdeas": [
+            "an ellipse with a, b and c marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "standard-equations-of-an-ellipse",
+          "title": "Standard Equations of an Ellipse",
+          "objectives": [
+            "Student can derive the standard equation x^2/a^2 + y^2/b^2 = 1 of an ellipse",
+            "Student can find the foci, vertices, axes and eccentricity from a standard equation, and the equation from given data"
+          ],
+          "visualIdeas": [
+            "horizontal and vertical ellipses with their foci"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "latus-rectum-of-an-ellipse",
+          "title": "Latus Rectum of an Ellipse",
+          "objectives": [
+            "Student can define the latus rectum of an ellipse",
+            "Student can use the length of the latus rectum 2b^2/a"
+          ],
+          "visualIdeas": [
+            "an ellipse with a latus rectum through each focus"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "hyperbola",
+          "title": "Hyperbola",
+          "objectives": [
+            "Student can define a hyperbola as the set of points whose distances from two fixed foci have a constant difference",
+            "Student can identify the transverse axis, conjugate axis, centre and vertices of a hyperbola"
+          ],
+          "visualIdeas": [
+            "a hyperbola with its two branches and foci"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "eccentricity-of-a-hyperbola",
+          "title": "Eccentricity of a Hyperbola",
+          "objectives": [
+            "Student can define the eccentricity e = c/a of a hyperbola and explain why it is greater than 1",
+            "Student can relate a, b and c for a hyperbola, c^2 = a^2 + b^2"
+          ],
+          "visualIdeas": [
+            "a hyperbola with a, b and c marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "standard-equation-of-hyperbola",
+          "title": "Standard Equation of Hyperbola",
+          "objectives": [
+            "Student can derive the standard equation x^2/a^2 - y^2/b^2 = 1 of a hyperbola",
+            "Student can find the foci, vertices and eccentricity from a standard equation, and the equation from given data"
+          ],
+          "visualIdeas": [
+            "hyperbolas opening left-right and up-down"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "latus-rectum-of-a-hyperbola",
+          "title": "Latus Rectum of a Hyperbola",
+          "objectives": [
+            "Student can define the latus rectum of a hyperbola",
+            "Student can use the length of the latus rectum 2b^2/a"
+          ],
+          "visualIdeas": [
+            "a hyperbola with a latus rectum through a focus"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "introduction-to-three-dimensional-geometry",
+      "title": "Introduction to Three Dimensional Geometry",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh111.pdf",
+      "topics": [
+        {
+          "id": "coordinate-axes-and-coordinate-planes-in-three-dimensional-space",
+          "title": "Coordinate Axes and Coordinate Planes in Three Dimensional Space",
+          "objectives": [
+            "Student can describe the three mutually perpendicular coordinate axes and the XY, YZ and ZX planes",
+            "Student can name the eight octants formed by the coordinate planes"
+          ],
+          "visualIdeas": [
+            "three perpendicular axes meeting at the origin with the coordinate planes shaded"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "coordinates-of-a-point-in-space",
+          "title": "Coordinates of a Point in Space",
+          "objectives": [
+            "Student can find the coordinates (x, y, z) of a point in space as distances from the coordinate planes",
+            "Student can find the octant of a point from the signs of its coordinates and points on the axes and planes"
+          ],
+          "visualIdeas": [
+            "a point in space with perpendiculars dropped to the three planes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "distance-between-two-points",
+          "title": "Distance between Two Points",
+          "objectives": [
+            "Student can derive the distance formula between two points in space",
+            "Student can use it to check whether points are collinear or form a given type of triangle"
+          ],
+          "visualIdeas": [
+            "a cuboid with two opposite corners as the two points"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "limits-and-derivatives",
+      "title": "Limits and Derivatives",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh112.pdf",
+      "topics": [
+        {
+          "id": "intuitive-idea-of-derivatives",
+          "title": "Intuitive Idea of Derivatives",
+          "objectives": [
+            "Student can find the average velocity of a falling body over shrinking time intervals",
+            "Student can interpret the derivative as the instantaneous rate of change, such as velocity at an instant"
+          ],
+          "visualIdeas": [
+            "a table of average velocities approaching a limiting value"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "limits",
+          "title": "Limits",
+          "objectives": [
+            "Student can describe the limit of a function as x approaches a value using tables and graphs",
+            "Student can find left and right hand limits and decide whether the limit exists"
+          ],
+          "visualIdeas": [
+            "a graph approaching a point from the left and from the right"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "algebra-of-limits",
+          "title": "Algebra of Limits",
+          "objectives": [
+            "Student can state the limit laws for sum, difference, product and quotient of functions",
+            "Student can use the limit laws to evaluate limits"
+          ],
+          "visualIdeas": [
+            "two function limits combining by the limit laws"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "limits-of-polynomials-and-rational-functions",
+          "title": "Limits of Polynomials and Rational Functions",
+          "objectives": [
+            "Student can evaluate limits of polynomials and rational functions by substitution and by factorising",
+            "Student can use lim (x^n - a^n)/(x - a) = n a^(n-1)"
+          ],
+          "visualIdeas": [
+            "a rational function with a hole at x = a and its limit"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "limits-of-trigonometric-functions",
+          "title": "Limits of Trigonometric Functions",
+          "objectives": [
+            "Student can state the Sandwich theorem",
+            "Student can prove lim sin x / x = 1 and lim (1 - cos x)/x = 0 as x tends to 0 and use them"
+          ],
+          "visualIdeas": [
+            "a unit circle comparing areas of triangles and a sector for small x"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "derivatives",
+          "title": "Derivatives",
+          "objectives": [
+            "Student can define the derivative of a function at a point and find it from first principles",
+            "Student can find the derivative function f'(x) of simple functions from first principles"
+          ],
+          "visualIdeas": [
+            "a secant line turning into the tangent as h approaches 0"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "algebra-of-derivative-of-functions",
+          "title": "Algebra of Derivative of Functions",
+          "objectives": [
+            "Student can use the rules for the derivative of a sum, difference, product (Leibnitz rule) and quotient",
+            "Student can apply these rules to combinations of functions"
+          ],
+          "visualIdeas": [
+            "the product rule written as a two-term pattern"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "derivative-of-polynomials-and-trigonometric-functions",
+          "title": "Derivative of Polynomials and Trigonometric Functions",
+          "objectives": [
+            "Student can find the derivative of x^n and of polynomial functions",
+            "Student can find the derivatives of sin x, cos x and tan x"
+          ],
+          "visualIdeas": [
+            "graphs of sin x and its derivative cos x one above the other"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "statistics",
+      "title": "Statistics",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh113.pdf",
+      "topics": [
+        {
+          "id": "measures-of-dispersion",
+          "title": "Measures of Dispersion",
+          "objectives": [
+            "Student can explain why a measure of central tendency alone does not describe data and why dispersion is needed",
+            "Student can name the measures of dispersion: range, quartile deviation, mean deviation and standard deviation"
+          ],
+          "visualIdeas": [
+            "two dot plots with the same mean but different spread"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "range",
+          "title": "Range",
+          "objectives": [
+            "Student can find the range as the difference between the maximum and minimum values",
+            "Student can explain the limitation of range as a measure of dispersion"
+          ],
+          "visualIdeas": [
+            "a dot plot with the smallest and largest values marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mean-deviation",
+          "title": "Mean Deviation",
+          "objectives": [
+            "Student can define the mean deviation about a central value a as the mean of |x - a|",
+            "Student can explain why absolute deviations are used"
+          ],
+          "visualIdeas": [
+            "deviations of data points from the mean shown as distances"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mean-deviation-for-ungrouped-data",
+          "title": "Mean Deviation for Ungrouped Data",
+          "objectives": [
+            "Student can calculate the mean deviation about the mean of ungrouped data",
+            "Student can calculate the mean deviation about the median of ungrouped data"
+          ],
+          "visualIdeas": [
+            "a table with columns x, x - mean and |x - mean|"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mean-deviation-for-grouped-data",
+          "title": "Mean Deviation for Grouped Data",
+          "objectives": [
+            "Student can calculate the mean deviation about the mean for discrete and continuous frequency distributions",
+            "Student can calculate the mean deviation about the median for grouped data"
+          ],
+          "visualIdeas": [
+            "a frequency table with class marks and |x - mean| columns"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "limitations-of-mean-deviation",
+          "title": "Limitations of Mean Deviation",
+          "objectives": [
+            "Student can state why mean deviation about the median is unreliable for highly variable data",
+            "Student can explain why ignoring signs of deviations makes mean deviation unsuitable for further algebra"
+          ],
+          "visualIdeas": [
+            "two data sets with similar mean deviation but different spread"
+          ],
+          "estMinutes": 5
+        },
+        {
+          "id": "variance-and-standard-deviation",
+          "title": "Variance and Standard Deviation",
+          "objectives": [
+            "Student can explain why squared deviations are used and define variance as the mean of squared deviations from the mean",
+            "Student can calculate the variance of ungrouped data"
+          ],
+          "visualIdeas": [
+            "squares drawn on each deviation from the mean"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "standard-deviation",
+          "title": "Standard Deviation",
+          "objectives": [
+            "Student can define standard deviation as the positive square root of variance",
+            "Student can calculate the standard deviation of ungrouped data"
+          ],
+          "visualIdeas": [
+            "a bell of data points with one standard deviation marked on each side of the mean"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "standard-deviation-of-a-discrete-frequency-distribution",
+          "title": "Standard Deviation of a Discrete Frequency Distribution",
+          "objectives": [
+            "Student can calculate the variance and standard deviation of a discrete frequency distribution",
+            "Student can use the formula with sums of f x and f x^2"
+          ],
+          "visualIdeas": [
+            "a table with columns x, f, fx and f(x - mean)^2"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "standard-deviation-of-a-continuous-frequency-distribution",
+          "title": "Standard Deviation of a Continuous Frequency Distribution",
+          "objectives": [
+            "Student can calculate the standard deviation of a continuous frequency distribution using class marks",
+            "Student can use the alternative formula in terms of the sums of f x and f x^2"
+          ],
+          "visualIdeas": [
+            "a histogram with class marks at the centres of bars"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "shortcut-method-to-find-variance-and-standard-deviation",
+          "title": "Shortcut Method to Find Variance and Standard Deviation",
+          "objectives": [
+            "Student can use the step-deviation method y = (x - A)/h to simplify calculations",
+            "Student can relate the variance of x to the variance of y by multiplying by h^2"
+          ],
+          "visualIdeas": [
+            "a table with an assumed mean A and step deviations"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "probability",
+      "title": "Probability",
+      "book": "Mathematics",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kemh114.pdf",
+      "topics": [
+        {
+          "id": "event",
+          "title": "Event",
+          "objectives": [
+            "Student can define an event as a subset of the sample space of a random experiment",
+            "Student can list the outcomes that make up a given event"
+          ],
+          "visualIdeas": [
+            "the sample space of throwing a die with an event circled"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "occurrence-of-an-event-and-types-of-events",
+          "title": "Occurrence of an Event and Types of Events",
+          "objectives": [
+            "Student can decide when an event has occurred from the outcome of an experiment",
+            "Student can identify impossible and sure events, simple and compound events"
+          ],
+          "visualIdeas": [
+            "events of a die shown as subsets of {1, 2, 3, 4, 5, 6}"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "algebra-of-events",
+          "title": "Algebra of Events",
+          "objectives": [
+            "Student can find the complement of an event, the event A or B, the event A and B, and the event A but not B",
+            "Student can relate these events to set operations"
+          ],
+          "visualIdeas": [
+            "a Venn diagram of two events in a sample space"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mutually-exclusive-events",
+          "title": "Mutually Exclusive Events",
+          "objectives": [
+            "Student can define mutually exclusive events as events that cannot occur together",
+            "Student can check whether given events are mutually exclusive"
+          ],
+          "visualIdeas": [
+            "two non-overlapping events in a Venn diagram"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "exhaustive-events",
+          "title": "Exhaustive Events",
+          "objectives": [
+            "Student can define exhaustive events whose union is the sample space",
+            "Student can identify events that are both mutually exclusive and exhaustive"
+          ],
+          "visualIdeas": [
+            "a sample space split into non-overlapping parts that cover it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "axiomatic-approach-to-probability",
+          "title": "Axiomatic Approach to Probability",
+          "objectives": [
+            "Student can state the axioms of probability for events of a sample space",
+            "Student can assign probabilities to outcomes consistent with the axioms"
+          ],
+          "visualIdeas": [
+            "outcomes with probabilities that add to 1"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "probability-of-an-event",
+          "title": "Probability of an Event",
+          "objectives": [
+            "Student can find the probability of an event as the sum of probabilities of its outcomes",
+            "Student can compute probabilities for experiments such as tossing coins"
+          ],
+          "visualIdeas": [
+            "the outcomes of tossing three coins with an event highlighted"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "probabilities-of-equally-likely-outcomes",
+          "title": "Probabilities of Equally Likely Outcomes",
+          "objectives": [
+            "Student can use P(E) = (number of outcomes in E)/(number of outcomes in S) for equally likely outcomes",
+            "Student can solve problems with dice, coins and cards using this formula"
+          ],
+          "visualIdeas": [
+            "a deck of 52 cards with the hearts highlighted"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "probability-of-the-event-a-or-b",
+          "title": "Probability of the Event \"A or B\"",
+          "objectives": [
+            "Student can use P(A or B) = P(A) + P(B) - P(A and B)",
+            "Student can use P(A or B) = P(A) + P(B) for mutually exclusive events"
+          ],
+          "visualIdeas": [
+            "two overlapping events with the overlap counted once"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "probability-of-event-not-a",
+          "title": "Probability of Event \"not A\"",
+          "objectives": [
+            "Student can use P(not A) = 1 - P(A)",
+            "Student can use the complement to simplify probability problems"
+          ],
+          "visualIdeas": [
+            "a sample space with event A and its complement shaded differently"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

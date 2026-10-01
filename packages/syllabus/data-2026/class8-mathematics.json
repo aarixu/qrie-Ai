@@ -1,0 +1,1598 @@
+{
+  "id": "class8-mathematics",
+  "klass": 8,
+  "subject": "Mathematics",
+  "source": {
+    "books": [
+      {
+        "title": "Ganita Prakash: Textbook of Mathematics for Grade 8 (Part-I)",
+        "code": "hegp1",
+        "edition": "Reprint 2026-27 (First Edition July 2025; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/hegp1ps.pdf"
+      },
+      {
+        "title": "Ganita Prakash: Textbook of Mathematics for Grade 8 (Part-II)",
+        "code": "hegp2",
+        "edition": "First Edition December 2025 (no \"Reprint 2026-27\" mark in the PDF; the only Part-II edition in the live catalogue)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/hegp2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "a-square-and-a-cube",
+      "title": "A Square and A Cube",
+      "book": "Ganita Prakash Part-I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp101.pdf",
+      "topics": [
+        {
+          "id": "square-numbers",
+          "title": "Square Numbers",
+          "objectives": [
+            "Student can explain why numbers like 1, 4, 9, 16 are called squares using areas of squares",
+            "Student can use the locker puzzle to see that square numbers have an odd number of factors"
+          ],
+          "visualIdeas": [
+            "a row of 100 lockers with only the square-numbered lockers left open"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "patterns-and-properties-of-perfect-squares",
+          "title": "Patterns and Properties of Perfect Squares",
+          "objectives": [
+            "Student can state that perfect squares end only in 0, 1, 4, 5, 6 or 9",
+            "Student can explain why a square can have only an even number of zeros at the end"
+          ],
+          "visualIdeas": [
+            "a table of squares 1 to 30 with the units digits highlighted"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "perfect-squares-and-odd-numbers",
+          "title": "Perfect Squares and Odd Numbers",
+          "objectives": [
+            "Student can show that adding consecutive odd numbers starting from 1 gives consecutive squares",
+            "Student can explain the pattern with inverted L-shapes added to a square"
+          ],
+          "visualIdeas": [
+            "dots arranged in nested L-shapes growing a square"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "perfect-squares-and-triangular-numbers",
+          "title": "Perfect Squares and Triangular Numbers",
+          "objectives": [
+            "Student can show that the sum of two consecutive triangular numbers is a square",
+            "Student can extend the pattern and draw the next term showing two triangular numbers forming a square"
+          ],
+          "visualIdeas": [
+            "two triangular dot arrangements fitting together into a square"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "square-roots",
+          "title": "Square Roots",
+          "objectives": [
+            "Student can find the square root of a perfect square and state that it has a positive and a negative square root",
+            "Student can test whether a number is a perfect square by pairing its prime factors",
+            "Student can estimate the square root of a number that is not a perfect square by finding the nearest squares"
+          ],
+          "visualIdeas": [
+            "a square of area 49 sq cm with side 7 cm",
+            "a number line between 15 and 16 locating the square root of 250"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "cubic-numbers",
+          "title": "Cubic Numbers",
+          "objectives": [
+            "Student can explain why 1, 8, 27 ... are called perfect cubes using unit cubes",
+            "Student can decide whether a number is a perfect cube"
+          ],
+          "visualIdeas": [
+            "a 3 by 3 by 3 cube built from 27 unit cubes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "taxicab-numbers",
+          "title": "Taxicab Numbers",
+          "objectives": [
+            "Student can recount the Hardy-Ramanujan story of 1729",
+            "Student can verify that 1729 is a sum of two cubes in two different ways"
+          ],
+          "visualIdeas": [
+            "the taxicab number 1729 shown as 1 cubed plus 12 cubed and 9 cubed plus 10 cubed"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "perfect-cubes-and-consecutive-odd-numbers",
+          "title": "Perfect Cubes and Consecutive Odd Numbers",
+          "objectives": [
+            "Student can describe how groups of consecutive odd numbers add up to perfect cubes",
+            "Student can use the pattern to find a sum without calculating it"
+          ],
+          "visualIdeas": [
+            "rows of odd numbers, 1; 3+5; 7+9+11, each row labelled with its cube"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "cube-roots",
+          "title": "Cube Roots",
+          "objectives": [
+            "Student can find the cube root of a perfect cube",
+            "Student can test whether a number is a perfect cube by splitting its prime factors into three identical groups"
+          ],
+          "visualIdeas": [
+            "3375 written as three identical groups of 3 times 5"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "successive-differences",
+          "title": "Successive Differences",
+          "objectives": [
+            "Student can compute successive differences of squares and of cubes until the differences become equal",
+            "Student can describe the pattern seen at each level"
+          ],
+          "visualIdeas": [
+            "a difference table for 1, 8, 27, 64, 125 reaching a constant row"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "a-pinch-of-history",
+          "title": "A Pinch of History",
+          "objectives": [
+            "Student can state that Babylonian clay tablets listed squares and cubes around 1700 BCE",
+            "Student can explain the Sanskrit terms varga for square and ghana for cube"
+          ],
+          "visualIdeas": [
+            "a clay tablet of square numbers beside the words varga and ghana"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "power-play",
+      "title": "Power Play",
+      "book": "Ganita Prakash Part-I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp102.pdf",
+      "topics": [
+        {
+          "id": "an-impossible-venture",
+          "title": "An Impossible Venture!",
+          "objectives": [
+            "Student can explain how the thickness of a paper doubles with each fold",
+            "Student can estimate how quickly repeated doubling becomes very large"
+          ],
+          "visualIdeas": [
+            "a sheet of paper folded again and again with its thickness doubling at each step"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "exponential-notation-and-operations",
+          "title": "Exponential Notation and Operations",
+          "objectives": [
+            "Student can write repeated multiplication in exponential notation, naming the base and the exponent",
+            "Student can evaluate expressions such as 0.001 cm x 2 to the power 7"
+          ],
+          "visualIdeas": [
+            "the paper-folding thickness written as 0.001 x 2 x 2 x 2 and as 0.001 x 2 cubed"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-stones-that-shine-and-the-magical-pond",
+          "title": "The Stones that Shine and the Magical Pond",
+          "objectives": [
+            "Student can model repeated tripling and doubling with powers",
+            "Student can use the rules that multiplying powers of the same base adds the exponents and that a power of a power multiplies them"
+          ],
+          "visualIdeas": [
+            "a branching tree of daughters, baskets, keys and rooms each multiplying by 3",
+            "a pond of lotuses doubling every day"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-many-combinations",
+          "title": "How Many Combinations",
+          "objectives": [
+            "Student can count combinations of choices by multiplying the number of options",
+            "Student can express the number of possible passwords as a power"
+          ],
+          "visualIdeas": [
+            "a tree diagram of 4 dresses and 3 caps giving 12 outfits"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-other-side-of-powers",
+          "title": "The Other Side of Powers",
+          "objectives": [
+            "Student can divide powers with the same base by subtracting exponents",
+            "Student can explain why any non-zero number to the power 0 is 1",
+            "Student can write negative exponents as reciprocals, such as 2 to the power -1 equals one half"
+          ],
+          "visualIdeas": [
+            "a line of 16 units being halved again and again",
+            "a power line of 4 from 4 to the power -2 up to 4 to the power 8"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "powers-of-10",
+          "title": "Powers of 10",
+          "objectives": [
+            "Student can write a number in expanded form using powers of 10",
+            "Student can write decimals using negative powers of 10"
+          ],
+          "visualIdeas": [
+            "47561 split into place-value blocks labelled 10 to the power 4 down to 10 to the power 0"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "scientific-notation",
+          "title": "Scientific Notation",
+          "objectives": [
+            "Student can write very large numbers in scientific notation x times 10 to the power y with x at least 1 and less than 10",
+            "Student can compare large quantities written in scientific notation"
+          ],
+          "visualIdeas": [
+            "the distance from the Sun to the galaxy centre written in full and as 3 x 10 to the power 20 m"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "did-you-ever-wonder",
+          "title": "Did You Ever Wonder?",
+          "objectives": [
+            "Student can solve estimation problems by describing relationships among quantities and making reasonable assumptions",
+            "Student can carry out approximate calculations for real situations such as donations equal to a person's weight"
+          ],
+          "visualIdeas": [
+            "a balance scale with a person on one side and sacks of jaggery on the other"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "linear-growth-vs-exponential-growth",
+          "title": "Linear Growth vs. Exponential Growth",
+          "objectives": [
+            "Student can contrast additive (linear) growth with multiplicative (exponential) growth",
+            "Student can compare the steps of a ladder to the Moon with the number of paper folds needed to reach it"
+          ],
+          "visualIdeas": [
+            "two graphs, one rising in a straight line and one curving steeply upward"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "getting-a-sense-for-large-numbers",
+          "title": "Getting a Sense for Large Numbers",
+          "objectives": [
+            "Student can relate lakh, crore and arab to million and billion using powers of 10",
+            "Student can use powers of 10 to compare very large quantities from the real world"
+          ],
+          "visualIdeas": [
+            "a number line in powers of 10 marking a lakh, a crore, a billion and beyond"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "a-pinch-of-history",
+          "title": "A Pinch of History",
+          "objectives": [
+            "Student can describe how ancient Indian texts such as the Lalitavistara named very large powers of ten",
+            "Student can compare the Indian naming of large numbers (lakh, crore, arab, kharab) with the international system (million, billion, trillion)"
+          ],
+          "visualIdeas": [
+            "a scroll listing names for powers of ten up to 10 to the power 53"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "a-story-of-numbers",
+      "title": "A Story of Numbers",
+      "book": "Ganita Prakash Part-I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp103.pdf",
+      "topics": [
+        {
+          "id": "reemas-curiosity",
+          "title": "Reema's Curiosity",
+          "objectives": [
+            "Student can describe how a Mesopotamian tablet led Reema to wonder how people wrote numbers in the past",
+            "Student can explain why we need a standard way to represent numbers"
+          ],
+          "visualIdeas": [
+            "an old paper with wedge-shaped symbols slipping out of a book"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-mechanism-of-counting",
+          "title": "The Mechanism of Counting",
+          "objectives": [
+            "Student can compare collections without number names using one-to-one matching, for example with sticks",
+            "Student can explain what a number system is: a standard sequence of objects, names or symbols in a fixed order"
+          ],
+          "visualIdeas": [
+            "a herd of cows matched one-to-one with a pile of sticks"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "some-early-number-systems-body-parts-tally-marks-and-counting-in-twos",
+          "title": "Some Early Number Systems: Body Parts, Tally Marks and Counting in Twos",
+          "objectives": [
+            "Student can describe counting with body parts and with tally marks on bones",
+            "Student can explain how the Gumulgal number names are built by counting in twos"
+          ],
+          "visualIdeas": [
+            "a tally-marked bone beside a figure pointing to body parts in counting order"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-roman-numerals",
+          "title": "The Roman Numerals",
+          "objectives": [
+            "Student can write and read numbers in Roman numerals using I, V, X, L, C, D and M",
+            "Student can explain how 4 is written as IV (1 less than 5) and 40 as XL (10 less than 50)"
+          ],
+          "visualIdeas": [
+            "a table of Roman numerals with grouping into tens, fives and ones"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-egyptian-number-system",
+          "title": "The Egyptian Number System",
+          "objectives": [
+            "Student can explain landmark numbers as powers of 10 in the Egyptian system",
+            "Student can write numbers using Egyptian symbols for 1, 10, 100 and so on"
+          ],
+          "visualIdeas": [
+            "Egyptian hieroglyphs for 1, 10, 100, 1000 with a number built from them"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "variations-on-the-egyptian-system-and-the-notion-of-base",
+          "title": "Variations on the Egyptian System and the Notion of Base",
+          "objectives": [
+            "Student can build number systems with landmark numbers that are powers of 5 or of another number",
+            "Student can define a base-n number system"
+          ],
+          "visualIdeas": [
+            "landmark numbers 1, 5, 25, 125 shown as nested groups of pebbles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "shortcomings-of-the-egyptian-system",
+          "title": "Shortcomings of the Egyptian System",
+          "objectives": [
+            "Student can explain why the Egyptian system needs new symbols for ever larger powers of 10",
+            "Student can explain why a place value system was the next step in the evolution of number systems"
+          ],
+          "visualIdeas": [
+            "a row of Egyptian symbols ending in a question mark for the next power of 10"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-mesopotamian-number-system",
+          "title": "The Mesopotamian Number System",
+          "objectives": [
+            "Student can describe the Mesopotamian base-60 (sexagesimal) place value system",
+            "Student can read a simple Mesopotamian numeral"
+          ],
+          "visualIdeas": [
+            "wedge-shaped symbols arranged in base-60 places"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-mayan-and-chinese-number-systems",
+          "title": "The Mayan and Chinese Number Systems",
+          "objectives": [
+            "Student can describe the Mayan place value system and its shell-shaped placeholder for zero",
+            "Student can describe Chinese rod numerals as a base-10 system for computation"
+          ],
+          "visualIdeas": [
+            "Mayan dots, bars and a shell beside Chinese rod numerals"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-hindu-number-system",
+          "title": "The Hindu Number System",
+          "objectives": [
+            "Student can explain the Hindu number system as a base-10 place value system with ten digits including 0",
+            "Student can explain why treating 0 as a digit lets every number be written with finitely many symbols",
+            "Student can state that the system originated in India about 2000 years ago and spread across the world"
+          ],
+          "visualIdeas": [
+            "375 split into 3 hundreds, 7 tens and 5 ones under place-value headings"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "quadrilaterals",
+      "title": "Quadrilaterals",
+      "book": "Ganita Prakash Part-I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp104.pdf",
+      "topics": [
+        {
+          "id": "a-carpenters-problem",
+          "title": "A Carpenter's Problem",
+          "objectives": [
+            "Student can model a rectangle using two strips as its diagonals",
+            "Student can reason that the diagonals of a rectangle are equal and bisect each other",
+            "Student can reason that the opposite sides of a rectangle are equal and parallel"
+          ],
+          "visualIdeas": [
+            "two wooden strips joined at their midpoints with a thread round their ends forming a rectangle"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-process-of-finding-properties",
+          "title": "The Process of Finding Properties",
+          "objectives": [
+            "Student can deduce a property of a quadrilateral through geometric reasoning",
+            "Student can verify a deduced property by measuring a real quadrilateral"
+          ],
+          "visualIdeas": [
+            "a rectangle with a deduction written beside it and a ruler checking it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-special-rectangle",
+          "title": "A Special Rectangle",
+          "objectives": [
+            "Student can define a square as a rectangle with all sides equal",
+            "Student can explain why every square is a rectangle but not every rectangle is a square"
+          ],
+          "visualIdeas": [
+            "a set diagram with squares inside rectangles"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "properties-of-a-square",
+          "title": "Properties of a Square",
+          "objectives": [
+            "Student can list the properties of a square, including diagonals that are equal and bisect each other at 90 degrees",
+            "Student can show that the diagonals of a square bisect its angles"
+          ],
+          "visualIdeas": [
+            "a square with its diagonals meeting at right angles and angle halves marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angles-in-a-quadrilateral",
+          "title": "Angles in a Quadrilateral",
+          "objectives": [
+            "Student can prove that the angles of a quadrilateral add up to 360 degrees by drawing a diagonal",
+            "Student can find a missing angle of a quadrilateral"
+          ],
+          "visualIdeas": [
+            "quadrilateral SOME split by a diagonal into two triangles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "more-quadrilaterals-with-parallel-opposite-sides",
+          "title": "More Quadrilaterals with Parallel Opposite Sides",
+          "objectives": [
+            "Student can construct a parallelogram using two pairs of parallel lines",
+            "Student can reason that a parallelogram has equal opposite sides, equal opposite angles and diagonals that bisect each other"
+          ],
+          "visualIdeas": [
+            "a parallelogram drawn from two pairs of parallel lines with equal sides marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "quadrilaterals-with-equal-sidelengths",
+          "title": "Quadrilaterals with Equal Sidelengths",
+          "objectives": [
+            "Student can construct a rhombus with a compass",
+            "Student can reason that the diagonals of a rhombus bisect each other at right angles and bisect its angles"
+          ],
+          "visualIdeas": [
+            "a rhombus with perpendicular diagonals and arcs from the construction"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "playing-with-quadrilaterals",
+          "title": "Playing with Quadrilaterals",
+          "objectives": [
+            "Student can identify the quadrilateral formed by diagonals of given lengths on a geoboard",
+            "Student can identify the quadrilaterals formed by joining two identical triangles and justify the answer"
+          ],
+          "visualIdeas": [
+            "two cardboard triangles joined along different sides to make different quadrilaterals"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "kite",
+          "title": "Kite",
+          "objectives": [
+            "Student can define a kite as a quadrilateral with two pairs of equal adjacent sides",
+            "Student can show that one diagonal of a kite bisects the other at right angles"
+          ],
+          "visualIdeas": [
+            "a kite ABCD with its diagonal BD bisecting AC at right angles"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "trapezium",
+          "title": "Trapezium",
+          "objectives": [
+            "Student can define a trapezium as a quadrilateral with at least one pair of parallel opposite sides",
+            "Student can find the angles of a trapezium using the fact that angles on the same side of a non-parallel side add up to 180 degrees",
+            "Student can show that in an isosceles trapezium the angles opposite the equal sides are equal"
+          ],
+          "visualIdeas": [
+            "an isosceles trapezium with perpendiculars dropped from the top corners forming a rectangle"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "number-play",
+      "title": "Number Play",
+      "book": "Ganita Prakash Part-I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp105.pdf",
+      "topics": [
+        {
+          "id": "sum-of-consecutive-numbers",
+          "title": "Sum of Consecutive Numbers",
+          "objectives": [
+            "Student can write numbers as sums of consecutive numbers",
+            "Student can show that all expressions of the form a plus or minus b plus or minus c plus or minus d have the same parity"
+          ],
+          "visualIdeas": [
+            "numbers 1 to 20 with their consecutive-sum breakdowns"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "breaking-even",
+          "title": "Breaking Even",
+          "objectives": [
+            "Student can decide whether an expression is even without computing it, using rules of parity",
+            "Student can decide whether an algebraic expression is always even"
+          ],
+          "visualIdeas": [
+            "a table of even plus odd, odd times odd and so on with results"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "pairs-to-make-fours",
+          "title": "Pairs to Make Fours",
+          "objectives": [
+            "Student can explain when the sum of two even numbers is a multiple of 4 using remainders on division by 4",
+            "Student can use algebra such as 4p + 2 and 4q + 2 to show what happens when such numbers are added"
+          ],
+          "visualIdeas": [
+            "even numbers sorted into multiples of 4 and those leaving remainder 2"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "always-sometimes-or-never",
+          "title": "Always, Sometimes, or Never",
+          "objectives": [
+            "Student can decide whether a statement about factors and multiples is always, sometimes or never true",
+            "Student can justify the decision with algebra, examples and counterexamples"
+          ],
+          "visualIdeas": [
+            "three bins labelled always, sometimes, never with statements sorted into them"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-remains",
+          "title": "What Remains?",
+          "objectives": [
+            "Student can write numbers that leave a given remainder as algebraic expressions such as 5k + 3",
+            "Student can find the remainder of a sum or difference from the remainders of the numbers"
+          ],
+          "visualIdeas": [
+            "numbers that leave remainder 3 on division by 5 marked on a number line"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-shortcut-for-divisibility-by-9",
+          "title": "A Shortcut for Divisibility by 9",
+          "objectives": [
+            "Student can test divisibility by 9 using the sum of digits",
+            "Student can explain why the test works using place values and remainders"
+          ],
+          "visualIdeas": [
+            "99009 split into place values, each 9 times a power of 10"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "shortcuts-for-divisibility-by-3-and-11",
+          "title": "Shortcuts for Divisibility by 3 and 11",
+          "objectives": [
+            "Student can test divisibility by 3 using the sum of digits",
+            "Student can test divisibility by 11 using alternating sums of digits and explain why it works"
+          ],
+          "visualIdeas": [
+            "place values 1, 10, 100, 1000 marked one more or one less than a multiple of 11"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "more-on-divisibility-shortcuts",
+          "title": "More on Divisibility Shortcuts",
+          "objectives": [
+            "Student can test divisibility by 6 using its factors 2 and 3",
+            "Student can explain why checking divisibility by 4 and 6 is not enough for 24"
+          ],
+          "visualIdeas": [
+            "a Venn diagram of multiples of 4 and of 6 showing which are multiples of 24"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "digital-roots",
+          "title": "Digital Roots",
+          "objectives": [
+            "Student can find the digital root of a number",
+            "Student can relate digital roots to remainders on division by 9"
+          ],
+          "visualIdeas": [
+            "489710 reduced step by step to its digital root 2"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "digits-in-disguise",
+          "title": "Digits in Disguise",
+          "objectives": [
+            "Student can solve cryptarithms where letters stand for digits in additions and multiplications",
+            "Student can reason about digits using place value and parity"
+          ],
+          "visualIdeas": [
+            "a cryptarithm PQ x 8 = RS with letters as tiles"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "we-distribute-yet-things-multiply",
+      "title": "We Distribute, Yet Things Multiply",
+      "book": "Ganita Prakash Part-I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp106.pdf",
+      "topics": [
+        {
+          "id": "increments-in-products",
+          "title": "Increments in Products",
+          "objectives": [
+            "Student can find how a product changes when one or both numbers are increased",
+            "Student can state and visualise the identity (a + m)(b + n) = ab + an + mb + mn with an area model"
+          ],
+          "visualIdeas": [
+            "a rectangle of a rows and b columns extended by m rows and n columns, with four regions labelled"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "fast-multiplications-using-the-distributive-property",
+          "title": "Fast Multiplications Using the Distributive Property",
+          "objectives": [
+            "Student can multiply quickly by 11, 101 and 1001 using the distributive property",
+            "Student can explain the digit patterns in such products"
+          ],
+          "visualIdeas": [
+            "3874 x 11 shown as 38740 + 3874"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "square-of-the-sum-difference-of-two-numbers",
+          "title": "Square of the Sum/Difference of Two Numbers",
+          "objectives": [
+            "Student can derive (a + b) squared = a squared + 2ab + b squared using areas",
+            "Student can derive (a - b) squared = a squared - 2ab + b squared and use it to compute squares such as 99 squared"
+          ],
+          "visualIdeas": [
+            "a 65 by 65 square split into a 60 square, a 5 square and two 60 by 5 rectangles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "investigating-patterns",
+          "title": "Investigating Patterns",
+          "objectives": [
+            "Student can explain number patterns using identities, such as 2(a squared + b squared) = (a + b) squared + (a - b) squared",
+            "Student can prove (a + b)(a - b) = a squared - b squared and use it to compute products like 98 x 102"
+          ],
+          "visualIdeas": [
+            "a list of number patterns with the matching identity beside each"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mind-the-mistake-mend-the-mistake",
+          "title": "Mind the Mistake, Mend the Mistake",
+          "objectives": [
+            "Student can find errors in expanding and simplifying algebraic expressions",
+            "Student can correct the errors and explain what went wrong"
+          ],
+          "visualIdeas": [
+            "a worked expansion with a mistake circled in red and the correct line below"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "this-way-or-that-way-all-ways-lead-to-the-bay",
+          "title": "This Way or That Way, All Ways Lead to the Bay",
+          "objectives": [
+            "Student can find an expression for a growing pattern in more than one way",
+            "Student can show that different expressions for the same pattern are equal"
+          ],
+          "visualIdeas": [
+            "a growing pattern of circles counted in three different ways"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "proportional-reasoning-1",
+      "title": "Proportional Reasoning-1",
+      "book": "Ganita Prakash Part-I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp107.pdf",
+      "topics": [
+        {
+          "id": "observing-similarity-in-change",
+          "title": "Observing Similarity in Change",
+          "objectives": [
+            "Student can tell which resized images look similar and which look distorted",
+            "Student can explain that images look similar when width and height change by the same factor"
+          ],
+          "visualIdeas": [
+            "five resized pictures of a tiger, two of them stretched or squashed"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ratios",
+          "title": "Ratios",
+          "objectives": [
+            "Student can write a ratio a : b and name its terms",
+            "Student can explain when two ratios are proportional"
+          ],
+          "visualIdeas": [
+            "image widths and heights written as ratios 60 : 40, 30 : 20, 90 : 60"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ratios-in-their-simplest-form",
+          "title": "Ratios in their Simplest Form",
+          "objectives": [
+            "Student can reduce a ratio to its simplest form by dividing by the HCF",
+            "Student can compare ratios using their simplest forms"
+          ],
+          "visualIdeas": [
+            "60 : 40 reduced to 3 : 2 by dividing both terms by 20"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "problem-solving-with-proportional-reasoning",
+          "title": "Problem Solving with Proportional Reasoning",
+          "objectives": [
+            "Student can check whether two ratios are proportional, for example using ad = bc",
+            "Student can solve problems such as scaling a lemonade recipe"
+          ],
+          "visualIdeas": [
+            "glasses of lemonade and spoons of sugar scaled by the same factor"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "trairasika-the-rule-of-three",
+          "title": "Trairasika—The Rule of Three",
+          "objectives": [
+            "Student can find the fourth term of a proportion using the rule of three",
+            "Student can solve problems such as the amount of rice for fewer students"
+          ],
+          "visualIdeas": [
+            "120 : 15 :: 80 : ? with the factor of change shown"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "sharing-but-not-equally",
+          "title": "Sharing, but Not Equally!",
+          "objectives": [
+            "Student can divide a quantity in a given ratio",
+            "Student can find each share using m/(m + n) and n/(m + n) of the whole"
+          ],
+          "visualIdeas": [
+            "12 counters shared between two people in the ratio 5 : 7"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "unit-conversions",
+          "title": "Unit Conversions",
+          "objectives": [
+            "Student can convert between units of length, area and volume using given conversion factors",
+            "Student can convert temperatures between Celsius and Fahrenheit"
+          ],
+          "visualIdeas": [
+            "a conversion table with metres to feet, hectares to acres and Celsius to Fahrenheit"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "fractions-in-disguise",
+      "title": "Fractions in Disguise",
+      "book": "Ganita Prakash Part-II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp201.pdf",
+      "topics": [
+        {
+          "id": "expressing-fractions-as-percentages",
+          "title": "Expressing Fractions as Percentages",
+          "objectives": [
+            "Student can express a fraction as a percentage by finding an equivalent fraction with denominator 100",
+            "Student can explain a percentage as a number out of every 100"
+          ],
+          "visualIdeas": [
+            "a 10 by 10 grid with 75 squares shaded for three quarters"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "percentage-of-some-quantity",
+          "title": "Percentage of Some Quantity",
+          "objectives": [
+            "Student can find a given percentage of a quantity",
+            "Student can explain why percentages of different wholes cannot be compared directly"
+          ],
+          "visualIdeas": [
+            "two biscuit packets of different sizes with their sugar percentages"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "free-hand-computations",
+          "title": "Free-hand Computations",
+          "objectives": [
+            "Student can find percentages such as 25%, 10% and 5% mentally using fractions",
+            "Student can build other percentages from 10%, 20% and 5%, for example 25% as 20% plus 5%"
+          ],
+          "visualIdeas": [
+            "a table of quantities with 25%, 10% and 5% filled in by mental steps"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-fdp-trio-fractions-decimals-and-percentages",
+          "title": "The FDP Trio — Fractions, Decimals, and Percentages",
+          "objectives": [
+            "Student can convert between fractions, decimals and percentages",
+            "Student can use the decimal equivalent to find a percentage of a quantity"
+          ],
+          "visualIdeas": [
+            "a three-way table linking 1/2, 0.5 and 50%"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "percentages-greater-than-100",
+          "title": "Percentages Greater than 100",
+          "objectives": [
+            "Student can interpret percentages greater than 100 in contexts such as sales targets",
+            "Student can find the quantity when a percentage over 100 is given"
+          ],
+          "visualIdeas": [
+            "a bar of the sales target with the sales running past 100%"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "using-percentages-to-compare-proportions",
+          "title": "Using Percentages to Compare Proportions",
+          "objectives": [
+            "Student can compare scores out of different totals by converting them to percentages",
+            "Student can compare the ingredients of two products by converting their shares into percentages"
+          ],
+          "visualIdeas": [
+            "two test papers, 42 out of 50 and 70 out of 80, converted to percentages"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "percentage-increase-or-decrease",
+          "title": "Percentage Increase or Decrease",
+          "objectives": [
+            "Student can calculate percentage increase or decrease using the original amount as the base",
+            "Student can calculate profit, loss and discount as percentages"
+          ],
+          "visualIdeas": [
+            "a price tag changing from Rs 30 to Rs 42 with the increase shown as a fraction of 30"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "taxes",
+          "title": "Taxes",
+          "objectives": [
+            "Student can explain that tax rates such as GST are given as percentages",
+            "Student can check the GST calculation on a bill"
+          ],
+          "visualIdeas": [
+            "a shop bill with the GST line highlighted"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "growth-and-compounding",
+          "title": "Growth and Compounding",
+          "objectives": [
+            "Student can calculate simple interest on a deposit",
+            "Student can calculate the amount with compounding using p(1 + r) to the power t",
+            "Student can compare growth with and without compounding"
+          ],
+          "visualIdeas": [
+            "a bank deposit growing year by year with and without compounding"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "tricky-percentages",
+          "title": "Tricky Percentages",
+          "objectives": [
+            "Student can explain why successive discounts such as 30% + 20% are not the same as a 50% discount",
+            "Student can compare percentage gains with absolute gains and work out the loss when a 50% discount follows a 50% profit margin"
+          ],
+          "visualIdeas": [
+            "two offers: deposit 100 get 300 and deposit 1000 get 1500, compared"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-baudhayana-pythagoras-theorem",
+      "title": "The Baudhayana-Pythagoras Theorem",
+      "book": "Ganita Prakash Part-II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp202.pdf",
+      "topics": [
+        {
+          "id": "doubling-a-square",
+          "title": "Doubling a Square",
+          "objectives": [
+            "Student can construct a square of double the area using the diagonal of the given square, as in Baudhayana's Sulba-Sutra",
+            "Student can explain why doubling the side gives four times the area"
+          ],
+          "visualIdeas": [
+            "a square with a larger square drawn on its diagonal, cut into triangles to show double area"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "halving-a-square",
+          "title": "Halving a Square",
+          "objectives": [
+            "Student can construct a square of half the area by drawing a tilted square inside the given square",
+            "Student can make a half-area square by folding paper"
+          ],
+          "visualIdeas": [
+            "a tilted square inside a square with corner triangles folded in"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "hypotenuse-of-an-isosceles-right-triangle",
+          "title": "Hypotenuse of an Isosceles Right Triangle",
+          "objectives": [
+            "Student can find the hypotenuse of an isosceles right triangle with legs 1 as root 2",
+            "Student can relate the square on the hypotenuse to twice the square on a leg"
+          ],
+          "visualIdeas": [
+            "an isosceles right triangle with squares drawn on its sides"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "decimal-representation-of-root-2",
+          "title": "Decimal Representation of Root 2",
+          "objectives": [
+            "Student can find lower and upper bounds for root 2 by squaring decimals",
+            "Student can explain that root 2 lies between 1.414 and 1.415 and cannot be written as a terminating decimal or a fraction"
+          ],
+          "visualIdeas": [
+            "a number line zooming in between 1.4 and 1.5, then 1.41 and 1.42"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "combining-two-different-squares",
+          "title": "Combining Two Different Squares",
+          "objectives": [
+            "Student can follow Baudhayana's method to combine two different squares into one square",
+            "Student can state the Baudhayana-Pythagoras theorem a squared + b squared = c squared for a right triangle"
+          ],
+          "visualIdeas": [
+            "two squares on the legs of a right triangle rearranged to fill the square on the hypotenuse"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "right-triangles-having-integer-sidelengths",
+          "title": "Right-Triangles Having Integer Sidelengths",
+          "objectives": [
+            "Student can check whether a triple is a Baudhayana triple",
+            "Student can generate new triples, for example by scaling known ones"
+          ],
+          "visualIdeas": [
+            "right triangles with sides 3-4-5, 5-12-13 and 8-15-17"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-long-standing-open-problem",
+          "title": "A Long-Standing Open Problem",
+          "objectives": [
+            "Student can describe Fermat's statement that no cube is a sum of two cubes and no higher power is a sum of two such powers",
+            "Student can state that after more than 300 years of failed attempts, Andrew Wiles proved it"
+          ],
+          "visualIdeas": [
+            "a timeline from Fermat's margin note to its proof"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "further-applications-of-the-baudhayana-pythagoras-theorem",
+          "title": "Further Applications of the Baudhayana-Pythagoras Theorem",
+          "objectives": [
+            "Student can solve Bhaskaracharya's lotus problem from the Lilavati using the theorem",
+            "Student can apply the theorem to find unknown lengths in real situations"
+          ],
+          "visualIdeas": [
+            "a lotus stem in a lake bending to touch the water 3 units away"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "proportional-reasoning-2",
+      "title": "Proportional Reasoning-2",
+      "book": "Ganita Prakash Part-II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp203.pdf",
+      "topics": [
+        {
+          "id": "proportionality-a-quick-recap",
+          "title": "Proportionality—A Quick Recap",
+          "objectives": [
+            "Student can recall that quantities in a proportional relationship change by the same factor",
+            "Student can scale a recipe such as idli batter in a given ratio"
+          ],
+          "visualIdeas": [
+            "cups of rice and urad dal in the ratio 2 : 1 scaled up"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ratios-in-maps",
+          "title": "Ratios in Maps",
+          "objectives": [
+            "Student can interpret a map's representative fraction such as 1 : 60,00,000",
+            "Student can convert a map distance into the actual distance"
+          ],
+          "visualIdeas": [
+            "a map scale bar with 1 cm marked against 60 km"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ratios-with-more-than-2-terms",
+          "title": "Ratios with More than 2 Terms",
+          "objectives": [
+            "Student can write and use ratios with three or more terms",
+            "Student can scale a multi-term ratio such as a spice mix"
+          ],
+          "visualIdeas": [
+            "a spice mix ratio 8 : 4 : 2 : 1 shown as spoonfuls"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dividing-a-whole-in-a-given-ratio",
+          "title": "Dividing a Whole in a Given Ratio",
+          "objectives": [
+            "Student can divide a quantity in a ratio with several terms",
+            "Student can solve problems such as mixing cement, sand and gravel in the ratio 1 : 1.5 : 3"
+          ],
+          "visualIdeas": [
+            "a bag of concrete split into cement, sand and gravel in ratio"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-slice-of-the-pie",
+          "title": "A Slice of the Pie",
+          "objectives": [
+            "Student can find the angle of each slice of a pie chart from the data",
+            "Student can draw and read a pie chart"
+          ],
+          "visualIdeas": [
+            "a pie chart of grades with the angle of each slice marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "inverse-proportions",
+          "title": "Inverse Proportions",
+          "objectives": [
+            "Student can distinguish direct and inverse proportion",
+            "Student can solve problems where one quantity increases as the other decreases by the same factor, such as workers and days"
+          ],
+          "visualIdeas": [
+            "more workers finishing a job in fewer days, shown with a table"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "exploring-some-geometric-themes",
+      "title": "Exploring Some Geometric Themes",
+      "book": "Ganita Prakash Part-II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp204.pdf",
+      "topics": [
+        {
+          "id": "fractals-the-sierpinski-carpet",
+          "title": "Fractals: The Sierpinski Carpet",
+          "objectives": [
+            "Student can describe fractals as self-similar shapes found in nature and art",
+            "Student can draw the first steps of the Sierpinski Carpet and count the remaining squares"
+          ],
+          "visualIdeas": [
+            "steps 0, 1 and 2 of the Sierpinski Carpet beside a fern"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sierpinski-gasket-and-koch-snowflake",
+          "title": "Sierpinski Gasket and Koch Snowflake",
+          "objectives": [
+            "Student can draw the steps of the Sierpinski Gasket by joining midpoints of an equilateral triangle",
+            "Student can describe how each side of the Koch Snowflake is replaced by a bump at every step"
+          ],
+          "visualIdeas": [
+            "steps of the Sierpinski triangle beside steps of the Koch snowflake"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fractals-in-art",
+          "title": "Fractals in Art",
+          "objectives": [
+            "Student can identify fractal-like patterns in Indian temples such as the Kandariya Mahadev Temple",
+            "Student can identify fractal patterns in other art, such as Fulani wedding blankets and Escher's prints"
+          ],
+          "visualIdeas": [
+            "a temple spire built from smaller copies of itself"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "build-it-in-your-imagination",
+          "title": "Build it in Your Imagination",
+          "objectives": [
+            "Student can visualise solids and their changes without drawing them",
+            "Student can describe the result of imagined cuts or arrangements of solids"
+          ],
+          "visualIdeas": [
+            "a cube being sliced in the mind's eye with the cut face shown"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "making-solids",
+          "title": "Making Solids",
+          "objectives": [
+            "Student can identify faces, edges and vertices of solids",
+            "Student can identify nets that fold into cuboids, cylinders, cones, prisms and pyramids"
+          ],
+          "visualIdeas": [
+            "nets of a cube, a cylinder and a triangular pyramid with fold lines"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "shortest-paths-on-a-cube",
+          "title": "Shortest Paths on a Cube",
+          "objectives": [
+            "Student can find the shortest path between two points on the surface of a cuboid by unfolding it into a net",
+            "Student can explain why different unfoldings of a cuboid give different path lengths and use the Baudhayana-Pythagoras theorem to find the shortest one"
+          ],
+          "visualIdeas": [
+            "an ant and a laddu on a cube with the straight path drawn on its unfolded net"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "representation-of-solids-on-a-plane-surface",
+          "title": "Representation of Solids on a Plane Surface",
+          "objectives": [
+            "Student can draw the front view, top view and side view of a solid",
+            "Student can match a solid with its views"
+          ],
+          "visualIdeas": [
+            "a stack of cubes with its front, top and side views drawn beside it"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "isometric-projections-and-drawing-on-isometric-grids",
+          "title": "Isometric Projections and Drawing on Isometric Grids",
+          "objectives": [
+            "Student can explain an isometric projection as one in which all edges of a cube appear of equal length",
+            "Student can draw solids made of cubes on isometric grid paper"
+          ],
+          "visualIdeas": [
+            "Tetris-shaped solids drawn on isometric dot paper"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "tales-by-dots-and-lines",
+      "title": "Tales by Dots and Lines",
+      "book": "Ganita Prakash Part-II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp205.pdf",
+      "topics": [
+        {
+          "id": "the-balancing-act",
+          "title": "The Balancing Act",
+          "objectives": [
+            "Student can explain the mean as a balance point where the distances of values on either side add up equally",
+            "Student can predict how the mean changes when a value is included or removed"
+          ],
+          "visualIdeas": [
+            "dots on a number line balanced on a pivot at the mean"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "unchanging-mean-and-relatively-unchanged",
+          "title": "Unchanging Mean and Relatively Unchanged",
+          "objectives": [
+            "Student can include or remove values without changing the mean",
+            "Student can explain how the mean changes when every value increases by the same number"
+          ],
+          "visualIdeas": [
+            "a data set shifted up by 10 with the mean moving by 10"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tinkering-with-median",
+          "title": "Tinkering with Median",
+          "objectives": [
+            "Student can predict how including a new value changes the median",
+            "Student can explain that including a value greater than the median increases it and including a smaller value decreases it"
+          ],
+          "visualIdeas": [
+            "sorted values with the median marked before and after adding 11"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "finding-the-unknown",
+          "title": "Finding the Unknown",
+          "objectives": [
+            "Student can find a missing value when the mean of the data is known",
+            "Student can correct a mean when one recorded value is found to be wrong"
+          ],
+          "visualIdeas": [
+            "a list of wrestlers' weights with one smudged value"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mean-and-median-with-frequencies",
+          "title": "Mean and Median with Frequencies",
+          "objectives": [
+            "Student can find the mean and median of data given in a frequency table",
+            "Student can find the median from a frequency table by adding frequencies cumulatively"
+          ],
+          "visualIdeas": [
+            "a frequency table of family sizes with a dot plot above it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "spreadsheets",
+          "title": "Spreadsheets",
+          "objectives": [
+            "Student can organise data in a spreadsheet",
+            "Student can use a spreadsheet to compute totals and means of marks"
+          ],
+          "visualIdeas": [
+            "a spreadsheet of students' marks with a formula cell highlighted"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "line-graphs",
+          "title": "Line Graphs",
+          "objectives": [
+            "Student can read and draw a line graph to show change over time",
+            "Student can compare a line graph with a clustered-column graph of the same data"
+          ],
+          "visualIdeas": [
+            "monthly temperatures of Kerala and Punjab as two lines"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "space-jam-a-traffic-problem-in-the-future",
+          "title": "Space Jam: A Traffic Problem in the Future?",
+          "objectives": [
+            "Student can interpret a line graph of objects launched into space by identifying what is given and inferring trends",
+            "Student can decide which inferences from a line graph are valid and explain why a line graph suits change over time"
+          ],
+          "visualIdeas": [
+            "a line graph of objects launched into space each year rising steeply"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "catch-the-pattern-in-rain",
+          "title": "Catch the (Pattern in) Rain",
+          "objectives": [
+            "Student can compare monthly average rainfall graphs of different cities and describe their patterns",
+            "Student can identify the peak and low rainfall months of cities on the west and east coasts"
+          ],
+          "visualIdeas": [
+            "six small rainfall graphs of Indian cities side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "infographics-and-what-can-a-strip-say",
+          "title": "Infographics and What can a Strip Say?",
+          "objectives": [
+            "Student can read information from an infographic such as a rice and wheat preference map",
+            "Student can interpret activity strips showing how time is spent in a day"
+          ],
+          "visualIdeas": [
+            "three coloured 48-box strips showing a day's activities"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "data-story-sleepy-deepy",
+          "title": "Data Story: Sleepy-Deepy",
+          "objectives": [
+            "Student can explore data on how long animals and people sleep",
+            "Student can raise new questions from data and look for evidence"
+          ],
+          "visualIdeas": [
+            "a bar chart of hours of sleep for different animals"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "algebra-play",
+      "title": "Algebra Play",
+      "book": "Ganita Prakash Part-II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp206.pdf",
+      "topics": [
+        {
+          "id": "thinking-about-think-of-a-number-tricks",
+          "title": "Thinking about 'Think of a Number' Tricks",
+          "objectives": [
+            "Student can explain why a think-of-a-number trick always gives the same answer using algebra",
+            "Student can invent a new trick of this kind"
+          ],
+          "visualIdeas": [
+            "the steps of a trick written in words beside the matching algebra"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "number-pyramids",
+          "title": "Number Pyramids",
+          "objectives": [
+            "Student can fill number pyramids where each number is the sum of the two below",
+            "Student can use letter-numbers to solve pyramids with missing entries"
+          ],
+          "visualIdeas": [
+            "a number pyramid with some blocks filled and others marked a, b, c"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fun-with-grids-calendar-magic-and-algebra-grids",
+          "title": "Fun with Grids: Calendar Magic and Algebra Grids",
+          "objectives": [
+            "Student can explain with algebra how to find the numbers in a 2 by 2 calendar grid from their sum",
+            "Student can solve grids where shapes stand for numbers"
+          ],
+          "visualIdeas": [
+            "a calendar page with a 2 by 2 square labelled a, a+1, a+7, a+8"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-largest-product",
+          "title": "The Largest Product",
+          "objectives": [
+            "Student can arrange given digits to get the largest product and justify the arrangement systematically",
+            "Student can compare products by grouping the arrangements that share the same multiplier"
+          ],
+          "visualIdeas": [
+            "the six arrangements of 2, 3 and 5 in a two-digit-by-one-digit product"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "decoding-divisibility-tricks",
+          "title": "Decoding Divisibility Tricks",
+          "objectives": [
+            "Student can explain with algebra why the difference of a two-digit number and its reverse is divisible by 9",
+            "Student can explain similar tricks with three-digit numbers"
+          ],
+          "visualIdeas": [
+            "47 and 74 written as 10a + b and 10b + a with their difference 9(b - a)"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "area",
+      "title": "Area",
+      "book": "Ganita Prakash Part-II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hegp207.pdf",
+      "topics": [
+        {
+          "id": "rectangle-and-squares",
+          "title": "Rectangle and Squares",
+          "objectives": [
+            "Student can divide a square into parts of equal area in different ways",
+            "Student can explain how area is measured by counting unit squares"
+          ],
+          "visualIdeas": [
+            "a square divided into 4 equal-area parts in several creative ways"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "why-cant-perimeter-be-a-measure-of-area",
+          "title": "Why Can't Perimeter be a Measure of Area?",
+          "objectives": [
+            "Student can show that regions with the same perimeter can have different areas and vice versa",
+            "Student can explain why area is measured by counting unit squares"
+          ],
+          "visualIdeas": [
+            "two shapes with equal perimeter drawn on a grid with different areas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "triangles",
+          "title": "Triangles",
+          "objectives": [
+            "Student can show that a triangle has half the area of the rectangle around it",
+            "Student can use area of a triangle = 1/2 x base x height"
+          ],
+          "visualIdeas": [
+            "a triangle inside a rectangle with its altitude dropped"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "area-of-any-polygon",
+          "title": "Area of any Polygon",
+          "objectives": [
+            "Student can find the area of a polygon by dividing it into triangles",
+            "Student can find the area of a quadrilateral from a diagonal and the perpendiculars drawn to it"
+          ],
+          "visualIdeas": [
+            "a pentagon split into three triangles by its diagonals"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "parallelogram",
+          "title": "Parallelogram",
+          "objectives": [
+            "Student can convert a parallelogram into a rectangle of equal area by cutting and moving a triangle",
+            "Student can use area of a parallelogram = base x height"
+          ],
+          "visualIdeas": [
+            "a parallelogram with a triangle cut off one side and moved to make a rectangle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rhombus",
+          "title": "Rhombus",
+          "objectives": [
+            "Student can show that area of a rhombus = 1/2 x product of its diagonals",
+            "Student can explain the dissection method from the Sulba-Sutras"
+          ],
+          "visualIdeas": [
+            "a rhombus with its diagonals rearranged into a rectangle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "trapezium",
+          "title": "Trapezium",
+          "objectives": [
+            "Student can find the area of a trapezium by splitting it into a rectangle and triangles",
+            "Student can use two copies of a trapezium to form a parallelogram and derive area = 1/2 x height x sum of parallel sides"
+          ],
+          "visualIdeas": [
+            "two copies of a trapezium joined to make a parallelogram"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "areas-in-real-life",
+          "title": "Areas in Real Life",
+          "objectives": [
+            "Student can find areas of everyday objects such as an A4 sheet",
+            "Student can convert lengths and areas between inches and centimetres"
+          ],
+          "visualIdeas": [
+            "an A4 sheet with sides 21 cm and 29.7 cm labelled"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

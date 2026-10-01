@@ -1,0 +1,955 @@
+{
+  "id": "class6-science",
+  "klass": 6,
+  "subject": "Science",
+  "source": {
+    "books": [
+      {
+        "title": "Curiosity: Textbook of Science for Grade 6",
+        "code": "fecu1",
+        "edition": "Reprint 2026-27 (First Edition July 2024; reprinted December 2024 and January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/fecu1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "the-wonderful-world-of-science",
+      "title": "The Wonderful World of Science",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu101.pdf",
+      "topics": [
+        {
+          "id": "what-is-science",
+          "title": "What is Science?",
+          "objectives": [
+            "Student can describe science as a way of thinking, observing and doing things to understand the world we live in",
+            "Student can explain why curiosity and asking questions are at the heart of science",
+            "Student can explain why science is compared to an unending jigsaw puzzle in which new discoveries add pieces and sometimes move old ones"
+          ],
+          "visualIdeas": [
+            "a jigsaw puzzle whose pieces are labelled with discoveries, one piece being moved to a new place",
+            "a montage of a mountain, a desert, a coast, the ocean and a galaxy where science happens"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-will-we-explore-with-the-help-of-this-book",
+          "title": "What Will We Explore with the Help of This Book?",
+          "objectives": [
+            "Student can name the themes the book explores: living things, food, water, hot and cold, materials and their separation, and the sky beyond Earth",
+            "Student can turn an everyday observation into a \"how\" or \"why\" question"
+          ],
+          "visualIdeas": [
+            "planet Earth surrounded by question bubbles linked to the themes of the book"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-can-we-try-to-find-answers-to-our-questions-on-our-own",
+          "title": "How Can We Try to Find Answers to Our Questions on Our Own?",
+          "objectives": [
+            "Student can list the steps of the scientific method: observe, ask a question, guess a possible answer, test the guess, analyse the results",
+            "Student can apply these steps to an everyday problem such as a pen that stops writing",
+            "Student can recognise people in daily life, such as a cook, a bicycle repair person or an electrician, who work like scientists"
+          ],
+          "visualIdeas": [
+            "a loop diagram of observe, question, guess, test, analyse",
+            "the pen-stopped-writing example drawn as a flowchart of guesses and tests"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "diversity-in-the-living-world",
+      "title": "Diversity in the Living World",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu102.pdf",
+      "topics": [
+        {
+          "id": "diversity-in-plants-and-animals-around-us",
+          "title": "Diversity in Plants and Animals Around Us",
+          "objectives": [
+            "Student can observe and record the variety of plants and animals in their surroundings",
+            "Student can explain that this variety of plants and animals is a part of biodiversity"
+          ],
+          "visualIdeas": [
+            "a survey table of plants and animals spotted around a school"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-to-group-plants",
+          "title": "How to Group Plants?",
+          "objectives": [
+            "Student can explain grouping as arranging things on the basis of their common features",
+            "Student can group plants into herbs, shrubs and trees on the basis of height, type of stem and branching",
+            "Student can distinguish monocots from dicots by the number of cotyledons, leaf venation (parallel or reticulate) and root type (fibrous roots or taproot)"
+          ],
+          "visualIdeas": [
+            "herb, shrub and tree drawn side by side with stems labelled",
+            "wheat and kidney bean compared: seed, leaf venation and roots"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "how-to-group-animals",
+          "title": "How to Group Animals?",
+          "objectives": [
+            "Student can group animals on the basis of the way they move",
+            "Student can suggest other features that can be used as a basis for grouping animals"
+          ],
+          "visualIdeas": [
+            "a sorting board of animals that walk, fly, swim, crawl or hop"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "plants-and-animals-in-different-surroundings",
+          "title": "Plants and Animals in Different Surroundings",
+          "objectives": [
+            "Student can explain that biodiversity differs between regions because of their distinct environmental conditions",
+            "Student can define adaptation and habitat and give examples such as the camel in the desert and the deodar in the mountains",
+            "Student can group plants and animals as terrestrial or aquatic on the basis of their habitats",
+            "Student can explain how damage to habitats leads to loss of biodiversity and why biodiversity must be protected"
+          ],
+          "visualIdeas": [
+            "a desert scene and a mountain scene with the camel and the deodar tree, adaptations labelled",
+            "a split view of a terrestrial and an aquatic habitat"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Mindful Eating: A Path to a Healthy Body",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu103.pdf",
+      "topics": [
+        {
+          "id": "what-do-we-eat",
+          "title": "What Do We Eat?",
+          "objectives": [
+            "Student can compare foods eaten in different regions of India and give reasons for the differences such as crops grown, taste, culture and tradition",
+            "Student can describe how cooking practices have changed over time, comparing traditional and modern methods"
+          ],
+          "visualIdeas": [
+            "an India map with typical meals from different regions",
+            "traditional and modern kitchen utensils side by side"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-are-the-components-of-food",
+          "title": "What are the Components of Food?",
+          "objectives": [
+            "Student can name the major nutrients in food: carbohydrates, fats, proteins, vitamins and minerals, along with dietary fibre and water",
+            "Student can state that carbohydrates and fats give energy, proteins are body-building, and vitamins and minerals protect the body from infections"
+          ],
+          "visualIdeas": [
+            "a plate divided into nutrient groups with example foods in each"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-to-test-different-components-of-food",
+          "title": "How to Test Different Components of Food?",
+          "objectives": [
+            "Student can test a food item for starch using iodine solution and read a blue-black colour as a positive result",
+            "Student can test a food item for fat by pressing it in paper and looking for an oily patch that light shines through",
+            "Student can test a food item for protein using copper sulfate and caustic soda solutions and read a violet colour as a positive result"
+          ],
+          "visualIdeas": [
+            "three test stations: iodine drop, paper patch held to light, test tube turning violet",
+            "an observation table of foods against starch, fat and protein"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "balanced-diet",
+          "title": "Balanced Diet",
+          "objectives": [
+            "Student can define a balanced diet as one that gives all essential nutrients in the right quantities along with roughage and water",
+            "Student can link long-term lack of nutrients to deficiency diseases and disorders",
+            "Student can explain why junk food, high in sugar and fat but low in protein, minerals, vitamins and fibre, is unhealthy"
+          ],
+          "visualIdeas": [
+            "a balanced plate compared with a junk-food plate",
+            "a matching chart of nutrients and the deficiency diseases caused by their lack"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "millets-nutrition-rich-cereals",
+          "title": "Millets: Nutrition-rich Cereals",
+          "objectives": [
+            "Student can explain why millets are called nutri-cereals",
+            "Student can explain why millets are easy to cultivate in different climatic conditions"
+          ],
+          "visualIdeas": [
+            "a display of different millet grains with their nutrient highlights"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "food-miles-from-farm-to-our-plate",
+          "title": "Food Miles: From Farm to Our Plate",
+          "objectives": [
+            "Student can define food miles as the distance a food item travels from where it is produced to the consumer",
+            "Student can explain why eating locally grown, plant-based food is good for both health and the environment",
+            "Student can suggest ways to avoid wasting food"
+          ],
+          "visualIdeas": [
+            "a map tracing a food item from a distant farm to a plate compared with a local one"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "exploring-magnets",
+      "title": "Exploring Magnets",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu104.pdf",
+      "topics": [
+        {
+          "id": "magnetic-and-non-magnetic-materials",
+          "title": "Magnetic and Non-magnetic Materials",
+          "objectives": [
+            "Student can predict and then test which objects are attracted by a magnet",
+            "Student can classify materials as magnetic or non-magnetic"
+          ],
+          "visualIdeas": [
+            "a magnet held over a tray of everyday objects, some sticking and some not"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "poles-of-magnet",
+          "title": "Poles of Magnet",
+          "objectives": [
+            "Student can show that iron filings stick mostly near the ends of a bar magnet, which are its poles",
+            "Student can explain that a magnet has a North pole and a South pole and that a single pole cannot be obtained by breaking a magnet"
+          ],
+          "visualIdeas": [
+            "iron filings clustered at the two ends of a bar magnet",
+            "a bar magnet broken into pieces, each piece still showing N and S"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "finding-directions",
+          "title": "Finding Directions",
+          "objectives": [
+            "Student can show that a freely suspended bar magnet comes to rest along the north-south direction",
+            "Student can explain how the needle of a magnetic compass is used to find directions"
+          ],
+          "visualIdeas": [
+            "a bar magnet hanging from a thread settling along a north-south line",
+            "a magnetic compass with its needle and direction markings"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "attraction-and-repulsion-between-magnets",
+          "title": "Attraction and Repulsion between Magnets",
+          "objectives": [
+            "Student can show that like poles of magnets repel and unlike poles attract",
+            "Student can use the rule of attraction and repulsion to identify the poles of an unmarked magnet"
+          ],
+          "visualIdeas": [
+            "two bar magnets shown in N-N, S-S and N-S arrangements with arrows for push or pull"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fun-with-magnets",
+          "title": "Fun with Magnets",
+          "objectives": [
+            "Student can describe simple games and toys that use magnets, such as a magnetic garland or a steel-ball maze",
+            "Student can explain that magnets can move some objects without touching them"
+          ],
+          "visualIdeas": [
+            "a steel ball steered through a cardboard maze by a magnet underneath"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "measurement-of-length-and-motion",
+      "title": "Measurement of Length and Motion",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu105.pdf",
+      "topics": [
+        {
+          "id": "how-do-we-measure",
+          "title": "How do we Measure?",
+          "objectives": [
+            "Student can measure lengths using body parts such as a handspan or a stride and explain why the results differ from person to person",
+            "Student can explain that measuring means comparing an unknown quantity with a known unit, giving a number and a unit"
+          ],
+          "visualIdeas": [
+            "two children measuring the same table in handspans and getting different counts"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "standard-units",
+          "title": "Standard Units",
+          "objectives": [
+            "Student can explain why standard units are needed and that the SI unit of length is the metre (m)",
+            "Student can convert between kilometre, metre, centimetre and millimetre using 1 km = 1000 m, 1 m = 100 cm and 1 cm = 10 mm"
+          ],
+          "visualIdeas": [
+            "a ladder of units from millimetre up to kilometre with conversion steps"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "correct-way-of-measuring-length",
+          "title": "Correct Way of Measuring Length",
+          "objectives": [
+            "Student can place a scale in contact with an object along its length and read it with the eye directly above the mark",
+            "Student can measure from a mark other than zero when the scale end is broken, by subtracting the starting reading from the final reading"
+          ],
+          "visualIdeas": [
+            "a scale placed along a pencil with correct and incorrect eye positions",
+            "a broken scale measuring from the 1.0 cm mark"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "measuring-the-length-of-a-curved-line",
+          "title": "Measuring the Length of a Curved Line",
+          "objectives": [
+            "Student can measure a curved line using a thread or a flexible measuring tape",
+            "Student can straighten the thread along a scale to read the length of the curved line"
+          ],
+          "visualIdeas": [
+            "a thread laid along a curved line, then straightened against a scale"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "describing-position",
+          "title": "Describing Position",
+          "objectives": [
+            "Student can describe the position of an object with respect to a reference point",
+            "Student can explain why the same object can be described differently from different reference points"
+          ],
+          "visualIdeas": [
+            "a street map with distances to a school measured from different landmarks"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "moving-things",
+          "title": "Moving Things",
+          "objectives": [
+            "Student can classify objects around them as in motion or at rest and justify the choice",
+            "Student can state that an object is in motion if its position changes with respect to a reference point with time"
+          ],
+          "visualIdeas": [
+            "a moving bus compared with a fixed tree as the reference point over a few time frames"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "types-of-motion",
+          "title": "Types of Motion",
+          "objectives": [
+            "Student can identify linear motion as motion along a straight line",
+            "Student can identify circular motion as motion along a circular path and oscillatory motion as to-and-fro motion about a fixed position",
+            "Student can sort everyday examples into linear, circular and oscillatory motion"
+          ],
+          "visualIdeas": [
+            "a car on a straight road, a merry-go-round and a swinging pendulum side by side with motion paths drawn"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "materials-around-us",
+      "title": "Materials Around Us",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu106.pdf",
+      "topics": [
+        {
+          "id": "observing-objects-around-us",
+          "title": "Observing Objects Around Us",
+          "objectives": [
+            "Student can identify the materials that everyday objects are made of",
+            "Student can explain that an object can be made of one or several materials and that different materials can be used to make objects with the same function"
+          ],
+          "visualIdeas": [
+            "a table matching objects to the materials they are made of"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-to-group-materials",
+          "title": "How to Group Materials?",
+          "objectives": [
+            "Student can group objects on the basis of a common property such as shape, colour, hardness or shine",
+            "Student can explain that arranging objects into groups is called classification"
+          ],
+          "visualIdeas": [
+            "objects being sorted into groups by different properties"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-materials-appearance-and-hardness",
+          "title": "Properties of Materials: Appearance and Hardness",
+          "objectives": [
+            "Student can group materials as lustrous or non-lustrous by their appearance",
+            "Student can group materials as hard or soft by testing them"
+          ],
+          "visualIdeas": [
+            "shiny metal pieces beside dull wood and paper",
+            "a scratch test comparing hard and soft materials"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-materials-seeing-through-and-dissolving",
+          "title": "Properties of Materials: Seeing Through and Dissolving",
+          "objectives": [
+            "Student can classify materials as transparent, translucent or opaque by how much can be seen through them",
+            "Student can test which substances are soluble in water and which are insoluble"
+          ],
+          "visualIdeas": [
+            "a torch shone through glass, butter paper and cardboard",
+            "beakers of water with sugar dissolving and sand settling"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "properties-of-materials-heavy-or-light-space-and-volume",
+          "title": "Properties of Materials: Heavy or Light, Space and Volume",
+          "objectives": [
+            "Student can compare how heavy equal amounts of water, sand and pebbles are",
+            "Student can explain that every material takes up space and that the space it occupies is its volume"
+          ],
+          "visualIdeas": [
+            "three identical cups filled half with water, sand and pebbles on a balance",
+            "school bags occupying the seats so students cannot sit"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-is-matter",
+          "title": "What is Matter?",
+          "objectives": [
+            "Student can define matter as anything that occupies space and has mass",
+            "Student can explain that mass is the amount of matter in an object and volume is the space it occupies"
+          ],
+          "visualIdeas": [
+            "a concept map linking matter to mass and volume"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "temperature-and-its-measurement",
+      "title": "Temperature and its Measurement",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu107.pdf",
+      "topics": [
+        {
+          "id": "hot-or-cold",
+          "title": "Hot or Cold?",
+          "objectives": [
+            "Student can show, using warm, tap and ice-cold water, that our sense of touch is not a reliable judge of how hot or cold something is",
+            "Student can explain why touching a person is not enough to tell correctly whether they have fever"
+          ],
+          "visualIdeas": [
+            "three containers of warm, tap and ice-cold water with hands dipped in them"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "temperature",
+          "title": "Temperature",
+          "objectives": [
+            "Student can define temperature as a reliable measure of the hotness or coldness of a body",
+            "Student can state that a thermometer measures temperature and name clinical and laboratory thermometers"
+          ],
+          "visualIdeas": [
+            "two cups at different temperatures with a thermometer in each"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "clinical-thermometer",
+          "title": "Clinical Thermometer",
+          "objectives": [
+            "Student can read a clinical thermometer and state that normal human body temperature is taken as 37.0 °C or 98.6 °F",
+            "Student can name the Celsius, Fahrenheit and Kelvin scales and their units, and state that the kelvin is the SI unit of temperature",
+            "Student can convert a Celsius temperature to the Kelvin scale by adding 273.15"
+          ],
+          "visualIdeas": [
+            "a digital clinical thermometer display",
+            "Celsius, Fahrenheit and Kelvin scales drawn side by side at matching points"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "laboratory-thermometer",
+          "title": "Laboratory Thermometer",
+          "objectives": [
+            "Student can state that a laboratory thermometer typically reads from -10 °C to 110 °C",
+            "Student can describe the correct way to measure the temperature of water with a laboratory thermometer and read it at eye level"
+          ],
+          "visualIdeas": [
+            "a laboratory thermometer in a beaker with the correct bulb position and eye line marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "air-temperature",
+          "title": "Air Temperature",
+          "objectives": [
+            "Student can read a room thermometer to find air temperature",
+            "Student can interpret the maximum and minimum air temperatures given in a weather report"
+          ],
+          "visualIdeas": [
+            "a weather report card showing the day's maximum and minimum temperatures"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "a-journey-through-states-of-water",
+      "title": "A Journey through States of Water",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu108.pdf",
+      "topics": [
+        {
+          "id": "investigating-waters-disappearing-act",
+          "title": "Investigating Water's Disappearing Act",
+          "objectives": [
+            "Student can explain the disappearance of water from puddles and wet clothes as evaporation",
+            "Student can define evaporation as the conversion of water into its vapour state"
+          ],
+          "visualIdeas": [
+            "a puddle shrinking over the course of a day"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "another-mystery",
+          "title": "Another Mystery",
+          "objectives": [
+            "Student can explain the water droplets on the outside of a glass of cold water as condensation of water vapour from the air",
+            "Student can define condensation as the conversion of water vapour into its liquid state"
+          ],
+          "visualIdeas": [
+            "a glass of ice-cold water with droplets forming on its outer surface"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-are-the-different-states-of-water",
+          "title": "What are the Different States of Water?",
+          "objectives": [
+            "Student can identify the solid, liquid and gaseous states of water as ice, water and water vapour",
+            "Student can compare the properties of the three states of water"
+          ],
+          "visualIdeas": [
+            "ice, water and steam shown in containers of different shapes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-can-we-change-the-states-of-water",
+          "title": "How can we Change the States of Water?",
+          "objectives": [
+            "Student can explain that water changes its state on heating or cooling",
+            "Student can describe how ice can be changed into water and water into water vapour, and back"
+          ],
+          "visualIdeas": [
+            "a cycle diagram of ice to water to vapour and back with heating and cooling arrows"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-can-water-be-evaporated-faster-or-slower",
+          "title": "How can Water be Evaporated Faster or Slower?",
+          "objectives": [
+            "Student can design an activity to test how exposed area, humidity and air movement affect the rate of evaporation",
+            "Student can predict whether clothes will dry faster or slower under given conditions"
+          ],
+          "visualIdeas": [
+            "two wet cloths, one spread out and one folded, drying side by side"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "cooling-effect",
+          "title": "Cooling Effect",
+          "objectives": [
+            "Student can explain that evaporation causes cooling",
+            "Student can use evaporation to explain why water stays cool in an earthen pot (matka)"
+          ],
+          "visualIdeas": [
+            "water seeping through a matka wall and evaporating from its surface"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-do-clouds-give-us-rain",
+          "title": "How do Clouds give us Rain?",
+          "objectives": [
+            "Student can explain that water vapour in the air condenses into tiny droplets that appear as clouds",
+            "Student can explain how droplets come together and fall as rain, hail or snow",
+            "Student can describe the water cycle as the circulation of water between the Earth's surface and the atmosphere"
+          ],
+          "visualIdeas": [
+            "a water cycle diagram with evaporation, condensation, clouds and rain labelled"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "methods-of-separation-in-everyday-life",
+      "title": "Methods of Separation in Everyday Life",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu109.pdf",
+      "topics": [
+        {
+          "id": "handpicking-and-threshing",
+          "title": "Handpicking and Threshing",
+          "objectives": [
+            "Student can explain handpicking as separating solids from a mixture on the basis of differences in size, colour and shape",
+            "Student can explain threshing as beating stalks to separate grains from them"
+          ],
+          "visualIdeas": [
+            "picking stones out of a plate of grain",
+            "stalks being beaten to free the grains"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "winnowing-and-sieving",
+          "title": "Winnowing and Sieving",
+          "objectives": [
+            "Student can explain winnowing as separating lighter husk from heavier grains using wind or blowing air",
+            "Student can explain sieving as separating solids of different particle sizes using a sieve"
+          ],
+          "visualIdeas": [
+            "a soop (bamboo tray) with husk blowing away and grains falling",
+            "flour passing through a sieve leaving bran behind"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "evaporation-getting-salt-from-seawater",
+          "title": "Evaporation: Getting Salt from Seawater",
+          "objectives": [
+            "Student can explain how evaporation separates a solid dissolved in a liquid, as when salt is obtained from seawater",
+            "Student can demonstrate evaporating a salt solution in a china dish"
+          ],
+          "visualIdeas": [
+            "a china dish of salt water on a wire gauze being heated until salt is left behind"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sedimentation-decantation-and-filtration",
+          "title": "Sedimentation, Decantation and Filtration",
+          "objectives": [
+            "Student can explain sedimentation as the settling of a heavier insoluble component at the bottom of a liquid",
+            "Student can explain decantation as removing the liquid above the sediment by tilting the vessel",
+            "Student can fold a filter paper into a cone and use filtration to separate insoluble solids from a liquid"
+          ],
+          "visualIdeas": [
+            "muddy water settling, then being poured off",
+            "a filter paper folded into a cone in a funnel over a conical flask"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "churning-and-magnetic-separation",
+          "title": "Churning and Magnetic Separation",
+          "objectives": [
+            "Student can explain churning as the method used to extract butter from curd",
+            "Student can explain magnetic separation as using a magnet to separate magnetic from non-magnetic substances"
+          ],
+          "visualIdeas": [
+            "curd being churned with butter collecting on top",
+            "a magnet pulling iron pieces out of a mixture"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "living-creatures-exploring-their-characteristics",
+      "title": "Living Creatures: Exploring their Characteristics",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu110.pdf",
+      "topics": [
+        {
+          "id": "what-sets-the-living-apart-from-the-non-living",
+          "title": "What Sets the Living Apart from the Non-living?",
+          "objectives": [
+            "Student can list the features of living beings: they move, eat, grow, breathe, excrete, respond to stimuli, reproduce and die",
+            "Student can classify objects around them as living or non-living using these features"
+          ],
+          "visualIdeas": [
+            "a checklist table of features applied to a pigeon, a pencil and a plant"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "essential-conditions-for-germination-of-a-seed",
+          "title": "Essential Conditions for Germination of a Seed",
+          "objectives": [
+            "Student can state that seeds need water, air and suitable light or dark conditions to germinate",
+            "Student can design a fair test that changes one condition at a time to check what germination needs"
+          ],
+          "visualIdeas": [
+            "a row of seed containers with one condition removed from each"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "growth-and-movement-in-plants",
+          "title": "Growth and Movement in Plants",
+          "objectives": [
+            "Student can describe how roots generally grow downwards and shoots grow upwards during germination",
+            "Student can design an activity to see how a plant responds to sunlight and to being placed upside down"
+          ],
+          "visualIdeas": [
+            "a germinating seed with root and shoot directions shown by arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "life-cycle-of-a-plant",
+          "title": "Life Cycle of a Plant",
+          "objectives": [
+            "Student can describe the stages of a plant's life cycle from seed germination through growth, flowering and seed production",
+            "Student can explain how new seeds continue the cycle"
+          ],
+          "visualIdeas": [
+            "a circular diagram of a bean plant from seed to seedling to flowering plant to seeds"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "life-cycle-of-a-mosquito",
+          "title": "Life Cycle of a Mosquito",
+          "objectives": [
+            "Student can name the stages of a mosquito's life cycle: egg, larva, pupa and adult",
+            "Student can explain that some animals change body shape, structure and habitat across their life stages"
+          ],
+          "visualIdeas": [
+            "a circular diagram of the mosquito life cycle showing which stages live in water"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "life-cycle-of-a-frog",
+          "title": "Life Cycle of a Frog",
+          "objectives": [
+            "Student can name the stages of a frog's life cycle: eggs, tadpoles, froglets and adults",
+            "Student can compare the life cycles of a mosquito and a frog with that of a plant"
+          ],
+          "visualIdeas": [
+            "a circular diagram of the frog life cycle from eggs to adult"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "natures-treasures",
+      "title": "Nature's Treasures",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu111.pdf",
+      "topics": [
+        {
+          "id": "air",
+          "title": "Air",
+          "objectives": [
+            "Student can state that air is a mixture of gases, with about 78 parts nitrogen, 21 parts oxygen and 1 part argon, carbon dioxide and other gases in every 100",
+            "Student can give uses of air for living beings and in daily life"
+          ],
+          "visualIdeas": [
+            "a 100-square grid coloured to show the composition of air"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "water",
+          "title": "Water",
+          "objectives": [
+            "Student can list uses of water in daily life",
+            "Student can suggest ways of using water so that none is wasted"
+          ],
+          "visualIdeas": [
+            "a bubble map of everyday uses of water"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "energy-from-the-sun",
+          "title": "Energy from the Sun",
+          "objectives": [
+            "Student can explain that the Sun is the main source of energy on Earth and that all plants and animals depend on it",
+            "Student can give examples of using the Sun's heat and light, such as drying chillies"
+          ],
+          "visualIdeas": [
+            "the Sun at the centre of arrows to plants, animals and drying produce"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "forests",
+          "title": "Forests",
+          "objectives": [
+            "Student can describe a forest as a large area with a dense growth of various plants",
+            "Student can explain what forests provide to people, animals and birds and why they must be protected"
+          ],
+          "visualIdeas": [
+            "a layered forest scene with herbs, shrubs and trees and the things it provides"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "soil-rocks-and-minerals",
+          "title": "Soil, Rocks and Minerals",
+          "objectives": [
+            "Student can explain why soil is a natural resource for growing plants",
+            "Student can give examples of how rocks and minerals are used"
+          ],
+          "visualIdeas": [
+            "samples of soil, rocks and minerals with their uses"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fossil-fuels",
+          "title": "Fossil Fuels",
+          "objectives": [
+            "Student can name coal, petroleum and natural gas as fossil fuels and give their uses",
+            "Student can explain that fossil fuels formed over millions of years from buried remains of microorganisms and plants, so they must be used carefully"
+          ],
+          "visualIdeas": [
+            "fuels used at home and in vehicles linked to their sources"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "natural-resources-renewable-and-non-renewable",
+          "title": "Natural Resources: Renewable and Non-renewable",
+          "objectives": [
+            "Student can define natural resources as resources provided by nature",
+            "Student can classify natural resources as renewable or non-renewable and justify the classification",
+            "Student can distinguish natural resources from human-made resources"
+          ],
+          "visualIdeas": [
+            "a two-column sort of air, water, forests, coal and natural gas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "resources-we-use",
+          "title": "Resources We Use",
+          "objectives": [
+            "Student can list the natural resources used directly or indirectly in everyday activities, such as water for washing clothes",
+            "Student can describe how smoke from vehicles that burn fossil fuels pollutes city air, and name alternatives such as electric vehicles",
+            "Student can suggest ways to use natural resources judiciously"
+          ],
+          "visualIdeas": [
+            "a village scene and a city scene compared for trees, air and resource use"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "beyond-earth",
+      "title": "Beyond Earth",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fecu112.pdf",
+      "topics": [
+        {
+          "id": "stars-and-constellations",
+          "title": "Stars and Constellations",
+          "objectives": [
+            "Student can explain that stars shine with their own light and that constellations are groups of stars that appear to form patterns",
+            "Student can identify Orion and the Big Dipper (part of Ursa Major) in a star chart",
+            "Student can locate the Pole Star from the two end stars of the Big Dipper's cup and use it, as it appears nearly stationary, to find North in the Northern Hemisphere"
+          ],
+          "visualIdeas": [
+            "a star chart with Orion and the Big Dipper joined by lines",
+            "a line extended from the Big Dipper's cup to the Pole Star"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "night-sky-watching",
+          "title": "Night Sky Watching",
+          "objectives": [
+            "Student can explain why fewer stars are visible from cities because of light pollution, smoke and dust",
+            "Student can plan a safe night-sky watching session"
+          ],
+          "visualIdeas": [
+            "the same patch of sky seen from a city and from a dark village"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "our-solar-system",
+          "title": "Our Solar System",
+          "objectives": [
+            "Student can explain that the Sun is a star and that planets revolve around it",
+            "Student can list the eight planets in order of increasing distance from the Sun",
+            "Student can explain that satellites move around planets, that the Moon is Earth's natural satellite, and that asteroids and comets are also part of the Solar System"
+          ],
+          "visualIdeas": [
+            "the Sun with eight planets in order and their orbits",
+            "the Moon revolving around the Earth"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-milky-way-galaxy",
+          "title": "The Milky Way Galaxy",
+          "objectives": [
+            "Student can describe the Milky Way as the faint band of light seen across a dark sky",
+            "Student can explain that a galaxy has millions to billions of stars and that our Solar System is part of the Milky Way Galaxy"
+          ],
+          "visualIdeas": [
+            "the Milky Way seen from a very dark location such as Ladakh"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-universe",
+          "title": "The Universe",
+          "objectives": [
+            "Student can explain that there are many galaxies beyond the Milky Way in the Universe",
+            "Student can explain that scientists search for life on exoplanets and have not yet found evidence of it"
+          ],
+          "visualIdeas": [
+            "a zoom-out from the Solar System to the Milky Way to many galaxies"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

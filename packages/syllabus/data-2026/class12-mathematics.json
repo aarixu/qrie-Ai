@@ -1,0 +1,1188 @@
+{
+  "id": "class12-mathematics",
+  "klass": 12,
+  "subject": "Mathematics",
+  "source": {
+    "books": [
+      {
+        "title": "Mathematics Part I",
+        "code": "lemh1",
+        "edition": "Reprint 2026-27 (First Edition November 2006; Revised Edition October 2022; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/lemh1ps.pdf"
+      },
+      {
+        "title": "Mathematics Part II",
+        "code": "lemh2",
+        "edition": "Reprint 2026-27 (First Edition January 2007; Revised Edition January 2023; the imprint page lists reprints up to December 2024)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/lemh2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from each book's Contents page; topics from each chapter PDF's numbered section and subsection headings (Introduction, Summary, Miscellaneous Examples and Exercises are not topics; small neighbouring subsections are grouped; long sections with no subsections are split by the definitions, theorems or integral types the section itself lists, keeping the section heading in the topic title; the appendices Proofs in Mathematics and Mathematical Modelling and the Supplementary Material are not chapters and are not included)"
+  },
+  "chapters": [
+    {
+      "id": "relations-and-functions",
+      "title": "Relations and Functions",
+      "book": "Mathematics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh101.pdf",
+      "topics": [
+        {
+          "id": "types-of-relations-empty-universal-reflexive-symmetric-and-transitive",
+          "title": "Types of Relations: Empty, Universal, Reflexive, Symmetric and Transitive",
+          "objectives": [
+            "Student can define a relation in a set A as a subset of A x A and identify empty and universal relations",
+            "Student can test whether a relation is reflexive, symmetric or transitive"
+          ],
+          "visualIdeas": [
+            "arrow diagram of a relation on a small set"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "types-of-relations-equivalence-relations-and-equivalence-classes",
+          "title": "Types of Relations: Equivalence Relations and Equivalence Classes",
+          "objectives": [
+            "Student can prove that a relation is an equivalence relation, as for congruence modulo n or parallel lines",
+            "Student can find equivalence classes and explain how an equivalence relation partitions a set into disjoint subsets"
+          ],
+          "visualIdeas": [
+            "integers split into the even class [0] and the odd class [1]"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "types-of-functions-one-one-and-onto-functions",
+          "title": "Types of Functions: One-one and Onto Functions",
+          "objectives": [
+            "Student can define one-one (injective), many-one and onto (surjective) functions",
+            "Student can prove whether a given function is one-one and whether it is onto",
+            "Student can define and identify bijective functions"
+          ],
+          "visualIdeas": [
+            "arrow diagrams of one-one, onto, both and neither"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "composition-of-functions-and-invertible-function",
+          "title": "Composition of Functions and Invertible Function",
+          "objectives": [
+            "Student can find the composition g o f of two functions and its domain",
+            "Student can define an invertible function and state that f is invertible exactly when it is one-one and onto",
+            "Student can find the inverse of an invertible function"
+          ],
+          "visualIdeas": [
+            "function machines f then g chained",
+            "f and its inverse mapping back"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "inverse-trigonometric-functions",
+      "title": "Inverse Trigonometric Functions",
+      "book": "Mathematics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh102.pdf",
+      "topics": [
+        {
+          "id": "basic-concepts-inverse-sine-and-inverse-cosine-functions",
+          "title": "Basic Concepts: Inverse Sine and Inverse Cosine Functions",
+          "objectives": [
+            "Student can restrict the domain of sine and cosine to make them one-one and onto and define sin^-1 and cos^-1",
+            "Student can state the domain, principal value branch and graph of sin^-1 x and cos^-1 x"
+          ],
+          "visualIdeas": [
+            "graph of y = sin x with the principal branch highlighted and its reflection in y = x"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "basic-concepts-inverse-cosecant-secant-tangent-and-cotangent-functions",
+          "title": "Basic Concepts: Inverse Cosecant, Secant, Tangent and Cotangent Functions",
+          "objectives": [
+            "Student can define cosec^-1, sec^-1, tan^-1 and cot^-1 with their domains and principal value branches",
+            "Student can sketch the graphs of these inverse functions"
+          ],
+          "visualIdeas": [
+            "table of the six inverse trigonometric functions with domains and ranges"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "basic-concepts-principal-values",
+          "title": "Basic Concepts: Principal Values",
+          "objectives": [
+            "Student can find the principal value of expressions such as sin^-1(1/2) and cos^-1(-1/2)",
+            "Student can evaluate expressions combining inverse trigonometric functions using their principal branches"
+          ],
+          "visualIdeas": [
+            "unit circle with principal value arcs marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-inverse-trigonometric-functions",
+          "title": "Properties of Inverse Trigonometric Functions",
+          "objectives": [
+            "Student can use sin(sin^-1 x) = x and sin^-1(sin x) = x within the principal branches",
+            "Student can simplify expressions with inverse trigonometric functions by a suitable substitution, such as x = sin theta",
+            "Student can prove identities such as sin^-1(2x sqrt(1 - x^2)) = 2 sin^-1 x on the stated interval"
+          ],
+          "visualIdeas": [
+            "substitution x = tan theta turning an expression into theta"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "matrices",
+      "title": "Matrices",
+      "book": "Mathematics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh103.pdf",
+      "topics": [
+        {
+          "id": "matrix-and-order-of-a-matrix",
+          "title": "Matrix and Order of a Matrix",
+          "objectives": [
+            "Student can define a matrix as a rectangular array and identify its elements a_ij",
+            "Student can state the order m x n of a matrix and construct a matrix from a rule for a_ij",
+            "Student can represent real data, such as items held by people, as a matrix"
+          ],
+          "visualIdeas": [
+            "2 x 3 matrix with rows and columns labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "types-of-matrices",
+          "title": "Types of Matrices",
+          "objectives": [
+            "Student can identify column, row, square, diagonal, scalar, identity and zero matrices",
+            "Student can give examples of each type of matrix"
+          ],
+          "visualIdeas": [
+            "gallery of matrix types with their patterns highlighted"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "equality-of-matrices",
+          "title": "Equality of Matrices",
+          "objectives": [
+            "Student can state when two matrices are equal",
+            "Student can find unknowns by equating corresponding elements of equal matrices"
+          ],
+          "visualIdeas": [
+            "two matrices with corresponding entries joined by lines"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "addition-of-matrices",
+          "title": "Addition of Matrices",
+          "objectives": [
+            "Student can add two matrices of the same order element by element",
+            "Student can explain why matrices of different orders cannot be added"
+          ],
+          "visualIdeas": [
+            "two production tables from factories added cell by cell"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "multiplication-of-a-matrix-by-a-scalar",
+          "title": "Multiplication of a Matrix by a Scalar",
+          "objectives": [
+            "Student can multiply a matrix by a scalar",
+            "Student can find the negative of a matrix and the difference of two matrices"
+          ],
+          "visualIdeas": [
+            "each entry of a matrix doubled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-matrix-addition-and-scalar-multiplication",
+          "title": "Properties of Matrix Addition and Scalar Multiplication",
+          "objectives": [
+            "Student can state and use the commutative, associative, identity and inverse properties of matrix addition",
+            "Student can use the properties k(A + B) = kA + kB and (k + l)A = kA + lA"
+          ],
+          "visualIdeas": [
+            "A + B and B + A computed side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "multiplication-of-matrices",
+          "title": "Multiplication of Matrices",
+          "objectives": [
+            "Student can state the condition for the product AB to be defined and its order",
+            "Student can multiply two matrices row by column",
+            "Student can show with an example that AB need not equal BA and that AB = O does not mean A = O or B = O"
+          ],
+          "visualIdeas": [
+            "row of A sliding along a column of B to give one entry of AB"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "properties-of-multiplication-of-matrices",
+          "title": "Properties of Multiplication of Matrices",
+          "objectives": [
+            "Student can use the associative and distributive laws of matrix multiplication",
+            "Student can use the identity matrix as the multiplicative identity",
+            "Student can verify identities such as A^2 - 5A + 7I = O for a given matrix"
+          ],
+          "visualIdeas": [
+            "(AB)C and A(BC) computed and compared"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "transpose-of-a-matrix",
+          "title": "Transpose of a Matrix",
+          "objectives": [
+            "Student can find the transpose of a matrix",
+            "Student can use the properties (A')' = A, (kA)' = kA', (A + B)' = A' + B' and (AB)' = B'A'"
+          ],
+          "visualIdeas": [
+            "rows of a matrix turned into columns"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "symmetric-and-skew-symmetric-matrices",
+          "title": "Symmetric and Skew Symmetric Matrices",
+          "objectives": [
+            "Student can identify symmetric (A' = A) and skew symmetric (A' = -A) matrices",
+            "Student can show that the diagonal elements of a skew symmetric matrix are zero",
+            "Student can express a square matrix as the sum of a symmetric and a skew symmetric matrix"
+          ],
+          "visualIdeas": [
+            "matrix mirrored about its leading diagonal"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "invertible-matrices",
+          "title": "Invertible Matrices",
+          "objectives": [
+            "Student can define the inverse of a square matrix",
+            "Student can prove that the inverse of a matrix, if it exists, is unique and that (AB)^-1 = B^-1 A^-1"
+          ],
+          "visualIdeas": [
+            "A times its inverse giving the identity matrix"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "determinants",
+      "title": "Determinants",
+      "book": "Mathematics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh104.pdf",
+      "topics": [
+        {
+          "id": "determinant-of-a-matrix-of-order-one-and-two",
+          "title": "Determinant of a Matrix of Order One and Two",
+          "objectives": [
+            "Student can explain that every square matrix has a determinant, a number",
+            "Student can evaluate determinants of order one and two"
+          ],
+          "visualIdeas": [
+            "2 x 2 determinant with the cross-multiplication pattern"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "determinant-of-a-matrix-of-order-3-x-3",
+          "title": "Determinant of a Matrix of Order 3 x 3",
+          "objectives": [
+            "Student can expand a 3 x 3 determinant along any row or column",
+            "Student can choose the row or column with most zeros to simplify expansion",
+            "Student can use the fact that |kA| = k^n |A| for a square matrix of order n"
+          ],
+          "visualIdeas": [
+            "3 x 3 determinant expanded along the first row with signs"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "area-of-a-triangle",
+          "title": "Area of a Triangle",
+          "objectives": [
+            "Student can find the area of a triangle with given vertices using a determinant",
+            "Student can use the determinant to test collinearity of three points and find the equation of a line"
+          ],
+          "visualIdeas": [
+            "triangle on coordinate axes with its vertices in a determinant"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "minors-and-cofactors",
+          "title": "Minors and Cofactors",
+          "objectives": [
+            "Student can find the minor and cofactor of an element of a determinant",
+            "Student can expand a determinant as the sum of products of elements and their cofactors",
+            "Student can show that elements multiplied by the cofactors of another row give zero"
+          ],
+          "visualIdeas": [
+            "3 x 3 determinant with a row and column struck out to show a minor"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "adjoint-of-a-matrix",
+          "title": "Adjoint of a Matrix",
+          "objectives": [
+            "Student can find the adjoint of a square matrix as the transpose of the cofactor matrix",
+            "Student can use the theorem A(adj A) = (adj A)A = |A| I"
+          ],
+          "visualIdeas": [
+            "cofactor matrix transposed into the adjoint"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "adjoint-and-inverse-of-a-matrix-inverse-of-a-matrix",
+          "title": "Adjoint and Inverse of a Matrix: Inverse of a Matrix",
+          "objectives": [
+            "Student can distinguish singular and non-singular matrices",
+            "Student can state that a square matrix is invertible if and only if it is non-singular",
+            "Student can find the inverse of a matrix using A^-1 = (1/|A|) adj A"
+          ],
+          "visualIdeas": [
+            "flow chart: find |A|, then adj A, then divide"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "solution-of-system-of-linear-equations-using-inverse-of-a-matrix",
+          "title": "Solution of System of Linear Equations using Inverse of a Matrix",
+          "objectives": [
+            "Student can define consistent and inconsistent systems of equations",
+            "Student can write a system of linear equations as AX = B and solve it by X = A^-1 B when |A| is not zero",
+            "Student can decide when |A| = 0 whether the system has no solution or infinitely many using (adj A)B"
+          ],
+          "visualIdeas": [
+            "three equations rewritten as one matrix equation AX = B"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "continuity-and-differentiability",
+      "title": "Continuity and Differentiability",
+      "book": "Mathematics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh105.pdf",
+      "topics": [
+        {
+          "id": "continuity",
+          "title": "Continuity",
+          "objectives": [
+            "Student can define continuity of a real function at a point using left-hand limit, right-hand limit and value",
+            "Student can define a continuous function and check continuity of functions such as |x|, polynomials and piecewise functions",
+            "Student can find points of discontinuity of a given function"
+          ],
+          "visualIdeas": [
+            "graph with a jump at x = c beside a smooth graph"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "algebra-of-continuous-functions",
+          "title": "Algebra of Continuous Functions",
+          "objectives": [
+            "Student can state that sums, differences, products and quotients of continuous functions are continuous",
+            "Student can use the theorem that a composition of continuous functions is continuous"
+          ],
+          "visualIdeas": [
+            "two continuous graphs and their sum"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "differentiability",
+          "title": "Differentiability",
+          "objectives": [
+            "Student can define the derivative of a function at a point and differentiability on an interval",
+            "Student can prove that a differentiable function is continuous and show by |x| that the converse is false"
+          ],
+          "visualIdeas": [
+            "corner of y = |x| at the origin"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "derivatives-of-composite-functions",
+          "title": "Derivatives of Composite Functions",
+          "objectives": [
+            "Student can state and apply the chain rule to differentiate composite functions",
+            "Student can differentiate functions such as sin(x^2) and (2x + 3)^n"
+          ],
+          "visualIdeas": [
+            "chain of nested function boxes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "derivatives-of-implicit-functions",
+          "title": "Derivatives of Implicit Functions",
+          "objectives": [
+            "Student can distinguish explicit and implicit functions",
+            "Student can find dy/dx by differentiating an implicit relation term by term"
+          ],
+          "visualIdeas": [
+            "circle x^2 + y^2 = r^2 with a tangent slope"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "derivatives-of-inverse-trigonometric-functions",
+          "title": "Derivatives of Inverse Trigonometric Functions",
+          "objectives": [
+            "Student can derive the derivatives of sin^-1 x and cos^-1 x and tan^-1 x",
+            "Student can use the table of derivatives of inverse trigonometric functions"
+          ],
+          "visualIdeas": [
+            "table of the six derivatives"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "exponential-and-logarithmic-functions",
+          "title": "Exponential and Logarithmic Functions",
+          "objectives": [
+            "Student can define the exponential function b^x and the logarithm function and describe their graphs",
+            "Student can state properties of logarithms and the derivatives of e^x and log x"
+          ],
+          "visualIdeas": [
+            "graphs of y = e^x and y = log x reflected in y = x"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "logarithmic-differentiation",
+          "title": "Logarithmic Differentiation",
+          "objectives": [
+            "Student can use logarithmic differentiation for functions of the form [u(x)]^v(x)",
+            "Student can differentiate long products and quotients by taking logarithms first"
+          ],
+          "visualIdeas": [
+            "x^x rewritten as e^(x log x)"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "derivatives-of-functions-in-parametric-forms",
+          "title": "Derivatives of Functions in Parametric Forms",
+          "objectives": [
+            "Student can find dy/dx when x and y are given in terms of a parameter t",
+            "Student can apply the method to curves such as x = a cos t, y = a sin t"
+          ],
+          "visualIdeas": [
+            "point moving on a circle as t varies"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "second-order-derivative",
+          "title": "Second Order Derivative",
+          "objectives": [
+            "Student can find the second order derivative of a function",
+            "Student can verify relations such as y'' + y = 0 for given functions"
+          ],
+          "visualIdeas": [
+            "graph with slope and change of slope shown"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "application-of-derivatives",
+      "title": "Application of Derivatives",
+      "book": "Mathematics Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh106.pdf",
+      "topics": [
+        {
+          "id": "rate-of-change-of-quantities",
+          "title": "Rate of Change of Quantities",
+          "objectives": [
+            "Student can interpret dy/dx as the rate of change of y with respect to x",
+            "Student can solve problems on rates of change, such as area of a growing circle, using the chain rule"
+          ],
+          "visualIdeas": [
+            "ripple spreading in a pond with radius increasing"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "increasing-and-decreasing-functions",
+          "title": "Increasing and Decreasing Functions",
+          "objectives": [
+            "Student can define increasing, strictly increasing, decreasing and strictly decreasing functions on an interval",
+            "Student can use the sign of the derivative to test whether a function is increasing or decreasing",
+            "Student can find the intervals in which a function is increasing or decreasing"
+          ],
+          "visualIdeas": [
+            "graph rising and falling with tangent slopes marked positive and negative"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "maxima-and-minima-local-maxima-local-minima-and-the-first-derivative-test",
+          "title": "Maxima and Minima: Local Maxima, Local Minima and the First Derivative Test",
+          "objectives": [
+            "Student can define maximum, minimum, local maximum and local minimum values",
+            "Student can find critical points and use the first derivative test to classify them"
+          ],
+          "visualIdeas": [
+            "graph with peaks and valleys and horizontal tangents"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "maxima-and-minima-second-derivative-test",
+          "title": "Maxima and Minima: Second Derivative Test",
+          "objectives": [
+            "Student can apply the second derivative test to find local maxima and minima",
+            "Student can recognise when the second derivative test fails and return to the first derivative test",
+            "Student can solve applied problems such as two positive numbers with a given sum, the shortest distance from a point to a parabola, or the trapezium of greatest area"
+          ],
+          "visualIdeas": [
+            "concave up and concave down curves at critical points"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "maximum-and-minimum-values-of-a-function-in-a-closed-interval",
+          "title": "Maximum and Minimum Values of a Function in a Closed Interval",
+          "objectives": [
+            "Student can find absolute maximum and minimum values of a function on a closed interval",
+            "Student can solve problems such as finding the nearest distance between a fixed point and a body moving along a curve"
+          ],
+          "visualIdeas": [
+            "open box made from a square sheet with corners cut out"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "integrals",
+      "title": "Integrals",
+      "book": "Mathematics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh201.pdf",
+      "topics": [
+        {
+          "id": "integration-as-an-inverse-process-of-differentiation",
+          "title": "Integration as an Inverse Process of Differentiation",
+          "objectives": [
+            "Student can define an antiderivative (primitive) and the indefinite integral with an arbitrary constant",
+            "Student can list the standard integrals that follow from known derivatives",
+            "Student can interpret the constant of integration as a family of curves"
+          ],
+          "visualIdeas": [
+            "family of parallel curves y = x^2 + C"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "some-properties-of-indefinite-integral",
+          "title": "Some Properties of Indefinite Integral",
+          "objectives": [
+            "Student can use the properties that integration and differentiation are inverse processes",
+            "Student can integrate sums and constant multiples of functions term by term"
+          ],
+          "visualIdeas": [
+            "integral of a sum split into a sum of integrals"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "integration-by-substitution",
+          "title": "Integration by Substitution",
+          "objectives": [
+            "Student can integrate by changing the variable to reduce an integral to a standard form",
+            "Student can derive integrals of tan x, cot x, sec x and cosec x"
+          ],
+          "visualIdeas": [
+            "substitution t = g(x) with dt = g'(x) dx"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "integration-using-trigonometric-identities",
+          "title": "Integration using Trigonometric Identities",
+          "objectives": [
+            "Student can use identities to rewrite powers such as sin^2 x, cos^2 x and sin^3 x in integrable form",
+            "Student can convert products of sines and cosines into sums before integrating"
+          ],
+          "visualIdeas": [
+            "identity turning a product into a sum"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "integrals-of-some-particular-functions-standard-forms",
+          "title": "Integrals of Some Particular Functions: Standard Forms",
+          "objectives": [
+            "Student can state the integrals of 1/(x^2 - a^2), 1/(a^2 - x^2), 1/(x^2 + a^2), 1/sqrt(x^2 - a^2), 1/sqrt(a^2 - x^2) and 1/sqrt(x^2 + a^2)",
+            "Student can derive these results using partial fractions or substitutions such as x = a tan theta, x = a sec theta and x = a sin theta"
+          ],
+          "visualIdeas": [
+            "table of the six special integrals"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "integrals-of-some-particular-functions-quadratic-expressions",
+          "title": "Integrals of Some Particular Functions: Quadratic Expressions",
+          "objectives": [
+            "Student can integrate 1/(ax^2 + bx + c) and 1/sqrt(ax^2 + bx + c) by completing the square",
+            "Student can integrate (px + q)/(ax^2 + bx + c) and (px + q)/sqrt(ax^2 + bx + c) by splitting the numerator"
+          ],
+          "visualIdeas": [
+            "quadratic rewritten by completing the square"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "integration-by-partial-fractions",
+          "title": "Integration by Partial Fractions",
+          "objectives": [
+            "Student can decompose a proper rational function into partial fractions for linear, repeated linear and quadratic factors",
+            "Student can integrate rational functions using partial fractions"
+          ],
+          "visualIdeas": [
+            "table of partial fraction forms"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "integration-by-parts",
+          "title": "Integration by Parts",
+          "objectives": [
+            "Student can state and apply the formula for integration by parts",
+            "Student can choose the first function sensibly, as in integrals of x cos x, log x and x e^x"
+          ],
+          "visualIdeas": [
+            "product u v split into u dv"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "integral-of-the-type-e-x-f-x-f-x-dx",
+          "title": "Integral of the Type e^x [f(x) + f'(x)] dx",
+          "objectives": [
+            "Student can show that the integral of e^x [f(x) + f'(x)] is e^x f(x) + C",
+            "Student can recognise and integrate functions of this type"
+          ],
+          "visualIdeas": [
+            "e^x times a function and its derivative"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "integrals-of-some-more-types",
+          "title": "Integrals of Some More Types",
+          "objectives": [
+            "Student can derive and use the integrals of sqrt(x^2 - a^2), sqrt(x^2 + a^2) and sqrt(a^2 - x^2)",
+            "Student can integrate sqrt(ax^2 + bx + c) by completing the square"
+          ],
+          "visualIdeas": [
+            "table of three square-root integrals"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "definite-integral",
+          "title": "Definite Integral",
+          "objectives": [
+            "Student can write the definite integral of f from a to b and identify its lower and upper limits",
+            "Student can interpret the definite integral of a positive function as an area under a curve"
+          ],
+          "visualIdeas": [
+            "shaded area under a curve between x = a and x = b"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fundamental-theorem-of-calculus",
+          "title": "Fundamental Theorem of Calculus",
+          "objectives": [
+            "Student can define the area function A(x) as the integral of f from a to x",
+            "Student can state the first fundamental theorem, A'(x) = f(x)",
+            "Student can state the second fundamental theorem and evaluate definite integrals using antiderivatives"
+          ],
+          "visualIdeas": [
+            "area under a curve growing as x moves right"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "evaluation-of-definite-integrals-by-substitution",
+          "title": "Evaluation of Definite Integrals by Substitution",
+          "objectives": [
+            "Student can evaluate definite integrals by substitution, changing the limits to the new variable",
+            "Student can explain why, after changing the limits, there is no need to return to the original variable"
+          ],
+          "visualIdeas": [
+            "old limits on x mapped to new limits on t"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "some-properties-of-definite-integrals",
+          "title": "Some Properties of Definite Integrals",
+          "objectives": [
+            "Student can state and prove the properties P0 to P7 of definite integrals",
+            "Student can use properties such as the integral of f(x) equals the integral of f(a - x) to evaluate integrals",
+            "Student can use the even and odd function property to evaluate integrals from -a to a"
+          ],
+          "visualIdeas": [
+            "symmetric areas of an even function and cancelling areas of an odd function"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "application-of-integrals",
+      "title": "Application of Integrals",
+      "book": "Mathematics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh202.pdf",
+      "topics": [
+        {
+          "id": "area-under-simple-curves-vertical-and-horizontal-strips",
+          "title": "Area under Simple Curves: Vertical and Horizontal Strips",
+          "objectives": [
+            "Student can find the area bounded by y = f(x), the x-axis and the lines x = a and x = b using vertical strips",
+            "Student can find the area bounded by x = g(y), the y-axis and the lines y = c and y = d using horizontal strips",
+            "Student can handle parts of a curve that lie below the x-axis by taking absolute values"
+          ],
+          "visualIdeas": [
+            "thin vertical strip of width dx under a curve",
+            "curve crossing the x-axis with areas A1 and A2"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "area-under-simple-curves-circles-ellipses-parabolas-and-lines",
+          "title": "Area under Simple Curves: Circles, Ellipses, Parabolas and Lines",
+          "objectives": [
+            "Student can find the area enclosed by a circle and by an ellipse using symmetry",
+            "Student can find the area of a region bounded by a line or a parabola and the axes or given ordinates"
+          ],
+          "visualIdeas": [
+            "quarter of an ellipse shaded in the first quadrant"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "differential-equations",
+      "title": "Differential Equations",
+      "book": "Mathematics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh203.pdf",
+      "topics": [
+        {
+          "id": "basic-concepts-order-and-degree-of-a-differential-equation",
+          "title": "Basic Concepts: Order and Degree of a Differential Equation",
+          "objectives": [
+            "Student can define a differential equation and recognise ordinary differential equations",
+            "Student can find the order of a differential equation",
+            "Student can find the degree of a differential equation when it is a polynomial in its derivatives"
+          ],
+          "visualIdeas": [
+            "equations with highest-order derivative and its power circled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "general-and-particular-solutions-of-a-differential-equation",
+          "title": "General and Particular Solutions of a Differential Equation",
+          "objectives": [
+            "Student can distinguish the general solution, with arbitrary constants, from a particular solution",
+            "Student can verify that a given function is a solution of a differential equation"
+          ],
+          "visualIdeas": [
+            "family of solution curves with one curve picked by a point"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "differential-equations-with-variables-separable",
+          "title": "Differential Equations with Variables Separable",
+          "objectives": [
+            "Student can solve first order, first degree differential equations by separating the variables",
+            "Student can find particular solutions from given initial conditions",
+            "Student can apply the method to problems such as growth of money at compound interest"
+          ],
+          "visualIdeas": [
+            "terms in y moved to one side and terms in x to the other"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "homogeneous-differential-equations",
+          "title": "Homogeneous Differential Equations",
+          "objectives": [
+            "Student can identify homogeneous functions and homogeneous differential equations",
+            "Student can solve homogeneous differential equations by the substitution y = vx"
+          ],
+          "visualIdeas": [
+            "dy/dx = F(y/x) transformed by y = vx"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "linear-differential-equations",
+          "title": "Linear Differential Equations",
+          "objectives": [
+            "Student can identify linear differential equations dy/dx + Py = Q and dx/dy + P1 x = Q1",
+            "Student can find the integrating factor and solve linear differential equations"
+          ],
+          "visualIdeas": [
+            "steps: find P and Q, compute IF = e^(integral P dx), multiply and integrate"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "vector-algebra",
+      "title": "Vector Algebra",
+      "book": "Mathematics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh204.pdf",
+      "topics": [
+        {
+          "id": "some-basic-concepts",
+          "title": "Some Basic Concepts",
+          "objectives": [
+            "Student can distinguish scalar and vector quantities and represent a vector as a directed line segment",
+            "Student can find the position vector and magnitude of a point and its direction cosines"
+          ],
+          "visualIdeas": [
+            "directed line segment AB with initial and terminal points",
+            "position vector OP with angles to the axes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "types-of-vectors",
+          "title": "Types of Vectors",
+          "objectives": [
+            "Student can identify zero, unit, coinitial, collinear, equal and negative vectors",
+            "Student can explain free vectors"
+          ],
+          "visualIdeas": [
+            "examples of collinear and coinitial vectors"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "addition-of-vectors",
+          "title": "Addition of Vectors",
+          "objectives": [
+            "Student can add vectors by the triangle law and the parallelogram law",
+            "Student can use the commutative and associative properties of vector addition and the additive identity"
+          ],
+          "visualIdeas": [
+            "triangle and parallelogram laws drawn side by side"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "multiplication-of-a-vector-by-a-scalar",
+          "title": "Multiplication of a Vector by a Scalar",
+          "objectives": [
+            "Student can describe the vector lambda a and how its length and direction depend on lambda",
+            "Student can find a unit vector in the direction of a given vector"
+          ],
+          "visualIdeas": [
+            "vector a stretched to 2a and reversed to -a"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "components-of-a-vector",
+          "title": "Components of a Vector",
+          "objectives": [
+            "Student can write a vector in component form x i + y j + z k using unit vectors along the axes",
+            "Student can add, subtract and scale vectors in component form and test equality and collinearity"
+          ],
+          "visualIdeas": [
+            "3D axes with i, j, k and a vector split into components"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "vector-joining-two-points",
+          "title": "Vector Joining Two Points",
+          "objectives": [
+            "Student can find the vector joining two points as the difference of their position vectors",
+            "Student can find its magnitude"
+          ],
+          "visualIdeas": [
+            "vector P1P2 between two points in space"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "section-formula",
+          "title": "Section Formula",
+          "objectives": [
+            "Student can find the position vector of a point dividing a line segment internally or externally in a given ratio",
+            "Student can find the position vector of the mid-point"
+          ],
+          "visualIdeas": [
+            "point R dividing PQ in the ratio m : n"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "scalar-or-dot-product-of-two-vectors",
+          "title": "Scalar (or Dot) Product of Two Vectors",
+          "objectives": [
+            "Student can define the scalar product a . b = |a||b| cos theta and find the angle between two vectors",
+            "Student can use properties of the dot product, including perpendicularity when a . b = 0",
+            "Student can compute the dot product in component form"
+          ],
+          "visualIdeas": [
+            "two vectors with the angle theta between them"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "projection-of-a-vector-on-a-line",
+          "title": "Projection of a Vector on a Line",
+          "objectives": [
+            "Student can find the projection of a vector on a line or on another vector",
+            "Student can interpret the projection as a scalar component along a direction"
+          ],
+          "visualIdeas": [
+            "shadow of vector a on the line of vector b"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vector-or-cross-product-of-two-vectors",
+          "title": "Vector (or Cross) Product of Two Vectors",
+          "objectives": [
+            "Student can define the vector product a x b and determine its direction with the right-hand rule",
+            "Student can compute the cross product as a determinant in component form",
+            "Student can use |a x b| as the area of a parallelogram and half of it as the area of a triangle"
+          ],
+          "visualIdeas": [
+            "parallelogram on a and b with a x b perpendicular to it"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "three-dimensional-geometry",
+      "title": "Three Dimensional Geometry",
+      "book": "Mathematics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh205.pdf",
+      "topics": [
+        {
+          "id": "direction-cosines-and-direction-ratios-of-a-line",
+          "title": "Direction Cosines and Direction Ratios of a Line",
+          "objectives": [
+            "Student can define direction cosines l, m, n of a line and show that l^2 + m^2 + n^2 = 1",
+            "Student can define direction ratios and convert them into direction cosines"
+          ],
+          "visualIdeas": [
+            "line through the origin with angles alpha, beta, gamma to the axes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "direction-cosines-of-a-line-passing-through-two-points",
+          "title": "Direction Cosines of a Line Passing through Two Points",
+          "objectives": [
+            "Student can find the direction cosines of a line through two given points",
+            "Student can test whether three points are collinear using direction ratios"
+          ],
+          "visualIdeas": [
+            "line through points P and Q in space"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "equation-of-a-line-through-a-given-point-and-parallel-to-a-given-vector",
+          "title": "Equation of a Line through a Given Point and Parallel to a Given Vector",
+          "objectives": [
+            "Student can write the vector equation r = a + lambda b of a line",
+            "Student can convert between vector and Cartesian forms of the equation of a line"
+          ],
+          "visualIdeas": [
+            "line through A parallel to vector b with a general point R"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "angle-between-two-lines",
+          "title": "Angle between Two Lines",
+          "objectives": [
+            "Student can find the angle between two lines from their direction ratios or direction vectors",
+            "Student can use the conditions for two lines to be perpendicular or parallel"
+          ],
+          "visualIdeas": [
+            "two lines in space with the angle between their directions"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "distance-between-two-skew-lines",
+          "title": "Distance between Two Skew Lines",
+          "objectives": [
+            "Student can explain skew lines as lines that are neither parallel nor intersecting",
+            "Student can find the shortest distance between two skew lines in vector and Cartesian form"
+          ],
+          "visualIdeas": [
+            "two skew lines with the common perpendicular segment"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "distance-between-parallel-lines",
+          "title": "Distance between Parallel Lines",
+          "objectives": [
+            "Student can write two parallel lines as r = a1 + lambda b and r = a2 + mu b with a common direction b",
+            "Student can find the distance between parallel lines as |b x (a2 - a1)| / |b|"
+          ],
+          "visualIdeas": [
+            "two parallel lines with a perpendicular gap marked"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "linear-programming",
+      "title": "Linear Programming",
+      "book": "Mathematics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh206.pdf",
+      "topics": [
+        {
+          "id": "linear-programming-problem-and-its-mathematical-formulation",
+          "title": "Linear Programming Problem and its Mathematical Formulation",
+          "objectives": [
+            "Student can identify the objective function, decision variables, constraints and non-negativity restrictions in an optimisation problem",
+            "Student can formulate a word problem, such as a furniture dealer's profit, as a linear programming problem"
+          ],
+          "visualIdeas": [
+            "furniture dealer with tables, chairs, budget and storage space"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "graphical-method-of-solving-linear-programming-problems",
+          "title": "Graphical Method of Solving Linear Programming Problems",
+          "objectives": [
+            "Student can draw the feasible region of a set of linear inequalities and identify feasible and optimal solutions",
+            "Student can use the corner point method based on the theorems that an optimum occurs at a vertex",
+            "Student can handle unbounded feasible regions by checking the open half-plane of the objective function"
+          ],
+          "visualIdeas": [
+            "shaded feasible polygon with corner points and objective value at each"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "probability",
+      "title": "Probability",
+      "book": "Mathematics Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lemh207.pdf",
+      "topics": [
+        {
+          "id": "conditional-probability",
+          "title": "Conditional Probability",
+          "objectives": [
+            "Student can define the conditional probability P(E|F) = P(E and F)/P(F)",
+            "Student can calculate conditional probabilities from experiments such as tossing coins or drawing cards"
+          ],
+          "visualIdeas": [
+            "Venn diagram with F shaded and E and F overlap highlighted"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "properties-of-conditional-probability",
+          "title": "Properties of Conditional Probability",
+          "objectives": [
+            "Student can use the properties P(S|F) = P(F|F) = 1 and P(E'|F) = 1 - P(E|F)",
+            "Student can use P((A or B)|F) = P(A|F) + P(B|F) - P((A and B)|F)"
+          ],
+          "visualIdeas": [
+            "Venn diagram of A and B inside a shaded F"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "multiplication-theorem-on-probability",
+          "title": "Multiplication Theorem on Probability",
+          "objectives": [
+            "Student can state the multiplication rule P(E and F) = P(E) P(F|E)",
+            "Student can extend the rule to three events and apply it to drawing without replacement"
+          ],
+          "visualIdeas": [
+            "probability tree for drawing two cards without replacement"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "independent-events",
+          "title": "Independent Events",
+          "objectives": [
+            "Student can define independent events as those for which P(E and F) = P(E) P(F)",
+            "Student can distinguish independent events from mutually exclusive events",
+            "Student can find probabilities involving independent events and their complements"
+          ],
+          "visualIdeas": [
+            "two dice rolled independently"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "partition-of-a-sample-space-and-theorem-of-total-probability",
+          "title": "Partition of a Sample Space and Theorem of Total Probability",
+          "objectives": [
+            "Student can define a partition of a sample space",
+            "Student can state and apply the theorem of total probability"
+          ],
+          "visualIdeas": [
+            "sample space split into E1, E2, E3 with event A cutting across them"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "bayes-theorem",
+          "title": "Bayes' Theorem",
+          "objectives": [
+            "Student can state Bayes' theorem and identify hypotheses, prior and posterior probabilities",
+            "Student can apply Bayes' theorem to problems such as finding which bag a ball came from or the chance of disease given a positive test"
+          ],
+          "visualIdeas": [
+            "three bags with coloured balls and a tree diagram reversed"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1757 @@
+{
+  "id": "class8-social-science",
+  "klass": 8,
+  "subject": "Social Science",
+  "source": {
+    "books": [
+      {
+        "title": "Exploring Society: India and Beyond, Social Science Textbook for Grade 8 Part 1",
+        "code": "hees1",
+        "edition": "Reprint 2026-27 (First Edition July 2025; reprinted March 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/hees1ps.pdf"
+      },
+      {
+        "title": "Exploring Society: India and Beyond, Social Science Textbook for Grade 8 Part 2",
+        "code": "hees2",
+        "edition": "First Edition June 2026 (revised edition; its prelims say Chapter 4 was rewritten after a Supreme Court-directed review; no \"Reprint 2026-27\" mark)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/hees2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "natural-resources-and-their-use",
+      "title": "Natural Resources and Their Use",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees101.pdf",
+      "topics": [
+        {
+          "id": "when-does-nature-become-a-resource",
+          "title": "When does Nature become a Resource?",
+          "objectives": [
+            "Student can explain that parts of Nature become resources when humans use them",
+            "Student can explain that a resource must be technologically accessible, economically feasible and culturally acceptable"
+          ],
+          "visualIdeas": [
+            "a tree in a forest beside the same wood made into furniture"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "categories-of-natural-resources",
+          "title": "Categories of Natural Resources",
+          "objectives": [
+            "Student can explain why we categorise things using shared criteria",
+            "Student can group natural resources into resources essential for life, for materials and for energy"
+          ],
+          "visualIdeas": [
+            "three baskets labelled life, materials and energy with resources sorted into them"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "renewable-and-non-renewable-resources",
+          "title": "Renewable and Non-renewable Resources",
+          "objectives": [
+            "Student can distinguish renewable from non-renewable resources with examples",
+            "Student can explain how Nature restores and regenerates itself and how overuse can make a renewable resource scarce"
+          ],
+          "visualIdeas": [
+            "a forest regrowing after a fire beside a coal mine running out"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "distribution-of-natural-resources-and-its-implications",
+          "title": "Distribution of Natural Resources and its Implications",
+          "objectives": [
+            "Student can explain that natural resources are unevenly distributed across the world and within India",
+            "Student can explain how this shapes settlements, trade, international relations and conflicts",
+            "Student can read a map showing where coal, oil, iron ore and bauxite are found in India"
+          ],
+          "visualIdeas": [
+            "a map of India marking coal, oil, iron ore and bauxite sites"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-paradox-of-plenty",
+          "title": "The 'Paradox of Plenty'",
+          "objectives": [
+            "Student can explain the resource curse: having plenty of natural resources does not by itself make a country rich",
+            "Student can explain how investing in industries, technology and skills helps avoid it"
+          ],
+          "visualIdeas": [
+            "a resource-rich region with raw materials leaving and finished goods coming back"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "responsible-and-wise-use-of-natural-resources-stewardship",
+          "title": "Responsible and Wise Use of Natural Resources: Stewardship",
+          "objectives": [
+            "Student can explain stewardship as using resources so that renewables regenerate and non-renewables last",
+            "Student can describe how overuse of groundwater in Punjab and of chemical fertilisers harms resources",
+            "Student can describe responses such as less polluting building materials and organic farming in Sikkim"
+          ],
+          "visualIdeas": [
+            "a depth-to-water map of Punjab",
+            "an organic terrace farm in Sikkim"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "responsible-and-judicious-use-of-resources",
+          "title": "Responsible and Judicious Use of Resources",
+          "objectives": [
+            "Student can explain why non-renewables should be used judiciously while switching to renewable energy",
+            "Student can describe India's role in the International Solar Alliance and solar parks like Bhadla",
+            "Student can explain that access to clean water and air is often unfair to some sections of society"
+          ],
+          "visualIdeas": [
+            "a satellite view of a large solar park in Rajasthan"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "reshaping-indias-political-map",
+      "title": "Reshaping India's Political Map",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees102.pdf",
+      "topics": [
+        {
+          "id": "the-medieval-period-and-new-invasions",
+          "title": "The Medieval Period and New Invasions",
+          "objectives": [
+            "Student can explain how the textbook uses the term medieval for the 11th to 17th centuries in India",
+            "Student can describe the invasions from beyond the Hindu Kush that reshaped India's political map from the 11th century",
+            "Student can read the chapter timeline from the Delhi Sultanate to the Sikh Empire"
+          ],
+          "visualIdeas": [
+            "a timeline from 1206 to 1799 with key battles and dynasties"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rise-and-fall-of-the-delhi-sultanate",
+          "title": "Rise and Fall of the Delhi Sultanate",
+          "objectives": [
+            "Student can name the five dynasties of the Delhi Sultanate",
+            "Student can describe the political instability, violent successions and military campaigns of the period, including Ala-ud-din Khilji's campaigns and his repulsion of Mongol invasions",
+            "Student can explain how the Sultanate weakened, including Timur's attack on Delhi"
+          ],
+          "visualIdeas": [
+            "a map of the Delhi Sultanate with neighbouring kingdoms like the Eastern Gangas and Hoysalas"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "resistance-to-the-delhi-sultanate",
+          "title": "Resistance to the Delhi Sultanate",
+          "objectives": [
+            "Student can describe kingdoms that resisted the Sultanate, such as the Eastern Gangas under Narasimhadeva I",
+            "Student can connect the Konark Surya temple with these victories"
+          ],
+          "visualIdeas": [
+            "the Konark Surya temple with its stone wheels"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-vijayanagara-empire",
+          "title": "The Vijayanagara Empire",
+          "objectives": [
+            "Student can describe how Harihara and Bukka founded the Vijayanagara Empire in the 14th century",
+            "Student can describe the empire's peak under Krishnadevaraya and his patronage of literature and temples",
+            "Student can explain how the Battle of Talikota in 1565 led to the destruction of Vijayanagara city"
+          ],
+          "visualIdeas": [
+            "ruins of Hampi with the Virupaksha temple"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-mughals-babur-and-akbar",
+          "title": "The Mughals: Babur and Akbar",
+          "objectives": [
+            "Student can explain how Babur's victory at Panipat in 1526 founded the Mughal Empire",
+            "Student can describe Akbar's reign as a blend of brutality and tolerance, including the siege of Chittor and his later policies"
+          ],
+          "visualIdeas": [
+            "the battle of Panipat as painted in the Baburnama, showing cannons"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "aurangzeb",
+          "title": "Aurangzeb",
+          "objectives": [
+            "Student can describe how Aurangzeb came to the throne and expanded the Mughal Empire to its greatest extent",
+            "Student can explain how long Deccan wars and rebellions strained the empire"
+          ],
+          "visualIdeas": [
+            "a map of the Mughal Empire at its largest around 1700"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "resistance-to-the-mughals",
+          "title": "Resistance to the Mughals",
+          "objectives": [
+            "Student can describe peasant and tribal resistance to Mughal rule, such as the Jats, Bhils, Gonds and Santhals",
+            "Student can describe the resistance of the Rajputs, including Maharana Pratap at Haldighati"
+          ],
+          "visualIdeas": [
+            "an artist's impression of the Battle of Haldighati"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-ahoms-and-the-rise-of-the-sikhs",
+          "title": "The Ahoms and the Rise of the Sikhs",
+          "objectives": [
+            "Student can describe the Ahom kingdom, its paik system and its victory over the Mughals at Saraighat",
+            "Student can describe how the Sikh Gurus responded to persecution, the formation of the Khalsa in 1699 and the later Sikh Empire"
+          ],
+          "visualIdeas": [
+            "a map of the Brahmaputra valley and of Punjab with the Ahom and Sikh territories"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "administering-india",
+          "title": "Administering India",
+          "objectives": [
+            "Student can describe the Delhi Sultanate's administration and its iqta system",
+            "Student can describe Akbar's administrative framework, including provinces (subahs) and the mansabdari system"
+          ],
+          "visualIdeas": [
+            "a chart of Mughal ministers: Diwan, Mir Bakhshi, Khan-i-Saman and Sadr"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "peoples-lives",
+          "title": "People's Lives",
+          "objectives": [
+            "Student can describe the economy of the period: agriculture, artisans, guilds (shrenis), trade networks and coinage",
+            "Student can explain that India remained wealthy while the condition of common people was often harsh"
+          ],
+          "visualIdeas": [
+            "a busy market with weavers, traders and coins of the period"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-rise-of-the-marathas",
+      "title": "The Rise of the Marathas",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees103.pdf",
+      "topics": [
+        {
+          "id": "who-are-the-marathas",
+          "title": "Who are the Marathas?",
+          "objectives": [
+            "Student can identify the Marathas as a people of the Deccan, especially present-day Maharashtra, identified with the Marathi language",
+            "Student can describe the region's history before the rise of Maratha power"
+          ],
+          "visualIdeas": [
+            "a map of the Deccan plateau with Maharashtra highlighted"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "foundation-of-maratha-power-and-the-rise-of-chhatrapati-shivaji",
+          "title": "Foundation of Maratha Power and the Rise of Chhatrapati Shivaji",
+          "objectives": [
+            "Student can describe Chhatrapati Shivaji's early life and his campaigns against the Deccan sultanates and the Mughals",
+            "Student can explain the role of forts and of his coronation in founding the Maratha kingdom"
+          ],
+          "visualIdeas": [
+            "Raigad and other forts of Chhatrapati Shivaji marked on a map"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-marathas-after-chhatrapati-shivaji",
+          "title": "The Marathas after Chhatrapati Shivaji",
+          "objectives": [
+            "Student can describe the Mughal-Maratha conflict under Sambhaji, Rajaram and Tarabai",
+            "Student can describe the 18th-century expansion of Maratha power across India under the Peshwas"
+          ],
+          "visualIdeas": [
+            "a map of Maratha territory expanding across India in the 18th century"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "maratha-administration",
+          "title": "Maratha Administration",
+          "objectives": [
+            "Student can describe Chhatrapati Shivaji's civilian administration, including salaried officials instead of hereditary posts",
+            "Student can describe the Maratha military, navy under Kanhoji Angre, judicial system and trade networks"
+          ],
+          "visualIdeas": [
+            "Maratha ships challenging European ships off India's west coast"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "cultural-revival",
+          "title": "Cultural Revival",
+          "objectives": [
+            "Student can explain how Chhatrapati Shivaji promoted Sanskrit and Marathi, for example through his seal and the Rajya-Vyavahara-Kosha",
+            "Student can describe the roles of Maratha women such as Tarabai and Ahilyabai Holkar"
+          ],
+          "visualIdeas": [
+            "Chhatrapati Shivaji's Sanskrit seal"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "in-focus-thanjavur-and-the-maratha-legacy",
+          "title": "In focus: Thanjavur and the Maratha Legacy",
+          "objectives": [
+            "Student can describe Maratha patronage of the arts in Thanjavur",
+            "Student can explain the Maratha legacy and the ideal of Swarajya"
+          ],
+          "visualIdeas": [
+            "a Thanjavur painting with gold foil work"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-colonial-era-in-india",
+      "title": "The Colonial Era in India",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees104.pdf",
+      "topics": [
+        {
+          "id": "the-age-of-colonialism",
+          "title": "The Age of Colonialism",
+          "objectives": [
+            "Student can define colonialism",
+            "Student can explain why European powers sought colonies"
+          ],
+          "visualIdeas": [
+            "a world map with European sea routes to Asia, Africa and the Americas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "europeans-in-india-portuguese-dutch-and-french",
+          "title": "Europeans in India: Portuguese, Dutch and French",
+          "objectives": [
+            "Student can explain why India's wealth attracted European traders",
+            "Student can describe the Portuguese, Dutch and French presence in India and how their aims differed"
+          ],
+          "visualIdeas": [
+            "a map of Portuguese, Dutch and French trading posts in India"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "enter-the-british-from-traders-to-rulers",
+          "title": "Enter the British: From Traders to Rulers",
+          "objectives": [
+            "Student can explain how the English East India Company turned from a trading company into a ruling power",
+            "Student can explain why the Battle of Plassey was a turning point for the Company"
+          ],
+          "visualIdeas": [
+            "a timeline from the Company's charter to its control of Bengal"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "from-paradise-to-hell",
+          "title": "From Paradise to Hell?",
+          "objectives": [
+            "Student can describe how Company revenue policies contributed to devastating famines such as the Bengal famine of 1770",
+            "Student can explain the idea of the drain of India's wealth"
+          ],
+          "visualIdeas": [
+            "a graph of wealth flowing from India to Britain"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "changing-landscapes",
+          "title": "Changing Landscapes",
+          "objectives": [
+            "Student can explain the decline of India's indigenous industries such as textiles",
+            "Student can describe how traditional governance and education were dismantled and reshaped",
+            "Student can explain how the railways were designed to serve imperial needs"
+          ],
+          "visualIdeas": [
+            "handlooms falling silent beside bales of British mill cloth",
+            "a railway map leading from the interior to ports"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "early-resistance-movements-challenging-colonial-authority",
+          "title": "Early Resistance Movements: Challenging Colonial Authority",
+          "objectives": [
+            "Student can describe early resistance such as the Sannyasi-Fakir rebellion",
+            "Student can describe tribal uprisings and peasant uprisings such as the Indigo Revolt"
+          ],
+          "visualIdeas": [
+            "indigo fields with peasants refusing to sow"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-great-rebellion-of-1857",
+          "title": "The Great Rebellion of 1857",
+          "objectives": [
+            "Student can explain why historians call the events of 1857 the Great Rebellion rather than the Sepoy Mutiny",
+            "Student can describe the spread of the rebellion and how it was repressed",
+            "Student can describe the roles of leaders such as Rani Lakshmibai and Tatia Tope"
+          ],
+          "visualIdeas": [
+            "a map of the main centres of the 1857 rebellion"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-legacy-of-european-colonialism-in-india",
+          "title": "The Legacy of European Colonialism in India",
+          "objectives": [
+            "Student can explain why the textbook says colonial rule was not a civilising mission",
+            "Student can describe the lasting effects of colonial rule on India"
+          ],
+          "visualIdeas": [
+            "a two-column chart of colonial claims and their effects on India"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "universal-franchise-and-indias-electoral-system",
+      "title": "Universal Franchise and India's Electoral System",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees105.pdf",
+      "topics": [
+        {
+          "id": "universal-adult-franchise",
+          "title": "Universal Adult Franchise",
+          "objectives": [
+            "Student can explain universal adult franchise: every citizen aged 18 and above has one vote of equal value",
+            "Student can explain why the Constitution makers adopted it from the start"
+          ],
+          "visualIdeas": [
+            "a queue of voters of different ages, genders and backgrounds each holding one ballot"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bridging-barriers-enabling-participation-ensuring-universal-franchise",
+          "title": "Bridging Barriers, Enabling Participation: Ensuring Universal Franchise",
+          "objectives": [
+            "Student can explain the challenges of organising elections in a large and diverse country",
+            "Student can describe measures that help every eligible voter take part"
+          ],
+          "visualIdeas": [
+            "a polling team carrying voting machines to a remote village"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "election-for-class-representative",
+          "title": "Election for Class Representative",
+          "objectives": [
+            "Student can follow the steps of a fair election through the school class representative example",
+            "Student can relate the steps to real elections"
+          ],
+          "visualIdeas": [
+            "a classroom ballot box with three candidates' names"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-role-of-the-election-commission-of-india-eci",
+          "title": "The Role of the Election Commission of India (ECI)",
+          "objectives": [
+            "Student can describe the ECI as the Constitutional body that conducts elections",
+            "Student can describe how the ECI manages the electoral process"
+          ],
+          "visualIdeas": [
+            "a flow chart from announcement of elections to counting of votes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "model-code-of-conduct-mcc",
+          "title": "Model Code of Conduct (MCC)",
+          "objectives": [
+            "Student can explain the purpose of the Model Code of Conduct",
+            "Student can give examples of what parties and candidates may and may not do"
+          ],
+          "visualIdeas": [
+            "a dos and don'ts list for candidates during elections"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "understanding-elections-in-india-lok-sabha-and-state-legislative-assemblies",
+          "title": "Understanding Elections in India: Lok Sabha and State Legislative Assemblies",
+          "objectives": [
+            "Student can explain how members of the Lok Sabha and State Legislative Assemblies are directly elected from constituencies",
+            "Student can state that there are 543 Lok Sabha constituencies"
+          ],
+          "visualIdeas": [
+            "a map of India divided into parliamentary constituencies"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "election-to-the-rajya-sabha",
+          "title": "Election to the Rajya Sabha",
+          "objectives": [
+            "Student can explain indirect election of Rajya Sabha members by MLAs",
+            "Student can state that 233 members are elected and 12 nominated by the President"
+          ],
+          "visualIdeas": [
+            "a diagram of voters electing MLAs, who elect Rajya Sabha members"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "election-of-the-president-and-vice-president-of-india",
+          "title": "Election of the President and Vice President of India",
+          "objectives": [
+            "Student can describe the electoral college that elects the President",
+            "Student can describe how the Vice President is elected and their role as chairperson of the Rajya Sabha"
+          ],
+          "visualIdeas": [
+            "a diagram of the electoral college made of MPs and MLAs"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "challenges-and-the-road-ahead",
+          "title": "Challenges and The Road Ahead",
+          "objectives": [
+            "Student can identify challenges such as money power, candidates with criminal records and voter apathy",
+            "Student can explain why informed and vigilant voters strengthen democracy"
+          ],
+          "visualIdeas": [
+            "a voter awareness poster"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "the-parliamentary-system-legislature-and-executive",
+      "title": "The Parliamentary System: Legislature and Executive",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees106.pdf",
+      "topics": [
+        {
+          "id": "introduction-to-the-parliamentary-system",
+          "title": "Introduction to the Parliamentary System",
+          "objectives": [
+            "Student can explain how the Constitution set up a parliamentary system of government",
+            "Student can explain how citizens choose representatives through elections"
+          ],
+          "visualIdeas": [
+            "three pillars labelled legislature, executive and judiciary holding up a roof"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "composition-of-the-parliament-of-india",
+          "title": "Composition of the Parliament of India",
+          "objectives": [
+            "Student can state that Parliament consists of the President, the Lok Sabha and the Rajya Sabha",
+            "Student can explain the bicameral system and the difference between the two houses",
+            "Student can explain the role of the presiding officers: the Speaker in the Lok Sabha and the Vice President as Chairperson of the Rajya Sabha"
+          ],
+          "visualIdeas": [
+            "the Lok Sabha and Rajya Sabha chambers in the new Parliament building"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "legislative-functions-of-the-parliament-constitutional-functions-and-lawmaking",
+          "title": "Legislative Functions of the Parliament: Constitutional Functions and Lawmaking",
+          "objectives": [
+            "Student can describe Parliament's constitutional functions, such as electing the President and amending the Constitution",
+            "Student can describe the steps by which a bill becomes a law"
+          ],
+          "visualIdeas": [
+            "a flow chart of a bill passing through both houses to the President"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "legislative-functions-of-the-parliament-executive-and-financial-accountability",
+          "title": "Legislative Functions of the Parliament: Executive and Financial Accountability",
+          "objectives": [
+            "Student can explain how Parliament holds the executive accountable through questions and debates",
+            "Student can explain Parliament's control over the budget"
+          ],
+          "visualIdeas": [
+            "a question hour scene with a minister answering"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "executive-functions-the-president-the-prime-minister-and-the-council-of-ministers",
+          "title": "Executive Functions: The President, the Prime Minister and the Council of Ministers",
+          "objectives": [
+            "Student can explain that the President is the Head of State and the nominal head of the executive",
+            "Student can describe the role of the Prime Minister and the Council of Ministers in running the government"
+          ],
+          "visualIdeas": [
+            "an organisation chart from the President to the Prime Minister and ministries"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-judiciary-role-of-checks-and-balances",
+          "title": "The Judiciary — Role of Checks and Balances",
+          "objectives": [
+            "Student can explain the judiciary as the custodian of the Constitution",
+            "Student can explain how checks and balances keep each branch of government within its limits"
+          ],
+          "visualIdeas": [
+            "a balance scale with legislature, executive and judiciary"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "legislative-and-executive-functions-at-the-state-level",
+          "title": "Legislative and Executive Functions at the State Level",
+          "objectives": [
+            "Student can explain the Union, State and Concurrent Lists",
+            "Student can distinguish unicameral and bicameral state legislatures (Vidhan Sabha and Vidhan Parishad)"
+          ],
+          "visualIdeas": [
+            "three overlapping circles for the Union, State and Concurrent Lists"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "challenges-to-the-effective-functioning-of-the-legislatures",
+          "title": "Challenges to the Effective Functioning of the Legislatures",
+          "objectives": [
+            "Student can identify challenges such as disruptions and fewer sitting days",
+            "Student can suggest how legislatures can work more effectively"
+          ],
+          "visualIdeas": [
+            "a bar chart of sitting days of Parliament over the years"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "factors-of-production",
+      "title": "Factors of Production",
+      "book": "Exploring Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees107.pdf",
+      "topics": [
+        {
+          "id": "introduction-to-factors-of-production",
+          "title": "Introduction to Factors of Production",
+          "objectives": [
+            "Student can define factors of production as the inputs used to produce goods and services",
+            "Student can identify the inputs a small restaurant business needs"
+          ],
+          "visualIdeas": [
+            "Ratna's roadside restaurant with labels for land, workers, equipment and her idea"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "land-natural-resources",
+          "title": "Land (Natural Resources)",
+          "objectives": [
+            "Student can explain that land in economics includes all natural resources",
+            "Student can explain that businesses buy or rent land"
+          ],
+          "visualIdeas": [
+            "a factory site with soil, water, sunlight and minerals labelled as land"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "labour-human-resources",
+          "title": "Labour (Human Resources)",
+          "objectives": [
+            "Student can explain labour as physical and mental effort in production",
+            "Student can explain human capital and how education, training and health make people more productive"
+          ],
+          "visualIdeas": [
+            "workers from a tea plantation to a laboratory, each with their skills listed"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "capital",
+          "title": "Capital",
+          "objectives": [
+            "Student can define capital as money and human-made resources used in production",
+            "Student can describe sources of capital: personal savings, family and friends, bank loans and, for large companies, shares sold on the stock market"
+          ],
+          "visualIdeas": [
+            "machinery, tools, a shop and a bank labelled as capital"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "entrepreneurship",
+          "title": "Entrepreneurship",
+          "objectives": [
+            "Student can explain the role of an entrepreneur in combining factors of production and taking risks",
+            "Student can describe what a startup is"
+          ],
+          "visualIdeas": [
+            "an entrepreneur bringing together land, labour and capital around an idea"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "technology-an-enabler-of-production",
+          "title": "Technology: An Enabler of Production",
+          "objectives": [
+            "Student can explain technology as the application of scientific knowledge to production",
+            "Student can give examples such as UPI payments, weather updates for farmers and drones"
+          ],
+          "visualIdeas": [
+            "a drone spraying a field and a phone showing a UPI payment"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-are-the-factors-connected",
+          "title": "How are the Factors Connected?",
+          "objectives": [
+            "Student can explain that factors of production are combined in different proportions for different products",
+            "Student can distinguish labour-intensive and capital-intensive production"
+          ],
+          "visualIdeas": [
+            "handicraft workshop beside a semiconductor factory"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "responsibilities-towards-factors-of-production",
+          "title": "Responsibilities towards Factors of Production",
+          "objectives": [
+            "Student can explain why producers must use natural resources responsibly and avoid pollution",
+            "Student can give examples such as leather factory waste and unrecycled phones"
+          ],
+          "visualIdeas": [
+            "a river polluted by factory waste beside a recycling centre"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "world-geography-some-glimpses",
+      "title": "World Geography: Some Glimpses",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees201.pdf",
+      "topics": [
+        {
+          "id": "the-complexity-of-mapping-the-earth",
+          "title": "The Complexity of Mapping the Earth",
+          "objectives": [
+            "Student can explain why every flat map of the Earth has some distortion",
+            "Student can compare the Mercator and Robinson projections"
+          ],
+          "visualIdeas": [
+            "an orange peel that cannot lie flat beside Mercator and Robinson world maps"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-blue-of-the-blue-planet-the-oceans",
+          "title": "The Blue of the Blue Planet, the Oceans",
+          "objectives": [
+            "Student can state that oceans cover about 71 per cent of the Earth and hold 97 per cent of its water",
+            "Student can explain how ocean currents such as the Gulf Stream affect climate"
+          ],
+          "visualIdeas": [
+            "a world map of warm and cold ocean currents"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ocean-trenches-the-great-barrier-reef-and-smaller-water-bodies",
+          "title": "Ocean Trenches, the Great Barrier Reef and Smaller Water Bodies",
+          "objectives": [
+            "Student can describe ocean trenches such as the Mariana Trench and coral reefs such as the Great Barrier Reef",
+            "Student can distinguish seas, gulfs, bays, straits and canals with examples"
+          ],
+          "visualIdeas": [
+            "a cross-section of the ocean floor with the Mariana Trench",
+            "labelled examples of a sea, gulf, bay, strait and canal"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-continents-variety-on-land",
+          "title": "The Continents: Variety on Land",
+          "objectives": [
+            "Student can name the seven continents",
+            "Student can recall the main landforms: mountains, plateaus and plains"
+          ],
+          "visualIdeas": [
+            "a world map of the seven continents"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "asia",
+          "title": "Asia",
+          "objectives": [
+            "Student can describe the Tibetan Plateau and how it formed from colliding tectonic plates",
+            "Student can describe the Gobi Desert and the Eurasian Steppes"
+          ],
+          "visualIdeas": [
+            "a physical map of Asia marking the Tibetan Plateau, Gobi and the steppes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "europe",
+          "title": "Europe",
+          "objectives": [
+            "Student can describe the Great European Plain and why it is agriculturally productive",
+            "Student can describe the Alps"
+          ],
+          "visualIdeas": [
+            "a physical map of Europe with the Alps and the European Plain"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "africa",
+          "title": "Africa",
+          "objectives": [
+            "Student can describe the Sahara Desert",
+            "Student can describe the River Nile and the African savannah"
+          ],
+          "visualIdeas": [
+            "a map of Africa with the Sahara, the Nile and the savannah"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "south-america",
+          "title": "South America",
+          "objectives": [
+            "Student can describe the Andes Mountains and their resources",
+            "Student can describe the Amazon River and rainforest"
+          ],
+          "visualIdeas": [
+            "a map of South America with the Andes and the Amazon rainforest"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "north-america",
+          "title": "North America",
+          "objectives": [
+            "Student can describe the Colorado Plateau and the Grand Canyon",
+            "Student can describe the Rocky Mountains and the Great Lakes"
+          ],
+          "visualIdeas": [
+            "a map of North America with the Rockies, the Colorado Plateau and the Great Lakes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-australian-continent",
+          "title": "The Australian Continent",
+          "objectives": [
+            "Student can describe the Great Australian Desert, including the Great Victoria Desert",
+            "Student can link Australia's landforms to its climate and life"
+          ],
+          "visualIdeas": [
+            "a physical map of Australia with its deserts and the Great Barrier Reef"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "indias-long-road-to-independence",
+      "title": "India's Long Road to Independence",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees202.pdf",
+      "topics": [
+        {
+          "id": "a-royal-proclamation",
+          "title": "A Royal Proclamation",
+          "objectives": [
+            "Student can explain how the British Crown took direct control of India in 1858",
+            "Student can describe how British India was governed through the Secretary of State and the Viceroy"
+          ],
+          "visualIdeas": [
+            "a map of British India and the princely states"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reform-movements-and-other-influences",
+          "title": "Reform Movements and Other Influences",
+          "objectives": [
+            "Student can describe reform movements such as the Brahmo Samaj and Arya Samaj and reformers like Vidyasagar and the Phules",
+            "Student can explain how Bankim Chandra's Vande Mataram and Swami Vivekananda inspired national feeling"
+          ],
+          "visualIdeas": [
+            "a table of reformers with their movements and ideas"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-rise-of-the-indian-national-congress",
+          "title": "The Rise of the Indian National Congress",
+          "objectives": [
+            "Student can describe the founding of the Indian National Congress in 1885",
+            "Student can explain the early Congress approach of seeking reforms through dialogue"
+          ],
+          "visualIdeas": [
+            "the first Congress session in Bombay in 1885"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "growing-discontent",
+          "title": "Growing Discontent",
+          "objectives": [
+            "Student can describe examples of growing discontent such as the Kuka Movement, Tilak's Kesari and Birsa Munda's Ulgulaan",
+            "Student can explain how secret societies such as the Anushilan Samiti emerged"
+          ],
+          "visualIdeas": [
+            "portraits of Baba Ram Singh, Bal Gangadhar Tilak and Birsa Munda"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-1905-partition-of-bengal-and-national-awakening",
+          "title": "The 1905 Partition of Bengal and National Awakening",
+          "objectives": [
+            "Student can explain why the 1905 Partition of Bengal was seen as divide and rule",
+            "Student can describe the Swadeshi and Boycott movements"
+          ],
+          "visualIdeas": [
+            "a bonfire of foreign cloth during the Swadeshi movement"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-nationalist-agenda",
+          "title": "The Nationalist Agenda",
+          "objectives": [
+            "Student can describe how the Nationalists spread the idea of freedom through papers like Bande Mataram and through National Education",
+            "Student can explain the 1906 Calcutta Congress call for Swaraj, Swadeshi, Boycott and National Education"
+          ],
+          "visualIdeas": [
+            "the front page of the Bande Mataram daily"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-all-india-muslim-league-and-the-1907-surat-split",
+          "title": "The All-India Muslim League and the 1907 Surat Split",
+          "objectives": [
+            "Student can describe the founding of the All-India Muslim League in 1906",
+            "Student can explain the split between Moderates and Nationalists at Surat in 1907"
+          ],
+          "visualIdeas": [
+            "a chart of Moderates and Nationalists with their aims"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-revolutionaries",
+          "title": "The Revolutionaries",
+          "objectives": [
+            "Student can describe revolutionary actions such as those of Khudiram Bose and the Alipore Bomb trial",
+            "Student can describe the Ghadar Movement and freedom fighters of the North-East such as Rani Gaidinliu"
+          ],
+          "visualIdeas": [
+            "a map of revolutionary centres in India and abroad"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "home-rule-movement-and-the-lucknow-pact",
+          "title": "Home Rule Movement and the Lucknow Pact",
+          "objectives": [
+            "Student can describe the Home Rule Movement led by Tilak and Annie Besant",
+            "Student can explain the 1916 Lucknow Pact"
+          ],
+          "visualIdeas": [
+            "Tilak and Annie Besant with the Home Rule flag"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "gandhi-and-the-non-cooperation-movement",
+          "title": "Gandhi and the Non-Cooperation Movement",
+          "objectives": [
+            "Student can explain Gandhi's method of satyagraha and how it began in South Africa",
+            "Student can describe the Non-Cooperation Movement and why it was called off after Chauri Chaura"
+          ],
+          "visualIdeas": [
+            "Gandhi spinning khadi beside a list of non-cooperation actions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-jallianwala-bagh-massacre-and-its-aftermath",
+          "title": "The Jallianwala Bagh Massacre and its Aftermath",
+          "objectives": [
+            "Student can describe the Rowlatt Act and the Jallianwala Bagh massacre of 13 April 1919",
+            "Student can explain how the massacre turned public opinion against British rule"
+          ],
+          "visualIdeas": [
+            "the narrow entrance of Jallianwala Bagh"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-khilafat-movement-and-its-aftermath",
+          "title": "The Khilafat Movement and its Aftermath",
+          "objectives": [
+            "Student can explain the Khilafat Movement and its alliance with the Non-Cooperation Movement",
+            "Student can describe the debate over its aftermath for Hindu-Muslim relations"
+          ],
+          "visualIdeas": [
+            "a timeline from 1919 to 1924 showing the rise and end of the Khilafat Movement"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "protests-repression-and-revenge",
+          "title": "Protests, Repression and Revenge",
+          "objectives": [
+            "Student can describe the protests against the Simon Commission and the death of Lala Lajpat Rai",
+            "Student can describe the actions of revolutionaries such as Bhagat Singh, Chandrashekhar Azad, Ram Prasad Bismil and Ashfaqulla Khan"
+          ],
+          "visualIdeas": [
+            "a 'Simon Go Back' protest with black flags"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "purna-swaraj-and-civil-disobedience",
+          "title": "Purna Swaraj and Civil Disobedience",
+          "objectives": [
+            "Student can explain the 1929 Lahore demand for Purna Swaraj",
+            "Student can describe the Salt March to Dandi and the Civil Disobedience Movement"
+          ],
+          "visualIdeas": [
+            "a map of the 380 km route of the Dandi March"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-gandhi-irwin-pact-and-the-idea-of-separate-nations",
+          "title": "The Gandhi-Irwin Pact and the Idea of Separate Nations",
+          "objectives": [
+            "Student can describe the Gandhi-Irwin Pact and the Round Table Conference",
+            "Student can explain how the demand for a separate Muslim homeland emerged"
+          ],
+          "visualIdeas": [
+            "a timeline from 1930 to 1940 of talks and resolutions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "world-war-ii-and-the-indian-national-army",
+          "title": "World War II and the Indian National Army",
+          "objectives": [
+            "Student can describe the impact of World War II on India",
+            "Student can describe Subhas Chandra Bose and the Indian National Army"
+          ],
+          "visualIdeas": [
+            "Subhas Chandra Bose with the INA flag"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-quit-india-movement",
+          "title": "The Quit India Movement",
+          "objectives": [
+            "Student can explain why the Cripps Mission was rejected",
+            "Student can describe the Quit India Movement and the call of Do or Die"
+          ],
+          "visualIdeas": [
+            "a 1942 Quit India protest poster"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "partition-turmoil-and-independence",
+          "title": "Partition, Turmoil, and Independence",
+          "objectives": [
+            "Student can describe the events after World War II, such as the Royal Indian Navy mutiny and the Cabinet Mission",
+            "Student can describe Direct Action Day in 1946 and the communal violence that followed"
+          ],
+          "visualIdeas": [
+            "a timeline of 1945 to 1947"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-partition-of-india",
+          "title": "The Partition of India",
+          "objectives": [
+            "Student can describe how the Radcliffe line was drawn and the partition carried out",
+            "Student can describe the human cost of Partition, including refugees and violence",
+            "Student can explain the meaning of independence on 15 August 1947"
+          ],
+          "visualIdeas": [
+            "a map of the new borders of 1947 with refugee movements"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "a-journey-through-indian-architecture",
+      "title": "A Journey Through Indian Architecture",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees203.pdf",
+      "topics": [
+        {
+          "id": "the-beginnings-harappan-architecture",
+          "title": "The Beginnings: Harappan Architecture",
+          "objectives": [
+            "Student can describe Harappan urban planning, drainage and water management",
+            "Student can explain why Harappan cities were built of bricks"
+          ],
+          "visualIdeas": [
+            "a plan of Mohenjo-daro's streets and drains"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "structural-stupa-architecture",
+          "title": "Structural Stupa Architecture",
+          "objectives": [
+            "Student can describe stupas as dome-shaped structures housing relics, with railings and gateways",
+            "Student can identify the Sanchi and Bharhut stupas"
+          ],
+          "visualIdeas": [
+            "the main stupa at Sanchi with its toranas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rock-cut-architecture",
+          "title": "Rock-Cut Architecture",
+          "objectives": [
+            "Student can explain rock-cut architecture as carving caves directly into rock",
+            "Student can describe examples such as the Udayagiri-Khandagiri caves and Ellora"
+          ],
+          "visualIdeas": [
+            "cave no. 10 at Ellora with a seated Buddha emerging from a stupa"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "water-structures",
+          "title": "Water Structures",
+          "objectives": [
+            "Student can explain why India developed many kinds of water structures",
+            "Student can describe examples such as Harappan wells, the tanks at Shringaverpur and stepwells like Rani ki Vav"
+          ],
+          "visualIdeas": [
+            "a cross-section of a stepwell"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "classical-temple-architecture",
+          "title": "Classical Temple Architecture",
+          "objectives": [
+            "Student can identify the main parts of a classical temple such as the garbhagriha, mandapa and gopuram",
+            "Student can compare temple styles using examples such as the Brihadishvara temple",
+            "Student can explain that temples were also centres of learning, art and economic life"
+          ],
+          "visualIdeas": [
+            "a ground plan of the Brihadishvara temple with its parts labelled"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-architecture-of-mosques",
+          "title": "The Architecture of Mosques",
+          "objectives": [
+            "Student can identify the main features of a mosque: prayer hall oriented to Mecca, domes and minarets",
+            "Student can describe examples such as the Jama Masjid of Ahmedabad"
+          ],
+          "visualIdeas": [
+            "a mosque with its dome, minarets and prayer hall labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "forts-and-palaces",
+          "title": "Forts and Palaces",
+          "objectives": [
+            "Student can explain why forts were built at strategic sites",
+            "Student can describe examples such as the Mehrangarh fort-palace"
+          ],
+          "visualIdeas": [
+            "Mehrangarh fort on its hill above Jodhpur"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tombs-and-mausoleums",
+          "title": "Tombs and Mausoleums",
+          "objectives": [
+            "Student can explain why mausoleums were built in the Islamic tradition",
+            "Student can describe examples such as Humayun's Tomb and the Taj Mahal"
+          ],
+          "visualIdeas": [
+            "Humayun's Tomb with its charbagh garden"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "traditional-houses-churches-and-colonial-architecture",
+          "title": "Traditional Houses, Churches and Colonial Architecture",
+          "objectives": [
+            "Student can describe the courtyard design of traditional houses such as havelis",
+            "Student can describe churches in India that blend European and local styles",
+            "Student can describe Indo-Saracenic colonial architecture with examples such as the Madras High Court and the Victoria Memorial"
+          ],
+          "visualIdeas": [
+            "a haveli courtyard beside the Victoria Memorial in Kolkata"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-role-of-the-judiciary-in-our-society",
+      "title": "The Role of the Judiciary in Our Society",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees204.pdf",
+      "topics": [
+        {
+          "id": "the-connection-between-law-and-justice",
+          "title": "The Connection Between Law and Justice",
+          "objectives": [
+            "Student can explain why societies need laws and how laws help achieve justice",
+            "Student can distinguish laws from other social rules"
+          ],
+          "visualIdeas": [
+            "a pair of scales of justice beside a book of laws"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-judicial-system-in-india-and-the-supreme-court",
+          "title": "The Judicial System in India and the Supreme Court",
+          "objectives": [
+            "Student can describe the hierarchy of courts: Supreme Court, High Courts and Subordinate Courts",
+            "Student can explain that the Supreme Court is the final interpreter of the Constitution"
+          ],
+          "visualIdeas": [
+            "a pyramid of courts with the Supreme Court at the top"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "jurisdiction-of-the-supreme-court",
+          "title": "Jurisdiction of the Supreme Court",
+          "objectives": [
+            "Student can explain the writ jurisdiction of the Supreme Court and High Courts to enforce Fundamental Rights",
+            "Student can distinguish the Supreme Court's original, appellate and advisory jurisdiction and Special Leave Petitions"
+          ],
+          "visualIdeas": [
+            "a chart of the Supreme Court's types of jurisdiction with the Article for each"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "high-courts-and-their-jurisdiction",
+          "title": "High Courts and their Jurisdiction",
+          "objectives": [
+            "Student can explain that a High Court is the highest court at the state level",
+            "Student can describe the jurisdiction of High Courts, including writs, appeals and supervision of subordinate courts"
+          ],
+          "visualIdeas": [
+            "a map of India showing which states share a High Court"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "subordinate-courts-and-tribunals",
+          "title": "Subordinate Courts and Tribunals",
+          "objectives": [
+            "Student can describe the subordinate courts such as District and Sessions Courts",
+            "Student can explain the role of specialised tribunals such as the National Green Tribunal and consumer fora"
+          ],
+          "visualIdeas": [
+            "a chart of tribunals and the disputes each decides"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "digital-technology-and-judicial-system",
+          "title": "Digital Technology and Judicial System",
+          "objectives": [
+            "Student can describe how digital technology makes courts more accessible and transparent",
+            "Student can name digital initiatives such as e-filing, live streaming of proceedings, translation of judgments and the National Judicial Data Grid"
+          ],
+          "visualIdeas": [
+            "a phone screen showing an online case status"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "alternate-modes-of-dispute-resolution",
+          "title": "Alternate Modes of Dispute Resolution",
+          "objectives": [
+            "Student can explain arbitration, mediation, conciliation, negotiation and Lok Adalats",
+            "Student can explain how these reduce the burden on courts"
+          ],
+          "visualIdeas": [
+            "two parties settling a dispute at a Lok Adalat table"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "citizenship-rights-and-duties",
+      "title": "Citizenship: Rights and Duties",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees205.pdf",
+      "topics": [
+        {
+          "id": "who-is-a-citizen",
+          "title": "Who Is a Citizen?",
+          "objectives": [
+            "Student can define a citizen as someone who legally belongs to a country",
+            "Student can describe what it means to be a good and active citizen"
+          ],
+          "visualIdeas": [
+            "students welcoming a new classmate onto their team"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-are-rights",
+          "title": "What are Rights?",
+          "objectives": [
+            "Student can explain rights as justified claims needed to live with dignity, safety and respect",
+            "Student can explain why actions that harm others cannot be rights"
+          ],
+          "visualIdeas": [
+            "a set of rights cards: education, livelihood, expression"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fundamental-rights-in-the-indian-constitution",
+          "title": "Fundamental Rights in the Indian Constitution",
+          "objectives": [
+            "Student can name the six categories of Fundamental Rights with their Articles",
+            "Student can explain that Fundamental Rights protect people from unfair treatment by others and by the government",
+            "Student can explain that people can approach the courts if these rights are violated"
+          ],
+          "visualIdeas": [
+            "a wheel of the six Fundamental Rights with Article numbers"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "duties",
+          "title": "Duties",
+          "objectives": [
+            "Student can explain Fundamental Duties and when they were added to the Constitution",
+            "Student can give examples of Fundamental Duties from Article 51A"
+          ],
+          "visualIdeas": [
+            "a list of Fundamental Duties illustrated with everyday actions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rights-and-duties-two-sides-of-the-same-coin",
+          "title": "Rights and Duties: Two Sides of the Same Coin",
+          "objectives": [
+            "Student can explain why rights and duties go together",
+            "Student can distinguish legally enforceable rights from moral and social duties"
+          ],
+          "visualIdeas": [
+            "a coin with rights on one face and duties on the other"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "discrimination",
+          "title": "Discrimination",
+          "objectives": [
+            "Student can define discrimination as unfair treatment based on identity",
+            "Student can distinguish visible and invisible discrimination using caselets"
+          ],
+          "visualIdeas": [
+            "two school caselets, one of name-calling and one of a child left out of a trip"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "inclusion",
+          "title": "Inclusion",
+          "objectives": [
+            "Student can explain inclusion as ensuring everyone feels welcomed and has equal access to opportunities",
+            "Student can suggest ways to make a school more inclusive"
+          ],
+          "visualIdeas": [
+            "a reading club with books in several languages"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "dynamics-of-population",
+      "title": "Dynamics of Population",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees206.pdf",
+      "topics": [
+        {
+          "id": "what-is-demography",
+          "title": "What Is Demography?",
+          "objectives": [
+            "Student can define demography as the study of the size, structure and changes of a population",
+            "Student can name the factors that change population: births, deaths and migration"
+          ],
+          "visualIdeas": [
+            "a diagram of births, deaths and migration flowing into and out of a population"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "population-at-a-glance",
+          "title": "Population at a Glance",
+          "objectives": [
+            "Student can state that India became the world's most populous country in 2023",
+            "Student can describe how world population has grown and is projected to change"
+          ],
+          "visualIdeas": [
+            "a bar graph of the world's most populous countries"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-determines-the-population-of-a-country",
+          "title": "What Determines the Population of a Country?",
+          "objectives": [
+            "Student can define birth rate, fertility rate and death rate",
+            "Student can explain replacement level fertility of 2.1"
+          ],
+          "visualIdeas": [
+            "a family tree showing replacement level fertility"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "death-rate-and-migration",
+          "title": "Death Rate and Migration",
+          "objectives": [
+            "Student can explain how lower mortality and higher life expectancy reflect better healthcare",
+            "Student can explain why people migrate and its effects on cities"
+          ],
+          "visualIdeas": [
+            "a line graph of India's life expectancy rising from 30 to 70 years"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-do-countries-experience-population-change",
+          "title": "How Do Countries Experience Population Change?",
+          "objectives": [
+            "Student can describe the stages of demographic transition",
+            "Student can explain why many developed countries have shrinking and ageing populations"
+          ],
+          "visualIdeas": [
+            "a demographic transition graph with birth and death rate curves"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "indias-population-composition-and-trends",
+          "title": "India's Population: Composition and Trends",
+          "objectives": [
+            "Student can describe the composition of India's population by age, gender and other characteristics",
+            "Student can read a population pyramid"
+          ],
+          "visualIdeas": [
+            "India's population pyramid"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "indias-demographic-dividend-a-limited-window-of-opportunity",
+          "title": "India's Demographic Dividend — A Limited Window of Opportunity",
+          "objectives": [
+            "Student can explain the demographic dividend and youth bulge",
+            "Student can explain why investing in education, health and jobs is needed before the window closes"
+          ],
+          "visualIdeas": [
+            "a bar chart of median age in India, Japan, China and the USA"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "indias-urban-landscape",
+      "title": "India's Urban Landscape",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees207.pdf",
+      "topics": [
+        {
+          "id": "introduction-to-indias-urban-landscape",
+          "title": "Introduction to India's Urban Landscape",
+          "objectives": [
+            "Student can describe India's urban legacy from Harappan cities to historical cities still flourishing today",
+            "Student can describe what makes an area a city today"
+          ],
+          "visualIdeas": [
+            "a timeline of Indian cities from Dholavira to modern metros"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "population-density-in-cities",
+          "title": "Population Density in Cities",
+          "objectives": [
+            "Student can define and calculate population density",
+            "Student can compare the density of different cities"
+          ],
+          "visualIdeas": [
+            "dots packed densely in a city grid beside sparse dots in a village"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-do-cities-become-centres-of-economic-activities",
+          "title": "How do Cities Become Centres of Economic Activities?",
+          "objectives": [
+            "Student can explain how location near rivers and trade routes helped cities grow",
+            "Student can explain why a growing share of the world's population lives in cities"
+          ],
+          "visualIdeas": [
+            "a city growing at the crossing of a river and a trade route"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-leads-to-urbanisation",
+          "title": "What Leads to Urbanisation?",
+          "objectives": [
+            "Student can describe the stages by which a village becomes a town and then a metropolitan city",
+            "Student can explain how a shift to industry and services drives urbanisation"
+          ],
+          "visualIdeas": [
+            "a flow chart from rural origins to a metropolitan area"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "cities-as-cultural-hubs",
+          "title": "Cities as Cultural Hubs",
+          "objectives": [
+            "Student can explain how people from many regions mix in cities to create shared culture",
+            "Student can give examples such as Mumbai's vada pav and Kolkata's cultural institutions"
+          ],
+          "visualIdeas": [
+            "a street food stall surrounded by people from different regions"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "challenges-faced-by-cities",
+          "title": "Challenges Faced by Cities",
+          "objectives": [
+            "Student can identify challenges such as pollution, traffic, slums, heat islands and waste",
+            "Student can explain how rapid growth strains urban infrastructure"
+          ],
+          "visualIdeas": [
+            "a city scene with traffic, smog and an overflowing garbage dump"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "planning-our-cities",
+          "title": "Planning Our Cities",
+          "objectives": [
+            "Student can explain what urban planners must consider, such as transport, housing, green spaces and public facilities",
+            "Student can suggest ways to make a city sustainable and liveable"
+          ],
+          "visualIdeas": [
+            "a planned neighbourhood map with parks, schools, transit and homes"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "cultural-currents-13th-to-17th-centuries",
+      "title": "Cultural Currents: 13th to 17th Centuries",
+      "book": "Exploring Society: India and Beyond Part 2",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hees208.pdf",
+      "topics": [
+        {
+          "id": "belief-systems-and-the-bhakti-tradition",
+          "title": "Belief Systems and the Bhakti Tradition",
+          "objectives": [
+            "Student can explain how Indian culture endured and grew richer during this period",
+            "Student can explain the bhakti marga as a path of devotion that did not require rituals or priests"
+          ],
+          "visualIdeas": [
+            "a map of India with bhakti saints placed in their regions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "regional-saints-and-their-messages",
+          "title": "Regional Saints and their Messages",
+          "objectives": [
+            "Student can describe the messages of saints such as Kabir and Ravidas on equality and oneness",
+            "Student can explain how Sufi saints formed a bridge between cultures"
+          ],
+          "visualIdeas": [
+            "short couplets of Kabir and Ravidas on a scroll"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "musical-traditions-continuation-and-evolution",
+          "title": "Musical Traditions — Continuation and Evolution",
+          "objectives": [
+            "Student can describe how Indian music evolved while keeping its identity",
+            "Student can name the two streams of classical music, Hindustani and Carnatic"
+          ],
+          "visualIdeas": [
+            "a sitar and a veena side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "from-walls-to-paper-miniature-paintings",
+          "title": "From Walls to Paper — Miniature Paintings",
+          "objectives": [
+            "Student can explain how painting moved from walls to paper",
+            "Student can describe Rajput and Mughal miniature painting traditions"
+          ],
+          "visualIdeas": [
+            "a Rajput miniature beside a Mughal miniature"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "changing-landscapes-gardens",
+          "title": "Changing Landscapes — Gardens",
+          "objectives": [
+            "Student can describe gardens in ancient Indian texts",
+            "Student can describe the Mughal charbagh garden design"
+          ],
+          "visualIdeas": [
+            "a charbagh garden plan with four parts and water channels"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "women-in-society-contextual-variations-in-their-role-and-status",
+          "title": "Women in Society — Contextual Variations in Their Role and Status",
+          "objectives": [
+            "Student can explain how the role and status of women varied by context during this period",
+            "Student can describe women who took part in public life, such as Razia Sultan and Nur Jahan, and the roles of women in south India such as at Vijayanagara"
+          ],
+          "visualIdeas": [
+            "Razia Sultan in her darbar beside Nur Jahan"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "education-and-knowledge-traditions",
+          "title": "Education and Knowledge Traditions",
+          "objectives": [
+            "Student can describe institutions of learning such as gurukulas, mathas, temple schools and pathshalas",
+            "Student can describe vocational education through the example of Banaras silk weaving and its brocades"
+          ],
+          "visualIdeas": [
+            "a weaver at a loom teaching an apprentice"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "growth-of-literature-and-language",
+          "title": "Growth of Literature and Language",
+          "objectives": [
+            "Student can describe the flourishing of literature in many Indian languages",
+            "Student can explain how Urdu developed from Hindavi with Arabic and Persian words"
+          ],
+          "visualIdeas": [
+            "a map of languages with a sample word in each script"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "developments-in-science-and-technology",
+          "title": "Developments in Science and Technology",
+          "objectives": [
+            "Student can describe Indian advances in science and technology during this period",
+            "Student can explain India's culture of enquiry and openness to other cultures"
+          ],
+          "visualIdeas": [
+            "an astronomical instrument of the period"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "regional-architectural-developments",
+          "title": "Regional Architectural Developments",
+          "objectives": [
+            "Student can describe regional architecture such as the Konark Surya Mandir and Ranakpur temple",
+            "Student can describe temple building and reconstruction, for example at Hampi and Srirangam"
+          ],
+          "visualIdeas": [
+            "the stone wheels of the Konark Surya Mandir"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "cultural-exchange-in-daily-life",
+          "title": "Cultural Exchange in Daily Life",
+          "objectives": [
+            "Student can describe the two-way exchange in food and cuisine",
+            "Student can describe changes in clothing such as the jama and pyjama"
+          ],
+          "visualIdeas": [
+            "a Mughal-era kitchen and a painting of court clothing"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

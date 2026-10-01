@@ -1,0 +1,1389 @@
+{
+  "id": "class8-science",
+  "klass": 8,
+  "subject": "Science",
+  "source": {
+    "books": [
+      {
+        "title": "Curiosity: Textbook of Science for Grade 8",
+        "code": "hecu1",
+        "edition": "Reprint 2026-27 (First Edition June 2025; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/hecu1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "exploring-the-investigative-world-of-science",
+      "title": "Exploring the Investigative World of Science",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu101.pdf",
+      "topics": [
+        {
+          "id": "from-wonder-to-investigation",
+          "title": "From Wonder to Investigation",
+          "objectives": [
+            "Student can explain that investigating in science means asking focused questions, designing simple experiments and using observations to improve understanding",
+            "Student can explain what the root and the kite on the book's pages stand for: staying grounded in careful observation while letting ideas take flight"
+          ],
+          "visualIdeas": [
+            "a root at the bottom of a page and a kite soaring at the top, joined by a dotted line labelled observe - question - experiment"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "our-investigative-journey-this-year",
+          "title": "Our Investigative Journey This Year",
+          "objectives": [
+            "Student can name the big themes of the year, from microbes and health to forces, matter, light, the Moon and calendars, ecosystems and the Earth",
+            "Student can link one theme to the next, for example how pressure differences lead to winds and cyclones"
+          ],
+          "visualIdeas": [
+            "a winding road map with stops labelled microbes, health, electricity, forces, matter, light, Moon, ecosystems and Earth"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "investigating-why-a-puri-puffs-up",
+          "title": "Investigating Why a Puri Puffs Up",
+          "objectives": [
+            "Student can list what can be changed or controlled in a puri experiment (thickness, size, flour, oil temperature, way of dropping) and what can be observed or measured",
+            "Student can explain why only one thing should be changed at a time while the other conditions are kept the same",
+            "Student can describe systematic investigation as observing, experimenting, recording notes and asking new questions"
+          ],
+          "visualIdeas": [
+            "a table with columns things we change and things we observe, filled in for puris fried in oil of three temperatures"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-invisible-living-world-beyond-our-naked-eye",
+      "title": "The Invisible Living World: Beyond Our Naked Eye",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu102.pdf",
+      "topics": [
+        {
+          "id": "what-is-a-cell",
+          "title": "What Is a Cell?",
+          "objectives": [
+            "Student can describe how onion peel and cheek cells are prepared and observed under a microscope",
+            "Student can name the basic parts of a cell (cell membrane, cytoplasm, nucleus) and state the function of each",
+            "Student can state that plant cells have a cell wall, plastids and a large vacuole, which animal cells usually lack"
+          ],
+          "visualIdeas": [
+            "side-by-side labelled diagrams of an onion peel cell and a human cheek cell",
+            "a brick wall next to a sheet of onion cells"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "variation-in-shape-and-structure-of-cells",
+          "title": "Variation in Shape and Structure of Cells",
+          "objectives": [
+            "Student can compare the shapes of a muscle cell and a nerve cell",
+            "Student can explain how the shape of a cell suits its function, for example long branched nerve cells carrying messages"
+          ],
+          "visualIdeas": [
+            "a spindle-shaped muscle cell beside a long branched nerve cell with arrows showing a message travelling"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-are-the-levels-of-organisation-in-the-body-of-a-living-organism",
+          "title": "What Are the Levels of Organisation in the Body of a Living Organism?",
+          "objectives": [
+            "Student can order the levels of organisation: cell, tissue, organ, organ system, organism",
+            "Student can explain that multicellular organisms begin as a single cell, the egg"
+          ],
+          "visualIdeas": [
+            "a staircase diagram from a single cell up to a whole organism"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-are-microorganisms",
+          "title": "What Are Microorganisms?",
+          "objectives": [
+            "Student can define microorganisms as living beings too small to be seen with the naked eye",
+            "Student can name the groups seen in pond water and soil suspension: protozoa, algae, fungi and bacteria",
+            "Student can distinguish unicellular microbes like bacteria and Amoeba from multicellular ones like some fungi and algae"
+          ],
+          "visualIdeas": [
+            "a microscope view of a pond-water drop showing Amoeba, Paramecium and green algae"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-are-we-connected-to-microbes",
+          "title": "How Are We Connected to Microbes?",
+          "objectives": [
+            "Student can explain that microbes are found everywhere, in water, soil, air, food and inside our bodies",
+            "Student can explain why salt or sugar in pickles and murabbas stops microbes from growing"
+          ],
+          "visualIdeas": [
+            "a rotting orange with cotton-like mould beside a jar of pickle labelled salt and spices keep microbes away"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "key-players-in-cleaning-the-environment",
+          "title": "Key Players in Cleaning the Environment",
+          "objectives": [
+            "Student can explain how fungi and bacteria decompose plant waste into nutrient-rich manure",
+            "Student can describe decomposition as returning nutrients to the soil",
+            "Student can state that some microbes living without oxygen break down waste and release biogas, mainly methane"
+          ],
+          "visualIdeas": [
+            "a compost pit cut-away showing peels turning into dark manure over three weeks"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "microorganisms-and-food",
+          "title": "Microorganisms and Food",
+          "objectives": [
+            "Student can explain how yeast makes dough rise by releasing carbon dioxide during respiration",
+            "Student can explain how Lactobacillus turns warm milk into curd by producing lactic acid",
+            "Student can describe how Rhizobium in the root nodules of legumes traps nitrogen from the air for plants"
+          ],
+          "visualIdeas": [
+            "two bowls of dough, one with yeast risen and bubbly, one without",
+            "root nodules of a cowpea plant with Rhizobium inside"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "amazing-microalgae-tiny-helpers-in-water",
+          "title": "Amazing Microalgae: Tiny Helpers in Water",
+          "objectives": [
+            "Student can state that microalgae make their own food using sunlight and produce more than half of Earth's oxygen",
+            "Student can give uses of microalgae such as Spirulina as food supplements, in cleaning water and in making biofuel"
+          ],
+          "visualIdeas": [
+            "a glass tank of green Spirulina being filtered through a fine cloth"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "why-is-cell-considered-to-be-a-basic-unit-of-life",
+          "title": "Why Is Cell Considered to Be a Basic Unit of Life?",
+          "objectives": [
+            "Student can distinguish unicellular and multicellular organisms with examples",
+            "Student can state that bacteria have a nucleoid instead of a well-defined nucleus and that fungal cells have a cell wall but no chloroplasts"
+          ],
+          "visualIdeas": [
+            "a bacterial cell with its nucleoid region labelled next to a yeast cell and a plant cell"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "health-the-ultimate-treasure",
+      "title": "Health: The Ultimate Treasure",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu103.pdf",
+      "topics": [
+        {
+          "id": "health-is-it-more-than-not-falling-sick",
+          "title": "Health: Is It More Than Not Falling Sick?",
+          "objectives": [
+            "Student can state the WHO definition of health as complete physical, mental and social well-being, not merely the absence of disease",
+            "Student can explain from a case study how habits and surroundings affect a person's well-being"
+          ],
+          "visualIdeas": [
+            "three overlapping circles labelled physical, mental and social with health at the centre"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-can-we-stay-healthy",
+          "title": "How Can We Stay Healthy?",
+          "objectives": [
+            "Student can list good habits that keep us healthy and habits that harm health",
+            "Student can explain that health depends on both lifestyle and environment"
+          ],
+          "visualIdeas": [
+            "a two-column chart of healthy habits and harmful habits"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "maintain-a-healthy-lifestyle",
+          "title": "Maintain a Healthy Lifestyle",
+          "objectives": [
+            "Student can describe a healthy lifestyle: balanced diet, physical activity, limited screen time, enough sleep, yoga or pranayama",
+            "Student can explain why tobacco, alcohol and addictive drugs must be refused"
+          ],
+          "visualIdeas": [
+            "a daily routine clock with meals, play, sleep and yoga marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "keep-the-environment-clean",
+          "title": "Keep the Environment Clean",
+          "objectives": [
+            "Student can explain why clean surroundings, air and water matter for health",
+            "Student can state that the Air Quality Index tells us how clean the air is",
+            "Student can explain that friendships and family time keep the mind healthy too"
+          ],
+          "visualIdeas": [
+            "a clean playground beside a littered one swarming with flies"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-do-we-know-that-we-are-unwell",
+          "title": "How Do We Know That We Are Unwell?",
+          "objectives": [
+            "Student can distinguish a symptom (what we feel, like pain) from a sign (what can be seen or measured, like fever)",
+            "Student can give examples of symptoms and signs that show we are unwell"
+          ],
+          "visualIdeas": [
+            "a thermometer reading high temperature labelled sign next to a headache labelled symptom"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "diseases-what-are-the-causes-and-types",
+          "title": "Diseases: What Are the Causes and Types?",
+          "objectives": [
+            "Student can define a disease and a pathogen",
+            "Student can distinguish communicable diseases caused by pathogens from non-communicable diseases linked to lifestyle, diet and environment"
+          ],
+          "visualIdeas": [
+            "a sorting diagram with typhoid, dengue and flu on one side and diabetes, cancer and asthma on the other"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-are-communicable-diseases-caused-and-spread",
+          "title": "How Are Communicable Diseases Caused and Spread?",
+          "objectives": [
+            "Student can describe how pathogens spread through air, direct and indirect contact, contaminated food and water, and vectors such as mosquitoes and houseflies",
+            "Student can suggest preventive steps for common communicable diseases such as cold, typhoid and malaria"
+          ],
+          "visualIdeas": [
+            "an infographic of an infected person passing germs by air, touch, food and a mosquito to a healthy person"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-are-non-communicable-diseases-caused",
+          "title": "How Are Non-communicable Diseases Caused?",
+          "objectives": [
+            "Student can explain that non-communicable diseases such as diabetes are linked to lifestyle, diet, environment and hormonal imbalance",
+            "Student can identify deficiency diseases and chronic diseases as kinds of non-communicable disease"
+          ],
+          "visualIdeas": [
+            "a lifestyle chart linking junk food, little exercise and overweight to diabetes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-to-prevent-and-control-diseases",
+          "title": "How to Prevent and Control Diseases?",
+          "objectives": [
+            "Student can explain how community sanitation reduces communicable diseases",
+            "Student can define immunity and explain how a vaccine trains the immune system to give acquired immunity",
+            "Student can describe how Edward Jenner's observations led to the first vaccine and to the eradication of smallpox"
+          ],
+          "visualIdeas": [
+            "a timeline from Jenner's cowpox experiment to smallpox eradication in 1979"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "treatment-of-diseases",
+          "title": "Treatment of Diseases",
+          "objectives": [
+            "Student can explain that antibiotics kill bacteria but do not work against viruses",
+            "Student can describe Alexander Fleming's discovery of penicillin",
+            "Student can explain antibiotic resistance and why antibiotics must be taken only as prescribed, in the correct dose and duration"
+          ],
+          "visualIdeas": [
+            "a petri dish where mould stops bacteria from growing around it",
+            "a flow chart of how antibiotic-resistant bacteria spread in a community"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "electricity-magnetic-and-heating-effects",
+      "title": "Electricity: Magnetic and Heating Effects",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu104.pdf",
+      "topics": [
+        {
+          "id": "does-an-electric-current-have-a-magnetic-effect",
+          "title": "Does an Electric Current Have a Magnetic Effect?",
+          "objectives": [
+            "Student can describe how a current-carrying wire deflects a nearby compass needle",
+            "Student can state that an electric current produces a magnetic field around a conductor"
+          ],
+          "visualIdeas": [
+            "a compass under a wire stretched between two nails, with the needle swinging when the switch is closed"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electromagnets",
+          "title": "Electromagnets",
+          "objectives": [
+            "Student can make an electromagnet by winding insulated wire around an iron nail and connecting it to a cell",
+            "Student can explain that a current-carrying coil behaves as a magnet only while current flows, and an iron core makes it stronger",
+            "Student can describe how cranes use lifting electromagnets to pick up and release iron and steel scrap"
+          ],
+          "visualIdeas": [
+            "a coil around a nail picking up paper clips with the circuit closed and dropping them when open",
+            "a crane magnet over a scrap yard"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "does-a-current-carrying-wire-get-hot",
+          "title": "Does a Current Carrying Wire Get Hot?",
+          "objectives": [
+            "Student can describe how a nichrome wire gets hot when current flows through it",
+            "Student can define the heating effect of electric current and name appliances that use it"
+          ],
+          "visualIdeas": [
+            "a nichrome wire glowing between two nails beside an electric heater and iron"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-does-a-battery-generate-electricity",
+          "title": "How Does a Battery Generate Electricity?",
+          "objectives": [
+            "Student can describe a Voltaic cell: two different metal electrodes dipped in an electrolyte",
+            "Student can explain that a chemical reaction in the cell produces electricity and that a cell is dead when its chemicals are used up",
+            "Student can recount how Galvani's frog-leg observation and Volta's idea led to the electric cell"
+          ],
+          "visualIdeas": [
+            "a simple Voltaic cell with two rods in a liquid lighting a lamp"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dry-cells-and-rechargeable-batteries",
+          "title": "Dry Cells and Rechargeable Batteries",
+          "objectives": [
+            "Student can describe the parts of a dry cell: zinc container as negative terminal, carbon rod as positive terminal, paste electrolyte",
+            "Student can explain that dry cells are single-use while rechargeable batteries can be recharged and reused many times but slowly wear out"
+          ],
+          "visualIdeas": [
+            "a cut-away dry cell with its zinc case, carbon rod and paste labelled",
+            "rechargeable batteries in a phone, laptop and electric vehicle"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "exploring-forces",
+      "title": "Exploring Forces",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu105.pdf",
+      "topics": [
+        {
+          "id": "what-is-a-force",
+          "title": "What Is a Force?",
+          "objectives": [
+            "Student can define a force as a push or a pull on an object",
+            "Student can identify pushes and pulls in moving a box in different ways"
+          ],
+          "visualIdeas": [
+            "a box being pushed, pulled and lifted with arrows showing each force"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-can-a-force-do-to-the-objects-on-which-it-is-applied",
+          "title": "What Can a Force Do to the Objects on Which It Is Applied?",
+          "objectives": [
+            "Student can explain that a force can change the speed or the direction of motion of an object",
+            "Student can explain that a force can change the shape of an object"
+          ],
+          "visualIdeas": [
+            "a bat changing a ball's direction and a hand squeezing a balloon"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "are-forces-an-interaction-between-two-or-more-objects",
+          "title": "Are Forces an Interaction Between Two or More Objects?",
+          "objectives": [
+            "Student can explain that a force arises only when at least two objects interact",
+            "Student can state that the SI unit of force is the newton (N)"
+          ],
+          "visualIdeas": [
+            "a hand pushing a table with arrows on both the hand and the table"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "contact-forces",
+          "title": "Contact Forces",
+          "objectives": [
+            "Student can define contact forces and give muscular force as an example",
+            "Student can explain friction as a force that opposes motion between surfaces in contact and depends on the roughness of surfaces"
+          ],
+          "visualIdeas": [
+            "a box sliding on a floor with a friction arrow pointing against its motion",
+            "a bicycle stopping sooner on a rough road"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "non-contact-forces",
+          "title": "Non-contact Forces",
+          "objectives": [
+            "Student can define non-contact forces and give magnetic, electrostatic and gravitational force as examples",
+            "Student can explain how rubbing gives objects static charges that attract small paper pieces",
+            "Student can state that gravitational force is always attractive and pulls all objects towards the Earth"
+          ],
+          "visualIdeas": [
+            "two ring magnets floating on a stick",
+            "a rubbed plastic scale attracting paper bits"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "weight-and-its-measurement",
+          "title": "Weight and Its Measurement",
+          "objectives": [
+            "Student can define weight as the force with which the Earth pulls an object, measured in newtons",
+            "Student can explain how a spring balance measures weight",
+            "Student can distinguish mass, which stays the same, from weight, which can change from place to place"
+          ],
+          "visualIdeas": [
+            "a spring balance stretching more for heavier objects"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "floating-and-sinking",
+          "title": "Floating and Sinking",
+          "objectives": [
+            "Student can explain upthrust (buoyant force) as the upward force a liquid applies on an object",
+            "Student can explain that an object sinks when gravity is greater than upthrust and floats when they are equal",
+            "Student can state Archimedes' principle"
+          ],
+          "visualIdeas": [
+            "a bottle pushed under water bouncing back with arrows for weight and upthrust"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "pressure-winds-storms-and-cyclones",
+      "title": "Pressure, Winds, Storms, and Cyclones",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu106.pdf",
+      "topics": [
+        {
+          "id": "pressure-force-per-unit-area",
+          "title": "Pressure: Force per Unit Area",
+          "objectives": [
+            "Student can define pressure as force per unit area and state its SI unit, the pascal (N/m2)",
+            "Student can calculate pressure from a given force and area",
+            "Student can explain why broad bag straps feel comfortable and why a sharp knife cuts easily"
+          ],
+          "visualIdeas": [
+            "two school bags, one with broad straps and one with narrow straps, with the shoulder area shaded"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "pressure-exerted-by-liquids",
+          "title": "Pressure Exerted by Liquids",
+          "objectives": [
+            "Student can explain from the balloon-and-pipe activity that liquids exert pressure that depends on the height of the liquid column",
+            "Student can explain why overhead water tanks are placed at a height"
+          ],
+          "visualIdeas": [
+            "two pipes of different widths filled to the same height with equally bulging balloons at their bottoms"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pressure-exerted-by-air",
+          "title": "Pressure Exerted by Air",
+          "objectives": [
+            "Student can explain that the atmosphere exerts pressure, called atmospheric pressure",
+            "Student can describe activities that show air pressing on surfaces"
+          ],
+          "visualIdeas": [
+            "an inverted paper plate held down by chart paper as air presses on it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "formation-of-wind",
+          "title": "Formation of Wind",
+          "objectives": [
+            "Student can explain that air moves from a region of high pressure to a region of low pressure",
+            "Student can explain sea breeze and land breeze as winds caused by pressure differences over land and sea",
+            "Student can state that a bigger pressure difference makes the air move faster"
+          ],
+          "visualIdeas": [
+            "two balloons joined by a straw, air flowing from the inflated one to the other"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "high-speed-winds-result-in-lowering-of-air-pressure",
+          "title": "High-Speed Winds Result in Lowering of Air Pressure",
+          "objectives": [
+            "Student can explain that fast-moving air has lower pressure",
+            "Student can explain why roofs can be blown off during high-speed winds"
+          ],
+          "visualIdeas": [
+            "air blown between two hanging balloons pulling them together",
+            "a roof lifting off a house in a storm"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "storms-thunderstorms-and-lightning",
+          "title": "Storms, Thunderstorms, and Lightning",
+          "objectives": [
+            "Student can explain how rising warm moist air forms clouds and storms",
+            "Student can explain how charges build up in clouds and cause lightning",
+            "Student can state how lightning conductors protect buildings and what safety steps to take"
+          ],
+          "visualIdeas": [
+            "a thundercloud with plus and minus charges and a lightning bolt to a lightning conductor"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "cyclone",
+          "title": "Cyclone",
+          "objectives": [
+            "Student can describe how a cyclone forms over warm ocean water as a spinning low-pressure system",
+            "Student can identify the eye of a cyclone and explain why cyclones are dangerous",
+            "Student can state that the India Meteorological Department monitors cyclones and issues warnings"
+          ],
+          "visualIdeas": [
+            "a satellite-style spiral of clouds with the calm eye at the centre and pressure values decreasing inwards"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "particulate-nature-of-matter",
+      "title": "Particulate Nature of Matter",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu107.pdf",
+      "topics": [
+        {
+          "id": "what-is-matter-composed-of",
+          "title": "What Is Matter Composed of?",
+          "objectives": [
+            "Student can explain from breaking and grinding chalk that matter is made of very small particles",
+            "Student can explain that grinding is a physical change in which only the size of the pieces changes"
+          ],
+          "visualIdeas": [
+            "a chalk stick broken into pieces, then powder, then a magnified speck"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-decides-different-states-of-matter",
+          "title": "What Decides Different States of Matter?",
+          "objectives": [
+            "Student can explain that interparticle attractions hold the particles of matter together",
+            "Student can state that the strength of these attractions decides the physical state of a substance",
+            "Student can recall Acharya Kanad's idea of Parmanu"
+          ],
+          "visualIdeas": [
+            "particles connected by springs of different strengths for solid, liquid and gas"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "solid-state",
+          "title": "Solid State",
+          "objectives": [
+            "Student can explain why solids have a definite shape and volume",
+            "Student can explain that particles in solids are tightly packed, strongly attracted and only vibrate about fixed positions"
+          ],
+          "visualIdeas": [
+            "particles in a solid drawn in neat rows, each vibrating in place"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "liquid-state",
+          "title": "Liquid State",
+          "objectives": [
+            "Student can explain from pouring water between containers that liquids have a fixed volume but no fixed shape",
+            "Student can explain that particles in liquids are less strongly attracted and can move about within the liquid"
+          ],
+          "visualIdeas": [
+            "200 mL of water poured into three differently shaped containers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "gaseous-state",
+          "title": "Gaseous State",
+          "objectives": [
+            "Student can explain from the smoke-in-gas-jar activity that gases have no fixed volume and fill the whole container",
+            "Student can explain that interparticle attractions in gases are negligible, so their particles move freely"
+          ],
+          "visualIdeas": [
+            "smoke spreading from one gas jar into an empty jar placed above it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-does-the-interparticle-spacing-differ-in-the-three-states-of-matter",
+          "title": "How Does the Interparticle Spacing Differ in the Three States of Matter?",
+          "objectives": [
+            "Student can explain from the syringe activity why gases are easily compressed and liquids and solids are not",
+            "Student can compare interparticle spacing in solids, liquids and gases"
+          ],
+          "visualIdeas": [
+            "a sealed syringe of air being squeezed beside syringes of water and chalk"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-particles-move-in-different-states-of-matter",
+          "title": "How Particles Move in Different States of Matter?",
+          "objectives": [
+            "Student can explain how potassium permanganate spreads through water because particles are always moving",
+            "Student can compare how freely particles move in solids, liquids and gases"
+          ],
+          "visualIdeas": [
+            "a crystal of potassium permanganate in water with pink streaks spreading out"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "nature-of-matter-elements-compounds-and-mixtures",
+      "title": "Nature of Matter: Elements, Compounds, and Mixtures",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu108.pdf",
+      "topics": [
+        {
+          "id": "what-are-mixtures",
+          "title": "What Are Mixtures?",
+          "objectives": [
+            "Student can define a mixture and its components",
+            "Student can distinguish uniform mixtures from non-uniform mixtures with examples"
+          ],
+          "visualIdeas": [
+            "a bowl of sprout salad beside a glass of sugar water"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "is-air-a-mixture",
+          "title": "Is Air a Mixture?",
+          "objectives": [
+            "Student can explain that air is a uniform mixture of nitrogen, oxygen, argon, carbon dioxide and water vapour",
+            "Student can describe a test that shows carbon dioxide is present in air"
+          ],
+          "visualIdeas": [
+            "a pie chart of the gases in air"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "types-of-mixtures",
+          "title": "Types of Mixtures",
+          "objectives": [
+            "Student can classify mixtures by the states of their components, such as gas in liquid or solid in liquid",
+            "Student can state that in science the components of a mixture must be pure substances"
+          ],
+          "visualIdeas": [
+            "a table of mixture types with soda water, vinegar, sand in water and seawater"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-are-pure-substances",
+          "title": "What Are Pure Substances?",
+          "objectives": [
+            "Student can contrast the everyday meaning of pure (unadulterated) with the scientific meaning",
+            "Student can define a pure substance as one with only one kind of particle that cannot be separated by physical methods"
+          ],
+          "visualIdeas": [
+            "a packet labelled pure ghee with a question mark beside a beaker of distilled water"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-are-the-types-of-pure-substances",
+          "title": "What Are the Types of Pure Substances?",
+          "objectives": [
+            "Student can describe how passing electricity through water gives hydrogen and oxygen",
+            "Student can state that pure substances are of two types, elements and compounds"
+          ],
+          "visualIdeas": [
+            "two inverted test tubes over electrodes collecting gas in a 2 to 1 ratio"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "elements",
+          "title": "Elements",
+          "objectives": [
+            "Student can define an element as a substance that cannot be broken into simpler substances",
+            "Student can explain that elements are made of atoms and that atoms of many elements combine to form molecules",
+            "Student can classify elements as metals and non-metals"
+          ],
+          "visualIdeas": [
+            "a hydrogen molecule and an oxygen molecule drawn as joined spheres"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "compounds",
+          "title": "Compounds",
+          "objectives": [
+            "Student can define a compound as elements combined chemically in a fixed ratio with new properties",
+            "Student can explain from heating sugar that sugar is a compound of carbon, hydrogen and oxygen",
+            "Student can distinguish a mixture of iron and sulfur from the compound formed by heating them"
+          ],
+          "visualIdeas": [
+            "iron filings and sulfur mixed on one watch glass and the black heated mass on another, with a magnet over each"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "how-do-we-use-elements-compounds-and-mixtures",
+          "title": "How Do We Use Elements, Compounds, and Mixtures?",
+          "objectives": [
+            "Student can give everyday uses of elements, compounds and mixtures in buildings, medicines and fertilisers",
+            "Student can explain why alloys such as stainless steel are made"
+          ],
+          "visualIdeas": [
+            "a bridge, a medicine strip and a fertiliser bag each tagged element, compound or mixture"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-are-minerals",
+          "title": "What Are Minerals?",
+          "objectives": [
+            "Student can define minerals as natural solid substances with a fixed chemical composition",
+            "Student can distinguish native minerals that are pure elements from minerals that are compounds",
+            "Student can give everyday products made from minerals, such as cement and talcum powder"
+          ],
+          "visualIdeas": [
+            "samples of quartz, calcite, mica and talc with the products made from them"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-amazing-world-of-solutes-solvents-and-solutions",
+      "title": "The Amazing World of Solutes, Solvents, and Solutions",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu109.pdf",
+      "topics": [
+        {
+          "id": "what-are-solute-solvent-and-solution",
+          "title": "What Are Solute, Solvent, and Solution?",
+          "objectives": [
+            "Student can define a solution as a uniform mixture and identify the solute and solvent in it",
+            "Student can identify the solute and solvent when two liquids are mixed"
+          ],
+          "visualIdeas": [
+            "salt crystals dissolving in water with particles spreading evenly"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-much-solute-can-a-fixed-amount-of-solvent-dissolve",
+          "title": "How Much Solute Can a Fixed Amount of Solvent Dissolve?",
+          "objectives": [
+            "Student can distinguish saturated and unsaturated solutions",
+            "Student can define solubility"
+          ],
+          "visualIdeas": [
+            "a glass of water with spoonfuls of salt added until some stays undissolved"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-does-temperature-affect-the-solubility-of-a-solute",
+          "title": "How Does Temperature Affect the Solubility of a Solute?",
+          "objectives": [
+            "Student can explain from the baking soda activity that solids generally dissolve more in hotter water",
+            "Student can state that the solubility of most solids in a liquid increases as temperature increases"
+          ],
+          "visualIdeas": [
+            "a beaker of baking soda solution at 20, 50 and 70 degrees with less solid left each time"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "solubility-of-gases",
+          "title": "Solubility of Gases",
+          "objectives": [
+            "Student can explain that oxygen dissolves in water to a small extent and sustains aquatic life",
+            "Student can explain that gases dissolve less as temperature rises"
+          ],
+          "visualIdeas": [
+            "fish in cold and warm water with dissolved oxygen bubbles drawn more in the cold water"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "why-do-objects-float-or-sink-in-water",
+          "title": "Why Do Objects Float or Sink in Water?",
+          "objectives": [
+            "Student can describe objects that float and sink in water, such as husk and rice",
+            "Student can explain that heaviness for the same size is described by density"
+          ],
+          "visualIdeas": [
+            "a wooden stick and an iron rod of the same size on a balance"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-is-density",
+          "title": "What Is Density?",
+          "objectives": [
+            "Student can define density as mass per unit volume",
+            "Student can explain that density does not depend on shape or size but depends on temperature and pressure"
+          ],
+          "visualIdeas": [
+            "a crowded bus and an empty bus as a picture of high and low density"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "determination-of-density-measuring-mass-and-volume",
+          "title": "Determination of Density: Measuring Mass and Volume",
+          "objectives": [
+            "Student can measure mass with a digital balance after setting it to zero",
+            "Student can read a measuring cylinder and find its smallest division",
+            "Student can find the volume of an irregular solid by water displacement and calculate its density"
+          ],
+          "visualIdeas": [
+            "a stone lowered into a measuring cylinder with the water level rising"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "effect-of-temperature-and-pressure-on-density",
+          "title": "Effect of Temperature and Pressure on Density",
+          "objectives": [
+            "Student can explain why heating decreases density and why hot air balloons rise",
+            "Student can explain that pressure increases the density of gases but hardly affects solids and liquids",
+            "Student can explain why ice floats on water"
+          ],
+          "visualIdeas": [
+            "a hot air balloon rising",
+            "ice cubes floating in a glass of water"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "light-mirrors-and-lenses",
+      "title": "Light: Mirrors and Lenses",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu110.pdf",
+      "topics": [
+        {
+          "id": "what-are-spherical-mirrors",
+          "title": "What Are Spherical Mirrors?",
+          "objectives": [
+            "Student can describe the images seen in the inner and outer surfaces of a shiny spoon",
+            "Student can define concave and convex mirrors as spherical mirrors that curve inwards and outwards"
+          ],
+          "visualIdeas": [
+            "a shiny spoon showing an inverted face on its inner side and a small upright face on its outer side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-are-the-characteristics-of-images-formed-by-spherical-mirrors",
+          "title": "What Are the Characteristics of Images Formed by Spherical Mirrors?",
+          "objectives": [
+            "Student can describe how the image in a concave mirror changes as an object moves away",
+            "Student can state that a convex mirror always forms an erect, diminished image",
+            "Student can give uses of concave mirrors (torch reflectors, a dentist's mirror) and convex mirrors (side-view and road safety mirrors)"
+          ],
+          "visualIdeas": [
+            "a toy placed near and far from concave and convex mirrors with the images drawn"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-are-the-laws-of-reflection",
+          "title": "What Are the Laws of Reflection?",
+          "objectives": [
+            "Student can represent light as rays and identify the incident ray, reflected ray and normal",
+            "Student can state the two laws of reflection and verify them with a mirror and a comb slit",
+            "Student can explain that a concave mirror converges and a convex mirror diverges a beam of light"
+          ],
+          "visualIdeas": [
+            "a ray diagram on a plane mirror with equal angles of incidence and reflection marked"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "what-is-a-lens",
+          "title": "What Is a Lens?",
+          "objectives": [
+            "Student can identify convex and concave lenses",
+            "Student can describe the images formed by a convex lens and a concave lens",
+            "Student can explain that a convex lens converges and a concave lens diverges light"
+          ],
+          "visualIdeas": [
+            "a water drop magnifying letters",
+            "parallel rays meeting after a convex lens and spreading after a concave lens"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "keeping-time-with-the-skies",
+      "title": "Keeping Time with the Skies",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu111.pdf",
+      "topics": [
+        {
+          "id": "how-does-the-moons-appearance-change-and-why",
+          "title": "How Does the Moon's Appearance Change and Why?",
+          "objectives": [
+            "Student can describe how to observe and record the Moon's shape over many days",
+            "Student can name the phases of the Moon and the waxing and waning periods (Shukla and Krishna Paksha)"
+          ],
+          "visualIdeas": [
+            "a strip of Moon sketches from new Moon to full Moon and back"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "locating-the-moon",
+          "title": "Locating the Moon",
+          "objectives": [
+            "Student can explain how the Moon's position at sunrise changes from day to day",
+            "Student can explain why a waxing Moon is easiest to spot at sunset and a waning Moon at sunrise"
+          ],
+          "visualIdeas": [
+            "a sky dome at sunrise with the Moon in different positions on successive days"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "making-sense-of-our-observations",
+          "title": "Making Sense of Our Observations",
+          "objectives": [
+            "Student can explain that the Moon shines by reflecting sunlight and only half of it is lit at any time",
+            "Student can explain the phases as the part of the lit half that faces the Earth as the Moon revolves"
+          ],
+          "visualIdeas": [
+            "a top view of the Sun, Earth and the Moon at eight positions with the lit half shaded"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "how-did-calendars-come-into-existence",
+          "title": "How Did Calendars Come into Existence?",
+          "objectives": [
+            "Student can explain how the day, the month and the year come from natural cycles",
+            "Student can explain why people needed calendars"
+          ],
+          "visualIdeas": [
+            "three cycles drawn as rings: day, Moon month and year of seasons"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "lunar-calendars",
+          "title": "Lunar Calendars",
+          "objectives": [
+            "Student can explain that a lunar year has 12 lunar months of about 29.5 days, about 354 days in all",
+            "Student can explain why lunar months drift against the seasons"
+          ],
+          "visualIdeas": [
+            "a ring of 12 Moon phases falling 11 days short of a ring of seasons"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "solar-calendars",
+          "title": "Solar Calendars",
+          "objectives": [
+            "Student can explain that solar calendars such as the Gregorian calendar follow the seasons with 365 days",
+            "Student can explain why a leap year adds a day every four years"
+          ],
+          "visualIdeas": [
+            "a calendar page for February with a 29th day marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "luni-solar-calendars",
+          "title": "Luni-solar Calendars",
+          "objectives": [
+            "Student can explain how an extra month (Adhika Maasa) every few years keeps a lunar calendar in step with the seasons",
+            "Student can name the months of Indian luni-solar calendars"
+          ],
+          "visualIdeas": [
+            "a timeline of lunar years with an extra month inserted every 2 to 3 years"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-indian-national-calendar",
+          "title": "The Indian National Calendar",
+          "objectives": [
+            "Student can state that the Indian National Calendar is a solar calendar of 365 days",
+            "Student can state when its year begins and name its first month, Chaitra"
+          ],
+          "visualIdeas": [
+            "a page of the national calendar showing Chaitra beginning on 22 March"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "are-festivals-related-to-astronomical-phenomena",
+          "title": "Are Festivals Related to Astronomical Phenomena?",
+          "objectives": [
+            "Student can explain why festivals based on the Moon fall on different Gregorian dates each year",
+            "Student can contrast how festival dates shift in luni-solar and purely lunar calendars"
+          ],
+          "visualIdeas": [
+            "Diwali on a new Moon and Holi on a full Moon marked on two years' calendars"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "why-do-we-launch-artificial-satellites-in-space",
+          "title": "Why Do We Launch Artificial Satellites in Space?",
+          "objectives": [
+            "Student can distinguish the Moon, a natural satellite, from artificial satellites",
+            "Student can list uses of satellites in communication, navigation, weather monitoring and disaster management"
+          ],
+          "visualIdeas": [
+            "the Earth with satellites in orbit beaming signals to a phone and a weather map"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "how-nature-works-in-harmony",
+      "title": "How Nature Works in Harmony",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu112.pdf",
+      "topics": [
+        {
+          "id": "how-do-we-experience-and-interpret-our-surroundings",
+          "title": "How Do We Experience and Interpret Our Surroundings?",
+          "objectives": [
+            "Student can define a habitat and identify the living and non-living components of a habitat",
+            "Student can record observations of two habitats such as a pond and a tree"
+          ],
+          "visualIdeas": [
+            "a pond scene with living things circled green and non-living things circled blue"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "who-all-live-together-in-nature",
+          "title": "Who All Live Together in Nature?",
+          "objectives": [
+            "Student can define a population as a group of organisms of the same kind living in a place",
+            "Student can define a community as different populations living together",
+            "Student can count a population in a 1 m by 1 m area"
+          ],
+          "visualIdeas": [
+            "a quadrat on a school lawn with plants counted"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "does-every-organism-in-a-community-matter",
+          "title": "Does Every Organism in a Community Matter?",
+          "objectives": [
+            "Student can explain from the pond study how fish, dragonflies, bees and plants are linked",
+            "Student can explain that removing one organism affects others in a community"
+          ],
+          "visualIdeas": [
+            "a pond with fish and one without, with arrows linking fish, dragonflies, bees and flowers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-are-the-different-types-of-interactions-among-organisms-and-their-surroundings",
+          "title": "What Are the Different Types of Interactions Among Organisms and their Surroundings?",
+          "objectives": [
+            "Student can distinguish biotic and abiotic components and give examples of interactions between them",
+            "Student can define an ecosystem and name terrestrial and aquatic examples",
+            "Student can classify organisms as producers, consumers (herbivores, carnivores, omnivores) and decomposers"
+          ],
+          "visualIdeas": [
+            "a forest picture with arrows between sunlight, water, soil, plants and animals"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "who-eats-whom",
+          "title": "Who Eats Whom?",
+          "objectives": [
+            "Student can draw a food chain for a grassland ecosystem",
+            "Student can explain how food chains link into a food web",
+            "Student can identify trophic levels in a food chain"
+          ],
+          "visualIdeas": [
+            "a grassland food web with grass, grasshopper, frog, snake, hare and eagle"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-happens-to-waste-in-nature",
+          "title": "What Happens to Waste in Nature?",
+          "objectives": [
+            "Student can explain how decomposers such as fungi and bacteria break down dead matter",
+            "Student can explain how decomposition returns nutrients to the soil"
+          ],
+          "visualIdeas": [
+            "mushrooms on a fallen log and beetles on dung with arrows to soil nutrients"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-does-one-change-lead-to-another",
+          "title": "How Does One Change Lead to Another?",
+          "objectives": [
+            "Student can trace how one change in an ecosystem, such as plants dying from pollution, leads to a chain of other changes",
+            "Student can explain from the frog-leg export case how removing frogs led to more pests and more pesticide use"
+          ],
+          "visualIdeas": [
+            "a chain of boxes: plants die, less oxygen, fish die, more insects, more pesticides"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-do-interactions-maintain-balance-in-ecosystems",
+          "title": "How Do Interactions Maintain Balance in Ecosystems?",
+          "objectives": [
+            "Student can explain how competition for resources keeps populations in check",
+            "Student can define mutualism, commensalism and parasitism with an example of each"
+          ],
+          "visualIdeas": [
+            "a bee on a flower, an orchid on a tree and a tick on a dog labelled with the relationship"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-are-the-benefits-of-an-ecosystem",
+          "title": "What Are the Benefits of an Ecosystem?",
+          "objectives": [
+            "Student can list benefits humans get from forests and aquatic ecosystems",
+            "Student can explain why the Sundarbans mangroves are valuable and threatened",
+            "Student can give examples of human-made ecosystems such as farms, fish ponds and parks"
+          ],
+          "visualIdeas": [
+            "a map of the Sundarbans mangroves slowing storm waves"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-do-healthy-ecosystems-serve-our-farms",
+          "title": "How Do Healthy Ecosystems Serve Our Farms?",
+          "objectives": [
+            "Student can explain how the Green Revolution raised food production and why its methods are now considered unsustainable",
+            "Student can explain how overusing pesticides and growing the same crop repeatedly degrades soil and harms natural predators of pests"
+          ],
+          "visualIdeas": [
+            "a field of a single crop beside a mixed field with earthworms and pollinators"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "our-home-earth-a-unique-life-sustaining-planet",
+      "title": "Our Home: Earth, a Unique Life Sustaining Planet",
+      "book": "Curiosity",
+      "pdf": "https://ncert.nic.in/textbook/pdf/hecu113.pdf",
+      "topics": [
+        {
+          "id": "why-is-earth-a-unique-planet",
+          "title": "Why Is Earth a Unique Planet?",
+          "objectives": [
+            "Student can explain that Earth is the only known planet where life exists",
+            "Student can explain that all life lives in a thin layer at the surface, like the skin of an apple"
+          ],
+          "visualIdeas": [
+            "an apple cut in half beside a cut-away Earth showing crust, mantle and core"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-do-the-planets-of-our-solar-system-look-like",
+          "title": "What Do the Planets of Our Solar System Look Like?",
+          "objectives": [
+            "Student can name the eight planets in order from the Sun",
+            "Student can compare the small rocky planets with the large gaseous planets"
+          ],
+          "visualIdeas": [
+            "the eight planets in a row drawn to relative size"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "position-of-the-earth",
+          "title": "Position of the Earth",
+          "objectives": [
+            "Student can explain the habitable (Goldilocks) zone around a star",
+            "Student can explain why Earth's distance from the Sun keeps water liquid"
+          ],
+          "visualIdeas": [
+            "a star with too hot, just right and too cold rings and Earth in the middle ring"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "size-of-the-earth",
+          "title": "Size of the Earth",
+          "objectives": [
+            "Student can explain how Earth's nearly circular orbit keeps sunlight and heat nearly steady through the year",
+            "Student can explain why Earth's size and gravity let it hold an atmosphere",
+            "Student can explain how the ozone layer blocks harmful ultraviolet rays"
+          ],
+          "visualIdeas": [
+            "a small planet losing its air to space beside Earth holding its atmosphere"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "magnetic-field-of-the-earth",
+          "title": "Magnetic Field of the Earth",
+          "objectives": [
+            "Student can explain that the Earth behaves like a giant magnet",
+            "Student can explain how Earth's magnetic field shields it from cosmic rays and the solar wind"
+          ],
+          "visualIdeas": [
+            "field lines around the Earth deflecting a stream of particles from the Sun"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "air-water-and-sunlight",
+          "title": "Air, Water, and Sunlight",
+          "objectives": [
+            "Student can explain how photosynthesis and respiration link plants and animals through oxygen and carbon dioxide",
+            "Student can explain how the mild greenhouse effect keeps the Earth warm enough for liquid water"
+          ],
+          "visualIdeas": [
+            "sunlight entering the atmosphere with some heat trapped and returned to the ground"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "soil-rocks-and-minerals",
+          "title": "Soil, Rocks, and Minerals",
+          "objectives": [
+            "Student can define the geosphere as the solid parts of the Earth",
+            "Student can explain how soil gets nutrients from broken-down rocks and remains of organisms"
+          ],
+          "visualIdeas": [
+            "a soil profile from topsoil down to bedrock"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "plants-animals-and-microorganisms",
+          "title": "Plants, Animals, and Microorganisms",
+          "objectives": [
+            "Student can define the biosphere",
+            "Student can explain how producers, consumers and decomposers together support life"
+          ],
+          "visualIdeas": [
+            "the biosphere drawn as a band overlapping land, water and air"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-importance-of-balance",
+          "title": "The Importance of Balance",
+          "objectives": [
+            "Student can explain how a change in one part of the Earth system, such as cutting a forest, affects the others",
+            "Student can explain why protecting air, water, soil and living things keeps Earth habitable"
+          ],
+          "visualIdeas": [
+            "a forest being cut with arrows to less rain, eroded soil and fewer animals"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-keeps-life-from-disappearing",
+          "title": "What Keeps Life from Disappearing?",
+          "objectives": [
+            "Student can explain that reproduction keeps each kind of organism going",
+            "Student can explain that genes carry the instructions passed from parents to offspring"
+          ],
+          "visualIdeas": [
+            "a cow with a calf and a cell drawn as an instruction manual"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "asexual-reproduction",
+          "title": "Asexual Reproduction",
+          "objectives": [
+            "Student can describe vegetative propagation from a leaf, stem or root",
+            "Student can give examples such as money plant, potato eyes, ginger, bamboo and sugarcane"
+          ],
+          "visualIdeas": [
+            "a money plant cutting growing roots in a glass of water"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sexual-reproduction",
+          "title": "Sexual Reproduction",
+          "objectives": [
+            "Student can explain that two parents each make gametes carrying half the genetic material",
+            "Student can explain why offspring are not exact copies of either parent"
+          ],
+          "visualIdeas": [
+            "a male gamete and a female gamete joining to form a new cell with half the instructions from each"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-are-the-threats-to-life-on-earth",
+          "title": "What Are the Threats to Life on Earth?",
+          "objectives": [
+            "Student can name the triple planetary crisis: climate change, biodiversity loss and pollution",
+            "Student can explain how burning fossil fuels causes global warming",
+            "Student can describe actions that reduce these threats, such as renewable energy, global agreements like the Montreal Protocol and the Paris Agreement, and reusing and recycling"
+          ],
+          "visualIdeas": [
+            "a thermometer over the Earth with smokestacks, a felled forest and a polluted river"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    }
+  ]
+}

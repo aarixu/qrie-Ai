@@ -1,0 +1,1485 @@
+{
+  "id": "class7-mathematics",
+  "klass": 7,
+  "subject": "Mathematics",
+  "source": {
+    "books": [
+      {
+        "title": "Ganita Prakash: Textbook of Mathematics for Grade 7, Part I",
+        "code": "gegp1",
+        "edition": "Reprint 2026-27 (First Edition April 2025; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/gegp1ps.pdf"
+      },
+      {
+        "title": "Ganita Prakash: Textbook of Mathematics for Grade 7, Part II",
+        "code": "gegp2",
+        "edition": "First Edition October 2025; the prelims and chapter PDFs carry no 'Reprint 2026-27' mark",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/gegp2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "large-numbers-around-us",
+      "title": "Large Numbers Around Us",
+      "book": "Ganita Prakash Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp101.pdf",
+      "topics": [
+        {
+          "id": "a-lakh-varieties",
+          "title": "A Lakh Varieties!",
+          "objectives": [
+            "Student can get a sense of large quantities by comparing them with familiar ones, such as a height compared with a known building",
+            "Student can reason about whether one lakh is a large or a small number in different contexts"
+          ],
+          "visualIdeas": [
+            "a line of 1 lakh people stretching 38 km",
+            "a tall statue compared with a stack of familiar objects"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-and-writing-numbers",
+          "title": "Reading and Writing Numbers",
+          "objectives": [
+            "Student can place commas in large numbers using the Indian place value system",
+            "Student can read and write the number names of numbers in lakhs"
+          ],
+          "visualIdeas": [
+            "a place value chart up to ten lakhs with comma positions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "land-of-tens",
+          "title": "Land of Tens",
+          "objectives": [
+            "Student can find how many presses of a +1000, +10,000 or +1,00,000 button are needed to reach a given number",
+            "Student can use place value to build numbers from tens, hundreds, thousands and lakhs in the fewest steps"
+          ],
+          "visualIdeas": [
+            "calculators with only +10, +100, +1000 buttons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "of-crores-and-crores",
+          "title": "Of Crores and Crores!",
+          "objectives": [
+            "Student can read and write numbers in both the Indian system (lakh, crore, arab) and the American/International system (million, billion)",
+            "Student can convert between the systems, for example 10 lakh = 1 million and 100 crore = 1 billion"
+          ],
+          "visualIdeas": [
+            "two rows of the same number with Indian and International comma placement"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "exact-and-approximate-values",
+          "title": "Exact and Approximate Values",
+          "objectives": [
+            "Student can decide when an exact number is needed and when an approximation is enough",
+            "Student can find the nearest thousand, ten thousand, lakh, ten lakh and crore of a large number",
+            "Student can compare and round city populations from a census table"
+          ],
+          "visualIdeas": [
+            "a number line showing a number between its nearest lakhs",
+            "a table of city populations"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "patterns-in-products",
+          "title": "Patterns in Products",
+          "objectives": [
+            "Student can use shortcuts such as multiplying by 5 as dividing by 2 and multiplying by 10",
+            "Student can predict the number of digits in a product from the numbers being multiplied"
+          ],
+          "visualIdeas": [
+            "116 x 5 = 58 x 10 written as a step diagram",
+            "multiplication patterns like 11 x 11, 111 x 111"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "did-you-ever-wonder",
+          "title": "Did You Ever Wonder...?",
+          "objectives": [
+            "Student can answer thought-experiment questions with large numbers, such as whether the population of Mumbai could fit into 1 lakh buses",
+            "Student can make reasonable assumptions and estimates to work through such questions"
+          ],
+          "visualIdeas": [
+            "a long line of buses next to a crowd representing Mumbai"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "arithmetic-expressions",
+      "title": "Arithmetic Expressions",
+      "book": "Ganita Prakash Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp102.pdf",
+      "topics": [
+        {
+          "id": "simple-expressions",
+          "title": "Simple Expressions",
+          "objectives": [
+            "Student can write an arithmetic expression for a situation and find its value",
+            "Student can compare expressions using =, < and > by reasoning, without always evaluating them"
+          ],
+          "visualIdeas": [
+            "an expression card 5 x 25 linked to a weekly lunch cost",
+            "two expressions on a balance scale"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "brackets-in-expressions",
+          "title": "Brackets in Expressions",
+          "objectives": [
+            "Student can explain how brackets show the order of operations in an expression",
+            "Student can evaluate expressions containing brackets"
+          ],
+          "visualIdeas": [
+            "30 + (5 x 4) with the bracket highlighted and evaluated first"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "terms-in-expressions",
+          "title": "Terms in Expressions",
+          "objectives": [
+            "Student can identify the terms of an expression as the parts separated by + signs",
+            "Student can evaluate an expression without brackets by first evaluating its terms"
+          ],
+          "visualIdeas": [
+            "an expression split into coloured term boxes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "swapping-and-grouping",
+          "title": "Swapping and Grouping",
+          "objectives": [
+            "Student can explain that swapping (commutative property) and grouping (associative property) the terms of a sum does not change its value",
+            "Student can use swapping and grouping to evaluate expressions quickly, including terms with a minus sign"
+          ],
+          "visualIdeas": [
+            "terms written on cards being swapped and grouped"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "more-expressions-and-their-terms",
+          "title": "More Expressions and Their Terms",
+          "objectives": [
+            "Student can write expressions with several terms for real-life situations such as a bill with a tip",
+            "Student can identify the terms of such expressions correctly"
+          ],
+          "visualIdeas": [
+            "a restaurant bill shown as 4 x 23 + 5"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "removing-brackets-i",
+          "title": "Removing Brackets I",
+          "objectives": [
+            "Student can explain that removing a bracket preceded by a minus sign changes the sign of each term inside it",
+            "Student can simplify expressions like 200 - (40 + 3) in two ways"
+          ],
+          "visualIdeas": [
+            "200 - (40 + 3) rewritten as 200 - 40 - 3"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tinker-the-terms-i",
+          "title": "Tinker the Terms I",
+          "objectives": [
+            "Student can predict how the value of an expression changes when one of its terms increases or decreases",
+            "Student can find the new value with as little computation as possible, for example when a term -16 becomes -15 the value increases by 1"
+          ],
+          "visualIdeas": [
+            "a table of expressions with one term changed and the new value"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "removing-brackets-ii",
+          "title": "Removing Brackets II",
+          "objectives": [
+            "Student can apply the distributive property: multiplying a number by a bracketed sum equals multiplying it by each term",
+            "Student can use the distributive property to evaluate products like 2 x (43 + 24)"
+          ],
+          "visualIdeas": [
+            "an area model showing 2 x (43 + 24) = 2 x 43 + 2 x 24"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "tinker-the-terms-ii",
+          "title": "Tinker the Terms II",
+          "objectives": [
+            "Student can use a known product to find a related product, for example 63 x 18 from 53 x 18",
+            "Student can find quick ways to evaluate products like 97 x 25"
+          ],
+          "visualIdeas": [
+            "63 x 18 drawn as (53 + 10) x 18"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "a-peek-beyond-the-point",
+      "title": "A Peek Beyond the Point",
+      "book": "Ganita Prakash Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp103.pdf",
+      "topics": [
+        {
+          "id": "the-need-for-smaller-units",
+          "title": "The Need for Smaller Units",
+          "objectives": [
+            "Student can explain why a unit is split into smaller parts to measure more accurately",
+            "Student can describe a length that lies between two whole units, such as the size of a screw"
+          ],
+          "visualIdeas": [
+            "a screw measured against a ruler with and without smaller markings"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "a-tenth-part",
+          "title": "A Tenth Part",
+          "objectives": [
+            "Student can express a length as units and tenths, for example 3 units and 4 tenths",
+            "Student can state that 10 one-tenths make one unit"
+          ],
+          "visualIdeas": [
+            "a ruler with one unit split into 10 equal parts"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "a-hundredth-part",
+          "title": "A Hundredth Part",
+          "objectives": [
+            "Student can explain that each tenth can be split into 10 hundredths and that 100 hundredths make one unit",
+            "Student can express measurements in units, tenths and hundredths"
+          ],
+          "visualIdeas": [
+            "a magnified tenth on a ruler split into 10 hundredths"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "decimal-place-value",
+          "title": "Decimal Place Value",
+          "objectives": [
+            "Student can extend the place value table to tenths, hundredths and thousandths",
+            "Student can write, read and expand decimal numbers using the decimal point"
+          ],
+          "visualIdeas": [
+            "a place value chart with columns from hundreds to thousandths"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "units-of-measurement",
+          "title": "Units of Measurement",
+          "objectives": [
+            "Student can convert lengths between mm, cm, m and km using decimals",
+            "Student can convert weights between g and kg and money between paise and rupees using decimals"
+          ],
+          "visualIdeas": [
+            "a ruler showing 12 mm = 1.2 cm",
+            "a 254 g packet labelled 0.254 kg"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "locating-and-comparing-decimals",
+          "title": "Locating and Comparing Decimals",
+          "objectives": [
+            "Student can locate decimals on the number line and compare them",
+            "Student can explain why 0.2, 0.20 and 0.200 are equal",
+            "Student can find which decimal is closest to a given number"
+          ],
+          "visualIdeas": [
+            "a number line between 1 and 2 divided into tenths with 1.4 marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "addition-and-subtraction-of-decimals",
+          "title": "Addition and Subtraction of Decimals",
+          "objectives": [
+            "Student can add and subtract decimals using place value",
+            "Student can continue decimal sequences and estimate sums and differences of decimals"
+          ],
+          "visualIdeas": [
+            "2.7 m + 3.5 m of cloth shown as place value columns"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "more-on-the-decimal-system",
+          "title": "More on the Decimal System",
+          "objectives": [
+            "Student can explain how decimal point and unit-conversion mistakes have caused real problems",
+            "Student can explain why 4.5 hours is 4 hours 30 minutes and not 4:50",
+            "Student can describe how decimal notation developed over time in India"
+          ],
+          "visualIdeas": [
+            "a clock showing 4.5 hours after noon as 4:30"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "expressions-using-letter-numbers",
+      "title": "Expressions using Letter-Numbers",
+      "book": "Ganita Prakash Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp104.pdf",
+      "topics": [
+        {
+          "id": "the-notion-of-letter-numbers",
+          "title": "The Notion of Letter-Numbers",
+          "objectives": [
+            "Student can use a letter-number to stand for an unknown or varying quantity, such as an age",
+            "Student can write and evaluate simple formulas with letter-numbers"
+          ],
+          "visualIdeas": [
+            "two age counters: Aftab a and Shabnam a + 3"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "revisiting-arithmetic-expressions",
+          "title": "Revisiting Arithmetic Expressions",
+          "objectives": [
+            "Student can apply swapping and grouping of terms and brackets to expressions with letter-numbers",
+            "Student can write an expression as a sum of terms and read it without confusion"
+          ],
+          "visualIdeas": [
+            "an expression written as a sum of terms with a letter-number term"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "omission-of-the-multiplication-symbol-in-algebraic-expressions",
+          "title": "Omission of the Multiplication Symbol in Algebraic Expressions",
+          "objectives": [
+            "Student can write products such as 4 x n as 4n",
+            "Student can describe a sequence such as the multiples of 4 with an algebraic expression",
+            "Student can find and correct mistakes when letter-numbers are replaced by numbers"
+          ],
+          "visualIdeas": [
+            "the sequence 4, 8, 12, ... with the nth term 4n"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "simplification-of-algebraic-expressions",
+          "title": "Simplification of Algebraic Expressions",
+          "objectives": [
+            "Student can find the perimeter of a rectangle as an algebraic expression",
+            "Student can simplify algebraic expressions by combining like terms",
+            "Student can identify and correct mistakes in simplifications"
+          ],
+          "visualIdeas": [
+            "a rectangle labelled l and b with perimeter 2l + 2b"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "formula-detective",
+          "title": "Formula Detective",
+          "objectives": [
+            "Student can find the formula used by a number machine from examples of its inputs and outputs",
+            "Student can write the number machine's formula as an algebraic expression and test it on new inputs"
+          ],
+          "visualIdeas": [
+            "a Y-shaped number machine taking two inputs and giving one output"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "algebraic-expressions-to-describe-patterns",
+          "title": "Algebraic Expressions to Describe Patterns",
+          "objectives": [
+            "Student can describe the positions of a repeating design with an expression like 3n",
+            "Student can use algebra to explain patterns in a calendar, such as equal diagonal sums in a 2 x 2 square"
+          ],
+          "visualIdeas": [
+            "a saree border with repeating designs A, B, C",
+            "a calendar with a 2 x 2 square marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "matchstick-patterns",
+          "title": "Matchstick Patterns",
+          "objectives": [
+            "Student can find the number of matchsticks needed at any step of a pattern using an algebraic expression",
+            "Student can draw the next step of a matchstick pattern and explain how the expression counts its sticks"
+          ],
+          "visualIdeas": [
+            "matchstick triangles growing step by step"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "parallel-and-intersecting-lines",
+      "title": "Parallel and Intersecting Lines",
+      "book": "Ganita Prakash Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp105.pdf",
+      "topics": [
+        {
+          "id": "across-the-line",
+          "title": "Across the Line",
+          "objectives": [
+            "Student can identify that two intersecting lines form four angles, with vertically opposite angles equal and linear pairs adding to 180°",
+            "Student can explain how measurement errors can make measured angles differ from these facts"
+          ],
+          "visualIdeas": [
+            "two crossing lines with the four angles coloured"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "perpendicular-lines",
+          "title": "Perpendicular Lines",
+          "objectives": [
+            "Student can explain that if two lines intersect and all four angles are equal, each angle is 90° and the lines are perpendicular",
+            "Student can identify perpendicular lines in the surroundings and in figures"
+          ],
+          "visualIdeas": [
+            "two perpendicular lines with right-angle marks"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "between-lines",
+          "title": "Between Lines",
+          "objectives": [
+            "Student can describe how line segments meet or cross using terms like point, endpoint, midpoint and intersect, with angle measures",
+            "Student can recognise parallel lines as lines on a plane that never meet"
+          ],
+          "visualIdeas": [
+            "segments meeting at endpoints and crossing at midpoints"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "parallel-and-perpendicular-lines-in-paper-folding",
+          "title": "Parallel and Perpendicular Lines in Paper Folding",
+          "objectives": [
+            "Student can make parallel and perpendicular creases by folding paper",
+            "Student can use arrow marks for parallel lines and a square mark for perpendicular lines"
+          ],
+          "visualIdeas": [
+            "a folded sheet with parallel and perpendicular creases marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "transversals",
+          "title": "Transversals",
+          "objectives": [
+            "Student can identify a transversal as a line that intersects a pair of lines and the 8 angles it forms",
+            "Student can draw a transversal to a pair of lines and label the angles it forms"
+          ],
+          "visualIdeas": [
+            "a transversal crossing two lines with 8 numbered angles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "corresponding-angles",
+          "title": "Corresponding Angles",
+          "objectives": [
+            "Student can identify pairs of corresponding angles",
+            "Student can state that corresponding angles are equal when a transversal cuts parallel lines, and that lines are parallel if corresponding angles are equal"
+          ],
+          "visualIdeas": [
+            "corresponding angles highlighted in matching colours"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "drawing-parallel-lines",
+          "title": "Drawing Parallel Lines",
+          "objectives": [
+            "Student can draw parallel lines with a ruler and a set square",
+            "Student can make a line parallel to a given line through a given point by paper folding"
+          ],
+          "visualIdeas": [
+            "a set square sliding along a ruler"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "alternate-angles",
+          "title": "Alternate Angles",
+          "objectives": [
+            "Student can identify alternate angles and show they are equal when a transversal cuts parallel lines",
+            "Student can show that interior angles on the same side of a transversal add up to 180°"
+          ],
+          "visualIdeas": [
+            "a Z-shape highlighting alternate angles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "parallel-illusions",
+          "title": "Parallel Illusions",
+          "objectives": [
+            "Student can recognise parallel lines in optical illusions where they appear not to be parallel",
+            "Student can check with a ruler or by measuring whether lines in an illusion are really parallel"
+          ],
+          "visualIdeas": [
+            "a figure of straight parallel lines that appear slanted because of the pattern around them"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "number-play",
+      "title": "Number Play",
+      "book": "Ganita Prakash Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp106.pdf",
+      "topics": [
+        {
+          "id": "numbers-tell-us-things",
+          "title": "Numbers Tell us Things",
+          "objectives": [
+            "Student can work out the numbers children call out when each says how many taller children stand in front of them",
+            "Student can arrange heights to produce a given sequence of called-out numbers, or explain why it is impossible"
+          ],
+          "visualIdeas": [
+            "stick figures of different heights in a row with numbers above them"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "picking-parity",
+          "title": "Picking Parity",
+          "objectives": [
+            "Student can determine whether a sum or product is even or odd without calculating it",
+            "Student can find the parity of the number of small squares in a grid from its dimensions",
+            "Student can find expressions like 2n that always have even parity"
+          ],
+          "visualIdeas": [
+            "number cards that cannot sum to 30",
+            "a 3 x 4 grid with paired squares"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "some-explorations-in-grids",
+          "title": "Some Explorations in Grids",
+          "objectives": [
+            "Student can fill a 3 x 3 grid with the numbers 1-9 to meet given row and column sums or explain why it is impossible",
+            "Student can construct 3 x 3 magic squares"
+          ],
+          "visualIdeas": [
+            "a 3 x 3 grid with circled row and column sums"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "generalising-a-3-x-3-magic-square",
+          "title": "Generalising a 3 x 3 Magic Square",
+          "objectives": [
+            "Student can describe the structure of a 3 x 3 magic square in terms of the centre number m",
+            "Student can explore the Chautisa Yantra, the first recorded 4 x 4 magic square, and magic squares in history and culture"
+          ],
+          "visualIdeas": [
+            "a magic square with entries written as m + 1, m - 3, ...",
+            "the Chautisa Yantra grid"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "natures-favourite-sequence-the-virahanka-fibonacci-numbers",
+          "title": "Nature's Favourite Sequence: The Virahanka-Fibonacci Numbers!",
+          "objectives": [
+            "Student can continue the Virahanka sequence 1, 2, 3, 5, 8, 13, ... by adding the two previous numbers",
+            "Student can explain how these numbers arose from counting rhythms of long and short syllables in Indian poetry"
+          ],
+          "visualIdeas": [
+            "rhythms of short and long syllables counted for 1 to 5 beats"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "digits-in-disguise",
+          "title": "Digits in Disguise",
+          "objectives": [
+            "Student can solve cryptarithms where letters stand for digits",
+            "Student can use reasoning about carries and place value to find which digit each letter stands for"
+          ],
+          "visualIdeas": [
+            "T + T = UT written with letter tiles"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "a-tale-of-three-intersecting-lines",
+      "title": "A Tale of Three Intersecting Lines",
+      "book": "Ganita Prakash Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp107.pdf",
+      "topics": [
+        {
+          "id": "equilateral-triangles",
+          "title": "Equilateral Triangles",
+          "objectives": [
+            "Student can construct an equilateral triangle of a given side using a ruler and compass",
+            "Student can explain why a compass makes the construction exact compared with trial and error using a ruler"
+          ],
+          "visualIdeas": [
+            "compass arcs meeting above a 4 cm base"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "constructing-a-triangle-when-its-sides-are-given",
+          "title": "Constructing a Triangle When its Sides are Given",
+          "objectives": [
+            "Student can construct a triangle with three given side lengths using a compass",
+            "Student can classify triangles as equilateral, isosceles or scalene by their sides"
+          ],
+          "visualIdeas": [
+            "arcs of 5 cm and 6 cm from the ends of a 4 cm base"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "are-triangles-possible-for-any-lengths",
+          "title": "Are Triangles Possible for any Lengths?",
+          "objectives": [
+            "Student can explain the triangle inequality: each side must be less than the sum of the other two",
+            "Student can decide whether a triangle can be made from three given lengths"
+          ],
+          "visualIdeas": [
+            "3 cm, 4 cm and 8 cm sticks failing to close"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "two-sides-and-the-included-angle",
+          "title": "Two Sides and the Included Angle",
+          "objectives": [
+            "Student can construct a triangle when two sides and the included angle are given",
+            "Student can identify the included angle between two given sides"
+          ],
+          "visualIdeas": [
+            "base AB with a 45° ray at A and an arc for AC"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "two-angles-and-the-included-side",
+          "title": "Two Angles and the Included Side",
+          "objectives": [
+            "Student can construct a triangle when two angles and the included side are given",
+            "Student can identify the included side between two given angles"
+          ],
+          "visualIdeas": [
+            "base AB with rays at 45° and 80° meeting at C"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angle-sum-property",
+          "title": "Angle Sum Property",
+          "objectives": [
+            "Student can prove that the angles of a triangle add up to 180° using a line parallel to the base",
+            "Student can define an exterior angle and find it using the angle sum property"
+          ],
+          "visualIdeas": [
+            "a triangle with a line through A parallel to BC",
+            "an exterior angle at C"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "constructions-related-to-altitudes-of-triangles",
+          "title": "Constructions Related to Altitudes of Triangles",
+          "objectives": [
+            "Student can define an altitude as the perpendicular from a vertex to the opposite side",
+            "Student can find altitudes by paper folding and construct them with a ruler and set square"
+          ],
+          "visualIdeas": [
+            "a triangle with its three altitudes drawn"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "types-of-triangles",
+          "title": "Types of Triangles",
+          "objectives": [
+            "Student can classify triangles by sides (equilateral, isosceles, scalene) and by angles (acute-angled, right-angled, obtuse-angled)",
+            "Student can explain why an acute-angled triangle must have all three angles acute"
+          ],
+          "visualIdeas": [
+            "a two-way table of triangle types"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "working-with-fractions",
+      "title": "Working with Fractions",
+      "book": "Ganita Prakash Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp108.pdf",
+      "topics": [
+        {
+          "id": "multiplication-of-fractions-a-fraction-and-a-whole-number",
+          "title": "Multiplication of Fractions: A Fraction and a Whole Number",
+          "objectives": [
+            "Student can multiply a whole number and a fraction in contexts like distance walked",
+            "Student can explain the method: divide by the denominator, then multiply by the numerator"
+          ],
+          "visualIdeas": [
+            "a number line with jumps of 3/5 km"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "multiplying-two-fractions",
+          "title": "Multiplying Two Fractions",
+          "objectives": [
+            "Student can multiply two fractions such as 1/2 x 1/4 in contexts like a tortoise walking for half an hour",
+            "Student can show a product of fractions as the area of a rectangle inside a unit square"
+          ],
+          "visualIdeas": [
+            "a unit square with a 1/2 by 1/4 rectangle shaded"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "multiplying-numerators-and-denominators",
+          "title": "Multiplying Numerators and Denominators",
+          "objectives": [
+            "Student can use Brahmagupta's rule: product of fractions = product of numerators / product of denominators",
+            "Student can cancel common factors before multiplying to get the product in lowest form"
+          ],
+          "visualIdeas": [
+            "a unit square grid of 12 x 18 parts with 5 x 7 shaded"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "is-the-product-always-greater-than-the-numbers-multiplied",
+          "title": "Is the Product Always Greater than the Numbers Multiplied?",
+          "objectives": [
+            "Student can explain that multiplying by a number between 0 and 1 gives a product less than the other number",
+            "Student can explain that the order of multiplication of fractions does not matter"
+          ],
+          "visualIdeas": [
+            "a chart of products when numbers are less than or greater than 1"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "division-of-fractions",
+          "title": "Division of Fractions",
+          "objectives": [
+            "Student can rewrite a division of fractions as a multiplication problem",
+            "Student can divide fractions using the reciprocal (Brahmagupta's rule)"
+          ],
+          "visualIdeas": [
+            "1 / (2/3) shown as how many 2/3 pieces fit in 1"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "dividend-divisor-and-the-quotient",
+          "title": "Dividend, Divisor and the Quotient",
+          "objectives": [
+            "Student can predict whether the quotient is greater or less than the dividend from the size of the divisor",
+            "Student can explain why dividing by a fraction between 0 and 1 gives a quotient greater than the dividend"
+          ],
+          "visualIdeas": [
+            "6 / 1/4 = 24 with quarter pieces counted"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "some-problems-involving-fractions",
+          "title": "Some Problems Involving Fractions",
+          "objectives": [
+            "Student can solve word problems involving multiplication and division of fractions",
+            "Student can find the fraction of a square occupied by a shaded region",
+            "Student can solve Bhaskaracharya's Dramma-tic Donation problem from Lilavati"
+          ],
+          "visualIdeas": [
+            "a square split into nested shaded parts",
+            "a coin labelled dramma and cowrie shells"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "geometric-twins",
+      "title": "Geometric Twins",
+      "book": "Ganita Prakash Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp201.pdf",
+      "topics": [
+        {
+          "id": "geometric-twins",
+          "title": "Geometric Twins",
+          "objectives": [
+            "Student can define congruent figures as figures with the same shape and size that can be superimposed",
+            "Student can explain that a figure may be rotated or flipped to check congruence"
+          ],
+          "visualIdeas": [
+            "two identical symbols, one rotated and flipped onto the other"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "congruence-of-triangles-measuring-the-sidelengths",
+          "title": "Congruence of Triangles: Measuring the Sidelengths",
+          "objectives": [
+            "Student can explain that equal sidelengths (SSS) guarantee congruence of triangles",
+            "Student can name congruent triangles with vertices in corresponding order, e.g. triangle ABC is congruent to triangle XYZ"
+          ],
+          "visualIdeas": [
+            "two triangles with matching sides marked with ticks"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "measuring-the-angles-and-two-sides-with-the-included-angle",
+          "title": "Measuring the Angles and Two Sides with the Included Angle",
+          "objectives": [
+            "Student can explain why three equal angles alone do not guarantee congruence",
+            "Student can explain the SAS condition for congruence"
+          ],
+          "visualIdeas": [
+            "two similar triangles of different sizes",
+            "two triangles with two sides and the included angle marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "measuring-two-sides-and-a-non-included-angle",
+          "title": "Measuring Two Sides and a Non-included Angle",
+          "objectives": [
+            "Student can show by construction that two sides and a non-included angle need not give congruent triangles",
+            "Student can explain why SSA is not a condition for congruence"
+          ],
+          "visualIdeas": [
+            "two different triangles built from the same two sides and non-included angle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "two-angles-and-the-included-side",
+          "title": "Two Angles and the Included Side",
+          "objectives": [
+            "Student can explain the ASA condition and the AAS condition for congruence",
+            "Student can identify the corresponding vertices of congruent triangles"
+          ],
+          "visualIdeas": [
+            "two triangles with two angles and a side marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "measuring-two-sides-in-a-right-triangle",
+          "title": "Measuring Two Sides in a Right Triangle",
+          "objectives": [
+            "Student can define the hypotenuse and explain the RHS condition for congruence of right-angled triangles",
+            "Student can use the RHS condition to decide whether two right-angled triangles are congruent"
+          ],
+          "visualIdeas": [
+            "two right triangles with the hypotenuse and one side marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angles-of-isosceles-and-equilateral-triangles",
+          "title": "Angles of Isosceles and Equilateral Triangles",
+          "objectives": [
+            "Student can show using congruence that angles opposite equal sides of a triangle are equal",
+            "Student can show that each angle of an equilateral triangle is 60°"
+          ],
+          "visualIdeas": [
+            "an isosceles triangle folded along its line of symmetry"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "operations-with-integers",
+      "title": "Operations with Integers",
+      "book": "Ganita Prakash Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp202.pdf",
+      "topics": [
+        {
+          "id": "a-quick-recap-of-integers",
+          "title": "A Quick Recap of Integers",
+          "objectives": [
+            "Student can add and subtract integers, including in puzzles like finding two numbers from their sum and difference",
+            "Student can model integer addition with carrom coin moves on a number line"
+          ],
+          "visualIdeas": [
+            "a carrom coin moving left and right on a number line"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "multiplication-of-integers",
+          "title": "Multiplication of Integers",
+          "objectives": [
+            "Student can model multiplication of integers with positive and negative tokens",
+            "Student can state the sign rules: the product is positive when both integers have the same sign and negative otherwise"
+          ],
+          "visualIdeas": [
+            "a bag of positive and negative tokens being added and removed"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "patterns-in-integer-multiplication",
+          "title": "Patterns in Integer Multiplication",
+          "objectives": [
+            "Student can use patterns in a multiplication grid to justify the sign rules",
+            "Student can continue a sequence such as 4 x 3, 3 x 3, 2 x 3, ... below zero and explain the pattern of the products"
+          ],
+          "visualIdeas": [
+            "a multiplication grid from -3 to 3 with colour-coded signs"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "division-of-integers",
+          "title": "Division of Integers",
+          "objectives": [
+            "Student can divide integers using the related multiplication fact",
+            "Student can state the sign rules for the quotient of two integers"
+          ],
+          "visualIdeas": [
+            "(-100) / 25 linked to 25 x (-4) = -100"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-magic-grid-of-integers",
+          "title": "A Magic Grid of Integers",
+          "objectives": [
+            "Student can follow the strike-out steps of the magic grid, multiply the circled integers and notice that the product stays the same for different choices",
+            "Student can investigate whether the magic lies in the numbers, their arrangement or both"
+          ],
+          "visualIdeas": [
+            "a 4 x 4 grid of integers with circled entries"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "expressions-using-integers",
+          "title": "Expressions Using Integers",
+          "objectives": [
+            "Student can use the commutative and associative properties of integer multiplication to evaluate expressions",
+            "Student can use the distributive property of multiplication over addition with integers"
+          ],
+          "visualIdeas": [
+            "5 x -3 x 4 grouped in two ways"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "finding-common-ground",
+      "title": "Finding Common Ground",
+      "book": "Ganita Prakash Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp203.pdf",
+      "topics": [
+        {
+          "id": "the-greatest-of-all",
+          "title": "The Greatest of All",
+          "objectives": [
+            "Student can solve problems like choosing the largest square tile that fits a room exactly, using common factors",
+            "Student can define the Highest Common Factor (HCF)"
+          ],
+          "visualIdeas": [
+            "a 12 ft by 16 ft floor tiled with the largest equal squares"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "primes-and-prime-factorisation",
+          "title": "Primes and Prime Factorisation",
+          "objectives": [
+            "Student can find the prime factorisation of a number by repeatedly factorising composite factors",
+            "Student can recall that a prime has only 1 and itself as factors and use a systematic procedure for prime factorisation"
+          ],
+          "visualIdeas": [
+            "a factor tree for 90"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "factors-of-a-number-using-prime-factorisation",
+          "title": "Factors of a Number Using Prime Factorisation",
+          "objectives": [
+            "Student can list all factors of a number by taking parts of its prime factorisation",
+            "Student can check whether a number is a factor of another using their prime factorisations"
+          ],
+          "visualIdeas": [
+            "840 = 2 x 2 x 2 x 3 x 5 x 7 with sub-products highlighted"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "finding-the-hcf-of-numbers-using-prime-factorisation",
+          "title": "Finding the HCF of Numbers Using Prime Factorisation",
+          "objectives": [
+            "Student can find the HCF by taking the minimum number of occurrences of each common prime",
+            "Student can find the common factors of two numbers from their prime factorisations"
+          ],
+          "visualIdeas": [
+            "prime factorisations of 45 and 75 with common primes circled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "least-but-not-last",
+          "title": "Least, but not Last!",
+          "objectives": [
+            "Student can solve problems like matching toran lengths using common multiples",
+            "Student can find the LCM through prime factorisation by taking the highest occurrence of each prime"
+          ],
+          "visualIdeas": [
+            "strips of 6 cm and 8 cm laid side by side until lengths match"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "patterns-properties-and-a-pretty-procedure",
+          "title": "Patterns, Properties, and a Pretty Procedure!",
+          "objectives": [
+            "Student can explore when the HCF of two numbers is one of the numbers and other HCF and LCM patterns",
+            "Student can use the terms conjecture and generalisation"
+          ],
+          "visualIdeas": [
+            "a table of number pairs with their HCF and LCM"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "efficient-procedures-for-hcf-and-lcm",
+          "title": "Efficient Procedures for HCF and LCM",
+          "objectives": [
+            "Student can find both the HCF and the LCM with the common-division procedure",
+            "Student can explain why the LCM of two numbers is never greater than their product"
+          ],
+          "visualIdeas": [
+            "the ladder division of 42 and 90 by common primes"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "another-peek-beyond-the-point",
+      "title": "Another Peek Beyond the Point",
+      "book": "Ganita Prakash Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp204.pdf",
+      "topics": [
+        {
+          "id": "a-quick-recap-of-decimals",
+          "title": "A Quick Recap of Decimals",
+          "objectives": [
+            "Student can read a decimal like 27.53 in terms of tens, units, tenths and hundredths",
+            "Student can write a decimal as a sum of decimal fractions such as tenths and hundredths"
+          ],
+          "visualIdeas": [
+            "a place value chart for 27.53"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "decimal-multiplication",
+          "title": "Decimal Multiplication",
+          "objectives": [
+            "Student can multiply decimals by multiplying as counting numbers and placing the decimal point using the total number of decimal digits",
+            "Student can explain why the product of decimals is not always greater than the numbers multiplied"
+          ],
+          "visualIdeas": [
+            "9.5 x 5 shown as 5 groups of 9.5",
+            "a price tag of Rs 9.5 multiplied by 5 pens"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "decimal-division",
+          "title": "Decimal Division",
+          "objectives": [
+            "Student can divide decimals by 10, 100 and 1000",
+            "Student can divide using place value (long division), regrouping ones into tenths and placing the decimal point in the quotient"
+          ],
+          "visualIdeas": [
+            "3.9 m ribbon cut into 10 equal pieces"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "division-with-a-decimal-dividend-and-a-decimal-divisor",
+          "title": "Division with a Decimal Dividend and a Decimal Divisor",
+          "objectives": [
+            "Student can divide a decimal by a whole number, as in packing 9.5 kg of sugar into 4 bags",
+            "Student can divide by a decimal divisor by first converting it to a whole number"
+          ],
+          "visualIdeas": [
+            "126 / 2.5 rewritten as 1260 / 25"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "does-this-ever-end",
+          "title": "Does This Ever End?",
+          "objectives": [
+            "Student can recognise divisions such as 10 / 3 where the quotient never ends",
+            "Student can explore the repeating pattern of the magic number 142857"
+          ],
+          "visualIdeas": [
+            "long division of 10 by 3 repeating forever"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dividend-divisor-and-quotient",
+          "title": "Dividend, Divisor, and Quotient",
+          "objectives": [
+            "Student can predict when the quotient is greater than the dividend, as when dividing by a decimal less than 1",
+            "Student can compare the quotient with the dividend when the divisor is greater than 1"
+          ],
+          "visualIdeas": [
+            "128 / 0.4 = 320 with arrows comparing sizes"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "look-before-you-leap",
+          "title": "Look Before You Leap!",
+          "objectives": [
+            "Student can explain why leap years are needed because the Earth takes 365.2422 days to go around the Sun",
+            "Student can apply the leap year rules for years divisible by 4, 100 and 400"
+          ],
+          "visualIdeas": [
+            "a flow chart for deciding if a year is a leap year"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "connecting-the-dots",
+      "title": "Connecting the Dots...",
+      "book": "Ganita Prakash Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp205.pdf",
+      "topics": [
+        {
+          "id": "of-questions-and-statements",
+          "title": "Of Questions and Statements",
+          "objectives": [
+            "Student can tell a statistical question, which needs data to answer, from a non-statistical one",
+            "Student can explain what a statistical statement is"
+          ],
+          "visualIdeas": [
+            "question cards sorted into statistical and not statistical"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "average-as-fair-share",
+          "title": "Average as Fair-Share",
+          "objectives": [
+            "Student can calculate the arithmetic mean as the sum of values divided by the number of values",
+            "Student can interpret the mean as a fair share, for example of guavas collected"
+          ],
+          "visualIdeas": [
+            "piles of guavas levelled into equal shares"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "averages-around-us",
+          "title": "Averages Around Us",
+          "objectives": [
+            "Student can use the mean to compare data such as runs scored in a series",
+            "Student can give examples of fields where the arithmetic mean is used as a representative value"
+          ],
+          "visualIdeas": [
+            "a bar chart of runs scored by two batters"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "outliers-and-medians",
+          "title": "Outliers and Medians",
+          "objectives": [
+            "Student can find the median of a data set with an odd or even number of values",
+            "Student can explain how an outlier affects the mean more than the median"
+          ],
+          "visualIdeas": [
+            "heights in a family sorted in a line with the middle one highlighted"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "of-ends-and-the-essence",
+          "title": "Of Ends and the Essence",
+          "objectives": [
+            "Student can read a dot plot and find the minimum, maximum and range",
+            "Student can describe and compare data using range, mean and median"
+          ],
+          "visualIdeas": [
+            "a dot plot of class heights with mean and median marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "clubbing-the-columns",
+          "title": "Clubbing the Columns",
+          "objectives": [
+            "Student can read and make clustered (double) bar graphs to compare values across categories and time",
+            "Student can identify the scale of a double column graph and estimate differences between bars"
+          ],
+          "visualIdeas": [
+            "a clustered bar graph of monthly onion prices in two towns"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "10-9-8-7-6-5-4-3-2-1-take-off",
+          "title": "10...9...8...7...6...5...4...3...2...1...Take Off!",
+          "objectives": [
+            "Student can make sense of a clustered bar graph of rocket launches by first identifying what is given (organisation, years, scale) and then the patterns",
+            "Student can compare the launches of different organisations across years from the graph"
+          ],
+          "visualIdeas": [
+            "a clustered bar graph of rocket launches by organisation for three years"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "summer-and-winter-at-the-same-time",
+          "title": "Summer and Winter at the Same Time",
+          "objectives": [
+            "Student can compare monthly hours of daylight in two cities from tables and graphs",
+            "Student can reason about what the data suggests about where the two cities are located"
+          ],
+          "visualIdeas": [
+            "two daylight-hours graphs rising and falling in opposite months"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "all-it-takes-is-a-minute",
+          "title": "All it Takes is a Minute",
+          "objectives": [
+            "Student can read a double bar graph of runs per over in a cricket match, including its scale and wicket markers",
+            "Student can answer questions such as who batted first and in which over the fewest runs were scored"
+          ],
+          "visualIdeas": [
+            "a double bar graph of runs per over with wicket markers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "data-detective",
+          "title": "Data Detective",
+          "objectives": [
+            "Student can ask new questions from data, such as differences in heights across schools",
+            "Student can explain why data from one or two schools cannot be generalised to all children"
+          ],
+          "visualIdeas": [
+            "dot plots of heights of boys and girls in two schools"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "constructions-and-tilings",
+      "title": "Constructions and Tilings",
+      "book": "Ganita Prakash Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp206.pdf",
+      "topics": [
+        {
+          "id": "construction-of-perpendicular-bisector",
+          "title": "Construction of Perpendicular Bisector",
+          "objectives": [
+            "Student can define bisection and construct the perpendicular bisector of a segment with a ruler and compass",
+            "Student can explain that every point on the perpendicular bisector is equally far from both endpoints"
+          ],
+          "visualIdeas": [
+            "compass arcs above and below segment XY joined by a line"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "construction-of-a-90-angle-at-a-given-point",
+          "title": "Construction of a 90° Angle at a Given Point",
+          "objectives": [
+            "Student can construct a 90° angle at a point on a line with a ruler and compass",
+            "Student can describe construction methods found in the Sulba-Sutras"
+          ],
+          "visualIdeas": [
+            "a line with point O and arcs forming a right angle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angle-bisection-for-a-design",
+          "title": "Angle Bisection for a Design",
+          "objectives": [
+            "Student can bisect an angle with a ruler and compass and use it to divide 360° into equal parts for a design",
+            "Student can find the angle between adjacent lines when 360° is divided into equal parts"
+          ],
+          "visualIdeas": [
+            "an 8-spoke design built by bisecting angles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "repeating-units-and-repeating-angles",
+          "title": "Repeating Units and Repeating Angles",
+          "objectives": [
+            "Student can copy an angle using the congruence of triangles to make repeating units",
+            "Student can construct a figure that repeats one unit in different orientations"
+          ],
+          "visualIdeas": [
+            "a figure made of one unit repeated in two orientations"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "arch-designs",
+          "title": "Arch Designs",
+          "objectives": [
+            "Student can construct arch shapes such as the trefoil arch using support lines and arcs",
+            "Student can identify the support lines and centres needed to draw the arcs of an arch"
+          ],
+          "visualIdeas": [
+            "a trefoil arch with its construction lines"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "regular-hexagons-and-related-constructions",
+          "title": "Regular Hexagons and Related Constructions",
+          "objectives": [
+            "Student can construct a 60° angle using an equilateral triangle and a regular hexagon using a compass",
+            "Student can construct 30° and 15° angles and a 6-pointed star"
+          ],
+          "visualIdeas": [
+            "a regular hexagon inside a circle",
+            "a 6-pointed star"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "tiling",
+          "title": "Tiling",
+          "objectives": [
+            "Student can define tiling as covering a region with shapes without gaps or overlaps",
+            "Student can tile regions using tangram pieces"
+          ],
+          "visualIdeas": [
+            "a region tiled with tangram pieces"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "finding-the-unknown",
+      "title": "Finding the Unknown",
+      "book": "Ganita Prakash Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/gegp207.pdf",
+      "topics": [
+        {
+          "id": "find-the-unknowns",
+          "title": "Find the Unknowns",
+          "objectives": [
+            "Student can find unknown weights on a balanced scale",
+            "Student can frame an equation for the position of a matchstick arrangement that uses a given number of sticks"
+          ],
+          "visualIdeas": [
+            "a balanced scale with unknown boxes and known weights"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "solving-equations-systematically",
+          "title": "Solving Equations Systematically",
+          "objectives": [
+            "Student can solve equations by doing the same operation on both sides",
+            "Student can check a solution by substituting it to see that LHS = RHS"
+          ],
+          "visualIdeas": [
+            "2n + 1 = 99 solved step by step with a balance"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "solving-problems",
+          "title": "Solving Problems",
+          "objectives": [
+            "Student can form and solve equations for word problems, such as sequences of tile arrangements",
+            "Student can check whether the solution of an equation makes sense in the problem"
+          ],
+          "visualIdeas": [
+            "square tile arrangements growing by step"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mind-the-mistake-mend-the-mistake",
+          "title": "Mind the Mistake, Mend the Mistake",
+          "objectives": [
+            "Student can find and correct mistakes in the steps of solving an equation",
+            "Student can solve the equation correctly after correcting the mistake"
+          ],
+          "visualIdeas": [
+            "a worked solution with one wrong step circled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-pinch-of-history",
+          "title": "A Pinch of History",
+          "objectives": [
+            "Student can explain that algebra was called bijaganita in ancient India and why the word bija (seed) was used",
+            "Student can describe how ancient Indian mathematicians formed expressions and solved equations"
+          ],
+          "visualIdeas": [
+            "a seed growing into a tree labelled with equations"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

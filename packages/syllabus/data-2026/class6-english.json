@@ -1,0 +1,1144 @@
+{
+  "id": "class6-english",
+  "klass": 6,
+  "subject": "English",
+  "source": {
+    "books": [
+      {
+        "title": "Poorvi: Textbook of English for Grade 6",
+        "code": "fepr1",
+        "edition": "Reprint 2026-27 (First Edition June 2024; reprinted March 2025 and January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/fepr1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "a-bottle-of-dew",
+      "title": "A Bottle of Dew",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr101.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-i",
+          "title": "Reading the Story: Part I",
+          "objectives": [
+            "Student can read Part I and explain what Rama Natha believed about a magic potion",
+            "Student can explain the task the sage Mahipati gave Rama Natha and predict whether he will complete it"
+          ],
+          "visualIdeas": [
+            "Rama Natha collecting dew from banana leaves in winter"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-the-story-part-ii",
+          "title": "Reading the Story: Part II",
+          "objectives": [
+            "Student can explain how Rama Natha and Madhumati created wealth through hard work",
+            "Student can explain the lesson behind the sage's trick"
+          ],
+          "visualIdeas": [
+            "a timeline from empty fields to a banana plantation and a box of gold coins"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-story",
+          "title": "Thinking about the Story",
+          "objectives": [
+            "Student can answer questions on extracts from the story with reasons",
+            "Student can connect causes in the story with their outcomes"
+          ],
+          "visualIdeas": [
+            "a cause-and-outcome table for events in the story"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-homophones-and-connecting-words",
+          "title": "Words and Grammar: Homophones and Connecting Words",
+          "objectives": [
+            "Student can use words from the story correctly to complete a paragraph",
+            "Student can identify homophones and use a pair of them in one sentence",
+            "Student can join phrases with connecting words to make meaningful sentences",
+            "Student can read a tongue twister with the letter b aloud with increasing speed"
+          ],
+          "visualIdeas": [
+            "homophone pairs drawn as matching cards",
+            "two phrases joined by a connecting word"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to an account of what Madhumati does with her bananas and number the events in order",
+            "Student can say words where the letter s sounds /s/ or /z/ correctly",
+            "Student can share three ideas for someone who needs to work hard, using sequence phrases"
+          ],
+          "visualIdeas": [
+            "words sorted into /s/ and /z/ sound bins"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-describing-a-banana",
+          "title": "Writing: Describing a Banana",
+          "objectives": [
+            "Student can describe a banana using details of taste, smell, colour and feel",
+            "Student can develop a short script with dialogues from the story and enact it"
+          ],
+          "visualIdeas": [
+            "a word web around a banana with sense words"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-raven-and-the-fox",
+      "title": "The Raven and the Fox",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr101.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can read the poem aloud and retell how the fox tricked the raven",
+            "Student can state the lesson about pride and flattery in the poem"
+          ],
+          "visualIdeas": [
+            "the raven on a branch with a morsel and the fox looking up"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can answer questions on lines from the poem",
+            "Student can explain the fox's intentions and the raven's mistake"
+          ],
+          "visualIdeas": [
+            "a speech-bubble comic of the fox's sweet words and the raven's reaction"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-rhyme-alliteration-and-opposites",
+          "title": "Words and Grammar: Rhyme, Alliteration and Opposites",
+          "objectives": [
+            "Student can find rhyming words in each stanza",
+            "Student can identify alliteration in the poem",
+            "Student can choose the correct opposites for words from the poem and use poem words in sentences"
+          ],
+          "visualIdeas": [
+            "rhyming word pairs from each stanza linked by lines"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to what the crow did after losing his food and mark statements true or false",
+            "Student can narrate the poem as a story and give it a different ending"
+          ],
+          "visualIdeas": [
+            "a story map with the original ending and a new ending"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-the-story-as-a-conversation",
+          "title": "Writing: The Story as a Conversation",
+          "objectives": [
+            "Student can rewrite the story as a conversation between Reynard and Mr Raven",
+            "Student can show the raven's responses through actions, since he cannot speak with food in his beak"
+          ],
+          "visualIdeas": [
+            "a script layout with speaker names and action brackets"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "rama-to-the-rescue",
+      "title": "Rama to the Rescue",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr101.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story",
+          "title": "Reading the Story",
+          "objectives": [
+            "Student can read the picture story and identify its characters",
+            "Student can explain how the couple used their plan to catch the thief",
+            "Student can predict what happens next at each pause in the story"
+          ],
+          "visualIdeas": [
+            "comic panels of the couple, the thief and the call for Rama"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "thinking-about-the-story",
+          "title": "Thinking about the Story",
+          "objectives": [
+            "Student can answer questions on events in the story",
+            "Student can match words from the story with their meanings"
+          ],
+          "visualIdeas": [
+            "a word-meaning matching grid"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-contractions-present-progressive-and-adverbs",
+          "title": "Words and Grammar: Contractions, Present Progressive and Adverbs",
+          "objectives": [
+            "Student can expand contractions such as I'm, it's and they're and explain the use of the apostrophe",
+            "Student can use am, is or are with the -ing form of a verb (the present progressive tense) for actions happening at the moment of speaking",
+            "Student can use adverbs to describe how an action is done",
+            "Student can punctuate exclamatory and interrogative sentences and tell them apart"
+          ],
+          "visualIdeas": [
+            "contraction cards that unfold into two words",
+            "a sentence frame with am/is/are + verb-ing"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a security guard's announcement and fill in the missing words",
+            "Student can pronounce common contractions clearly",
+            "Student can share ideas on how people can keep their houses and themselves safe"
+          ],
+          "visualIdeas": [
+            "a neighbourhood safety notice board"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-retelling-what-happened",
+          "title": "Writing: Retelling What Happened",
+          "objectives": [
+            "Student can retell, as the man in the story, what happened to a neighbour",
+            "Student can include when, where, what, how and why in the account"
+          ],
+          "visualIdeas": [
+            "a 5W planning chart"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-unlikely-best-friends",
+      "title": "The Unlikely Best Friends",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr102.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-i",
+          "title": "Reading the Story: Part I",
+          "objectives": [
+            "Student can explain why Gajaraj the elephant was sad despite royal comforts",
+            "Student can describe how Gajaraj and the stray dog became friends"
+          ],
+          "visualIdeas": [
+            "Gajaraj sharing his food with the stray dog in the royal stable"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-the-story-part-ii",
+          "title": "Reading the Story: Part II",
+          "objectives": [
+            "Student can explain how the two friends reacted when they were separated",
+            "Student can explain how the farmer and the mahout resolved the problem and also became friends"
+          ],
+          "visualIdeas": [
+            "the dog running back to the stable and Gajaraj swinging him up joyfully"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-story",
+          "title": "Thinking about the Story",
+          "objectives": [
+            "Student can answer questions about the characters' feelings and actions",
+            "Student can explain what makes Gajaraj and Buntee unlikely best friends"
+          ],
+          "visualIdeas": [
+            "a feelings chart for Gajaraj and Buntee across the story"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-opposites-past-tenses-and-neither-nor",
+          "title": "Words and Grammar: Opposites, Past Tenses and Neither...Nor",
+          "objectives": [
+            "Student can form opposites, including by adding letters to the beginning of a word",
+            "Student can distinguish the simple past, past progressive and past perfect tenses",
+            "Student can use neither...nor to connect two negative choices and either...or to choose between two things"
+          ],
+          "visualIdeas": [
+            "a timeline showing simple past, past progressive and past perfect actions"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a story about an unlikely friendship between a cow and a leopard, fill in details and order events",
+            "Student can find common likes and dislikes with a friend and tell the class about them"
+          ],
+          "visualIdeas": [
+            "a Venn diagram of my likes, my friend's likes and both"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-about-my-friend",
+          "title": "Writing: About My Friend",
+          "objectives": [
+            "Student can write six sentences about a friend showing how they are similar and different",
+            "Student can use words such as both, unlike, but and neither...nor in the description"
+          ],
+          "visualIdeas": [
+            "a comparison chart of two friends"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "a-friends-prayer",
+      "title": "A Friend's Prayer",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr102.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can read the poem silently, underline the lines they agree with and explain why they like them",
+            "Student can explain what the speaker wishes to give and to be as a friend"
+          ],
+          "visualIdeas": [
+            "two friends sharing hopes and plans"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can answer questions on lines from the poem",
+            "Student can explain the idea of loving friends the way they are, without judging them from afar"
+          ],
+          "visualIdeas": [
+            "a heart-shaped web of what friends can be"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-qualities-of-a-good-friend",
+          "title": "Words: Qualities of a Good Friend",
+          "objectives": [
+            "Student can choose words similar in meaning to being blessed",
+            "Student can name and use words for good qualities in a friend, such as loyal, helpful, kind, caring and honest"
+          ],
+          "visualIdeas": [
+            "a word wall of friendship qualities"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a description of two friends' outdoor activities and note the details",
+            "Student can role-play a conversation between friends, such as a walk in the park or sharing tiffins at school"
+          ],
+          "visualIdeas": [
+            "two children talking during a tiffin break"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-how-our-friendship-started",
+          "title": "Writing: How Our Friendship Started",
+          "objectives": [
+            "Student can plan a paragraph by answering when, where and how a friendship started",
+            "Student can write a titled paragraph of about 80 words on how a friendship began"
+          ],
+          "visualIdeas": [
+            "a when-where-how planning frame"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-chair",
+      "title": "The Chair",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr102.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-i",
+          "title": "Reading the Story: Part I",
+          "objectives": [
+            "Student can explain the bet between Mario and his grandfather",
+            "Student can describe the invisible chair and how it was supposed to work"
+          ],
+          "visualIdeas": [
+            "Grandpa handing Mario an invisible chair"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-the-story-part-ii",
+          "title": "Reading the Story: Part II",
+          "objectives": [
+            "Student can describe what happened when Mario tried to sit on the chair at school",
+            "Student can explain how the chair test showed who his true friends were"
+          ],
+          "visualIdeas": [
+            "Mario held up in mid-air by three friends while others laugh"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-story",
+          "title": "Thinking about the Story",
+          "objectives": [
+            "Student can answer questions about the characters' actions and reasons",
+            "Student can explain the difference between true friends and mere companions"
+          ],
+          "visualIdeas": [
+            "a two-column chart of true friends and companions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-suffixes-and-adjectives",
+          "title": "Words and Grammar: Suffixes and Adjectives",
+          "objectives": [
+            "Student can split words into root words and suffixes and form new words by adding suffixes",
+            "Student can identify adjectives and pair them with suitable nouns",
+            "Student can complete a paragraph with suitable adjective-noun pairings"
+          ],
+          "visualIdeas": [
+            "root word plus suffix blocks building new words",
+            "adjective cards matched to noun cards"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to Manu talk about her friend Monika and fill in the blanks",
+            "Student can choose qualities they want in a friend and give reasons when speaking"
+          ],
+          "visualIdeas": [
+            "a list of friendship qualities with tick boxes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-a-message-to-a-friend",
+          "title": "Writing: A Message to a Friend",
+          "objectives": [
+            "Student can complete Mario's message to Guneet with the correct words",
+            "Student can express thanks and feelings in a short message"
+          ],
+          "visualIdeas": [
+            "a note card addressed to a friend"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "neem-baba",
+      "title": "Neem Baba",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr103.pdf",
+      "topics": [
+        {
+          "id": "reading-the-dialogue-part-i",
+          "title": "Reading the Dialogue: Part I",
+          "objectives": [
+            "Student can read the conversation between Amber and Neem Baba with expression",
+            "Student can explain the names people and scientists give the neem tree"
+          ],
+          "visualIdeas": [
+            "Amber talking to a large neem tree"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-the-dialogue-part-ii",
+          "title": "Reading the Dialogue: Part II",
+          "objectives": [
+            "Student can list the uses of the neem tree described by Neem Baba",
+            "Student can explain why the neem tree is well known"
+          ],
+          "visualIdeas": [
+            "a neem tree with its leaves, oil and seed powder labelled with uses"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can answer questions on the dialogue",
+            "Student can explain why trees like neem should be cared for"
+          ],
+          "visualIdeas": [
+            "a neem-uses mind map"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-compound-words-past-forms-and-personification",
+          "title": "Words and Grammar: Compound Words, Past Forms and Personification",
+          "objectives": [
+            "Student can sort compound words into open, closed and hyphenated compounds",
+            "Student can match present and past forms of verbs such as become-became and use them in sentences",
+            "Student can identify personification, where a tree or object is spoken to or described as a person"
+          ],
+          "visualIdeas": [
+            "three trees holding open, closed and hyphenated compound words"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a boy telling his mother about Peepal Baba and select the correct statements",
+            "Student can make a leaf card and speak to the class about how it was made"
+          ],
+          "visualIdeas": [
+            "a leaf card with a drawn leaf outside and its tree name inside"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-a-tree-i-like",
+          "title": "Writing: A Tree I Like",
+          "objectives": [
+            "Student can write a titled paragraph about a tree in their neighbourhood",
+            "Student can include where the tree is, how it looks and why they like it"
+          ],
+          "visualIdeas": [
+            "a planning web: where, how it looks, why I like it"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "what-a-bird-thought",
+      "title": "What a Bird Thought",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr103.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can read the poem and describe how the bird's idea of its world changed",
+            "Student can explain the stages from the egg to the nest to the open sky"
+          ],
+          "visualIdeas": [
+            "three frames: inside a blue egg, in a straw nest, flying under the sky"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can answer questions on lines from the poem",
+            "Student can explain what the bird learns about the world at the end"
+          ],
+          "visualIdeas": [
+            "an expanding-circles diagram of the bird's world"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-rhyming-and-describing-words",
+          "title": "Words: Rhyming and Describing Words",
+          "objectives": [
+            "Student can find rhyming words in the poem and complete a new stanza with rhymes",
+            "Student can use describing words to write sentences about a picture"
+          ],
+          "visualIdeas": [
+            "a nest drawing labelled with describing words"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a short poem about a parrot and fill in the missing words",
+            "Student can speak about which bird they would like to be, describing its looks, home and day"
+          ],
+          "visualIdeas": [
+            "a bird profile card"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-the-world-through-other-eyes",
+          "title": "Writing: The World Through Other Eyes",
+          "objectives": [
+            "Student can discuss how the world might look to a baby and to a fish, following the bird's example",
+            "Student can write five sentences each on how the world looks to a baby and to a fish"
+          ],
+          "visualIdeas": [
+            "a baby's view and a fish's view of the world side by side"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "spices-that-heal-us",
+      "title": "Spices that Heal Us",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr103.pdf",
+      "topics": [
+        {
+          "id": "reading-daadis-letter",
+          "title": "Reading Daadi's Letter",
+          "objectives": [
+            "Student can read Daadi's letter and list the spices and herbs she describes",
+            "Student can explain how each spice is used as a natural cure"
+          ],
+          "visualIdeas": [
+            "a kitchen shelf of spices with their healing uses"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "thinking-about-the-letter",
+          "title": "Thinking about the Letter",
+          "objectives": [
+            "Student can answer questions on the letter",
+            "Student can explain Daadi's advice to consult an elder before using any remedy"
+          ],
+          "visualIdeas": [
+            "a question-and-answer card set on the letter"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-describing-spices-and-modals",
+          "title": "Words and Grammar: Describing Spices and Modals",
+          "objectives": [
+            "Student can describe spices by the part of the plant, colour, texture and taste",
+            "Student can match helping verbs such as may, can and must with their functions",
+            "Student can complete dialogues using modals correctly"
+          ],
+          "visualIdeas": [
+            "a spice description table",
+            "modal verbs matched to functions like permission and ability"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to information about Tulsi and fill in a fact card",
+            "Student can introduce themselves as a spice, describing colour, taste, part of the plant, texture and benefits"
+          ],
+          "visualIdeas": [
+            "a spicy headband with a spice name"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-a-home-remedy-and-a-paragraph-on-tulsi",
+          "title": "Writing: A Home Remedy and a Paragraph on Tulsi",
+          "objectives": [
+            "Student can complete Daadi's steps for a home remedy for cough using the missing words",
+            "Student can write a short paragraph on Tulsi from the completed fact sheet"
+          ],
+          "visualIdeas": [
+            "a numbered recipe card for a ginger and honey remedy",
+            "a Tulsi fact sheet beside a paragraph outline"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "change-of-heart",
+      "title": "Change of Heart",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr104.pdf",
+      "topics": [
+        {
+          "id": "reading-the-story-part-i",
+          "title": "Reading the Story: Part I",
+          "objectives": [
+            "Student can describe Prabhat's attitude to winning and losing",
+            "Student can explain what happened in the badminton match with the new student Surya"
+          ],
+          "visualIdeas": [
+            "Prabhat and Surya on a badminton court with a scoreboard"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reading-the-story-part-ii",
+          "title": "Reading the Story: Part II",
+          "objectives": [
+            "Student can explain why Prabhat felt unhappy after changing the scoreboard",
+            "Student can describe Prabhat's change of heart"
+          ],
+          "visualIdeas": [
+            "Prabhat awake at night with his diary"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-story",
+          "title": "Thinking about the Story",
+          "objectives": [
+            "Student can answer questions about Prabhat's feelings and choices",
+            "Student can discuss fair play and accepting defeat"
+          ],
+          "visualIdeas": [
+            "a before-and-after chart of Prabhat's attitude"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-word-puzzles-and-the-past-perfect",
+          "title": "Words and Grammar: Word Puzzles and the Past Perfect",
+          "objectives": [
+            "Student can find smaller words inside longer words such as BADMINTON",
+            "Student can identify verbs in sentences",
+            "Student can use the past perfect to show which of two past actions happened first"
+          ],
+          "visualIdeas": [
+            "a timeline of two past actions with had + past participle on the earlier one"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to an announcement about the Friday matches and note the important details",
+            "Student can make polite requests, apologies and thanks in role-play situations"
+          ],
+          "visualIdeas": [
+            "speech bubbles for request, apology and thanks"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-a-diary-entry",
+          "title": "Writing: A Diary Entry",
+          "objectives": [
+            "Student can complete Prabhat's diary entry describing his feelings that night",
+            "Student can express feelings and reflection in a diary format"
+          ],
+          "visualIdeas": [
+            "a diary page with date and feelings"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-winner",
+      "title": "The Winner",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr104.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can read the poem aloud and describe the children's play until night falls",
+            "Student can explain who the winner is at the end of the poem"
+          ],
+          "visualIdeas": [
+            "children playing by a creek as the sun sets"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can answer questions on lines from the poem",
+            "Student can connect the poem to their own playtime"
+          ],
+          "visualIdeas": [
+            "a sequence of the evening from play to nightfall"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-repetition-personification-and-water-bodies",
+          "title": "Words: Repetition, Personification and Water Bodies",
+          "objectives": [
+            "Student can identify repetition in the poem and explain its effect",
+            "Student can identify personification, where night is shown as winning",
+            "Student can build a word web of water bodies such as a creek"
+          ],
+          "visualIdeas": [
+            "a word web of water bodies around the word creek"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to riddles and identify the sport each describes",
+            "Student can enact conversations between a parent and a child about playtime"
+          ],
+          "visualIdeas": [
+            "riddle cards with sports pictures"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-my-playtime",
+          "title": "Writing: My Playtime",
+          "objectives": [
+            "Student can plan a paragraph by answering clue questions: when they go out to play, who they play with, which games, their favourite game, what they gain and when they go home",
+            "Student can write a titled paragraph about their playtime"
+          ],
+          "visualIdeas": [
+            "a clue list: when, with whom, which games, what we gain"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "yoga-a-way-of-life",
+      "title": "Yoga—A Way of Life",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr104.pdf",
+      "topics": [
+        {
+          "id": "reading-the-text",
+          "title": "Reading the Text",
+          "objectives": [
+            "Student can read the text and explain what yoga is and why it is called a way of life",
+            "Student can list benefits of practising yoga"
+          ],
+          "visualIdeas": [
+            "children practising yoga asanas outdoors"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can answer questions on the text",
+            "Student can explain how yoga supports physical and mental wellbeing"
+          ],
+          "visualIdeas": [
+            "a body-and-mind benefits chart"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-practice-or-practise-advice-or-advise",
+          "title": "Words: Practice or Practise, Advice or Advise",
+          "objectives": [
+            "Student can use practice as a noun and practise as a verb correctly",
+            "Student can use advice as a noun and advise as a verb correctly"
+          ],
+          "visualIdeas": [
+            "noun and verb spelling pairs side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a girl talk about practising yoga with her grandfather and select the true statements",
+            "Student can share their thoughts on yoga in a group, taking turns to speak and listen"
+          ],
+          "visualIdeas": [
+            "a group circle with a talking token"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-the-benefits-of-yoga",
+          "title": "Writing: The Benefits of Yoga",
+          "objectives": [
+            "Student can write a short paragraph on the benefits of yoga with an opening line, supporting ideas and a concluding line",
+            "Student can use sentence starters together with their own ideas to build the paragraph"
+          ],
+          "visualIdeas": [
+            "a paragraph frame: opening, supporting ideas, conclusion"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "hamara-bharat-incredible-india",
+      "title": "Hamara Bharat—Incredible India!",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr105.pdf",
+      "topics": [
+        {
+          "id": "reading-hamara-bharat-and-kalakritiyon-ka-bharat",
+          "title": "Reading: Hamara Bharat and Kalakritiyon ka Bharat",
+          "objectives": [
+            "Student can read the passage on Bharat's diversity, unity and natural wealth",
+            "Student can read the story of the Ek Bharat, Shreshtha Bharat programme and describe the art forms the children share"
+          ],
+          "visualIdeas": [
+            "an India map with art forms from different states"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can answer questions on the texts",
+            "Student can explain how art forms connect people from different states"
+          ],
+          "visualIdeas": [
+            "a state-to-art-form matching board"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-sequence-words-and-the-simple-present",
+          "title": "Words and Grammar: Sequence Words and the Simple Present",
+          "objectives": [
+            "Student can use sequence words such as first, next, then and finally to describe a process",
+            "Student can use the simple present with -s or -es for he, she and it"
+          ],
+          "visualIdeas": [
+            "a morning routine with sequence words",
+            "a substitution table of subjects and verbs"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a description of how gakkad bharta is made and complete a flowchart",
+            "Student can speak about a local art form of their region using sequence words"
+          ],
+          "visualIdeas": [
+            "a recipe flowchart"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-an-art-form-i-like",
+          "title": "Writing: An Art Form I Like",
+          "objectives": [
+            "Student can discuss in pairs which art form from the chapter they liked the most",
+            "Student can write a paragraph of five sentences giving reasons for liking that art form"
+          ],
+          "visualIdeas": [
+            "an art form card with reasons listed"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-kites",
+      "title": "The Kites",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr105.pdf",
+      "topics": [
+        {
+          "id": "reading-the-poem",
+          "title": "Reading the Poem",
+          "objectives": [
+            "Student can read the poem aloud and describe the speaker's wish to ride on a kite",
+            "Student can describe what the speaker imagines seeing from the sky"
+          ],
+          "visualIdeas": [
+            "colourful kites in a windy sky over rooftops"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thinking-about-the-poem",
+          "title": "Thinking about the Poem",
+          "objectives": [
+            "Student can identify similes that compare kites to coloured birds and lightness to air",
+            "Student can identify alliteration, repetition and rhyming words in the poem"
+          ],
+          "visualIdeas": [
+            "similes highlighted with like and as"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-parts-of-a-kite-cinquain-and-words-of-movement",
+          "title": "Words: Parts of a Kite, Cinquain and Words of Movement",
+          "objectives": [
+            "Student can name the parts of a kite",
+            "Student can write a cinquain, a five-line poem describing a person, a place or a thing",
+            "Student can describe kite movements with words such as drift, glide, soar, dive and swoop",
+            "Student can use expressions from the poem in sentences"
+          ],
+          "visualIdeas": [
+            "a labelled kite: nose, spine, cover, tail, kite line, reel",
+            "a five-line cinquain shaped inside a kite"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to information about the Kite Festival in India, spot the incorrect words in given statements and correct them",
+            "Student can share a kite-flying experience in complete sentences"
+          ],
+          "visualIdeas": [
+            "a map of kite festivals across India"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-i-am-a-kite",
+          "title": "Writing: I am a Kite",
+          "objectives": [
+            "Student can write a paragraph of about 100 words imagining themselves as a kite",
+            "Student can plan the paragraph with a partner using hints about the kite's shape, colours, owner, activities, friends and a message for humans"
+          ],
+          "visualIdeas": [
+            "a kite outline with planning hints"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "ila-sachani-embroidering-dreams-with-her-feet",
+      "title": "Ila Sachani: Embroidering Dreams with her Feet",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr105.pdf",
+      "topics": [
+        {
+          "id": "reading-the-text",
+          "title": "Reading the Text",
+          "objectives": [
+            "Student can describe Ila Sachani's Kathiawar embroidery made with her feet",
+            "Student can find the main idea and supporting details of each paragraph",
+            "Student can explain how Ila overcame early challenges with family support"
+          ],
+          "visualIdeas": [
+            "an embroidered cushion with Kathiawar designs",
+            "a main-idea and supporting-details table"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "thinking-about-the-text",
+          "title": "Thinking about the Text",
+          "objectives": [
+            "Student can answer questions on the text",
+            "Student can discuss what Ila's story teaches about determination"
+          ],
+          "visualIdeas": [
+            "a challenge-to-achievement path"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "words-and-grammar-synonyms-and-words-of-quantity",
+          "title": "Words and Grammar: Synonyms and Words of Quantity",
+          "objectives": [
+            "Student can match words from the text with their synonyms",
+            "Student can use words of quantity to show large or unmentioned quantities in sentences"
+          ],
+          "visualIdeas": [
+            "quantity words arranged on a scale from few to many"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "listening-and-speaking",
+          "title": "Listening and Speaking",
+          "objectives": [
+            "Student can listen to a talk about Kathiawar embroidery and choose the correct form, colours, stitches and designs",
+            "Student can ask yes/no questions with a rising tone"
+          ],
+          "visualIdeas": [
+            "a question with a rising intonation arrow"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "writing-describing-my-artwork",
+          "title": "Writing: Describing My Artwork",
+          "objectives": [
+            "Student can create an artwork from four or five collected items such as leaves, straws, twigs or old cards",
+            "Student can write a paragraph with a suitable title describing the artwork they created"
+          ],
+          "visualIdeas": [
+            "an artwork made from leaves, straws and old cards"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "national-war-memorial",
+      "title": "National War Memorial",
+      "book": "Poorvi",
+      "pdf": "https://ncert.nic.in/textbook/pdf/fepr105.pdf",
+      "topics": [
+        {
+          "id": "reading-and-reciting-the-poem",
+          "title": "Reading and Reciting the Poem",
+          "objectives": [
+            "Student can read the poem aloud and recite it with classmates",
+            "Student can explain how the National War Memorial honours the courage and sacrifice of soldiers"
+          ],
+          "visualIdeas": [
+            "the National War Memorial with the eternal flame (Amar Jawan Jyoti)"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,890 @@
+{
+  "id": "class9-social-science",
+  "klass": 9,
+  "subject": "Social Science",
+  "source": {
+    "books": [
+      {
+        "title": "Understanding Society: India and Beyond — Social Science Textbook for Grade 9, Part 1",
+        "code": "iest1",
+        "edition": "First Edition, June 2026 (Jyeshtha 1948) — new NCERT book for the 2026-27 session",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/iest1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's section headings"
+  },
+  "chapters": [
+    {
+      "id": "understanding-social-science",
+      "title": "Understanding Social Science",
+      "book": "Understanding Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iest101.pdf",
+      "topics": [
+        {
+          "id": "what-is-social-science-social-science-in-everyday-life",
+          "title": "What is Social Science? Social Science in Everyday Life",
+          "objectives": [
+            "Student can describe Social Science as the systematic study of human society and how it differs from the natural sciences",
+            "Student can trace how everyday activities, such as eating, travelling and studying, depend on systems of governance, economy, society and environment"
+          ],
+          "visualIdeas": [
+            "a day in a student’s life with arrows to the farmer, road authority, school policy and power station behind each activity"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "understanding-society-through-time-and-traditions",
+          "title": "Understanding Society through Time and Traditions",
+          "objectives": [
+            "Student can describe how societies changed from early communities to villages, towns and cities",
+            "Student can explain how Indian knowledge traditions, such as the idea of the Pañchamahābhūtas and the Arthaśhāstra, reflect early systematic thinking about nature, governance and the economy"
+          ],
+          "visualIdeas": [
+            "a timeline from early hunter-gatherers to modern cities"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "social-science-as-a-study-of-disciplines-geography-and-history",
+          "title": "Social Science as a Study of Disciplines: Geography and History",
+          "objectives": [
+            "Student can explain why a problem like drought needs several disciplines to understand it",
+            "Student can describe what Geography studies",
+            "Student can classify sources of history as literary, archaeological, epigraphic and numismatic with an example of each"
+          ],
+          "visualIdeas": [
+            "four cards: a palm-leaf manuscript, a terracotta figurine, a Brahmi inscription and a Samudragupta coin"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "social-science-as-a-study-of-disciplines-political-science-and-economics",
+          "title": "Social Science as a Study of Disciplines: Political Science and Economics",
+          "objectives": [
+            "Student can describe what Political Science studies, with Panchayati Raj as an example of grassroots democracy",
+            "Student can describe what Economics studies and outline India’s economic journey before and after colonial rule"
+          ],
+          "visualIdeas": [
+            "a village panchayat meeting beside a market scene"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "why-should-we-study-social-science-its-future",
+          "title": "Why Should We Study Social Science? Its Future",
+          "objectives": [
+            "Student can explain how Social Science helps citizens take part in civic life and ask informed questions about shared challenges",
+            "Student can describe the role of Social Science in addressing issues such as climate change and new technologies"
+          ],
+          "visualIdeas": [
+            "a bridge linking past, present and future"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "shaping-of-the-earths-surface",
+      "title": "Shaping of the Earth's Surface",
+      "book": "Understanding Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iest102.pdf",
+      "topics": [
+        {
+          "id": "plate-tectonics-the-earths-layers-and-plates",
+          "title": "Plate Tectonics: The Earth’s Layers and Plates",
+          "objectives": [
+            "Student can name the layers of the Earth: crust, mantle and core",
+            "Student can explain that the crust is broken into plates that move"
+          ],
+          "visualIdeas": [
+            "a cut-away Earth showing crust, mantle and core",
+            "a world map of the major plates"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "plate-tectonics-earthquakes-volcanoes-folding-and-faulting",
+          "title": "Plate Tectonics: Earthquakes, Volcanoes, Folding and Faulting",
+          "objectives": [
+            "Student can explain how interior forces such as earthquakes, volcanoes, folding and faulting move and shape the crust",
+            "Student can relate the Himalaya to the folding of rock layers"
+          ],
+          "visualIdeas": [
+            "rock layers folding into mountains and breaking along a fault"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "weathering-and-erosion",
+          "title": "Weathering and Erosion",
+          "objectives": [
+            "Student can distinguish weathering (breaking down without movement) from erosion (wearing away and carrying material)",
+            "Student can describe physical, chemical and biological weathering and the types of erosion",
+            "Student can explain how erosion affects farmers, people near rivers and coasts, and other occupations"
+          ],
+          "visualIdeas": [
+            "a rock cracking from frost beside a river carrying sediment away"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "agents-of-gradation-running-water",
+          "title": "Agents of Gradation: Running Water",
+          "objectives": [
+            "Student can name the agents of gradation",
+            "Student can describe landforms made by rivers, such as waterfalls, V-shaped valleys, meanders, ox-bow lakes, floodplains and deltas"
+          ],
+          "visualIdeas": [
+            "a river’s course from mountain to sea with a waterfall, meander, ox-bow lake and delta"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "agents-of-gradation-waves-and-currents",
+          "title": "Agents of Gradation: Waves and Currents",
+          "objectives": [
+            "Student can describe coastal landforms made by waves and currents, such as beaches, sand bars, cliffs, sea caves, arches and stacks",
+            "Student can explain how beaches matter to people, from tourism and fishing to protection against coastal erosion"
+          ],
+          "visualIdeas": [
+            "a headland eroding into a sea cave, then an arch, then a stack"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "agents-of-gradation-glaciers",
+          "title": "Agents of Gradation: Glaciers",
+          "objectives": [
+            "Student can describe landforms of glacial erosion such as U-shaped valleys, cirques, aretes, hanging valleys and fjords, and deposits such as moraines",
+            "Student can explain how glacial landforms are useful to people, for example for tourism and harbours"
+          ],
+          "visualIdeas": [
+            "a glacier flowing down a U-shaped valley with a moraine at its snout"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "agents-of-gradation-wind",
+          "title": "Agents of Gradation: Wind",
+          "objectives": [
+            "Student can explain how strong winds pick up and carry loose sand and soil in dry areas",
+            "Student can describe landforms made by wind, such as yardangs, ventifacts and sand dunes"
+          ],
+          "visualIdeas": [
+            "a desert scene with sand dunes and a wind-carved rock"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "agents-of-gradation-underground-water",
+          "title": "Agents of Gradation: Underground Water",
+          "objectives": [
+            "Student can explain how underground water dissolves limestone to form karst topography",
+            "Student can describe karst landforms such as caves, stalactites, stalagmites and sinkholes"
+          ],
+          "visualIdeas": [
+            "a limestone cave with stalactites hanging and stalagmites rising"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "landforms-and-disasters-landslides-and-avalanches",
+          "title": "Landforms and Disasters: Landslides and Avalanches",
+          "objectives": [
+            "Student can explain the natural and human causes of landslides",
+            "Student can explain the causes of avalanches on snow-covered slopes"
+          ],
+          "visualIdeas": [
+            "a hillside with heavy rain and a road cut, showing a slope failing"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "landforms-and-disasters-glofs-and-dust-storms",
+          "title": "Landforms and Disasters: GLOFs and Dust Storms",
+          "objectives": [
+            "Student can explain what a glacial lake outburst flood (GLOF) is and why it happens",
+            "Student can explain the causes of dust storms in desert and semi-arid regions and suggest mitigation measures"
+          ],
+          "visualIdeas": [
+            "a glacial lake held by a moraine wall that breaks and floods the valley"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "atmosphere-and-climate",
+      "title": "Atmosphere and Climate",
+      "book": "Understanding Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iest103.pdf",
+      "topics": [
+        {
+          "id": "composition-of-the-atmosphere",
+          "title": "Composition of the Atmosphere",
+          "objectives": [
+            "Student can name the main gases of the atmosphere and the role of water vapour and dust",
+            "Student can explain how the atmosphere supports life and helps form clouds and rain"
+          ],
+          "visualIdeas": [
+            "a pie chart of atmospheric gases: nitrogen, oxygen and others"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "structure-of-the-atmosphere",
+          "title": "Structure of the Atmosphere",
+          "objectives": [
+            "Student can name the layers of the atmosphere: troposphere, stratosphere, mesosphere, thermosphere and exosphere",
+            "Student can explain that the layers are divided by changes in temperature and air density with height"
+          ],
+          "visualIdeas": [
+            "a layered column of the atmosphere with heights and a temperature line"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "weather-and-climate",
+          "title": "Weather and Climate",
+          "objectives": [
+            "Student can distinguish weather from climate",
+            "Student can describe the elements of weather and climate, such as temperature, pressure, wind, humidity and rainfall"
+          ],
+          "visualIdeas": [
+            "a daily weather card beside a 30-year climate graph"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "seasons-in-india",
+          "title": "Seasons in India",
+          "objectives": [
+            "Student can describe India’s tropical monsoon climate",
+            "Student can name the four seasons used by the India Meteorological Department: winter, summer, monsoon and post-monsoon",
+            "Student can describe the six traditional Indian seasons based on the Indian calendar"
+          ],
+          "visualIdeas": [
+            "a circular calendar of India’s four seasons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "monsoon",
+          "title": "Monsoon",
+          "objectives": [
+            "Student can explain the monsoon as a seasonal reversal of winds and why it matters to India",
+            "Student can describe traditional methods of predicting rainfall in texts such as the Kṛiṣhiparāśhara and the Bṛihatsaṁhitā"
+          ],
+          "visualIdeas": [
+            "a map of India with the monsoon winds arriving from the south-west"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "climate-change",
+          "title": "Climate Change",
+          "objectives": [
+            "Student can explain climate change as a long-term change caused mainly by human activities such as burning fuels and cutting trees",
+            "Student can suggest ways to reduce one’s carbon footprint"
+          ],
+          "visualIdeas": [
+            "a footprint made of icons: car, electricity, plastic, food"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "punjab-floods-2025-a-case-study",
+          "title": "Punjab Floods 2025: A Case Study",
+          "objectives": [
+            "Student can describe the causes and effects of the 2025 floods in Punjab",
+            "Student can discuss how extreme weather affects people and how communities can prepare"
+          ],
+          "visualIdeas": [
+            "a map of Punjab with flooded districts marked"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "early-humans-and-beginning-of-civilisation",
+      "title": "Early Humans and Beginning of Civilisation",
+      "book": "Understanding Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iest104.pdf",
+      "topics": [
+        {
+          "id": "why-should-we-study-early-human-history",
+          "title": "Why Should We Study Early Human History?",
+          "objectives": [
+            "Student can explain that early human history covers the long period before the invention of writing",
+            "Student can describe how archaeologists study this period through tools, fossils and cave art"
+          ],
+          "visualIdeas": [
+            "a timeline split at the invention of writing"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "who-were-our-human-ancestors",
+          "title": "Who Were Our Human Ancestors?",
+          "objectives": [
+            "Student can explain that early humans evolved in Africa and gradually migrated to other parts of the world",
+            "Student can name early human species such as Homo erectus and Homo sapiens"
+          ],
+          "visualIdeas": [
+            "a world map with migration arrows out of Africa"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "palaeolithic-hunter-gatherers",
+          "title": "Palaeolithic Hunter-Gatherers",
+          "objectives": [
+            "Student can describe the life of Palaeolithic hunter-gatherers",
+            "Student can name their stone tools, such as handaxes, cleavers and scrapers, and where they lived"
+          ],
+          "visualIdeas": [
+            "a handaxe and a cleaver with labels",
+            "a cave shelter with a fire"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mesolithic-hunter-gatherers",
+          "title": "Mesolithic Hunter-Gatherers",
+          "objectives": [
+            "Student can describe the microlithic tools of the Mesolithic period",
+            "Student can describe their temporary settlements near rivers and lakes and their rock art at sites like Bhimbetka"
+          ],
+          "visualIdeas": [
+            "microliths hafted onto a wooden shaft"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-neolithic-revolution-and-the-neolithic-in-the-indian-subcontinent",
+          "title": "The Neolithic Revolution and the Neolithic in the Indian Subcontinent",
+          "objectives": [
+            "Student can explain why the shift to farming and domestication of animals is called the Neolithic Revolution",
+            "Student can describe Neolithic sites in the subcontinent such as Mehrgarh and Burzahom",
+            "Student can describe the Chalcolithic use of copper with stone tools"
+          ],
+          "visualIdeas": [
+            "a Neolithic village with fields, animals, pottery and weaving"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "sindhu-sarasvati-civilisation",
+          "title": "Sindhu-Sarasvatī Civilisation",
+          "objectives": [
+            "Student can describe the planned cities, drainage, seals and crafts of the Sindhu-Sarasvatī Civilisation",
+            "Student can name major sites such as Harappa, Mohenjo-daro, Dholavira, Lothal and Rakhigarhi"
+          ],
+          "visualIdeas": [
+            "a city grid with drains and a seal"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "bronze-age-civilisations-mesopotamia",
+          "title": "Bronze Age Civilisations: Mesopotamia",
+          "objectives": [
+            "Student can describe the features of Bronze Age civilisations: cities, trade, writing and administration",
+            "Student can describe Mesopotamian achievements such as cuneiform writing, ziggurats and Hammurabi’s laws"
+          ],
+          "visualIdeas": [
+            "a clay tablet with cuneiform signs beside a ziggurat"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "egyptian-civilisation",
+          "title": "Egyptian Civilisation",
+          "objectives": [
+            "Student can explain the importance of the Nile to Egyptian civilisation",
+            "Student can describe pharaohs, pyramids, mummification and papyrus records"
+          ],
+          "visualIdeas": [
+            "the Nile valley with pyramids and a papyrus scroll"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-chinese-civilisation",
+          "title": "The Chinese Civilisation",
+          "objectives": [
+            "Student can describe the growth of Chinese civilisation along the Huang He (Yellow River)",
+            "Student can describe the Shang period, bronze work and the logographic Chinese script"
+          ],
+          "visualIdeas": [
+            "a map of the Huang He valley with a bronze vessel"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "state-and-society-up-to-1000-ce",
+      "title": "State and Society up to 1000 CE",
+      "book": "Understanding Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iest105.pdf",
+      "topics": [
+        {
+          "id": "understanding-early-indian-state-and-society",
+          "title": "Understanding Early Indian State and Society",
+          "objectives": [
+            "Student can describe the continuity of cultural, social and political traditions in Indian civilisation",
+            "Student can identify the sources historians use to study early Indian states"
+          ],
+          "visualIdeas": [
+            "a timeline of Indian states up to 1000 CE"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-vedic-period-and-its-political-institutions",
+          "title": "The Vedic Period and its Political Institutions",
+          "objectives": [
+            "Student can describe clans (janas) led by a rājā in the Vedic period",
+            "Student can describe the role of assemblies such as the sabhā and samiti"
+          ],
+          "visualIdeas": [
+            "a Vedic assembly with elders in discussion"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "early-kingdoms-and-republics",
+          "title": "Early Kingdoms and Republics",
+          "objectives": [
+            "Student can explain how janapadas grew into larger kingdoms such as Magadha",
+            "Student can describe republics (gaṇas or saṅghas) and how they differed from kingdoms"
+          ],
+          "visualIdeas": [
+            "a map of the janapadas and mahājanapadas with Magadha highlighted"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "duties-and-ideals-of-the-king",
+          "title": "Duties and Ideals of the King",
+          "objectives": [
+            "Student can describe the duties expected of a king, such as protecting subjects and administering justice",
+            "Student can use sources such as the Arthaśhāstra and the Śhānti Parva of the Mahābhārata to explain ideals of kingship"
+          ],
+          "visualIdeas": [
+            "a king seated with symbols of justice and welfare"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "council-of-ministers",
+          "title": "Council of Ministers",
+          "objectives": [
+            "Student can describe the role of the council of ministers in governance",
+            "Student can name the seven constituents (saptāṅga) of the state in the Arthaśhāstra and explain the saying that one wheel does not move the carriage"
+          ],
+          "visualIdeas": [
+            "a king with ministers each holding a different responsibility"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-were-empires-administered",
+          "title": "How Were Empires Administered?",
+          "objectives": [
+            "Student can describe the administration, taxation and military organisation of empires such as the Mauryas, Guptas and Cholas",
+            "Student can describe local self-government through village assemblies, such as in the Uttaramerur inscription"
+          ],
+          "visualIdeas": [
+            "an organisation chart from emperor to provinces to villages"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "ethics-the-foundation-of-law-and-life",
+          "title": "Ethics: The Foundation of Law and Life",
+          "objectives": [
+            "Student can explain dharma as duty, righteousness and moral conduct rather than religion",
+            "Student can describe how Aśhoka’s dhamma and later records linked ethics with governance"
+          ],
+          "visualIdeas": [
+            "an Aśhokan pillar with an edict"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "social-structures-varna-and-jati",
+          "title": "Social Structures: Varṇa and Jāti",
+          "objectives": [
+            "Student can describe the varṇa system and the factors, such as occupation, region and gotra, that shaped social identity",
+            "Student can read a source like a Ṛigveda verse for evidence, interpretation and its limits"
+          ],
+          "visualIdeas": [
+            "a web of factors shaping social identity: occupation, region, language, gotra"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "family-society-and-the-role-of-women",
+          "title": "Family, Society and the Role of Women",
+          "objectives": [
+            "Student can describe family and social life in early India",
+            "Student can describe the roles and status of women in early Indian society"
+          ],
+          "visualIdeas": [
+            "a household scene showing different family roles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "religious-life-bhakti-and-the-quest-for-knowledge",
+          "title": "Religious Life, Bhakti and the Quest for Knowledge",
+          "objectives": [
+            "Student can describe the emergence of the Bhakti tradition",
+            "Student can describe education in early India, from gurukulas to centres of learning, and the subjects studied"
+          ],
+          "visualIdeas": [
+            "a gurukula scene with students and a teacher"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "literary-heritage-of-early-india",
+          "title": "Literary Heritage of Early India",
+          "objectives": [
+            "Student can name important early Indian texts on grammar, law and ethics, and medicine, such as Pāṇini’s Aṣhṭādhyāyī and the Charaka Saṁhitā",
+            "Student can name works of Sanskrit poetry and Tamil literature, such as the works of Kālidāsa, the Tirukkural and the Sangam texts"
+          ],
+          "visualIdeas": [
+            "a shelf of manuscripts labelled Aṣhṭādhyāyī, Charaka Saṁhitā and others"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "economy-agriculture-land-revenue-and-irrigation",
+          "title": "Economy: Agriculture, Land Revenue and Irrigation",
+          "objectives": [
+            "Student can explain that the early economy was based on agriculture supported by land revenue",
+            "Student can describe irrigation works such as the Sudarshana lake and the Grand Anicut (Kallanai)"
+          ],
+          "visualIdeas": [
+            "a canal and dam watering fields"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "trade-routes-ports-and-guilds",
+          "title": "Trade Routes, Ports and Guilds",
+          "objectives": [
+            "Student can describe trade routes and ports such as Muziris and their role in commerce",
+            "Student can describe guilds and how they also worked as financial institutions"
+          ],
+          "visualIdeas": [
+            "a map of trade routes and ports around the Indian Ocean"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "democracy",
+      "title": "Democracy",
+      "book": "Understanding Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iest106.pdf",
+      "topics": [
+        {
+          "id": "tracing-democratic-traditions-from-early-times",
+          "title": "Tracing Democratic Traditions from Early Times",
+          "objectives": [
+            "Student can describe democracy as a system of self-governance that is more than elections",
+            "Student can describe early democratic traditions in India, such as the sabhā and samiti, and how ideas from the world shaped modern democracy"
+          ],
+          "visualIdeas": [
+            "a timeline from Vedic assemblies to the Indian Constitution"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "principles-of-democracy-popular-sovereignty-rule-of-law-and-fundamental-rights",
+          "title": "Principles of Democracy: Popular Sovereignty, Rule of Law and Fundamental Rights",
+          "objectives": [
+            "Student can explain popular sovereignty and universal adult franchise",
+            "Student can explain the rule of law and the role of fundamental rights"
+          ],
+          "visualIdeas": [
+            "three pillars labelled popular sovereignty, rule of law and fundamental rights"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "principles-of-democracy-separation-of-powers-accountability-and-multi-party-system",
+          "title": "Principles of Democracy: Separation of Powers, Accountability and Multi-Party System",
+          "objectives": [
+            "Student can explain the separation of powers between legislature, executive and judiciary",
+            "Student can explain accountability and transparency, including the Right to Information",
+            "Student can explain the multi-party system and the safeguarding of the rights of vulnerable groups"
+          ],
+          "visualIdeas": [
+            "three branches of government with checks between them"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "types-of-democracy",
+          "title": "Types of Democracy",
+          "objectives": [
+            "Student can distinguish direct democracy from representative democracy",
+            "Student can compare parliamentary and presidential democracies with examples"
+          ],
+          "visualIdeas": [
+            "a two-column comparison: parliamentary (India, Canada) and presidential (USA)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "democracy-in-practice-indias-living-democracy",
+          "title": "Democracy in Practice: India’s Living Democracy",
+          "objectives": [
+            "Student can explain why India is called the world’s largest democracy",
+            "Student can describe democracy at the local level through panchayats and the representation of women"
+          ],
+          "visualIdeas": [
+            "a graphic of India’s voter count beside a panchayat meeting"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "challenges-to-democratic-practices-in-india-democracy-and-you",
+          "title": "Challenges to Democratic Practices in India; Democracy and You",
+          "objectives": [
+            "Student can describe challenges to democratic practices such as misinformation on social media",
+            "Student can describe how citizens contribute to democracy through civic awareness and responsible use of media"
+          ],
+          "visualIdeas": [
+            "a phone screen with a fake news alert and a fact-check"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "elections",
+      "title": "Elections",
+      "book": "Understanding Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iest107.pdf",
+      "topics": [
+        {
+          "id": "why-do-elections-matter",
+          "title": "Why do Elections Matter?",
+          "objectives": [
+            "Student can explain why elections are called the soul of democracy",
+            "Student can explain that voting is both a constitutional right and a duty"
+          ],
+          "visualIdeas": [
+            "a ballot box with diverse hands dropping votes"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-electoral-system",
+          "title": "The Electoral System",
+          "objectives": [
+            "Student can explain the first-past-the-post system used in India",
+            "Student can compare it with proportional representation"
+          ],
+          "visualIdeas": [
+            "a constituency result showing the candidate with the most votes winning"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-laws-and-the-delimitation-commission",
+          "title": "The Laws and the Delimitation Commission",
+          "objectives": [
+            "Student can describe the role of the Representation of the People Acts of 1950 and 1951",
+            "Student can explain how the Delimitation Commission draws constituencies"
+          ],
+          "visualIdeas": [
+            "a map divided into constituencies"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "election-commission-of-india-eci",
+          "title": "Election Commission of India (ECI)",
+          "objectives": [
+            "Student can describe the role of the ECI in conducting free and fair elections",
+            "Student can describe the electoral roll, voter ID, the Model Code of Conduct and EVMs with VVPAT"
+          ],
+          "visualIdeas": [
+            "an EVM with a VVPAT slip"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "political-parties",
+          "title": "Political Parties",
+          "objectives": [
+            "Student can explain the role of political parties in presenting programmes and policies through manifestos",
+            "Student can distinguish national and state parties and describe party symbols"
+          ],
+          "visualIdeas": [
+            "a set of election symbols beside a manifesto"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "challenges-to-free-and-fair-elections",
+          "title": "Challenges to Free and Fair Elections",
+          "objectives": [
+            "Student can identify challenges to free and fair elections",
+            "Student can describe how the ECI tries to ensure that elections are impartial"
+          ],
+          "visualIdeas": [
+            "a checklist of challenges with the ECI’s responses"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "building-blocks-in-economics-the-problem-of-choice",
+      "title": "Building Blocks in Economics: The Problem of Choice",
+      "book": "Understanding Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iest108.pdf",
+      "topics": [
+        {
+          "id": "choices-and-limited-resources",
+          "title": "Choices and Limited Resources",
+          "objectives": [
+            "Student can explain that resources are limited while wants are unlimited, so we must make choices",
+            "Student can define opportunity cost with everyday examples"
+          ],
+          "visualIdeas": [
+            "a student choosing between two items with one budget, the forgone item labelled opportunity cost"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-does-economics-deal-with",
+          "title": "What does Economics Deal with?",
+          "objectives": [
+            "Student can explain the origin of the word economics from the Greek oikonomia (household management)",
+            "Student can describe how consumers, producers, governments and financial institutions make choices with limited resources, and what economists do"
+          ],
+          "visualIdeas": [
+            "a household, a firm and a government each making a choice"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "key-questions-in-economics",
+          "title": "Key Questions in Economics",
+          "objectives": [
+            "Student can state the central questions of what to produce, how to produce and for whom to produce",
+            "Student can distinguish labour-intensive from capital-intensive ways of production"
+          ],
+          "visualIdeas": [
+            "three question cards: what, how and for whom"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "economic-systems-planned-market-and-mixed-economy",
+          "title": "Economic Systems: Planned, Market and Mixed Economy",
+          "objectives": [
+            "Student can describe how planned, market and mixed economies answer the central questions",
+            "Student can explain why India is described as a mixed economy"
+          ],
+          "visualIdeas": [
+            "three boxes: government decides, market decides, both decide"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-price-puzzle-what-drives-the-market",
+      "title": "The Price Puzzle: What Drives the Market",
+      "book": "Understanding Society: India and Beyond Part 1",
+      "pdf": "https://ncert.nic.in/textbook/pdf/iest109.pdf",
+      "topics": [
+        {
+          "id": "demand-and-the-law-of-demand",
+          "title": "Demand and the Law of Demand",
+          "objectives": [
+            "Student can define demand and read a demand schedule and demand curve",
+            "Student can state the law of demand: as price falls, quantity demanded rises"
+          ],
+          "visualIdeas": [
+            "a downward-sloping demand curve with a schedule beside it"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "other-determinants-of-demand",
+          "title": "Other Determinants of Demand",
+          "objectives": [
+            "Student can explain how income, tastes, seasons, future expectations and population affect demand",
+            "Student can distinguish substitute goods from complementary goods and explain how their prices affect demand"
+          ],
+          "visualIdeas": [
+            "tea and coffee as substitutes, smartphones and earphones as complements"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "supply-and-the-law-of-supply",
+          "title": "Supply and the Law of Supply",
+          "objectives": [
+            "Student can define supply and read a supply schedule and supply curve",
+            "Student can state the law of supply: as price rises, quantity supplied rises"
+          ],
+          "visualIdeas": [
+            "an upward-sloping supply curve with a schedule beside it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "other-determinants-of-supply",
+          "title": "Other Determinants of Supply",
+          "objectives": [
+            "Student can explain how prices of related goods and the number of sellers affect supply",
+            "Student can explain how technology, input costs and weather affect supply"
+          ],
+          "visualIdeas": [
+            "a farmer’s supply shifting after a good monsoon"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "market-equilibrium",
+          "title": "Market Equilibrium",
+          "objectives": [
+            "Student can find the equilibrium price where quantity demanded equals quantity supplied",
+            "Student can explain how excess demand and excess supply push prices toward equilibrium and how markets keep adjusting"
+          ],
+          "visualIdeas": [
+            "demand and supply curves crossing at the equilibrium point with shortage and surplus regions"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "role-of-government-in-the-economy",
+          "title": "Role of Government in the Economy",
+          "objectives": [
+            "Student can explain why governments regulate unfair practices, set price ceilings and floors, and provide public goods",
+            "Student can describe the limitations of government intervention"
+          ],
+          "visualIdeas": [
+            "a price ceiling line below equilibrium creating a shortage"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    }
+  ]
+}

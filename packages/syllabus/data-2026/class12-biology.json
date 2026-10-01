@@ -1,0 +1,1727 @@
+{
+  "id": "class12-biology",
+  "klass": 12,
+  "subject": "Biology",
+  "source": {
+    "books": [
+      {
+        "title": "Biology",
+        "code": "lebo1",
+        "edition": "Reprint 2026-27 (First Edition December 2006; Revised Edition November 2022; reprinted January 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/lebo1ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter titles from the book's Contents page; topics from each chapter PDF's numbered section and subsection headings, using the headings printed in the chapter body where they differ from the chapter's opening outline (Summary and Exercises are not topics; small neighbouring subsections are grouped; long sections are split at the run-in headings the book prints, such as 'Microsporogenesis :' or 'Agents of Pollination :', or at the parts the section itself names)"
+  },
+  "chapters": [
+    {
+      "id": "sexual-reproduction-in-flowering-plants",
+      "title": "Sexual Reproduction in Flowering Plants",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo101.pdf",
+      "topics": [
+        {
+          "id": "flower-a-fascinating-organ-of-angiosperms",
+          "title": "Flower - A Fascinating Organ of Angiosperms",
+          "objectives": [
+            "Student can describe the flower as the site of sexual reproduction in angiosperms and label its parts on an L.S.",
+            "Student can state that hormonal and structural changes lead to the floral primordium and floral buds before flowering"
+          ],
+          "visualIdeas": [
+            "L.S. of a flower with androecium and gynoecium labelled"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "stamen-and-structure-of-microsporangium",
+          "title": "Stamen and Structure of Microsporangium",
+          "objectives": [
+            "Student can describe a stamen with its filament and bilobed, dithecous anther",
+            "Student can describe the four wall layers of a microsporangium (epidermis, endothecium, middle layers, tapetum) and the sporogenous tissue"
+          ],
+          "visualIdeas": [
+            "T.S. of a young anther with four microsporangia",
+            "enlarged microsporangium wall layers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "microsporogenesis",
+          "title": "Microsporogenesis",
+          "objectives": [
+            "Student can explain how microspore mother cells undergo meiosis to form microspore tetrads",
+            "Student can describe how microspores dissociate into pollen grains as the anther matures and dehydrates"
+          ],
+          "visualIdeas": [
+            "microspore mother cell dividing into a tetrad of microspores"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "pollen-grain",
+          "title": "Pollen Grain",
+          "objectives": [
+            "Student can describe the two-layered pollen wall with sporopollenin in the exine and germ pores",
+            "Student can describe the vegetative cell and generative cell and pollen shed at 2-celled or 3-celled stage",
+            "Student can explain pollen allergies, pollen supplements and the viability and storage of pollen in liquid nitrogen"
+          ],
+          "visualIdeas": [
+            "mature pollen grain with exine, intine, vegetative and generative cells"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-pistil-and-the-megasporangium-ovule",
+          "title": "The Pistil and the Megasporangium (Ovule)",
+          "objectives": [
+            "Student can distinguish monocarpellary and multicarpellary, syncarpous and apocarpous gynoecium and name the parts of a pistil",
+            "Student can describe the structure of an anatropous ovule: funicle, hilum, integuments, micropyle, chalaza and nucellus"
+          ],
+          "visualIdeas": [
+            "L.S. of an anatropous ovule with parts labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "megasporogenesis-and-female-gametophyte",
+          "title": "Megasporogenesis and Female Gametophyte",
+          "objectives": [
+            "Student can explain the formation of four megaspores from the megaspore mother cell by meiosis",
+            "Student can describe monosporic development of the 7-celled, 8-nucleate embryo sac",
+            "Student can identify the egg apparatus (egg and synergids with filiform apparatus), antipodals and central cell"
+          ],
+          "visualIdeas": [
+            "stages from functional megaspore to the 8-nucleate embryo sac"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "pollination-kinds-of-pollination",
+          "title": "Pollination: Kinds of Pollination",
+          "objectives": [
+            "Student can define pollination and distinguish autogamy, geitonogamy and xenogamy",
+            "Student can compare chasmogamous and cleistogamous flowers and explain why cleistogamy ensures seed set"
+          ],
+          "visualIdeas": [
+            "three diagrams: same flower, same plant, different plant"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "agents-of-pollination",
+          "title": "Agents of Pollination",
+          "objectives": [
+            "Student can describe adaptations of wind-pollinated flowers and of water pollination in plants like Vallisneria and Zostera",
+            "Student can describe how insects and other animals pollinate flowers and the rewards of nectar and pollen"
+          ],
+          "visualIdeas": [
+            "maize tassel shedding pollen in wind",
+            "bee visiting a brightly coloured flower"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "outbreeding-devices",
+          "title": "Outbreeding Devices",
+          "objectives": [
+            "Student can explain why continued self-pollination results in inbreeding depression",
+            "Student can describe devices that prevent self-pollination: timing, positions of anther and stigma, self-incompatibility and unisexual flowers"
+          ],
+          "visualIdeas": [
+            "flower with anther and stigma maturing at different times"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "pollen-pistil-interaction",
+          "title": "Pollen-pistil Interaction",
+          "objectives": [
+            "Student can explain how the pistil recognises compatible pollen and how the pollen tube grows to enter the ovule through the micropyle and a synergid",
+            "Student can describe artificial hybridisation using emasculation and bagging"
+          ],
+          "visualIdeas": [
+            "pollen tube growing down the style into the ovule",
+            "bagged emasculated flower"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "double-fertilisation",
+          "title": "Double Fertilisation",
+          "objectives": [
+            "Student can describe syngamy (one male gamete with the egg) and triple fusion (the other with the two polar nuclei)",
+            "Student can explain why the event is called double fertilisation and name its products, the zygote and the primary endosperm nucleus"
+          ],
+          "visualIdeas": [
+            "embryo sac with two male gametes moving to the egg and the central cell"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "endosperm",
+          "title": "Endosperm",
+          "objectives": [
+            "Student can list the post-fertilisation events",
+            "Student can describe the development of triploid endosperm and give examples such as coconut water and coconut kernel"
+          ],
+          "visualIdeas": [
+            "coconut cut open showing liquid and solid endosperm"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "embryo",
+          "title": "Embryo",
+          "objectives": [
+            "Student can describe embryo development from the zygote at the micropylar end",
+            "Student can compare the dicot embryo (epicotyl, hypocotyl, plumule, radicle) with the monocot embryo (scutellum, coleoptile, coleorrhiza)"
+          ],
+          "visualIdeas": [
+            "typical dicot embryo beside L.S. of a grass embryo"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "seed",
+          "title": "Seed",
+          "objectives": [
+            "Student can describe a seed as a fertilised ovule with seed coat, cotyledons and embryo axis; distinguish albuminous and non-albuminous seeds",
+            "Student can describe dormancy, fruit formation from the ovary, false fruits and parthenocarpy",
+            "Student can explain why seed viability and dispersal are adaptive advantages"
+          ],
+          "visualIdeas": [
+            "structure of some seeds and a false fruit of apple"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "apomixis-and-polyembryony",
+          "title": "Apomixis and Polyembryony",
+          "objectives": [
+            "Student can define apomixis as seed production without fertilisation and describe how it can occur",
+            "Student can explain polyembryony, as in citrus and mango, and why apomixis is valuable for hybrid seed industry"
+          ],
+          "visualIdeas": [
+            "citrus seed with several embryos"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "human-reproduction",
+      "title": "Human Reproduction",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo102.pdf",
+      "topics": [
+        {
+          "id": "the-male-reproductive-system",
+          "title": "The Male Reproductive System",
+          "objectives": [
+            "Student can describe the location and structure of the testes, testicular lobules and seminiferous tubules",
+            "Student can identify the Sertoli cells and Leydig cells and their roles",
+            "Student can trace the accessory ducts, accessory glands and external genitalia of the male"
+          ],
+          "visualIdeas": [
+            "sectional view of the male pelvis",
+            "T.S. of a seminiferous tubule"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-female-reproductive-system",
+          "title": "The Female Reproductive System",
+          "objectives": [
+            "Student can describe the ovaries, oviducts (fallopian tubes), uterus and its three layers, cervix and vagina",
+            "Student can identify the external genitalia and the structure of the mammary glands"
+          ],
+          "visualIdeas": [
+            "diagrammatic view of the female reproductive system",
+            "section of a mammary gland"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "gametogenesis-spermatogenesis",
+          "title": "Gametogenesis: Spermatogenesis",
+          "objectives": [
+            "Student can describe spermatogenesis from spermatogonia to spermatozoa and spermiogenesis",
+            "Student can explain the hormonal control of spermatogenesis by GnRH, LH and FSH",
+            "Student can describe the structure of a sperm and the composition of semen"
+          ],
+          "visualIdeas": [
+            "stages of spermatogenesis inside a seminiferous tubule",
+            "labelled sperm"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "gametogenesis-oogenesis",
+          "title": "Gametogenesis: Oogenesis",
+          "objectives": [
+            "Student can describe oogenesis from oogonia to the secondary oocyte and the stages of follicle development",
+            "Student can compare spermatogenesis and oogenesis"
+          ],
+          "visualIdeas": [
+            "ovary section with primary, secondary, tertiary and Graafian follicles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "menstrual-cycle",
+          "title": "Menstrual Cycle",
+          "objectives": [
+            "Student can describe the menstrual, follicular, ovulatory and luteal phases",
+            "Student can explain the role of pituitary and ovarian hormones in the cycle",
+            "Student can explain the importance of menstrual hygiene"
+          ],
+          "visualIdeas": [
+            "graph of hormone levels, follicle stages and endometrium thickness over 28 days"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "fertilisation-and-implantation",
+          "title": "Fertilisation and Implantation",
+          "objectives": [
+            "Student can describe the transport of sperm and ovum and fertilisation in the ampullary region of the oviduct",
+            "Student can explain how the sex of the baby is decided by the sperm",
+            "Student can describe cleavage, morula, blastocyst and implantation in the endometrium"
+          ],
+          "visualIdeas": [
+            "ovum surrounded by sperms",
+            "blastocyst embedding in the uterine wall"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "pregnancy-and-embryonic-development",
+          "title": "Pregnancy and Embryonic Development",
+          "objectives": [
+            "Student can describe the formation and functions of the placenta and the hormones of pregnancy",
+            "Student can explain how the inner cell mass gives rise to the germ layers and stem cells",
+            "Student can outline the major developmental milestones of the foetus month by month"
+          ],
+          "visualIdeas": [
+            "human foetus within the uterus with placenta and umbilical cord"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "parturition-and-lactation",
+          "title": "Parturition and Lactation",
+          "objectives": [
+            "Student can explain the foetal ejection reflex and the hormonal control of parturition",
+            "Student can describe lactation and the importance of colostrum for the newborn"
+          ],
+          "visualIdeas": [
+            "mother breastfeeding a newborn"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "reproductive-health",
+      "title": "Reproductive Health",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo103.pdf",
+      "topics": [
+        {
+          "id": "reproductive-health-problems-and-strategies",
+          "title": "Reproductive Health - Problems and Strategies",
+          "objectives": [
+            "Student can define reproductive health in its physical, emotional, behavioural and social aspects",
+            "Student can describe India's family planning and Reproductive and Child Health Care (RCH) programmes",
+            "Student can explain the need for sex education and the statutory ban on amniocentesis for sex determination"
+          ],
+          "visualIdeas": [
+            "awareness poster on reproductive health"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "population-stabilisation-and-birth-control-natural-and-barrier-methods",
+          "title": "Population Stabilisation and Birth Control: Natural and Barrier Methods",
+          "objectives": [
+            "Student can explain the causes and consequences of rapid population growth in India",
+            "Student can list the qualities of an ideal contraceptive",
+            "Student can describe natural methods (periodic abstinence, withdrawal, lactational amenorrhea) and barrier methods"
+          ],
+          "visualIdeas": [
+            "graph of India's population growth",
+            "condoms, diaphragm and cervical cap"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "population-stabilisation-and-birth-control-iuds-pills-implants-and-surgical-methods",
+          "title": "Population Stabilisation and Birth Control: IUDs, Pills, Implants and Surgical Methods",
+          "objectives": [
+            "Student can describe intra uterine devices (non-medicated, copper releasing and hormone releasing) and how they work",
+            "Student can describe oral pills including Saheli, injectables, implants and emergency contraceptives",
+            "Student can describe sterilisation by vasectomy and tubectomy and the possible side effects of contraceptives"
+          ],
+          "visualIdeas": [
+            "Copper T in the uterus",
+            "diagrams of vasectomy and tubectomy"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "medical-termination-of-pregnancy-mtp",
+          "title": "Medical Termination of Pregnancy (MTP)",
+          "objectives": [
+            "Student can define MTP and state when it is legally permitted in India",
+            "Student can discuss the need for MTP and why it should be done by qualified medical professionals"
+          ],
+          "visualIdeas": [
+            "timeline of pregnancy showing the first trimester"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sexually-transmitted-infections-stis",
+          "title": "Sexually Transmitted Infections (STIs)",
+          "objectives": [
+            "Student can name common sexually transmitted infections and how they spread",
+            "Student can explain the early symptoms and complications of STIs if untreated",
+            "Student can list simple principles for prevention of STIs"
+          ],
+          "visualIdeas": [
+            "prevention checklist for STIs"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "infertility",
+          "title": "Infertility",
+          "objectives": [
+            "Student can explain infertility and its possible causes in males and females",
+            "Student can describe assisted reproductive technologies such as IVF, ZIFT, GIFT, ICSI and artificial insemination"
+          ],
+          "visualIdeas": [
+            "in vitro fertilisation steps from egg collection to transfer"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "principles-of-inheritance-and-variation",
+      "title": "Principles of Inheritance and Variation",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo104.pdf",
+      "topics": [
+        {
+          "id": "mendels-laws-of-inheritance",
+          "title": "Mendel's Laws of Inheritance",
+          "objectives": [
+            "Student can describe Mendel's hybridisation experiments on garden pea and why pea was suitable",
+            "Student can list the seven pairs of contrasting traits Mendel studied"
+          ],
+          "visualIdeas": [
+            "table of seven pea characters with dominant and recessive forms"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "inheritance-of-one-gene",
+          "title": "Inheritance of One Gene",
+          "objectives": [
+            "Student can work out a monohybrid cross with a Punnett square and give the F2 phenotypic ratio 3:1 and genotypic ratio 1:2:1",
+            "Student can explain genes, alleles, homozygous and heterozygous conditions, genotype and phenotype",
+            "Student can use a test cross to find the genotype of an organism"
+          ],
+          "visualIdeas": [
+            "Punnett square for a tall x dwarf cross"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "law-of-dominance-and-law-of-segregation",
+          "title": "Law of Dominance and Law of Segregation",
+          "objectives": [
+            "Student can state the law of dominance and explain it using a monohybrid cross",
+            "Student can state the law of segregation and explain why alleles do not blend"
+          ],
+          "visualIdeas": [
+            "alleles separating into gametes during meiosis"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "incomplete-dominance",
+          "title": "Incomplete Dominance",
+          "objectives": [
+            "Student can explain incomplete dominance with flower colour in snapdragon and the 1:2:1 F2 ratio",
+            "Student can explain dominance in terms of the enzyme an allele codes for, and why an allele that makes a non-functional enzyme or none is generally recessive"
+          ],
+          "visualIdeas": [
+            "red, pink and white snapdragon flowers in a Punnett square"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "co-dominance",
+          "title": "Co-dominance",
+          "objectives": [
+            "Student can explain co-dominance using the ABO blood groups",
+            "Student can explain multiple alleles, with three alleles of gene I giving six genotypes",
+            "Student can explain, using starch grain size in pea seeds, that one gene can have more than one effect and that dominance depends on the phenotype examined"
+          ],
+          "visualIdeas": [
+            "table of ABO genotypes and blood groups"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "inheritance-of-two-genes",
+          "title": "Inheritance of Two Genes",
+          "objectives": [
+            "Student can work out a dihybrid cross and the 9:3:3:1 F2 phenotypic ratio",
+            "Student can state the law of independent assortment"
+          ],
+          "visualIdeas": [
+            "Punnett square of a round yellow x wrinkled green cross"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chromosomal-theory-of-inheritance",
+          "title": "Chromosomal Theory of Inheritance",
+          "objectives": [
+            "Student can explain why Mendel's work was rediscovered in 1900",
+            "Student can explain how Sutton and Boveri related chromosome movement in meiosis to Mendel's laws",
+            "Student can explain why Morgan used Drosophila for his experiments"
+          ],
+          "visualIdeas": [
+            "chromosome pairs separating in meiosis alongside gene segregation"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "linkage-and-recombination",
+          "title": "Linkage and Recombination",
+          "objectives": [
+            "Student can explain linkage and recombination from Morgan's dihybrid crosses in Drosophila",
+            "Student can explain how recombination frequency was used by Sturtevant to map genes on chromosomes"
+          ],
+          "visualIdeas": [
+            "linked genes on a chromosome with crossing over"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "polygenic-inheritance-and-pleiotropy",
+          "title": "Polygenic Inheritance and Pleiotropy",
+          "objectives": [
+            "Student can explain polygenic inheritance with human skin colour",
+            "Student can explain pleiotropy, where one gene affects several traits, with an example such as phenylketonuria"
+          ],
+          "visualIdeas": [
+            "bell-shaped distribution of skin colour shades"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sex-determination",
+          "title": "Sex Determination",
+          "objectives": [
+            "Student can describe XO, XY and ZW types of sex determination in insects, mammals and birds",
+            "Student can explain sex determination in humans and why the father's sperm decides the sex",
+            "Student can explain haplodiploid sex determination in honey bees"
+          ],
+          "visualIdeas": [
+            "XX and XY chromosomes combining at fertilisation",
+            "honey bee family with haploid drones"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mutation",
+          "title": "Mutation",
+          "objectives": [
+            "Student can define mutation and distinguish chromosomal aberrations, point mutations (as in sickle cell anaemia) and frame-shift mutations",
+            "Student can explain that physical and chemical factors such as UV radiation act as mutagens"
+          ],
+          "visualIdeas": [
+            "DNA sequence with one base changed"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "pedigree-analysis",
+          "title": "Pedigree Analysis",
+          "objectives": [
+            "Student can read a pedigree chart using standard symbols",
+            "Student can use pedigree analysis to trace inheritance of a trait or disorder in a family"
+          ],
+          "visualIdeas": [
+            "pedigree chart with symbols for male, female, affected and carrier"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mendelian-disorders",
+          "title": "Mendelian Disorders",
+          "objectives": [
+            "Student can explain Mendelian disorders and their patterns of inheritance",
+            "Student can describe haemophilia and colour blindness as sex-linked recessive disorders",
+            "Student can describe sickle-cell anaemia, phenylketonuria and thalassemia as autosomal recessive disorders"
+          ],
+          "visualIdeas": [
+            "normal and sickle-shaped red blood cells"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chromosomal-disorders",
+          "title": "Chromosomal Disorders",
+          "objectives": [
+            "Student can explain aneuploidy and polyploidy",
+            "Student can describe Down's syndrome, Klinefelter's syndrome and Turner's syndrome with their karyotypes"
+          ],
+          "visualIdeas": [
+            "karyotypes showing trisomy 21, XXY and XO"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "molecular-basis-of-inheritance",
+      "title": "Molecular Basis of Inheritance",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo105.pdf",
+      "topics": [
+        {
+          "id": "structure-of-polynucleotide-chain",
+          "title": "Structure of Polynucleotide Chain",
+          "objectives": [
+            "Student can describe a nucleotide and the phosphodiester bonds in a polynucleotide chain",
+            "Student can describe the Watson-Crick double helix with antiparallel strands and complementary base pairing (Chargaff's rules)",
+            "Student can state the central dogma of molecular biology"
+          ],
+          "visualIdeas": [
+            "DNA double helix with base pairs and sugar-phosphate backbones"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "packaging-of-dna-helix",
+          "title": "Packaging of DNA Helix",
+          "objectives": [
+            "Student can explain how DNA is packed in prokaryotes and eukaryotes using histones and nucleosomes",
+            "Student can distinguish euchromatin and heterochromatin"
+          ],
+          "visualIdeas": [
+            "beads-on-string nucleosomes coiling into chromatin fibres"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-search-for-genetic-material",
+          "title": "The Search for Genetic Material",
+          "objectives": [
+            "Student can describe Griffith's transforming principle experiment with Streptococcus pneumoniae",
+            "Student can explain how Avery, MacLeod and McCarty showed that DNA is the transforming principle",
+            "Student can describe the Hershey-Chase experiment proving that DNA is the genetic material"
+          ],
+          "visualIdeas": [
+            "mice injected with S, R and heat-killed strains",
+            "radioactive phages in a blender experiment"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "properties-of-genetic-material-dna-versus-rna",
+          "title": "Properties of Genetic Material (DNA versus RNA)",
+          "objectives": [
+            "Student can list the criteria a genetic material must fulfil",
+            "Student can explain why DNA is a better genetic material and RNA a better catalyst and messenger"
+          ],
+          "visualIdeas": [
+            "DNA vs RNA comparison table"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rna-world",
+          "title": "RNA World",
+          "objectives": [
+            "Student can explain why RNA is thought to have been the first genetic material",
+            "Student can explain how DNA evolved from RNA with chemical changes that made it more stable"
+          ],
+          "visualIdeas": [
+            "timeline from RNA world to DNA"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "replication",
+          "title": "Replication",
+          "objectives": [
+            "Student can describe the semiconservative model of DNA replication proposed by Watson and Crick",
+            "Student can explain the Meselson and Stahl experiment using 15N and 14N as its proof"
+          ],
+          "visualIdeas": [
+            "DNA bands in caesium chloride gradients over generations"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "replication-the-machinery-and-the-enzymes",
+          "title": "Replication: The Machinery and the Enzymes",
+          "objectives": [
+            "Student can describe the replication fork and the role of DNA-dependent DNA polymerase",
+            "Student can explain continuous and discontinuous synthesis on the two strands and the role of DNA ligase",
+            "Student can state that replication begins at the origin of replication and, in eukaryotes, takes place in the S-phase of the cell cycle"
+          ],
+          "visualIdeas": [
+            "replication fork with leading and lagging strands"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "transcription-and-the-transcription-unit",
+          "title": "Transcription and the Transcription Unit",
+          "objectives": [
+            "Student can define transcription and explain why only one strand is copied",
+            "Student can identify the template strand, coding strand, promoter and terminator of a transcription unit"
+          ],
+          "visualIdeas": [
+            "transcription unit with promoter, structural gene and terminator"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "transcription-unit-and-the-gene",
+          "title": "Transcription Unit and the Gene",
+          "objectives": [
+            "Student can define a cistron and distinguish monocistronic and polycistronic structural genes",
+            "Student can explain split genes with exons and introns in eukaryotes"
+          ],
+          "visualIdeas": [
+            "gene with exons and introns"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "types-of-rna-and-the-process-of-transcription",
+          "title": "Types of RNA and the Process of Transcription",
+          "objectives": [
+            "Student can name mRNA, tRNA and rRNA and their roles",
+            "Student can describe initiation, elongation and termination of transcription in bacteria",
+            "Student can describe the three RNA polymerases of eukaryotes and splicing, capping and tailing of hnRNA"
+          ],
+          "visualIdeas": [
+            "RNA polymerase moving along DNA",
+            "hnRNA processed into mature mRNA"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "genetic-code",
+          "title": "Genetic Code",
+          "objectives": [
+            "Student can describe how the triplet nature of the code was worked out",
+            "Student can state the salient features of the genetic code: triplet, 61 coding and 3 stop codons, unambiguous, degenerate, comma-less, nearly universal, AUG as start codon"
+          ],
+          "visualIdeas": [
+            "codon wheel or table of the genetic code"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mutations-and-genetic-code",
+          "title": "Mutations and Genetic Code",
+          "objectives": [
+            "Student can explain how point mutations such as in sickle-cell anaemia change one amino acid",
+            "Student can explain frame-shift insertions and deletions using a sentence of three-letter words"
+          ],
+          "visualIdeas": [
+            "sentence of three-letter words shifted by one letter"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "trna-the-adapter-molecule",
+          "title": "tRNA - the Adapter Molecule",
+          "objectives": [
+            "Student can explain the role of tRNA as an adapter that reads the code and carries amino acids",
+            "Student can describe the clover-leaf and L-shaped structure of tRNA with its anticodon"
+          ],
+          "visualIdeas": [
+            "clover-leaf tRNA with anticodon loop and amino acid acceptor end"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "translation",
+          "title": "Translation",
+          "objectives": [
+            "Student can describe charging (aminoacylation) of tRNA",
+            "Student can describe the ribosome as the cellular factory and initiation, elongation and termination of translation",
+            "Student can explain the role of untranslated regions in mRNA"
+          ],
+          "visualIdeas": [
+            "ribosome moving along mRNA with tRNAs bringing amino acids"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "regulation-of-gene-expression",
+          "title": "Regulation of Gene Expression",
+          "objectives": [
+            "Student can list the levels at which gene expression can be regulated in eukaryotes",
+            "Student can explain that in prokaryotes regulation is mainly at the initiation of transcription"
+          ],
+          "visualIdeas": [
+            "levels of regulation from DNA to protein"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-lac-operon",
+          "title": "The Lac Operon",
+          "objectives": [
+            "Student can describe the lac operon with its regulatory gene, promoter, operator and structural genes z, y and a",
+            "Student can explain negative regulation by the repressor and induction by lactose"
+          ],
+          "visualIdeas": [
+            "lac operon switched off by repressor and switched on by inducer"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "human-genome-project",
+          "title": "Human Genome Project",
+          "objectives": [
+            "Student can state the goals of the Human Genome Project",
+            "Student can describe its methodologies: Expressed Sequence Tags and sequence annotation using vectors such as BAC and YAC"
+          ],
+          "visualIdeas": [
+            "DNA fragments cloned, sequenced and assembled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "salient-features-of-human-genome",
+          "title": "Salient Features of Human Genome",
+          "objectives": [
+            "Student can list salient features of the human genome, such as about 3 x 10^9 bp and the number of genes",
+            "Student can discuss applications and future challenges of genome knowledge"
+          ],
+          "visualIdeas": [
+            "human chromosomes with gene-rich and gene-poor regions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dna-fingerprinting",
+          "title": "DNA Fingerprinting",
+          "objectives": [
+            "Student can explain DNA fingerprinting using repetitive DNA, satellite DNA and polymorphism",
+            "Student can describe the steps of DNA fingerprinting with VNTR probes developed by Alec Jeffreys",
+            "Student can list applications in forensics and paternity testing"
+          ],
+          "visualIdeas": [
+            "gel with DNA bands from a crime scene and suspects"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "evolution",
+      "title": "Evolution",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo106.pdf",
+      "topics": [
+        {
+          "id": "origin-of-life",
+          "title": "Origin of Life",
+          "objectives": [
+            "Student can describe the Big Bang theory and the formation of the early earth",
+            "Student can explain the theory of chemical evolution proposed by Oparin and Haldane",
+            "Student can describe Miller's experiment and what it showed"
+          ],
+          "visualIdeas": [
+            "Miller's experimental set-up with electrodes and gases"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "evolution-of-life-forms-a-theory",
+          "title": "Evolution of Life Forms - A Theory",
+          "objectives": [
+            "Student can state the three connotations of the theory of special creation",
+            "Student can explain Darwin's theory of evolution by natural selection based on his voyage on HMS Beagle and Wallace's similar conclusion"
+          ],
+          "visualIdeas": [
+            "map of the voyage of HMS Beagle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "evidences-for-evolution-fossils-embryology-and-comparative-anatomy",
+          "title": "Evidences for Evolution: Fossils, Embryology and Comparative Anatomy",
+          "objectives": [
+            "Student can explain how fossils in rock layers provide evidence of evolution",
+            "Student can explain embryological evidence and why von Baer disapproved of Haeckel's proposal",
+            "Student can distinguish homologous organs (divergent evolution) and analogous organs (convergent evolution) with examples"
+          ],
+          "visualIdeas": [
+            "forelimbs of whale, bat, cheetah and human",
+            "wings of a butterfly and a bird"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "evidences-for-evolution-natural-selection-in-action",
+          "title": "Evidences for Evolution: Natural Selection in Action",
+          "objectives": [
+            "Student can explain industrial melanism in moths in England as evidence of natural selection",
+            "Student can explain how artificial selection and the resistance of pests and microbes show evolution in action"
+          ],
+          "visualIdeas": [
+            "white and dark-winged moths on clean and sooty tree trunks"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-is-adaptive-radiation",
+          "title": "What is Adaptive Radiation?",
+          "objectives": [
+            "Student can explain adaptive radiation using Darwin's finches and Australian marsupials",
+            "Student can explain convergent evolution between Australian marsupials and placental mammals"
+          ],
+          "visualIdeas": [
+            "beak varieties of Darwin's finches",
+            "marsupial radiation chart"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "biological-evolution",
+          "title": "Biological Evolution",
+          "objectives": [
+            "Student can explain fitness and natural selection as the basis of Darwin's theory",
+            "Student can compare Darwin's ideas with Lamarck's use and disuse of organs"
+          ],
+          "visualIdeas": [
+            "branching tree of descent from a common ancestor"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mechanism-of-evolution",
+          "title": "Mechanism of Evolution",
+          "objectives": [
+            "Student can explain Hugo de Vries' mutation theory and saltation",
+            "Student can contrast mutations, which are random and directionless, with Darwin's small directional variations"
+          ],
+          "visualIdeas": [
+            "evening primrose with a large single-step variation"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "hardy-weinberg-principle",
+          "title": "Hardy-Weinberg Principle",
+          "objectives": [
+            "Student can state the Hardy-Weinberg principle and the equation p^2 + 2pq + q^2 = 1",
+            "Student can list the five factors that disturb genetic equilibrium: gene flow, genetic drift, mutation, recombination and natural selection",
+            "Student can distinguish stabilising, directional and disruptive selection"
+          ],
+          "visualIdeas": [
+            "three graphs of stabilising, directional and disruptive selection"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "a-brief-account-of-evolution",
+          "title": "A Brief Account of Evolution",
+          "objectives": [
+            "Student can outline the evolution of plant forms through geological periods",
+            "Student can outline the evolution of vertebrates from jawless fish to mammals"
+          ],
+          "visualIdeas": [
+            "geological time scale with plant and animal groups"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "origin-and-evolution-of-man",
+          "title": "Origin and Evolution of Man",
+          "objectives": [
+            "Student can trace human evolution from Dryopithecus and Ramapithecus to Homo sapiens",
+            "Student can compare brain capacities of Homo habilis, Homo erectus, Neanderthal man and modern humans"
+          ],
+          "visualIdeas": [
+            "skulls of adult human, baby chimpanzee and adult chimpanzee compared"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "human-health-and-disease",
+      "title": "Human Health and Disease",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo107.pdf",
+      "topics": [
+        {
+          "id": "common-diseases-in-humans-bacterial-and-viral-diseases",
+          "title": "Common Diseases in Humans: Bacterial and Viral Diseases",
+          "objectives": [
+            "Student can define health and pathogens",
+            "Student can describe the causes, symptoms and spread of typhoid (with the Widal test), pneumonia and the common cold"
+          ],
+          "visualIdeas": [
+            "droplets spreading from a sneeze"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "common-diseases-in-humans-protozoan-helminth-and-fungal-diseases",
+          "title": "Common Diseases in Humans: Protozoan, Helminth and Fungal Diseases",
+          "objectives": [
+            "Student can describe the life cycle of Plasmodium and how malaria spreads through the female Anopheles mosquito",
+            "Student can describe amoebiasis, ascariasis, filariasis (elephantiasis) and ringworm",
+            "Student can explain personal and public hygiene and vector control, including Gambusia fish, in preventing diseases"
+          ],
+          "visualIdeas": [
+            "life cycle of Plasmodium in human and mosquito"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "innate-immunity",
+          "title": "Innate Immunity",
+          "objectives": [
+            "Student can define immunity and distinguish innate from acquired immunity",
+            "Student can describe the physical, physiological, cellular and cytokine barriers of innate immunity"
+          ],
+          "visualIdeas": [
+            "layers of barriers: skin, mucus, acid, phagocytes, interferons"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "acquired-immunity",
+          "title": "Acquired Immunity",
+          "objectives": [
+            "Student can explain primary and secondary (anamnestic) immune responses and memory",
+            "Student can describe B-lymphocytes, T-lymphocytes and the H2L2 structure of an antibody",
+            "Student can distinguish humoral and cell-mediated immunity and explain graft rejection"
+          ],
+          "visualIdeas": [
+            "Y-shaped antibody with heavy and light chains"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "active-and-passive-immunity",
+          "title": "Active and Passive Immunity",
+          "objectives": [
+            "Student can distinguish active and passive immunity with examples",
+            "Student can explain why colostrum gives the newborn passive immunity (IgA)"
+          ],
+          "visualIdeas": [
+            "mother feeding colostrum with antibodies to the baby"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "vaccination-and-immunisation",
+          "title": "Vaccination and Immunisation",
+          "objectives": [
+            "Student can explain the principle of vaccination based on immune memory",
+            "Student can explain passive immunisation with preformed antibodies and recombinant vaccines such as for hepatitis B"
+          ],
+          "visualIdeas": [
+            "vaccine priming memory cells"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "allergies-and-auto-immunity",
+          "title": "Allergies and Auto Immunity",
+          "objectives": [
+            "Student can explain allergy as an exaggerated response to allergens involving IgE and histamine",
+            "Student can explain auto immunity with rheumatoid arthritis as an example"
+          ],
+          "visualIdeas": [
+            "allergen triggering mast cells to release histamine"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "immune-system-in-the-body",
+          "title": "Immune System in the Body",
+          "objectives": [
+            "Student can distinguish primary lymphoid organs (bone marrow, thymus) from secondary lymphoid organs (spleen, lymph nodes, tonsils, MALT)",
+            "Student can describe the role of each lymphoid organ"
+          ],
+          "visualIdeas": [
+            "human figure with lymphoid organs and lymph nodes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "aids",
+          "title": "AIDS",
+          "objectives": [
+            "Student can explain that AIDS is caused by HIV, a retrovirus, and how it spreads",
+            "Student can describe how HIV multiplies in macrophages and helper T-lymphocytes and weakens immunity",
+            "Student can describe diagnosis by ELISA, treatment with anti-retroviral drugs and prevention of AIDS"
+          ],
+          "visualIdeas": [
+            "replication of a retrovirus inside a host cell"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "cancer",
+          "title": "Cancer",
+          "objectives": [
+            "Student can explain loss of contact inhibition, benign and malignant tumours and metastasis",
+            "Student can describe physical, chemical and biological carcinogens and the role of oncogenes",
+            "Student can describe methods of cancer detection and treatment, including surgery, radiation, chemotherapy and immunotherapy with interferon"
+          ],
+          "visualIdeas": [
+            "normal cells stopping at contact and cancer cells piling up"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "drugs-and-alcohol-abuse",
+          "title": "Drugs and Alcohol Abuse",
+          "objectives": [
+            "Student can describe opioids, cannabinoids and coca alkaloids, their sources and effects",
+            "Student can explain the harm of tobacco smoking and chewing"
+          ],
+          "visualIdeas": [
+            "poppy plant, cannabis leaf and coca plant"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "adolescence-and-drug-alcohol-abuse-addiction-and-dependence",
+          "title": "Adolescence and Drug/Alcohol Abuse; Addiction and Dependence",
+          "objectives": [
+            "Student can explain why adolescents are vulnerable to drug and alcohol abuse",
+            "Student can explain addiction, dependence and withdrawal syndrome"
+          ],
+          "visualIdeas": [
+            "cycle of curiosity, use, dependence and withdrawal"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "effects-of-drug-alcohol-abuse-prevention-and-control",
+          "title": "Effects of Drug/Alcohol Abuse; Prevention and Control",
+          "objectives": [
+            "Student can describe the effects of drug and alcohol abuse on the individual, family and society, including misuse of steroids by sportspersons",
+            "Student can list measures for prevention: avoiding peer pressure, education, seeking help and watching for danger signs"
+          ],
+          "visualIdeas": [
+            "support network around a teenager"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "microbes-in-human-welfare",
+      "title": "Microbes in Human Welfare",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo108.pdf",
+      "topics": [
+        {
+          "id": "microbes-in-household-products",
+          "title": "Microbes in Household Products",
+          "objectives": [
+            "Student can explain the role of lactic acid bacteria in making curd and improving its nutritional value",
+            "Student can describe microbial fermentation in dough for dosa, idli and bread, in toddy and in cheese"
+          ],
+          "visualIdeas": [
+            "milk turning into curd with Lactobacillus"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fermented-beverages",
+          "title": "Fermented Beverages",
+          "objectives": [
+            "Student can explain the use of Saccharomyces cerevisiae in producing wine, beer, whisky, brandy and rum",
+            "Student can distinguish beverages made with and without distillation"
+          ],
+          "visualIdeas": [
+            "fermentation tank with yeast"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "antibiotics",
+          "title": "Antibiotics",
+          "objectives": [
+            "Student can describe Alexander Fleming's discovery of penicillin",
+            "Student can explain how antibiotics have helped treat deadly diseases"
+          ],
+          "visualIdeas": [
+            "petri dish with Penicillium mould and a clear zone"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chemicals-enzymes-and-other-bioactive-molecules",
+          "title": "Chemicals, Enzymes and other Bioactive Molecules",
+          "objectives": [
+            "Student can name microbes used to produce organic acids, alcohols and enzymes such as lipases and pectinases",
+            "Student can name bioactive molecules such as streptokinase, cyclosporin A and statins and their uses"
+          ],
+          "visualIdeas": [
+            "table of microbes and their products"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "microbes-in-sewage-treatment",
+          "title": "Microbes in Sewage Treatment",
+          "objectives": [
+            "Student can describe primary treatment of sewage as physical removal of particles",
+            "Student can describe secondary treatment with aerobic microbial flocs, BOD and activated sludge",
+            "Student can explain anaerobic digestion of sludge and the Ganga and Yamuna Action Plans"
+          ],
+          "visualIdeas": [
+            "flow chart of a sewage treatment plant from primary to secondary treatment"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "microbes-in-production-of-biogas",
+          "title": "Microbes in Production of Biogas",
+          "objectives": [
+            "Student can explain how methanogens produce biogas from cattle dung and other wastes",
+            "Student can describe the structure and working of a biogas plant"
+          ],
+          "visualIdeas": [
+            "biogas plant with digester, gas holder and outlets"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "microbes-as-biocontrol-agents",
+          "title": "Microbes as Biocontrol Agents",
+          "objectives": [
+            "Student can explain biocontrol and why it is better than chemical pesticides",
+            "Student can give examples: ladybird and dragonflies, Bacillus thuringiensis, Trichoderma and baculoviruses"
+          ],
+          "visualIdeas": [
+            "ladybird eating aphids on a plant"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "microbes-as-biofertilisers",
+          "title": "Microbes as Biofertilisers",
+          "objectives": [
+            "Student can explain biofertilisers and why they reduce dependence on chemical fertilisers",
+            "Student can give examples: Rhizobium, free-living nitrogen fixers, mycorrhiza and cyanobacteria"
+          ],
+          "visualIdeas": [
+            "root nodules of a legume with Rhizobium"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "biotechnology-principles-and-processes",
+      "title": "Biotechnology: Principles and Processes",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo109.pdf",
+      "topics": [
+        {
+          "id": "principles-of-biotechnology",
+          "title": "Principles of Biotechnology",
+          "objectives": [
+            "Student can define biotechnology and name its two core techniques, genetic engineering and bioprocess engineering",
+            "Student can explain why a piece of DNA must be linked to an origin of replication to multiply in a host",
+            "Student can describe the first recombinant DNA made by Cohen and Boyer"
+          ],
+          "visualIdeas": [
+            "plasmid cut and joined with foreign DNA"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "restriction-enzymes",
+          "title": "Restriction Enzymes",
+          "objectives": [
+            "Student can explain how restriction endonucleases recognise palindromic sequences and cut DNA",
+            "Student can explain the naming of restriction enzymes such as EcoRI and the sticky ends they produce",
+            "Student can explain the role of DNA ligase in joining DNA fragments"
+          ],
+          "visualIdeas": [
+            "EcoRI cutting a palindrome to leave sticky ends"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "separation-and-isolation-of-dna-fragments",
+          "title": "Separation and Isolation of DNA Fragments",
+          "objectives": [
+            "Student can explain how gel electrophoresis separates DNA fragments by size",
+            "Student can describe staining with ethidium bromide and elution of the separated bands"
+          ],
+          "visualIdeas": [
+            "agarose gel with DNA bands under UV light"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "cloning-vectors",
+          "title": "Cloning Vectors",
+          "objectives": [
+            "Student can describe the features of a cloning vector: origin of replication, selectable marker and cloning sites",
+            "Student can explain insertional inactivation and blue-white selection using pBR322 and other vectors",
+            "Student can describe vectors for cloning genes in plants (Ti plasmid of Agrobacterium) and animals (retroviruses)"
+          ],
+          "visualIdeas": [
+            "map of pBR322 with ori, ampR, tetR and restriction sites"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "competent-host-for-transformation-with-recombinant-dna",
+          "title": "Competent Host (For Transformation with Recombinant DNA)",
+          "objectives": [
+            "Student can explain why host cells must be made competent to take up DNA",
+            "Student can describe methods of transformation: divalent cations with heat shock, microinjection, biolistics (gene gun) and disarmed pathogen vectors"
+          ],
+          "visualIdeas": [
+            "bacterial cells taking up plasmids after heat shock"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "isolation-of-the-genetic-material-and-cutting-of-dna-at-specific-locations",
+          "title": "Isolation of the Genetic Material and Cutting of DNA at Specific Locations",
+          "objectives": [
+            "Student can describe how DNA is isolated by breaking cells with enzymes and precipitating DNA with chilled ethanol",
+            "Student can explain how restriction digestion is checked by agarose gel electrophoresis"
+          ],
+          "visualIdeas": [
+            "DNA threads spooled out of a tube with chilled ethanol"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "amplification-of-gene-of-interest-using-pcr",
+          "title": "Amplification of Gene of Interest using PCR",
+          "objectives": [
+            "Student can describe the three steps of PCR: denaturation, primer annealing and extension",
+            "Student can explain the use of a thermostable DNA polymerase and how PCR amplifies DNA many times"
+          ],
+          "visualIdeas": [
+            "PCR cycle diagram with doubling of DNA"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "insertion-of-recombinant-dna-into-the-host-cell-organism",
+          "title": "Insertion of Recombinant DNA into the Host Cell/Organism",
+          "objectives": [
+            "Student can explain how recombinant DNA is introduced into competent host cells",
+            "Student can explain how a selectable marker such as antibiotic resistance helps pick transformed cells"
+          ],
+          "visualIdeas": [
+            "bacteria growing on ampicillin plates"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "obtaining-the-foreign-gene-product",
+          "title": "Obtaining the Foreign Gene Product",
+          "objectives": [
+            "Student can explain recombinant proteins and the need for large-scale production",
+            "Student can describe stirred-tank bioreactors and the conditions they maintain"
+          ],
+          "visualIdeas": [
+            "stirred-tank bioreactor with labelled parts"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "downstream-processing",
+          "title": "Downstream Processing",
+          "objectives": [
+            "Student can describe downstream processing: separation, purification and formulation of the product",
+            "Student can explain the need for quality control and clinical trials before marketing"
+          ],
+          "visualIdeas": [
+            "flow from bioreactor to purified, packaged product"
+          ],
+          "estMinutes": 5
+        }
+      ]
+    },
+    {
+      "id": "biotechnology-and-its-applications",
+      "title": "Biotechnology and its Applications",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo110.pdf",
+      "topics": [
+        {
+          "id": "biotechnological-applications-in-agriculture",
+          "title": "Biotechnological Applications in Agriculture",
+          "objectives": [
+            "Student can compare the three options for increasing food production: agrochemicals, organic agriculture and genetically engineered crops",
+            "Student can list the benefits of genetically modified (GM) plants, including golden rice rich in vitamin A"
+          ],
+          "visualIdeas": [
+            "three paths to more food production"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bt-cotton",
+          "title": "Bt Cotton",
+          "objectives": [
+            "Student can explain how Bt toxin from Bacillus thuringiensis kills insects but not the bacterium itself",
+            "Student can explain how cry genes are introduced into crops such as cotton to make them pest resistant"
+          ],
+          "visualIdeas": [
+            "Bt cotton boll versus a boll damaged by bollworm"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pest-resistant-plants",
+          "title": "Pest Resistant Plants",
+          "objectives": [
+            "Student can explain RNA interference (RNAi) as a method of cellular defence",
+            "Student can describe how tobacco plants were made resistant to the nematode Meloidogyne incognita using RNAi"
+          ],
+          "visualIdeas": [
+            "dsRNA silencing nematode mRNA inside a root"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "genetically-engineered-insulin",
+          "title": "Genetically Engineered Insulin",
+          "objectives": [
+            "Student can explain the structure of insulin with A and B chains and the C peptide in proinsulin",
+            "Student can describe how Eli Lilly produced human insulin using rDNA technology in E. coli"
+          ],
+          "visualIdeas": [
+            "two chains of insulin joined by disulphide bridges"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "gene-therapy",
+          "title": "Gene Therapy",
+          "objectives": [
+            "Student can define gene therapy",
+            "Student can describe the first gene therapy for adenosine deaminase (ADA) deficiency"
+          ],
+          "visualIdeas": [
+            "lymphocytes receiving a functional ADA gene and returned to the patient"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "molecular-diagnosis",
+          "title": "Molecular Diagnosis",
+          "objectives": [
+            "Student can explain why early diagnosis needs molecular techniques",
+            "Student can describe the use of PCR, recombinant DNA probes and ELISA in diagnosis"
+          ],
+          "visualIdeas": [
+            "ELISA plate with coloured wells"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "transgenic-animals",
+          "title": "Transgenic Animals",
+          "objectives": [
+            "Student can define transgenic animals and explain why they are produced",
+            "Student can give examples of their uses, such as the transgenic cow Rosie producing human protein-enriched milk and testing vaccine and chemical safety"
+          ],
+          "visualIdeas": [
+            "transgenic cow Rosie"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ethical-issues",
+          "title": "Ethical Issues",
+          "objectives": [
+            "Student can explain the role of the Genetic Engineering Appraisal Committee (GEAC)",
+            "Student can discuss patents on biological resources and biopiracy, with the example of basmati rice"
+          ],
+          "visualIdeas": [
+            "map of India with basmati growing regions"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "organisms-and-populations",
+      "title": "Organisms and Populations",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo111.pdf",
+      "topics": [
+        {
+          "id": "population-attributes",
+          "title": "Population Attributes",
+          "objectives": [
+            "Student can define a population and its attributes: birth rate, death rate and sex ratio",
+            "Student can interpret age pyramids for expanding, stable and declining populations",
+            "Student can explain different ways of measuring population density"
+          ],
+          "visualIdeas": [
+            "three age pyramids with pre-reproductive, reproductive and post-reproductive bands"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "population-growth",
+          "title": "Population Growth",
+          "objectives": [
+            "Student can explain how natality, mortality, immigration and emigration change population density",
+            "Student can write the equation Nt+1 = Nt + [(B + I) - (D + E)]"
+          ],
+          "visualIdeas": [
+            "population box with arrows in and out for B, I, D and E"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "growth-models-and-life-history-variation",
+          "title": "Growth Models and Life History Variation",
+          "objectives": [
+            "Student can describe exponential growth with dN/dt = rN and the J-shaped curve",
+            "Student can describe logistic growth with carrying capacity K and the S-shaped curve",
+            "Student can explain how populations evolve life history traits to maximise reproductive fitness"
+          ],
+          "visualIdeas": [
+            "J-shaped and S-shaped growth curves with K marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "population-interactions-predation",
+          "title": "Population Interactions: Predation",
+          "objectives": [
+            "Student can list the types of population interactions and their effects on each species",
+            "Student can explain the roles of predators in transferring energy, controlling prey and maintaining species diversity",
+            "Student can describe defences of prey against predators"
+          ],
+          "visualIdeas": [
+            "table of interactions with + and - signs",
+            "monarch butterfly avoided by a bird"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "population-interactions-competition",
+          "title": "Population Interactions: Competition",
+          "objectives": [
+            "Student can explain interspecific competition and Gause's competitive exclusion principle",
+            "Student can explain resource partitioning as a way species avoid competition"
+          ],
+          "visualIdeas": [
+            "warblers feeding at different parts of the same tree"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "population-interactions-parasitism-commensalism-and-mutualism",
+          "title": "Population Interactions: Parasitism, Commensalism and Mutualism",
+          "objectives": [
+            "Student can describe ectoparasites, endoparasites and brood parasitism, as in the cuckoo",
+            "Student can describe commensalism with examples such as an orchid on a mango branch and barnacles on whales",
+            "Student can describe mutualism in lichens, mycorrhizae and the fig and wasp relationship"
+          ],
+          "visualIdeas": [
+            "fig flower pollinated by a wasp"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "title": "Ecosystem",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo112.pdf",
+      "topics": [
+        {
+          "id": "ecosystem-structure-and-function",
+          "title": "Ecosystem - Structure and Function",
+          "objectives": [
+            "Student can describe an ecosystem as a functional unit with biotic and abiotic components, using a pond as an example",
+            "Student can explain vertical stratification and list the functions of an ecosystem: productivity, decomposition, energy flow and nutrient cycling"
+          ],
+          "visualIdeas": [
+            "pond ecosystem with producers, consumers and decomposers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "productivity",
+          "title": "Productivity",
+          "objectives": [
+            "Student can define primary production and productivity",
+            "Student can distinguish gross primary productivity, net primary productivity and secondary productivity"
+          ],
+          "visualIdeas": [
+            "GPP minus respiration equals NPP bar"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "decomposition",
+          "title": "Decomposition",
+          "objectives": [
+            "Student can describe the steps of decomposition: fragmentation, leaching, catabolism, humification and mineralisation",
+            "Student can explain how chemical composition of detritus and climatic factors affect the rate of decomposition"
+          ],
+          "visualIdeas": [
+            "leaf litter broken down in steps into humus and minerals"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "energy-flow",
+          "title": "Energy Flow",
+          "objectives": [
+            "Student can explain that only a small part of incident solar radiation (photosynthetically active radiation) is captured by plants",
+            "Student can describe grazing and detritus food chains, food webs and trophic levels",
+            "Student can explain the 10 per cent law of energy transfer and standing crop"
+          ],
+          "visualIdeas": [
+            "energy flow through trophic levels with decreasing arrows"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "ecological-pyramids",
+          "title": "Ecological Pyramids",
+          "objectives": [
+            "Student can construct pyramids of number, biomass and energy",
+            "Student can explain why the pyramid of energy is always upright while some pyramids of number and biomass are inverted",
+            "Student can state the limitations of ecological pyramids"
+          ],
+          "visualIdeas": [
+            "upright energy pyramid beside an inverted pyramid of biomass in the sea"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "biodiversity-and-conservation",
+      "title": "Biodiversity and Conservation",
+      "book": "Biology",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lebo113.pdf",
+      "topics": [
+        {
+          "id": "biodiversity",
+          "title": "Biodiversity",
+          "objectives": [
+            "Student can define biodiversity as the term popularised by Edward Wilson for diversity at all levels of biological organisation",
+            "Student can describe genetic, species and ecological diversity with examples"
+          ],
+          "visualIdeas": [
+            "three levels of biodiversity illustrated"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-many-species-are-there-on-earth-and-how-many-in-india",
+          "title": "How Many Species are there on Earth and How Many in India?",
+          "objectives": [
+            "Student can estimate the number of species recorded and the estimated global total",
+            "Student can state India's share of global species diversity as a megadiversity country"
+          ],
+          "visualIdeas": [
+            "pie chart of species by taxonomic group"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "patterns-of-biodiversity",
+          "title": "Patterns of Biodiversity",
+          "objectives": [
+            "Student can explain the latitudinal gradient in diversity and the reasons tropics are richer in species",
+            "Student can describe the species-area relationship of Humboldt and the meaning of its slope"
+          ],
+          "visualIdeas": [
+            "species richness against area on log-log axes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-importance-of-species-diversity-to-the-ecosystem",
+          "title": "The Importance of Species Diversity to the Ecosystem",
+          "objectives": [
+            "Student can explain how communities with more species tend to be more stable and productive",
+            "Student can explain the rivet popper hypothesis"
+          ],
+          "visualIdeas": [
+            "aeroplane losing rivets as an analogy for species loss"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "loss-of-biodiversity",
+          "title": "Loss of Biodiversity",
+          "objectives": [
+            "Student can describe the IUCN Red List and recent extinctions",
+            "Student can explain the effects of biodiversity loss",
+            "Student can explain the four major causes (\"the evil quartet\"): habitat loss, over-exploitation, alien species invasions and co-extinctions"
+          ],
+          "visualIdeas": [
+            "four panels for the evil quartet"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "biodiversity-conservation-why-should-we-conserve-biodiversity",
+          "title": "Biodiversity Conservation: Why Should We Conserve Biodiversity?",
+          "objectives": [
+            "Student can explain the narrowly utilitarian, broadly utilitarian and ethical reasons for conserving biodiversity",
+            "Student can give examples of ecosystem services, such as the oxygen produced by the Amazon forest"
+          ],
+          "visualIdeas": [
+            "Amazon forest producing oxygen, medicines and food"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-do-we-conserve-biodiversity",
+          "title": "How do we Conserve Biodiversity?",
+          "objectives": [
+            "Student can distinguish in situ conservation (hotspots, protected areas, sacred groves) from ex situ conservation (zoos, botanical gardens, seed banks, cryopreservation)",
+            "Student can describe international efforts such as the Earth Summit at Rio de Janeiro and the World Summit on Sustainable Development"
+          ],
+          "visualIdeas": [
+            "map of biodiversity hotspots including those in India"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

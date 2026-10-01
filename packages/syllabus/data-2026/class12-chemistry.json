@@ -1,0 +1,1822 @@
+{
+  "id": "class12-chemistry",
+  "klass": 12,
+  "subject": "Chemistry",
+  "source": {
+    "books": [
+      {
+        "title": "Chemistry Part I",
+        "code": "lech1",
+        "edition": "Reprint 2026-27 (First Edition January 2007; Revised Edition October 2022; reprinted February 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/lech1ps.pdf"
+      },
+      {
+        "title": "Chemistry Part II",
+        "code": "lech2",
+        "edition": "Reprint 2026-27 (First Edition April 2007; Revised Edition November 2022; reprinted February 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/lech2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "chapter (unit) titles from each book's Contents page; topics from each chapter PDF's numbered section and subsection headings (Summary and Exercises are not topics; small neighbouring subsections are grouped under one topic; long 'Chemical Reactions' sections are split by the reaction classes the section itself names, keeping the heading words in the topic title)"
+  },
+  "chapters": [
+    {
+      "id": "solutions",
+      "title": "Solutions",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech101.pdf",
+      "topics": [
+        {
+          "id": "types-of-solutions",
+          "title": "Types of Solutions",
+          "objectives": [
+            "Student can define a solution as a homogeneous mixture and identify solute and solvent",
+            "Student can classify binary solutions by the physical states of solute and solvent with examples"
+          ],
+          "visualIdeas": [
+            "3 x 3 grid of solid, liquid and gas solutes in solid, liquid and gas solvents"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "expressing-concentration-of-solutions-percentages-and-parts-per-million",
+          "title": "Expressing Concentration of Solutions: Percentages and Parts per Million",
+          "objectives": [
+            "Student can express concentration as mass percentage, volume percentage and mass by volume percentage",
+            "Student can express trace concentrations in parts per million and calculate them"
+          ],
+          "visualIdeas": [
+            "beaker with solute and solvent masses labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "expressing-concentration-of-solutions-mole-fraction-molarity-and-molality",
+          "title": "Expressing Concentration of Solutions: Mole Fraction, Molarity and Molality",
+          "objectives": [
+            "Student can calculate mole fraction and show that the mole fractions in a solution add up to one",
+            "Student can calculate molarity and molality of a solution",
+            "Student can explain why mass %, ppm, mole fraction and molality do not depend on temperature while molarity does"
+          ],
+          "visualIdeas": [
+            "worked example of ethylene glycol in water converted between units"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "solubility-of-a-solid-in-a-liquid",
+          "title": "Solubility of a Solid in a Liquid",
+          "objectives": [
+            "Student can define solubility and explain \"like dissolves like\"",
+            "Student can explain dissolution and crystallisation reaching dynamic equilibrium in a saturated solution",
+            "Student can describe how temperature and pressure affect the solubility of a solid in a liquid"
+          ],
+          "visualIdeas": [
+            "saturated solution with dissolution and crystallisation arrows in balance"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "solubility-of-a-gas-in-a-liquid",
+          "title": "Solubility of a Gas in a Liquid",
+          "objectives": [
+            "Student can state Henry's law, p = KH x, and relate the Henry's law constant to solubility",
+            "Student can apply Henry's law to soft drinks, scuba diving (bends) and anoxia at high altitude",
+            "Student can explain why the solubility of gases in liquids decreases with rise in temperature"
+          ],
+          "visualIdeas": [
+            "gas above a liquid compressed to increase dissolved molecules",
+            "scuba diver with nitrogen bubbles in blood"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "vapour-pressure-of-liquid-liquid-solutions",
+          "title": "Vapour Pressure of Liquid-Liquid Solutions",
+          "objectives": [
+            "Student can state Raoult's law for a solution of two volatile liquids",
+            "Student can use Dalton's law to find the total vapour pressure and the composition of the vapour phase",
+            "Student can explain Raoult's law as a special case of Henry's law"
+          ],
+          "visualIdeas": [
+            "plot of p1, p2 and total vapour pressure against mole fraction"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "vapour-pressure-of-solutions-of-solids-in-liquids",
+          "title": "Vapour Pressure of Solutions of Solids in Liquids",
+          "objectives": [
+            "Student can explain why adding a non-volatile solute lowers the vapour pressure of the solvent",
+            "Student can apply Raoult's law in its general form to a solution of a non-volatile solute"
+          ],
+          "visualIdeas": [
+            "surface of a solvent partly covered by solute particles, fewer molecules escaping"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ideal-and-non-ideal-solutions",
+          "title": "Ideal and Non-ideal Solutions",
+          "objectives": [
+            "Student can define ideal solutions with Delta_mix H = 0 and Delta_mix V = 0",
+            "Student can explain positive and negative deviations from Raoult's law in terms of A-B interactions, with examples",
+            "Student can explain minimum and maximum boiling azeotropes such as ethanol-water and nitric acid-water"
+          ],
+          "visualIdeas": [
+            "vapour pressure-composition curves bulging above and dipping below the ideal line"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "relative-lowering-of-vapour-pressure",
+          "title": "Relative Lowering of Vapour Pressure",
+          "objectives": [
+            "Student can define colligative properties as those depending on the number of solute particles",
+            "Student can derive the relative lowering of vapour pressure equal to the mole fraction of the solute",
+            "Student can calculate the molar mass of a solute from vapour pressure data"
+          ],
+          "visualIdeas": [
+            "vapour pressure of pure solvent vs solution"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "elevation-of-boiling-point",
+          "title": "Elevation of Boiling Point",
+          "objectives": [
+            "Student can explain why a solution boils at a higher temperature than the pure solvent",
+            "Student can use Delta Tb = Kb m and define the ebullioscopic constant",
+            "Student can calculate molar mass of a solute from boiling point elevation"
+          ],
+          "visualIdeas": [
+            "vapour pressure curves of solvent and solution crossing 1 atm at different temperatures"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "depression-of-freezing-point",
+          "title": "Depression of Freezing Point",
+          "objectives": [
+            "Student can explain why a solution freezes at a lower temperature than the pure solvent",
+            "Student can use Delta Tf = Kf m and define the cryoscopic constant",
+            "Student can calculate the freezing point of a solution such as ethylene glycol in water"
+          ],
+          "visualIdeas": [
+            "vapour pressure curves showing the lowered freezing point"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "osmosis-and-osmotic-pressure",
+          "title": "Osmosis and Osmotic Pressure",
+          "objectives": [
+            "Student can explain osmosis through a semipermeable membrane with everyday examples",
+            "Student can use pi = CRT to calculate osmotic pressure and molar mass, especially of macromolecules",
+            "Student can define isotonic, hypertonic and hypotonic solutions"
+          ],
+          "visualIdeas": [
+            "thistle funnel with solution rising due to osmosis",
+            "red blood cell in isotonic, hypertonic and hypotonic saline"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reverse-osmosis-and-water-purification",
+          "title": "Reverse Osmosis and Water Purification",
+          "objectives": [
+            "Student can explain reverse osmosis as applying pressure greater than the osmotic pressure",
+            "Student can describe the use of reverse osmosis in desalination of sea water"
+          ],
+          "visualIdeas": [
+            "piston pushing water out of sea water through a membrane"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "abnormal-molar-masses",
+          "title": "Abnormal Molar Masses",
+          "objectives": [
+            "Student can explain why association or dissociation of a solute gives abnormal molar masses",
+            "Student can define the van't Hoff factor i and include it in colligative property equations",
+            "Student can calculate the degree of association or dissociation from colligative data"
+          ],
+          "visualIdeas": [
+            "KCl splitting into ions and acetic acid pairing into dimers"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "electrochemistry",
+      "title": "Electrochemistry",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech102.pdf",
+      "topics": [
+        {
+          "id": "electrochemical-cells",
+          "title": "Electrochemical Cells",
+          "objectives": [
+            "Student can describe the Daniell cell and the redox reaction it uses",
+            "Student can explain how an external opposing potential stops or reverses the cell reaction",
+            "Student can distinguish a galvanic cell from an electrolytic cell"
+          ],
+          "visualIdeas": [
+            "Daniell cell with zinc and copper electrodes and a salt bridge"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "galvanic-cells",
+          "title": "Galvanic Cells",
+          "objectives": [
+            "Student can identify the anode, cathode and half-cell reactions of a galvanic cell",
+            "Student can write the cell representation and the cell potential as E_cell = E_right - E_left"
+          ],
+          "visualIdeas": [
+            "two half-cells with electron flow in the external wire"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "measurement-of-electrode-potential",
+          "title": "Measurement of Electrode Potential",
+          "objectives": [
+            "Student can describe the standard hydrogen electrode and its assigned potential of zero",
+            "Student can measure the standard electrode potential of a half-cell against the SHE",
+            "Student can use the table of standard electrode potentials to compare oxidising and reducing strengths"
+          ],
+          "visualIdeas": [
+            "standard hydrogen electrode with platinum foil and H2 gas bubbling",
+            "electrochemical series ladder"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "nernst-equation",
+          "title": "Nernst Equation",
+          "objectives": [
+            "Student can write the Nernst equation for an electrode and for a cell",
+            "Student can calculate the cell emf at non-standard concentrations, as for the Daniell cell"
+          ],
+          "visualIdeas": [
+            "graph of E against log of concentration ratio"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "equilibrium-constant-from-nernst-equation",
+          "title": "Equilibrium Constant from Nernst Equation",
+          "objectives": [
+            "Student can derive E0_cell = (2.303 RT / nF) log Kc at equilibrium",
+            "Student can calculate the equilibrium constant of a cell reaction from E0_cell"
+          ],
+          "visualIdeas": [
+            "cell voltage falling to zero as the reaction reaches equilibrium"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electrochemical-cell-and-gibbs-energy-of-the-reaction",
+          "title": "Electrochemical Cell and Gibbs Energy of the Reaction",
+          "objectives": [
+            "Student can relate electrical work to Gibbs energy, Delta_r G = -nFE_cell",
+            "Student can calculate standard Gibbs energy from the standard cell potential"
+          ],
+          "visualIdeas": [
+            "energy bar showing Gibbs energy converted to electrical work"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conductance-of-electrolytic-solutions",
+          "title": "Conductance of Electrolytic Solutions",
+          "objectives": [
+            "Student can define resistance, resistivity, conductance and conductivity with their units",
+            "Student can distinguish electronic conductance from electrolytic conductance and list the factors affecting each"
+          ],
+          "visualIdeas": [
+            "conductor of length l and area A with resistivity labelled"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "measurement-of-the-conductivity-of-ionic-solutions",
+          "title": "Measurement of the Conductivity of Ionic Solutions",
+          "objectives": [
+            "Student can explain why ac and a conductivity cell are used to measure the resistance of an ionic solution",
+            "Student can define cell constant and use it to calculate conductivity",
+            "Student can define molar conductivity and calculate it from conductivity and concentration"
+          ],
+          "visualIdeas": [
+            "conductivity cell in a Wheatstone bridge with an ac source"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "variation-of-conductivity-and-molar-conductivity-with-concentration",
+          "title": "Variation of Conductivity and Molar Conductivity with Concentration",
+          "objectives": [
+            "Student can explain why conductivity decreases and molar conductivity increases on dilution",
+            "Student can use Lambda_m = Lambda0_m - A c^(1/2) for strong electrolytes and find limiting molar conductivity",
+            "Student can state Kohlrausch's law of independent migration of ions and use it to find Lambda0_m and the degree of dissociation of a weak electrolyte"
+          ],
+          "visualIdeas": [
+            "Lambda_m against square root of c for KCl and acetic acid"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "electrolytic-cells-and-electrolysis",
+          "title": "Electrolytic Cells and Electrolysis",
+          "objectives": [
+            "Student can describe electrolysis in an electrolytic cell with an external voltage source",
+            "Student can state Faraday's first and second laws of electrolysis",
+            "Student can calculate the mass deposited using the Faraday constant, 96487 C per mole of electrons"
+          ],
+          "visualIdeas": [
+            "electrolytic cell depositing copper on the cathode"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "products-of-electrolysis",
+          "title": "Products of Electrolysis",
+          "objectives": [
+            "Student can explain how the products depend on the electrolyte, the electrodes and the electrode potentials",
+            "Student can predict the products of electrolysis of molten and aqueous sodium chloride and of dilute and concentrated sulphuric acid"
+          ],
+          "visualIdeas": [
+            "competing half-reactions at each electrode during electrolysis of brine"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "primary-batteries",
+          "title": "Primary Batteries",
+          "objectives": [
+            "Student can distinguish primary from secondary batteries",
+            "Student can describe the dry (Leclanche) cell and the mercury cell with their electrode reactions"
+          ],
+          "visualIdeas": [
+            "cross-section of a dry cell",
+            "mercury button cell"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "secondary-batteries",
+          "title": "Secondary Batteries",
+          "objectives": [
+            "Student can describe the lead storage battery with its discharge and recharge reactions",
+            "Student can describe the nickel-cadmium cell"
+          ],
+          "visualIdeas": [
+            "lead storage battery with Pb and PbO2 plates in sulphuric acid"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fuel-cells",
+          "title": "Fuel Cells",
+          "objectives": [
+            "Student can explain why fuel cells convert chemical energy to electricity more efficiently than thermal plants",
+            "Student can describe the hydrogen-oxygen fuel cell used in the Apollo space programme and write its electrode reactions"
+          ],
+          "visualIdeas": [
+            "H2-O2 fuel cell with porous carbon electrodes"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "corrosion",
+          "title": "Corrosion",
+          "objectives": [
+            "Student can explain corrosion, such as rusting of iron, as an electrochemical process",
+            "Student can write the anode and cathode reactions in rusting",
+            "Student can describe ways to prevent corrosion: covering the surface with paint, chemicals such as bisphenol or other metals such as Sn and Zn, and providing a sacrificial electrode of a metal such as Mg or Zn"
+          ],
+          "visualIdeas": [
+            "water droplet on iron with anode and cathode spots forming rust"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "chemical-kinetics",
+      "title": "Chemical Kinetics",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech103.pdf",
+      "topics": [
+        {
+          "id": "rate-of-a-chemical-reaction",
+          "title": "Rate of a Chemical Reaction",
+          "objectives": [
+            "Student can define the rate of reaction as the change in concentration of a reactant or product per unit time",
+            "Student can distinguish average rate from instantaneous rate and find the instantaneous rate from the slope of a concentration-time graph",
+            "Student can write rate expressions for a reaction using its stoichiometric coefficients and state the units of rate"
+          ],
+          "visualIdeas": [
+            "concentration-time curve with a tangent drawn at time t"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "rate-expression-and-rate-constant",
+          "title": "Rate Expression and Rate Constant",
+          "objectives": [
+            "Student can explain that the rate depends on the concentration of reactants",
+            "Student can write a rate law with experimentally determined exponents and define the rate constant"
+          ],
+          "visualIdeas": [
+            "table of initial concentrations and initial rates"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "order-of-a-reaction",
+          "title": "Order of a Reaction",
+          "objectives": [
+            "Student can define the order of a reaction as the sum of exponents in the rate law",
+            "Student can identify zero, first, second and fractional order reactions",
+            "Student can deduce the units of the rate constant from the order"
+          ],
+          "visualIdeas": [
+            "table linking order to units of k"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "molecularity-of-a-reaction",
+          "title": "Molecularity of a Reaction",
+          "objectives": [
+            "Student can define molecularity of an elementary reaction",
+            "Student can distinguish order from molecularity",
+            "Student can explain that a complex reaction proceeds in steps and the slowest step is rate determining"
+          ],
+          "visualIdeas": [
+            "two-step reaction with the slow step highlighted"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "zero-order-reactions",
+          "title": "Zero Order Reactions",
+          "objectives": [
+            "Student can derive the integrated rate equation [R] = [R]0 - kt for a zero order reaction",
+            "Student can give examples such as decomposition of gaseous ammonia on a hot platinum surface"
+          ],
+          "visualIdeas": [
+            "straight line [R] against t with slope -k"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "first-order-reactions",
+          "title": "First Order Reactions",
+          "objectives": [
+            "Student can derive the integrated rate equation k = (2.303/t) log([R]0/[R]) for a first order reaction",
+            "Student can use plots of ln[R] or log([R]0/[R]) against time to identify a first order reaction",
+            "Student can apply the equation to gas-phase reactions using pressures"
+          ],
+          "visualIdeas": [
+            "ln[R] against t straight line with slope -k"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "half-life-of-a-reaction",
+          "title": "Half-Life of a Reaction",
+          "objectives": [
+            "Student can define half-life and derive it for zero and first order reactions",
+            "Student can show that the half-life of a first order reaction is independent of initial concentration",
+            "Student can explain pseudo first order reactions such as the inversion of cane sugar"
+          ],
+          "visualIdeas": [
+            "concentration halving at equal time intervals for a first order reaction"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "temperature-dependence-of-the-rate-of-a-reaction",
+          "title": "Temperature Dependence of the Rate of a Reaction",
+          "objectives": [
+            "Student can state the Arrhenius equation k = A e^(-Ea/RT) and explain each term",
+            "Student can explain activation energy with an energy profile and an activated complex",
+            "Student can use the Maxwell-Boltzmann distribution to explain why a 10 degree rise roughly doubles the rate",
+            "Student can calculate activation energy from rate constants at two temperatures"
+          ],
+          "visualIdeas": [
+            "energy profile with activation energy hump",
+            "Maxwell-Boltzmann curves at T and T + 10"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "effect-of-catalyst",
+          "title": "Effect of Catalyst",
+          "objectives": [
+            "Student can define a catalyst and explain how it provides a path of lower activation energy",
+            "Student can explain that a catalyst does not change Delta G or the equilibrium constant"
+          ],
+          "visualIdeas": [
+            "two energy profiles, with and without catalyst"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "collision-theory-of-chemical-reactions",
+          "title": "Collision Theory of Chemical Reactions",
+          "objectives": [
+            "Student can explain collision frequency and effective collisions",
+            "Student can explain the roles of threshold energy and proper orientation, and the probability (steric) factor P"
+          ],
+          "visualIdeas": [
+            "two molecules colliding in correct and wrong orientations"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-d-and-f-block-elements",
+      "title": "The d- and f-Block Elements",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech104.pdf",
+      "topics": [
+        {
+          "id": "electronic-configurations-of-the-d-block-elements",
+          "title": "Electronic Configurations of the d-Block Elements",
+          "objectives": [
+            "Student can locate the d-block and the four transition series in the periodic table",
+            "Student can write the general configuration (n-1)d^(1-10) ns^(1-2) and explain exceptions such as Cr and Cu",
+            "Student can explain why Zn, Cd and Hg are not regarded as transition elements"
+          ],
+          "visualIdeas": [
+            "periodic table with the d-block highlighted",
+            "orbital boxes for Cr and Cu"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "physical-properties",
+          "title": "Physical Properties",
+          "objectives": [
+            "Student can describe typical metallic properties of transition elements",
+            "Student can explain their high melting points and enthalpies of atomisation in terms of unpaired d electrons"
+          ],
+          "visualIdeas": [
+            "graph of enthalpy of atomisation across the 3d, 4d and 5d series"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "variation-in-atomic-and-ionic-sizes-of-transition-metals",
+          "title": "Variation in Atomic and Ionic Sizes of Transition Metals",
+          "objectives": [
+            "Student can explain the decrease in radius across a series",
+            "Student can explain lanthanoid contraction and why 4d and 5d elements of a group have similar radii",
+            "Student can relate size changes to the increase in density from Ti to Cu"
+          ],
+          "visualIdeas": [
+            "graph of atomic radii of the three transition series"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ionisation-enthalpies",
+          "title": "Ionisation Enthalpies",
+          "objectives": [
+            "Student can explain the gradual increase in ionisation enthalpy across a transition series",
+            "Student can account for irregularities using exchange energy and the stability of d5 and d10 configurations"
+          ],
+          "visualIdeas": [
+            "graph of first, second and third ionisation enthalpies across the 3d series"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "oxidation-states",
+          "title": "Oxidation States",
+          "objectives": [
+            "Student can explain why transition elements show variable oxidation states differing by one",
+            "Student can identify the elements of the 3d series with the most oxidation states and the common +2 state"
+          ],
+          "visualIdeas": [
+            "table of oxidation states of 3d elements with the most common ones circled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "trends-in-the-m2-m-and-m3-m2-standard-electrode-potentials",
+          "title": "Trends in the M2+/M and M3+/M2+ Standard Electrode Potentials",
+          "objectives": [
+            "Student can explain the irregular trend of E0(M2+/M) using enthalpies of atomisation, ionisation and hydration",
+            "Student can explain the unique positive E0 of copper and the values for Mn, Ni and Zn",
+            "Student can relate E0(M3+/M2+) values to the stability of d5 Mn2+ and d10 Zn2+ and of Sc3+"
+          ],
+          "visualIdeas": [
+            "bar chart of observed and calculated E0 values"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "trends-in-stability-of-higher-oxidation-states",
+          "title": "Trends in Stability of Higher Oxidation States",
+          "objectives": [
+            "Student can explain why the highest oxidation states appear in fluorides and oxides",
+            "Student can relate stable halides and oxides of the 3d metals to their oxidation states",
+            "Student can explain why many copper(I) compounds disproportionate in aqueous solution"
+          ],
+          "visualIdeas": [
+            "table of stable halides of 3d metals"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "chemical-reactivity-and-e0-values",
+          "title": "Chemical Reactivity and E0 Values",
+          "objectives": [
+            "Student can relate the reactivity of first-series transition metals with mineral acids to their E0(M2+/M) values",
+            "Student can use E0(M3+/M2+) values to identify Mn3+ and Co3+ as strong oxidising agents and Ti2+, V2+ and Cr2+ as strong reducing agents"
+          ],
+          "visualIdeas": [
+            "metals ranked by E0 with H2 released from acids"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "magnetic-properties",
+          "title": "Magnetic Properties",
+          "objectives": [
+            "Student can distinguish diamagnetic and paramagnetic substances",
+            "Student can calculate the spin-only magnetic moment mu = sqrt(n(n+2)) BM from the number of unpaired electrons"
+          ],
+          "visualIdeas": [
+            "unpaired electron arrows for Mn2+, Fe3+ and Cu2+"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "formation-of-coloured-ions",
+          "title": "Formation of Coloured Ions",
+          "objectives": [
+            "Student can explain the colour of transition metal ions by d-d transitions absorbing visible light",
+            "Student can relate the colour seen to the complementary colour of the light absorbed"
+          ],
+          "visualIdeas": [
+            "test tubes of coloured aqueous ions such as Cu2+ and Ni2+"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "formation-of-complex-compounds-and-catalytic-properties",
+          "title": "Formation of Complex Compounds and Catalytic Properties",
+          "objectives": [
+            "Student can explain why transition metals form complexes, giving examples",
+            "Student can explain catalytic activity of transition metals and their compounds by their variable oxidation states, as in Fe(III) catalysing iodide-persulphate reaction"
+          ],
+          "visualIdeas": [
+            "iron catalyst cycling between Fe3+ and Fe2+"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "formation-of-interstitial-compounds-and-alloy-formation",
+          "title": "Formation of Interstitial Compounds and Alloy Formation",
+          "objectives": [
+            "Student can describe interstitial compounds formed when small atoms like H, C or N are trapped in metal lattices, and list their properties",
+            "Student can explain why transition metals readily form alloys and give examples"
+          ],
+          "visualIdeas": [
+            "small atoms sitting in the holes of a metal lattice"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "oxides-and-oxoanions-of-metals",
+          "title": "Oxides and Oxoanions of Metals",
+          "objectives": [
+            "Student can describe how the oxides of transition metals change from ionic and basic to covalent and acidic as oxidation state rises",
+            "Student can give examples such as Mn2O7, CrO3 and amphoteric V2O5"
+          ],
+          "visualIdeas": [
+            "oxides of a metal arranged by oxidation state from basic to acidic"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "potassium-dichromate",
+          "title": "Potassium Dichromate",
+          "objectives": [
+            "Student can describe the preparation of potassium dichromate from chromite ore",
+            "Student can explain the chromate-dichromate interconversion with pH and draw both ions",
+            "Student can write equations for dichromate acting as an oxidising agent in acid solution"
+          ],
+          "visualIdeas": [
+            "yellow chromate and orange dichromate solutions changing with pH"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "potassium-permanganate",
+          "title": "Potassium Permanganate",
+          "objectives": [
+            "Student can describe the preparation of potassium permanganate from MnO2",
+            "Student can describe the structure and properties of the permanganate ion",
+            "Student can write equations for permanganate acting as an oxidising agent in acidic and neutral or alkaline solutions"
+          ],
+          "visualIdeas": [
+            "purple permanganate solution decolourising in a titration"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-lanthanoids-electronic-configurations-and-atomic-and-ionic-sizes",
+          "title": "The Lanthanoids: Electronic Configurations and Atomic and Ionic Sizes",
+          "objectives": [
+            "Student can write the electronic configurations of lanthanoids with variable 4f occupancy",
+            "Student can explain lanthanoid contraction and its consequences"
+          ],
+          "visualIdeas": [
+            "graph of Ln3+ ionic radii decreasing from La to Lu"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-lanthanoids-oxidation-states-and-general-characteristics",
+          "title": "The Lanthanoids: Oxidation States and General Characteristics",
+          "objectives": [
+            "Student can explain why +3 is the main oxidation state and when +2 and +4 states occur",
+            "Student can describe general properties of lanthanoids, including their reactions and the colour of Ln3+ ions",
+            "Student can state uses of lanthanoids such as the alloy mischmetall"
+          ],
+          "visualIdeas": [
+            "flow chart of lanthanoid reactions with water, acids, halogens and oxygen"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-actinoids",
+          "title": "The Actinoids",
+          "objectives": [
+            "Student can write the electronic configuration of actinoids with 5f and 6d occupancy and note that they are radioactive",
+            "Student can explain actinoid contraction and why actinoids show a wider range of oxidation states",
+            "Student can compare the general characteristics of actinoids with those of lanthanoids"
+          ],
+          "visualIdeas": [
+            "two rows of the f-block with lanthanoids and actinoids compared"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "some-applications-of-d-and-f-block-elements",
+          "title": "Some Applications of d- and f-Block Elements",
+          "objectives": [
+            "Student can list uses of transition metals and their compounds, such as iron and steels, TiO in pigments, MnO2 in dry cells and coinage metals",
+            "Student can name industrial catalysts such as V2O5 for sulphuric acid, Ziegler catalysts, iron in the Haber process and PdCl2 in the Wacker process"
+          ],
+          "visualIdeas": [
+            "steel girders, a catalyst bed and a lighter flint"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "coordination-compounds",
+      "title": "Coordination Compounds",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech105.pdf",
+      "topics": [
+        {
+          "id": "werners-theory-of-coordination-compounds",
+          "title": "Werner's Theory of Coordination Compounds",
+          "objectives": [
+            "Student can state the postulates of Werner's theory: primary and secondary valences",
+            "Student can explain how precipitation with AgNO3 shows the number of ionisable chlorides in cobalt ammine chlorides",
+            "Student can distinguish double salts from coordination compounds"
+          ],
+          "visualIdeas": [
+            "CoCl3.6NH3, CoCl3.5NH3 and CoCl3.4NH3 with ionisable chlorides shown"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "definitions-of-some-important-terms-pertaining-to-coordination-compounds",
+          "title": "Definitions of Some Important Terms Pertaining to Coordination Compounds",
+          "objectives": [
+            "Student can define coordination entity, central atom, ligand, coordination number and coordination sphere",
+            "Student can classify ligands as unidentate, didentate, polydentate and ambidentate, and explain chelation",
+            "Student can define coordination polyhedron, oxidation number of the central atom, and homoleptic and heteroleptic complexes"
+          ],
+          "visualIdeas": [
+            "octahedral [Co(NH3)6]3+ with ligands, central ion and coordination sphere labelled",
+            "ethane-1,2-diamine chelating a metal ion"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "formulas-of-mononuclear-coordination-entities",
+          "title": "Formulas of Mononuclear Coordination Entities",
+          "objectives": [
+            "Student can write formulas of mononuclear coordination entities with the central atom first and ligands in alphabetical order",
+            "Student can use square brackets for the entity, parentheses for polyatomic and abbreviated ligands, and show the charge of the entity as a right superscript"
+          ],
+          "visualIdeas": [
+            "formula built step by step: central atom, then ligands in alphabetical order"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "naming-of-mononuclear-coordination-compounds",
+          "title": "Naming of Mononuclear Coordination Compounds",
+          "objectives": [
+            "Student can apply the IUPAC rules to name cationic, anionic and neutral complexes",
+            "Student can name ligands, use prefixes for their number and show the oxidation state of the metal in Roman numerals"
+          ],
+          "visualIdeas": [
+            "worked names for [Co(NH3)6]Cl3 and K3[Fe(C2O4)3]"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "geometric-isomerism",
+          "title": "Geometric Isomerism",
+          "objectives": [
+            "Student can distinguish structural isomerism from stereoisomerism in coordination compounds",
+            "Student can identify cis and trans isomers of square planar and octahedral complexes",
+            "Student can identify facial and meridional isomers of [Ma3b3] complexes"
+          ],
+          "visualIdeas": [
+            "cis and trans [Pt(NH3)2Cl2]",
+            "fac and mer isomers of an octahedral complex"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "optical-isomerism",
+          "title": "Optical Isomerism",
+          "objectives": [
+            "Student can explain optical isomers (d and l) as non-superimposable mirror images",
+            "Student can identify optical isomerism in octahedral complexes with didentate ligands such as [Co(en)3]3+"
+          ],
+          "visualIdeas": [
+            "mirror image pair of [Co(en)3]3+"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "linkage-coordination-ionisation-and-solvate-isomerism",
+          "title": "Linkage, Coordination, Ionisation and Solvate Isomerism",
+          "objectives": [
+            "Student can identify linkage isomers formed by ambidentate ligands such as NO2- and SCN-",
+            "Student can identify coordination, ionisation and solvate (hydrate) isomers with examples"
+          ],
+          "visualIdeas": [
+            "[Co(NH3)5Cl]SO4 and [Co(NH3)5SO4]Cl side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "valence-bond-theory",
+          "title": "Valence Bond Theory",
+          "objectives": [
+            "Student can explain bonding in complexes by hybridisation of metal orbitals (sp3, dsp2, d2sp3, sp3d2)",
+            "Student can predict the geometry and type (inner or outer orbital) of complexes such as [Co(NH3)6]3+ and [CoF6]3-"
+          ],
+          "visualIdeas": [
+            "orbital box diagrams for Co3+ in [Co(NH3)6]3+ and [CoF6]3-"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "magnetic-properties-of-coordination-compounds",
+          "title": "Magnetic Properties of Coordination Compounds",
+          "objectives": [
+            "Student can use magnetic moments to find the number of unpaired electrons and infer the structure of a complex",
+            "Student can state the limitations of valence bond theory"
+          ],
+          "visualIdeas": [
+            "[NiCl4]2- paramagnetic vs [Ni(CN)4]2- diamagnetic"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "crystal-field-theory",
+          "title": "Crystal Field Theory",
+          "objectives": [
+            "Student can explain the splitting of d orbitals in octahedral and tetrahedral crystal fields",
+            "Student can define crystal field splitting energy and use the spectrochemical series of ligands",
+            "Student can predict high spin and low spin configurations by comparing Delta_o with pairing energy"
+          ],
+          "visualIdeas": [
+            "d orbital energy diagram splitting into t2g and eg in an octahedral field"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "colour-in-coordination-compounds",
+          "title": "Colour in Coordination Compounds",
+          "objectives": [
+            "Student can explain the colour of complexes by d-d transitions in crystal field theory",
+            "Student can relate the wavelength absorbed to the colour observed",
+            "Student can state the limitations of crystal field theory"
+          ],
+          "visualIdeas": [
+            "[Ti(H2O)6]3+ absorbing green-yellow light and appearing violet"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bonding-in-metal-carbonyls",
+          "title": "Bonding in Metal Carbonyls",
+          "objectives": [
+            "Student can describe the structures of homoleptic metal carbonyls such as Ni(CO)4 and Fe(CO)5",
+            "Student can explain synergic bonding: sigma donation from CO and pi back-bonding from the metal"
+          ],
+          "visualIdeas": [
+            "M-C-O bond with sigma donation and pi back-donation arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "importance-and-applications-of-coordination-compounds",
+          "title": "Importance and Applications of Coordination Compounds",
+          "objectives": [
+            "Student can list uses of coordination compounds in qualitative and quantitative analysis and estimation of water hardness with EDTA",
+            "Student can give biological and industrial examples such as chlorophyll, haemoglobin, metal extraction and purification of nickel via Ni(CO)4"
+          ],
+          "visualIdeas": [
+            "chlorophyll and haemoglobin with their central metal ions"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "haloalkanes-and-haloarenes",
+      "title": "Haloalkanes and Haloarenes",
+      "book": "Chemistry Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech201.pdf",
+      "topics": [
+        {
+          "id": "classification",
+          "title": "Classification",
+          "objectives": [
+            "Student can classify halogen compounds by the number of halogen atoms",
+            "Student can distinguish compounds with sp3 C-X bonds (alkyl, allylic, benzylic halides) from those with sp2 C-X bonds (vinylic and aryl halides)"
+          ],
+          "visualIdeas": [
+            "structures of allylic, benzylic, vinylic and aryl halides side by side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "nomenclature",
+          "title": "Nomenclature",
+          "objectives": [
+            "Student can name haloalkanes and haloarenes by common and IUPAC systems",
+            "Student can name dihalogen compounds such as geminal and vicinal dihalides"
+          ],
+          "visualIdeas": [
+            "structures with IUPAC names worked out"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nature-of-c-x-bond",
+          "title": "Nature of C-X Bond",
+          "objectives": [
+            "Student can explain the polarity of the C-X bond due to halogen electronegativity",
+            "Student can compare bond length and bond enthalpy of C-X bonds down the group"
+          ],
+          "visualIdeas": [
+            "C-X bond with partial charges for F, Cl, Br and I"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "methods-of-preparation-of-haloalkanes",
+          "title": "Methods of Preparation of Haloalkanes",
+          "objectives": [
+            "Student can prepare haloalkanes from alcohols using concentrated halogen acids, phosphorus halides or thionyl chloride",
+            "Student can prepare haloalkanes from hydrocarbons by free radical halogenation and by addition of HX to alkenes",
+            "Student can describe halogen exchange by the Finkelstein and Swarts reactions"
+          ],
+          "visualIdeas": [
+            "reaction map from alcohol, alkane and alkene to haloalkane"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "preparation-of-haloarenes",
+          "title": "Preparation of Haloarenes",
+          "objectives": [
+            "Student can prepare haloarenes from hydrocarbons by electrophilic substitution",
+            "Student can prepare haloarenes from amines by Sandmeyer's reaction"
+          ],
+          "visualIdeas": [
+            "benzene to chlorobenzene with FeCl3 and aniline to chlorobenzene via a diazonium salt"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "physical-properties",
+          "title": "Physical Properties",
+          "objectives": [
+            "Student can explain trends in boiling points of haloalkanes with size of halogen, number of halogens and branching",
+            "Student can compare melting points of isomeric dihalobenzenes",
+            "Student can explain density and solubility of haloalkanes"
+          ],
+          "visualIdeas": [
+            "bar chart of boiling points of CH3Cl, CH3Br, CH3I"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reactions-of-haloalkanes-nucleophilic-substitution-reactions",
+          "title": "Reactions of Haloalkanes: Nucleophilic Substitution Reactions",
+          "objectives": [
+            "Student can describe nucleophilic substitution of haloalkanes and give products with common nucleophiles",
+            "Student can explain ambident nucleophiles such as cyanide and nitrite"
+          ],
+          "visualIdeas": [
+            "nucleophile attacking the carbon bearing the halogen"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "substitution-nucleophilic-bimolecular-sn2-and-unimolecular-sn1",
+          "title": "Substitution Nucleophilic Bimolecular (SN2) and Unimolecular (SN1)",
+          "objectives": [
+            "Student can describe the SN2 mechanism with backside attack and inversion, and its second order kinetics",
+            "Student can describe the SN1 mechanism via a carbocation and its first order kinetics",
+            "Student can compare reactivity of primary, secondary, tertiary, allylic and benzylic halides towards SN1 and SN2"
+          ],
+          "visualIdeas": [
+            "SN2 transition state with nucleophile and leaving group 180 degrees apart",
+            "carbocation intermediate in SN1"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "stereochemical-aspects-of-nucleophilic-substitution-reactions",
+          "title": "Stereochemical Aspects of Nucleophilic Substitution Reactions",
+          "objectives": [
+            "Student can explain plane polarised light, optical activity, dextro and laevo rotation",
+            "Student can identify chiral molecules and enantiomers from the presence of an asymmetric carbon",
+            "Student can explain retention, inversion and racemisation, and why SN2 gives inversion and SN1 gives racemisation"
+          ],
+          "visualIdeas": [
+            "mirror image pair of butan-2-ol",
+            "hands as non-superimposable mirror images"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "reactions-of-haloalkanes-elimination-reactions-and-reaction-with-metals",
+          "title": "Reactions of Haloalkanes: Elimination Reactions and Reaction with Metals",
+          "objectives": [
+            "Student can explain beta-elimination (dehydrohalogenation) and apply Saytzeff's rule to predict the major alkene",
+            "Student can describe the preparation and reactivity of Grignard reagents",
+            "Student can describe the Wurtz reaction"
+          ],
+          "visualIdeas": [
+            "2-bromobutane giving but-2-ene as the major product"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reactions-of-haloarenes-nucleophilic-substitution",
+          "title": "Reactions of Haloarenes: Nucleophilic Substitution",
+          "objectives": [
+            "Student can explain why aryl halides are much less reactive towards nucleophilic substitution than alkyl halides",
+            "Student can explain how electron-withdrawing groups at ortho and para positions increase reactivity"
+          ],
+          "visualIdeas": [
+            "resonance structures of chlorobenzene with partial double bond C-Cl"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reactions-of-haloarenes-electrophilic-substitution-and-reaction-with-metals",
+          "title": "Reactions of Haloarenes: Electrophilic Substitution and Reaction with Metals",
+          "objectives": [
+            "Student can explain why halogens are deactivating but ortho-para directing",
+            "Student can write halogenation, nitration, sulphonation and Friedel-Crafts reactions of haloarenes",
+            "Student can describe the Wurtz-Fittig and Fittig reactions"
+          ],
+          "visualIdeas": [
+            "chlorobenzene with ortho and para attack positions marked"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "polyhalogen-compounds",
+          "title": "Polyhalogen Compounds",
+          "objectives": [
+            "Student can describe uses and environmental or health effects of dichloromethane, chloroform, iodoform and carbon tetrachloride",
+            "Student can explain why chloroform is stored in closed dark bottles",
+            "Student can describe DDT as a chlorinated insecticide and explain why its chemical stability and fat solubility make it build up in animal tissues"
+          ],
+          "visualIdeas": [
+            "four polyhalogen molecules with a use for each"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "freons",
+          "title": "Freons",
+          "objectives": [
+            "Student can describe freons as chlorofluorocarbons and their uses",
+            "Student can explain how freons in the stratosphere damage the ozone layer"
+          ],
+          "visualIdeas": [
+            "CFC molecule releasing chlorine radicals that break ozone"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "alcohols-phenols-and-ethers",
+      "title": "Alcohols, Phenols and Ethers",
+      "book": "Chemistry Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech202.pdf",
+      "topics": [
+        {
+          "id": "classification",
+          "title": "Classification",
+          "objectives": [
+            "Student can classify alcohols and phenols as mono-, di- and trihydric",
+            "Student can classify alcohols with sp3 C-OH bonds as primary, secondary, tertiary, allylic or benzylic and identify vinylic alcohols and phenols",
+            "Student can classify ethers as simple (symmetrical) or mixed (unsymmetrical)"
+          ],
+          "visualIdeas": [
+            "primary, secondary and tertiary alcohols drawn side by side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "nomenclature",
+          "title": "Nomenclature",
+          "objectives": [
+            "Student can name alcohols by common and IUPAC systems, including polyhydric alcohols",
+            "Student can name substituted phenols and name ethers as alkoxyalkanes or by their common names"
+          ],
+          "visualIdeas": [
+            "structures with their common and IUPAC names"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "structures-of-functional-groups",
+          "title": "Structures of Functional Groups",
+          "objectives": [
+            "Student can describe the bonding and C-O-H angle in alcohols",
+            "Student can explain the shorter C-O bond in phenol and the larger C-O-C angle in ethers"
+          ],
+          "visualIdeas": [
+            "3D models of methanol, phenol and methoxymethane with bond angles"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "preparation-of-alcohols",
+          "title": "Preparation of Alcohols",
+          "objectives": [
+            "Student can prepare alcohols from alkenes by acid-catalysed hydration and by hydroboration-oxidation",
+            "Student can prepare alcohols by reduction of aldehydes, ketones, carboxylic acids and esters",
+            "Student can prepare primary, secondary and tertiary alcohols using Grignard reagents"
+          ],
+          "visualIdeas": [
+            "reaction map from alkenes, carbonyls and Grignard reagents to alcohols"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "preparation-of-phenols",
+          "title": "Preparation of Phenols",
+          "objectives": [
+            "Student can prepare phenol from haloarenes, benzenesulphonic acid and diazonium salts",
+            "Student can describe the industrial preparation of phenol from cumene"
+          ],
+          "visualIdeas": [
+            "cumene to phenol and acetone flow chart"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "physical-properties-of-alcohols-and-phenols",
+          "title": "Physical Properties of Alcohols and Phenols",
+          "objectives": [
+            "Student can explain the high boiling points of alcohols and phenols by hydrogen bonding",
+            "Student can explain the solubility of lower alcohols in water"
+          ],
+          "visualIdeas": [
+            "hydrogen bonds between alcohol molecules and with water"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chemical-reactions-cleavage-of-o-h-bond",
+          "title": "Chemical Reactions: Cleavage of O-H Bond",
+          "objectives": [
+            "Student can show the acidic nature of alcohols and phenols by their reaction with metals",
+            "Student can explain why phenol is more acidic than ethanol and how substituents change phenol acidity",
+            "Student can describe esterification of alcohols and phenols"
+          ],
+          "visualIdeas": [
+            "resonance-stabilised phenoxide ion",
+            "pKa ladder of ethanol, water, phenol and nitrophenols"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chemical-reactions-cleavage-of-c-o-bond-in-alcohols",
+          "title": "Chemical Reactions: Cleavage of C-O Bond in Alcohols",
+          "objectives": [
+            "Student can describe reactions of alcohols with hydrogen halides (Lucas test) and phosphorus trihalides",
+            "Student can explain acid-catalysed dehydration of alcohols and its mechanism",
+            "Student can describe oxidation and dehydrogenation of primary, secondary and tertiary alcohols"
+          ],
+          "visualIdeas": [
+            "ethanol dehydration mechanism step by step"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "reactions-of-phenols",
+          "title": "Reactions of Phenols",
+          "objectives": [
+            "Student can describe electrophilic substitution in phenol: nitration and halogenation",
+            "Student can write Kolbe's reaction and the Reimer-Tiemann reaction",
+            "Student can describe reaction of phenol with zinc dust and its oxidation"
+          ],
+          "visualIdeas": [
+            "phenol with ortho and para positions activated by -OH"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "some-commercially-important-alcohols",
+          "title": "Some Commercially Important Alcohols",
+          "objectives": [
+            "Student can describe the manufacture and uses of methanol and ethanol",
+            "Student can explain why methanol is poisonous and what denatured alcohol is"
+          ],
+          "visualIdeas": [
+            "fermentation of molasses to ethanol"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "preparation-of-ethers",
+          "title": "Preparation of Ethers",
+          "objectives": [
+            "Student can prepare ethers by acid dehydration of alcohols and explain its limitations",
+            "Student can describe Williamson synthesis and choose suitable halide and alkoxide"
+          ],
+          "visualIdeas": [
+            "Williamson synthesis SN2 attack of alkoxide on an alkyl halide"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "physical-properties-of-ethers",
+          "title": "Physical Properties of Ethers",
+          "objectives": [
+            "Student can compare boiling points of ethers with alkanes and alcohols of similar mass",
+            "Student can explain the solubility of ethers in water"
+          ],
+          "visualIdeas": [
+            "ether molecule hydrogen-bonded to water but not to itself"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chemical-reactions-of-ethers",
+          "title": "Chemical Reactions of Ethers",
+          "objectives": [
+            "Student can describe cleavage of the C-O bond in ethers by hydrogen halides and predict the products",
+            "Student can describe electrophilic substitution in anisole: halogenation, Friedel-Crafts reaction and nitration"
+          ],
+          "visualIdeas": [
+            "anisole with methoxy group directing ortho and para"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "aldehydes-ketones-and-carboxylic-acids",
+      "title": "Aldehydes, Ketones and Carboxylic Acids",
+      "book": "Chemistry Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech203.pdf",
+      "topics": [
+        {
+          "id": "nomenclature-and-structure-of-carbonyl-group",
+          "title": "Nomenclature and Structure of Carbonyl Group",
+          "objectives": [
+            "Student can name aldehydes and ketones by common and IUPAC systems",
+            "Student can describe the planar, polar carbonyl group with sp2 carbon and its resonance structures"
+          ],
+          "visualIdeas": [
+            "carbonyl group with sigma and pi bonds and partial charges"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "preparation-of-aldehydes-and-ketones",
+          "title": "Preparation of Aldehydes and Ketones",
+          "objectives": [
+            "Student can prepare aldehydes and ketones by oxidation and dehydrogenation of alcohols",
+            "Student can prepare them from hydrocarbons by ozonolysis of alkenes and hydration of alkynes"
+          ],
+          "visualIdeas": [
+            "reaction map from alcohols and hydrocarbons to carbonyl compounds"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "preparation-of-aldehydes",
+          "title": "Preparation of Aldehydes",
+          "objectives": [
+            "Student can prepare aldehydes from acyl chlorides (Rosenmund reduction) and from nitriles and esters (Stephen reaction, DIBAL-H)",
+            "Student can prepare aromatic aldehydes from hydrocarbons by Etard reaction, side-chain chlorination and Gatterman-Koch reaction"
+          ],
+          "visualIdeas": [
+            "toluene to benzaldehyde by chromyl chloride"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "preparation-of-ketones",
+          "title": "Preparation of Ketones",
+          "objectives": [
+            "Student can prepare ketones from acyl chlorides with dialkylcadmium and from nitriles with Grignard reagents",
+            "Student can prepare aromatic ketones by Friedel-Crafts acylation"
+          ],
+          "visualIdeas": [
+            "benzene acylated to acetophenone"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "physical-properties-of-aldehydes-and-ketones",
+          "title": "Physical Properties of Aldehydes and Ketones",
+          "objectives": [
+            "Student can compare boiling points of aldehydes and ketones with hydrocarbons, ethers and alcohols of similar mass",
+            "Student can explain solubility of lower aldehydes and ketones in water"
+          ],
+          "visualIdeas": [
+            "dipole-dipole attraction between carbonyl molecules"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chemical-reactions-nucleophilic-addition-reactions",
+          "title": "Chemical Reactions: Nucleophilic Addition Reactions",
+          "objectives": [
+            "Student can describe the mechanism of nucleophilic addition to the carbonyl group",
+            "Student can explain why aldehydes are more reactive than ketones",
+            "Student can write addition of HCN, sodium hydrogensulphite, Grignard reagents and alcohols (hemiacetals, acetals)",
+            "Student can write addition-elimination reactions with ammonia derivatives to give oximes, hydrazones and semicarbazones"
+          ],
+          "visualIdeas": [
+            "nucleophile attacking trigonal carbonyl carbon giving a tetrahedral intermediate"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "chemical-reactions-reduction-and-oxidation",
+          "title": "Chemical Reactions: Reduction and Oxidation",
+          "objectives": [
+            "Student can reduce aldehydes and ketones to alcohols and to hydrocarbons by Clemmensen and Wolff-Kishner reductions",
+            "Student can distinguish aldehydes from ketones with Tollens' and Fehling's tests",
+            "Student can describe the haloform reaction of methyl ketones"
+          ],
+          "visualIdeas": [
+            "silver mirror in a Tollens' test tube and red precipitate in Fehling's test"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chemical-reactions-reactions-due-to-alpha-hydrogen-and-other-reactions",
+          "title": "Chemical Reactions: Reactions due to Alpha-Hydrogen and Other Reactions",
+          "objectives": [
+            "Student can explain the acidity of alpha-hydrogens",
+            "Student can describe aldol condensation and cross aldol condensation",
+            "Student can describe the Cannizzaro reaction and electrophilic substitution in aromatic aldehydes and ketones"
+          ],
+          "visualIdeas": [
+            "two ethanal molecules joining in an aldol reaction"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "uses-of-aldehydes-and-ketones",
+          "title": "Uses of Aldehydes and Ketones",
+          "objectives": [
+            "Student can list uses of formaldehyde (formalin), acetaldehyde, benzaldehyde and acetone",
+            "Student can name aldehydes and ketones used in flavours and perfumes"
+          ],
+          "visualIdeas": [
+            "bottles of formalin and acetone with their uses"
+          ],
+          "estMinutes": 5
+        },
+        {
+          "id": "nomenclature-and-structure-of-carboxyl-group",
+          "title": "Nomenclature and Structure of Carboxyl Group",
+          "objectives": [
+            "Student can name carboxylic acids by common and IUPAC systems",
+            "Student can describe the structure of the carboxyl group and explain why it is less electrophilic than a carbonyl"
+          ],
+          "visualIdeas": [
+            "resonance structures of the carboxyl group"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "methods-of-preparation-of-carboxylic-acids",
+          "title": "Methods of Preparation of Carboxylic Acids",
+          "objectives": [
+            "Student can prepare carboxylic acids from primary alcohols, aldehydes and alkylbenzenes by oxidation",
+            "Student can prepare them from nitriles and amides, from Grignard reagents and from acyl halides, anhydrides and esters"
+          ],
+          "visualIdeas": [
+            "reaction map of routes to carboxylic acids"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "physical-properties-of-carboxylic-acids",
+          "title": "Physical Properties of Carboxylic Acids",
+          "objectives": [
+            "Student can explain the high boiling points of carboxylic acids by hydrogen-bonded dimers",
+            "Student can explain the solubility of lower acids in water"
+          ],
+          "visualIdeas": [
+            "carboxylic acid dimer with two hydrogen bonds"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chemical-reactions-reactions-involving-cleavage-of-o-h-bond",
+          "title": "Chemical Reactions: Reactions Involving Cleavage of O-H Bond",
+          "objectives": [
+            "Student can show the acidity of carboxylic acids by their reactions with metals and alkalies",
+            "Student can explain why carboxylic acids are stronger than phenols and alcohols using carboxylate resonance",
+            "Student can explain the effect of electron-withdrawing and electron-donating groups on acidity"
+          ],
+          "visualIdeas": [
+            "carboxylate ion with negative charge shared equally over two oxygens"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chemical-reactions-reactions-involving-cleavage-of-c-oh-bond",
+          "title": "Chemical Reactions: Reactions Involving Cleavage of C-OH Bond",
+          "objectives": [
+            "Student can describe formation of anhydrides and esterification",
+            "Student can describe reactions with PCl5, PCl3 and SOCl2, and with ammonia to form amides"
+          ],
+          "visualIdeas": [
+            "ethanoic acid converted to ester, acid chloride and amide"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "chemical-reactions-reactions-involving-cooh-group-and-substitution-in-the-hydrocarbon-part",
+          "title": "Chemical Reactions: Reactions Involving -COOH Group and Substitution in the Hydrocarbon Part",
+          "objectives": [
+            "Student can describe reduction of carboxylic acids and decarboxylation",
+            "Student can describe the Hell-Volhard-Zelinsky reaction and ring substitution in aromatic acids"
+          ],
+          "visualIdeas": [
+            "alpha-halogenation of a carboxylic acid"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "uses-of-carboxylic-acids",
+          "title": "Uses of Carboxylic Acids",
+          "objectives": [
+            "Student can list uses of methanoic acid, ethanoic acid (vinegar) and hexanedioic acid (nylon-6,6)",
+            "Student can state uses of benzoic acid esters in perfumery, sodium benzoate as a food preservative and higher fatty acids in soaps and detergents"
+          ],
+          "visualIdeas": [
+            "vinegar, food preservative and soap with the acids they contain"
+          ],
+          "estMinutes": 5
+        }
+      ]
+    },
+    {
+      "id": "amines",
+      "title": "Amines",
+      "book": "Chemistry Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech204.pdf",
+      "topics": [
+        {
+          "id": "structure-and-classification-of-amines",
+          "title": "Structure and Classification of Amines",
+          "objectives": [
+            "Student can describe the pyramidal shape of amines with an sp3 nitrogen and a lone pair",
+            "Student can classify amines as primary, secondary and tertiary, and as aliphatic or aromatic"
+          ],
+          "visualIdeas": [
+            "pyramidal trimethylamine with lone pair",
+            "primary, secondary and tertiary amines side by side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "nomenclature",
+          "title": "Nomenclature",
+          "objectives": [
+            "Student can name aliphatic amines by common names (alkylamines) and IUPAC names (alkanamines)",
+            "Student can name arylamines, such as aniline (benzenamine), and substituted anilines"
+          ],
+          "visualIdeas": [
+            "amines with common and IUPAC names"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "preparation-of-amines-reduction-and-ammonolysis",
+          "title": "Preparation of Amines: Reduction and Ammonolysis",
+          "objectives": [
+            "Student can prepare amines by reduction of nitro compounds, nitriles and amides",
+            "Student can prepare amines by ammonolysis of alkyl halides and explain why it gives a mixture"
+          ],
+          "visualIdeas": [
+            "nitrobenzene reduced to aniline with Sn/HCl"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "preparation-of-amines-gabriel-phthalimide-synthesis-and-hoffmann-bromamide-degradation",
+          "title": "Preparation of Amines: Gabriel Phthalimide Synthesis and Hoffmann Bromamide Degradation",
+          "objectives": [
+            "Student can describe Gabriel phthalimide synthesis of primary amines and why it cannot make aromatic amines",
+            "Student can describe Hoffmann bromamide degradation and the loss of one carbon atom"
+          ],
+          "visualIdeas": [
+            "phthalimide alkylated and hydrolysed to a primary amine"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "physical-properties-of-amines",
+          "title": "Physical Properties of Amines",
+          "objectives": [
+            "Student can explain hydrogen bonding and boiling points of primary, secondary and tertiary amines",
+            "Student can explain the solubility of lower amines in water"
+          ],
+          "visualIdeas": [
+            "hydrogen bonds between amine molecules"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chemical-reactions-basic-character-of-amines",
+          "title": "Chemical Reactions: Basic Character of Amines",
+          "objectives": [
+            "Student can explain why amines are basic and form salts with acids",
+            "Student can compare basic strengths of aliphatic amines in gas phase and water using inductive, solvation and steric effects",
+            "Student can explain why aryl amines are weaker bases than ammonia using resonance"
+          ],
+          "visualIdeas": [
+            "pKb ladder of ammonia, methylamines and aniline"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "chemical-reactions-alkylation-acylation-carbylamine-reaction-and-reaction-with-nitrous-acid",
+          "title": "Chemical Reactions: Alkylation, Acylation, Carbylamine Reaction and Reaction with Nitrous Acid",
+          "objectives": [
+            "Student can write alkylation and acylation (including benzoylation) of amines",
+            "Student can use the carbylamine reaction as a test for primary amines",
+            "Student can describe the reaction of aliphatic and aromatic primary amines with nitrous acid"
+          ],
+          "visualIdeas": [
+            "primary amine with chloroform and KOH giving a foul-smelling isocyanide"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chemical-reactions-reaction-with-arylsulphonyl-chloride-and-electrophilic-substitution",
+          "title": "Chemical Reactions: Reaction with Arylsulphonyl Chloride and Electrophilic Substitution",
+          "objectives": [
+            "Student can use Hinsberg's reagent to distinguish primary, secondary and tertiary amines",
+            "Student can explain bromination, nitration and sulphonation of aniline and why the -NH2 group is protected by acetylation"
+          ],
+          "visualIdeas": [
+            "aniline giving 2,4,6-tribromoaniline with bromine water"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "method-of-preparation-and-physical-properties-of-diazonium-salts",
+          "title": "Method of Preparation and Physical Properties of Diazonium Salts",
+          "objectives": [
+            "Student can prepare benzenediazonium chloride by diazotisation of aniline at 273-278 K",
+            "Student can explain why arenediazonium salts are more stable than alkyldiazonium salts and are used in solution"
+          ],
+          "visualIdeas": [
+            "aniline in ice bath with NaNO2 and HCl"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chemical-reactions-of-diazonium-salts",
+          "title": "Chemical Reactions of Diazonium Salts",
+          "objectives": [
+            "Student can write reactions involving displacement of nitrogen: Sandmeyer and Gatterman reactions and replacement by I, F, H, OH and NO2",
+            "Student can write coupling reactions with phenol and aniline that retain the diazo group to form azo dyes"
+          ],
+          "visualIdeas": [
+            "diazonium salt at the centre of arrows to many products",
+            "orange azo dye from coupling with phenol"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "importance-of-diazonium-salts-in-synthesis-of-aromatic-compounds",
+          "title": "Importance of Diazonium Salts in Synthesis of Aromatic Compounds",
+          "objectives": [
+            "Student can explain how diazonium salts introduce groups like -F, -I, -CN and -OH that cannot be added by direct substitution",
+            "Student can plan simple conversions through a diazonium salt"
+          ],
+          "visualIdeas": [
+            "synthesis route from benzene to iodobenzene via aniline"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "biomolecules",
+      "title": "Biomolecules",
+      "book": "Chemistry Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/lech205.pdf",
+      "topics": [
+        {
+          "id": "classification-of-carbohydrates",
+          "title": "Classification of Carbohydrates",
+          "objectives": [
+            "Student can define carbohydrates as optically active polyhydroxy aldehydes or ketones or compounds that give them on hydrolysis",
+            "Student can classify carbohydrates as monosaccharides, oligosaccharides and polysaccharides, and as reducing or non-reducing sugars",
+            "Student can classify monosaccharides as aldoses or ketoses by carbon number"
+          ],
+          "visualIdeas": [
+            "tree diagram of carbohydrate classes"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "monosaccharides-glucose",
+          "title": "Monosaccharides: Glucose",
+          "objectives": [
+            "Student can describe the preparation of glucose from sucrose and from starch",
+            "Student can use reactions of glucose to establish its open chain structure",
+            "Student can explain why the open chain cannot explain all properties and describe the cyclic alpha and beta pyranose forms"
+          ],
+          "visualIdeas": [
+            "open chain and Haworth ring structures of glucose"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "monosaccharides-fructose",
+          "title": "Monosaccharides: Fructose",
+          "objectives": [
+            "Student can describe fructose as a ketohexose obtained with glucose by hydrolysis of sucrose",
+            "Student can draw the open chain and cyclic furanose structures of fructose"
+          ],
+          "visualIdeas": [
+            "Haworth structure of fructofuranose"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "disaccharides",
+          "title": "Disaccharides",
+          "objectives": [
+            "Student can describe the glycosidic linkage joining two monosaccharides",
+            "Student can describe sucrose, maltose and lactose, their hydrolysis products and reducing nature",
+            "Student can explain why hydrolysis of sucrose gives invert sugar"
+          ],
+          "visualIdeas": [
+            "sucrose drawn as glucose and fructose joined by a glycosidic bond"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "polysaccharides",
+          "title": "Polysaccharides",
+          "objectives": [
+            "Student can describe starch (amylose and amylopectin), cellulose and glycogen and the linkages in them",
+            "Student can explain the importance of carbohydrates to plants and animals"
+          ],
+          "visualIdeas": [
+            "straight chain amylose vs branched amylopectin"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "amino-acids",
+          "title": "Amino Acids",
+          "objectives": [
+            "Student can describe alpha-amino acids and their zwitterion form",
+            "Student can classify amino acids as acidic, basic or neutral, and as essential or non-essential"
+          ],
+          "visualIdeas": [
+            "zwitterion of glycine",
+            "table of amino acids with three-letter codes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "structure-of-proteins",
+          "title": "Structure of Proteins",
+          "objectives": [
+            "Student can describe the peptide bond and distinguish fibrous and globular proteins",
+            "Student can describe primary, secondary (alpha-helix and beta-pleated sheet), tertiary and quaternary structures"
+          ],
+          "visualIdeas": [
+            "alpha-helix and beta-pleated sheet models"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "denaturation-of-proteins",
+          "title": "Denaturation of Proteins",
+          "objectives": [
+            "Student can explain denaturation as loss of 3D structure and biological activity by heat or pH change",
+            "Student can give examples such as coagulation of egg white on boiling and curdling of milk"
+          ],
+          "visualIdeas": [
+            "egg white turning opaque on boiling"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "enzymes",
+          "title": "Enzymes",
+          "objectives": [
+            "Student can describe enzymes as biocatalysts that are globular proteins",
+            "Student can explain that enzymes lower the activation energy of reactions"
+          ],
+          "visualIdeas": [
+            "enzyme lowering the energy barrier of a reaction"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "vitamins",
+          "title": "Vitamins",
+          "objectives": [
+            "Student can classify vitamins as fat soluble and water soluble",
+            "Student can match vitamins with their sources and deficiency diseases"
+          ],
+          "visualIdeas": [
+            "table of vitamins, sources and deficiency diseases"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nucleic-acids",
+          "title": "Nucleic Acids",
+          "objectives": [
+            "Student can describe the composition of DNA and RNA: sugar, phosphate and bases",
+            "Student can describe nucleosides, nucleotides and the double helix structure of DNA with complementary base pairing",
+            "Student can state the biological functions of nucleic acids in heredity and protein synthesis"
+          ],
+          "visualIdeas": [
+            "DNA double helix with A-T and G-C pairs"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "hormones",
+          "title": "Hormones",
+          "objectives": [
+            "Student can describe hormones as chemical messengers and give examples of their types",
+            "Student can relate hormones such as insulin, thyroxine and steroid hormones to their functions"
+          ],
+          "visualIdeas": [
+            "endocrine glands releasing hormones into the blood"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

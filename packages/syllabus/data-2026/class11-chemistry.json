@@ -1,0 +1,2465 @@
+{
+  "id": "class11-chemistry",
+  "klass": 11,
+  "subject": "Chemistry",
+  "source": {
+    "books": [
+      {
+        "title": "Chemistry Part I",
+        "code": "kech1",
+        "edition": "Reprint 2026-27 (first edition March 2006; revised edition October 2022; reprinted March 2024, June 2024, January 2025 and February 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/kech1ps.pdf"
+      },
+      {
+        "title": "Chemistry Part II",
+        "code": "kech2",
+        "edition": "Reprint 2026-27 (first edition March 2006; revised edition October 2022; reprinted March 2024, June 2024, January 2025 and February 2026)",
+        "contentsUrl": "https://ncert.nic.in/textbook/pdf/kech2ps.pdf"
+      }
+    ],
+    "builtAt": "2026-10-01",
+    "method": "unit titles from each book's Contents page; topics from each unit PDF's numbered section and subsection headings, and in Thermodynamics and Classification of Elements from the lettered sub-headings the book uses inside a section (General Introduction is not a topic; a parent heading that is only a short lead-in to its subsections is not a separate topic; very short adjacent subsections are joined under one title naming them; where several sections share a heading such as 'Preparation', the topic title adds the compound class)"
+  },
+  "chapters": [
+    {
+      "id": "some-basic-concepts-of-chemistry",
+      "title": "Some Basic Concepts of Chemistry",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kech101.pdf",
+      "topics": [
+        {
+          "id": "importance-of-chemistry",
+          "title": "Importance of Chemistry",
+          "objectives": [
+            "Student can describe the role of chemistry in areas such as medicines, fertilisers, materials and the environment",
+            "Student can describe the development of chemistry in ancient India, known as Rasayan Shastra"
+          ],
+          "visualIdeas": [
+            "a collage of medicines, fertilisers, alloys and plastics linked to chemistry"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "states-of-matter",
+          "title": "States of Matter",
+          "objectives": [
+            "Student can compare the arrangement and movement of particles in solids, liquids and gases",
+            "Student can explain why solids have definite shape and volume, liquids have definite volume, and gases have neither"
+          ],
+          "visualIdeas": [
+            "particles packed in a solid, close but mobile in a liquid, far apart in a gas"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "classification-of-matter",
+          "title": "Classification of Matter",
+          "objectives": [
+            "Student can classify matter into mixtures and pure substances, and mixtures into homogeneous and heterogeneous",
+            "Student can classify pure substances into elements and compounds and give examples of each"
+          ],
+          "visualIdeas": [
+            "a tree chart: matter, mixtures and pure substances, elements and compounds",
+            "atoms and molecules of an element and of a compound"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "physical-and-chemical-properties",
+          "title": "Physical and Chemical Properties",
+          "objectives": [
+            "Student can distinguish physical properties, measured without changing a substance's identity, from chemical properties that need a chemical change",
+            "Student can give examples such as colour, odour, melting point and density versus composition, combustibility and reactivity with acids and bases"
+          ],
+          "visualIdeas": [
+            "a table sorting properties of a substance into physical and chemical"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "measurement-of-physical-properties-and-the-international-system-of-units-si",
+          "title": "Measurement of Physical Properties and the International System of Units (SI)",
+          "objectives": [
+            "Student can explain that a measurement needs a number and a unit, and name the metric system as the basis of SI",
+            "Student can list the seven SI base quantities and units and use SI prefixes for multiples and submultiples"
+          ],
+          "visualIdeas": [
+            "a table of SI base units beside prefixes from pico to tera"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mass-weight-volume-density-and-temperature",
+          "title": "Mass, Weight, Volume, Density and Temperature",
+          "objectives": [
+            "Student can distinguish mass from weight and use units and devices for measuring volume",
+            "Student can calculate density as mass per unit volume",
+            "Student can convert between the Celsius, Fahrenheit and Kelvin temperature scales"
+          ],
+          "visualIdeas": [
+            "an analytical balance and volumetric glassware",
+            "three thermometers side by side in degrees C, degrees F and K"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "scientific-notation",
+          "title": "Scientific Notation",
+          "objectives": [
+            "Student can write very large and very small numbers in the form N x 10^n",
+            "Student can multiply, divide, add and subtract numbers written in scientific notation"
+          ],
+          "visualIdeas": [
+            "602200000000000000000000 rewritten as 6.022 x 10^23"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "significant-figures",
+          "title": "Significant Figures",
+          "objectives": [
+            "Student can distinguish precision (closeness of repeated measurements) from accuracy (agreement with the true value)",
+            "Student can count significant figures using the rules for zeros and exact numbers",
+            "Student can apply the rules for significant figures in addition, subtraction, multiplication and division, and round off results"
+          ],
+          "visualIdeas": [
+            "a target board showing precise-but-inaccurate and precise-and-accurate shots"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "dimensional-analysis",
+          "title": "Dimensional Analysis",
+          "objectives": [
+            "Student can convert units using unit factors such as 1 in = 2.54 cm",
+            "Student can carry units through a calculation like algebraic quantities"
+          ],
+          "visualIdeas": [
+            "a chain of unit factors converting days to seconds"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "law-of-conservation-of-mass-definite-proportions-and-multiple-proportions",
+          "title": "Law of Conservation of Mass, Definite Proportions and Multiple Proportions",
+          "objectives": [
+            "Student can state the law of conservation of mass given by Lavoisier",
+            "Student can state the law of definite proportions with an example of a compound from different sources",
+            "Student can state the law of multiple proportions and check it with the masses of oxygen combining with a fixed mass of hydrogen in water and hydrogen peroxide"
+          ],
+          "visualIdeas": [
+            "two samples of copper carbonate with identical percentage composition"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "gay-lussacs-law-of-gaseous-volumes-and-avogadros-law",
+          "title": "Gay Lussac's Law of Gaseous Volumes and Avogadro's Law",
+          "objectives": [
+            "Student can state Gay Lussac's law that reacting gases combine in simple whole-number ratios by volume",
+            "Student can state Avogadro's law that equal volumes of gases at the same temperature and pressure contain equal numbers of molecules"
+          ],
+          "visualIdeas": [
+            "two volumes of hydrogen and one volume of oxygen giving two volumes of water vapour"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "daltons-atomic-theory",
+          "title": "Dalton's Atomic Theory",
+          "objectives": [
+            "Student can state the postulates of Dalton's atomic theory",
+            "Student can explain how the theory accounts for the laws of chemical combination and name what it could not explain"
+          ],
+          "visualIdeas": [
+            "atoms as solid spheres combining in fixed ratios"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "atomic-mass-and-average-atomic-mass",
+          "title": "Atomic Mass and Average Atomic Mass",
+          "objectives": [
+            "Student can define the atomic mass unit as one-twelfth the mass of a carbon-12 atom",
+            "Student can calculate the average atomic mass of an element from the masses and natural abundances of its isotopes"
+          ],
+          "visualIdeas": [
+            "isotopes of carbon with their percentage abundances"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "molecular-mass-and-formula-mass",
+          "title": "Molecular Mass and Formula Mass",
+          "objectives": [
+            "Student can calculate the molecular mass of a substance as the sum of atomic masses of its atoms",
+            "Student can use formula mass for ionic compounds such as sodium chloride that have no discrete molecules"
+          ],
+          "visualIdeas": [
+            "a glucose formula with atomic masses added up",
+            "the packing of Na+ and Cl- ions in sodium chloride"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mole-concept-and-molar-masses",
+          "title": "Mole Concept and Molar Masses",
+          "objectives": [
+            "Student can define one mole as 6.022 x 10^23 entities (Avogadro constant)",
+            "Student can relate the molar mass in grams to the atomic or molecular mass and convert between mass, moles and number of particles"
+          ],
+          "visualIdeas": [
+            "one mole each of water, sodium chloride and sugar on a bench"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "percentage-composition",
+          "title": "Percentage Composition",
+          "objectives": [
+            "Student can calculate the mass per cent of each element in a compound from its formula",
+            "Student can explain why percentage composition is used to check the purity of a sample"
+          ],
+          "visualIdeas": [
+            "a pie chart of the mass per cent of elements in ethanol"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "empirical-formula-for-molecular-formula",
+          "title": "Empirical Formula for Molecular Formula",
+          "objectives": [
+            "Student can distinguish an empirical formula from a molecular formula",
+            "Student can find the empirical formula from percentage composition and the molecular formula from the molar mass"
+          ],
+          "visualIdeas": [
+            "a step table: mass per cent, moles, simplest ratio, empirical formula"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "stoichiometry-and-stoichiometric-calculations",
+          "title": "Stoichiometry and Stoichiometric Calculations",
+          "objectives": [
+            "Student can explain what a balanced chemical equation tells us about moles, masses and volumes of reactants and products",
+            "Student can balance a chemical equation and use it to calculate amounts of reactants and products"
+          ],
+          "visualIdeas": [
+            "the combustion of methane with mole, mass and volume ratios under each species"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "limiting-reagent",
+          "title": "Limiting Reagent",
+          "objectives": [
+            "Student can identify the limiting reagent as the reactant used up first, which limits the amount of product",
+            "Student can calculate the amount of product formed when reactants are not in stoichiometric proportion"
+          ],
+          "visualIdeas": [
+            "sandwich-making analogy with more bread than filling",
+            "reactant particles with some left over after reaction"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reactions-in-solutions",
+          "title": "Reactions in Solutions",
+          "objectives": [
+            "Student can express the concentration of a solution as mass per cent, mole fraction, molarity and molality",
+            "Student can calculate molarity and molality of a solution and explain why molality does not change with temperature"
+          ],
+          "visualIdeas": [
+            "a volumetric flask filled to the mark for a 1 M solution"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "structure-of-atom",
+      "title": "Structure of Atom",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kech102.pdf",
+      "topics": [
+        {
+          "id": "discovery-of-electron",
+          "title": "Discovery of Electron",
+          "objectives": [
+            "Student can describe cathode ray discharge tube experiments and the properties of cathode rays",
+            "Student can explain why cathode rays were identified as negatively charged particles called electrons"
+          ],
+          "visualIdeas": [
+            "a cathode ray tube with a beam travelling from cathode to anode"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "charge-to-mass-ratio-of-electron",
+          "title": "Charge to Mass Ratio of Electron",
+          "objectives": [
+            "Student can describe how Thomson measured e/m of the electron using deflection in electric and magnetic fields",
+            "Student can state that the deflection depends on the charge, the mass and the field strengths"
+          ],
+          "visualIdeas": [
+            "a cathode ray beam bent by electric plates and a magnet"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "charge-on-the-electron",
+          "title": "Charge on the Electron",
+          "objectives": [
+            "Student can describe Millikan's oil drop experiment for measuring the charge on the electron",
+            "Student can calculate the mass of the electron from its charge and e/m ratio"
+          ],
+          "visualIdeas": [
+            "charged oil drops falling between charged plates viewed through a telescope"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "discovery-of-protons-and-neutrons",
+          "title": "Discovery of Protons and Neutrons",
+          "objectives": [
+            "Student can describe how canal rays led to the discovery of positively charged protons",
+            "Student can describe Chadwick's discovery of the neutron and compare the charge and mass of electron, proton and neutron"
+          ],
+          "visualIdeas": [
+            "a table of electron, proton and neutron with their charges and masses"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thomson-model-of-atom",
+          "title": "Thomson Model of Atom",
+          "objectives": [
+            "Student can describe Thomson's model of the atom as a sphere of positive charge with electrons embedded in it",
+            "Student can state what the model explained (overall neutrality) and its limitations"
+          ],
+          "visualIdeas": [
+            "the plum pudding or watermelon picture of an atom"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "rutherfords-nuclear-model-of-atom",
+          "title": "Rutherford's Nuclear Model of Atom",
+          "objectives": [
+            "Student can describe the alpha particle scattering experiment and its observations",
+            "Student can state the conclusions: a tiny, dense, positively charged nucleus with electrons moving around it"
+          ],
+          "visualIdeas": [
+            "alpha particles striking gold foil with most passing through and a few bouncing back"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "atomic-number-and-mass-number",
+          "title": "Atomic Number and Mass Number",
+          "objectives": [
+            "Student can define atomic number as the number of protons and mass number as the number of nucleons",
+            "Student can find the numbers of protons, neutrons and electrons from the symbol of an atom or ion"
+          ],
+          "visualIdeas": [
+            "the notation 35/17 Cl with each number labelled"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "isobars-and-isotopes",
+          "title": "Isobars and Isotopes",
+          "objectives": [
+            "Student can define isotopes as atoms with the same atomic number but different mass numbers, and isobars as atoms with the same mass number",
+            "Student can explain why isotopes of an element have the same chemical properties"
+          ],
+          "visualIdeas": [
+            "the three isotopes of hydrogen with their protons and neutrons"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "drawbacks-of-rutherford-model",
+          "title": "Drawbacks of Rutherford Model",
+          "objectives": [
+            "Student can explain why an electron in circular orbit should, by classical theory, radiate energy and spiral into the nucleus",
+            "Student can state that the Rutherford model says nothing about electron distribution and energies"
+          ],
+          "visualIdeas": [
+            "an electron spiralling into the nucleus"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "wave-nature-of-electromagnetic-radiation",
+          "title": "Wave Nature of Electromagnetic Radiation",
+          "objectives": [
+            "Student can describe electromagnetic radiation as oscillating electric and magnetic fields travelling at the speed of light",
+            "Student can relate frequency, wavelength and wavenumber, c = nu lambda",
+            "Student can describe the electromagnetic spectrum and the visible range"
+          ],
+          "visualIdeas": [
+            "electric and magnetic field components of a light wave",
+            "the electromagnetic spectrum with the visible band expanded"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "particle-nature-of-electromagnetic-radiation-plancks-quantum-theory",
+          "title": "Particle Nature of Electromagnetic Radiation: Planck's Quantum Theory",
+          "objectives": [
+            "Student can describe black-body radiation and the photoelectric effect as phenomena that wave theory could not explain",
+            "Student can state Planck's quantum theory, E = h nu, and calculate the energy of a photon",
+            "Student can explain the photoelectric effect using threshold frequency and the kinetic energy of ejected electrons"
+          ],
+          "visualIdeas": [
+            "light falling on a metal surface ejecting electrons",
+            "intensity-wavelength curves of a black body at different temperatures"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "evidence-for-the-quantized-electronic-energy-levels-atomic-spectra",
+          "title": "Evidence for the Quantized Electronic Energy Levels: Atomic Spectra",
+          "objectives": [
+            "Student can distinguish continuous, emission and absorption spectra",
+            "Student can describe the line spectrum of hydrogen and its series (Lyman, Balmer, Paschen and others) using the Rydberg formula"
+          ],
+          "visualIdeas": [
+            "the line spectrum of hydrogen with the Balmer lines in the visible region"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "bohrs-model-for-hydrogen-atom",
+          "title": "Bohr's Model for Hydrogen Atom",
+          "objectives": [
+            "Student can state the postulates of Bohr's model: stationary orbits, quantised angular momentum and energy changes by absorbing or emitting radiation",
+            "Student can use the expressions for the radius and energy of the nth orbit of hydrogen and hydrogen-like species"
+          ],
+          "visualIdeas": [
+            "concentric orbits with energy levels getting closer together as n increases"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "explanation-of-line-spectrum-of-hydrogen",
+          "title": "Explanation of Line Spectrum of Hydrogen",
+          "objectives": [
+            "Student can explain the lines in the hydrogen spectrum as transitions of the electron between energy levels",
+            "Student can calculate the wavelength or frequency of radiation emitted in a given transition"
+          ],
+          "visualIdeas": [
+            "an energy level diagram with arrows for Lyman, Balmer and Paschen transitions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "limitations-of-bohrs-model",
+          "title": "Limitations of Bohr's Model",
+          "objectives": [
+            "Student can list the shortcomings of Bohr's model, such as failing for multi-electron atoms and not explaining fine structure or the Zeeman and Stark effects",
+            "Student can state that the model could not explain the ability of atoms to form molecules by bonds"
+          ],
+          "visualIdeas": [
+            "a spectral line splitting into several lines in a magnetic field"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "dual-behaviour-of-matter",
+          "title": "Dual Behaviour of Matter",
+          "objectives": [
+            "Student can state de Broglie's relation lambda = h/mv for the wavelength of a moving particle",
+            "Student can explain why wave properties are noticeable for electrons but not for everyday objects"
+          ],
+          "visualIdeas": [
+            "an electron wave fitting around an orbit",
+            "a cricket ball and an electron with their de Broglie wavelengths compared"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "heisenbergs-uncertainty-principle",
+          "title": "Heisenberg's Uncertainty Principle",
+          "objectives": [
+            "Student can state that the position and momentum of an electron cannot both be known exactly at the same time",
+            "Student can explain the significance of the principle for microscopic objects and why it rules out definite orbits in the Bohr model"
+          ],
+          "visualIdeas": [
+            "a photon striking an electron and changing its path during measurement"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "quantum-mechanical-model-of-atom",
+          "title": "Quantum Mechanical Model of Atom",
+          "objectives": [
+            "Student can state that quantum mechanics describes electrons with the Schrodinger equation and wave functions",
+            "Student can list the important features of the quantum mechanical model: quantised energy levels, orbitals and probability of finding an electron"
+          ],
+          "visualIdeas": [
+            "a probability cloud of an electron around the nucleus"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "orbitals-and-quantum-numbers",
+          "title": "Orbitals and Quantum Numbers",
+          "objectives": [
+            "Student can describe the principal, azimuthal and magnetic quantum numbers and the values they can take",
+            "Student can name subshells as s, p, d, f and work out the number of orbitals in each",
+            "Student can describe the electron spin quantum number and its two values"
+          ],
+          "visualIdeas": [
+            "a table of n, l and m values with the subshells and number of orbitals"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "shapes-of-atomic-orbitals",
+          "title": "Shapes of Atomic Orbitals",
+          "objectives": [
+            "Student can describe the shapes of s, p and d orbitals using boundary surface diagrams",
+            "Student can find the number of radial and angular nodes of an orbital"
+          ],
+          "visualIdeas": [
+            "boundary surface diagrams of 1s, 2p and 3d orbitals"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "energies-of-orbitals",
+          "title": "Energies of Orbitals",
+          "objectives": [
+            "Student can explain that in hydrogen the orbital energy depends only on n, but in multi-electron atoms it depends on n and l",
+            "Student can use the (n + l) rule and the idea of shielding to order orbital energies"
+          ],
+          "visualIdeas": [
+            "energy level diagrams for hydrogen and for a multi-electron atom side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "filling-of-orbitals-in-atom",
+          "title": "Filling of Orbitals in Atom",
+          "objectives": [
+            "Student can state the aufbau principle and the order of filling of orbitals",
+            "Student can state Pauli's exclusion principle and Hund's rule of maximum multiplicity"
+          ],
+          "visualIdeas": [
+            "the diagonal arrow chart of the order of filling orbitals",
+            "orbital boxes filled one arrow at a time before pairing"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "electronic-configuration-of-atoms",
+          "title": "Electronic Configuration of Atoms",
+          "objectives": [
+            "Student can write the electronic configuration of atoms using spdf notation and orbital diagrams",
+            "Student can identify exceptions such as chromium and copper"
+          ],
+          "visualIdeas": [
+            "orbital box diagrams for carbon, nitrogen and oxygen"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "stability-of-completely-filled-and-half-filled-subshells",
+          "title": "Stability of Completely Filled and Half Filled Subshells",
+          "objectives": [
+            "Student can explain the extra stability of half-filled and completely filled subshells using symmetrical distribution and exchange energy",
+            "Student can use this to explain the configurations of chromium and copper"
+          ],
+          "visualIdeas": [
+            "possible exchanges of parallel spins in a d5 configuration"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "classification-of-elements-and-periodicity-in-properties",
+      "title": "Classification of Elements and Periodicity in Properties",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kech103.pdf",
+      "topics": [
+        {
+          "id": "why-do-we-need-to-classify-elements",
+          "title": "Why do we Need to Classify Elements?",
+          "objectives": [
+            "Student can explain why classifying the many known elements makes their study systematic",
+            "Student can describe how the number of known elements grew over time"
+          ],
+          "visualIdeas": [
+            "a timeline of the number of known elements"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "genesis-of-periodic-classification",
+          "title": "Genesis of Periodic Classification",
+          "objectives": [
+            "Student can describe Dobereiner's triads and Newlands' law of octaves and their limitations",
+            "Student can state Mendeleev's periodic law and explain how he left gaps and predicted properties of eka-aluminium and eka-silicon"
+          ],
+          "visualIdeas": [
+            "Mendeleev's table with gaps marked for gallium and germanium",
+            "Newlands' octaves compared to musical notes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "modern-periodic-law-and-the-present-form-of-the-periodic-table",
+          "title": "Modern Periodic Law and the Present Form of the Periodic Table",
+          "objectives": [
+            "Student can state the modern periodic law based on atomic number, following Moseley's work",
+            "Student can describe the long form of the periodic table with 18 groups and 7 periods"
+          ],
+          "visualIdeas": [
+            "the long form periodic table with groups and periods labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nomenclature-of-elements-with-atomic-numbers-100",
+          "title": "Nomenclature of Elements with Atomic Numbers > 100",
+          "objectives": [
+            "Student can name elements with atomic number above 100 using the IUPAC numerical roots",
+            "Student can write the temporary symbol of an element from its atomic number"
+          ],
+          "visualIdeas": [
+            "a table of digit roots: nil, un, bi, tri and so on"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "electronic-configurations-of-elements-and-the-periodic-table",
+          "title": "Electronic Configurations of Elements and the Periodic Table",
+          "objectives": [
+            "Student can relate the period number to the principal quantum number of the outermost shell",
+            "Student can explain why elements in the same group have similar outer electronic configurations"
+          ],
+          "visualIdeas": [
+            "the periodic table coloured by the subshell being filled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-s-block-elements",
+          "title": "The s-Block Elements",
+          "objectives": [
+            "Student can describe the outer configuration ns1 and ns2 of group 1 and 2 elements",
+            "Student can describe s-block elements as reactive metals with low ionization enthalpies that form ionic compounds"
+          ],
+          "visualIdeas": [
+            "groups 1 and 2 highlighted on the periodic table"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-p-block-elements",
+          "title": "The p-Block Elements",
+          "objectives": [
+            "Student can describe the outer configuration ns2 np1 to ns2 np6 of groups 13 to 18",
+            "Student can describe the noble gases as having closed valence shells and the change from metals to non-metals across the block"
+          ],
+          "visualIdeas": [
+            "groups 13 to 18 highlighted with the noble gases in a separate colour"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-d-block-and-f-block-elements",
+          "title": "The d-Block and f-Block Elements",
+          "objectives": [
+            "Student can describe d-block (transition) elements as metals with general configuration (n-1)d1-10 ns0-2, mostly forming coloured ions and showing variable oxidation states",
+            "Student can describe f-block (inner transition) elements, the lanthanoids and actinoids, placed separately at the bottom of the table"
+          ],
+          "visualIdeas": [
+            "the periodic table with the d-block in the centre and the f-block rows below"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "metals-non-metals-and-metalloids",
+          "title": "Metals, Non-metals and Metalloids",
+          "objectives": [
+            "Student can describe the general properties of metals and non-metals and where they lie in the periodic table",
+            "Student can identify metalloids such as silicon, germanium and arsenic along the zig-zag line"
+          ],
+          "visualIdeas": [
+            "a zig-zag line separating metals from non-metals with metalloids along it"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "atomic-radius-and-ionic-radius",
+          "title": "Atomic Radius and Ionic Radius",
+          "objectives": [
+            "Student can explain the trends of atomic radius down a group and across a period in terms of nuclear charge and shells",
+            "Student can explain why a cation is smaller and an anion larger than its parent atom, and compare isoelectronic species"
+          ],
+          "visualIdeas": [
+            "circles of increasing size down group 1 and decreasing across period 2"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ionization-enthalpy",
+          "title": "Ionization Enthalpy",
+          "objectives": [
+            "Student can define first and second ionization enthalpy",
+            "Student can explain the trends of ionization enthalpy across a period and down a group using shielding and effective nuclear charge",
+            "Student can explain anomalies such as boron having a lower first ionization enthalpy than beryllium"
+          ],
+          "visualIdeas": [
+            "a graph of first ionization enthalpy against atomic number with peaks at the noble gases"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electron-gain-enthalpy",
+          "title": "Electron Gain Enthalpy",
+          "objectives": [
+            "Student can define electron gain enthalpy and explain why it can be negative or positive",
+            "Student can describe its general trends in the periodic table and why noble gases have large positive values"
+          ],
+          "visualIdeas": [
+            "an atom gaining an electron with energy released"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "electronegativity",
+          "title": "Electronegativity",
+          "objectives": [
+            "Student can define electronegativity as the ability of an atom in a compound to attract shared electrons",
+            "Student can describe its trends and relate it to metallic and non-metallic character, using the Pauling scale"
+          ],
+          "visualIdeas": [
+            "an electronegativity map of the periodic table"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "periodic-trends-in-chemical-properties",
+          "title": "Periodic Trends in Chemical Properties",
+          "objectives": [
+            "Student can explain the periodicity of valence or oxidation states from the number of outer electrons",
+            "Student can explain the anomalous properties of second period elements, such as lithium and beryllium, using their small size and lack of d orbitals"
+          ],
+          "visualIdeas": [
+            "formulas of hydrides and oxides across period 3 showing valence"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "periodic-trends-and-chemical-reactivity",
+          "title": "Periodic Trends and Chemical Reactivity",
+          "objectives": [
+            "Student can relate reactivity to ionization enthalpy and electron gain enthalpy at the two ends of a period",
+            "Student can explain why oxides on the left are basic, on the right acidic, and in the centre amphoteric or neutral"
+          ],
+          "visualIdeas": [
+            "oxides across period 3 labelled basic, amphoteric and acidic"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "chemical-bonding-and-molecular-structure",
+      "title": "Chemical Bonding and Molecular Structure",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kech104.pdf",
+      "topics": [
+        {
+          "id": "kossel-lewis-approach-to-chemical-bonding",
+          "title": "Kössel-Lewis Approach to Chemical Bonding",
+          "objectives": [
+            "Student can write Lewis symbols showing the valence electrons of an atom",
+            "Student can state the octet rule and explain the formation of ionic bonds by electron transfer in Kössel's approach"
+          ],
+          "visualIdeas": [
+            "Lewis symbols of the second period elements",
+            "Na giving an electron to Cl to form Na+ and Cl-"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "covalent-bond",
+          "title": "Covalent Bond",
+          "objectives": [
+            "Student can describe a covalent bond as a shared pair of electrons, as proposed by Langmuir and Lewis",
+            "Student can show single, double and triple bonds in molecules such as Cl2, O2 and N2"
+          ],
+          "visualIdeas": [
+            "two chlorine atoms sharing a pair of electrons"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "lewis-representation-of-simple-molecules-the-lewis-structures",
+          "title": "Lewis Representation of Simple Molecules (the Lewis Structures)",
+          "objectives": [
+            "Student can draw Lewis structures by counting valence electrons, choosing the central atom and completing octets",
+            "Student can draw Lewis structures for molecules and ions such as CO, NO2- and CO3 2-"
+          ],
+          "visualIdeas": [
+            "step-by-step construction of the Lewis structure of the carbonate ion"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "formal-charge",
+          "title": "Formal Charge",
+          "objectives": [
+            "Student can calculate the formal charge on each atom in a Lewis structure",
+            "Student can use formal charges to choose the lowest-energy Lewis structure, as for ozone"
+          ],
+          "visualIdeas": [
+            "the ozone molecule with formal charges marked on each oxygen"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "limitations-of-the-octet-rule",
+          "title": "Limitations of the Octet Rule",
+          "objectives": [
+            "Student can identify molecules with an incomplete octet (LiCl, BCl3), odd-electron molecules (NO, NO2) and expanded octets (PF5, SF6)",
+            "Student can state other drawbacks of the octet theory, such as not explaining shapes or relative stability"
+          ],
+          "visualIdeas": [
+            "Lewis structures of BCl3, NO and SF6 side by side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ionic-or-electrovalent-bond",
+          "title": "Ionic or Electrovalent Bond",
+          "objectives": [
+            "Student can relate the ease of forming an ionic bond to low ionization enthalpy and negative electron gain enthalpy",
+            "Student can define lattice enthalpy and explain how it stabilises ionic solids"
+          ],
+          "visualIdeas": [
+            "ions arranged in a sodium chloride crystal lattice"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bond-length-bond-angle-and-bond-enthalpy",
+          "title": "Bond Length, Bond Angle and Bond Enthalpy",
+          "objectives": [
+            "Student can define bond length using covalent radii and bond angle between orbitals around a central atom",
+            "Student can define bond enthalpy and explain average bond enthalpy for polyatomic molecules"
+          ],
+          "visualIdeas": [
+            "a water molecule with the O-H bond length and H-O-H angle marked"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bond-order",
+          "title": "Bond Order",
+          "objectives": [
+            "Student can define bond order as the number of bonds between two atoms",
+            "Student can relate a higher bond order to greater bond enthalpy and shorter bond length"
+          ],
+          "visualIdeas": [
+            "H2, O2 and N2 with single, double and triple bonds"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "resonance-structures",
+          "title": "Resonance Structures",
+          "objectives": [
+            "Student can explain why one Lewis structure cannot describe molecules such as O3 and CO3 2-",
+            "Student can draw resonance structures and describe the resonance hybrid"
+          ],
+          "visualIdeas": [
+            "the canonical forms of ozone and their hybrid"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "polarity-of-bonds",
+          "title": "Polarity of Bonds",
+          "objectives": [
+            "Student can explain polar covalent bonds and define dipole moment, and use it to explain the dipole moments of molecules such as H2O, BeF2, BF3, NH3 and NF3",
+            "Student can apply Fajans' rules to predict partial covalent character of ionic bonds"
+          ],
+          "visualIdeas": [
+            "bond dipole arrows in H2O, BeF2, NH3 and NF3"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-valence-shell-electron-pair-repulsion-vsepr-theory",
+          "title": "The Valence Shell Electron Pair Repulsion (VSEPR) Theory",
+          "objectives": [
+            "Student can state the postulates of VSEPR theory and the order of repulsion lone pair-lone pair > lone pair-bond pair > bond pair-bond pair",
+            "Student can predict the shapes of molecules with only bond pairs, such as BeCl2, BF3, CH4, PCl5 and SF6",
+            "Student can predict the shapes of molecules with lone pairs, such as SO2, NH3, H2O, SF4, ClF3, BrF5 and XeF4"
+          ],
+          "visualIdeas": [
+            "ball-and-stick shapes from linear to octahedral",
+            "NH3 and H2O with lone pairs squeezing the bond angles"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "valence-bond-theory",
+          "title": "Valence Bond Theory",
+          "objectives": [
+            "Student can explain the formation of the H2 molecule from the attractive and repulsive forces as two H atoms approach",
+            "Student can relate the energy minimum on the potential energy curve to bond length and bond enthalpy, and describe bonding as orbital overlap"
+          ],
+          "visualIdeas": [
+            "a potential energy curve of two H atoms against internuclear distance"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "directional-properties-of-bonds-and-overlapping-of-atomic-orbitals",
+          "title": "Directional Properties of Bonds and Overlapping of Atomic Orbitals",
+          "objectives": [
+            "Student can explain why simple overlap of atomic orbitals cannot explain the bond angles in CH4, NH3 and H2O",
+            "Student can distinguish positive, negative and zero overlap of atomic orbitals"
+          ],
+          "visualIdeas": [
+            "s and p orbitals overlapping in phase, out of phase and at right angles"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "types-of-overlapping-and-nature-of-covalent-bonds",
+          "title": "Types of Overlapping and Nature of Covalent Bonds",
+          "objectives": [
+            "Student can distinguish sigma bonds formed by head-on overlap from pi bonds formed by sideways overlap",
+            "Student can explain why a sigma bond is stronger than a pi bond"
+          ],
+          "visualIdeas": [
+            "head-on s-s, s-p and p-p overlap beside sideways p-p overlap"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "hybridisation",
+          "title": "Hybridisation",
+          "objectives": [
+            "Student can define hybridisation and state its salient features",
+            "Student can describe sp, sp2 and sp3 hybridisation with BeCl2, BCl3 and CH4"
+          ],
+          "visualIdeas": [
+            "an s orbital and three p orbitals mixing into four sp3 hybrids pointing to a tetrahedron"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "other-examples-of-sp3-sp2-and-sp-hybridisation",
+          "title": "Other Examples of sp3, sp2 and sp Hybridisation",
+          "objectives": [
+            "Student can explain the shapes of NH3 and H2O using sp3 hybridisation with lone pairs",
+            "Student can explain the bonding in ethane, ethene and ethyne using sp3, sp2 and sp hybridisation"
+          ],
+          "visualIdeas": [
+            "ethene with sp2 sigma framework and sideways p overlap forming the pi bond"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "hybridisation-of-elements-involving-d-orbitals",
+          "title": "Hybridisation of Elements involving d Orbitals",
+          "objectives": [
+            "Student can describe sp3d and sp3d2 hybridisation in PCl5 and SF6",
+            "Student can explain why the axial bonds in PCl5 are longer than the equatorial bonds"
+          ],
+          "visualIdeas": [
+            "trigonal bipyramidal PCl5 and octahedral SF6"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "molecular-orbital-theory",
+          "title": "Molecular Orbital Theory",
+          "objectives": [
+            "Student can state the salient features of molecular orbital theory",
+            "Student can contrast molecular orbitals, which belong to the whole molecule, with atomic orbitals"
+          ],
+          "visualIdeas": [
+            "two atomic orbitals combining into a bonding and an antibonding molecular orbital"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "formation-of-molecular-orbitals-linear-combination-of-atomic-orbitals-lcao",
+          "title": "Formation of Molecular Orbitals: Linear Combination of Atomic Orbitals (LCAO)",
+          "objectives": [
+            "Student can describe the formation of bonding and antibonding molecular orbitals by addition and subtraction of atomic wave functions",
+            "Student can explain why bonding orbitals have lower energy and antibonding orbitals higher energy"
+          ],
+          "visualIdeas": [
+            "constructive and destructive interference of two 1s orbitals"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conditions-for-the-combination-of-atomic-orbitals-and-types-of-molecular-orbitals",
+          "title": "Conditions for the Combination of Atomic Orbitals and Types of Molecular Orbitals",
+          "objectives": [
+            "Student can state the conditions for atomic orbitals to combine: similar energy, same symmetry and maximum overlap",
+            "Student can distinguish sigma and pi molecular orbitals and their antibonding forms"
+          ],
+          "visualIdeas": [
+            "sigma and pi molecular orbitals formed from 2p orbitals"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "energy-level-diagram-for-molecular-orbitals",
+          "title": "Energy Level Diagram for Molecular Orbitals",
+          "objectives": [
+            "Student can draw the molecular orbital energy level diagram for second period homonuclear diatomic molecules",
+            "Student can explain the different ordering of sigma2p and pi2p orbitals for O2 and F2 compared with B2, C2 and N2"
+          ],
+          "visualIdeas": [
+            "two MO energy diagrams side by side for N2 and O2"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electronic-configuration-and-molecular-behaviour",
+          "title": "Electronic Configuration and Molecular Behaviour",
+          "objectives": [
+            "Student can relate the molecular orbital configuration to stability and calculate bond order",
+            "Student can predict bond length and magnetic nature (paramagnetic or diamagnetic) from the configuration"
+          ],
+          "visualIdeas": [
+            "MO boxes with unpaired electrons highlighted for O2"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bonding-in-some-homonuclear-diatomic-molecules",
+          "title": "Bonding in Some Homonuclear Diatomic Molecules",
+          "objectives": [
+            "Student can write MO configurations for H2, He2, Li2, C2 and O2 and find their bond orders",
+            "Student can explain why He2 does not exist and why O2 is paramagnetic"
+          ],
+          "visualIdeas": [
+            "MO filling diagrams for H2, He2 and O2"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "hydrogen-bonding",
+          "title": "Hydrogen Bonding",
+          "objectives": [
+            "Student can explain the cause of hydrogen bonding between a hydrogen atom and a highly electronegative atom such as F, O or N",
+            "Student can distinguish intermolecular and intramolecular hydrogen bonds with examples such as HF and o-nitrophenol"
+          ],
+          "visualIdeas": [
+            "zig-zag chains of HF molecules held by hydrogen bonds",
+            "o-nitrophenol with an intramolecular hydrogen bond"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "thermodynamics",
+      "title": "Thermodynamics",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kech105.pdf",
+      "topics": [
+        {
+          "id": "the-system-and-the-surroundings",
+          "title": "The System and the Surroundings",
+          "objectives": [
+            "Student can define the system, the surroundings and the boundary",
+            "Student can state that the system and surroundings together make up the universe"
+          ],
+          "visualIdeas": [
+            "a beaker of reacting solution as the system with the rest of the room as surroundings"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "types-of-the-system",
+          "title": "Types of the System",
+          "objectives": [
+            "Student can distinguish open, closed and isolated systems by exchange of matter and energy",
+            "Student can give an example of each, such as reactants in an open beaker, a closed vessel and an insulated flask"
+          ],
+          "visualIdeas": [
+            "an open beaker, a closed flask and a thermos flask side by side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-state-of-the-system",
+          "title": "The State of the System",
+          "objectives": [
+            "Student can describe the state of a system by state variables such as pressure, volume, temperature and amount",
+            "Student can define a state function as a property that depends only on the state, not on how it was reached"
+          ],
+          "visualIdeas": [
+            "two different paths between the same initial and final states"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-internal-energy-as-a-state-function",
+          "title": "The Internal Energy as a State Function",
+          "objectives": [
+            "Student can explain how internal energy changes by adiabatic work and by heat transfer",
+            "Student can state the first law of thermodynamics as delta U = q + w with the IUPAC sign convention"
+          ],
+          "visualIdeas": [
+            "a gas in an insulated container being stirred and a gas heated through a conducting wall"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "work",
+          "title": "Work",
+          "objectives": [
+            "Student can derive the pressure-volume work w = -p_ex delta V for expansion against constant external pressure",
+            "Student can calculate work for isothermal reversible expansion of an ideal gas, w = -2.303 nRT log(Vf/Vi)",
+            "Student can explain free expansion and apply the first law to isothermal processes of an ideal gas"
+          ],
+          "visualIdeas": [
+            "a gas in a cylinder pushing a piston against external pressure",
+            "a p-V graph with the work shown as the shaded area"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "enthalpy-h",
+          "title": "Enthalpy, H",
+          "objectives": [
+            "Student can define enthalpy H = U + pV and show that delta H equals the heat absorbed at constant pressure",
+            "Student can relate delta H and delta U for reactions involving gases using delta H = delta U + delta n_g RT"
+          ],
+          "visualIdeas": [
+            "heat flowing into a reaction at constant pressure with the system expanding"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "extensive-and-intensive-properties",
+          "title": "Extensive and Intensive Properties",
+          "objectives": [
+            "Student can distinguish extensive properties, which depend on the amount of matter, from intensive properties, which do not",
+            "Student can classify properties such as mass, volume, enthalpy, temperature and density"
+          ],
+          "visualIdeas": [
+            "a gas divided by a partition into two halves with each property compared"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "heat-capacity-and-the-relationship-between-cp-and-cv",
+          "title": "Heat Capacity and the Relationship between Cp and CV",
+          "objectives": [
+            "Student can define heat capacity, specific heat and molar heat capacity and use q = c m delta T",
+            "Student can derive Cp - CV = R for an ideal gas"
+          ],
+          "visualIdeas": [
+            "heating curves of samples with different heat capacities"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "measurement-of-delta-u-and-delta-h-calorimetry",
+          "title": "Measurement of ΔU and ΔH: Calorimetry",
+          "objectives": [
+            "Student can describe the bomb calorimeter for measuring delta U at constant volume",
+            "Student can describe measuring delta H at constant pressure in a calorimeter and identify exothermic and endothermic reactions by the sign"
+          ],
+          "visualIdeas": [
+            "a cut-away bomb calorimeter immersed in water with a thermometer"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "standard-enthalpy-of-reactions-and-enthalpy-changes-during-phase-transformations",
+          "title": "Standard Enthalpy of Reactions and Enthalpy Changes during Phase Transformations",
+          "objectives": [
+            "Student can define reaction enthalpy and standard enthalpy of reaction, with the standard state of a substance",
+            "Student can use standard enthalpies of fusion, vaporisation and sublimation"
+          ],
+          "visualIdeas": [
+            "a table of enthalpies of fusion and vaporisation of common substances"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "standard-enthalpy-of-formation",
+          "title": "Standard Enthalpy of Formation",
+          "objectives": [
+            "Student can define standard molar enthalpy of formation and state that it is zero for an element in its reference state",
+            "Student can calculate the reaction enthalpy from enthalpies of formation of products and reactants"
+          ],
+          "visualIdeas": [
+            "an enthalpy diagram with elements at zero and compounds above or below"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "thermochemical-equations-and-hesss-law-of-constant-heat-summation",
+          "title": "Thermochemical Equations and Hess's Law of Constant Heat Summation",
+          "objectives": [
+            "Student can write a thermochemical equation with physical states and the enthalpy change",
+            "Student can state Hess's law and use it to calculate the enthalpy change of a reaction from other reactions"
+          ],
+          "visualIdeas": [
+            "two routes from reactants to products with enthalpy changes that add up to the same total"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "standard-enthalpy-of-combustion-and-enthalpy-of-atomization",
+          "title": "Standard Enthalpy of Combustion and Enthalpy of Atomization",
+          "objectives": [
+            "Student can define standard enthalpy of combustion and use it, for example for butane in cooking gas",
+            "Student can define enthalpy of atomization"
+          ],
+          "visualIdeas": [
+            "a gas stove flame burning butane"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "bond-enthalpy",
+          "title": "Bond Enthalpy",
+          "objectives": [
+            "Student can distinguish bond dissociation enthalpy for diatomic molecules from mean bond enthalpy in polyatomic molecules",
+            "Student can estimate the reaction enthalpy in the gas phase from bond enthalpies of bonds broken and formed"
+          ],
+          "visualIdeas": [
+            "bonds broken in reactants and bonds formed in products for the formation of HCl"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "lattice-enthalpy",
+          "title": "Lattice Enthalpy",
+          "objectives": [
+            "Student can define lattice enthalpy of an ionic compound",
+            "Student can calculate lattice enthalpy using a Born-Haber cycle for sodium chloride"
+          ],
+          "visualIdeas": [
+            "a Born-Haber cycle for NaCl"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "enthalpy-of-solution-and-enthalpy-of-dilution",
+          "title": "Enthalpy of Solution and Enthalpy of Dilution",
+          "objectives": [
+            "Student can define enthalpy of solution and relate it to lattice enthalpy and enthalpy of hydration of ions",
+            "Student can explain that the enthalpy of solution depends on concentration, giving enthalpy of dilution"
+          ],
+          "visualIdeas": [
+            "an ionic solid dissolving with ions surrounded by water molecules"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "is-decrease-in-enthalpy-a-criterion-for-spontaneity",
+          "title": "Is Decrease in Enthalpy a Criterion for Spontaneity?",
+          "objectives": [
+            "Student can define a spontaneous process as one that can occur without outside help",
+            "Student can explain with examples why a decrease in enthalpy alone cannot decide spontaneity"
+          ],
+          "visualIdeas": [
+            "an exothermic and an endothermic reaction that are both spontaneous"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "entropy-and-spontaneity",
+          "title": "Entropy and Spontaneity",
+          "objectives": [
+            "Student can describe entropy as a measure of the randomness or disorder of a system and a state function",
+            "Student can state that for a spontaneous process in an isolated system the total entropy increases, delta S_total > 0"
+          ],
+          "visualIdeas": [
+            "gas molecules spreading from one bulb into two connected bulbs"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "gibbs-energy-and-spontaneity",
+          "title": "Gibbs Energy and Spontaneity",
+          "objectives": [
+            "Student can define Gibbs energy G = H - TS and use delta G = delta H - T delta S",
+            "Student can use the sign of delta G to predict spontaneity and the effect of temperature for different signs of delta H and delta S"
+          ],
+          "visualIdeas": [
+            "a table of the four combinations of signs of delta H and delta S"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "entropy-and-second-law-absolute-entropy-and-third-law-of-thermodynamics",
+          "title": "Entropy and Second Law; Absolute Entropy and Third Law of Thermodynamics",
+          "objectives": [
+            "Student can state the second law in terms of entropy increase of the universe for spontaneous processes",
+            "Student can state the third law: the entropy of a perfectly crystalline substance approaches zero at absolute zero"
+          ],
+          "visualIdeas": [
+            "a perfect crystal at 0 K with every particle in place"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "gibbs-energy-change-and-equilibrium",
+          "title": "Gibbs Energy Change and Equilibrium",
+          "objectives": [
+            "Student can state that delta G = 0 at equilibrium",
+            "Student can use delta G standard = -RT ln K = -2.303 RT log K to relate the standard Gibbs energy change to the equilibrium constant"
+          ],
+          "visualIdeas": [
+            "a Gibbs energy curve with its minimum at equilibrium"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "equilibrium",
+      "title": "Equilibrium",
+      "book": "Chemistry Part I",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kech106.pdf",
+      "topics": [
+        {
+          "id": "solid-liquid-liquid-vapour-and-solid-vapour-equilibrium",
+          "title": "Solid-Liquid, Liquid-Vapour and Solid-Vapour Equilibrium",
+          "objectives": [
+            "Student can describe ice and water at the normal melting point as a dynamic equilibrium",
+            "Student can describe the equilibrium between a liquid and its vapour in a closed vessel and define equilibrium vapour pressure",
+            "Student can describe solid-vapour equilibrium in the sublimation of iodine"
+          ],
+          "visualIdeas": [
+            "water evaporating in a closed box until the vapour pressure becomes constant"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "equilibrium-involving-dissolution-of-solid-or-gases-in-liquids",
+          "title": "Equilibrium Involving Dissolution of Solid or Gases in Liquids",
+          "objectives": [
+            "Student can describe a saturated solution as a dynamic equilibrium between dissolved and undissolved solute",
+            "Student can state Henry's law and explain why a soda bottle fizzes when opened"
+          ],
+          "visualIdeas": [
+            "a soda bottle releasing bubbles when its cap is removed"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "general-characteristics-of-equilibria-involving-physical-processes",
+          "title": "General Characteristics of Equilibria Involving Physical Processes",
+          "objectives": [
+            "Student can list the characteristics of physical equilibria: only in closed systems, both processes at the same rate, measurable properties constant",
+            "Student can explain that the magnitude of a constant at equilibrium indicates the extent of the process"
+          ],
+          "visualIdeas": [
+            "two opposite arrows of equal length between two phases"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "equilibrium-in-chemical-processes-dynamic-equilibrium",
+          "title": "Equilibrium in Chemical Processes - Dynamic Equilibrium",
+          "objectives": [
+            "Student can explain chemical equilibrium as forward and reverse reactions occurring at equal rates",
+            "Student can describe how equilibrium can be approached from either direction, as in the hydrogen-iodine reaction, and how isotopes show it is dynamic"
+          ],
+          "visualIdeas": [
+            "concentration-time graphs of reactants and products levelling off at equilibrium"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "law-of-chemical-equilibrium-and-equilibrium-constant",
+          "title": "Law of Chemical Equilibrium and Equilibrium Constant",
+          "objectives": [
+            "Student can state the law of chemical equilibrium (law of mass action) for a general reaction",
+            "Student can write the equilibrium constant expression Kc and relate K for a reaction reversed or multiplied by a factor"
+          ],
+          "visualIdeas": [
+            "a general reaction aA + bB = cC + dD with its Kc expression"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "homogeneous-equilibria",
+          "title": "Homogeneous Equilibria",
+          "objectives": [
+            "Student can define a homogeneous equilibrium as one in which all reactants and products are in the same phase",
+            "Student can write Kc expressions for gas-phase and solution-phase homogeneous equilibria"
+          ],
+          "visualIdeas": [
+            "nitrogen, hydrogen and ammonia molecules mixed in one gas phase"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "equilibrium-constant-in-gaseous-systems",
+          "title": "Equilibrium Constant in Gaseous Systems",
+          "objectives": [
+            "Student can write Kp in terms of partial pressures",
+            "Student can derive and use Kp = Kc(RT)^delta n"
+          ],
+          "visualIdeas": [
+            "a vessel of gases with partial pressure gauges for each gas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "heterogeneous-equilibria",
+          "title": "Heterogeneous Equilibria",
+          "objectives": [
+            "Student can define heterogeneous equilibrium with more than one phase",
+            "Student can write equilibrium constants that leave out pure solids and liquids, as for the decomposition of calcium carbonate"
+          ],
+          "visualIdeas": [
+            "calcium carbonate heated in a closed vessel with CaO and CO2"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "predicting-the-extent-of-a-reaction",
+          "title": "Predicting the Extent of a Reaction",
+          "objectives": [
+            "Student can use the magnitude of K to judge whether products or reactants predominate at equilibrium",
+            "Student can compare reactions with very large, intermediate and very small K"
+          ],
+          "visualIdeas": [
+            "three bars showing the extent of reaction for K large, K about 1 and K small"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "predicting-the-direction-of-the-reaction",
+          "title": "Predicting the Direction of the Reaction",
+          "objectives": [
+            "Student can define the reaction quotient Q",
+            "Student can predict the direction of net reaction by comparing Q with K"
+          ],
+          "visualIdeas": [
+            "a number line with Q < K, Q = K and Q > K and arrows showing direction"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "calculating-equilibrium-concentrations",
+          "title": "Calculating Equilibrium Concentrations",
+          "objectives": [
+            "Student can set up a table of initial, change and equilibrium amounts for a reaction",
+            "Student can solve for equilibrium concentrations given K and initial concentrations"
+          ],
+          "visualIdeas": [
+            "an ICE table for the N2O4 to NO2 equilibrium"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "relationship-between-equilibrium-constant-k-reaction-quotient-q-and-gibbs-energy-g",
+          "title": "Relationship between Equilibrium Constant K, Reaction Quotient Q and Gibbs Energy G",
+          "objectives": [
+            "Student can use delta G = delta G standard + RT ln Q and delta G standard = -RT ln K",
+            "Student can relate the sign of delta G standard to the value of K and the spontaneity of a reaction"
+          ],
+          "visualIdeas": [
+            "a graph of Gibbs energy against reaction progress with the minimum at equilibrium"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "effect-of-concentration-change",
+          "title": "Effect of Concentration Change",
+          "objectives": [
+            "Student can state Le Chatelier's principle",
+            "Student can predict how adding or removing a reactant or product shifts an equilibrium, as in the Fe3+ and SCN- reaction"
+          ],
+          "visualIdeas": [
+            "a blood-red solution of iron(III) thiocyanate changing colour as reagents are added"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "effect-of-pressure-change",
+          "title": "Effect of Pressure Change",
+          "objectives": [
+            "Student can predict the effect of changing pressure by changing volume on gaseous equilibria with different numbers of moles on each side",
+            "Student can explain why pressure has no effect when the moles of gas are equal on both sides"
+          ],
+          "visualIdeas": [
+            "a piston compressing a mixture of gases"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "effect-of-inert-gas-addition",
+          "title": "Effect of Inert Gas Addition",
+          "objectives": [
+            "Student can explain that adding an inert gas at constant volume does not change the equilibrium",
+            "Student can reason that the partial pressures and molar concentrations of the reacting gases stay the same"
+          ],
+          "visualIdeas": [
+            "argon atoms added to a fixed-volume vessel at equilibrium"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "effect-of-temperature-change",
+          "title": "Effect of Temperature Change",
+          "objectives": [
+            "Student can explain that temperature changes the value of K",
+            "Student can predict the direction of shift for exothermic and endothermic reactions, as for the synthesis of ammonia and the N2O4-NO2 equilibrium"
+          ],
+          "visualIdeas": [
+            "flasks of NO2 and N2O4 in hot and in ice-cold water with different brown colour"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "effect-of-a-catalyst",
+          "title": "Effect of a Catalyst",
+          "objectives": [
+            "Student can explain that a catalyst speeds up the forward and reverse reactions equally and does not change K",
+            "Student can describe the use of a catalyst in the Haber process to reach equilibrium faster"
+          ],
+          "visualIdeas": [
+            "energy profiles with and without a catalyst"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "ionic-equilibrium-in-solution",
+          "title": "Ionic Equilibrium in Solution",
+          "objectives": [
+            "Student can distinguish strong and weak electrolytes by the extent of their ionization in water",
+            "Student can explain that weak electrolytes set up an equilibrium between ions and unionized molecules"
+          ],
+          "visualIdeas": [
+            "strong acid fully ionized beside a weak acid partly ionized"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "arrhenius-concept-of-acids-and-bases",
+          "title": "Arrhenius Concept of Acids and Bases",
+          "objectives": [
+            "Student can describe the general properties of acids and bases and how salts form",
+            "Student can define acids and bases in the Arrhenius concept and state its limitation to aqueous solutions"
+          ],
+          "visualIdeas": [
+            "HCl and NaOH dissociating in water into H+ and OH- ions"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-bronsted-lowry-acids-and-bases",
+          "title": "The Brönsted-Lowry Acids and Bases",
+          "objectives": [
+            "Student can define acids as proton donors and bases as proton acceptors",
+            "Student can identify conjugate acid-base pairs in a reaction"
+          ],
+          "visualIdeas": [
+            "NH3 accepting a proton from water with conjugate pairs labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "lewis-acids-and-bases",
+          "title": "Lewis Acids and Bases",
+          "objectives": [
+            "Student can define a Lewis acid as an electron pair acceptor and a Lewis base as an electron pair donor",
+            "Student can classify species such as BF3, NH3, OH- and metal ions as Lewis acids or bases"
+          ],
+          "visualIdeas": [
+            "BF3 accepting a lone pair from NH3"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-ionization-constant-of-water-and-its-ionic-product",
+          "title": "The Ionization Constant of Water and its Ionic Product",
+          "objectives": [
+            "Student can relate the strength of an acid or base to the extent of its ionization and the strength of its conjugate",
+            "Student can write the ionic product of water Kw = [H3O+][OH-] = 1.0 x 10^-14 at 298 K and classify solutions as acidic, neutral or basic"
+          ],
+          "visualIdeas": [
+            "water molecules self-ionizing into H3O+ and OH-"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-ph-scale",
+          "title": "The pH Scale",
+          "objectives": [
+            "Student can define pH as -log[H3O+] and calculate pH and pOH with pH + pOH = 14",
+            "Student can read the pH of common substances on the scale"
+          ],
+          "visualIdeas": [
+            "a pH scale from 0 to 14 with lemon juice, water, blood and household ammonia placed on it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ionization-constants-of-weak-acids",
+          "title": "Ionization Constants of Weak Acids",
+          "objectives": [
+            "Student can write the ionization constant Ka of a weak acid and relate it to the degree of ionization",
+            "Student can calculate the pH of a weak acid solution from Ka and concentration"
+          ],
+          "visualIdeas": [
+            "an ICE table for acetic acid ionizing in water"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "ionization-of-weak-bases",
+          "title": "Ionization of Weak Bases",
+          "objectives": [
+            "Student can write the ionization constant Kb of a weak base",
+            "Student can calculate the pH of a weak base solution"
+          ],
+          "visualIdeas": [
+            "ammonia accepting a proton from water to form NH4+ and OH-"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "relation-between-ka-and-kb",
+          "title": "Relation between Ka and Kb",
+          "objectives": [
+            "Student can derive Ka x Kb = Kw for a conjugate acid-base pair",
+            "Student can use pKa + pKb = pKw to find one constant from the other"
+          ],
+          "visualIdeas": [
+            "a conjugate pair with Ka and Kb multiplying to Kw"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "di-and-polybasic-acids-and-di-and-polyacidic-bases",
+          "title": "Di- and Polybasic Acids and Di- and Polyacidic Bases",
+          "objectives": [
+            "Student can write stepwise ionization constants for polybasic acids such as oxalic acid and phosphoric acid",
+            "Student can explain why the first ionization constant is larger than the later ones"
+          ],
+          "visualIdeas": [
+            "successive loss of protons from H2SO4 or H3PO4"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "factors-affecting-acid-strength",
+          "title": "Factors Affecting Acid Strength",
+          "objectives": [
+            "Student can relate acid strength to the strength and polarity of the H-A bond",
+            "Student can explain the trends in acid strength of hydrogen halides down a group and of hydrides across a period"
+          ],
+          "visualIdeas": [
+            "H-F, H-Cl, H-Br and H-I bonds of increasing length"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "common-ion-effect-in-the-ionization-of-acids-and-bases",
+          "title": "Common Ion Effect in the Ionization of Acids and Bases",
+          "objectives": [
+            "Student can explain the common ion effect as the suppression of ionization of a weak electrolyte by adding a strong electrolyte with a common ion",
+            "Student can calculate the pH of a solution of a weak acid with its salt"
+          ],
+          "visualIdeas": [
+            "acetic acid solution with sodium acetate added, shifting the equilibrium left"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "hydrolysis-of-salts-and-the-ph-of-their-solutions",
+          "title": "Hydrolysis of Salts and the pH of their Solutions",
+          "objectives": [
+            "Student can explain why salts of strong acid-weak base and weak acid-strong base give acidic or basic solutions",
+            "Student can predict whether a salt solution is acidic, basic or neutral and calculate its pH"
+          ],
+          "visualIdeas": [
+            "a table of salts with the parent acid and base strengths and resulting pH"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "buffer-solutions",
+          "title": "Buffer Solutions",
+          "objectives": [
+            "Student can define a buffer solution as one that resists change in pH on dilution or on adding small amounts of acid or base",
+            "Student can use the Henderson-Hasselbalch equation to design an acidic or basic buffer"
+          ],
+          "visualIdeas": [
+            "a buffer beaker staying at the same pH while drops of acid and base are added"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "solubility-product-constant",
+          "title": "Solubility Product Constant",
+          "objectives": [
+            "Student can classify salts by solubility and write the solubility product Ksp for a sparingly soluble salt",
+            "Student can calculate solubility from Ksp and predict precipitation by comparing the ionic product with Ksp"
+          ],
+          "visualIdeas": [
+            "a saturated solution of barium sulphate in equilibrium with the solid"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "common-ion-effect-on-solubility-of-ionic-salts",
+          "title": "Common Ion Effect on Solubility of Ionic Salts",
+          "objectives": [
+            "Student can explain why the solubility of a sparingly soluble salt decreases when a common ion is added",
+            "Student can describe the use of this effect, as in purifying sodium chloride by passing HCl gas"
+          ],
+          "visualIdeas": [
+            "salt crystals precipitating from brine as HCl gas is bubbled in"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "redox-reactions",
+      "title": "Redox Reactions",
+      "book": "Chemistry Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kech201.pdf",
+      "topics": [
+        {
+          "id": "classical-idea-of-redox-reactions-oxidation-and-reduction-reactions",
+          "title": "Classical Idea of Redox Reactions - Oxidation and Reduction Reactions",
+          "objectives": [
+            "Student can define oxidation and reduction in terms of addition or removal of oxygen, hydrogen or electronegative elements",
+            "Student can identify the oxidising agent and reducing agent in a reaction"
+          ],
+          "visualIdeas": [
+            "magnesium burning in oxygen beside copper oxide being reduced by hydrogen"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "redox-reactions-in-terms-of-electron-transfer-reactions",
+          "title": "Redox Reactions in Terms of Electron Transfer Reactions",
+          "objectives": [
+            "Student can define oxidation as loss of electrons and reduction as gain of electrons",
+            "Student can split a redox reaction into oxidation and reduction half reactions"
+          ],
+          "visualIdeas": [
+            "sodium transferring an electron to chlorine with two half reactions written below"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "competitive-electron-transfer-reactions",
+          "title": "Competitive Electron Transfer Reactions",
+          "objectives": [
+            "Student can describe the reaction of zinc metal with copper sulphate solution as a competition for electrons",
+            "Student can arrange metals by their tendency to release electrons, as in a metal activity series"
+          ],
+          "visualIdeas": [
+            "a zinc rod in blue copper sulphate solution getting coated with copper"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "oxidation-number",
+          "title": "Oxidation Number",
+          "objectives": [
+            "Student can assign oxidation numbers using the rules for elements, ions, oxygen, hydrogen and halogens",
+            "Student can define oxidation and reduction in terms of change in oxidation number and use the Stock notation"
+          ],
+          "visualIdeas": [
+            "a molecule with the oxidation number written over each atom"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "types-of-redox-reactions",
+          "title": "Types of Redox Reactions",
+          "objectives": [
+            "Student can classify redox reactions as combination, decomposition, displacement (metal and non-metal) and disproportionation reactions",
+            "Student can identify a disproportionation reaction, in which the same element is both oxidised and reduced"
+          ],
+          "visualIdeas": [
+            "four example equations, one for each type of redox reaction"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "balancing-of-redox-reactions",
+          "title": "Balancing of Redox Reactions",
+          "objectives": [
+            "Student can balance redox equations by the oxidation number method",
+            "Student can balance redox equations by the half reaction method in acidic and basic media"
+          ],
+          "visualIdeas": [
+            "a permanganate equation balanced step by step with half reactions"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "redox-reactions-as-the-basis-for-titrations",
+          "title": "Redox Reactions as the Basis for Titrations",
+          "objectives": [
+            "Student can describe redox titrations using potassium permanganate and potassium dichromate",
+            "Student can explain how the end point is detected in such titrations"
+          ],
+          "visualIdeas": [
+            "a burette of purple permanganate dripping into a colourless solution"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "limitations-of-concept-of-oxidation-number",
+          "title": "Limitations of Concept of Oxidation Number",
+          "objectives": [
+            "Student can explain that the idea of oxidation and reduction has broadened from oxygen and electrons to oxidation numbers",
+            "Student can state that oxidation and reduction can also be seen as shifts in electron density"
+          ],
+          "visualIdeas": [
+            "a polar bond with electron density shifted towards the more electronegative atom"
+          ],
+          "estMinutes": 5
+        },
+        {
+          "id": "redox-reactions-and-electrode-processes",
+          "title": "Redox Reactions and Electrode Processes",
+          "objectives": [
+            "Student can describe a Daniell cell in which a redox reaction produces electricity",
+            "Student can explain redox couples, electrode potential and the standard hydrogen electrode, and use standard electrode potentials to compare oxidising and reducing power"
+          ],
+          "visualIdeas": [
+            "a Daniell cell with zinc and copper electrodes joined by a salt bridge"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Organic Chemistry – Some Basic Principles and Techniques",
+      "book": "Chemistry Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kech202.pdf",
+      "topics": [
+        {
+          "id": "tetravalence-of-carbon-shapes-of-organic-compounds",
+          "title": "Tetravalence of Carbon: Shapes of Organic Compounds",
+          "objectives": [
+            "Student can explain the tetravalence of carbon and relate sp3, sp2 and sp hybridisation to tetrahedral, trigonal planar and linear shapes",
+            "Student can relate hybridisation to bond length, bond enthalpy and electronegativity of carbon"
+          ],
+          "visualIdeas": [
+            "methane, ethene and ethyne models showing tetrahedral, planar and linear carbon"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "some-characteristic-features-of-pi-bonds",
+          "title": "Some Characteristic Features of π Bonds",
+          "objectives": [
+            "Student can explain why a pi bond needs the p orbitals to be parallel and restricts rotation about the double bond",
+            "Student can explain why pi bonds are reactive centres in organic molecules"
+          ],
+          "visualIdeas": [
+            "sideways overlap of p orbitals above and below the plane of ethene"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "complete-condensed-and-bond-line-structural-formulas",
+          "title": "Complete, Condensed and Bond-line Structural Formulas",
+          "objectives": [
+            "Student can write complete (dash), condensed and bond-line structural formulas of organic compounds",
+            "Student can interpret bond-line formulas of chains and rings"
+          ],
+          "visualIdeas": [
+            "the same molecule drawn as a complete, a condensed and a bond-line formula"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "three-dimensional-representation-of-organic-molecules",
+          "title": "Three-Dimensional Representation of Organic Molecules",
+          "objectives": [
+            "Student can draw wedge-and-dash formulas to show bonds above and below the plane of the paper",
+            "Student can describe molecular models such as ball-and-stick and space-filling models"
+          ],
+          "visualIdeas": [
+            "methane drawn with wedges and dashes beside its ball-and-stick model"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "classification-of-organic-compounds",
+          "title": "Classification of Organic Compounds",
+          "objectives": [
+            "Student can classify organic compounds as acyclic (open chain) or cyclic",
+            "Student can distinguish alicyclic, aromatic (benzenoid and non-benzenoid) and heterocyclic aromatic compounds"
+          ],
+          "visualIdeas": [
+            "a tree chart of organic compound classes with an example structure for each"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "functional-group-and-homologous-series",
+          "title": "Functional Group and Homologous Series",
+          "objectives": [
+            "Student can define a functional group and recognise common groups such as hydroxyl (-OH), aldehyde (-CHO) and carboxylic acid (-COOH)",
+            "Student can define a homologous series as a family differing by CH2 units with the same functional group"
+          ],
+          "visualIdeas": [
+            "the first members of the alcohol series lined up with -CH2- added each time"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-iupac-system-of-nomenclature",
+          "title": "The IUPAC System of Nomenclature",
+          "objectives": [
+            "Student can explain why a systematic naming system is needed besides trivial names",
+            "Student can explain that a systematic name comes from the parent hydrocarbon, modified by prefixes and suffixes for the functional groups and branches attached to it"
+          ],
+          "visualIdeas": [
+            "a carbon chain with its parent chain, branch and functional groups labelled, as in the book's figure"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "iupac-nomenclature-of-alkanes",
+          "title": "IUPAC Nomenclature of Alkanes",
+          "objectives": [
+            "Student can name straight-chain alkanes and alkyl groups",
+            "Student can name branched alkanes by choosing the longest chain, numbering for lowest locants and ordering substituents alphabetically"
+          ],
+          "visualIdeas": [
+            "a branched alkane with its longest chain highlighted and carbons numbered"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "nomenclature-of-organic-compounds-having-functional-group-s",
+          "title": "Nomenclature of Organic Compounds having Functional Group(s)",
+          "objectives": [
+            "Student can name compounds with one functional group using the right suffix and lowest locant",
+            "Student can name polyfunctional compounds by choosing the principal functional group in order of priority"
+          ],
+          "visualIdeas": [
+            "a table of functional groups with their prefixes and suffixes"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "nomenclature-of-substituted-benzene-compounds",
+          "title": "Nomenclature of Substituted Benzene Compounds",
+          "objectives": [
+            "Student can name substituted benzenes using IUPAC and common names",
+            "Student can use ortho, meta and para or locant numbers for disubstituted benzenes"
+          ],
+          "visualIdeas": [
+            "a benzene ring with ortho, meta and para positions marked"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "isomerism",
+          "title": "Isomerism",
+          "objectives": [
+            "Student can define isomers and classify structural isomerism into chain, position, functional group and metamerism",
+            "Student can state that stereoisomers have the same constitution but different spatial arrangement, as geometrical and optical isomers"
+          ],
+          "visualIdeas": [
+            "two chain isomers and two position isomers of C5H12 and C3H7OH"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "fission-of-a-covalent-bond",
+          "title": "Fission of a Covalent Bond",
+          "objectives": [
+            "Student can distinguish heterolytic cleavage, forming carbocations or carbanions, from homolytic cleavage, forming free radicals",
+            "Student can classify carbocations as primary, secondary or tertiary and state their order of stability"
+          ],
+          "visualIdeas": [
+            "a C-X bond breaking heterolytically and homolytically with curved arrows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "substrate-and-reagent",
+          "title": "Substrate and Reagent",
+          "objectives": [
+            "Student can define substrate and reagent in an organic reaction",
+            "Student can distinguish nucleophiles (electron-rich) from electrophiles (electron-deficient) with examples"
+          ],
+          "visualIdeas": [
+            "an electron-rich nucleophile attacking an electron-poor carbon"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "electron-movement-in-organic-reactions",
+          "title": "Electron Movement in Organic Reactions",
+          "objectives": [
+            "Student can use curved arrows to show the movement of an electron pair",
+            "Student can use fish-hook arrows to show the movement of a single electron"
+          ],
+          "visualIdeas": [
+            "a full curved arrow and a fish-hook arrow side by side"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "electron-displacement-effects-in-covalent-bonds-and-inductive-effect",
+          "title": "Electron Displacement Effects in Covalent Bonds and Inductive Effect",
+          "objectives": [
+            "Student can distinguish permanent from temporary electron displacement effects",
+            "Student can describe the inductive effect and classify groups as electron-withdrawing or electron-donating"
+          ],
+          "visualIdeas": [
+            "a carbon chain with partial charges fading away from a chlorine atom"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "resonance-structure",
+          "title": "Resonance Structure",
+          "objectives": [
+            "Student can explain resonance using benzene and nitromethane as examples",
+            "Student can apply the rules for writing resonance structures and judge resonance energy and stability"
+          ],
+          "visualIdeas": [
+            "the two Kekulé structures of benzene and its resonance hybrid"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "resonance-effect",
+          "title": "Resonance Effect",
+          "objectives": [
+            "Student can describe the resonance (mesomeric) effect as polarity produced by interaction of pi bonds with each other or with a lone pair",
+            "Student can classify groups as showing +R or -R effect"
+          ],
+          "visualIdeas": [
+            "electron density shifting into a benzene ring from an -OH group"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "electromeric-effect-e-effect",
+          "title": "Electromeric Effect (E effect)",
+          "objectives": [
+            "Student can describe the electromeric effect as a temporary shift of pi electrons in the presence of an attacking reagent",
+            "Student can distinguish +E and -E effects"
+          ],
+          "visualIdeas": [
+            "a C=O pi bond shifting towards oxygen as a reagent approaches"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "hyperconjugation",
+          "title": "Hyperconjugation",
+          "objectives": [
+            "Student can describe hyperconjugation as delocalisation of sigma electrons of a C-H bond into an adjacent empty p orbital or pi bond",
+            "Student can use it to explain the stability order of carbocations"
+          ],
+          "visualIdeas": [
+            "the ethyl cation with a C-H bond overlapping the empty p orbital"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "types-of-organic-reactions-and-mechanisms",
+          "title": "Types of Organic Reactions and Mechanisms",
+          "objectives": [
+            "Student can classify organic reactions as substitution, addition, elimination and rearrangement",
+            "Student can state that these reaction types are studied in detail in Unit 9 and in Class XII"
+          ],
+          "visualIdeas": [
+            "a chart sorting organic reactions into the four types"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sublimation-and-crystallisation",
+          "title": "Sublimation and Crystallisation",
+          "objectives": [
+            "Student can describe purification by sublimation for solids that change directly into vapour",
+            "Student can describe purification by crystallisation, based on different solubilities of the compound and impurities"
+          ],
+          "visualIdeas": [
+            "a funnel over a heated dish collecting sublimed crystals",
+            "crystals forming as a hot saturated solution cools"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "distillation",
+          "title": "Distillation",
+          "objectives": [
+            "Student can describe simple distillation for liquids with very different boiling points",
+            "Student can describe fractional distillation, distillation under reduced pressure and steam distillation and when each is used"
+          ],
+          "visualIdeas": [
+            "a simple distillation set-up and a fractionating column"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "differential-extraction",
+          "title": "Differential Extraction",
+          "objectives": [
+            "Student can describe extracting an organic compound from water with an immiscible solvent in a separating funnel",
+            "Student can explain the principle of differing solubility in the two solvents"
+          ],
+          "visualIdeas": [
+            "a separating funnel with two liquid layers"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "chromatography",
+          "title": "Chromatography",
+          "objectives": [
+            "Student can describe the principle of chromatography with a stationary and a mobile phase",
+            "Student can describe adsorption chromatography (column and thin layer) and partition (paper) chromatography and calculate the retardation factor Rf"
+          ],
+          "visualIdeas": [
+            "a thin layer chromatography plate with spots and solvent front marked",
+            "a column with coloured bands separating"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "detection-of-carbon-and-hydrogen",
+          "title": "Detection of Carbon and Hydrogen",
+          "objectives": [
+            "Student can describe heating the compound with copper(II) oxide to detect carbon as carbon dioxide and hydrogen as water",
+            "Student can state the tests for the gases formed: lime water turning milky and anhydrous copper sulphate turning blue"
+          ],
+          "visualIdeas": [
+            "a heated test tube with the gas bubbling through lime water"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "detection-of-other-elements",
+          "title": "Detection of Other Elements",
+          "objectives": [
+            "Student can describe the preparation of sodium fusion extract (Lassaigne's test)",
+            "Student can describe the tests for nitrogen, sulphur, halogens and phosphorus in an organic compound"
+          ],
+          "visualIdeas": [
+            "a Prussian blue colour for nitrogen and a violet colour with sodium nitroprusside for sulphur"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "quantitative-analysis-of-carbon-and-hydrogen",
+          "title": "Quantitative Analysis of Carbon and Hydrogen",
+          "objectives": [
+            "Student can describe burning a known mass of the compound and weighing the carbon dioxide and water absorbed",
+            "Student can calculate the percentage of carbon and hydrogen from the masses obtained"
+          ],
+          "visualIdeas": [
+            "a combustion train with U-tubes absorbing water and carbon dioxide"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "quantitative-analysis-of-nitrogen",
+          "title": "Quantitative Analysis of Nitrogen",
+          "objectives": [
+            "Student can describe the Dumas method of estimating nitrogen by collecting nitrogen gas",
+            "Student can describe Kjeldahl's method of estimating nitrogen as ammonia and state where it cannot be used"
+          ],
+          "visualIdeas": [
+            "a Kjeldahl flask with ammonia passing into a known volume of acid"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "quantitative-analysis-of-halogens-sulphur-and-phosphorus",
+          "title": "Quantitative Analysis of Halogens, Sulphur and Phosphorus",
+          "objectives": [
+            "Student can describe the Carius method of estimating halogens as silver halide",
+            "Student can describe estimating sulphur as barium sulphate and phosphorus as magnesium pyrophosphate or ammonium phosphomolybdate"
+          ],
+          "visualIdeas": [
+            "a sealed Carius tube in a furnace"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "quantitative-analysis-of-oxygen",
+          "title": "Quantitative Analysis of Oxygen",
+          "objectives": [
+            "Student can explain that oxygen is usually found by subtracting the percentages of other elements from 100",
+            "Student can describe the direct method by converting oxygen to carbon monoxide and then carbon dioxide"
+          ],
+          "visualIdeas": [
+            "a percentage bar with oxygen as the remainder"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "hydrocarbons",
+      "title": "Hydrocarbons",
+      "book": "Chemistry Part II",
+      "pdf": "https://ncert.nic.in/textbook/pdf/kech203.pdf",
+      "topics": [
+        {
+          "id": "classification",
+          "title": "Classification",
+          "objectives": [
+            "Student can classify hydrocarbons as saturated (alkanes), unsaturated (alkenes and alkynes) and aromatic",
+            "Student can relate hydrocarbons to uses such as LPG, CNG and petrol"
+          ],
+          "visualIdeas": [
+            "a chart of hydrocarbon classes with an example of each"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "alkanes-nomenclature-and-isomerism",
+          "title": "Alkanes: Nomenclature and Isomerism",
+          "objectives": [
+            "Student can name alkanes by IUPAC rules and write their structural isomers",
+            "Student can identify primary, secondary, tertiary and quaternary carbon atoms"
+          ],
+          "visualIdeas": [
+            "structural isomers of pentane"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "preparation-of-alkanes",
+          "title": "Preparation of Alkanes",
+          "objectives": [
+            "Student can describe preparation of alkanes by hydrogenation of alkenes and alkynes and from alkyl halides (including the Wurtz reaction)",
+            "Student can describe preparation of alkanes from carboxylic acids by decarboxylation and Kolbe's electrolytic method"
+          ],
+          "visualIdeas": [
+            "a reaction map converting alkenes, alkyl halides and carboxylic acids into alkanes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-alkanes",
+          "title": "Properties of Alkanes",
+          "objectives": [
+            "Student can describe the physical properties of alkanes and the trend of boiling point with molecular size and branching",
+            "Student can describe chemical reactions of alkanes: free radical halogenation, combustion, controlled oxidation, isomerisation, aromatization, reaction with steam and pyrolysis"
+          ],
+          "visualIdeas": [
+            "a free radical chain mechanism for chlorination of methane"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "conformations",
+          "title": "Conformations",
+          "objectives": [
+            "Student can define conformations as arrangements produced by rotation about a C-C single bond",
+            "Student can draw staggered and eclipsed conformations of ethane using Sawhorse and Newman projections and compare their stability"
+          ],
+          "visualIdeas": [
+            "Newman projections of staggered and eclipsed ethane"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "alkenes-structure-of-double-bond-and-nomenclature",
+          "title": "Alkenes: Structure of Double Bond and Nomenclature",
+          "objectives": [
+            "Student can describe the C=C double bond as one sigma and one pi bond",
+            "Student can name alkenes using IUPAC rules"
+          ],
+          "visualIdeas": [
+            "ethene with its sigma and pi bonds"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "isomerism-in-alkenes",
+          "title": "Isomerism in Alkenes",
+          "objectives": [
+            "Student can write structural isomers of alkenes",
+            "Student can explain geometrical (cis-trans) isomerism in alkenes and why cis and trans forms differ in properties"
+          ],
+          "visualIdeas": [
+            "cis- and trans-but-2-ene side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "preparation-of-alkenes",
+          "title": "Preparation of Alkenes",
+          "objectives": [
+            "Student can describe preparation of alkenes from alkynes by partial reduction, including Lindlar's catalyst",
+            "Student can describe preparation from alkyl halides by dehydrohalogenation, from vicinal dihalides and from alcohols by acidic dehydration"
+          ],
+          "visualIdeas": [
+            "a reaction map converting alkynes, alkyl halides and alcohols into alkenes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-alkenes",
+          "title": "Properties of Alkenes",
+          "objectives": [
+            "Student can describe addition of hydrogen, halogens, hydrogen halides, sulphuric acid and water to alkenes",
+            "Student can apply Markovnikov's rule and explain the peroxide (Kharash) effect",
+            "Student can describe oxidation, ozonolysis and polymerisation of alkenes"
+          ],
+          "visualIdeas": [
+            "the carbocation mechanism for HBr adding to propene",
+            "many ethene units joining into polythene"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "alkynes-nomenclature-isomerism-and-structure-of-triple-bond",
+          "title": "Alkynes: Nomenclature, Isomerism and Structure of Triple Bond",
+          "objectives": [
+            "Student can name alkynes and write their position and chain isomers",
+            "Student can describe the triple bond of ethyne as one sigma and two pi bonds with a linear shape"
+          ],
+          "visualIdeas": [
+            "ethyne with its sigma bond and two perpendicular pi bonds"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "preparation-of-alkynes",
+          "title": "Preparation of Alkynes",
+          "objectives": [
+            "Student can describe the preparation of ethyne from calcium carbide and water",
+            "Student can describe the preparation of alkynes from vicinal dihalides"
+          ],
+          "visualIdeas": [
+            "calcium carbide reacting with water to give ethyne"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "properties-of-alkynes",
+          "title": "Properties of Alkynes",
+          "objectives": [
+            "Student can explain the acidic character of alkynes with a terminal hydrogen",
+            "Student can describe addition reactions of alkynes and the polymerisation of ethyne to benzene"
+          ],
+          "visualIdeas": [
+            "ethyne reacting with sodamide to form sodium acetylide"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "aromatic-hydrocarbon-nomenclature-and-isomerism",
+          "title": "Aromatic Hydrocarbon: Nomenclature and Isomerism",
+          "objectives": [
+            "Student can describe arenes as benzenoid and non-benzenoid aromatic compounds",
+            "Student can name and draw isomers of substituted benzenes"
+          ],
+          "visualIdeas": [
+            "isomers of dimethylbenzene (xylene)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "structure-of-benzene",
+          "title": "Structure of Benzene",
+          "objectives": [
+            "Student can describe Kekulé's structure of benzene and its limitations",
+            "Student can explain the stability of benzene by resonance and the delocalised pi electron cloud"
+          ],
+          "visualIdeas": [
+            "Kekulé structures and the delocalised ring of benzene"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "aromaticity",
+          "title": "Aromaticity",
+          "objectives": [
+            "Student can state the conditions for aromaticity: planar, complete delocalisation and (4n + 2) pi electrons (Hückel rule)",
+            "Student can decide whether given cyclic compounds are aromatic"
+          ],
+          "visualIdeas": [
+            "benzene, naphthalene and a non-aromatic ring compared"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "preparation-of-benzene",
+          "title": "Preparation of Benzene",
+          "objectives": [
+            "Student can describe preparation of benzene by cyclic polymerisation of ethyne",
+            "Student can describe preparation of benzene by decarboxylation of sodium benzoate and reduction of phenol"
+          ],
+          "visualIdeas": [
+            "three routes to benzene drawn as a reaction map"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "properties-of-benzene",
+          "title": "Properties of Benzene",
+          "objectives": [
+            "Student can describe electrophilic substitution reactions of benzene: nitration, halogenation, sulphonation and Friedel-Crafts alkylation and acylation",
+            "Student can explain the three-step mechanism of electrophilic substitution through a carbocation (arenium ion)",
+            "Student can describe addition reactions and combustion of benzene"
+          ],
+          "visualIdeas": [
+            "the mechanism of nitration of benzene with the arenium ion intermediate"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "directive-influence-of-a-functional-group-in-monosubstituted-benzene",
+          "title": "Directive Influence of a Functional Group in Monosubstituted Benzene",
+          "objectives": [
+            "Student can identify ortho and para directing groups such as -OH, -NH2 and -CH3 and meta directing groups such as -NO2 and -CHO",
+            "Student can explain the directive influence using resonance structures and the activating or deactivating effect of groups"
+          ],
+          "visualIdeas": [
+            "resonance structures of phenol with negative charge at ortho and para positions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "carcinogenicity-and-toxicity",
+          "title": "Carcinogenicity and Toxicity",
+          "objectives": [
+            "Student can state that benzene and polynuclear hydrocarbons are toxic and some are carcinogenic",
+            "Student can name sources of such compounds, such as incomplete combustion of tobacco, coal and petroleum"
+          ],
+          "visualIdeas": [
+            "a polynuclear hydrocarbon with several fused benzene rings"
+          ],
+          "estMinutes": 5
+        }
+      ]
+    }
+  ]
+}
