@@ -271,7 +271,11 @@ Smart-board design research covered what the board can do today and how speech c
 3. **Remove captions from the board.** Whether they stay as an off-board accessibility setting is a decision below.
 4. **Measured side effect:** with the asked question removed, the same picture-and-points beat fits one page with 0 overlaps instead of overflowing.
 
-**C1 STATUS (2026-10-01, late): BUILT in worktree `wf_16028799-3e6-2`.** Not merged or deployed when this was written; check `git log` on phase3-completion.
+**C1 STATUS (2026-10-01, ~23:58): DEPLOYED.**
+- Merged to phase3-completion (`6e68f35`) and pushed. Full suite: 4,840 passed, 0 failed.
+- Live on qrie-ai.vercel.app/app (bundle `index-BDlibqjZ.js`). The relay did not change.
+- Checked in the browser on the evaporation class with no mic. The board showed no question. The typed box appeared. The nudge at 20 s and the hint at 40 s were filed as help nobody asked for. A typed answer was judged right, the follow-up was filed as silent, and the class moved on.
+- Known gap: a typed answer sent while she is still talking is timed at about 0 ms.
 - **Classroom** (`2a5d957`):
   - The chips, the answer button, "Give me a hint", "I'm not sure", "Explain another way", "Work it out" (WorkPanel and `lib/workAnswer` deleted), the warm-up card, and the student's words with ✓/✗ on the board are all gone.
   - The toolbar keeps **Raise hand** and **End the class** only. Report moved to the top bar.
