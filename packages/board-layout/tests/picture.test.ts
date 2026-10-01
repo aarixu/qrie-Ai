@@ -64,9 +64,18 @@ describe('a picture keeps the board while its points go up the side', () => {
   it('wraps a long point onto more lines rather than shrinking it away', () => {
     // A key point squeezed to one line of a narrow column comes out too small
     // to read from a desk, which is the one thing a key point may not be.
-    const written = laid.elements.filter((el) => el.kind === 'handwrite');
+    // Long enough for her handwriting's own ruler (2026-10-02): measured as
+    // Caveat rather than as sans, the two short points above fit on one line.
+    const long = layoutBeat(
+      beat([
+        ...board.slice(0, 7),
+        { do: 'write', text: 'pelvis — collects the urine from every nephron and sends it down the ureter to the bladder' },
+      ]),
+      parts,
+    );
+    const written = long.elements.filter((el) => el.kind === 'handwrite');
     for (const w of written) expect(('size' in w ? w.size : 0) ?? 0).toBeGreaterThanOrEqual(24);
-    expect(written.length).toBeGreaterThan(2);
+    expect(written.some((w) => /_l\d+$/.test(w.id))).toBe(true);
   });
 
   it('stacks the points in the order they were said, from the top', () => {

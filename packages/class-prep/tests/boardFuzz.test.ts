@@ -16,10 +16,12 @@ import { fuzzPlan } from './fixtures/fuzzPlans';
  *   - one-page:  31.7% of classes before the stacker, the column and the band
  *     learned to turn the page between spoken lines; 0 after.
  *   - on-camera: 5.0% before; 0 after.
- *   - on-board:  1 class (a connector's label above its row), before and after.
- *   - overlap:   1 class, before and after.
- * The guards below hold those numbers: none of the first two, and no more
- * than the one of each that is left.
+ *   - on-board:  1 class (a connector's label above its row) until her
+ *     handwriting got its own ruler (lesson-format `handWidth`); 0 after.
+ *   - overlap:   1 class throughout.
+ *   - with the handwriting ruler: 6.81 pages a class -> 6.34, and wrapped
+ *     continuation lines 12.0% of her lines -> 0.4%.
+ * The guards below hold those numbers.
  */
 
 const SEEDS = 300;
@@ -56,8 +58,8 @@ describe('300 seeded classes through assemble and the keep gate', () => {
     expect(count('on-camera')).toBe(0);
   });
 
-  it('keeps ink on the board and apart no worse than measured', () => {
-    expect(count('on-board')).toBeLessThanOrEqual(1);
+  it('keeps ink on the board, and apart no worse than measured', () => {
+    expect(count('on-board')).toBe(0);
     expect(count('overlap')).toBeLessThanOrEqual(1);
   });
 

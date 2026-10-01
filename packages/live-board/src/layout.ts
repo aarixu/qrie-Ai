@@ -1,8 +1,10 @@
 import {
   boxOf,
+  handWidth,
   overlaps,
   textWidth,
   union,
+  wrapHand,
   wrapLines,
   writeMs,
   CANVAS_H,
@@ -153,13 +155,14 @@ export function augmentLesson(lesson: Lesson, state: LiveState): Lesson {
  */
 function handLines(text: string, id: string, x: number, top: number, w: number): Element[] | string {
   for (const size of HAND_SIZES) {
-    const lines = wrapLines(text, w, size);
-    if (!lines.every((l) => textWidth(l, size) <= w + EPS)) continue;
+    // Measured as her handwriting (Caveat), as `boxOf` measures a handwrite.
+    const lines = wrapHand(text, w, size);
+    if (!lines.every((l) => handWidth(l, size) <= w + EPS)) continue;
     const lead = size * 1.35 + LINE_GAP;
     return lines.map((l, n) => ({
       kind: 'handwrite' as const,
       id: n === 0 ? id : `${id}_l${n}`,
-      x: x + textWidth(l, size) / 2,
+      x: x + handWidth(l, size) / 2,
       y: top + size + n * lead,
       text: l,
       size,
@@ -310,10 +313,13 @@ function spanBox(el: Element, span: string): Rect | null {
   const start = compact[at];
   const end = compact[at + needle.length - 1] + 1;
   const whole = boxOf(el);
+  // The same ruler `boxOf` used for the whole line, or the span drifts off it.
+  const measure = (t: string): number =>
+    el.kind === 'handwrite' ? handWidth(t, size) : textWidth(t, size, mono);
   return {
-    x: whole.x + textWidth(el.text.slice(0, start), size, mono),
+    x: whole.x + measure(el.text.slice(0, start)),
     y: whole.y,
-    w: textWidth(el.text.slice(start, end), size, mono),
+    w: measure(el.text.slice(start, end)),
     h: whole.h,
   };
 }

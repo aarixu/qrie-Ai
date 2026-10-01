@@ -1,7 +1,6 @@
 import {
   boxOf,
   overlaps,
-  textWidth,
   union,
   noteBoxHeight,
   splitPartRef,
@@ -9,9 +8,12 @@ import {
   type Rect,
   CANVAS_H,
   CANVAS_W,
+  fitHand,
   fitText,
+  handWidth,
   writeMs,
   PAGE_STRIDE,
+  wrapHand,
   wrapLines,
   listBoxHeight,
   type Element,
@@ -231,19 +233,20 @@ function planBand(
 }
 
 /**
- * Wrapped to a column, keeping a little of it clear.
+ * Her handwriting, wrapped to a column, keeping a little of it clear.
  *
- * The BREAKING is `wrapLines` in lesson-format, beside the width measurement it
+ * The BREAKING is `wrapHand` in lesson-format, beside the width measurement it
  * is made of — this file used to carry its own copy that guessed half an em per
  * character, packed more onto a line than would fit, and ran text past the very
- * margin it was wrapping for.
+ * margin it was wrapping for. Every caller writes in her hand (a key point, a
+ * picture's name), so it is measured as Caveat, not as the sans board text.
  *
  * The six percent held back is the only part that belongs here: a board is not
  * a page, and text that reaches the edge of its column reads as though it ran
  * out of room.
  */
 function wrapText(text: string, w: number, size: number): string[] {
-  return wrapLines(text, w * 0.94, size);
+  return wrapHand(text, w * 0.94, size);
 }
 
 /**
@@ -629,7 +632,7 @@ export function layoutBeat(
          * a phone. Below size 28 it is written on two or more lines at 30
          * instead, and the block is as tall as those lines.
          */
-        const wideFit = fitText(item.text, WIDTH * 0.94, 36, 17);
+        const wideFit = fitHand(item.text, WIDTH * 0.94, 36, 17);
         const wideLines = wideFit >= 28 ? null : wrapText(item.text, WIDTH * 0.9, 30);
         blocks.push({
           kind: item.do,
@@ -673,7 +676,7 @@ export function layoutBeat(
               x: r.x + r.w / 2,
               y: narrow ? top + n * lead : r.y + Math.min(WRITE_H, r.h) * 0.7,
               text: line,
-              size: narrow ? size : fitText(item.text, r.w * 0.94, 36, 17),
+              size: narrow ? size : fitHand(item.text, r.w * 0.94, 36, 17),
               ...(item.tone ? { tone: item.tone } : {}),
             }));
           },
@@ -913,7 +916,7 @@ export function layoutBeat(
                     const sameRow = drawn[0].y < drawn[1].y + drawn[1].h && drawn[1].y < drawn[0].y + drawn[0].h;
                     if (onAPicture && sameRow) {
                       const size = Math.min(words.size ?? 26, LANE_SIZE);
-                      const half = textWidth(words.text, size) / 2;
+                      const half = handWidth(words.text, size) / 2;
                       const rowFrom = Math.min(drawn[0].y, drawn[1].y);
                       const rowTo = Math.max(drawn[0].y + drawn[0].h, drawn[1].y + drawn[1].h);
                       const under = figureBoxes.filter(
@@ -1310,7 +1313,7 @@ export function layoutBeat(
        * a student could see. A person writes the word as near the thing as it
        * fits and draws a short line.
        */
-      const widest = Math.max(...lines.map((line) => textWidth(line, size)));
+      const widest = Math.max(...lines.map((line) => handWidth(line, size)));
       const edge = hostBox
         ? onLeft
           ? hostBox.x - MARGIN_GAP
@@ -1455,7 +1458,7 @@ export function layoutBeat(
       const px = (sheet === 0 ? bandLeft : SIDE) + sheet * PAGE_STRIDE;
       lines.forEach((line, k) => {
         const id = k === 0 ? point.id : `${point.id}_l${k}`;
-        const x = px + textWidth(line, band.size) / 2;
+        const x = px + handWidth(line, band.size) / 2;
         const y = by + band.size + k * bandLead;
         emit({
           kind: 'handwrite',

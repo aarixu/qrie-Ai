@@ -28,6 +28,37 @@ export interface Rect {
  */
 const EM_SANS = 0.58;
 const EM_MONO = 0.62;
+/**
+ * Her handwriting, Caveat, in ems a character by the KIND of character.
+ *
+ * MEASURED 2026-10-02 in the browser (canvas measureText, 'Caveat Variable'):
+ * lowercase 0.359 on average, capitals 0.509, digits 0.45, punctuation 0.30, a
+ * space 0.242; m and w reach 0.56, M and W 0.72. A typical board line comes to
+ * 0.35-0.37 overall, and an all-capitals one to 0.46. It used to be measured
+ * with EM_SANS, 0.58 for every character — 66% over on an ordinary line — so
+ * her lines wrapped early, her points shrank to fit room they already had, and
+ * the page turned too often.
+ *
+ * Each figure below is that mean with about 8% kept for the glyphs above it;
+ * the renderer's writing mask adds its own 1.3x on top, so nothing is clipped.
+ * Anything outside plain ASCII is counted wide.
+ */
+const HAND = { space: 0.26, lower: 0.39, wideLower: 0.6, upper: 0.55, wideUpper: 0.75, digit: 0.49, other: 0.33, wide: 0.6 };
+
+function handEms(text: string): number {
+  let ems = 0;
+  for (const ch of text) {
+    if (ch === ' ') ems += HAND.space;
+    else if (ch === 'm' || ch === 'w') ems += HAND.wideLower;
+    else if (ch === 'M' || ch === 'W') ems += HAND.wideUpper;
+    else if (ch >= 'a' && ch <= 'z') ems += HAND.lower;
+    else if (ch >= 'A' && ch <= 'Z') ems += HAND.upper;
+    else if (ch >= '0' && ch <= '9') ems += HAND.digit;
+    else if (ch.charCodeAt(0) < 128) ems += HAND.other;
+    else ems += HAND.wide;
+  }
+  return ems;
+}
 
 /**
  * HOW LONG A WRITTEN LINE TAKES TO COME OUT OF HER HAND.
@@ -177,6 +208,26 @@ export function textWidth(text: string, size: number, mono = false): number {
 }
 
 /**
+ * How wide one line of HER HANDWRITING will be drawn (a `handwrite`). A line
+ * with `$…$` maths in it is typeset by KaTeX rather than written in Caveat,
+ * so it keeps the sans measure.
+ */
+export function handWidth(text: string, size: number): number {
+  return hasMath(text) ? textWidth(text, size) : handEms(text) * size;
+}
+
+/** `wrapLines`, measured as her handwriting. */
+export function wrapHand(text: string, w: number, size: number): string[] {
+  return wrapLines(text, w, size, handWidth);
+}
+
+/** `fitText`, measured as her handwriting. */
+export function fitHand(text: string, maxWidth: number, preferred: number, min = 12): number {
+  if (text.length === 0 || maxWidth <= 0) return preferred;
+  return Math.max(min, Math.min(preferred, (maxWidth / handWidth(text, preferred)) * preferred));
+}
+
+/**
  * Break a line into lines that fit a column, on whole words.
  *
  * On whole words because a teacher does not hyphenate on a board, and a single
@@ -188,7 +239,12 @@ export function textWidth(text: string, size: number, mono = false): number {
  * more onto a line than would fit, and ran text past the very margin it was
  * wrapping for. One ruler.
  */
-export function wrapLines(text: string, w: number, size: number): string[] {
+export function wrapLines(
+  text: string,
+  w: number,
+  size: number,
+  measure: (text: string, size: number) => number = textWidth,
+): string[] {
   const lines: string[] = [];
   let line = '';
   // A `$…$` group is one word, whatever spaces it holds: maths is never
@@ -196,7 +252,7 @@ export function wrapLines(text: string, w: number, size: number): string[] {
   const words = hasMath(text) ? (text.match(/(?:\$[^$]*\$|[^\s$])+/g) ?? [text]) : text.split(/\s+/);
   for (const word of words) {
     const next = line ? `${line} ${word}` : word;
-    if (line && textWidth(next, size) > w) {
+    if (line && measure(next, size) > w) {
       lines.push(line);
       line = word;
     } else {
@@ -321,9 +377,16 @@ export function graphicLabelSize(
  */
 export const BESIDE_GAP = 22;
 
-/** A rect around a centred single line of text. */
+/**
+ * A rect around a centred single line of text, `em` wide a character — counted
+ * by what the text READS as (`mathPlain`), not by its LaTeX source: a label
+ * written `$\frac{1}{2}$` is three characters on the board, not twelve.
+ */
 function centredText(x: number, y: number, text: string, size: number, em: number): Rect {
-  const w = text.length * size * em;
+  return centredWidth(x, y, mathPlain(text).length * size * em, size);
+}
+
+function centredWidth(x: number, y: number, w: number, size: number): Rect {
   return { x: x - w / 2, y: y - size, w, h: size * 1.35 };
 }
 
@@ -359,7 +422,7 @@ export function boxOf(el: Element): Rect {
     case 'formula':
       return centredText(el.x, el.y, el.text, 24, EM_MONO);
     case 'handwrite':
-      return centredText(el.x, el.y, el.text, el.size ?? 26, EM_SANS);
+      return centredWidth(el.x, el.y, handWidth(el.text, el.size ?? 26), el.size ?? 26);
     case 'note':
       return { x: el.x, y: el.y, w: el.w, h: noteBoxHeight(el.text, el.w) };
     case 'list':

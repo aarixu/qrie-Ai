@@ -79,3 +79,6 @@ tools/speech/voices/
 tools/speech/samples/
 tools/measure/f-bench/.models/
 .vercel
+
+# Candidate backgrounds from tools/avatar/background.mjs; the kept one is in content/avatars/backgrounds/
+tools/avatar/out/
