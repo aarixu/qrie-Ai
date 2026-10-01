@@ -289,7 +289,7 @@ concrete word — place a "leaf", not "photosynthesis".
 - {"do":"title","text","sub"?}          The lesson heading. Owns the top of the board.
 - {"do":"caption","text"}               One line under everything, naming what is shown.
 - {"do":"equation","text"}              A short equation as you would write it on a board — "v = s / t". Plain text, never LaTeX.
-- {"do":"write","text","tone"?}         A KEY POINT, written out BY HAND while she says it. Every key point you say out loud gets written: two to four in a beat is normal.
+- {"do":"write","text","tone"?}         A KEY POINT, written out BY HAND while she says it. Every key point you say out loud gets written: two to four in a beat is normal. A few words, the way a teacher notes it — never the sentence she is saying: a line that copies what she says is a subtitle, and a class that writes one is refused. Maths goes in LaTeX between $…$; a chemical equation goes in $\\ce{…}$ — "$\\ce{C6H12O6 + 6O2 -> 6CO2 + 6H2O}$" — and it must balance, unless the line says it is the skeletal equation ("Skeletal: $\\ce{H2 + O2 -> H2O}$").
 - {"do":"diagram","ref"}                A generated picture, by the id of its brief below. Only for things with internal structure worth pointing inside — a cell, a cross-section, a graph.
 - {"do":"point","ref","part"}           Light one named part of that picture, dim the rest.
 - {"do":"sketch","ref","from":"<picture>#<part>"}   A SMALL DRAWING beside the picture, with a long arrow from the part it explains. The textbook zoom-in: the photo shows the glass; what is inside the water — tiny particles — is a sketch next to it. ref is a diagram brief; keep it simple, a few shapes, and give its moving parts motion.

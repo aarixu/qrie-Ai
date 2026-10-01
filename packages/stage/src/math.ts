@@ -1,5 +1,7 @@
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+// Chemistry, `\ce{…}`: registers mhchem's macros on this KaTeX (canvas C3).
+import 'katex/contrib/mhchem';
 import { hasMath } from '@ai-tutor/lesson-format';
 
 /**

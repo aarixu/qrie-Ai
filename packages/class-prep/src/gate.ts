@@ -10,6 +10,7 @@ import { computeFrame } from '../../stage/src/frame.ts';
 // of which needs a workspace link for it.
 import { checkLesson } from '../../maths-check/src/index.ts';
 import type { TopicOutcome } from './prompts.ts';
+import { boardChecks } from './boardChecks.ts';
 
 /**
  * THE KEEP GATE — what a prepared class must pass before it is kept.
@@ -79,6 +80,12 @@ import type { TopicOutcome } from './prompts.ts';
  *                    (`undrawn`), because a lesson cannot say what it lacks.
  *                    A labelled-picture beat once dropped its cards this way.
  *
+ * And three about what the smart board writes (canvas C3, boardChecks.ts):
+ *   echo             no ink writes out the line she is saying — a subtitle.
+ *   tex              every `$…$` is LaTeX the board sets (a whitelist).
+ *   chem             every `\ce{…}` reaction balances, unless the board says
+ *                    it is the skeletal equation.
+ *
  * NOT IN `validateLesson`, ON PURPOSE. The classroom validates every lesson
  * it loads and shows one that fails as "not available"
  * (apps/classroom/src/lib/content.ts, fetchLesson), so a rule added there
@@ -103,7 +110,10 @@ export type GateRule =
   | 'on-board'
   | 'one-page'
   | 'on-camera'
-  | 'drawn';
+  | 'drawn'
+  | 'echo'
+  | 'tex'
+  | 'chem';
 
 /** A board instruction that writes words and drew nothing — assemble's `undrawn`. */
 export interface Undrawn {
@@ -473,6 +483,7 @@ export function gateLesson(lesson: Lesson, opts: GateOptions = {}): GateProblem[
     ...notationProblems(lesson),
     ...unspokenProblems(lesson, opts.unspoken ?? []),
     ...boardProblems(lesson),
+    ...boardChecks(lesson),
     ...(opts.undrawn ?? []).map((u) => ({
       rule: 'drawn' as const,
       where: u.beat,

@@ -20,6 +20,13 @@ describe('maths on the board', () => {
     expect(texToHtml(String.raw`\href{javascript:alert(1)}{x}`) ?? '').not.toContain('javascript:');
   });
 
+  it('sets a reaction in \\ce{} with its numbers as subscripts and a real arrow (C3)', () => {
+    const html = texToHtml(String.raw`\ce{C6H12O6 + 6O2 -> 6CO2 + 6H2O}`);
+    expect(html).not.toBeNull();
+    expect(html).toContain('msupsub');
+    expect(html).not.toContain('-&gt;');
+  });
+
   it('shows maths it cannot read as its source, never an error box', () => {
     expect(lineToHtml(String.raw`$\frac{1}{$`)).not.toContain('katex-error');
     expect(texToHtml(String.raw`\frac{1}{`)).toBeNull();
