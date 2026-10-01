@@ -402,7 +402,8 @@ Smart-board design research covered what the board can do today and how speech c
     - Meera in 3D in the study room (all `/app/avatars/` files 200);
     - her voice streaming from `/api/speech`.
   - Full suite before deploy: 4,927 passed, 0 failed.
-- **Not done:** the live-tutor half (driver A/B ink scripts) waits for live-tutor phase 2. Also not done: roughjs/perfect-freehand strokes, smiles-drawer, and picture part boxes found by Gemini. The pen tip was dropped by Aarav's decision 4.
+- **Not done:** the live-tutor half (driver A/B ink scripts) waits for live-tutor phase 2. smiles-drawer is "later" in the plan. Picture part boxes found by Gemini already exist (class-prep's `eyes`, at prep). The pen tip was dropped by Aarav's decision 4.
+- **Left out on purpose: roughjs and perfect-freehand.** The marks already draw as single hand strokes (a looping circle, an uneven box, a curved underline, a marker highlight), and Aarav chose a clean board with no pen. roughjs's sketchy double lines would add a dependency to make the board look rougher. Say the word and it goes in; it is one renderer change in `Scene.tsx` `renderMark`.
 
 **Order:**
 - C0 and C1 together, now: neither needs model spend to build.
