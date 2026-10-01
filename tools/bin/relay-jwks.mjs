@@ -2,11 +2,12 @@
  * PUSH THE PROJECT'S PUBLIC SIGNING KEYS TO THE RELAY (RELAY_JWKS).
  *
  * NOT IN USE: the deployed relay checks sign-ins over the network again, and
- * nothing reads RELAY_JWKS (measured 2026-10-01: the local check saved 10-35 ms; see createJwksVerifier). Kept for the day the relay wires
+ * nothing reads RELAY_JWKS (measured 2026-10-01: the local check saved
+ * 10-35 ms; see createJwksVerifier). Kept for the day the relay wires
  * createJwksVerifier back in.
  *
- * The relay checks a sign-in's signature itself (packages/relay/src/auth.ts
- * createJwksVerifier). Nearly every call lands on a fresh Edge isolate
+ * Wired in, the relay would check a sign-in's signature itself
+ * (packages/relay/src/auth.ts createJwksVerifier). Nearly every call lands on a fresh Edge isolate
  * (measured 2026-10-01: 11 of 12 in a row), so fetching the keys per isolate
  * cost a fetch on almost every call; given up front they cost nothing. These
  * are PUBLIC keys — the same JSON anyone can read at
