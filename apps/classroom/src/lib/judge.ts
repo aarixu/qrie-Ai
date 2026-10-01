@@ -14,6 +14,7 @@ import type { WhyProbe } from '@ai-tutor/lesson-format';
 import { LINES } from '@ai-tutor/tutor-control';
 import { fromStudent } from './safety';
 import { createBrowserLlm } from './browserLlm';
+import { hedged } from './hedge';
 import { tutorLanguage } from './workspace';
 
 /**
@@ -57,8 +58,18 @@ export { parseVerdict, parseFollowUp } from '@ai-tutor/tutor-judge';
  * Hinglish answer, 3.8-flash returned "unclear" at low, at medium and at its
  * default, while 3.7-flash and 3.1-flash-lite both returned "right". Cheaper is
  * worthless if it tells a child who was right that they were not.
+ *
+ * NOW 3.1-FLASH-LITE, FOR ITS TAIL (2026-10-02). In the Respiration class that
+ * night a right typed answer waited out the twelve-second limit on 3.7-flash and
+ * the student was asked to say it again. Measured the same hour through the
+ * live relay, the class's own judge prompt on 12 committed Class 10 probes, each
+ * answered with the right option's words, a confident distractor and "pata
+ * nahi" (36 answers): both models judged 36/36 as expected; 3.7-flash took a
+ * median 2.9 s, p90 14.0 s, worst 19.1 s, and 3.1-flash-lite a median 1.9 s,
+ * p90 2.4 s, worst 2.7 s. It is also the ear's model, and cheaper. The 3.8
+ * finding above stands: a model is chosen here by its verdicts first.
  */
-const JUDGE_MODEL = 'google/gemini-3.7-flash';
+const JUDGE_MODEL = 'google/gemini-3.1-flash-lite';
 
 /**
  * THE JUDGE DOES NOT NEED TO THINK, AND IT WAS BEING BILLED AS IF IT DID.
@@ -76,16 +87,27 @@ const JUDGE_MODEL = 'google/gemini-3.7-flash';
  * smaller than the word suggests.
  */
 /**
- * A judge that has not answered in this long is not going to: the student is
- * waiting with the chips hidden. The call fails, which every caller already
- * reads as "say nothing and leave the chips standing". Measured judge calls
- * return in 1-3 s; twelve is generous.
+ * A judge call that has not answered in this long is not going to: the
+ * student is waiting on her. It fails, which the class reads as "ask them to
+ * say it again". Most judge calls return in 2-4 s; twelve is generous.
  */
 const JUDGE_TIMEOUT_MS = 12_000;
 
+/**
+ * AND A SECOND JUDGE GOES AFTER FIVE SECONDS (2026-10-02). Timed through the
+ * live relay, six judge calls in eight took 2-4 s and two took 31 s and 53 s;
+ * in the Respiration class that night a right typed answer hit the twelve
+ * seconds and the student was asked to say it again. See lib/hedge.ts.
+ */
+const JUDGE_HEDGE_MS = 5_000;
+
 const deps: JudgeDeps = {
   complete: (system, user) =>
-    createBrowserLlm(JUDGE_MODEL, { json: true, effort: 'none', timeoutMs: JUDGE_TIMEOUT_MS }).complete(system, user),
+    hedged(
+      () =>
+        createBrowserLlm(JUDGE_MODEL, { json: true, effort: 'none', timeoutMs: JUDGE_TIMEOUT_MS }).complete(system, user),
+      JUDGE_HEDGE_MS,
+    ),
   screen: (text) => fromStudent(text),
 };
 
