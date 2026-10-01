@@ -46,7 +46,9 @@ function run(opts: { smartBoard?: boolean } = {}): {
       invalid += 1;
       continue;
     }
-    const marked = new Set(made.lesson.elements.flatMap((el) => (el.kind === 'mark' ? [el.shape] : [])));
+    const marked = new Set(
+      (checked.lesson as Lesson).elements.flatMap((el) => (el.kind === 'mark' ? [el.shape] : [])),
+    );
     if (marked.has('box')) framed += 1;
     if (marked.has('highlight')) highlighted += 1;
     const problems = gateLesson(checked.lesson as Lesson, {
