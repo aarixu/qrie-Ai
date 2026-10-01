@@ -127,6 +127,25 @@ describe('the local check of a Supabase access token', () => {
     expect(fallbackCalls).toHaveLength(1);
   });
 
+  it('uses keys given up front without fetching, and fetches only for a key id they lack', async () => {
+    const { jwk, sign } = await signer();
+    const calls: string[] = [];
+    const verify = createJwksVerifier(SUPABASE, {
+      keys: [jwk],
+      fetchImpl: (async (url: string) => {
+        calls.push(url);
+        return new Response(JSON.stringify({ keys: [] }), { status: 200 });
+      }) as unknown as typeof fetch,
+      now: () => NOW,
+      fallback: async () => ({ ok: true, user: { userId: 'from-network' } }),
+    });
+    expect(await verify(`Bearer ${await sign(good())}`)).toEqual({ ok: true, user: { userId: 'student-1' } });
+    expect(calls).toEqual([]);
+    // A rotated key the given set does not have: fetched, then the network check.
+    expect(await verify(`Bearer ${await sign(good(), { kid: 'rotated-key' })}`)).toEqual({ ok: true, user: { userId: 'from-network' } });
+    expect(calls).toEqual([`${ISSUER}/.well-known/jwks.json`]);
+  });
+
   it('refuses a missing or malformed header without any call', async () => {
     const { verify, calls, fallbackCalls } = setup([]);
     expect(await verify(undefined)).toMatchObject({ ok: false, status: 401 });

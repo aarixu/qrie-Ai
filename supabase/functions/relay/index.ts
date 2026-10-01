@@ -136,8 +136,26 @@ const CORS = {
 // The signature is checked here first, against the project's public keys;
 // a token that cannot be checked here is asked about over the network
 // (packages/relay/src/auth.ts).
+/**
+ * The project's PUBLIC signing keys, given up front (RELAY_JWKS: the JSON at
+ * <project>/auth/v1/.well-known/jwks.json). Nearly every call lands on a fresh
+ * isolate, so fetching them per isolate cost a fetch on almost every call;
+ * unset or unreadable, they are fetched as before. Public data, not a secret.
+ */
+const PUBLIC_KEYS = ((): JsonWebKey[] | undefined => {
+  try {
+    const keys = (JSON.parse(env('RELAY_JWKS') || 'null') as { keys?: unknown } | null)?.keys;
+    return Array.isArray(keys) ? (keys as JsonWebKey[]) : undefined;
+  } catch {
+    return undefined;
+  }
+})();
+
 const verify = cacheVerifier(
-  createJwksVerifier(SUPABASE_URL, { fallback: createSupabaseVerifier(SUPABASE_URL, ANON_KEY) }),
+  createJwksVerifier(SUPABASE_URL, {
+    fallback: createSupabaseVerifier(SUPABASE_URL, ANON_KEY),
+    ...(PUBLIC_KEYS ? { keys: PUBLIC_KEYS } : {}),
+  }),
 );
 const ledger = createSupabaseLedger(SUPABASE_URL, SERVICE_ROLE_KEY);
 // What each call cost, in the units the provider bills. Same door as the

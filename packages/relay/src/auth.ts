@@ -113,12 +113,24 @@ export function createJwksVerifier(
     now?: () => number;
     /** How long a fetched key set is kept. */
     keysTtlMs?: number;
+    /**
+     * The published keys, given up front (the relay's RELAY_JWKS setting).
+     * MEASURED 2026-10-01: nearly every call to the deployed relay lands on a
+     * fresh isolate (11 of 12 in a row), so a key set fetched and cached per
+     * isolate cost a 33-87 ms fetch on almost every call. Keys given here are
+     * used without fetching; a key id they do not have (a rotation) is
+     * fetched, and failing that sent to `fallback`.
+     */
+    keys?: readonly JsonWebKey[];
   },
 ): Verifier {
   const issuer = `${supabaseUrl.replace(/\/+$/, '')}/auth/v1`;
   const doFetch = opts.fetchImpl ?? fetch;
   const now = opts.now ?? Date.now;
   const ttl = opts.keysTtlMs ?? 10 * 60_000;
+  const given: { byKid: Map<string, Promise<CryptoKey | null>>; jwks: JsonWebKey[] } | null = opts.keys?.length
+    ? { byKid: new Map(), jwks: [...opts.keys] }
+    : null;
   let keys: { at: number; byKid: Map<string, Promise<CryptoKey | null>>; jwks: JsonWebKey[] } | null = null;
   let fetching: Promise<boolean> | null = null;
 
@@ -139,16 +151,19 @@ export function createJwksVerifier(
     fetching ??= loadKeys().finally(() => (fetching = null));
     return fetching;
   };
-  const keyFor = (kid: string): Promise<CryptoKey | null> | null => {
-    if (!keys) return null;
-    const cached = keys.byKid.get(kid);
+  const keyFor = (
+    set: { byKid: Map<string, Promise<CryptoKey | null>>; jwks: JsonWebKey[] } | null,
+    kid: string,
+  ): Promise<CryptoKey | null> | null => {
+    if (!set) return null;
+    const cached = set.byKid.get(kid);
     if (cached) return cached;
-    const jwk = keys.jwks.find((k) => (k as { kid?: unknown }).kid === kid);
+    const jwk = set.jwks.find((k) => (k as { kid?: unknown }).kid === kid);
     if (!jwk || jwk.kty !== 'EC' || jwk.crv !== 'P-256') return null;
     const imported = crypto.subtle
       .importKey('jwk', { kty: jwk.kty, crv: jwk.crv, x: jwk.x, y: jwk.y }, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify'])
       .catch(() => null);
-    keys.byKid.set(kid, imported);
+    set.byKid.set(kid, imported);
     return imported;
   };
 
@@ -165,8 +180,11 @@ export function createJwksVerifier(
     if (!header || !claims || !signature) return refuse('that sign-in is not valid');
 
     if (header.alg !== 'ES256' || typeof header.kid !== 'string') return opts.fallback(authHeader);
-    if (!(await ensureKeys())) return opts.fallback(authHeader);
-    const key = await keyFor(header.kid);
+    let key = await keyFor(given, header.kid);
+    if (!key) {
+      if (!(await ensureKeys())) return opts.fallback(authHeader);
+      key = await keyFor(keys, header.kid);
+    }
     if (!key) return opts.fallback(authHeader);
 
     const signed = new TextEncoder().encode(`${parts[0]}.${parts[1]}`);
