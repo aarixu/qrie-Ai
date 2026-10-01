@@ -325,14 +325,17 @@ Smart-board design research covered what the board can do today and how speech c
 - Then C3, alongside live-tutor phase 2.
 - The 10 lessons are re-prepared after C0 and C1.
 
-### Decisions only Aarav can make
+### Aarav's decisions (2026-10-01)
 
-1. **Captions.** Delete them entirely, or keep an off-board accessibility setting (off by default)? Research: they help second-language listening and deaf students.
-2. **Short labels.** May 1–4-word labels beside the part they name stay? Research says they help, and they are not subtitles.
-3. **Recording-style controls.** Remove "REC", play/pause, the n/N counter, the progress line and "Watch again"?
-4. **Hints.** When she gives a hint, may she write a short note while saying it? That is her ink, not the question.
-5. **Phone board.** Build the portrait page format (best result, bigger change), or the follow-the-pen camera first?
-6. **The pen.** A pen tip / marker, or a drawn hand?
+1. **Captions** leave the board. They stay only as a setting, off by default.
+2. **Controls:** keep only **Raise hand** and **End class**. Remove everything else that says "recording": "REC", play/pause, the n/N counter, the progress line and "Watch again".
+3. **The board is 16:9 everywhere, phones included,** like a long-form YouTube video. There is no portrait format. A phone watches it the way it watches a landscape video.
+   - **So C2 becomes:** a 16:9 stage (the canvas moves from 1000x620 to 16:9); a full-screen landscape view on phones with only the two controls overlaid; and size floors set for a 16:9 frame on a landscape phone. At 812x375 a 1000-unit-wide board is about 0.67 px per unit, so 14 px text needs about 21 units.
+4. **No pen or hand on the board.** Ink simply appears: written text, marks and drawings come in on their own as she speaks. Research found a visible hand helps (Fiorella & Mayer 2016); Aarav chose a clean board. The pen-tip item in C3 is dropped.
+5. **Labels and hints.**
+   - Short 1–4-word labels beside a part stay, as research supports.
+   - When she gives a hint she may write a short note while saying it. That is her ink, not the question.
+   - Both were taken as defaults; Aarav did not object.
 
 ---
 
