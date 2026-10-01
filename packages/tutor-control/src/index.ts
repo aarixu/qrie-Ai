@@ -15,6 +15,11 @@
  * and silence nudges (apps/classroom/src/screens/ClassRoom.tsx). Every `say`
  * goes out only through the app's safety screen, with `haltSession()`
  * covering the path.
+ *
+ * The conductor (`createConductor`, `conductor/`) runs a whole live class
+ * from a teaching plan that `validatePlan` has passed: after every student
+ * turn it picks the next move, with `decide()` as its help ladder. Pure in
+ * the same way: no model call, no clock of its own, no randomness, no I/O.
  */
 
 export { FAST_WRONG_MS, decide } from './decide.ts';
@@ -50,3 +55,4 @@ export type {
   TeachingPlan,
 } from './conductor/types.ts';
 export { STUDENT_CLASSES } from './conductor/types.ts';
+export { createConductor, validatePlan, type PlanCheck, type PlanCheckOptions } from './conductor/index.ts';

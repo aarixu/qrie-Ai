@@ -16,6 +16,14 @@ import { BottomNav, SideNav } from '../ui/Nav';
 import { AskBox } from '../ui/AskBox';
 import { PROTOTYPE_ONLY_PREPARED, usePrototypeNotice } from '../lib/prototype';
 import { PrototypeNotice } from '../ui/PrototypeNotice';
+import {
+  chapterCountFor,
+  chapterPathFor,
+  firstLessonFor,
+  firstTopicFor,
+  readyChapterFor,
+  subjectsFor,
+} from '../lib/homeChoices';
 
 /**
  * Home, built to the Stitch design: a greeting bar with the streak, a hero card
@@ -73,17 +81,13 @@ export function Home() {
    * is always a topic to open even with no network: a class prepared on the
    * spot is a better answer than a button that ignores them.
    */
-  const firstTopic = useMemo(() => {
-    const klass = profile.klass;
-    const mine = SYLLABI.filter((s) => klass === null || s.klass === klass);
-    for (const syllabus of mine.length > 0 ? mine : SYLLABI) {
-      for (const chapter of syllabus.chapters) {
-        const topic = chapter.topics[0];
-        if (topic) return `/class/${syllabus.id}/${chapter.id}/${topic.id}`;
-      }
-    }
-    return '/syllabus';
-  }, [profile.klass]);
+  // Their class and the subjects they chose, never another class's
+  // (lib/homeChoices.ts: the Respiration bug).
+  const firstTopic = useMemo(
+    () => firstTopicFor(SYLLABI, profile.klass, profile.subjects),
+    [profile.klass, profile.subjects],
+  );
+  const firstLesson = firstLessonFor(catalog, profile.klass, profile.subjects);
 
   const streak = computeStreak(progress);
 
@@ -95,42 +99,22 @@ export function Home() {
   // against a typical 8-beat lesson rather than fetching every lesson to render Home.
   const heroPercent = hero ? Math.min(95, Math.round((heroBeat / 8) * 100)) : 0;
 
-  // Subjects the student picked, else everything the syllabus offers.
-  const subjects = Array.from(new Set(SYLLABI.map((s) => s.subject)));
+  // The subjects they picked that their class has (lib/homeChoices.ts).
+  const subjects = subjectsFor(SYLLABI, profile.klass, profile.subjects);
 
-  const chapterCount = (subject: string) =>
-    SYLLABI.filter((s) => s.subject === subject).reduce((n, s) => n + s.chapters.length, 0);
+  const chapterCount = (subject: string) => chapterCountFor(SYLLABI, profile.klass, subject);
 
-  const firstChapterPath = (subject: string): string | null => {
-    const syllabus = SYLLABI.find((s) => s.subject === subject);
-    const chapter = syllabus?.chapters[0];
-    return syllabus && chapter ? `/chapter/${syllabus.id}/${chapter.id}` : null;
-  };
+  const firstChapterPath = (subject: string): string | null => chapterPathFor(SYLLABI, profile.klass, subject);
 
   /**
-   * THE FIRST CHAPTER OF THIS SUBJECT THAT HAS A CLASS SOMEBODY CAN OPEN.
-   *
-   * `firstChapterPath` above takes chapter zero of whichever syllabus mentions
-   * the subject first, which is sorted by class — so Mathematics lands on Class
-   * 6 patterns and Biology on Class 11, and every prepared class in this app is
-   * Class 9 or 10 Science. Four tiles, four chapters with nothing in them.
-   *
-   * This asks the catalogue instead. Null has two meanings and the caller has
-   * to tell them apart: the catalogue has not arrived, or this subject has
-   * nothing ready at all.
+   * THE FIRST CHAPTER OF THIS SUBJECT, IN THEIR CLASS, THAT HAS A CLASS
+   * SOMEBODY CAN OPEN — asked of the catalogue. Null has two meanings and the
+   * caller has to tell them apart: the catalogue has not arrived, or this
+   * subject has nothing ready in their class at all.
    */
   const warmRefs = useMemo(() => new Set((catalog ?? []).map((e) => e.topicRef)), [catalog]);
-  const firstReadyChapter = (subject: string): string | null => {
-    for (const s of SYLLABI.filter((x) => x.subject === subject)) {
-      for (const c of s.chapters) {
-        if (c.topics.some((t) => warmRefs.has(`${s.id}/${c.id}/${t.id}`))) {
-          return `/chapter/${s.id}/${c.id}`;
-        }
-      }
-    }
-    return null;
-  };
-
+  const firstReadyChapter = (subject: string): string | null =>
+    readyChapterFor(SYLLABI, warmRefs, profile.klass, subject);
   return (
     <div className="bg-background text-on-background min-h-screen font-body-md pb-24 md:pb-8 md:pl-[232px]">
       {/* Top app bar */}
@@ -191,7 +175,7 @@ export function Home() {
             />
             <div className="relative z-10">
               <span className="inline-block bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full font-label-sm text-label-sm mb-3">
-                {hero?.subject ?? 'Science'}
+                {hero?.subject ?? subjects[0] ?? 'Science'}
               </span>
               <h2 className="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg mb-2">
                 {hero?.title ?? 'Start your first class'}
@@ -220,8 +204,10 @@ export function Home() {
               <button
                 onClick={() => {
                   if (hero) return navigate(`/lesson/${hero.id}`);
-                  const first = catalog?.[0];
-                  if (first) return navigate(`/lesson/${first.id}`);
+                  // A lesson of THEIR class and subject — it used to be
+                  // catalog[0], which is how a Class 8 student got Class 10
+                  // Respiration.
+                  if (firstLesson) return navigate(`/lesson/${firstLesson.id}`);
                   // Only once we KNOW there is no recorded lesson. Falling
                   // through while the catalogue is still in flight would send
                   // a student off to have a class prepared from scratch —
