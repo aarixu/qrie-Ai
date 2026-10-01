@@ -5,10 +5,13 @@
  * transcription. Until a caller has a name, none of that can be attributed,
  * limited or cut off, and one leaked URL spends until the balance is gone.
  *
- * Verified by ASKING SUPABASE rather than by checking a signature here. That
- * costs one round trip and buys two things worth more than the milliseconds:
- * the project's JWT secret never has to live in this process, and a token
- * revoked at sign-out stops working immediately instead of at its own expiry.
+ * Two ways, and the relay uses both. `createJwksVerifier` checks the
+ * signature here against the project's PUBLIC keys — no secret in this
+ * process, no round trip per call — and is what the relay asks first since
+ * 2026-10-01. `createSupabaseVerifier` asks Supabase, which costs a round
+ * trip and also refuses a session that has signed out; it is the fallback for
+ * any token the local check cannot read. See createJwksVerifier for what that
+ * trade gives up.
  *
  * This file was written for the LiveKit token server and lives here now
  * because the relays need exactly the same thing. It is fetch-only — no
@@ -77,6 +80,135 @@ export function createSupabaseVerifier(
 
     return { ok: true, user: { userId: body.id } };
   };
+}
+
+/**
+ * WHO IS ASKING, CHECKED HERE (Aarav, 2026-10-01: "login wala 0.1 sec bhi
+ * kar do").
+ *
+ * This project's access tokens are signed with ES256 by Supabase's
+ * asymmetric signing keys, and the public half is published at
+ * `<project>/auth/v1/.well-known/jwks.json`. So the relay checks the
+ * signature and the claims itself, with Web Crypto, instead of asking
+ * /auth/v1/user on every call: MEASURED 2026-09-30 that round trip was
+ * 53-192 ms of every hear and llm call. No secret lives in this process —
+ * only public keys.
+ *
+ * THE PRICE, SAID OUT LOUD: the network check also refused a session that had
+ * signed out. A token checked here stays good until its own expiry (one hour
+ * by default) even after sign-out. Aarav chose the time; the meter still holds
+ * every token to its owner's daily units.
+ *
+ * Anything this cannot check — a legacy HS256 token, a key id the published
+ * set does not have (a rotation newer than the cached keys), or keys that
+ * cannot be fetched — goes to `fallback`, the network check. A token it CAN
+ * check and finds wrong (bad signature, expired, another project, another
+ * audience, not a signed-in user) is refused here and never sent on.
+ */
+export function createJwksVerifier(
+  supabaseUrl: string,
+  opts: {
+    fallback: Verifier;
+    fetchImpl?: typeof fetch;
+    now?: () => number;
+    /** How long a fetched key set is kept. */
+    keysTtlMs?: number;
+  },
+): Verifier {
+  const issuer = `${supabaseUrl.replace(/\/+$/, '')}/auth/v1`;
+  const doFetch = opts.fetchImpl ?? fetch;
+  const now = opts.now ?? Date.now;
+  const ttl = opts.keysTtlMs ?? 10 * 60_000;
+  let keys: { at: number; byKid: Map<string, Promise<CryptoKey | null>>; jwks: JsonWebKey[] } | null = null;
+  let fetching: Promise<boolean> | null = null;
+
+  const loadKeys = async (): Promise<boolean> => {
+    try {
+      const res = await doFetch(`${issuer}/.well-known/jwks.json`);
+      if (!res.ok) return false;
+      const body = (await res.json().catch(() => null)) as { keys?: unknown } | null;
+      if (!body || !Array.isArray(body.keys)) return false;
+      keys = { at: now(), byKid: new Map(), jwks: body.keys as JsonWebKey[] };
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  const ensureKeys = async (): Promise<boolean> => {
+    if (keys && now() - keys.at < ttl) return true;
+    fetching ??= loadKeys().finally(() => (fetching = null));
+    return fetching;
+  };
+  const keyFor = (kid: string): Promise<CryptoKey | null> | null => {
+    if (!keys) return null;
+    const cached = keys.byKid.get(kid);
+    if (cached) return cached;
+    const jwk = keys.jwks.find((k) => (k as { kid?: unknown }).kid === kid);
+    if (!jwk || jwk.kty !== 'EC' || jwk.crv !== 'P-256') return null;
+    const imported = crypto.subtle
+      .importKey('jwk', { kty: jwk.kty, crv: jwk.crv, x: jwk.x, y: jwk.y }, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify'])
+      .catch(() => null);
+    keys.byKid.set(kid, imported);
+    return imported;
+  };
+
+  const refuse = (why: string): VerifyResult => ({ ok: false, status: 401, why });
+
+  return async (authHeader) => {
+    const token = bearerFrom(authHeader);
+    if (token === null) return refuse('expected an Authorization: Bearer <token> header');
+    const parts = token.split('.');
+    if (parts.length !== 3) return refuse('that sign-in is not valid');
+    const header = decodeJson(parts[0]);
+    const claims = decodeJson(parts[1]);
+    const signature = decodeBase64Url(parts[2]);
+    if (!header || !claims || !signature) return refuse('that sign-in is not valid');
+
+    if (header.alg !== 'ES256' || typeof header.kid !== 'string') return opts.fallback(authHeader);
+    if (!(await ensureKeys())) return opts.fallback(authHeader);
+    const key = await keyFor(header.kid);
+    if (!key) return opts.fallback(authHeader);
+
+    const signed = new TextEncoder().encode(`${parts[0]}.${parts[1]}`);
+    const valid = await crypto.subtle
+      .verify({ name: 'ECDSA', hash: 'SHA-256' }, key, signature, signed)
+      .catch(() => false);
+    if (!valid) return refuse('that sign-in is not valid');
+
+    const seconds = now() / 1000;
+    // Thirty seconds of leeway either side: clocks on an Edge isolate and on
+    // the auth server are not the same clock.
+    if (typeof claims.exp !== 'number' || claims.exp + 30 < seconds) return refuse('that sign-in has expired');
+    if (typeof claims.nbf === 'number' && claims.nbf - 30 > seconds) return refuse('that sign-in is not valid yet');
+    if (claims.iss !== issuer) return refuse('that sign-in is for another project');
+    const audiences = Array.isArray(claims.aud) ? claims.aud : [claims.aud];
+    if (!audiences.includes('authenticated')) return refuse('that sign-in is not for this app');
+    if (claims.role !== 'authenticated') return refuse('that sign-in is not a signed-in user');
+    if (typeof claims.sub !== 'string' || claims.sub === '') return refuse('that sign-in carries no user');
+    return { ok: true, user: { userId: claims.sub } };
+  };
+}
+
+function decodeBase64Url(part: string): Uint8Array<ArrayBuffer> | null {
+  try {
+    const binary = atob(part.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((part.length + 3) % 4));
+    const bytes = new Uint8Array(new ArrayBuffer(binary.length));
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  } catch {
+    return null;
+  }
+}
+
+function decodeJson(part: string): Record<string, unknown> | null {
+  const bytes = decodeBase64Url(part);
+  if (!bytes) return null;
+  try {
+    const value = JSON.parse(new TextDecoder().decode(bytes)) as unknown;
+    return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
 }
 
 /**

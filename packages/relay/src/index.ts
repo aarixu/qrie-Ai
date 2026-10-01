@@ -32,6 +32,7 @@ export {
 export {
   bearerFrom,
   cacheVerifier,
+  createJwksVerifier,
   createSupabaseVerifier,
   type Verified,
   type Verifier,

@@ -53,6 +53,7 @@
 
 import {
   cacheVerifier,
+  createJwksVerifier,
   createSupabaseVerifier,
 } from '../../../packages/relay/src/auth.ts';
 import { createSupabaseLedger } from '../../../packages/relay/src/gate.ts';
@@ -132,7 +133,12 @@ const CORS = {
  * once per SPOKEN LINE, and a round trip to the identity service before each
  * one would be most of a second of silence between sentences.
  */
-const verify = cacheVerifier(createSupabaseVerifier(SUPABASE_URL, ANON_KEY));
+// The signature is checked here first, against the project's public keys;
+// a token that cannot be checked here is asked about over the network
+// (packages/relay/src/auth.ts).
+const verify = cacheVerifier(
+  createJwksVerifier(SUPABASE_URL, { fallback: createSupabaseVerifier(SUPABASE_URL, ANON_KEY) }),
+);
 const ledger = createSupabaseLedger(SUPABASE_URL, SERVICE_ROLE_KEY);
 // What each call cost, in the units the provider bills. Same door as the
 // meter: the service role, through a definer function, so a student holding
