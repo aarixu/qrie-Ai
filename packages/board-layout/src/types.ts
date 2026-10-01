@@ -80,7 +80,7 @@ export type Instruction =
    * A short equation, as it would be written on a board. `id` lets a later
    * `annotate` mark it.
    */
-  | { do: 'equation'; text: string; id?: string }
+  | { do: 'equation'; text: string; id?: string; at?: string }
   /**
    * Working, step under step, the equals signs in one column, each step
    * written after the one above it (canvas C3). Plain maths like `equation`;
@@ -90,8 +90,10 @@ export type Instruction =
   /**
    * A line the tutor writes out by hand while speaking. Slow; use sparingly.
    * `id` lets a later `annotate` mark it — box it, highlight a word of it.
+   * `at` is a word of the line she is saying: the ink waits until she reaches
+   * it, rather than arriving with the start of her sentence (canvas C3).
    */
-  | { do: 'write'; text: string; tone?: Tone; id?: string }
+  | { do: 'write'; text: string; tone?: Tone; id?: string; at?: string }
   /** A heading with body text under it. Several in a row lay out side by side. */
   | {
       do: 'card';

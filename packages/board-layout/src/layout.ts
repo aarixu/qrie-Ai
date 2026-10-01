@@ -190,6 +190,18 @@ const idFor = (beatId: string, index: number, suffix = ''): string =>
   `${beatId}_${index}${suffix}`;
 
 /**
+ * How long into a spoken line she reaches `word`: its place in the line at
+ * about 14 characters a second, the rate a teacher's Hinglish line was
+ * measured at (relay vertexSpeech: 56 characters in 4.4 s). 0 when the line
+ * does not hold the word.
+ */
+const SPOKEN_MS_PER_CHAR = 1000 / 14;
+function anchorMs(said: string, word: string): number {
+  const at = said.toLowerCase().indexOf(word.trim().toLowerCase());
+  return at > 0 ? Math.round(at * SPOKEN_MS_PER_CHAR) : 0;
+}
+
+/**
  * Where a mark on a line she wrote goes: round all its lines, or only round
  * `span` — the first of its lines that holds those words, from where they
  * start in it to where they end. Measured with the ruler the line was laid
@@ -452,9 +464,14 @@ export function layoutBeat(
   const origin: number[] = [];
   /** The spoken line each item is drawn under: how many says came before it. */
   const lineOf: number[] = [];
+  /** What each spoken line says, in order: `saidLines[lineOf[item] - 1]`. */
+  const saidLines: string[] = [];
   let saysSeen = 0;
   beat.board.forEach((step, boardIndex) => {
-    if (step.do === 'say') saysSeen += 1;
+    if (step.do === 'say') {
+      saysSeen += 1;
+      saidLines.push(step.text);
+    }
     if (step.do !== 'ask') {
       items.push(step);
       origin.push(boardIndex);
@@ -1915,6 +1932,22 @@ export function layoutBeat(
     });
     bonds.push({ a: pending.id, b: host.id });
   }
+
+  // INK TIMED TO A WORD (canvas C3). A write or an equation with `at` waits
+  // until she reaches that word of the line it is written under — every line
+  // it drew, in whichever arrangement placed it. A word her line does not
+  // hold leaves the ink where it was, with the start of the line.
+  items.forEach((item, index) => {
+    if ((item.do !== 'write' && item.do !== 'equation') || !item.at) return;
+    const said = saidLines[lineOf[index] - 1] ?? '';
+    const wait = anchorMs(said, item.at);
+    if (wait <= 0) return;
+    const ids = new Set(byInstruction.get(index) ?? []);
+    elements.forEach((el, k) => {
+      if (!ids.has(el.id) || (el.kind !== 'handwrite' && el.kind !== 'formula')) return;
+      elements[k] = { ...el, after: (el.after ?? 0) + wait };
+    });
+  });
 
   // Nothing on the board sits on anything else.
   //
