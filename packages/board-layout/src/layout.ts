@@ -185,6 +185,40 @@ const idFor = (beatId: string, index: number, suffix = ''): string =>
   `${beatId}_${index}${suffix}`;
 
 /**
+ * Where a mark on a line she wrote goes: round all its lines, or only round
+ * `span` — the first of its lines that holds those words, from where they
+ * start in it to where they end. Measured with the ruler the line was laid
+ * out with (her hand, `handWidth`); a formula is evenly spaced, so a share of
+ * its width. A line with typeset maths, or a span no line holds, marks the
+ * whole.
+ */
+function markedBox(lines: readonly Element[], span?: string): Rect | null {
+  if (lines.length === 0) return null;
+  const whole = lines.map(boxOf).reduce(union);
+  const wanted = span?.trim().toLowerCase();
+  if (!wanted) return whole;
+  for (const line of lines) {
+    if (line.kind !== 'handwrite' && line.kind !== 'formula') continue;
+    if (/\$/.test(line.text)) continue;
+    const at = line.text.toLowerCase().indexOf(wanted);
+    if (at < 0) continue;
+    const b = boxOf(line);
+    if (line.kind === 'formula') {
+      const share = b.w / Math.max(1, line.text.length);
+      return { x: b.x + at * share, y: b.y, w: wanted.length * share, h: b.h };
+    }
+    const size = line.size ?? 26;
+    return {
+      x: b.x + handWidth(line.text.slice(0, at), size),
+      y: b.y,
+      w: handWidth(line.text.slice(at, at + wanted.length), size),
+      h: b.h,
+    };
+  }
+  return whole;
+}
+
+/**
  * How tall a note will be once wrapped.
  *
  * Approximated from character count rather than measured, because the layout
@@ -472,11 +506,17 @@ export function layoutBeat(
   let pendingSketch: { at: number; id: string; step: Extract<Instruction, { do: 'sketch' }> } | null =
     null;
   let sceneEmitted = false;
+  /**
+   * The item each written line came from, by the `id` the planner gave it, so
+   * a later `annotate` can mark what she wrote (canvas C3).
+   */
+  const writtenAt = new Map<string, number>();
   let i = 0;
   while (i < items.length) {
     const item = items[i];
     const index = i;
     current = i;
+    if ((item.do === 'write' || item.do === 'equation') && item.id) writtenAt.set(item.id, index);
 
     switch (item.do) {
       case 'title': {
@@ -841,6 +881,13 @@ export function layoutBeat(
 
       case 'say': {
         // Says no element of its own; it marks where the board pauses for words.
+        i += 1;
+        break;
+      }
+
+      case 'newPage': {
+        // Draws nothing; the stacker turns the page here (see there).
+        blocks.push({ kind: item.do, at: index, height: 0, place: () => [] });
         i += 1;
         break;
       }
@@ -1679,8 +1726,16 @@ export function layoutBeat(
     line.reduce((sum, b, k) => sum + leastOf(b) + (k > 0 ? GUTTER : 0), 0);
   const sheets: Block[][] = [[]];
   let taken = 0;
-  for (const line of spoken) {
-    if (sheets[sheets.length - 1].length > 0 && taken + GUTTER + heightOf(line) > MAIN.h) {
+  for (const spokenLine of spoken) {
+    // A `newPage` turns the page at the start of the spoken line it falls in —
+    // a line still draws on one page — if the page has anything on it, and
+    // takes no room of its own.
+    const turns = spokenLine.some((b) => b.kind === 'newPage');
+    const line = spokenLine.filter((b) => b.kind !== 'newPage');
+    if (
+      sheets[sheets.length - 1].length > 0 &&
+      (turns || taken + GUTTER + heightOf(line) > MAIN.h)
+    ) {
       sheets.push([]);
       taken = 0;
     }
@@ -1738,6 +1793,29 @@ export function layoutBeat(
   // is the move that lets ONE picture carry a whole stretch of teaching — she
   // marks it, writes beside it, and never needs another image.
   for (const pending of pendingMarks) {
+    // A line she wrote: marked where its lines landed, all of it or a span.
+    const written = writtenAt.get(pending.step.target);
+    if (written !== undefined) {
+      const ids = new Set(byInstruction.get(written) ?? []);
+      const lines = elements.filter((el) => ids.has(el.id));
+      const box = markedBox(lines, pending.step.span);
+      if (!box) continue;
+      const grow = pending.step.mark === 'underline' || pending.step.mark === 'highlight' ? 2 : 10;
+      current = pending.at;
+      emit({
+        kind: 'mark',
+        id: pending.id,
+        x: box.x - grow,
+        y: box.y - grow,
+        w: box.w + grow * 2,
+        h: box.h + grow * 2,
+        shape: pending.step.mark,
+        ...(pending.step.tone ? { tone: pending.step.tone } : {}),
+      });
+      for (const line of lines) bonds.push({ a: pending.id, b: line.id });
+      continue;
+    }
+
     const box = partBox(pending.step.target, elements);
     if (!box) continue;
     const { elementId } = splitPartRef(pending.step.target);

@@ -351,7 +351,8 @@ export type Element =
       y: number;
       w: number;
       h: number;
-      shape: 'circle' | 'underline' | 'tick' | 'cross';
+      /** `box` and `highlight` are for her own writing (canvas C3): a frame round a line, a marker stroke over part of one. */
+      shape: 'circle' | 'underline' | 'tick' | 'cross' | 'box' | 'highlight';
       tone?: Tone;
     }
   | { kind: 'model3d'; id: string; x: number; y: number; w: number; h: number; asset?: string; label?: string };

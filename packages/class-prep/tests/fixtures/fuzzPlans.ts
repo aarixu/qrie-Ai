@@ -15,7 +15,10 @@ import type { Blueprint } from '../../src/types';
 
 type Part = { name: string; x: number; y: number; w: number; h: number };
 
-export function fuzzPlan(seed: number): {
+export function fuzzPlan(
+  seed: number,
+  opts: { smartBoard?: boolean } = {},
+): {
   plan: Blueprint;
   drawn: Set<string>;
   parts: Map<string, Part[]>;
@@ -122,5 +125,32 @@ export function fuzzPlan(seed: number): {
     const body = kind === 'scene' ? scene(b) : kind === 'picture' ? picture(b) : working();
     return { id: `b${b + 1}`, topic: `Part ${b + 1}`, narration: '', board: [...body, ...ask()] };
   });
+
+  /**
+   * The smart board's own moves (canvas C3): key points she frames and
+   * highlights, a clean page, a marked equation. Drawn from the random stream
+   * only after every beat above, so turning it on leaves those beats exactly
+   * as they were and the measured numbers stay comparable.
+   */
+  if (opts.smartBoard) {
+    const b = beats.length;
+    const first = sentence(18, 40);
+    const word = first.split(' ')[1] ?? first.split(' ')[0];
+    const board: Instruction[] = [
+      { do: 'say', text: sentence(20, 60) },
+      { do: 'write', id: `k${b}a`, text: first },
+      { do: 'say', text: sentence(20, 60) },
+      { do: 'annotate', target: `k${b}a`, mark: 'box' },
+      { do: 'say', text: sentence(20, 60) },
+      { do: 'annotate', target: `k${b}a`, mark: 'highlight', span: word },
+      { do: 'say', text: sentence(20, 60) },
+      { do: 'newPage' },
+      { do: 'write', id: `k${b}b`, text: sentence(18, 40) },
+      { do: 'say', text: sentence(20, 60) },
+      { do: 'equation', id: `e${b}`, text: `${int(2, 9)}x + ${int(1, 20)} = ${int(21, 60)}` },
+      { do: 'annotate', target: `e${b}`, mark: 'underline' },
+    ];
+    beats.push({ id: `b${b + 1}`, topic: `Part ${b + 1}`, narration: '', board: [...board, ...ask()] });
+  }
   return { plan: { id: `fuzz-${seed}`, title: 'Fuzz', visuals, beats }, drawn, parts, shapes };
 }

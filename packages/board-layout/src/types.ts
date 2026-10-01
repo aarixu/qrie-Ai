@@ -76,10 +76,16 @@ export type Instruction =
       hint?: string;
       options?: { text: string; correct?: boolean; why?: string; hint?: string }[];
     }
-  /** A short equation, as it would be written on a board. */
-  | { do: 'equation'; text: string }
-  /** A line the tutor writes out by hand while speaking. Slow; use sparingly. */
-  | { do: 'write'; text: string; tone?: Tone }
+  /**
+   * A short equation, as it would be written on a board. `id` lets a later
+   * `annotate` mark it.
+   */
+  | { do: 'equation'; text: string; id?: string }
+  /**
+   * A line the tutor writes out by hand while speaking. Slow; use sparingly.
+   * `id` lets a later `annotate` mark it — box it, highlight a word of it.
+   */
+  | { do: 'write'; text: string; tone?: Tone; id?: string }
   /** A heading with body text under it. Several in a row lay out side by side. */
   | {
       do: 'card';
@@ -161,8 +167,26 @@ export type Instruction =
    * `kidney#cortex`. That second form is what lets one generated picture carry
    * a whole stretch of teaching: she circles the cortex, arrows to the pelvis,
    * writes beside each, and never needs another image.
+   *
+   * Or the `id` of a line she wrote (`write`, `equation`), with `box` round it
+   * or a `highlight` over it; `span` narrows the mark to those words of the
+   * line (canvas C3). A span the line does not contain marks the whole line.
    */
-  | { do: 'annotate'; target: string; mark: 'circle' | 'underline' | 'tick' | 'cross'; tone?: Tone }
+  | {
+      do: 'annotate';
+      target: string;
+      mark: 'circle' | 'underline' | 'tick' | 'cross' | 'box' | 'highlight';
+      span?: string;
+      tone?: Tone;
+    }
+  /**
+   * Clean board: what follows starts on a fresh page (canvas C3).
+   *
+   * A teacher wipes before a new idea rather than squeezing it in under the
+   * last one. On an endless board the wipe is a page turn, and the camera
+   * follows. Nothing is drawn; on a page with nothing on it yet, nothing turns.
+   */
+  | { do: 'newPage' }
   /**
    * What the tutor says at this point in the beat.
    *

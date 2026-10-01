@@ -265,7 +265,7 @@ board fills in as she speaks:
 - {"do":"place","id","noun","label"?,"group"?,"size"?,"row"?}   Put ONE noun on the board as a small picture. \`noun\` is a plain everyday word — "boy", "tank", "clock". \`group\` clusters things that belong together. \`size\` is "small" | "normal" | "large". \`row\` (0, 1, 2…) stacks parts of the scene at different heights — use it whenever the relationship is spatial: something above something, before and after, a comparison grid. Same row = side by side.
 - {"do":"connect","from","to","label"?,"dashed"?,"tone"?}   Draw the relationship between two placed things.
 - {"do":"label","target":"<picture>#<part>","text","tone"?}   Write a part’s name in the margin with a line running to it. The move every labelled diagram is made of.
-- {"do":"annotate","target","mark","tone"?}   A teacher's mark ON something placed: "circle" | "underline" | "tick" | "cross".
+- {"do":"annotate","target","mark","span"?,"tone"?}   A teacher's mark ON something placed or written. On a placed thing or a picture's part: "circle" | "underline" | "tick" | "cross". On a line she wrote, named by that write's "id": "box" (frame the definition), "highlight" or "underline"; "span" narrows it to those words of the line — {"do":"annotate","target":"def","mark":"highlight","span":"energy"} — and it comes on the word she stresses them.
 
 Like this — the words and the drawing arriving together:
 
@@ -288,8 +288,9 @@ concrete word — place a "leaf", not "photosynthesis".
 
 - {"do":"title","text","sub"?}          The lesson heading. Owns the top of the board.
 - {"do":"caption","text"}               One line under everything, naming what is shown.
-- {"do":"equation","text"}              A short equation as you would write it on a board — "v = s / t". Plain text, never LaTeX.
-- {"do":"write","text","tone"?}         A KEY POINT, written out BY HAND while she says it. Every key point you say out loud gets written: two to four in a beat is normal. A few words, the way a teacher notes it — never the sentence she is saying: a line that copies what she says is a subtitle, and a class that writes one is refused. Maths goes in LaTeX between $…$; a chemical equation goes in $\\ce{…}$ — "$\\ce{C6H12O6 + 6O2 -> 6CO2 + 6H2O}$" — and it must balance, unless the line says it is the skeletal equation ("Skeletal: $\\ce{H2 + O2 -> H2O}$").
+- {"do":"equation","text","id"?}        A short equation as you would write it on a board — "v = s / t". Plain text, never LaTeX.
+- {"do":"newPage"}                      Clean board: what follows starts on a fresh page. Use it before a new idea rather than squeezing the idea in under the last one.
+- {"do":"write","text","id"?,"tone"?}   Give it an "id" when you will mark it later. A KEY POINT, written out BY HAND while she says it. Every key point you say out loud gets written: two to four in a beat is normal. A few words, the way a teacher notes it — never the sentence she is saying: a line that copies what she says is a subtitle, and a class that writes one is refused. Maths goes in LaTeX between $…$; a chemical equation goes in $\\ce{…}$ — "$\\ce{C6H12O6 + 6O2 -> 6CO2 + 6H2O}$" — and it must balance, unless the line says it is the skeletal equation ("Skeletal: $\\ce{H2 + O2 -> H2O}$").
 - {"do":"diagram","ref"}                A generated picture, by the id of its brief below. Only for things with internal structure worth pointing inside — a cell, a cross-section, a graph.
 - {"do":"point","ref","part"}           Light one named part of that picture, dim the rest.
 - {"do":"sketch","ref","from":"<picture>#<part>"}   A SMALL DRAWING beside the picture, with a long arrow from the part it explains. The textbook zoom-in: the photo shows the glass; what is inside the water — tiny particles — is a sketch next to it. ref is a diagram brief; keep it simple, a few shapes, and give its moving parts motion.

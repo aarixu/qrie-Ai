@@ -26,17 +26,29 @@ import { fuzzPlan } from './fixtures/fuzzPlans';
 
 const SEEDS = 300;
 
-describe('300 seeded classes through assemble and the keep gate', () => {
+/** Every seeded class through assemble and the keep gate: how many broke each rule. */
+function run(opts: { smartBoard?: boolean } = {}): {
+  invalid: number;
+  count: (rule: GateRule) => number;
+  /** Classes whose board drew a frame, a highlight. */
+  framed: number;
+  highlighted: number;
+} {
   const classesWith = new Map<GateRule, number>();
+  let framed = 0;
+  let highlighted = 0;
   let invalid = 0;
   for (let seed = 1; seed <= SEEDS; seed += 1) {
-    const { plan, drawn, parts, shapes } = fuzzPlan(seed);
+    const { plan, drawn, parts, shapes } = fuzzPlan(seed, opts);
     const made = assemble(plan, drawn, parts, shapes);
     const checked = validateLesson(made.lesson);
     if (!checked.ok) {
       invalid += 1;
       continue;
     }
+    const marked = new Set(made.lesson.elements.flatMap((el) => (el.kind === 'mark' ? [el.shape] : [])));
+    if (marked.has('box')) framed += 1;
+    if (marked.has('highlight')) highlighted += 1;
     const problems = gateLesson(checked.lesson as Lesson, {
       bonds: made.bonds,
       unspoken: made.unspoken,
@@ -45,7 +57,11 @@ describe('300 seeded classes through assemble and the keep gate', () => {
     });
     for (const rule of new Set(problems.map((p) => p.rule))) classesWith.set(rule, (classesWith.get(rule) ?? 0) + 1);
   }
-  const count = (rule: GateRule): number => classesWith.get(rule) ?? 0;
+  return { invalid, count: (rule) => classesWith.get(rule) ?? 0, framed, highlighted };
+}
+
+describe('300 seeded classes through assemble and the keep gate', () => {
+  const { invalid, count } = run();
 
   it('all validate', () => {
     expect(invalid).toBe(0);
@@ -71,5 +87,31 @@ describe('300 seeded classes through assemble and the keep gate', () => {
 
   it('draws every instruction that writes words', () => {
     expect(count('drawn')).toBe(0);
+  });
+});
+
+/**
+ * The same classes with one more beat of the smart board's moves (canvas C3):
+ * a key point boxed, a word of it highlighted, a clean page, an equation
+ * underlined. The beats before it are unchanged, so any new problem is the
+ * new beat's.
+ */
+describe('300 seeded classes with a beat of marks on her writing and a clean page', () => {
+  const { invalid, count, framed, highlighted } = run({ smartBoard: true });
+
+  it('frames and highlights her writing in every class', () => {
+    expect(framed).toBe(SEEDS);
+    expect(highlighted).toBe(SEEDS);
+  });
+
+  it('all validate, and the new beat breaks no rule the classes did not already break', () => {
+    expect(invalid).toBe(0);
+    expect(count('one-page')).toBe(0);
+    expect(count('on-camera')).toBe(0);
+    expect(count('on-board')).toBe(0);
+    expect(count('overlap')).toBeLessThanOrEqual(1);
+    expect(count('drawn')).toBe(0);
+    expect(count('echo')).toBe(0);
+    expect(count('tex')).toBe(0);
   });
 });

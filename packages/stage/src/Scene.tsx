@@ -999,6 +999,30 @@ function renderMark(el: Extract<Element, { kind: 'mark' }>): ReactElement {
           <path d={`M ${el.x + el.w} ${el.y} L ${el.x} ${el.y + el.h}`} {...common} />
         </>
       );
+    case 'box':
+      // A frame round a line she wrote, drawn in one stroke the way a hand
+      // boxes a definition: corners not quite square, the end running past
+      // where it began.
+      return (
+        <path
+          d={`M ${el.x + 6} ${el.y} L ${el.x + el.w} ${el.y + 2} L ${el.x + el.w - 2} ${el.y + el.h} L ${el.x} ${el.y + el.h - 2} L ${el.x + 2} ${el.y - 4} L ${el.x + 16} ${el.y - 1}`}
+          {...common}
+          strokeWidth={3}
+        />
+      );
+    case 'highlight':
+      // A marker pulled across the words: one broad, see-through stroke over
+      // them, multiplied so the ink underneath stays black.
+      return (
+        <path
+          d={`M ${el.x} ${cy} L ${el.x + el.w} ${cy}`}
+          {...common}
+          strokeWidth={el.h * 0.8}
+          strokeLinecap="butt"
+          strokeOpacity={0.32}
+          style={{ mixBlendMode: 'multiply' }}
+        />
+      );
   }
 }
 

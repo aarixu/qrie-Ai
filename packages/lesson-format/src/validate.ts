@@ -158,8 +158,13 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
     case 'mark':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'mark needs numeric x,y,w,h');
       need(
-        el.shape === 'circle' || el.shape === 'underline' || el.shape === 'tick' || el.shape === 'cross',
-        'mark shape must be circle, underline, tick or cross',
+        el.shape === 'circle' ||
+          el.shape === 'underline' ||
+          el.shape === 'tick' ||
+          el.shape === 'cross' ||
+          el.shape === 'box' ||
+          el.shape === 'highlight',
+        'mark shape must be circle, underline, tick, cross, box or highlight',
       );
       break;
     case 'model3d':
