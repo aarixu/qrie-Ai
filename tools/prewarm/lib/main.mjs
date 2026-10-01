@@ -72,6 +72,24 @@ import {
   whyNotSaveable,
 } from '../../../packages/class-prep/src/index.ts';
 import { candidatesFor, pencilGlyph } from '../../../packages/graphics/src/resolve.ts';
+import { askAgainLater } from '../../../packages/class-prep/src/notNow.ts';
+
+/**
+ * EVERY MODEL CALL HERE WAITS OUT "NOT NOW". class-prep keeps its wait to the
+ * repair rounds because the app's calls have a student waiting; nothing in this
+ * runner is interactive, and every call is paid for. A 429 on the fact-check
+ * threw away a Respiration plan that had already passed the keep gate
+ * (2026-10-02, Rs 5.13).
+ */
+const patient = (adapter) => ({
+  ...adapter,
+  complete: (system, user) =>
+    askAgainLater(
+      () => adapter.complete(system, user),
+      {},
+      (ms) => process.stdout.write(`\n    busy      waiting ${Math.round(ms / 1000)} s and asking again\n`),
+    ),
+});
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../../..');
@@ -324,8 +342,8 @@ async function dressAndKeep(made, row, client, keepRefused, writeOut) {
     graphics = await dressNouns(
       made.lesson,
       row.topic.title,
-      client.llm(PICKER_MODEL, { json: true }),
-      client.llm(ARTIST_MODEL),
+      patient(client.llm(PICKER_MODEL, { json: true })),
+      patient(client.llm(ARTIST_MODEL)),
     );
   } catch (e) {
     console.warn(
@@ -368,9 +386,9 @@ async function warmOne(row, opts, client, keepRefused, writeOut) {
     klass: row.klass,
     minutes,
     outcomes,
-    planner: client.llm(PLANNER_MODEL, { json: true }),
-    artist: client.llm(ARTIST_MODEL),
-    ...(opts.review ? { reviewer: client.llm(REVIEWER_MODEL, { json: true }) } : {}),
+    planner: patient(client.llm(PLANNER_MODEL, { json: true })),
+    artist: patient(client.llm(ARTIST_MODEL)),
+    ...(opts.review ? { reviewer: patient(client.llm(REVIEWER_MODEL, { json: true })) } : {}),
     imageArtist: client.imageArtist(IMAGE_MODEL),
     eyes: client.vision(VISION_MODEL),
     web: createCommonsSearch(),

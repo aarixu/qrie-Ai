@@ -11,8 +11,9 @@
  * needs a longer wait than an interactive call can afford — and a repair round
  * can afford it, because the plan it is repairing is already paid for.
  *
- * So ONLY the repair rounds in prepare.ts use this. Nothing interactive does:
- * the relay's own backoff is untouched.
+ * So the repair rounds in prepare.ts use this, and so does tools/prewarm, which
+ * wraps every model call in it (nothing there is interactive). Nothing
+ * interactive does: the relay's own backoff is untouched.
  */
 
 /**
