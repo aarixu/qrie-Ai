@@ -1,0 +1,126 @@
+import type { Instruction } from '@ai-tutor/board-layout';
+import type { Blueprint } from '../../src/types';
+
+/**
+ * SEEDED, SYNTHETIC CLASSES — the shapes the planner actually writes, with
+ * random words and random amounts, so a layout rule can be measured over
+ * hundreds of classes at no cost (canvas C0, item 6). The same seed always
+ * gives the same class.
+ *
+ * Shapes, from the canvas audit's generator (2026-10-01): a scene of placed
+ * things with connectors and key points; a labelled picture with key points
+ * and sometimes a list; and a run of maths working. Every beat asks once, as
+ * the prompt requires, and its answer arrives after a line.
+ */
+
+type Part = { name: string; x: number; y: number; w: number; h: number };
+
+export function fuzzPlan(seed: number): {
+  plan: Blueprint;
+  drawn: Set<string>;
+  parts: Map<string, Part[]>;
+  shapes: Map<string, number>;
+} {
+  let s = seed >>> 0 || 1;
+  const rnd = (): number => {
+    s = (s * 1103515245 + 12345) % 2147483648;
+    return s / 2147483648;
+  };
+  const int = (a: number, b: number): number => a + Math.floor(rnd() * (b - a + 1));
+  const pick = <T>(xs: readonly T[]): T => xs[Math.floor(rnd() * xs.length)];
+  const WORDS =
+    'blood oxygen glucose energy cells lungs heart muscle yeast dough sugar water carbon dioxide air food kidney urine waste body plant leaf root sunlight gas tube vessel pump release carried through into from the and of to'.split(
+      ' ',
+    );
+  const phrase = (lo: number, hi: number): string => {
+    let out = '';
+    const n = int(lo, hi);
+    while (out.length < n) out += (out ? ' ' : '') + pick(WORDS);
+    return out;
+  };
+  const sentence = (lo: number, hi: number): string => {
+    const t = phrase(lo, hi);
+    return t[0].toUpperCase() + t.slice(1);
+  };
+
+  const visuals: Blueprint['visuals'] = [];
+  const drawn = new Set<string>();
+  const parts = new Map<string, Part[]>();
+  const shapes = new Map<string, number>();
+
+  const ask = (): Instruction[] => [
+    { do: 'say', text: `${sentence(20, 50)}?` },
+    { do: 'ask', question: `${sentence(30, 70)}?`, expect: phrase(10, 30), hint: `${sentence(15, 40)}?` },
+    { do: 'say', text: sentence(20, 60) },
+    { do: 'write', text: sentence(18, 50) },
+  ];
+
+  const scene = (b: number): Instruction[] => {
+    const n = int(2, 5);
+    const board: Instruction[] = [];
+    if (rnd() < 0.4) board.push({ do: 'title', text: sentence(12, 30) });
+    board.push({ do: 'say', text: sentence(20, 60) });
+    const ids: string[] = [];
+    for (let k = 0; k < n; k += 1) {
+      const id = `s${b}p${k}`;
+      ids.push(id);
+      board.push({ do: 'place', id, noun: pick(WORDS), ...(rnd() < 0.85 ? { label: phrase(4, 20) } : {}) } as Instruction);
+    }
+    for (let k = 0; k < int(1, Math.min(3, n - 1)); k += 1) {
+      const a = int(0, n - 2);
+      board.push({ do: 'say', text: sentence(20, 60) });
+      board.push({ do: 'connect', from: ids[a], to: ids[a + 1], ...(rnd() < 0.75 ? { label: phrase(6, 28) } : {}) } as Instruction);
+    }
+    for (let k = 0; k < int(0, 3); k += 1) {
+      board.push({ do: 'say', text: sentence(20, 60) });
+      board.push({ do: 'write', text: sentence(22, 60) });
+    }
+    return board;
+  };
+
+  const picture = (b: number): Instruction[] => {
+    const ref = `pic${b}`;
+    visuals.push({ id: ref, brief: 'a picture', alt: 'a picture', parts: [] } as never);
+    drawn.add(ref);
+    const n = int(3, 6);
+    const ys = Array.from({ length: n }, () => 0.05 + rnd() * 0.8).sort((x, y) => x - y);
+    const own: Part[] = [];
+    const board: Instruction[] = [{ do: 'say', text: sentence(20, 60) }, { do: 'picture', ref } as Instruction];
+    for (let k = 0; k < n; k += 1) {
+      const name = `part${k}`;
+      own.push({ name, x: 0.05 + rnd() * 0.75, y: ys[k], w: 0.05 + rnd() * 0.15, h: 0.05 + rnd() * 0.12 });
+      if (rnd() < 0.5) board.push({ do: 'annotate', target: `${ref}#${name}`, mark: 'circle' } as Instruction);
+      board.push({ do: 'label', target: `${ref}#${name}`, text: sentence(5, 18) } as Instruction);
+    }
+    parts.set(ref, own);
+    shapes.set(ref, 0.6 + rnd() * 1.2);
+    for (let k = 0; k < int(1, 3); k += 1) {
+      board.push({ do: 'say', text: sentence(20, 60) });
+      board.push({ do: 'write', text: sentence(22, 60) });
+    }
+    if (rnd() < 0.3) {
+      board.push({
+        do: 'list',
+        heading: 'Parts',
+        items: Array.from({ length: int(3, 5) }, () => ({ term: sentence(5, 14), meaning: phrase(15, 40) })),
+      });
+    }
+    return board;
+  };
+
+  const working = (): Instruction[] => {
+    const board: Instruction[] = [{ do: 'title', text: sentence(12, 30) }, { do: 'say', text: sentence(20, 60) }];
+    for (let k = 0; k < int(2, 4); k += 1) {
+      board.push({ do: 'say', text: sentence(20, 60) });
+      for (let j = 0; j < int(1, 3); j += 1) board.push({ do: 'equation', text: `${int(2, 9)}x + ${int(1, 20)} = ${int(21, 60)}` });
+    }
+    return board;
+  };
+
+  const beats: Blueprint['beats'] = Array.from({ length: int(3, 5) }, (_, b) => {
+    const kind = pick(['scene', 'picture', 'working'] as const);
+    const body = kind === 'scene' ? scene(b) : kind === 'picture' ? picture(b) : working();
+    return { id: `b${b + 1}`, topic: `Part ${b + 1}`, narration: '', board: [...body, ...ask()] };
+  });
+  return { plan: { id: `fuzz-${seed}`, title: 'Fuzz', visuals, beats }, drawn, parts, shapes };
+}

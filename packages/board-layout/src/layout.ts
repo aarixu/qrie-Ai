@@ -400,12 +400,15 @@ export function layoutBeat(
   const items: Instruction[] = [];
   /** The board index each item came from: `origin[item] = board index`. */
   const origin: number[] = [];
+  /** The spoken line each item is drawn under: how many says came before it. */
+  const lineOf: number[] = [];
   let saysSeen = 0;
   beat.board.forEach((step, boardIndex) => {
     if (step.do === 'say') saysSeen += 1;
     if (step.do !== 'ask') {
       items.push(step);
       origin.push(boardIndex);
+      lineOf.push(saysSeen);
       return;
     }
     asks.push({
@@ -1444,7 +1447,8 @@ export function layoutBeat(
       by = MAIN.y;
     };
 
-    pendingWrites.forEach((point, n) => {
+    const placePoint = (n: number): void => {
+      const point = pendingWrites[n];
       current = point.at;
       const lines = band.lines[n];
       roomFor(lines.length * bandLead);
@@ -1469,10 +1473,10 @@ export function layoutBeat(
         leashes.push({ id, region: { x: x - 16, y: y - 12, w: 32, h: 24 } });
       });
       by += lines.length * bandLead + POINT_GAP;
-    });
+    };
 
     /**
-     * And the lists, under the key points.
+     * And the lists, with the key points.
      *
      * Placed here rather than left to the stacker, because this branch ends by
      * emptying the block list — and anything it had not placed itself simply
@@ -1480,7 +1484,7 @@ export function layoutBeat(
      * nowhere at all: no error, no gap, just a board missing the half the
      * student was meant to copy down.
      */
-    for (const block of written) {
+    const placeList = (block: Block): void => {
       current = block.at ?? -1;
       roomFor(block.height ?? 0);
       let bottom = by;
@@ -1494,6 +1498,38 @@ export function layoutBeat(
         bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
       }
       by = bottom + BAND_GAP;
+    };
+
+    /**
+     * In the order she says them, a spoken line at a time.
+     *
+     * The points used to be written first and the lists after, so a line that
+     * made a point and wrote a list put the point under the picture and the
+     * list on the next page — one line on two pages, and the camera on one of
+     * them (canvas audit 2026-10-01). Now everything one line writes is
+     * measured together, and the page turns BEFORE a line that does not fit;
+     * each piece still turns it on its own only when one line is taller than
+     * a page.
+     */
+    type BandItem = { at: number; point?: number; list?: Block };
+    const bandItems: BandItem[] = [
+      ...pendingWrites.map((p, n): BandItem => ({ at: p.at, point: n })),
+      ...written.map((block): BandItem => ({ at: block.at ?? -1, list: block })),
+    ].sort((a, b) => a.at - b.at);
+    const tallness = (item: BandItem): number =>
+      item.point !== undefined
+        ? band.lines[item.point].length * bandLead + POINT_GAP
+        : (item.list?.height ?? 0) + BAND_GAP;
+    for (let i = 0; i < bandItems.length; ) {
+      let end = i + 1;
+      while (end < bandItems.length && lineOf[bandItems[end].at] === lineOf[bandItems[i].at]) end += 1;
+      const said = bandItems.slice(i, end);
+      roomFor(said.reduce((sum, item) => sum + tallness(item), 0) - POINT_GAP);
+      for (const item of said) {
+        if (item.point !== undefined) placePoint(item.point);
+        else if (item.list) placeList(item.list);
+      }
+      i = end;
     }
     bandSheets = sheet + 1;
 
@@ -1548,33 +1584,50 @@ export function layoutBeat(
      * 2026-10-01, item 6: 19.1% of random beats with a diagram and two to four
      * points ran off the board). It stops where the labelled figure's band stops, above the
      * caption, and carries on at the top of the next page across the full
-     * width.
+     * width — a spoken line at a time, so the page turns before a line whose
+     * ink would not all fit, never in the middle of one.
      */
     const columnBottom = MAIN.y + MAIN.h + SPARE_BELOW;
     let sheet = 0;
     let ry = MAIN.y;
     const columnAt = (): { x: number; w: number } =>
       sheet === 0 ? { x: SIDE + figureW + GAP, w: columnW } : { x: SIDE + sheet * PAGE_STRIDE, w: WIDTH };
-    /** Where a block would end if written from `y` — placed, measured, thrown away. */
-    const endOf = (block: Block, y: number): number => {
-      let bottom = y;
-      for (const el of block.place({ ...columnAt(), y, h: WRITE_H })) {
-        bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
+    /** Where a run of blocks would end if written from `y` — placed, measured, thrown away. */
+    const endOf = (run: readonly Block[], y: number): number => {
+      let at = y;
+      for (const block of run) {
+        let bottom = at;
+        for (const el of block.place({ ...columnAt(), y: at, h: WRITE_H })) {
+          bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
+        }
+        at = bottom + BETWEEN_POINTS;
       }
-      return bottom;
+      return at - BETWEEN_POINTS;
     };
-    for (const block of blocks.filter((b) => b !== figures[0])) {
-      if (ry > MAIN.y && endOf(block, ry) > columnBottom) {
+    const rest = blocks.filter((b) => b !== figures[0]);
+    for (let k = 0; k < rest.length; ) {
+      let end = k + 1;
+      while (end < rest.length && lineOf[rest[end].at ?? -1] === lineOf[rest[k].at ?? -1]) end += 1;
+      const said = rest.slice(k, end);
+      if (ry > MAIN.y && endOf(said, ry) > columnBottom) {
         sheet += 1;
         ry = MAIN.y;
       }
-      current = block.at ?? -1;
-      let bottom = ry;
-      for (const el of block.place({ ...columnAt(), y: ry, h: WRITE_H })) {
-        emit(el);
-        bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
+      for (const block of said) {
+        // One line taller than what is left of a page still turns it.
+        if (ry > MAIN.y && endOf([block], ry) > columnBottom) {
+          sheet += 1;
+          ry = MAIN.y;
+        }
+        current = block.at ?? -1;
+        let bottom = ry;
+        for (const el of block.place({ ...columnAt(), y: ry, h: WRITE_H })) {
+          emit(el);
+          bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
+        }
+        ry = bottom + BETWEEN_POINTS;
       }
-      ry = bottom + BETWEEN_POINTS;
+      k = end;
     }
     columnSheets = sheet + 1;
 
@@ -1591,18 +1644,46 @@ export function layoutBeat(
    * on an endless board is the page count, not the writing.
    */
   const leastOf = (b: Block): number => b.height ?? MIN_FLEXIBLE_H;
+  /**
+   * AND THE PAGE TURNS BETWEEN SPOKEN LINES, NEVER DURING ONE.
+   *
+   * Packed a block at a time, a line that wrote three equations filled the
+   * page on its second and drew its third on the next — while the camera,
+   * which follows the newest ink, showed only the third (canvas audit
+   * 2026-10-01: 16% of moments drew on two pages). So blocks are packed a LINE
+   * at a time: a line whose ink does not fit what is left of the page starts
+   * the next page whole. Only a line taller than a page is split, and the keep
+   * gate's `one-page` rule tells the planner to split that line.
+   */
+  const spoken: Block[][] = [];
+  let lastLine: number | null = null;
+  for (const block of blocks) {
+    // A block that recorded its own ids belongs with the one before it.
+    const line: number | null = block.at === null ? lastLine : (lineOf[block.at] ?? lastLine);
+    if (spoken.length === 0 || line !== lastLine) spoken.push([]);
+    spoken[spoken.length - 1].push(block);
+    lastLine = line;
+  }
+  const heightOf = (line: readonly Block[]): number =>
+    line.reduce((sum, b, k) => sum + leastOf(b) + (k > 0 ? GUTTER : 0), 0);
   const sheets: Block[][] = [[]];
   let taken = 0;
-  for (const block of blocks) {
-    const here = sheets[sheets.length - 1];
-    const gutter = here.length > 0 ? GUTTER : 0;
-    if (here.length > 0 && taken + gutter + leastOf(block) > MAIN.h) {
-      sheets.push([block]);
-      taken = leastOf(block);
-      continue;
+  for (const line of spoken) {
+    if (sheets[sheets.length - 1].length > 0 && taken + GUTTER + heightOf(line) > MAIN.h) {
+      sheets.push([]);
+      taken = 0;
     }
-    here.push(block);
-    taken += gutter + leastOf(block);
+    for (const block of line) {
+      const here = sheets[sheets.length - 1];
+      const gutter = here.length > 0 ? GUTTER : 0;
+      if (here.length > 0 && taken + gutter + leastOf(block) > MAIN.h) {
+        sheets.push([block]);
+        taken = leastOf(block);
+        continue;
+      }
+      here.push(block);
+      taken += gutter + leastOf(block);
+    }
   }
 
   sheets.forEach((sheet, sheetIndex) => {

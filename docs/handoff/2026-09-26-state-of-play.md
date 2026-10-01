@@ -258,6 +258,27 @@ Smart-board design research covered what the board can do today and how speech c
 - A layout-only refusal is re-kept for free.
 - Then re-prepare the 10 no-question lessons.
 
+**C0 STATUS (2026-10-02, ~00:30):**
+- **Done before this:** items 1, 3 and most of 4 (`2e7e4d2`).
+- **Done now, not yet deployed (it does not change the classroom):**
+  - **Item 4.** Page turns happen only between spoken lines, in all three stackers: the generic stack, the figure column and the labelled-picture band. The band now writes points and lists in the order she says them.
+  - **Board font.** The board is drawn in 'Quicksand Variable' (`23b2869`).
+  - **Item 5.** Three new gate rules: `on-board`, `one-page`, `on-camera`. `on-camera` uses stage's own `computeFrame`.
+  - **Item 6.** `packages/class-prep/tests/boardFuzz.test.ts` runs 300 seeded classes through assemble and the gate on every run of the suite.
+
+  | Measured on those 300 classes | Before | After |
+  |---|---|---|
+  | One line drawn on two pages | 31.7% | 0 |
+  | Ink never on camera | 5.0% | 0 |
+  | Ink off the board | 1 class | 1 class |
+  | Overlap | 1 class | 1 class |
+
+  The guards hold these numbers.
+- **Still open:**
+  - **Item 2:** save a refused class, and add `--rekeep`.
+  - **Item 5, fourth rule:** every board instruction drew something. It needs assemble to report it, like `unspoken`. The dropped-ink bug it guards against was fixed in `2e7e4d2`.
+  - **The handwriting ruler.** Measured in the browser, Caveat draws at 0.35 em a character; the ruler assumes 0.58. Handwriting is over-measured by about 66%, so lines wrap early and pages turn too often. Correcting it moves every layout, so it is its own change, measured with the fuzz test.
+
 **C1 — Aarav's board rules: no quiz screen, no subtitles.** Effort S–M; it also cuts overlaps.
 
 1. **Asked questions write nothing on the board.**

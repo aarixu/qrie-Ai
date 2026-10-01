@@ -1,5 +1,9 @@
 import { assertNoOverlap, OverlapError, type Bond } from '@ai-tutor/board-layout';
-import type { Beat, Element, Lesson } from '@ai-tutor/lesson-format';
+import { boxOf, CANVAS_H, CANVAS_W, PAGE_STRIDE, type Beat, type Element, type Lesson } from '@ai-tutor/lesson-format';
+// The camera itself, by relative path for the reason given just below: it is
+// pure geometry over lesson-format, and importing the package would pull in
+// the React renderer.
+import { computeFrame } from '../../stage/src/frame.ts';
 // By relative path, the way screenSpine.ts reaches the safety screen: the
 // checker is plain TypeScript with type-only bare imports, so the relative
 // path resolves the same in vite, vitest and the prewarm runner's Node — none
@@ -54,6 +58,20 @@ import type { TopicOutcome } from './prompts.ts';
  *                    kept. It reads what assemble reported, not the lesson,
  *                    because a stand-in line looks like any other line.
  *
+ * And three about what the student can SEE (canvas C0, 2026-10-01: the replay
+ * of every kept class found ink nobody ever saw). Marks and arrows are left
+ * out of all three: they follow what they point at, and a loop drawn round a
+ * thing at the edge of a page overshoots it by design.
+ *   on-board         every element sits on its own page of the endless board,
+ *                    1000 by 620. One kept maths class wrote its answer lines
+ *                    at y 696-825.
+ *   one-page         the ink one spoken line adds lands on one page. The
+ *                    camera frames one page, so the rest of that line's ink
+ *                    was drawn where nobody was looking (16% of moments).
+ *   on-camera        every element is inside the frame the camera chooses
+ *                    (stage's `computeFrame`, at the board's own shape) at
+ *                    least once in the class. 2.7% of kept elements never were.
+ *
  * NOT IN `validateLesson`, ON PURPOSE. The classroom validates every lesson
  * it loads and shows one that fails as "not available"
  * (apps/classroom/src/lib/content.ts, fetchLesson), so a rule added there
@@ -74,7 +92,10 @@ export type GateRule =
   | 'outcomes'
   | 'notation'
   | 'maths'
-  | 'unspoken';
+  | 'unspoken'
+  | 'on-board'
+  | 'one-page'
+  | 'on-camera';
 
 export interface GateProblem {
   rule: GateRule;
@@ -338,6 +359,84 @@ function unspokenProblems(lesson: Lesson, unspoken: readonly string[]): GateProb
     }));
 }
 
+/** Ink that follows something else, and is judged with it. */
+const follows = (el: Element): boolean => el.kind === 'mark' || el.kind === 'arrow';
+
+/** The page of the endless board an element is drawn on, by its centre. */
+const pageOf = (el: Element): number => {
+  const b = boxOf(el);
+  return Math.max(0, Math.floor((b.x + b.w / 2) / PAGE_STRIDE));
+};
+
+/** A few of its own words, or its kind, so the planner can find it. */
+const named = (el: Element): string => {
+  const words = writtenText(el)?.trim();
+  return words ? `"${words.length > 50 ? `${words.slice(0, 50)}…` : words}"` : `the ${el.kind}`;
+};
+
+/** Units of slack, so a stroke that touches an edge is not called off it. */
+const EDGE = 2;
+
+function boardProblems(lesson: Lesson): GateProblem[] {
+  const problems: GateProblem[] = [];
+  const byId = new Map(lesson.elements.map((el) => [el.id, el]));
+
+  for (const el of lesson.elements) {
+    if (follows(el)) continue;
+    const b = boxOf(el);
+    const left = b.x - pageOf(el) * PAGE_STRIDE;
+    if (b.y < -EDGE || b.y + b.h > CANVAS_H + EDGE || left < -EDGE || left + b.w > CANVAS_W + EDGE) {
+      problems.push({
+        rule: 'on-board',
+        where: el.id,
+        message:
+          `Beat "${plannerBeatOf(el.id)}": ${named(el)} runs off the edge of the board. ` +
+          `Give that beat less to put on one board, or split it into two beats.`,
+      });
+    }
+  }
+
+  lesson.beats.forEach((beat, n) => {
+    const before = new Set(n > 0 ? lesson.beats[n - 1].show : []);
+    const fresh = beat.show
+      .filter((id) => !before.has(id))
+      .map((id) => byId.get(id))
+      .filter((el): el is Element => el !== undefined && !follows(el));
+    if (new Set(fresh.map(pageOf)).size > 1) {
+      problems.push({
+        rule: 'one-page',
+        where: beat.id,
+        message:
+          `Beat "${plannerBeatOf(beat.id)}": the line "${beat.narration.slice(0, 60)}" draws on two pages at ` +
+          `once, and the camera shows one. Split what that line writes between two lines.`,
+      });
+    }
+  });
+
+  const seen = new Set<string>();
+  const aspect = CANVAS_W / CANVAS_H;
+  for (const beat of lesson.beats) {
+    const frame = computeFrame(lesson, beat.frame ?? beat.show, beat.focus ?? [], aspect);
+    for (const id of beat.show) {
+      const el = byId.get(id);
+      if (!el || seen.has(id)) continue;
+      const b = boxOf(el);
+      if (b.x < frame.x + frame.w && frame.x < b.x + b.w && b.y < frame.y + frame.h && frame.y < b.y + b.h) seen.add(id);
+    }
+  }
+  for (const el of lesson.elements) {
+    if (follows(el) || seen.has(el.id)) continue;
+    problems.push({
+      rule: 'on-camera',
+      where: el.id,
+      message:
+        `Beat "${plannerBeatOf(el.id)}": ${named(el)} is never on screen — the camera follows the newest ` +
+        `writing, and this is always out of its frame. Write less beside it, or give it a line of its own.`,
+    });
+  }
+  return problems;
+}
+
 /**
  * Every rule, over one assembled lesson. Empty means the class may be kept.
  * Maths problems come first: they are the ones a class is refused for
@@ -350,5 +449,6 @@ export function gateLesson(lesson: Lesson, opts: GateOptions = {}): GateProblem[
     ...heldProblems(lesson, opts.outcomes ?? [], opts.opening ?? []),
     ...notationProblems(lesson),
     ...unspokenProblems(lesson, opts.unspoken ?? []),
+    ...boardProblems(lesson),
   ];
 }
