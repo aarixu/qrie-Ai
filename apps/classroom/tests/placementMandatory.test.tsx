@@ -1,11 +1,11 @@
-import { act } from 'react';
+import { Suspense, act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, matchRoutes, useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { answerProbe, selectNextProbe, startSession } from '@ai-tutor/diagnostic';
 import type { DiagnosticResult } from '@ai-tutor/knowledge-graph';
-import { Gate, gateTo } from '../src/App';
+import { AppRoutes, Gate, PlacementRequired, gateTo } from '../src/App';
 import { loadDiagnosticDataFor, hasPlacementFor } from '../src/lib/diagnosticData';
 import { buildPlacementResult, mergeSittings } from '../src/lib/placementPlan';
 import { MIN_SPLASH_MS } from '../src/screens/Splash';
@@ -18,6 +18,7 @@ import {
   recordFinished,
   restoreSitting,
   safeNext,
+  salvageSitting,
   saveSitting,
 } from '../src/lib/placement';
 import { TRIAL_HOME, TRIAL_KEY } from '../src/lib/workspace';
@@ -25,7 +26,9 @@ import { Diagnostic } from '../src/screens/Diagnostic';
 import { Home } from '../src/screens/Home';
 import { Onboarding } from '../src/screens/Onboarding';
 import { PLACEMENT_BLOCKED_BODY, PLACEMENT_BLOCKED_TITLE, PlacementRoute } from '../src/screens/Placement';
-import { EMPTY_PLACEMENT, placementStore, type PlacementState } from '../src/stores/placement';
+import { connectSync, mergePlan } from '../src/lib/sync';
+import { touchedAt } from '../src/stores/localStore';
+import { EMPTY_PLACEMENT, PLACEMENT_KEY, placementStore, type PlacementState } from '../src/stores/placement';
 import { profileStore, type StudentProfile } from '../src/stores/profile';
 import { progressStore } from '../src/stores/progress';
 import { settingsStore } from '../src/stores/settings';
@@ -279,6 +282,48 @@ describe('the Gate: no class, topic or lesson until the placement is done', () =
     expect(isPlacementGated('/chapter/a/b')).toBe(false);
   });
 
+  /**
+   * react-router 7 decodes the path and matches without regard to case, so
+   * every one of these opens a gated route (checked against matchRoutes
+   * below, not assumed). Read raw, each walked past the Gate into a class.
+   */
+  const SPELLINGS = [
+    '/Lesson/class10-blood',
+    '/LESSON/class10-blood',
+    '/%6Cesson/class10-blood',
+    '/le%73son/class10-blood',
+    '/CLASS',
+    '/Class/class10-science/life-processes',
+    '/%63lass',
+    '/QUIZ/class10-blood',
+    '/Complete/class10-blood',
+    '/%63omplete/class10-blood',
+  ];
+
+  it('reads a path the way the router matches it: any case, percent-encoded or not', () => {
+    const table = [
+      { path: '/lesson/:lessonId' },
+      { path: '/class/*' },
+      { path: '/quiz/:lessonRef' },
+      { path: '/complete/:lessonId' },
+      { path: '*' },
+    ];
+    for (const at of SPELLINGS) {
+      const matched = matchRoutes(table, at)?.at(-1)?.route.path;
+      expect(matched, at).not.toBe('*');
+      expect(isPlacementGated(at), at).toBe(true);
+      expect(due(at), at).toBe(`/diagnostic?next=${encodeURIComponent(at)}`);
+    }
+    // A typed topic in any case still carries its query to the test.
+    expect(due('/CLASS', '?topic=volcanoes')).toBe(
+      `/diagnostic?next=${encodeURIComponent('/CLASS?topic=volcanoes')}`,
+    );
+    // What the router does NOT match stays ungated, exactly as before.
+    for (const at of ['/classes', '/lesson%2Fx', '/Chapter/a/b', '/%E0%A4%A']) {
+      expect(isPlacementGated(at), at).toBe(false);
+    }
+  });
+
   it('only ever sends a student on to a path inside this app', () => {
     expect(safeNext('/lesson/x')).toBe('/lesson/x');
     expect(safeNext('/class?topic=volcanoes')).toBe('/class?topic=volcanoes');
@@ -530,6 +575,82 @@ describe('the Gate component reads the stores and applies it', () => {
     await pastSplash();
     expect(where(host)).toBe('/try?blocked=%2Fclass%2Fx');
   });
+
+  it('sends the same deep link to the test in any case the router accepts', async () => {
+    settle(['Science']);
+    const host = await mount('/Lesson/class10-blood', GATED_ROUTES);
+    await pastSplash();
+    expect(where(host)).toBe(`/diagnostic?next=${encodeURIComponent('/Lesson/class10-blood')}`);
+    expect(host.textContent).not.toContain('lesson');
+  });
+});
+
+// --------------------------------------- the routes themselves, past the Gate --
+
+describe('the routes that open a class check the placement themselves', () => {
+  /** The app's real route table, with no Gate in front of it. */
+  async function mountTable(at: string): Promise<HTMLElement> {
+    const host = document.body.appendChild(document.createElement('div'));
+    const root = createRoot(host);
+    roots.push(root);
+    await act(async () => {
+      root.render(
+        <MemoryRouter initialEntries={[at]}>
+          <Suspense fallback={<div>loading</div>}>
+            <AppRoutes />
+          </Suspense>
+          <Where />
+        </MemoryRouter>,
+      );
+    });
+    return host;
+  }
+
+  it('sends an unplaced student to the test from every spelling the router matches', async () => {
+    settle(['Science']);
+    for (const at of [
+      '/lesson/class10-blood',
+      '/LESSON/class10-blood',
+      '/%6Cesson/class10-blood',
+      '/CLASS?topic=volcanoes',
+      '/class/class10-science/life-processes',
+      '/Quiz/class10-blood',
+      '/COMPLETE/class10-blood',
+    ]) {
+      const host = await mountTable(at);
+      expect(where(host), at).toBe(`/diagnostic?next=${encodeURIComponent(at)}`);
+      for (const root of roots.splice(0)) act(() => root.unmount());
+      document.body.innerHTML = '';
+    }
+  });
+
+  it('lets a placed student through, and never sends a guest trial to the test', async () => {
+    const lesson = (
+      <Route
+        path="/lesson/:id"
+        element={
+          <PlacementRequired>
+            <div>the lesson</div>
+          </PlacementRequired>
+        }
+      />
+    );
+    settle(['Science']);
+    // A guest on a settled phone whose owner has not been placed: the trial's
+    // own lesson must still open (TRIAL_HOME is a /lesson/ route).
+    sessionStorage.setItem(TRIAL_KEY, new Date().toISOString());
+    let host = await mount(TRIAL_HOME, lesson);
+    expect(where(host)).toBe(TRIAL_HOME);
+    expect(host.textContent).toContain('the lesson');
+    for (const root of roots.splice(0)) act(() => root.unmount());
+    document.body.innerHTML = '';
+
+    sessionStorage.clear();
+    recordFinished(10, 'Science', finishedSitting('Science'));
+    host = await mount('/LESSON/class10-blood', lesson);
+    expect(where(host)).toBe('/LESSON/class10-blood');
+    expect(host.textContent).toContain('the lesson');
+  });
 });
 
 // -------------------------------------------------------- the merged plan --
@@ -559,12 +680,85 @@ describe('one plan from a test per subject', () => {
     });
     const after = recordFinished(10, 'Mathematics', maths.sitting);
 
-    const result = buildPlacementResult(10, profileStore.get(), after)!;
-    expect(result).not.toBeNull();
+    const { result, stale } = buildPlacementResult(10, profileStore.get(), after);
+    expect(stale).toEqual([]);
+    if (!result) throw new Error('no plan');
     const ids = result.answers.map((a) => a.probeId);
     for (const a of science.session.answers) expect(ids).toContain(a.probeId);
     for (const a of maths.session.answers) expect(ids).toContain(a.probeId);
   });
+
+  /**
+   * A finished sitting as an app update that regenerated its map leaves it:
+   * the first `gone` answers name a question the map no longer has.
+   */
+  function movedUnder(subject: string, gone: number) {
+    const { sitting } = sittingWith(subject, 20, () => null);
+    return {
+      ...sitting,
+      answers: sitting.answers.map((a, i) => (i < gone ? { ...a, probeId: `regenerated-away-${i}` } : a)),
+    };
+  }
+
+  it('keeps what a finished sitting still says when the map moved under part of it', () => {
+    settle(['Science', 'Mathematics']);
+    const science = movedUnder('Science', 12);
+    const data = loadDiagnosticDataFor(10, ['Science'])!;
+    // Resuming refuses it — the next question would come from another map...
+    expect(restoreSitting(science, data, 10, ['Science'])).toBeNull();
+    // ...but the plan keeps the eight answers that still mean something.
+    expect(salvageSitting(science, data, 10, ['Science'])?.session.answers).toHaveLength(8);
+
+    recordFinished(10, 'Science', science);
+    const after = recordFinished(10, 'Mathematics', finishedSitting('Mathematics'));
+    const { result, stale } = buildPlacementResult(10, profileStore.get(), after);
+    expect(stale).toEqual([]);
+    const probes = result!.answers.map((a) => a.probeId);
+    for (const a of science.answers.slice(12)) expect(probes).toContain(a.probeId);
+    expect(probes.filter((p) => p.startsWith('regenerated-away-'))).toEqual([]);
+  });
+
+  it('never builds a plan without a placed subject whose sitting the map no longer reads', () => {
+    settle(['Science', 'Mathematics']);
+    recordFinished(10, 'Science', movedUnder('Science', 20));
+    const after = recordFinished(10, 'Mathematics', finishedSitting('Mathematics'));
+    const { result, stale } = buildPlacementResult(10, profileStore.get(), after);
+    expect(stale).toEqual(['Science']);
+    expect(result).toBeNull();
+  });
+
+  it('owes that subject again, says why, and keeps the plan the student had until it is done', async () => {
+    // Science finished against a map that has since been regenerated, and a
+    // plan already stored from an earlier placement (set after the record, so
+    // this is not the old one-sitting test being adopted).
+    settle(['Science', 'Mathematics']);
+    recordFinished(10, 'Science', movedUnder('Science', 20));
+    const earlier: DiagnosticResult = { mastery: {}, gaps: [], plan: [], answers: [] };
+    profileStore.update((p) => ({ ...p, diagnostic: earlier, diagnosedAt: '2026-09-20T10:00:00.000Z' }));
+    expect(placementStatus(placementStore.get(), profileStore.get(), 10).owed).toEqual(['Mathematics']);
+
+    const host = await mount('/diagnostic', RUNNER_ROUTES);
+    const notSure = async (limit: number) => {
+      for (let i = 0; i < limit; i++) {
+        const unsure = button(host, "I'm not sure");
+        if (!unsure) return;
+        await click(unsure, 'not sure');
+      }
+    };
+    await notSure(25);
+
+    expect(host.textContent).toMatch(/Mathematics is done/);
+    expect(host.textContent).toMatch(/Next is Science\. Its questions have been updated since you took it/);
+    expect(placementStatus(placementStore.get(), profileStore.get(), 10).owed).toEqual(['Science']);
+    // Not overwritten with a plan that leaves Science out.
+    expect(profileStore.get().diagnostic).toBe(earlier);
+
+    await click(button(host, 'Carry on with Science'), 'carry on');
+    await notSure(25);
+    expect(placementStatus(placementStore.get(), profileStore.get(), 10).owed).toEqual([]);
+    expect(profileStore.get().diagnostic).not.toBe(earlier);
+    expect(profileStore.get().diagnostic?.answers).toHaveLength(40);
+  }, 60_000);
 
   it('prefers the sitting that asked about an outcome over one that only inferred it', () => {
     const data = loadDiagnosticDataFor(10, ['Science'])!;
@@ -672,5 +866,70 @@ describe('a student who skipped before this change', () => {
       'Science',
       'Mathematics',
     ]);
+  });
+});
+
+// ------------------------------------------- adoption, and the other device --
+
+describe('adopting the old result never wins over a test sat on another device', () => {
+  /** Device A: took the old one-sitting test, Class 10, and has never written a placement. */
+  function deviceA(): void {
+    settle(['Science', 'Mathematics']);
+    profileStore.update((p) => ({
+      ...p,
+      diagnostic: { mastery: {}, gaps: [], plan: [], answers: [] },
+      diagnosedAt: '2026-09-20T10:00:00.000Z',
+    }));
+    localStorage.removeItem(`${PLACEMENT_KEY}:at`);
+  }
+
+  /** Device B's row in the cloud: moved to Class 11, ten Biology answers in. */
+  function deviceBRow(): { value: PlacementState; updatedAt: number } {
+    const value: PlacementState = {
+      version: 1,
+      records: {
+        [placementKey(11, 'Biology')]: {
+          completedAt: null,
+          finished: null,
+          open: { ...sittingWith('Science', 10).sitting, klass: 11, subjects: ['Biology'] },
+        },
+      },
+      retaking: [],
+    };
+    return { value, updatedAt: Date.now() - 60_000 };
+  }
+
+  it('dates the adoption at 0, so any real record anywhere is newer', () => {
+    deviceA();
+    adoptLegacyPlacement();
+    expect(Object.keys(placementStore.get().records)).toHaveLength(2);
+    expect(touchedAt(PLACEMENT_KEY)).toBe(0);
+    // Against device B's row the cloud wins; with no row anywhere, it is sent.
+    expect(mergePlan({ [PLACEMENT_KEY]: { value: null, updatedAt: 0 } }, { [PLACEMENT_KEY]: deviceBRow() }))
+      .toEqual({ take: [PLACEMENT_KEY], send: [] });
+    expect(mergePlan({ [PLACEMENT_KEY]: { value: null, updatedAt: 0 } }, {})).toEqual({
+      take: [],
+      send: [PLACEMENT_KEY],
+    });
+  });
+
+  it('takes device B\'s open sitting when sync connects after the adoption, answers and all', async () => {
+    deviceA();
+    adoptLegacyPlacement();
+    const b = deviceBRow();
+    const stop = connectSync({
+      pull: async () => ({ [PLACEMENT_KEY]: b }),
+      push: async () => undefined,
+      forget: async () => undefined,
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    stop();
+
+    expect(placementStore.get()).toEqual(b.value);
+    expect(placementStore.get().records[placementKey(11, 'Biology')]?.open?.answers).toHaveLength(10);
+    // Dated as the cloud dated it, so the next sync does not push it back as new.
+    expect(touchedAt(PLACEMENT_KEY)).toBe(b.updatedAt);
   });
 });

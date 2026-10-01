@@ -74,21 +74,37 @@ export function touchedAt(key: string): number | null {
 }
 
 /**
+ * Write a value to a registered store and date it `at` rather than now.
+ *
+ * The stamp goes on AFTER the value, which is the whole of this function:
+ * `store.set` stamps every write with Date.now() (createLocalStore's `write`),
+ * so a stamp written first is overwritten by the write it was meant to date.
+ * The listeners `set` fires (the React stores, and lib/sync.ts's pushLater,
+ * which reads the stamp only when its timer fires) see the value first and
+ * the stamp a moment later, in the same tick.
+ */
+export function writeDated(key: string, value: unknown, at: number): void {
+  const store = stores.get(key);
+  if (!store) return;
+  store.set(value);
+  try {
+    localStorage.setItem(stampKey(key), String(at));
+  } catch {
+    // Same tolerance as everywhere else here: no storage, no stamp, carry on.
+  }
+}
+
+/**
  * Apply a value the cloud won with, without claiming this device wrote it.
  *
  * The stamp is the CLOUD's, not now: stamping it now would make this device
  * look newer than the one that actually made the change, and the next sync
- * would push it back.
+ * would push it back. This used to write the stamp BEFORE `store.set`, which
+ * then overwrote it with now — so the claim above was false until it went
+ * through writeDated (tests/sync.test.ts holds it).
  */
 export function writeFromCloud(key: string, value: unknown, updatedAt: number): void {
-  const store = stores.get(key);
-  if (!store) return;
-  try {
-    localStorage.setItem(stampKey(key), String(updatedAt));
-  } catch {
-    // Same tolerance as everywhere else here: no storage, no stamp, carry on.
-  }
-  store.set(value);
+  writeDated(key, value, updatedAt);
 }
 
 export interface LocalStoreOptions {
@@ -127,7 +143,8 @@ export function createLocalStore<T>(key: string, initial: T, opts: LocalStoreOpt
     try {
       localStorage.setItem(key, JSON.stringify(next));
       // Stamped on every write so sync can tell which device is ahead.
-      // writeFromCloud overwrites this with the cloud's own moment.
+      // writeDated (and writeFromCloud through it) overwrites this afterwards
+      // with the moment it means.
       localStorage.setItem(`${key}:at`, String(Date.now()));
     } catch {
       // storage full/blocked — keep the in-memory value and carry on

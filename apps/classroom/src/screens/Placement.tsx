@@ -10,6 +10,7 @@ import {
   placementStatus,
   recordFinished,
   recordProgress,
+  reopenPlacement,
   safeNext,
   startRetake,
 } from '../lib/placement';
@@ -22,8 +23,9 @@ import { Diagnostic } from './Diagnostic';
  * /diagnostic — THE PLACEMENT TEST, A SUBJECT AT A TIME, UNTIL EVERY ONE IS DONE.
  *
  * Aarav, 2026-09-30: the test is mandatory and per chosen subject, it may be
- * paused, and no class opens before it is finished (App.tsx gateTo shuts the
- * class routes; lib/placement.ts says which subjects are owed). This screen
+ * paused, and no class opens before it is finished (App.tsx gateTo and
+ * PlacementRequired shut the class routes; lib/placement.ts says which
+ * subjects are owed). This screen
  * walks the owed subjects in the order they were chosen, mounting one sitting
  * of the engine per subject, and lets the student stop between any two
  * questions or any two subjects.
@@ -41,7 +43,9 @@ import { Diagnostic } from './Diagnostic';
  *
  * When the last subject finishes, the sittings are folded into the one plan
  * the rest of the app reads (lib/placementPlan.ts) and the student goes where
- * they were going, or to the plan.
+ * they were going, or to the plan — unless a subject finished earlier can no
+ * longer be read against this build's map, which is then owed again and sat
+ * before any plan is stored.
  */
 
 /** Shown when the Gate turned a class into this. Exported for the test. */
@@ -89,6 +93,8 @@ export function PlacementRoute() {
   const [justDone, setJustDone] = useState<string | null>(null);
   /** Where to go once the last subject is done — rendered, not pushed, so it happens once. */
   const [leaving, setLeaving] = useState<string | null>(null);
+  /** Subjects owed again because their earlier sitting no longer fits the map. */
+  const [redone, setRedone] = useState<string[]>([]);
 
   if (leaving) return <Navigate to={leaving} replace />;
   if (klass === null) return <Navigate to="/onboarding" replace />;
@@ -192,8 +198,11 @@ export function PlacementRoute() {
     return (
       <Card icon="celebration" title={`${justDone} is done`}>
         <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-          Next is {subject}. It works the same way, and you can stop whenever you like — your
-          answers are kept.
+          Next is {subject}.
+          {redone.includes(subject)
+            ? ` Its questions have been updated since you took it, so it needs one more go before your classes open.`
+            : ''}{' '}
+          It works the same way, and you can stop whenever you like — your answers are kept.
         </p>
         <button onClick={() => setJustDone(null)} className={PRIMARY}>
           Carry on with {subject}
@@ -223,7 +232,20 @@ export function PlacementRoute() {
           return;
         }
         // The last one: one plan from every subject's sitting.
-        const result = buildPlacementResult(klass, profileStore.get(), after);
+        const { result, stale } = buildPlacementResult(klass, profileStore.get(), after);
+        // A subject finished earlier whose sitting the map no longer reads is
+        // owed again, and the plan waits for it rather than being stored
+        // without it (lib/placementPlan.ts). The subject just finished is
+        // never among them in practice — its sitting was made against this
+        // map a moment ago — and is filtered out so that a fault there could
+        // never send a student round the same subject for ever.
+        const redo = stale.filter((s) => s !== subject);
+        if (redo.length > 0) {
+          reopenPlacement(klass, redo);
+          setRedone(redo);
+          setJustDone(subject);
+          return;
+        }
         if (result) saveDiagnostic(result);
         setLeaving(next ?? (result ? '/plan' : '/'));
       }}

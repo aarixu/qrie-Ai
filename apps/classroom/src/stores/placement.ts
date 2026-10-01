@@ -73,4 +73,7 @@ export interface PlacementState {
 
 export const EMPTY_PLACEMENT: PlacementState = { version: 1, records: {}, retaking: [] };
 
-export const placementStore = createLocalStore<PlacementState>('ai-tutor:placement', EMPTY_PLACEMENT);
+/** The store's key, for the one write that dates itself (lib/placement.ts adoptLegacyPlacement). */
+export const PLACEMENT_KEY = 'ai-tutor:placement';
+
+export const placementStore = createLocalStore<PlacementState>(PLACEMENT_KEY, EMPTY_PLACEMENT);

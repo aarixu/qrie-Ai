@@ -3,7 +3,7 @@ import type { DiagnosticResult, Mastery } from '@ai-tutor/knowledge-graph';
 import { evidenceSet } from '@ai-tutor/learner-model';
 import { loadDiagnosticDataFor } from './diagnosticData';
 import { loadModel } from './learnerModel';
-import { placementKey, placementSubjects, restoreSitting } from './placement';
+import { placementKey, placementSubjects, salvageSitting } from './placement';
 import type { PlacementState } from '../stores/placement';
 import type { StudentProfile } from '../stores/profile';
 
@@ -70,33 +70,57 @@ export function mergeSittings(base: DiagnosticSession, parts: readonly Contribut
   };
 }
 
+export interface PlacementPlan {
+  /**
+   * The plan across every subject, or null when there is nothing to build it
+   * from — and ALWAYS null while `stale` is not empty, so a caller cannot
+   * store a plan that leaves a placed subject out.
+   */
+  result: DiagnosticResult | null;
+  /**
+   * Subjects counted as placed that give the plan nothing: their finished
+   * sitting is about outcomes and questions this map no longer has (an app
+   * update regenerated the map under it), or there is no sitting to read at
+   * all. The screen owes them again (lib/placement.ts reopenPlacement) rather
+   * than leaving the student placed in a subject their plan says nothing about.
+   */
+  stale: string[];
+}
+
 /**
- * The study plan for every subject placed, or null when there is nothing to
- * build it from.
+ * The study plan for every subject placed.
+ *
+ * A finished sitting is read back with `salvageSitting`, not `restoreSitting`:
+ * resuming needs the sitting to fit the map exactly, but a plan only needs the
+ * answers that still mean something. One that keeps none is `stale`.
  *
  * A subject placed by the old one-sitting test has no sitting of its own; its
  * contribution is that test's stored result, so a student who adds a subject
  * after it keeps the plan they had for the others rather than losing it to
- * the new subject's.
+ * the new subject's. That one test covered every subject at once, so how many
+ * of its answers fall in each subject says nothing about whether the subject
+ * was placed, and it is not judged stale by them.
  */
 export function buildPlacementResult(
   klass: number,
   profile: StudentProfile,
   state: PlacementState,
-): DiagnosticResult | null {
+): PlacementPlan {
   const subjects = placementSubjects(klass, profile.subjects);
   const data = loadDiagnosticDataFor(klass, subjects);
-  if (!data || subjects.length === 0) return null;
+  if (!data || subjects.length === 0) return { result: null, stale: [] };
 
   const parts: Contribution[] = [];
+  const stale: string[] = [];
   let legacyAdded = false;
   for (const subject of subjects) {
     const record = state.records[placementKey(klass, subject)];
     const own = loadDiagnosticDataFor(klass, [subject]);
-    const finished = own ? restoreSitting(record?.finished, own, klass, [subject]) : null;
+    const finished = own ? salvageSitting(record?.finished, own, klass, [subject]) : null;
     if (finished) {
       parts.push({ ...finished.session, before: finished.before });
-    } else if (record?.legacy && profile.diagnostic && !legacyAdded) {
+    } else if (record?.legacy && profile.diagnostic) {
+      if (legacyAdded) continue;
       legacyAdded = true;
       parts.push({
         mastery: profile.diagnostic.mastery,
@@ -104,16 +128,21 @@ export function buildPlacementResult(
         askedNodeIds: new Set(profile.diagnostic.answers.map((a) => a.nodeId)),
         seeded: new Set(),
       });
+    } else if (record?.completedAt) {
+      stale.push(subject);
     }
   }
-  if (parts.length === 0) return null;
+  if (stale.length > 0 || parts.length === 0) return { result: null, stale };
 
   const base = startSession(data.index, data.bank, {
     klass,
     subjects: data.subjects,
     lookBack: data.lookBack,
   });
-  return buildPlan(mergeSittings(base, parts), data.index, {
-    knownEvidence: evidenceSet(loadModel()),
-  });
+  return {
+    result: buildPlan(mergeSittings(base, parts), data.index, {
+      knownEvidence: evidenceSet(loadModel()),
+    }),
+    stale,
+  };
 }

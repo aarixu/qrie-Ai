@@ -2,8 +2,10 @@ import type { DiagnosticSession } from '@ai-tutor/diagnostic';
 import { initialMastery, type GraphIndex, type Mastery } from '@ai-tutor/knowledge-graph';
 import { SYLLABI } from './content';
 import { hasPlacementFor, type DiagnosticData } from './diagnosticData';
+import { writeDated } from '../stores/localStore';
 import {
   EMPTY_PLACEMENT,
+  PLACEMENT_KEY,
   placementStore,
   type PlacementRecord,
   type PlacementState,
@@ -94,14 +96,32 @@ export function withLegacy(
   return { ...current, records };
 }
 
-/** Write the adoption above down, once. A no-op for everyone it does not apply to. */
+/**
+ * Write the adoption above down, once. A no-op for everyone it does not apply to.
+ *
+ * DATED AT 0, NOT NOW. The Gate calls this on its first render, which in
+ * practice comes before lib/sync.ts has pulled the cloud (lib/account.ts
+ * attaches sync only once `getUser` has answered over the network). Sync keeps
+ * whichever copy of a store was written last (lib/sync.ts mergePlan), so a
+ * "now" here made a device that had never touched this store beat a real one
+ * from another device: a Class 11 Biology sitting ten answers in on device B,
+ * overwritten by device A adopting the old result against its stale Class 10.
+ * An inference drawn on this device must lose to anything a student actually
+ * did anywhere — and at 0 it does in the merge, while still being sent up when
+ * the cloud has no placement row at all.
+ *
+ * Not closed here: a write made after sync has attached but before its pull
+ * returns is pushed after PUSH_SETTLE_MS without being compared (lib/sync.ts
+ * pushLater), and this would be such a write if the Gate re-ran it in that
+ * window. That is sync's general behaviour, not this store's.
+ */
 export function adoptLegacyPlacement(): void {
   const klass = currentKlass();
   if (klass === null) return;
   const before = normal(placementStore.get());
   const after = withLegacy(before, profileStore.get(), klass);
   if (after.records !== before.records && Object.keys(after.records).length > 0) {
-    placementStore.set(after);
+    writeDated(PLACEMENT_KEY, after, 0);
   }
 }
 
@@ -195,6 +215,24 @@ export function startRetake(klass: number, subjects: readonly string[]): Placeme
   });
 }
 
+/**
+ * These subjects are owed again: their finished sitting no longer means
+ * anything against the map this build carries (lib/placementPlan.ts says when).
+ *
+ * Unlike a retake this DOES shut the classes again, and that is the point: the
+ * plan is built from every subject's sitting, and a subject whose sitting
+ * cannot be read is a subject the plan would silently leave out while Home
+ * called it placed.
+ */
+export function reopenPlacement(klass: number, subjects: readonly string[]): PlacementState {
+  return write(klass, (state) => {
+    const keys = new Set(subjects.map((s) => placementKey(klass, s)));
+    const records = { ...state.records };
+    for (const key of keys) records[key] = { completedAt: null, open: null, finished: null };
+    return { ...state, records, retaking: state.retaking.filter((k) => !keys.has(k)) };
+  });
+}
+
 // --------------------------------------------------------- saving a sitting --
 
 /** The starting prior of a map — what a saved sitting is a difference from. */
@@ -261,6 +299,40 @@ export function restoreSitting(
   klass: number,
   subjects: readonly string[],
 ): { session: DiagnosticSession; before: Mastery } | null {
+  return readSitting(saved, data, klass, subjects, false);
+}
+
+/**
+ * A FINISHED sitting, kept for the plan even when the map moved under it.
+ *
+ * `restoreSitting` refuses a sitting that names an outcome or a question the
+ * map no longer has, which is right for RESUMING one — the next question would
+ * be chosen from a session that is not this map's. For the plan it threw a
+ * finished subject away: placed, its classes open, and no part of it in the
+ * plan, with nothing said (lib/placementPlan.ts). This keeps what the map
+ * still has instead — the answers whose outcome and question are both still
+ * there, and the beliefs about outcomes that still exist — and is null only
+ * when the sitting is not this class and subject, is not a shape this build
+ * reads, or no answer at all survives. A sitting with no surviving answer is a
+ * test about outcomes that are gone, and nothing to plan from.
+ */
+export function salvageSitting(
+  saved: SavedSitting | null | undefined,
+  data: DiagnosticData,
+  klass: number,
+  subjects: readonly string[],
+): { session: DiagnosticSession; before: Mastery } | null {
+  const read = readSitting(saved, data, klass, subjects, true);
+  return read && read.session.answers.length > 0 ? read : null;
+}
+
+function readSitting(
+  saved: SavedSitting | null | undefined,
+  data: DiagnosticData,
+  klass: number,
+  subjects: readonly string[],
+  keepWhatSurvives: boolean,
+): { session: DiagnosticSession; before: Mastery } | null {
   if (!saved || typeof saved !== 'object' || saved.version !== 1 || saved.klass !== klass) return null;
   if (!Array.isArray(saved.subjects) || !sameSet(saved.subjects, subjects)) return null;
   if (!Array.isArray(saved.answers) || !isRecord(saved.mastery) || !isRecord(saved.before)) return null;
@@ -270,20 +342,25 @@ export function restoreSitting(
   if (saved.config.klass !== klass || !Number.isFinite(saved.config.maxQuestions)) return null;
   if (!isStringList(saved.asked) || !isStringList(saved.seeded)) return null;
   const probes = new Set(data.bank.probes.map((p) => p.id));
+  const known = (id: string): boolean => typeof id === 'string' && data.index.node(id) !== null;
+  const answers: SavedSitting['answers'] = [];
   for (const answer of saved.answers) {
     if (!answer || typeof answer !== 'object') return null;
-    if (!data.index.node(answer.nodeId) || !probes.has(answer.probeId)) return null;
+    if (known(answer.nodeId) && probes.has(answer.probeId)) answers.push(answer);
+    else if (!keepWhatSurvives) return null;
   }
+  const kept = (beliefs: Record<string, number>): Record<string, number> =>
+    keepWhatSurvives ? Object.fromEntries(Object.entries(beliefs).filter(([id]) => known(id))) : beliefs;
   const prior = priorOf(data.index);
   return {
     session: {
-      mastery: { ...prior, ...saved.mastery },
-      answers: saved.answers.map((a) => ({ ...a })),
-      askedNodeIds: new Set(saved.asked),
-      seeded: new Set(saved.seeded),
+      mastery: { ...prior, ...kept(saved.mastery) },
+      answers: answers.map((a) => ({ ...a })),
+      askedNodeIds: new Set(keepWhatSurvives ? saved.asked.filter(known) : saved.asked),
+      seeded: new Set(keepWhatSurvives ? saved.seeded.filter(known) : saved.seeded),
       config: { ...saved.config, subjects: [...saved.config.subjects] },
     },
-    before: { ...prior, ...saved.before },
+    before: { ...prior, ...kept(saved.before) },
   };
 }
 
@@ -297,10 +374,38 @@ export function restoreSitting(
  * test, /complete/<id> is a lesson's last screen. The catalogue (/syllabus,
  * /chapter/...) stays open: looking at what is ahead opens nothing, and every
  * tap inside it lands on one of these.
+ *
+ * READ THE WAY THE ROUTER READS IT. react-router (7.18) decodes the path a
+ * segment at a time and then matches without regard to case, so /LESSON/x,
+ * /Class?topic=... and /%6Cesson/x all open the routes above. Tested against
+ * the raw pathname, those spellings walked past the Gate into a class. The
+ * path is decoded exactly as the router decodes it (its `decodePath`: each
+ * segment through decodeURIComponent, an encoded "/" kept encoded, a
+ * malformed one left as it came) and lower-cased before it is tested.
+ *
+ * This is the Gate's early answer, not the only one: the four routes are also
+ * wrapped on the route itself (App.tsx PlacementRequired), which runs on
+ * whatever spelling the router matched, whether or not this agrees with it.
  */
 const GATED = /^\/(lesson|class|quiz|complete)(\/|$)/;
 
-export const isPlacementGated = (pathname: string): boolean => GATED.test(pathname);
+function asTheRouterReadsIt(pathname: string): string {
+  try {
+    return pathname
+      .split('/')
+      .map((segment) => decodeURIComponent(segment).replace(/\//g, '%2F'))
+      .join('/')
+      .toLowerCase();
+  } catch {
+    return pathname.toLowerCase();
+  }
+}
+
+export const isPlacementGated = (pathname: string): boolean => GATED.test(asTheRouterReadsIt(pathname));
+
+/** Where a student who owes the test is sent from `pathAndSearch`, carrying it. */
+export const placementDetour = (pathAndSearch: string): string =>
+  `/diagnostic?next=${encodeURIComponent(pathAndSearch)}`;
 
 /**
  * WHERE TO GO AFTER THE TEST, from a `next` the Gate wrote — or null.
