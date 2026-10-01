@@ -53,3 +53,4 @@ export {
   FLOW_GAP,
   type Rect,
 } from './geometry';
+export { compileFunction, samplePoints } from './safeExpr';

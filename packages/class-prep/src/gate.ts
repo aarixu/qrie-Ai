@@ -489,7 +489,7 @@ export function gateLesson(lesson: Lesson, opts: GateOptions = {}): GateProblem[
       where: u.beat,
       message:
         `Beat "${u.beat}": its ${u.do}${u.text ? ` "${u.text.slice(0, 50)}"` : ''} never reaches the board. ` +
-        `Check it has words to write (a chart needs its data, a list its items), or move it to a beat of its own.`,
+        `Check it has words to write (a chart needs its data, a list its items, a plot a formula of x the board can compute), or move it to a beat of its own.`,
     })),
   ];
 }

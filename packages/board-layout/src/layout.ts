@@ -16,6 +16,7 @@ import {
   wrapHand,
   wrapLines,
   listBoxHeight,
+  compileFunction,
   type Element,
   type Beat,
 } from '@ai-tutor/lesson-format';
@@ -595,6 +596,43 @@ export function layoutBeat(
         break;
       }
 
+      case 'plot': {
+        // A formula this cannot compute draws nothing, and `undrawn` says so.
+        if (compileFunction(item.fn) === null || !(item.from < item.to)) {
+          i += 1;
+          break;
+        }
+        blocks.push({
+          kind: item.do,
+          at: index,
+          height: null,
+          // No wider than a graph reads well: a curve stretched across the
+          // whole board is a line, not a shape.
+          place: (r) => {
+            const w = Math.min(r.w, r.h * 1.8);
+            return [
+              {
+                kind: 'plot',
+                id: idFor(beat.id, index),
+                x: r.x + (r.w - w) / 2,
+                y: r.y,
+                w,
+                h: r.h,
+                fn: item.fn,
+                from: item.from,
+                to: item.to,
+                ...(item.caption ? { caption: item.caption } : {}),
+                ...(item.x ? { xLabel: item.x } : {}),
+                ...(item.y ? { yLabel: item.y } : {}),
+                ...(item.tone ? { tone: item.tone } : {}),
+              },
+            ];
+          },
+        });
+        i += 1;
+        break;
+      }
+
       case 'chart': {
         blocks.push({
           kind: item.do,
@@ -1104,7 +1142,7 @@ export function layoutBeat(
   /** Set once a branch below has placed the beat's figure itself. */
   let figurePlaced = false;
 
-  const FIGURE: ReadonlySet<Block['kind']> = new Set(['picture', 'diagram', 'chart', 'flow']);
+  const FIGURE: ReadonlySet<Block['kind']> = new Set(['picture', 'diagram', 'chart', 'plot', 'flow']);
   const figures = blocks.filter((b) => FIGURE.has(b.kind));
   /**
    * THE FIGURE THE NAMES ARE WRITTEN ROUND.
@@ -1901,6 +1939,7 @@ const WRITES_WORDS: ReadonlySet<Instruction['do']> = new Set([
   'list',
   'flow',
   'chart',
+  'plot',
 ]);
 
 /** A few of an instruction's own words, for a message that names it. */
@@ -1920,6 +1959,8 @@ function wordsOf(step: Instruction): string {
       return step.steps[0]?.label ?? '';
     case 'chart':
       return step.caption ?? step.data[0]?.label ?? '';
+    case 'plot':
+      return step.caption ?? step.fn;
     default:
       return '';
   }

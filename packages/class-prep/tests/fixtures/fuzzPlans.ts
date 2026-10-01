@@ -151,6 +151,15 @@ export function fuzzPlan(
       { do: 'annotate', target: `e${b}`, mark: 'underline' },
     ];
     beats.push({ id: `b${b + 1}`, topic: `Part ${b + 1}`, narration: '', board: [...board, ...ask()] });
+    // A graph with key points beside it.
+    const graph: Instruction[] = [
+      { do: 'say', text: sentence(20, 60) },
+      { do: 'plot', fn: pick(['2x + 1', 'x^2 - 4', 'sin(x)', '3 - x', '1/x']), from: -int(1, 5), to: int(1, 5), x: 'x', y: 'y' },
+    ];
+    for (let k = 0; k < int(1, 3); k += 1) {
+      graph.push({ do: 'say', text: sentence(20, 60) }, { do: 'write', text: sentence(14, 40) });
+    }
+    beats.push({ id: `b${b + 2}`, topic: `Part ${b + 2}`, narration: '', board: [...graph, ...ask()] });
   }
   return { plan: { id: `fuzz-${seed}`, title: 'Fuzz', visuals, beats }, drawn, parts, shapes };
 }

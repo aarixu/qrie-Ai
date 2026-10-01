@@ -30,13 +30,15 @@ const SEEDS = 300;
 function run(opts: { smartBoard?: boolean } = {}): {
   invalid: number;
   count: (rule: GateRule) => number;
-  /** Classes whose board drew a frame, a highlight. */
+  /** Classes whose board drew a frame, a highlight, a graph. */
   framed: number;
   highlighted: number;
+  plotted: number;
 } {
   const classesWith = new Map<GateRule, number>();
   let framed = 0;
   let highlighted = 0;
+  let plotted = 0;
   let invalid = 0;
   for (let seed = 1; seed <= SEEDS; seed += 1) {
     const { plan, drawn, parts, shapes } = fuzzPlan(seed, opts);
@@ -51,6 +53,7 @@ function run(opts: { smartBoard?: boolean } = {}): {
     );
     if (marked.has('box')) framed += 1;
     if (marked.has('highlight')) highlighted += 1;
+    if ((checked.lesson as Lesson).elements.some((el) => el.kind === 'plot')) plotted += 1;
     const problems = gateLesson(checked.lesson as Lesson, {
       bonds: made.bonds,
       unspoken: made.unspoken,
@@ -59,7 +62,7 @@ function run(opts: { smartBoard?: boolean } = {}): {
     });
     for (const rule of new Set(problems.map((p) => p.rule))) classesWith.set(rule, (classesWith.get(rule) ?? 0) + 1);
   }
-  return { invalid, count: (rule) => classesWith.get(rule) ?? 0, framed, highlighted };
+  return { invalid, count: (rule) => classesWith.get(rule) ?? 0, framed, highlighted, plotted };
 }
 
 describe('300 seeded classes through assemble and the keep gate', () => {
@@ -93,17 +96,18 @@ describe('300 seeded classes through assemble and the keep gate', () => {
 });
 
 /**
- * The same classes with one more beat of the smart board's moves (canvas C3):
+ * The same classes with two more beats of the smart board's moves (canvas C3):
  * a key point boxed, a word of it highlighted, a clean page, an equation
- * underlined. The beats before it are unchanged, so any new problem is the
- * new beat's.
+ * underlined; then a graph with key points beside it. The beats before them
+ * are unchanged, so any new problem is the new beats'.
  */
-describe('300 seeded classes with a beat of marks on her writing and a clean page', () => {
-  const { invalid, count, framed, highlighted } = run({ smartBoard: true });
+describe('300 seeded classes with marks on her writing, a clean page and a graph', () => {
+  const { invalid, count, framed, highlighted, plotted } = run({ smartBoard: true });
 
-  it('frames and highlights her writing in every class', () => {
+  it('frames and highlights her writing, and draws a graph, in every class', () => {
     expect(framed).toBe(SEEDS);
     expect(highlighted).toBe(SEEDS);
+    expect(plotted).toBe(SEEDS);
   });
 
   it('all validate, and the new beat breaks no rule the classes did not already break', () => {

@@ -258,6 +258,30 @@ export type Element =
       tone?: Tone;
     }
   /**
+   * A line graph COMPUTED from a formula of x (canvas C3).
+   *
+   * `fn` is plain maths — "2x + 1", "x^2 - 4", "sin(x)" — read by
+   * `compileFunction` and sampled over [from, to]: the line on the board is the
+   * line the formula makes, never one a model drew. The y range is the
+   * computed values', so the curve always fills its box.
+   */
+  | {
+      kind: 'plot';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      fn: string;
+      from: number;
+      to: number;
+      caption?: string;
+      /** What the axes measure, e.g. "time (s)". */
+      xLabel?: string;
+      yLabel?: string;
+      tone?: Tone;
+    }
+  /**
    * A sequence of steps with arrows between them — a workflow.
    *
    * The renderer computes every box and arrow position from `x`, `y`, `w` and

@@ -246,9 +246,10 @@ demonstration that kind wants. Never mix two kinds on one board.
   step with say between marks — or a flow when the steps are abstract.
 - A comparison: the things side by side, then marks and writes on the
   difference. Not cards describing them.
-- A definition or a law: write it by hand, once, large. Maybe one card.
-- A quantity that varies: a chart.
-- A thing with internal structure (a cell, a cross-section, a graph): one
+- A definition or a law: write it by hand, once, large, then box it. Maybe one card.
+- A quantity that varies: a chart of amounts, or a plot when it follows a
+  formula (a straight line, a parabola, a wave).
+- A thing with internal structure (a cell, a cross-section): one
   \`diagram\` with named parts, then point at the parts one at a time.
 
 If a board would need more than one scene, more than five placed things, or a
@@ -301,6 +302,7 @@ concrete word — place a "leaf", not "photosynthesis".
 - {"do":"note","text","tone"?}          An aside worth pausing on. Wraps. "\\n\\n" starts a paragraph.
 - {"do":"flow","steps":[{"label","note"?}],"tone"?}   Steps with arrows between them, 2 to 5.
 - {"do":"chart","caption"?,"unit"?,"data":[{"label","value"}],"tone"?}   A bar chart.
+- {"do":"plot","fn","from","to","caption"?,"x"?,"y"?,"tone"?}   A line graph COMPUTED from a formula of x over [from, to] — "2x + 1", "x^2 - 4", "sin(x)". The board computes every point, so the line is exactly what the formula makes; never draw a graph as a picture. "fn" is plain maths: x, numbers, + - * / ^, brackets, sqrt, sin, cos, tan, log, ln, exp, abs, pi. "x" and "y" name what the axes measure ("time (s)", "distance (m)").
 
 \`tone\` is one of "neutral" | "good" | "bad" | "accent". Never a colour.
 

@@ -129,6 +129,20 @@ export type Instruction =
       data: { label: string; value: number }[];
       tone?: Tone;
     }
+  /**
+   * A line graph of one formula of x over [from, to] (canvas C3). The points
+   * are computed from `fn`; `x` and `y` name what the axes measure.
+   */
+  | {
+      do: 'plot';
+      fn: string;
+      from: number;
+      to: number;
+      caption?: string;
+      x?: string;
+      y?: string;
+      tone?: Tone;
+    }
   /** One line under the board, naming what is being shown. */
   | { do: 'caption'; text: string }
   /**

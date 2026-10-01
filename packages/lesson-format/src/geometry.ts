@@ -436,6 +436,7 @@ export function boxOf(el: Element): Rect {
     case 'image':
     case 'diagram':
     case 'chart':
+    case 'plot':
     case 'mark':
     case 'model3d':
       return { x: el.x, y: el.y, w: el.w, h: el.h };

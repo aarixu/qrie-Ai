@@ -1,6 +1,7 @@
 // With its extension: the relay's keep route (packages/relay/src/classStore.ts)
 // runs this file in Deno, which resolves no extensionless specifier.
 import { ALTERNATE_MODES, type AlternateMode, type Beat, type Element, type Lesson, type Point } from './types.ts';
+import { compileFunction } from './safeExpr.ts';
 
 /**
  * Runtime validation of a lesson document.
@@ -120,6 +121,14 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
           el.data.every((d) => isObj(d) && isStr(d.label) && isNum(d.value) && d.value >= 0),
         'chart needs data: at least one { label, value } with a non-negative value',
       );
+      break;
+    case 'plot':
+      need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'plot needs numeric x,y,w,h');
+      need(isStr(el.fn) && compileFunction(el.fn) !== null, 'plot needs a formula of x it can read in "fn"');
+      need(isNum(el.from) && isNum(el.to) && el.from < el.to, 'plot needs numeric from < to');
+      for (const key of ['caption', 'xLabel', 'yLabel'] as const) {
+        if (el[key] !== undefined) need(isStr(el[key]), `plot ${key} must be a string`);
+      }
       break;
     case 'flow':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w), 'flow needs numeric x,y,w');

@@ -1,5 +1,16 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
-import { CANVAS_H, CANVAS_W, mathPlain, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
+import {
+  CANVAS_H,
+  CANVAS_W,
+  compileFunction,
+  mathPlain,
+  samplePoints,
+  splitPartRef,
+  type Element,
+  type Lesson,
+  type Point,
+  type Tone,
+} from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
 import { formulaTex, hasMath, lineToHtml, texToHtml, typesetsAsMaths } from './math';
 import {
@@ -136,6 +147,7 @@ function centerOf(el: Element): Point {
     case 'image':
     case 'diagram':
     case 'chart':
+    case 'plot':
     case 'graphic':
     case 'mark':
     case 'model3d':
@@ -703,6 +715,123 @@ function renderChart(el: Extract<Element, { kind: 'chart' }>): ReactElement {
   );
 }
 
+/** A number as a board writes it on an axis: no more than three figures. */
+const axisNumber = (v: number): string => {
+  if (v === 0) return '0';
+  const r = Number(v.toPrecision(3));
+  return Math.abs(r) >= 1000 ? r.toLocaleString('en-IN') : String(r);
+};
+
+/**
+ * A line graph COMPUTED from its formula (canvas C3).
+ *
+ * The points are `fn` sampled over [from, to], so the curve is the one the
+ * formula makes. The y range is the computed values', with 0 pulled in when it
+ * is near, so an axis a student expects is there; a value that is not a number
+ * (a root of a negative, a division by zero) is a gap in the line, not a spike.
+ * Where the values run away (1/x near 0), the range is the middle of them and
+ * the line is clipped to the box.
+ */
+function renderPlot(el: Extract<Element, { kind: 'plot' }>): ReactElement | null {
+  const fn = compileFunction(el.fn);
+  if (!fn) return null;
+  const color = TONE_COLORS[toneOf(el)];
+  const capH = el.caption ? 32 : 0;
+  const padL = el.yLabel ? 50 : 36;
+  const padB = el.xLabel ? 44 : 28;
+  const box = { x: el.x + padL, y: el.y + capH + 10, w: el.w - padL - 14, h: el.h - capH - 10 - padB };
+  if (box.w <= 20 || box.h <= 20) return null;
+
+  const points = samplePoints(fn, el.from, el.to, 161);
+  if (points.length < 2) return null;
+  const ys = points.map((p) => p.y).sort((a, b) => a - b);
+  const at = (q: number) => ys[Math.min(ys.length - 1, Math.max(0, Math.round(q * (ys.length - 1))))];
+  let lo = ys[0];
+  let hi = ys[ys.length - 1];
+  if (hi - lo > 10 * Math.max(1e-9, at(0.9) - at(0.1))) {
+    lo = at(0.05);
+    hi = at(0.95);
+  }
+  if (hi - lo < 1e-9) {
+    lo -= 1;
+    hi += 1;
+  }
+  if (lo > 0 && lo < (hi - lo) * 0.5) lo = 0;
+  if (hi < 0 && -hi < (hi - lo) * 0.5) hi = 0;
+  const pad = (hi - lo) * 0.06;
+  lo -= pad;
+  hi += pad;
+
+  const sx = (x: number) => box.x + ((x - el.from) / (el.to - el.from)) * box.w;
+  const sy = (y: number) => box.y + box.h - ((y - lo) / (hi - lo)) * box.h;
+  const step = (el.to - el.from) / 160;
+  let d = '';
+  points.forEach((p, k) => {
+    const gap = k === 0 || p.x - points[k - 1].x > step * 1.5;
+    d += `${gap ? 'M' : 'L'} ${sx(p.x).toFixed(1)} ${sy(p.y).toFixed(1)} `;
+  });
+
+  const axisY = lo <= 0 && hi >= 0 ? sy(0) : box.y + box.h;
+  const axisX = el.from <= 0 && el.to >= 0 ? sx(0) : box.x;
+  const clipId = `plot-clip-${el.id}`;
+  const label = { fontFamily: FONT_HAND, fontSize: 15, fontWeight: 700, fill: TONE_COLORS.neutral } as const;
+
+  return (
+    <>
+      {el.caption && (
+        <text x={el.x + el.w / 2} y={el.y + 22} textAnchor="middle" fontFamily={FONT_HAND} fontSize={20} fontWeight={800} fill={INK}>
+          {el.caption}
+        </text>
+      )}
+      <clipPath id={clipId}>
+        <rect x={box.x} y={box.y} width={box.w} height={box.h} />
+      </clipPath>
+      <line x1={box.x} y1={axisY} x2={box.x + box.w} y2={axisY} stroke={INK} strokeWidth={1.6} />
+      <line x1={axisX} y1={box.y} x2={axisX} y2={box.y + box.h} stroke={INK} strokeWidth={1.6} />
+      <text x={box.x} y={box.y + box.h + 18} textAnchor="start" {...label}>
+        {axisNumber(el.from)}
+      </text>
+      <text x={box.x + box.w} y={box.y + box.h + 18} textAnchor="end" {...label}>
+        {axisNumber(el.to)}
+      </text>
+      <text x={box.x - 6} y={box.y + 10} textAnchor="end" {...label}>
+        {axisNumber(hi - pad)}
+      </text>
+      <text x={box.x - 6} y={box.y + box.h} textAnchor="end" {...label}>
+        {axisNumber(lo + pad)}
+      </text>
+      {el.xLabel && (
+        <text x={box.x + box.w / 2} y={box.y + box.h + 38} textAnchor="middle" {...label} fontSize={16}>
+          {el.xLabel}
+        </text>
+      )}
+      {el.yLabel && (
+        <text
+          x={el.x + 14}
+          y={box.y + box.h / 2}
+          textAnchor="middle"
+          {...label}
+          fontSize={16}
+          transform={`rotate(-90 ${el.x + 14} ${box.y + box.h / 2})`}
+        >
+          {el.yLabel}
+        </text>
+      )}
+      <path
+        d={d.trim()}
+        clipPath={`url(#${clipId})`}
+        fill="none"
+        stroke={color}
+        strokeWidth={3.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="stage-draw"
+        pathLength={1}
+      />
+    </>
+  );
+}
+
 /**
  * A workflow: boxes with arrows between them, laid out from the step count.
  *
@@ -1098,6 +1227,8 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
       return renderMark(el);
     case 'chart':
       return renderChart(el);
+    case 'plot':
+      return renderPlot(el) ?? <></>;
     case 'flow':
       return renderFlow(el);
     case 'handwrite':
