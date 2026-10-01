@@ -28,7 +28,11 @@ import type { TopicOutcome } from './prompts.ts';
  *                    class holds on, and asks nothing else before it (T1.2).
  *   outcomes         when the map has outcomes for this topic, every moment
  *                    that asks files at least one of them (T1.3) — otherwise
- *                    the answer is evidence about nothing.
+ *                    the answer is evidence about nothing. ONE ask is not
+ *                    held to it: the opening's context question (`opening`
+ *                    below), which the planner prompt puts in the first beat
+ *                    before anything is taught. Its answer IS evidence about
+ *                    nothing, and that is correct for it.
  *   notation         no beat's narration reads maths notation aloud (T1.5):
  *                    no `=`, `/` or `^`, and no digit-operator-digit. A held
  *                    beat's narration ends with its question, so the question
@@ -103,6 +107,36 @@ export interface GateOptions {
    * Absent: rule `unspoken` has nothing to read and finds nothing.
    */
   unspoken?: readonly string[];
+  /**
+   * THE OPENING'S CONTEXT QUESTION — `assemble(...).opening`: the lesson beat
+   * holding the first ask of the planner's first beat, or nothing.
+   *
+   * The planner prompt (PLANNER_SYSTEM, "THE CONTEXT ITSELF IS BUILT BY
+   * ASKING") makes that first beat the opening and "none of the teaching", and
+   * has it ask a real question from the student's own life before anything is
+   * taught. Rule `outcomes` used to demand `checks` on that ask too, so the two
+   * rules contradicted each other and a class that obeyed the prompt was never
+   * kept (class10 excretion, 2026-10-01: `outcomes@b1_3`).
+   *
+   * The gate gives way, not the prompt, because the answer to that question is
+   * evidence about nothing and should be filed as nothing. Claiming an outcome
+   * for it would file a guess made BEFORE the teaching as evidence about what
+   * the teaching was for — a student who says "it disappears" about sugar in
+   * milk, which is the answer the opening exists to start from, would be booked
+   * wrong on an outcome nobody had taught yet. The classroom already files an
+   * ask that claims no outcome as nothing: `answeredOutcomesAtBeat` is empty
+   * for it, `recordAnswerAtBeat` returns early (apps/classroom/src/stores/
+   * outcomes.ts), and the ledger's replay and the learner model's fold skip an
+   * event with no outcome ids (packages/ledger/src/replay.ts,
+   * packages/learner-model/src/fold.ts).
+   *
+   * Found by position, from the plan, not from the lesson: lesson beat ids do
+   * not say reliably which planner beat they came from (`plannerBeatOf` maps
+   * "beat_1" and "beat_2" both to "beat"), and nothing about the ask itself — its
+   * wording, or whether it is written anywhere — marks it as the opening.
+   * Absent: every ask is held to the rule, as before.
+   */
+  opening?: readonly string[];
 }
 
 /** The planner beat a lesson beat or element id came from: `b3_4` -> `b3`, `b3__pen` -> `b3`. */
@@ -155,10 +189,15 @@ function overlapProblems(lesson: Lesson, bonds: readonly Bond[]): GateProblem[] 
   }
 }
 
-function heldProblems(lesson: Lesson, outcomes: readonly TopicOutcome[]): GateProblem[] {
+function heldProblems(
+  lesson: Lesson,
+  outcomes: readonly TopicOutcome[],
+  opening: readonly string[],
+): GateProblem[] {
   const problems: GateProblem[] = [];
   const byId = new Map(lesson.elements.map((el) => [el.id, el]));
   const real = new Set(outcomes.map((o) => o.id));
+  const elicits = new Set(opening);
 
   lesson.beats.forEach((beat: Beat, n) => {
     if (!beat.ask) return;
@@ -219,8 +258,9 @@ function heldProblems(lesson: Lesson, outcomes: readonly TopicOutcome[]): GatePr
       });
     }
 
-    // Evidence about something the map knows.
-    if (real.size > 0) {
+    // Evidence about something the map knows — except the opening's context
+    // question, whose answer is about nothing yet (see GateOptions.opening).
+    if (real.size > 0 && !elicits.has(beat.id)) {
       const filed = [...(beat.checks?.length ? beat.checks : (beat.teaches ?? []))].filter((id) => real.has(id));
       if (filed.length === 0) {
         problems.push({
@@ -303,7 +343,7 @@ export function gateLesson(lesson: Lesson, opts: GateOptions = {}): GateProblem[
   return [
     ...mathsProblems(lesson, opts.mathsCheck ?? checkLessonMaths),
     ...overlapProblems(lesson, opts.bonds ?? []),
-    ...heldProblems(lesson, opts.outcomes ?? []),
+    ...heldProblems(lesson, opts.outcomes ?? [], opts.opening ?? []),
     ...notationProblems(lesson),
     ...unspokenProblems(lesson, opts.unspoken ?? []),
   ];

@@ -1,5 +1,6 @@
 import {
   boxOf,
+  overlaps,
   textWidth,
   union,
   noteBoxHeight,
@@ -77,6 +78,21 @@ const MIN_FLEXIBLE_H = 150;
 const EQUATION_H = 52;
 const WRITE_H = 62;
 const CARD_H = 128;
+/** The sizes a card's body may wrap at, largest first; see the card block. */
+const CARD_BODY_SIZES = [16, 15, 14, 13];
+
+/**
+ * A connector's words lifted above their row (the scene block): written no
+ * larger than LANE_SIZE, LANE_CLEAR above the tallest thing they span, and —
+ * when the row reached the top of its band — in a LANE that tall kept clear
+ * above it. 42 holds a size-20 line (27 tall, `boxOf`) with its clearance
+ * under it and the solver's breathing room over it.
+ */
+const LANE = 42;
+const LANE_SIZE = 20;
+const LANE_CLEAR = 8;
+/** A label's box with the room the solver wants round it (collide.ts BREATHING). */
+const padLabel = (r: Rect): Rect => ({ x: r.x - 6, y: r.y - 6, w: r.w + 12, h: r.h + 12 });
 /**
  * The work area under a held question: room for three lines of handwriting at
  * the default handwriting size (26, what `boxOf` assumes for a `handwrite`),
@@ -844,13 +860,41 @@ export function layoutBeat(
                 // in runs into the card beside it.
                 size: fitText(card.heading, cardW - 24, 19),
               });
-              out.push({
-                kind: 'text',
-                id: idFor(beat.id, index, `_b${n}`),
-                x: x + cardW / 2,
-                y: y + 78,
-                text: card.body,
-                size: fitText(card.body, cardW - 24, 16),
+              /**
+               * THE BODY WRAPS INSIDE ITS CARD.
+               *
+               * It was one line, shrunk to size 12 and then left wider than
+               * the card: three forty-character bodies in a row ran past
+               * their frames into the next card, and a text element is not
+               * something the solver can move (canvas audit 2026-10-01, item
+               * 5). A body that fits one line at size 15 or more is drawn
+               * exactly as before; a longer one wraps at the largest size
+               * that keeps it to three lines, never below 13. Four lines at 13
+               * still end inside the 128-unit card; a body that needs five or
+               * more runs past its foot, and nothing here stops that.
+               */
+              const room = cardW - 28;
+              const oneLine = fitText(card.body, cardW - 24, 16);
+              const size =
+                oneLine >= 15 ? oneLine : (CARD_BODY_SIZES.find((s) => wrapLines(card.body, room, s).length <= 3) ?? 13);
+              const lines = oneLine >= 15 ? [card.body] : wrapLines(card.body, room, size);
+              // A text line's box is 1.35 of its size tall (boxOf), so lines
+              // any closer than this would read as touching.
+              const lead = size * 1.4;
+              // Centred on the line a one-line body sits on, and never up into
+              // the heading above it.
+              const first = Math.max(y + 64, y + 78 - ((lines.length - 1) * lead) / 2);
+              lines.forEach((line, k) => {
+                const lineId = idFor(beat.id, index, k === 0 ? `_b${n}` : `_b${n}_l${k}`);
+                if (k > 0) bonds.push({ a: idFor(beat.id, index, `_c${n}`), b: lineId });
+                out.push({
+                  kind: 'text',
+                  id: lineId,
+                  x: x + cardW / 2,
+                  y: lines.length === 1 ? y + 78 : first + k * lead,
+                  text: line,
+                  size,
+                });
               });
             });
             return out;
@@ -890,52 +934,117 @@ export function layoutBeat(
           at: null,
           height: null,
           place: (r) => {
-            const { elements: figures, boxes } = layoutScene(places, r, (authorId) => `${beat.id}__${authorId}`);
-            const out: Element[] = [...figures];
-            // Attribute each figure back to the instruction that placed it, so
-            // it can appear on the word that named it rather than all at once.
-            for (const box of boxes.values()) {
-              const n = sceneSteps.findIndex((it) => it.do === 'place' && it.id === box.id);
-              if (n >= 0) byInstruction.set(n, [...(byInstruction.get(n) ?? []), box.elementId]);
-            }
-            let connectors = 0;
-            sceneSteps.forEach((it, n) => {
-              if (it.do === 'connect') {
-                const made = connectElements(it, boxes, idFor(beat.id, n), connectors);
-                // A label may move anywhere around the pair it joins, and no
-                // further: see connectionRegion.
-                const drawn = [it.from, it.to].map((end) => {
-                  const placed = boxes.get(end);
-                  const figure = placed && figures.find((f) => f.id === placed.elementId);
-                  return figure ? boxOf(figure) : undefined;
-                });
-                if (drawn[0] && drawn[1]) {
-                  const labelId = labelIdFor(idFor(beat.id, n));
-                  // The label's own starting point belongs to the region too.
-                  // Siblings are nudged clear of one another perpendicular to
-                  // their lines, which can start a label just outside the pair
-                  // it joins — and a leash that excluded where the label was
-                  // BORN was a rule broken before the solver ever ran.
-                  const home = made.find((m) => m.id === labelId);
-                  const region = home
-                    ? union(connectionRegion(drawn[0], drawn[1]), boxOf(home))
-                    : connectionRegion(drawn[0], drawn[1]);
-                  leashes.push({ id: labelId, region });
-                }
-                connectors += 1;
-                out.push(...made);
-                byInstruction.set(n, [...(byInstruction.get(n) ?? []), ...made.map((m) => m.id)]);
-              } else if (it.do === 'annotate') {
-                const made = annotateElement(it, boxes, idFor(beat.id, n));
-                // A mark is MEANT to sit on what it marks; the solver must not
-                // push the circle off the thing it is circling.
-                const target = boxes.get(it.target);
-                if (target) for (const m of made) bonds.push({ a: m.id, b: target.elementId });
-                out.push(...made);
-                byInstruction.set(n, [...(byInstruction.get(n) ?? []), ...made.map((m) => m.id)]);
+            /**
+             * The scene, drawn into one band — PURE, so it can be drawn twice
+             * and only the version kept leaves anything behind.
+             */
+            const drawScene = (band: Rect) => {
+              const { elements: figures, boxes } = layoutScene(places, band, (authorId) => `${beat.id}__${authorId}`);
+              const out: Element[] = [...figures];
+              const attributed: [number, string][] = [];
+              const tied: Leash[] = [];
+              const meant: Bond[] = [];
+              const figureBoxes = figures.map(boxOf);
+              /** Labels that sit on a picture and had no room above the row to go to. */
+              let stuck = false;
+              // Attribute each figure back to the instruction that placed it, so
+              // it can appear on the word that named it rather than all at once.
+              for (const box of boxes.values()) {
+                const n = sceneSteps.findIndex((it) => it.do === 'place' && it.id === box.id);
+                if (n >= 0) attributed.push([n, box.elementId]);
               }
-            });
-            return out;
+              let connectors = 0;
+              sceneSteps.forEach((it, n) => {
+                if (it.do === 'connect') {
+                  const made = connectElements(it, boxes, idFor(beat.id, n), connectors);
+                  // A label may move anywhere around the pair it joins, and no
+                  // further: see connectionRegion.
+                  const drawn = [it.from, it.to].map((end) => {
+                    const placed = boxes.get(end);
+                    const figure = placed && figures.find((f) => f.id === placed.elementId);
+                    return figure ? boxOf(figure) : undefined;
+                  });
+                  const labelId = labelIdFor(idFor(beat.id, n));
+                  const at = made.findIndex((m) => m.id === labelId);
+                  /**
+                   * WORDS ON A PICTURE GO ABOVE THE ROW.
+                   *
+                   * A connector's label is born at the middle of its arrow, and
+                   * an arrow between two things that are not neighbours runs
+                   * straight through the one between them — so its words were
+                   * written over that thing's icon and its name, and the solver,
+                   * held to the region round the two ends, had nowhere free to
+                   * take them (canvas audit 2026-10-01, item 4). Both overlaps
+                   * that refused Class 10 Science that day had this shape — a
+                   * place under a connector's label — and boards built to it
+                   * reproduce their exact ids (class-prep tests/fixtures/
+                   * class10Science.ts). Lifted to just above the tops of
+                   * everything it spans, still centred over its own arrow —
+                   * the place a teacher writes it.
+                   */
+                  if (at >= 0 && drawn[0] && drawn[1]) {
+                    const words = made[at] as Extract<Element, { kind: 'handwrite' }>;
+                    const onAPicture = figureBoxes.some((f) => overlaps(padLabel(boxOf(words)), f));
+                    const sameRow = drawn[0].y < drawn[1].y + drawn[1].h && drawn[1].y < drawn[0].y + drawn[0].h;
+                    if (onAPicture && sameRow) {
+                      const size = Math.min(words.size ?? 26, LANE_SIZE);
+                      const half = textWidth(words.text, size) / 2;
+                      const rowFrom = Math.min(drawn[0].y, drawn[1].y);
+                      const rowTo = Math.max(drawn[0].y + drawn[0].h, drawn[1].y + drawn[1].h);
+                      const under = figureBoxes.filter(
+                        (f) => f.x < words.x + half && words.x - half < f.x + f.w && f.y < rowTo && rowFrom < f.y + f.h,
+                      );
+                      const rowTop = Math.min(...under.map((f) => f.y), rowFrom);
+                      const lifted = { ...words, size, y: rowTop - LANE_CLEAR - size * 0.35 } as Element;
+                      // Inside the scene's own rectangle (a lane drawn lower
+                      // still starts at r.y), and clear of every picture.
+                      const fits =
+                        boxOf(lifted).y - LANE_CLEAR >= r.y &&
+                        !figureBoxes.some((f) => overlaps(padLabel(boxOf(lifted)), f));
+                      if (fits) made[at] = lifted;
+                      else stuck = true;
+                    }
+                  }
+                  if (drawn[0] && drawn[1]) {
+                    // The label's own starting point belongs to the region too.
+                    // Siblings are nudged clear of one another perpendicular to
+                    // their lines, which can start a label just outside the pair
+                    // it joins — and a leash that excluded where the label was
+                    // BORN was a rule broken before the solver ever ran.
+                    const home = made.find((m) => m.id === labelId);
+                    const region = home
+                      ? union(connectionRegion(drawn[0], drawn[1]), boxOf(home))
+                      : connectionRegion(drawn[0], drawn[1]);
+                    tied.push({ id: labelId, region });
+                  }
+                  connectors += 1;
+                  out.push(...made);
+                  for (const m of made) attributed.push([n, m.id]);
+                } else if (it.do === 'annotate') {
+                  const made = annotateElement(it, boxes, idFor(beat.id, n));
+                  // A mark is MEANT to sit on what it marks; the solver must not
+                  // push the circle off the thing it is circling.
+                  const target = boxes.get(it.target);
+                  if (target) for (const m of made) meant.push({ a: m.id, b: target.elementId });
+                  out.push(...made);
+                  for (const m of made) attributed.push([n, m.id]);
+                }
+              });
+              return { out, attributed, tied, meant, stuck };
+            };
+
+            /**
+             * A label that needed the room above its row and found none — the
+             * row filled its band to the top — gets that room: the scene is
+             * drawn again a lane lower. Only then, so a scene whose words
+             * already sat clear is drawn exactly as it always was.
+             */
+            const first = drawScene(r);
+            const drawnScene = first.stuck ? drawScene({ ...r, y: r.y + LANE, h: r.h - LANE }) : first;
+            for (const [n, id] of drawnScene.attributed) byInstruction.set(n, [...(byInstruction.get(n) ?? []), id]);
+            leashes.push(...drawnScene.tied);
+            bonds.push(...drawnScene.meant);
+            return drawnScene.out;
           },
         });
         i += 1;
@@ -1008,9 +1117,34 @@ export function layoutBeat(
    */
   /** Pages the band under a labelled figure needed, when it turned one. */
   let bandSheets = 1;
+  /** Pages the column beside a figure needed, when it turned one. */
+  let columnSheets = 1;
+  /**
+   * The page the stacker starts on. Not 0 when a labelled figure has already
+   * filled the first page(s) by hand and left blocks for the stacker to place.
+   */
+  let firstSheet = 0;
+  /** Set once a branch below has placed the beat's figure itself. */
+  let figurePlaced = false;
 
   const FIGURE: ReadonlySet<Block['kind']> = new Set(['picture', 'diagram', 'chart', 'flow']);
   const figures = blocks.filter((b) => FIGURE.has(b.kind));
+  /**
+   * THE FIGURE THE NAMES ARE WRITTEN ROUND.
+   *
+   * The only one, when there is one. With two figures in a beat — a picture
+   * and a flow — this used to be nobody, and every name was dropped (canvas
+   * audit 2026-10-01, item 6). Now it is the figure the first name (or the
+   * sketch) points into, and the other figure goes on the next page with
+   * everything else the labelled arrangement does not place itself.
+   */
+  const namedRef = pendingLabels[0]?.step.target ?? pendingSketch?.step.from;
+  const labelledHost =
+    pendingLabels.length > 0 || pendingSketch !== null
+      ? figures.length === 1
+        ? figures[0]
+        : figures.find((f) => namedRef !== undefined && f.ref === splitPartRef(namedRef).elementId)
+      : undefined;
   /** Written under a labelled figure, in the order the beat asked for them. */
   const written = blocks.filter((b) => b.kind === 'list');
   /**
@@ -1037,7 +1171,7 @@ export function layoutBeat(
    * making on purpose: a smaller picture whose parts are all named beats a
    * bigger one the student has to be told about in a sentence somewhere else.
    */
-  if (figures.length === 1 && (pendingLabels.length > 0 || pendingSketch !== null)) {
+  if (labelledHost) {
     const MARGIN_GAP = 18;
     const leastMargin = Math.round((WIDTH - MARGIN_GAP * 2) * 0.26);
     const columnW = WIDTH - MARGIN_GAP * 2 - leastMargin * 2;
@@ -1063,12 +1197,12 @@ export function layoutBeat(
     const under = band.height + listsH;
     const figureH = under > 0 ? Math.max(MIN_FIGURE_H, bandRoom - under - BAND_GAP) : MAIN.h;
 
-    current = figures[0].at ?? -1;
-    for (const el of figures[0].place({ x: columnX, y: MAIN.y, w: columnW, h: figureH })) {
+    current = labelledHost.at ?? -1;
+    for (const el of labelledHost.place({ x: columnX, y: MAIN.y, w: columnW, h: figureH })) {
       emit(el);
     }
 
-    const host = elements.find((el) => el.id === figures[0].ref);
+    const host = elements.find((el) => el.id === labelledHost.ref);
     const hostBox = host ? boxOf(host) : null;
 
     /**
@@ -1136,6 +1270,48 @@ export function layoutBeat(
     }
 
     /**
+     * How tall a side's names stand, written at one size: each name's lines
+     * plus the space under it. The same sum decides the size and the spill.
+     */
+    const pileOf = (side: 'left' | 'right', size: number): number => {
+      const lead = handLead(size);
+      return placedFor
+        .filter(({ pending }) => sideOf.get(pending) === side)
+        .reduce((sum, { pending }) => sum + wrapText(pending.step.text, margins[side].w, size).length * lead + 12, 0);
+    };
+
+    /**
+     * A SIDE THAT CANNOT HOLD ITS NAMES GIVES SOME TO THE OTHER SIDE.
+     *
+     * Once the parts are known every name goes to the side its part is on, and
+     * a picture whose parts all sit on its left sends every name left. Even at
+     * the smallest size that is sometimes more than the figure is tall, and the
+     * names past the foot of the figure were clamped back onto the ones above
+     * them. So the name whose part is nearest the middle — the one whose line is
+     * least hurt by crossing — moves across, one at a time, while the other
+     * side has room for it. A beat with a sketch keeps every name on the left:
+     * the right is the sketch's.
+     */
+    if (!pendingSketch && hostBox) {
+      const middle = hostBox.x + hostBox.w / 2;
+      for (const side of ['left', 'right'] as const) {
+        const other = side === 'left' ? 'right' : 'left';
+        while (pileOf(side, 14) > figureH) {
+          const movable = placedFor
+            .filter(({ pending, box }) => box !== null && sideOf.get(pending) === side)
+            .sort((a, b) => Math.abs(a.box!.x + a.box!.w / 2 - middle) - Math.abs(b.box!.x + b.box!.w / 2 - middle));
+          const mover = movable[0];
+          if (!mover) break;
+          sideOf.set(mover.pending, other);
+          if (pileOf(other, 14) > figureH) {
+            sideOf.set(mover.pending, side);
+            break;
+          }
+        }
+      }
+    }
+
+    /**
      * How small the writing has to be for a side to hold all its names.
      *
      * A margin has one column of room, and five names in it at full size is a
@@ -1144,28 +1320,67 @@ export function layoutBeat(
      * smaller and have every name legible.
      */
     const sizeFor = (side: 'left' | 'right'): number => {
-      const mine = placedFor.filter(({ pending }) => sideOf.get(pending) === side);
       for (const size of [20, 18, 16, 14]) {
-        const lead = handLead(size);
-        const total = mine.reduce(
-          (sum, { pending }) =>
-            sum + wrapText(pending.step.text, margins[side].w, size).length * lead + 12,
-          0,
-        );
-        if (total <= figureH) return size;
+        if (pileOf(side, size) <= figureH) return size;
       }
       return 14;
     };
     const sizes = { left: sizeFor('left'), right: sizeFor('right') };
 
-    const lowest = { left: MAIN.y, right: MAIN.y };
+    /**
+     * WHERE EACH NAME STANDS, worked out a side at a time before any is
+     * written.
+     *
+     * Beside its own part, and in the ORDER the parts run down the picture —
+     * not the order the names were said in. Stacked in spoken order, each name
+     * below the last and then clamped to the foot of the figure, a side whose
+     * first name pointed low put every later name on the same spot: five names
+     * at one height, which is what the keep gate refused (canvas audit
+     * 2026-10-01, item 3). Sorted, a name only moves down to clear the one above
+     * it, and a side that runs past the foot is pushed back UP as one column, so
+     * nothing is clamped onto anything. A name whose part is unknown wants the
+     * top, as before — so the draft, laid out before any picture exists, comes
+     * out exactly as it did whenever its names fit beside the figure.
+     */
+    const NAME_GAP = 10;
+    const standing = new Map<Pending, number>();
+    for (const side of ['left', 'right'] as const) {
+      const lead = handLead(sizes[side]);
+      const column = placedFor
+        .filter(({ pending }) => sideOf.get(pending) === side)
+        .map(({ pending, box }) => {
+          const height = wrapText(pending.step.text, margins[side].w, sizes[side]).length * lead;
+          return { pending, height, wanted: box ? box.y + box.h / 2 - height / 2 : MAIN.y, top: 0 };
+        })
+        .sort((a, b) => a.wanted - b.wanted);
+      let cursor = MAIN.y;
+      for (const name of column) {
+        name.top = Math.max(name.wanted, cursor);
+        cursor = name.top + name.height + NAME_GAP;
+      }
+      let ceiling = MAIN.y + figureH;
+      for (let k = column.length - 1; k >= 0; k -= 1) {
+        column[k].top = Math.min(column[k].top, ceiling - column[k].height);
+        ceiling = column[k].top - NAME_GAP;
+      }
+      // Taller than the figure even so: written down from the top, past the
+      // foot, rather than over one another.
+      if (column.length > 0 && column[0].top < MAIN.y) {
+        cursor = MAIN.y;
+        for (const name of column) {
+          name.top = cursor;
+          cursor += name.height + NAME_GAP;
+        }
+      }
+      for (const name of column) standing.set(name.pending, name.top);
+    }
+
     for (const { pending, box } of placedFor) {
       const side = sideOf.get(pending)!;
       const onLeft = side === 'left';
       const size = sizes[side];
       const lines = wrapText(pending.step.text, margins[side].w, size);
       const lead = handLead(size);
-      const height = lines.length * lead;
       /**
        * Written AGAINST the picture, not centred in the margin.
        *
@@ -1188,11 +1403,8 @@ export function layoutBeat(
         ? Math.max(SIDE + widest / 2, edge - widest / 2)
         : Math.min(SIDE + WIDTH - widest / 2, edge + widest / 2);
 
-      // Beside its part, then down if that room has gone, then kept on the
-      // board.
-      const wanted = box ? box.y + box.h / 2 - height / 2 : MAIN.y;
-      const top = Math.min(Math.max(wanted, lowest[side]), MAIN.y + figureH - height) + size;
-      lowest[side] = top + height - size + 10;
+      // Where the side's column put it (above), as the first line's baseline.
+      const top = standing.get(pending)! + size;
 
       current = pending.at;
       lines.forEach((line, n) => {
@@ -1278,7 +1490,7 @@ export function layoutBeat(
           tone: 'accent',
         });
         bonds.push({ a: arrowId, b: ref });
-        bonds.push({ a: arrowId, b: figures[0].ref ?? '' });
+        bonds.push({ a: arrowId, b: labelledHost.ref ?? '' });
       }
     }
 
@@ -1377,11 +1589,28 @@ export function layoutBeat(
     }
     bandSheets = sheet + 1;
 
-    // Everything this beat wanted has now been placed by hand.
+    /**
+     * WHAT THE ARRANGEMENT ABOVE DID NOT PLACE GOES ON THE NEXT PAGE.
+     *
+     * The figure, its names, its key points, its lists and the room under its
+     * questions were all placed by hand above. Everything else — a note, a card,
+     * an equation, a scene, a second figure — used to be thrown away with the
+     * rest of the block list: a definition banner the prompt asks for beside
+     * every demonstration simply never appeared (canvas audit 2026-10-01, item
+     * 6). It now goes to the stacker, which starts on the page after this
+     * figure's last one, so nothing is drawn over the picture or its band.
+     */
+    const leftover = blocks.filter(
+      (b) => b !== labelledHost && b.kind !== 'write' && b.kind !== 'list' && b.kind !== 'work',
+    );
     blocks.length = 0;
+    blocks.push(...leftover);
+    firstSheet = bandSheets;
+    figurePlaced = true;
   }
 
   if (
+    !figurePlaced &&
     figures.length === 1 &&
     figures[0].narrow !== false &&
     beside.length > 0 &&
@@ -1406,24 +1635,66 @@ export function layoutBeat(
     // next one starts below it. Equal slots looked tidier until a point wrapped
     // to three lines and ran into the next one.
     const BETWEEN_POINTS = 16;
+    /**
+     * AND WHEN THE COLUMN RUNS OUT, THE PAGE TURNS.
+     *
+     * It used to write on down: four wrapped key points beside a diagram ended
+     * at 658 on a board 620 high, through the caption on the way (canvas audit
+     * 2026-10-01, item 6: 19.1% of random beats with a diagram and two to four
+     * points ran off the board). It stops where the labelled figure's band stops, above the
+     * caption, and carries on at the top of the next page across the full
+     * width. A held question goes WITH the room under it (and its options):
+     * the chain of glued blocks is measured together and moved together.
+     */
+    const columnBottom = MAIN.y + MAIN.h + SPARE_BELOW;
+    let sheet = 0;
     let ry = MAIN.y;
-    for (const block of blocks) {
-      if (block === figures[0]) continue;
-      // The room under a held question, kept in the column it was asked in.
-      if (block.kind === 'work') {
-        const h = block.height ?? 0;
-        block.place({ x: SIDE + figureW + GAP, y: ry, w: columnW, h });
-        ry += h + BETWEEN_POINTS;
-        continue;
+    const columnAt = (): { x: number; w: number } =>
+      sheet === 0 ? { x: SIDE + figureW + GAP, w: columnW } : { x: SIDE + sheet * PAGE_STRIDE, w: WIDTH };
+    /** Where a run of blocks would end if written from `y` — placed, measured, thrown away. */
+    const endOf = (chain: readonly Block[], y: number): number => {
+      let at = y;
+      for (const block of chain) {
+        if (block.kind === 'work') {
+          at += (block.height ?? 0) + BETWEEN_POINTS;
+          continue;
+        }
+        let bottom = at;
+        for (const el of block.place({ ...columnAt(), y: at, h: WRITE_H })) {
+          bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
+        }
+        at = bottom + BETWEEN_POINTS;
       }
-      current = block.at ?? -1;
-      let bottom = ry;
-      for (const el of block.place({ x: SIDE + figureW + GAP, y: ry, w: columnW, h: WRITE_H })) {
-        emit(el);
-        bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
+      return at - BETWEEN_POINTS;
+    };
+    const rest = blocks.filter((b) => b !== figures[0]);
+    for (let k = 0; k < rest.length; ) {
+      let end = k + 1;
+      while (end < rest.length && rest[end].glued) end += 1;
+      const chain = rest.slice(k, end);
+      if (ry > MAIN.y && endOf(chain, ry) > columnBottom) {
+        sheet += 1;
+        ry = MAIN.y;
       }
-      ry = bottom + BETWEEN_POINTS;
+      for (const block of chain) {
+        // The room under a held question, kept in the column it was asked in.
+        if (block.kind === 'work') {
+          const h = block.height ?? 0;
+          block.place({ ...columnAt(), y: ry, h });
+          ry += h + BETWEEN_POINTS;
+          continue;
+        }
+        current = block.at ?? -1;
+        let bottom = ry;
+        for (const el of block.place({ ...columnAt(), y: ry, h: WRITE_H })) {
+          emit(el);
+          bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
+        }
+        ry = bottom + BETWEEN_POINTS;
+      }
+      k = end;
     }
+    columnSheets = sheet + 1;
 
     blocks.length = 0;
   }
@@ -1459,7 +1730,7 @@ export function layoutBeat(
 
   sheets.forEach((sheet, sheetIndex) => {
     if (sheet.length === 0) return;
-    const dx = sheetIndex * PAGE_STRIDE;
+    const dx = (firstSheet + sheetIndex) * PAGE_STRIDE;
     const fixed = sheet.reduce((sum, b) => sum + (b.height ?? 0), 0);
     const flexible = sheet.filter((b) => b.height === null).length;
     const gutters = Math.max(0, sheet.length - 1) * GUTTER;
@@ -1483,7 +1754,13 @@ export function layoutBeat(
       y += h + GUTTER;
     }
   });
-  const sheetsUsed = Math.max(1, sheets.filter((s) => s.length > 0).length, bandSheets);
+  const stackedSheets = sheets.filter((s) => s.length > 0).length;
+  const sheetsUsed = Math.max(
+    1,
+    stackedSheets > 0 ? firstSheet + stackedSheets : 0,
+    bandSheets,
+    columnSheets,
+  );
 
   // --- mark the things the scene does not own ---
   //

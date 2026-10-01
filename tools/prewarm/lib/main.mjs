@@ -8,7 +8,7 @@
  * class than the app would have made is not pre-warming the product, it is
  * shipping a second product.
  *
- * TWO DELIBERATE DIVERGENCES FROM THE APP, both named so neither is mistaken
+ * THREE DELIBERATE DIVERGENCES FROM THE APP, all named so none is mistaken
  * for drift:
  *
  *   1. THE FACTUAL REVIEWER IS ON — and since C10 the app's is too
@@ -27,6 +27,13 @@
  *      ("The board shows what it has"). Letting an icon-picker hiccup throw
  *      would discard a fully prepared and fully PAID-FOR lesson and put it
  *      back in the pending set to be bought again.
+ *
+ *   3. A CLASS THE KEEP GATE WILL REFUSE IS STOPPED EARLY. prepareClass is
+ *      called with `stopWhenUnkeepable`, so a plan still failing the keep gate
+ *      after its repair round throws before the reviewer and the pictures,
+ *      and a class refused at the end is not sent to the icon picker. The app
+ *      teaches such a class to the student who is waiting and keeps none of
+ *      it; with no student here, everything after the refusal was waste.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -292,11 +299,32 @@ async function warmOne(row, opts, client) {
     imageArtist: client.imageArtist(IMAGE_MODEL),
     eyes: client.vision(VISION_MODEL),
     web: createCommonsSearch(),
+    // THE RUNNER ONLY KEEPS, so a class the keep gate will refuse is stopped
+    // right after its repair round — before the reviewer and the pictures are
+    // paid for. On 2026-10-01 all three refused Class 10 Science topics were
+    // already refused there and went on to spend about thirty more calls each
+    // (canvas audit, item 1). The thrown error carries `gateProblems` and
+    // `issues`, which the catch in main() writes to the state file. The app
+    // does not set this: a student is waiting for that class.
+    stopWhenUnkeepable: true,
     onProgress: (p) => {
       process.stdout.write(`\r    ${p.phase.padEnd(9)} ${p.message.padEnd(60).slice(0, 60)}`);
     },
   });
   process.stdout.write('\n');
+
+  // A class the keep gate refused is not dressed: the icon picker and the
+  // icon artist are paid calls, and saveable would refuse the class anyway.
+  if (made.report.gate && made.report.gate.problems.length > 0) {
+    throw Object.assign(
+      new Error(
+        `prepared but NOT kept — the keep gate failed it: ${made.report.gate.problems
+          .map((p) => `${p.rule}@${p.where}`)
+          .join(', ')}; nothing was kept, and its nouns were not dressed`,
+      ),
+      { issues: made.report.issues, gateProblems: made.report.gate.problems },
+    );
+  }
 
   // Divergence 2 from the header: the app's try/catch, for the app's reason
   // ("The board shows what it has", liveClass.ts). Here it is a money rule as

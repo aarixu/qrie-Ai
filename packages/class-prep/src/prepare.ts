@@ -32,7 +32,9 @@ import {
 } from './prompts.ts';
 import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
-import { gateLesson, type GateProblem, type MathsCheck } from './gate.ts';
+import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck } from './gate.ts';
+import { askAgainLater, type RepairRetry } from './notNow.ts';
+export { REPAIR_WAITS_MS, type RepairRetry } from './notNow.ts';
 import { checkLines } from '../../maths-check/src/index.ts';
 import type {
   Blueprint,
@@ -179,6 +181,33 @@ export interface PrepOptions {
   onAsset?: (id: string, svg: string) => void;
   /** How many times one picture may be redrawn before the class goes on without it. */
   maxArtAttempts?: number;
+  /**
+   * HOW A REPAIR ROUND WAITS OUT "NOT NOW" — a 429 or 503 from the relay that
+   * is not a day-long refusal (notNow.ts). Default: wait 10 s, then 30 s, then
+   * give up as before. Only the three repair rounds use it (unreadable JSON, a
+   * failed plan, a flagged review); the first plan, the review, the pictures
+   * and every interactive call keep the relay's own short retries.
+   *
+   * What it costs the live classroom: a rate-limited repair now holds the room
+   * shut up to forty seconds longer before it opens. What it saves: a class
+   * the repair would have fixed is fixed, instead of being taught unrepaired
+   * and never kept — or, when the plan did not validate, not taught at all.
+   */
+  repairRetry?: RepairRetry;
+  /**
+   * STOP BEFORE PAYING FOR A CLASS THAT WILL NOT BE KEPT.
+   *
+   * For a caller whose only purpose is to keep the class — the prewarm runner.
+   * After the repair round (and again after a factual correction), a class
+   * whose keep gate still finds anything is refused right there, before the
+   * reviewer, the pictures and everything after them are paid for. The error
+   * carries `gateProblems` and the `issues` so far, for the operator.
+   *
+   * Off by default, and the live classroom leaves it off: a student is waiting
+   * for that class, and a worse class taught beats none (the "taught but not
+   * kept" posture at refuseWrongMaths). Wrong maths is refused either way.
+   */
+  stopWhenUnkeepable?: boolean;
 }
 
 /**
@@ -443,10 +472,20 @@ export function assemble(
    * gave their ink no line — for the keep gate's `unspoken` rule.
    */
   unspoken: string[];
+  /**
+   * The lesson beat that holds the OPENING'S CONTEXT QUESTION: the first ask
+   * of the planner's first beat. Empty when that beat asks nothing or did not
+   * survive layout. For the keep gate's `outcomes` rule — see
+   * GateOptions.opening in gate.ts for why that one ask files no outcome.
+   */
+  opening: string[];
 } {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
   const bonds: Bond[] = [];
   const unspoken: string[] = [];
+  const opening: string[] = [];
+  /** The planner's first beat — the opening, by the prompt's own contract. */
+  const openingBeat = blueprint.beats[0];
   const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
   /** A copy of a picture is described by the same brief the original was. */
   const briefFor = (id: string) => briefs.get(aliases.get(id) ?? id);
@@ -631,8 +670,10 @@ export function assemble(
       const held = asks.find((a) => a.step === stepIndex);
       const ask = held?.ask;
       const checksHere = asksHere ? ask !== undefined : last;
+      const id = usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`;
+      if (ask && beat === openingBeat && opening.length === 0) opening.push(id);
       beats.push({
-        id: usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`,
+        id,
         topic: beat.topic,
         // A held moment ends by saying the question it holds on — see heldLine.
         narration: ask ? heldLine(step.narration, ask.question) : step.narration,
@@ -716,6 +757,7 @@ export function assemble(
     aliases: Object.fromEntries(aliases),
     bonds,
     unspoken,
+    opening,
   };
 }
 
@@ -984,7 +1026,8 @@ function usableProbe(probe: unknown): boolean {
  * WRONG MATHS IS REFUSED, NOT TAUGHT (T1.4).
  *
  * Every other keep-gate rule marks a WORSE class — taught to the student who
- * is waiting, never kept. A line of working that does not hold is a WRONG
+ * is waiting, never kept (and, for a caller with no student waiting that sets
+ * `stopWhenUnkeepable`, not prepared further). A line of working that does not hold is a WRONG
  * class, and a child copying it down learns the mistake. So after its one
  * repair round a class with wrong maths throws, before the room opens, the
  * same posture the factual reviewer takes. A maths check that could not run
@@ -1031,6 +1074,21 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const t0 = Date.now();
   const issues: string[] = [];
 
+  /**
+   * One repair call, with "not now" waited out (notNow.ts) and the wait both
+   * shown to whoever is watching and written on the report.
+   */
+  const repairCall = (user: string, done: number): Promise<string> =>
+    askAgainLater(
+      () => planner.complete(PLANNER_SYSTEM, user),
+      opts.repairRetry,
+      (ms) => {
+        const seconds = Math.round(ms / 1000);
+        issues.push(`The repair call was rate-limited; waited ${seconds} s and asked again.`);
+        say('checking', `The model is busy — trying again in ${seconds} seconds…`, done);
+      },
+    );
+
   say('planning', 'Working out how to teach this…', 0.05);
   const raw = await planner.complete(
     PLANNER_SYSTEM,
@@ -1044,13 +1102,13 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   if (!blueprint) {
     issues.push('The first plan was not readable JSON.');
     say('planning', 'That came back garbled — asking again…', 0.2);
-    const retry = await planner.complete(
-      PLANNER_SYSTEM,
+    const retry = await repairCall(
       repairPlanUser(
         raw.slice(0, 4000),
         ['The reply was not valid JSON. Return the whole plan again, as one JSON object.'],
         language,
       ),
+      0.2,
     );
     blueprint = parsePlan(retry);
   }
@@ -1152,32 +1210,70 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const sources = new Map<string, string>();
 
   say('checking', 'Checking the class holds together…', 0.15);
-  let { lesson: candidate, aliases, bonds, unspoken } = assemble(blueprint, promised, pictureParts, pictureShapes, language);
+  const first = assemble(blueprint, promised, pictureParts, pictureShapes, language);
+  let { aliases, bonds, unspoken, opening } = first;
 
-  let validated = validateLesson(candidate);
+  let validated = validateLesson(first.lesson);
 
   /**
-   * THE KEEP GATE (gate.ts), on every assembled candidate that validates.
+   * THE KEEP GATE (gate.ts), on every assembled candidate — one that failed
+   * validation included.
    *
-   * Its problems feed the same one repair round a validation error does, and
-   * they go FIRST in what the planner is told, wrong maths first of all: the
-   * repair prompt reads ten named problems, and the one rule a class is
-   * refused for should never be the one cut off.
+   * It used to run only on a candidate that validated, so a first plan with a
+   * validation error had its gate problems hidden from the one repair round
+   * that could have fixed them: excretion's first plan taught and checked one
+   * outcome in a beat, and its repair was never told about anything else
+   * (canvas audit 2026-10-01, item 1). An unvalidated candidate is still a
+   * lesson-shaped object, so the gate reads it where it can; where it cannot,
+   * this answers null — "not gated", which is different from "nothing found".
+   * Its maths is not judged: a check that throws on a half-formed lesson says
+   * nothing about the working, and the repaired plan's maths is checked anyway.
    */
   const gateOf = (
+    candidate: unknown,
     checked: ReturnType<typeof validateLesson>,
-    made: { bonds: readonly Bond[]; unspoken: readonly string[] },
-  ): GateProblem[] =>
-    checked.ok
-      ? gateLesson(checked.lesson as Lesson, {
-          bonds: made.bonds,
-          unspoken: made.unspoken,
-          outcomes: opts.outcomes,
-          mathsCheck: opts.mathsCheck,
-        })
-      : [];
-  let gate = gateOf(validated, { bonds, unspoken });
+    made: { bonds: readonly Bond[]; unspoken: readonly string[]; opening: readonly string[] },
+  ): GateProblem[] | null => {
+    const read = { bonds: made.bonds, unspoken: made.unspoken, opening: made.opening, outcomes: opts.outcomes };
+    if (checked.ok) return gateLesson(checked.lesson as Lesson, { ...read, mathsCheck: opts.mathsCheck });
+    const maths = opts.mathsCheck ?? checkLessonMaths;
+    try {
+      return gateLesson(candidate as Lesson, {
+        ...read,
+        mathsCheck: (l) => {
+          try {
+            return maths(l);
+          } catch {
+            return { ok: true, failures: [] };
+          }
+        },
+      });
+    } catch {
+      return null;
+    }
+  };
+  const firstGate = gateOf(first.lesson, validated, first);
+  let gate = firstGate ?? [];
   const wrongMaths = (problems: readonly GateProblem[]): boolean => problems.some((p) => p.rule === 'maths');
+  /** How a gate problem is named in one line of the report: `rule@where`. */
+  const listed = (problems: readonly GateProblem[]): string => problems.map((p) => `${p.rule}@${p.where}`).join(', ');
+
+  /**
+   * STOP BEFORE PAYING FOR WHAT WILL NOT BE KEPT — for a caller that asked
+   * (`stopWhenUnkeepable`). Run after the repair round and after a factual
+   * correction, once wrong maths has had its own refusal; see PrepOptions.
+   */
+  const stopIfUnkeepable = (problems: readonly GateProblem[], before: string): void => {
+    if (!opts.stopWhenUnkeepable || problems.length === 0) return;
+    say('failed', 'This class would not be kept.', 1);
+    throw Object.assign(
+      new Error(
+        `The class would not be kept: it still fails the keep gate (${listed(problems)}), so preparation ` +
+          `stopped before ${before}.`,
+      ),
+      { gateProblems: [...problems], issues: [...issues] },
+    );
+  };
 
   /**
    * Said but never written — the deterministic check behind the prompt rule.
@@ -1200,24 +1296,29 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   // lesson that might break elsewhere.
   if (!validated.ok || unwritten.length > 0 || gate.length > 0) {
     /**
+     * What the planner is told, in this order, because the repair prompt reads
+     * ten and the rules a class is REFUSED for must never be the ones cut off:
+     * wrong maths, then what stops it validating, then the rest of the gate,
+     * then what was said and not written.
+     *
      * Ink after the last ask with no line after it is named ONCE: by the
-     * gate's `unspoken` rule, which reads the layout itself, whenever the
-     * plan validated; by inkWaitsForALine, which reads the plan, when it did
-     * not and the gate never ran. Both at once filled two of the ten places
-     * with one problem.
+     * gate's `unspoken` rule, which reads the layout itself, whenever the gate
+     * could read this plan; by inkWaitsForALine, which reads the plan, when it
+     * could not. Both at once filled two of the ten places with one problem.
      */
-    const named = [
-      ...(validated.ok ? [] : [...validated.errors, ...inkWaitsForALine(blueprint.beats)]),
-      ...gate.map((p) => p.message),
+    const toFix = [
+      ...gate.filter((p) => p.rule === 'maths').map((p) => p.message),
+      ...(validated.ok ? [] : validated.errors),
+      ...(firstGate === null ? inkWaitsForALine(blueprint.beats) : []),
+      ...gate.filter((p) => p.rule !== 'maths').map((p) => p.message),
       ...unwritten,
     ];
-    issues.push(`The first plan failed validation: ${named[0]}`);
+    // Every problem it was sent for, not only the first: when the repair does
+    // not fix one, the state file is the only place left to find out which.
+    issues.push(`The first plan was sent to repair, for: ${toFix.slice(0, 10).join(' | ')}`);
     say('checking', 'Fixing the plan…', 0.2);
     try {
-      const reply = await planner.complete(
-        PLANNER_SYSTEM,
-        repairPlanUser(JSON.stringify(blueprint), named.slice(0, 10), language),
-      );
+      const reply = await repairCall(repairPlanUser(JSON.stringify(blueprint), toFix.slice(0, 10), language), 0.2);
       // parsePlan, not bare JSON.parse: a repair reply is a model reply, and
       // recovering JSON from prose is the whole reason parsePlan exists.
       const fixed = parsePlan(reply);
@@ -1252,7 +1353,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
       const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes, language);
       const revalidated = validateLesson(rebuilt.lesson);
-      const regate = gateOf(revalidated, rebuilt);
+      const regate = gateOf(rebuilt.lesson, revalidated, rebuilt) ?? [];
       // A repair that validates is taken, as it always was — unless it BROKE
       // the maths of a plan whose maths held, which would turn a class that
       // could be taught into one that must be refused.
@@ -1261,10 +1362,32 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         aliases = rebuilt.aliases;
         bonds = rebuilt.bonds;
         unspoken = rebuilt.unspoken;
+        opening = rebuilt.opening;
         blueprint = fixed;
         gate = regate;
         unwritten = unwrittenIn(fixed.beats);
-        issues.push('The plan was repaired and passed.');
+        /**
+         * "PASSED" ONLY WHEN IT DID. This said "repaired and passed" for any
+         * repair that validated, its gate unread — so excretion's state file
+         * said passed over a plan whose own gate already failed it on
+         * outcomes@b1_3, and nothing anywhere said so until the keep gate,
+         * after every picture had been paid for.
+         */
+        issues.push(
+          regate.length === 0
+            ? 'The plan was repaired and passed.'
+            : `The plan was repaired and validates, but it still fails the keep gate: ${listed(regate)} — ` +
+                regate
+                  .slice(0, 5)
+                  .map((p) => p.message)
+                  .join(' | '),
+        );
+      } else {
+        issues.push(
+          revalidated.ok
+            ? 'The repaired plan was not taken: its maths no longer held.'
+            : `The repaired plan was not taken: it does not validate (${revalidated.errors[0]}).`,
+        );
       }
     } catch (e) {
       issues.push(`Repair failed: ${e instanceof Error ? e.message : String(e)}`);
@@ -1282,6 +1405,9 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
   // Wrong maths after the repair: refused before the room opens.
   refuseWrongMaths(gate, say);
+  // Anything else the keep gate will refuse: stopped here for a caller that
+  // only keeps, before the reviewer and the pictures are paid for.
+  stopIfUnkeepable(gate, 'the review and the pictures');
 
   let lesson = validated.lesson as Lesson;
 
@@ -1385,10 +1511,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
             (p) =>
               `The claim "${p.claim}" is factually wrong — ${p.why}. Look for it in or around beat "${p.beatId.replace(/_\d+$/, '')}". Correct the teaching itself; do not delete the beat.`,
           );
-        const reply = await planner.complete(
-          PLANNER_SYSTEM,
-          repairPlanUser(JSON.stringify(blueprint), named, language),
-        );
+        const reply = await repairCall(repairPlanUser(JSON.stringify(blueprint), named, language), 0.27);
         const fixed = parsePlan(reply);
         if (!fixed) throw new Error('the corrected plan was unreadable');
         fixed.beats ??= [];
@@ -1448,11 +1571,12 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           aliases = rebuilt.aliases;
           bonds = rebuilt.bonds;
           unspoken = rebuilt.unspoken;
+          opening = rebuilt.opening;
           lesson = revalidated.lesson as Lesson;
           repaired = true;
           // The corrected plan is fresh model output: the keep gate reads it
           // again, and wrong maths in it is refused just below.
-          gate = gateOf(revalidated, rebuilt);
+          gate = gateOf(rebuilt.lesson, revalidated, rebuilt) ?? [];
           for (const miss of unwrittenIn(fixed.beats)) {
             issues.push(`Still unwritten after factual repair: ${miss}`);
           }
@@ -1492,8 +1616,12 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     }
     review = { flagged, repaired, ms: Date.now() - r0 };
     // Only a factual correction changes the lesson here; the class it made
-    // is held to the maths rule like the first one was.
-    if (repaired) refuseWrongMaths(gate, say);
+    // is held to the maths rule like the first one was — and, for a caller
+    // that only keeps, to every other rule, before the pictures are bought.
+    if (repaired) {
+      refuseWrongMaths(gate, say);
+      stopIfUnkeepable(gate, 'the pictures');
+    }
   }
 
   /**
@@ -1654,6 +1782,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   let final = lesson;
   let finalBonds = bonds;
   let finalUnspoken = unspoken;
+  let finalOpening = opening;
   if (pictureShapes.size > 0 || pictureParts.size > 0) {
     const refitted = assemble({ ...blueprint, beats }, promised, pictureParts, pictureShapes, language);
     const revalidated = validateLesson(refitted.lesson);
@@ -1661,6 +1790,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       final = revalidated.lesson as Lesson;
       finalBonds = refitted.bonds;
       finalUnspoken = refitted.unspoken;
+      finalOpening = refitted.opening;
       // A copy of a picture needs the markup under its own id, and the copy
       // ids are decided by this second layout rather than the first.
       for (const [copy, original] of Object.entries(refitted.aliases) as [string, string][]) {
@@ -1678,15 +1808,47 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    *
    * Run again on `final` because the re-fit above lays pictures out at their
    * measured shapes, and a layout that moved can overlap where the draft did
-   * not. What is left here is a class that is taught but not kept: saveable
-   * refuses any report whose gate found something.
+   * not — it did, for labelled pictures, until the names round a measured
+   * picture stopped being clamped onto one another (board-layout, canvas
+   * audit 2026-10-01 item 3). What is left here is a class that is taught but
+   * not kept: saveable refuses any report whose gate found something.
    */
-  const keepGate = gateLesson(final, {
-    bonds: finalBonds,
-    unspoken: finalUnspoken,
-    outcomes: opts.outcomes,
-    mathsCheck: opts.mathsCheck,
-  });
+  const gateFinal = (): GateProblem[] =>
+    gateLesson(final, {
+      bonds: finalBonds,
+      unspoken: finalUnspoken,
+      opening: finalOpening,
+      outcomes: opts.outcomes,
+      mathsCheck: opts.mathsCheck,
+    });
+  let keepGate = gateFinal();
+
+  /**
+   * AND IT IS NEVER WORSE THAN THE DRAFT THE GATE ALREADY PASSED.
+   *
+   * The re-fit is an improvement — the picture at its true shape, a line from
+   * each name to its part — and nothing more. If it would fail the keep gate
+   * on anything the draft's gate did not find, the copy kept is the draft:
+   * the one the in-prep gate judged and the first student was taught. So a
+   * class that passed in preparation cannot be refused at the keep for a
+   * layout it was never shown — whatever, in the layout engine, moved.
+   */
+  if (final !== lesson && keepGate.length > 0) {
+    const key = (p: GateProblem): string => `${p.rule}|${p.where}|${p.message}`;
+    const drafted = new Set(gate.map(key));
+    const fresh = keepGate.filter((p) => !drafted.has(key(p)));
+    if (fresh.length > 0) {
+      issues.push(
+        `Kept as drafted: laid out again at the pictures' measured shapes, the class would fail the keep ` +
+          `gate where the draft did not (${listed(fresh)}).`,
+      );
+      final = lesson;
+      finalBonds = bonds;
+      finalUnspoken = unspoken;
+      finalOpening = opening;
+      keepGate = gateFinal();
+    }
+  }
   for (const problem of keepGate) issues.push(`Fails the keep gate, so it is not kept: ${problem.message}`);
 
   const report: PrepReport = {
