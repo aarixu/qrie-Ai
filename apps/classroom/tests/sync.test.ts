@@ -1,6 +1,14 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { mergePlan, type Snapshot } from '../src/lib/sync';
-import { createLocalStore, forgetDeviceOwner, handOverDevice, wipeDevice } from '../src/stores/localStore';
+import {
+  createLocalStore,
+  forgetDeviceOwner,
+  handOverDevice,
+  touchedAt,
+  wipeDevice,
+  writeDated,
+  writeFromCloud,
+} from '../src/stores/localStore';
 
 /**
  * WHICH SIDE WINS, PER STORE.
@@ -63,6 +71,30 @@ describe('merging a device with the cloud', () => {
     );
     expect(plan.send).toEqual(['progress']);
     expect(plan.take).toEqual(['notes']);
+  });
+});
+
+describe('a value taken from the cloud', () => {
+  it('keeps the cloud\'s moment, not now — so the next sync does not see this device as newer', () => {
+    const notes = createLocalStore('cloud-stamp-test:notes', { text: '' });
+    writeFromCloud('cloud-stamp-test:notes', { text: 'from the laptop' }, 123);
+    expect(notes.get()).toEqual({ text: 'from the laptop' });
+    // store.set stamps every write with Date.now(); the cloud's stamp has to
+    // land after it, or it is overwritten by the write it was meant to date.
+    expect(touchedAt('cloud-stamp-test:notes')).toBe(123);
+  });
+
+  it('a dated write is dated as asked, and still reaches the store\'s listeners', () => {
+    const notes = createLocalStore('dated-test:notes', { text: '' });
+    let heard = 0;
+    const off = notes.subscribe(() => {
+      heard += 1;
+    });
+    writeDated('dated-test:notes', { text: 'inferred' }, 0);
+    off();
+    expect(notes.get()).toEqual({ text: 'inferred' });
+    expect(touchedAt('dated-test:notes')).toBe(0);
+    expect(heard).toBe(1);
   });
 });
 

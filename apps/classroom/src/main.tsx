@@ -53,9 +53,11 @@ if (import.meta.env.PROD && !isNative() && 'serviceWorker' in navigator) {
    *  - A worker that installed during a class is already waiting on the next
    *    visit, and "updatefound" never fires again for it. It has to be looked
    *    for directly, or it waits until every tab closes.
-   *  - A reload is not free on every screen. The placement test and the quiz
-   *    hold their state in memory, so a reload there restarts them from the
-   *    first question.
+   *  - A reload is not free on every screen. The quiz holds its state in
+   *    memory, so a reload there restarts it from the first question. The
+   *    placement test saves after every answer and resumes (screens/
+   *    Placement.tsx), but a reload is still a question pulled from under a
+   *    student mid-thought.
    */
   /**
    * The app's own root, which is '/' standalone and '/app/' when it is mounted

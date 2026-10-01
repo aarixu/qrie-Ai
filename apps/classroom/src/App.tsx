@@ -10,19 +10,26 @@ import {
   useParams,
 } from 'react-router-dom';
 import { GraphIndex } from '@ai-tutor/knowledge-graph';
-import { settingsStore, isOnboarded } from './stores/settings';
+import { settingsStore, isOnboarded, klassOf } from './stores/settings';
 import { watchTheme } from './lib/theme';
-import { profileStore, saveDiagnostic, hasDiagnostic } from './stores/profile';
+import { profileStore, hasDiagnostic } from './stores/profile';
+import { placementStore } from './stores/placement';
 import { flagStore, replayUnsent, unsentReports } from './stores/flags';
 import { preferencesStore } from './stores/preferences';
 import { useStore } from './stores/localStore';
 import { loadDiagnosticDataFor } from './lib/diagnosticData';
-import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from './lib/content';
+import { fetchCatalog, findEntry, type CatalogEntry } from './lib/content';
 import { hrefFor } from './lib/destination';
 import { currentAccount } from './lib/supabase';
 import { reportCrash, track } from './lib/telemetry';
 import { isNative } from './lib/platform';
 import { isTrialPath, isTrialSession, mayPersist } from './lib/workspace';
+import {
+  adoptLegacyPlacement,
+  isPlacementGated,
+  placementDetour,
+  placementStatus,
+} from './lib/placement';
 import type { QuizOutcome } from './lib/quiz';
 import type { PlanChange } from './lib/adaptPlan';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
@@ -43,7 +50,9 @@ const Profile = lazy(() => import('./screens/Profile').then((m) => ({ default: m
 const Search = lazy(() => import('./screens/Search').then((m) => ({ default: m.Search })));
 const Syllabus = lazy(() => import('./screens/Syllabus').then((m) => ({ default: m.Syllabus })));
 const Progress = lazy(() => import('./screens/Progress').then((m) => ({ default: m.Progress })));
-const Diagnostic = lazy(() => import('./screens/Diagnostic').then((m) => ({ default: m.Diagnostic })));
+const PlacementRoute = lazy(() =>
+  import('./screens/Placement').then((m) => ({ default: m.PlacementRoute })),
+);
 const StudyPlan = lazy(() => import('./screens/StudyPlan').then((m) => ({ default: m.StudyPlan })));
 const PracticeQuiz = lazy(() => import('./screens/PracticeQuiz').then((m) => ({ default: m.PracticeQuiz })));
 const QuizResult = lazy(() => import('./screens/QuizResult').then((m) => ({ default: m.QuizResult })));
@@ -71,39 +80,6 @@ import { ActionLab } from './screens/ActionLab';
 import { CanvasLab } from './screens/CanvasLab';
 import { ModelInspector } from './screens/ModelInspector';
 import { AvatarLab } from './screens/AvatarLab';
-
-/**
- * The subjects a student is being placed in.
- *
- * Their own choice from onboarding wins. Only when that is missing — a profile
- * from before onboarding asked the question — do we fall back to whatever the
- * syllabus covers for the class, which is the honest answer rather than a
- * list we would be inventing.
- */
-const subjectsForClass = (klass: number, chosen: string[]): string[] =>
-  chosen.length > 0
-    ? chosen
-    : Array.from(new Set(SYLLABI.filter((s) => s.klass === klass).map((s) => s.subject)));
-
-/** /diagnostic — reads the class from settings and hands the engine to the screen. */
-function DiagnosticRoute() {
-  const navigate = useNavigate();
-  const settings = useStore(settingsStore);
-  const profile = useStore(profileStore);
-  if (settings.klass === null) return <Navigate to="/onboarding" replace />;
-
-  return (
-    <Diagnostic
-      klass={settings.klass}
-      subjects={subjectsForClass(settings.klass, profile.subjects)}
-      onComplete={(result) => {
-        saveDiagnostic(result);
-        navigate('/plan', { replace: true });
-      }}
-      onSkip={() => navigate('/', { replace: true })}
-    />
-  );
-}
 
 /** /plan — renders the stored result. Nothing to show means nothing was taken. */
 function StudyPlanRoute() {
@@ -230,7 +206,8 @@ function QuizRoute() {
 }
 
 /**
- * First run goes to onboarding; everything else passes through.
+ * First run goes to onboarding; a placement test still owed shuts the routes
+ * that open a class (gateTo, below); everything else passes through.
  *
  * The splash is held for MIN_SPLASH_MS even when startup is instant — a splash
  * that appears for eighty milliseconds reads as a rendering glitch, not a brand.
@@ -242,6 +219,8 @@ function QuizRoute() {
  */
 export function Gate({ children }: { children: React.ReactNode }) {
   const settings = useStore(settingsStore);
+  const profile = useStore(profileStore);
+  const placement = useStore(placementStore);
   const location = useLocation();
   const [booting, setBooting] = useState(true);
 
@@ -249,6 +228,16 @@ export function Gate({ children }: { children: React.ReactNode }) {
     const timer = setTimeout(() => setBooting(false), MIN_SPLASH_MS);
     return () => clearTimeout(timer);
   }, []);
+
+  /**
+   * A student who finished the old one-sitting placement is placed; this
+   * writes that down once (lib/placement.ts withLegacy says why, and why only
+   * once). Not during a trial: a trial writes nothing that outlives it.
+   */
+  useEffect(() => {
+    if (!isOnboarded(settings) || !mayPersist()) return;
+    adoptLegacyPlacement();
+  }, [settings, profile.diagnostic, placement]);
 
   // The dev benches are not the product and have no student behind them.
   // Sending them through onboarding just puts a name form in front of a tool
@@ -326,10 +315,19 @@ export function Gate({ children }: { children: React.ReactNode }) {
    * isTrialSession is session-scoped, so all of this ends with the tab.
    */
   if (booting && !isBench) return <Splash />;
+  /**
+   * THE PLACEMENT, OWED. Asked only on a route it shuts, so the maps are not
+   * read for every screen; gateTo decides what it means.
+   */
+  const placementDue =
+    isPlacementGated(location.pathname) &&
+    placementStatus(placement, profile, klassOf(settings, profile)).owed.length > 0;
   const to = gateTo(location.pathname, {
     settled: isOnboarded(settings),
     trial: isTrialSession(),
     bench: isBench,
+    placementDue,
+    search: location.search,
   });
   return to === null ? <>{children}</> : <Navigate to={to} replace />;
 }
@@ -348,11 +346,36 @@ export function Gate({ children }: { children: React.ReactNode }) {
  *   - a bench is a dev tool with no student behind it and is never gated;
  *   - a trial is CONFINED, and the comment above says at length why;
  *   - the doors are reached by people who have not onboarded, which is what
- *     they are for, so the onboarding redirect must not swallow them.
+ *     they are for, so the onboarding redirect must not swallow them;
+ *   - a settled student who still owes a placement test (Aarav, 2026-09-30:
+ *     mandatory, per chosen subject) is sent to it from any route that opens
+ *     a class or a lesson (lib/placement.ts isPlacementGated, which reads the
+ *     path decoded and case-blind, as the router matches it), carrying where
+ *     they were going so a deep link still lands once the test is done. The
+ *     same rule is applied again on those routes' own elements
+ *     (PlacementRequired, below), which does not depend on this agreeing with
+ *     the router.
+ *
+ * `placementDue` defaults to false, so a caller that does not say is gated
+ * exactly as before; the Gate above always says.
  */
 export function gateTo(
   pathname: string,
-  { settled, trial, bench }: { settled: boolean; trial: boolean; bench: boolean },
+  {
+    settled,
+    trial,
+    bench,
+    placementDue = false,
+    search = '',
+  }: {
+    settled: boolean;
+    trial: boolean;
+    bench: boolean;
+    /** This student has a chosen subject that has never been placed. */
+    placementDue?: boolean;
+    /** The query string of the path asked for, kept with it on the way to the test. */
+    search?: string;
+  },
 ): string | null {
   if (bench) return null;
   const isDoor = pathname === '/enrol' || pathname === '/try';
@@ -363,7 +386,40 @@ export function gateTo(
     return `/try?blocked=${encodeURIComponent(pathname)}`;
   }
   if (!isDoor && !settled && pathname !== '/onboarding') return '/onboarding';
+  if (settled && placementDue && isPlacementGated(pathname)) return placementDetour(pathname + search);
   return null;
+}
+
+/**
+ * THE PLACEMENT, OWED — CHECKED ON THE ROUTE ITSELF.
+ *
+ * The Gate above decides from the pathname, and the router does not match the
+ * pathname as written: it decodes it and ignores case, so /LESSON/x,
+ * /%6Cesson/x and /Class?topic=... open the same routes as their lower-case
+ * spellings. isPlacementGated now reads a path the way the router does, but
+ * that is two pieces of code agreeing. This wraps the element of every route
+ * that opens a class (AppRoutes, below), so whichever spelling the router
+ * matched, this is what renders first.
+ *
+ * It applies the same rule gateTo does and nothing else: a trial is not sent
+ * to the test (the Gate confines it, and TRIAL_HOME is /lesson/class10-blood,
+ * which a guest on a settled, unplaced phone must still reach), and a student
+ * who has not onboarded is left to the Gate, which sends them to onboarding.
+ */
+export function PlacementRequired({ children }: { children: React.ReactNode }) {
+  const settings = useStore(settingsStore);
+  const profile = useStore(profileStore);
+  const placement = useStore(placementStore);
+  const location = useLocation();
+  const due =
+    isOnboarded(settings) &&
+    !isTrialSession() &&
+    placementStatus(placement, profile, klassOf(settings, profile)).owed.length > 0;
+  return due ? (
+    <Navigate to={placementDetour(location.pathname + location.search)} replace />
+  ) : (
+    <>{children}</>
+  );
 }
 
 /**
@@ -598,53 +654,93 @@ export default function App() {
       <Boundaried>
         <Suspense fallback={<Splash />}>
         <Gate>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/diagnostic" element={<DiagnosticRoute />} />
-            <Route path="/plan" element={<StudyPlanRoute />} />
-            <Route path="/syllabus" element={<Syllabus />} />
-            <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
-            <Route path="/lesson/:lessonId" element={<LessonRoute />} />
-            {/* Teach me this topic — fetched if somebody has had it, made if not. */}
-            <Route path="/class/*" element={<LiveClassRoute />} />
-            {/* The benches are tools, not product. A store reviewer can reach
-              any route that exists, so in a production build these do not.
-              import.meta.env.DEV is a literal at build time, so the screens
-              are dropped from the bundle rather than merely hidden. */}
-            {import.meta.env.DEV && (
-              <>
-                <Route path="/action-lab/:lessonId" element={<ActionLab />} />
-                <Route path="/canvas-lab" element={<CanvasLab />} />
-                <Route path="/avatar-lab" element={<AvatarLab />} />
-                {/* What the model actually learned. Aarav's tool, not a
-                  product surface — he asked to see whether it is learning
-                  before anything is shown to a student. */}
-                <Route path="/model" element={<ModelInspector />} />
-              </>
-            )}
-            <Route path="/complete/:lessonId" element={<LessonComplete />} />
-            <Route path="/quiz/:lessonRef" element={<QuizRoute />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/progress" element={<Progress />} />
-            <Route path="/doubts" element={<DoubtHistory />} />
-            <Route path="/streak" element={<StreakDetail />} />
-            <Route path="/notes" element={<Notes />} />
-            <Route path="/bookmarks" element={<Bookmarks />} />
-            <Route path="/achievements" element={<Achievements />} />
-            <Route path="/signin" element={<SignIn />} />
-            {/* The contest door, and the try-before-you-enrol door in front
-              of it. /enrol?c=<campaign> carries the contest. */}
-            <Route path="/enrol" element={<Enrol />} />
-            <Route path="/try" element={<TrialConsent />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/help" element={<Help />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <AppRoutes />
         </Gate>
         </Suspense>
       </Boundaried>
     </Router>
+  );
+}
+
+/**
+ * Every route, apart from the router and the Gate so a test can mount the
+ * real table — the four routes that open a class are wrapped in
+ * PlacementRequired here, and a test that mounted a copy of the table would
+ * prove the copy.
+ */
+export function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/diagnostic" element={<PlacementRoute />} />
+      <Route path="/plan" element={<StudyPlanRoute />} />
+      <Route path="/syllabus" element={<Syllabus />} />
+      <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
+      <Route
+        path="/lesson/:lessonId"
+        element={
+          <PlacementRequired>
+            <LessonRoute />
+          </PlacementRequired>
+        }
+      />
+      {/* Teach me this topic — fetched if somebody has had it, made if not. */}
+      <Route
+        path="/class/*"
+        element={
+          <PlacementRequired>
+            <LiveClassRoute />
+          </PlacementRequired>
+        }
+      />
+      {/* The benches are tools, not product. A store reviewer can reach
+        any route that exists, so in a production build these do not.
+        import.meta.env.DEV is a literal at build time, so the screens
+        are dropped from the bundle rather than merely hidden. */}
+      {import.meta.env.DEV && (
+        <>
+          <Route path="/action-lab/:lessonId" element={<ActionLab />} />
+          <Route path="/canvas-lab" element={<CanvasLab />} />
+          <Route path="/avatar-lab" element={<AvatarLab />} />
+          {/* What the model actually learned. Aarav's tool, not a
+            product surface — he asked to see whether it is learning
+            before anything is shown to a student. */}
+          <Route path="/model" element={<ModelInspector />} />
+        </>
+      )}
+      <Route
+        path="/complete/:lessonId"
+        element={
+          <PlacementRequired>
+            <LessonComplete />
+          </PlacementRequired>
+        }
+      />
+      <Route
+        path="/quiz/:lessonRef"
+        element={
+          <PlacementRequired>
+            <QuizRoute />
+          </PlacementRequired>
+        }
+      />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/search" element={<Search />} />
+      <Route path="/progress" element={<Progress />} />
+      <Route path="/doubts" element={<DoubtHistory />} />
+      <Route path="/streak" element={<StreakDetail />} />
+      <Route path="/notes" element={<Notes />} />
+      <Route path="/bookmarks" element={<Bookmarks />} />
+      <Route path="/achievements" element={<Achievements />} />
+      <Route path="/signin" element={<SignIn />} />
+      {/* The contest door, and the try-before-you-enrol door in front
+        of it. /enrol?c=<campaign> carries the contest. */}
+      <Route path="/enrol" element={<Enrol />} />
+      <Route path="/try" element={<TrialConsent />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/help" element={<Help />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
