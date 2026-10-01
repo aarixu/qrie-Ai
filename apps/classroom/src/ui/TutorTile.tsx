@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { TUTOR } from '@ai-tutor/persona';
 import { CartoonAvatar, usePoseFor } from '../avatar/CartoonAvatar';
+import { HumanAvatar, canDrawHuman } from '../avatar/HumanAvatar';
 import { VideoAvatar } from '../avatar/VideoAvatar';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
 
@@ -43,6 +45,8 @@ export function TutorTile({
   const pose = usePoseFor(mode);
   /** Whoever is actually teaching in this tile. */
   const who = clone?.name ?? TUTOR.name;
+  /** Meera in 3D has arrived; until then the letter disc holds her place. */
+  const [humanReady, setHumanReady] = useState(false);
 
   return (
     <div
@@ -53,17 +57,21 @@ export function TutorTile({
         listening ? 'border-stage-green' : active ? 'border-stage-blue' : 'border-stage-surface'
       }`}
     >
-      <div
-        className={`rounded-full grid place-items-center font-headline-md font-bold text-[#5c3a10] bg-[radial-gradient(circle_at_35%_30%,#ffd9a8,#f2a65a)] ${
-          pip ? 'w-[60px] h-[60px] text-[28px]' : 'w-[84px] h-[84px] text-[38px]'
-        }`}
-      >
-        {who[0]}
-      </div>
+      {!humanReady && (
+        <div
+          className={`rounded-full grid place-items-center font-headline-md font-bold text-[#5c3a10] bg-[radial-gradient(circle_at_35%_30%,#ffd9a8,#f2a65a)] ${
+            pip ? 'w-[60px] h-[60px] text-[28px]' : 'w-[84px] h-[84px] text-[38px]'
+          }`}
+        >
+          {who[0]}
+        </div>
+      )}
 
-      {/* Meera the cartoon — lipsync, blinks, gestures, all drawn in code.
-          Aarav's call after seeing the photo-warp in a real class: a cartoon
-          can ACT, a photograph can only be nudged. */}
+      {/* Meera in 3D (Aarav's pick, 2026-10-01): a rigged human who lip-syncs
+          and gestures with mocap, drawn on the student's device. She can ACT,
+          which is why the photo-warp lost. The letter disc above holds her
+          place until her model arrives; a browser with no WebGL keeps the
+          penguin. */}
       {clone ? (
         <VideoAvatar
           manifest={clone.manifest}
@@ -71,6 +79,8 @@ export function TutorTile({
           beatId={clone.beatId}
           className="absolute inset-0 w-full h-full object-cover"
         />
+      ) : canDrawHuman() ? (
+        <HumanAvatar pose={pose} className="absolute inset-0 w-full h-full" onReady={() => setHumanReady(true)} />
       ) : (
         <CartoonAvatar pose={pose} className="absolute inset-0 w-full h-full" />
       )}
