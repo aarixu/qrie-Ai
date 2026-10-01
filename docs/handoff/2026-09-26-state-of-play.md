@@ -328,7 +328,7 @@ Smart-board design research covered what the board can do today and how speech c
 3. **Size floors raised to 24–28 units,** and a gate on rendered pixel size.
 4. **Chrome gives its space back,** and the tutor picture moves off the board.
 
-**C2 STATUS (2026-10-02, ~01:45): DONE, not yet deployed.** Items 2 and 3 above were replaced by Aarav's decision 3 below (16:9 everywhere).
+**C2 STATUS (2026-10-02, ~01:45): DONE; deployed ~03:45 IST (bundle `index-A5wpKoIh.js`).** Items 2 and 3 above were replaced by Aarav's decision 3 below (16:9 everywhere).
 - **The stage is 16:9 on every screen** (`ClassRoom.tsx`, `lib/useMediaQuery.ts`). Three rooms:
   - **wide** (≥1024 px): the largest 16:9 that fits the column (a CSS size container), with the rail (Meera + the doubt) beside it. 1280x720: a 944x531 stage.
   - **sideways** (landscape, under 1024 px): the stage takes the full height; a 128 px column beside it holds Meera's small window, the clock, the report flag and the two controls. Nothing sits on the board. 812x375: a 652x367 stage.
@@ -376,7 +376,7 @@ Smart-board design research covered what the board can do today and how speech c
    - the layout gate.
    - A failing check drops the ink, never the class.
 
-**C3 STATUS (2026-10-02, ~02:20 IST): the prepared-class half is DONE, not yet deployed.** Pushed as `9c86d32`, `52700c5`, `73180eb`, `1fba8fd`, `866c908`. Each item has tests, is in the planner prompt, and is in the 300-class fuzz (an opt-in smart-board beat), with no gate rule broken.
+**C3 STATUS (2026-10-02, ~02:20 IST): the prepared-class half is DONE; deployed ~03:45 IST with the relay.** Pushed as `9c86d32`, `52700c5`, `73180eb`, `1fba8fd`, `866c908`. Each item has tests, is in the planner prompt, and is in the 300-class fuzz (an opt-in smart-board beat), with no gate rule broken.
 - **Chemistry:** the stage loads KaTeX mhchem, so `$\ce{C6H12O6 + 6O2 -> 6CO2 + 6H2O}$` sets properly. `maths-check/chem` counts atoms on both sides.
 - **Three new gate rules** (`class-prep/src/boardChecks.ts`):
   - `echo`: ink that copies the line she is saying (8+ words, 80% from the line, covering 60% of it).
@@ -387,6 +387,21 @@ Smart-board design research covered what the board can do today and how speech c
 - **`plot`:** a line graph computed from a formula of x by a safe reader (`lesson-format/safeExpr.ts`, no eval). It has a gap where there is no value, and is laid out as a figure.
 - **`derive`:** working step under step, equals signs aligned, each step 1.4 s after the one above. The maths check reads the chain; a wrong step is refused.
 - **Anchor words:** `at` on a write or an equation delays its ink until she reaches that word (~14 characters a second, measured).
+- **THE FULL CLASS, DEPLOYED (2026-10-02, ~03:45 IST).** Aarav asked for one full class with Vertex voice and ear, the new canvas, and the 3D avatar in a normal room.
+  - **The class:** Class 10 Respiration, prepared through the deployed relay with tonight's engine (`prewarm --out content --as class10-respiration`). It is planned, repaired, fact-checked, with one picture. It has 25 spoken lines and 5 spoken questions. The board carries the three equations (plain chemistry now reads C₆H₁₂O₆ + 6O₂ → …), a flow, an ATP chart, two lists, and two equations boxed.
+    - Four attempts were needed, Rs ~31 in all. Each failure was fixed in the engine first:
+      - a line split between the band under a picture and the next page;
+      - a garbled plan re-asked without its outcomes;
+      - a 429 on the fact-check, so prewarm now waits out 429s;
+      - the old relay refusing the new `box` mark.
+  - **The live-tutor lab** keeps the old lesson, unlisted, as `class10-respiration-live-board`; `content/plans/class10-respiration.json` points there.
+  - **The judge** moved to gemini-3.1-flash-lite, with a 5 s hedge. Both models scored 36/36 on 36 probe answers. Worst latency: 2.7 s against 3.7-flash's 19 s. A typed answer that timed out on 3.7 that night was the trigger.
+  - **Relay redeployed** with the new lesson-format validator (`supabase functions deploy relay`). After it: `relay-check --spend` passed. Speech streams first audio in 1.45 s in English and Hinglish; the ear returns Hinglish in Roman script.
+  - **Site deployed:** bundle `index-A5wpKoIh.js`. Checked on qrie-ai.vercel.app/app/lesson/class10-respiration:
+    - a 16:9 stage;
+    - Meera in 3D in the study room (all `/app/avatars/` files 200);
+    - her voice streaming from `/api/speech`.
+  - Full suite before deploy: 4,927 passed, 0 failed.
 - **Not done:** the live-tutor half (driver A/B ink scripts) waits for live-tutor phase 2. Also not done: roughjs/perfect-freehand strokes, smiles-drawer, and picture part boxes found by Gemini. The pen tip was dropped by Aarav's decision 4.
 
 **Order:**
