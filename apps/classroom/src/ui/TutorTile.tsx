@@ -11,20 +11,26 @@ export type TutorMode = 'idle' | 'teaching' | 'listening';
  * The tutor's window — a participant tile, the way Meet draws one, because a
  * teacher in a live class is a person in a call, not an icon on a card.
  *
- * `pip` floats over the board on a phone; `rail` sits at the top of the side
- * panel on wide screens. The ring is the class's state made visible: blue while
- * she teaches, green while the live tutor has the room, grey when idle.
+ * `pip` floats over the board on a phone held sideways; `rail` sits at the top
+ * of the side panel on wide screens; `fill` takes the box it is given — the
+ * room under the board on a phone held upright (canvas C2). The ring is the
+ * class's state made visible: blue while she teaches, green while the live
+ * tutor has the room, grey when idle.
  *
- * Abstract on purpose — a real character or viseme avatar replaces the inside
- * of this tile later without touching anything that uses it.
+ * Meera in 3D sits in a room — a warm, out-of-focus study (Aarav, 2026-10-02:
+ * "a normal background like a drawing room", not tied to the topic), the way a
+ * tutor on a video call is in one. Her renderer draws with a transparent clear
+ * (HumanAvatar), so the room is simply the tile's own background.
  */
+const ROOM = `${import.meta.env.BASE_URL}avatars/backgrounds/study.webp`;
+
 export function TutorTile({
   mode,
   variant,
   clone,
 }: {
   mode: TutorMode;
-  variant: 'pip' | 'rail';
+  variant: 'pip' | 'rail' | 'fill';
   /**
    * A real teacher, lip-dubbed. Absent — every ordinary class — the penguin
    * plays: he is Qrie own tutor, and a client engagement must not quietly
@@ -47,12 +53,16 @@ export function TutorTile({
   const who = clone?.name ?? TUTOR.name;
   /** Meera in 3D has arrived; until then the letter disc holds her place. */
   const [humanReady, setHumanReady] = useState(false);
+  /** She is drawn in 3D here, so she stands in her room. */
+  const human = !clone && canDrawHuman();
 
   return (
     <div
       aria-label={`${who} ${mode}`}
+      data-room={human ? 'study' : undefined}
+      style={human ? { backgroundImage: `url(${ROOM})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
       className={`relative overflow-hidden rounded-[14px] bg-gradient-to-br from-[#3a332a] to-[#1c1915] grid place-items-center transition-colors ${
-        pip ? 'w-[104px] h-[138px]' : 'w-full h-[180px] rounded-2xl'
+        pip ? 'w-[104px] h-[138px]' : variant === 'fill' ? 'w-full h-full rounded-2xl' : 'w-full h-[180px] rounded-2xl'
       } border-[2.5px] ${
         listening ? 'border-stage-green' : active ? 'border-stage-blue' : 'border-stage-surface'
       }`}
@@ -79,7 +89,7 @@ export function TutorTile({
           beatId={clone.beatId}
           className="absolute inset-0 w-full h-full object-cover"
         />
-      ) : canDrawHuman() ? (
+      ) : human ? (
         <HumanAvatar pose={pose} className="absolute inset-0 w-full h-full" onReady={() => setHumanReady(true)} />
       ) : (
         <CartoonAvatar pose={pose} className="absolute inset-0 w-full h-full" />

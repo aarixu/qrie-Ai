@@ -31,7 +31,12 @@ import type { AvatarPose } from './CartoonAvatar';
  * re-bake there.
  */
 
-const BASE = '/avatars/f02/';
+/**
+ * Under the app's own base, as lib/content.ts reads every other static file:
+ * the site serves the tutor at /app/, where a root `/avatars/…` is the
+ * marketing site's 404 and she would never load.
+ */
+const BASE = `${import.meta.env.BASE_URL}avatars/f02/`;
 
 /** Oculus viseme weights per mouth shape, at full loudness. Names are the FBX's own. */
 const MOUTH: Record<Viseme, Record<string, number>> = {
