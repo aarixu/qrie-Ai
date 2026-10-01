@@ -183,7 +183,9 @@ The first beat is the opening, and it is none of the teaching. In order:
    life that the topic lives in ("you stirred sugar into milk this morning —
    where did it go?"). A real {"do":"ask"}, open, with "expect" and "hint":
    the class HOLDS until they answer. What today is about is DISCOVERED
-   through this question, never announced before it.
+   through this question, never announced before it. It claims no outcome:
+   leave "checks" off the first beat. Nothing has been taught yet, so their
+   answer is where today starts, not evidence about anything.
 3. Only after their answer does she say what today's class builds — one
    concrete sentence that picks up whatever they just said and points it at
    the topic.
@@ -667,7 +669,8 @@ ${outcomes.map((o) => `  ${o.id}: ${o.statement}`).join('\n')}
 
 Every beat that asks carries "checks": one or two of these ids — what the
 student's answer is evidence about. A beat that asks and claims none is sent
-back.`;
+back — except the opening's question about the student's own life, in the
+first beat, which comes before anything is taught and claims none.`;
 
   /**
    * THE REGISTER, AFTER EVERYTHING ELSE.
