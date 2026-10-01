@@ -71,9 +71,13 @@ const INK = '#3c3c3c';
  *
  * This used to name Nunito, which index.html has never requested — so every
  * lesson has been drawn in the Segoe UI fallback while the surrounding UI used
- * Quicksand, and the board quietly did not match the room it sits in.
+ * Quicksand, and the board quietly did not match the room it sits in. Then it
+ * named 'Quicksand', which is not what @fontsource-variable/quicksand registers
+ * either (canvas audit 2026-10-01): the family is 'Quicksand Variable', as the
+ * app's own tailwind.config.js asks for it. Measured in the browser, it draws
+ * at 0.48 em a character (0.51 bold), inside the ruler's 0.58.
  */
-const FONT_HAND = "'Quicksand', 'Segoe UI', system-ui, sans-serif";
+const FONT_HAND = "'Quicksand Variable', 'Quicksand', 'Baloo 2', 'Segoe UI', system-ui, sans-serif";
 const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
 /** A real handwriting face, for the lines the tutor writes out rather than shows. */
 // 'Caveat Variable' is the family @fontsource-variable/caveat registers
