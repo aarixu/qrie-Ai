@@ -18,12 +18,15 @@ import type { TopicOutcome } from './prompts.ts';
  *   overlap          nothing on the board sits on anything else, and no
  *                    prepared ink sits in a held question's work area (T1.1,
  *                    T1.5). The layout's own bonds excuse the pairs it meant.
- *   one-question     a held moment writes its question ONCE (T1.2). The four
- *                    asks of that class each wrote theirs twice. Counted two
- *                    ways: any NEW ink with a "?" in the held moment, and any
- *                    ink the planner beat wrote whose words contain the ask's
- *                    own question — which catches an imperative ask ("Find
- *                    the value of x.") and a copy written a moment earlier.
+ *   one-question     a held moment's question is written NOWHERE (Aarav,
+ *                    2026-10-01: she asks out loud, and the ask writes
+ *                    nothing). It was "once" (T1.2), after the four asks of
+ *                    the first maths class each wrote theirs twice. Counted
+ *                    two ways: any NEW ink with a "?" in the held moment, and
+ *                    any ink the planner beat wrote whose words contain the
+ *                    ask's own question — which catches an imperative ask
+ *                    ("Find the value of x.") and a copy written a moment
+ *                    earlier.
  *   spoken-question  a held moment's narration ends with the question the
  *                    class holds on, and asks nothing else before it (T1.2).
  *   outcomes         when the map has outcomes for this topic, every moment
@@ -204,8 +207,8 @@ function heldProblems(
     const where = plannerBeatOf(beat.id);
     const question = beat.ask.question;
 
-    // Written once. The ink this moment ADDS, grouped by element so a question
-    // wrapped over two lines (`b3_11`, `b3_11_l1`) is one question.
+    // Written nowhere. The ink this moment ADDS, grouped by element so a
+    // question wrapped over two lines (`b3_11`, `b3_11_l1`) is one question.
     const before = new Set(n > 0 ? lesson.beats[n - 1].show : []);
     const asked = new Set(
       beat.show
@@ -234,13 +237,14 @@ function heldProblems(
     for (const [group, lines] of writtenHere) {
       if (copyOf !== '' && isCopy(bare(lines.join(' ')))) asked.add(group);
     }
-    if (asked.size > 1) {
+    if (asked.size > 0) {
       problems.push({
         rule: 'one-question',
         where: beat.id,
         message:
-          `Beat "${where}": the question it holds on is written ${asked.size} times. The ask writes its own ` +
-          `question — remove the extra "write" or "note" of it.`,
+          `Beat "${where}": the question it holds on is written on the board. A question is only SPOKEN — ` +
+          `the ask writes nothing — so remove the "write" or "note" of it, and any other ink with a "?" ` +
+          `that arrives as it is asked.`,
       });
     }
 

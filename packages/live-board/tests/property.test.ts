@@ -83,7 +83,8 @@ function held(): Lesson {
         narration: 'Which variable is easier to get on its own?',
         show: laid.laid.show,
         ask: ask.ask,
-        ...(ask.workArea ? { workArea: ask.workArea } : {}),
+        // As a class kept before 2026-10-01 carries it; an ask writes nothing now.
+        workArea: { id: 'q_work', x: 60, y: 400, w: 880, h: 130 },
       },
     ],
   };

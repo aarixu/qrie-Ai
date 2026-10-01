@@ -69,6 +69,7 @@ import { TutorTile, type TutorMode } from '../ui/TutorTile';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
 import { SupportScreen } from '../ui/SupportScreen';
+import { withoutAskInk } from '../lib/askInk';
 import { dontKnowIn } from '@ai-tutor/tutor-judge';
 
 /**
@@ -260,7 +261,7 @@ function ToolButton({
  *   when the class stops   → lib/sessionHalt (distress in the student's words or a model's)
  */
 export function ClassRoom({
-  lesson,
+  lesson: given,
   tts,
   diagrams,
   clone,
@@ -298,6 +299,10 @@ export function ClassRoom({
   remember?: boolean;
 }) {
   const navigate = useNavigate();
+  // A class kept before 2026-10-01 wrote its questions on the board; it plays
+  // without them (lib/askInk.ts). Memoised on the lesson it was given, because
+  // the player rebuilds on a new lesson identity and would restart the class.
+  const lesson = useMemo(() => withoutAskInk(given), [given]);
   const player = usePlayer(lesson, tts);
 
   /**

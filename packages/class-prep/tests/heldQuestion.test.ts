@@ -7,8 +7,8 @@ import type { Blueprint } from '../src/types';
 import { substitutionAsTaught, substitutionClean } from './fixtures/substitution';
 
 /**
- * ONE QUESTION PER ASK: spoken once, written once, and the answer hidden
- * until it is answered.
+ * ONE QUESTION PER ASK: spoken once, written nowhere (since 2026-10-01; it
+ * was "written once"), and the answer hidden until it is answered.
  *
  * The first maths class ever prepared held on four questions and got all four
  * wrong the same three ways (state-of-play, 2026-09-28): every question was
@@ -27,11 +27,38 @@ const lessonOf = (plan = substitutionAsTaught()) => {
 const held = (lesson: Lesson): Beat[] => lesson.beats.filter((b) => b.ask);
 const textOf = (el: Element | undefined): string => (el && 'text' in el ? el.text : '');
 
-describe('the repair no longer adds a second copy of the question', () => {
-  it('counts an ask as the written question', () => {
+describe('a beat that is only its question', () => {
+  /**
+   * An ask writes nothing since 2026-10-01, so a quick-check beat — narration
+   * and one ask — lays out to a bare board. Assemble used to drop a beat with
+   * nothing to show, which dropped the question with it.
+   */
+  it('is kept, and its question is still asked over the board as it stands', () => {
+    const made = assemble(
+      {
+        id: 'sum',
+        title: 'A sum',
+        visuals: [],
+        beats: [
+          { id: 'b1', topic: 'Adding', narration: '', board: [{ do: 'say', text: 'Two and five.' }, { do: 'write', text: '2 + 5' }] },
+          { id: 'b2', topic: 'Quick check', narration: 'One quick check.', board: [{ do: 'ask', question: 'What do they make?', expect: 'seven' }] },
+        ],
+      },
+      new Set(),
+    );
+    const checked = validateLesson(made.lesson);
+    if (!checked.ok) throw new Error(checked.errors.join('\n'));
+    const check = checked.lesson.beats.find((b) => b.id === 'b2');
+    expect(check?.ask?.question).toBe('What do they make?');
+    expect(check?.show).toEqual(checked.lesson.beats.find((b) => b.id === 'b1')?.show);
+  });
+});
+
+describe('the repair is never asked to write a question', () => {
+  it('sends no plan to repair for a question that is only spoken', () => {
     const beats = substitutionClean().beats;
-    // The clean plan writes no question of its own; the ask is the ink.
-    expect(saidButNotWritten(beats).filter((e) => e.includes('asks a question'))).toEqual([]);
+    // The clean plan writes no question of its own, and none is wanted.
+    expect(saidButNotWritten(beats).filter((e) => /question/i.test(e))).toEqual([]);
   });
 });
 
@@ -63,23 +90,30 @@ describe('the answer stays off the board until it is answered', () => {
   const { lesson } = lessonOf();
   const byId = new Map(lesson.elements.map((el) => [el.id, el]));
 
+  /** Ids by what they write — they no longer sit where an ask's own ink used to push them. */
+  const idsWriting = (words: string): string[] =>
+    lesson.elements.filter((el) => textOf(el).includes(words)).map((el) => el.id);
+
   it('does not show b3’s solution while asking how to find x', () => {
     const b3 = held(lesson).find((b) => b.id.startsWith('b3'))!;
-    expect(b3.show).not.toContain('b3_12');
-    expect(b3.show).not.toContain('b3_13');
-    expect(textOf(byId.get('b3_13'))).toContain('Solution');
+    const solution = [...idsWriting('Solution: x = 49/29'), ...idsWriting('x = 3 - 2(19/29)')];
+    expect(solution.length).toBeGreaterThanOrEqual(2);
+    for (const id of solution) expect(b3.show).not.toContain(id);
+    expect(textOf(byId.get(idsWriting('Solution')[0]))).toContain('Solution');
   });
 
   it('holds back the ink after every ask, and still puts it on the board afterwards', () => {
-    const after: Record<string, string> = { b1: 'b1_11', b2: 'b2_10_c0', b3: 'b3_12', b4: 'b4_6_c0' };
-    for (const beat of held(lesson)) {
-      const answer = after[beat.id.split('_')[0]];
-      expect(beat.show).not.toContain(answer);
-    }
-    // Nothing vanishes: it is on the board by the end of the class — b4's
-    // card too, though b4 is the LAST beat and says nothing after its ask.
+    // What each planner beat writes after its ask: the next beat of the
+    // lesson is where it first appears.
     const last = lesson.beats[lesson.beats.length - 1];
-    for (const answer of ['b1_11', 'b2_10_c0', 'b3_12', 'b4_6_c0']) expect(last.show).toContain(answer);
+    for (const beat of held(lesson)) {
+      const planner = beat.id.split('_')[0];
+      const answer = last.show.filter((id) => id.startsWith(`${planner}_`) && !beat.show.includes(id));
+      expect(answer.length, planner).toBeGreaterThan(0);
+    }
+    // b4 is the LAST beat and says nothing after its ask; its card is still on
+    // the board by the end of the class.
+    expect(last.show.some((id) => id.startsWith('b4_') && id.includes('_c'))).toBe(true);
   });
 });
 

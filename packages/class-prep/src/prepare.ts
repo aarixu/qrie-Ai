@@ -282,7 +282,7 @@ function wellFormedStep(step: unknown): Instruction | null {
     // one of the two must be there.
     if (!isWords(s.question) && !isBoardForm(s.written)) return null;
     if (s.question !== undefined && typeof s.question !== 'string') delete s.question;
-    // The layout letters each option by its text, so an entry that is not an
+    // The judge reads each option by its text, so an entry that is not an
     // object with words goes, and options that are not a list go altogether.
     // How many are left, and whether one is right, the validator judges.
     if (Array.isArray(s.options)) {
@@ -589,8 +589,10 @@ export function assemble(
     });
 
     // A beat left with nothing to show was a beat about a picture that failed;
-    // its narration would talk about something invisible.
-    if (laid.show.length === 0) continue;
+    // its narration would talk about something invisible. Unless it ASKS: an
+    // ask writes nothing (2026-10-01), so a beat that is only its question has
+    // a bare board of its own, and dropping it dropped the question.
+    if (laid.show.length === 0 && asks.length === 0) continue;
 
     // Every spoken line survives. The filter used to require that a line also
     // put something new on the board, which quietly deleted the sentence a
@@ -678,8 +680,6 @@ export function assemble(
         // A held moment ends by saying the question it holds on — see heldLine.
         narration: ask ? heldLine(step.narration, ask.question) : step.narration,
         ...(ask ? { ask } : {}),
-        // The board kept clear under the question, slid with its page.
-        ...(held?.workArea ? { workArea: { ...held.workArea, x: held.workArea.x + dx } } : {}),
         // Everything ever drawn, plus this page so far. Old pages stay on the
         // board; the frame is what keeps the class looking here. Deduplicated,
         // because a beat may look again at a picture an earlier page drew.
@@ -905,8 +905,8 @@ export function dropBadProbes(beats: readonly { board?: readonly { do: string }[
       if (step.do !== 'ask') continue;
       const ask = step as { whyProbe?: unknown; written?: unknown; question?: unknown };
       // A board form (T6) that is blank or has an unclosed $…$ goes on its
-      // own: the board writes the spoken question instead, and the class is
-      // not refused for it.
+      // own, and the class is not refused for it. (Nothing of an ask is
+      // written since 2026-10-01; a planner may still send the field.)
       if (ask.written !== undefined && !isBoardForm(ask.written)) delete ask.written;
       // A planner that wrote only the board form: she says it with its maths
       // read as symbols, rather than the preparation crashing on a missing

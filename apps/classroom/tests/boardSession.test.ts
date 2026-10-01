@@ -82,7 +82,11 @@ function doubtTurn(session: BoardSession, at: number) {
   return laid.turn;
 }
 
-/** A one-beat lesson whose held question has a prepared work area, laid out by board-layout itself. */
+/**
+ * A one-beat lesson whose held question has a work area, as a class kept before
+ * 2026-10-01 carries one: board-layout no longer reserves it (an ask writes
+ * nothing), but the live board still writes into one where a kept class has it.
+ */
 function heldLesson(): Lesson {
   const laid = layoutBeat({
     id: 'q',
@@ -97,7 +101,6 @@ function heldLesson(): Lesson {
     ],
   });
   const held = laid.asks[0];
-  if (!held?.workArea) throw new Error('the fixture beat should have a work area');
   return {
     formatVersion: 1,
     id: 'held',
@@ -112,7 +115,7 @@ function heldLesson(): Lesson {
         narration: 'Which variable is easier to get on its own?',
         show: laid.laid.show,
         ask: held.ask,
-        workArea: held.workArea,
+        workArea: { id: 'q_work', x: 60, y: 400, w: 880, h: 130 },
       },
       {
         id: 'next',
