@@ -5,13 +5,12 @@
  * transcription. Until a caller has a name, none of that can be attributed,
  * limited or cut off, and one leaked URL spends until the balance is gone.
  *
- * Two ways, and the relay uses both. `createJwksVerifier` checks the
- * signature here against the project's PUBLIC keys — no secret in this
- * process, no round trip per call — and is what the relay asks first since
- * 2026-10-01. `createSupabaseVerifier` asks Supabase, which costs a round
- * trip and also refuses a session that has signed out; it is the fallback for
- * any token the local check cannot read. See createJwksVerifier for what that
- * trade gives up.
+ * Two ways. `createSupabaseVerifier` asks Supabase, which costs a round trip
+ * and also refuses a session that has signed out; it is what the deployed
+ * relay uses. `createJwksVerifier` checks the signature here against the
+ * project's PUBLIC keys; it was measured in production on 2026-10-01 and
+ * saved about 15 ms (see its docblock), so it is built and tested but not
+ * wired in.
  *
  * This file was written for the LiveKit token server and lives here now
  * because the relays need exactly the same thing. It is fetch-only — no
@@ -96,8 +95,15 @@ export function createSupabaseVerifier(
  *
  * THE PRICE, SAID OUT LOUD: the network check also refused a session that had
  * signed out. A token checked here stays good until its own expiry (one hour
- * by default) even after sign-out. Aarav chose the time; the meter still holds
- * every token to its owner's daily units.
+ * by default) even after sign-out.
+ *
+ * AND WHAT IT BOUGHT, MEASURED (2026-10-01, deployed, 36 calls): the check
+ * fell from 35-87 ms to 1-4 ms, but nearly every call lands on a fresh
+ * isolate, and the meter's claim — the next call to the same Supabase host —
+ * then paid the connection the identity call used to pay, rising from about
+ * 65 ms to about 90 ms. About 15 ms in all. Not worth the hour, so the
+ * deployed relay does not use this (supabase/functions/relay/index.ts). It
+ * becomes worth it where nothing else needs that connection.
  *
  * Anything this cannot check — a legacy HS256 token, a key id the published
  * set does not have (a rotation newer than the cached keys), or keys that

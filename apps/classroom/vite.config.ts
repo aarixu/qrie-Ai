@@ -17,7 +17,6 @@ import { fileURLToPath } from 'node:url';
 import {
   cacheVerifier,
   createDevOtpProvider,
-  createJwksVerifier,
   createMemoryConsentStore,
   createMemoryLedger,
   createMemoryOtpGate,
@@ -60,7 +59,7 @@ const pkg = (name: string) =>
  */
 function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Plugin {
   const gate: Gate = {
-    verify: cacheVerifier(createJwksVerifier(supabaseUrl, { fallback: createSupabaseVerifier(supabaseUrl, anonKey) })),
+    verify: cacheVerifier(createSupabaseVerifier(supabaseUrl, anonKey)),
     ledger: createMemoryLedger(),
     ticketSecret: 'dev-only-ticket-secret',
   };

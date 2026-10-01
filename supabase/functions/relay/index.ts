@@ -53,7 +53,6 @@
 
 import {
   cacheVerifier,
-  createJwksVerifier,
   createSupabaseVerifier,
 } from '../../../packages/relay/src/auth.ts';
 import { createSupabaseLedger } from '../../../packages/relay/src/gate.ts';
@@ -133,30 +132,17 @@ const CORS = {
  * once per SPOKEN LINE, and a round trip to the identity service before each
  * one would be most of a second of silence between sentences.
  */
-// The signature is checked here first, against the project's public keys;
-// a token that cannot be checked here is asked about over the network
-// (packages/relay/src/auth.ts).
 /**
- * The project's PUBLIC signing keys, given up front (RELAY_JWKS: the JSON at
- * <project>/auth/v1/.well-known/jwks.json). Nearly every call lands on a fresh
- * isolate, so fetching them per isolate cost a fetch on almost every call;
- * unset or unreadable, they are fetched as before. Public data, not a secret.
+ * WHO IS ASKING: Supabase is asked over the network (auth.ts
+ * createSupabaseVerifier), which also refuses a session that has signed out.
+ * createJwksVerifier (the signature checked here) was tried on 2026-10-01 and
+ * measured: the check itself fell from 35-87 ms to 1-4 ms, but nearly every
+ * call lands on a fresh isolate and the meter's claim then paid the
+ * connection to Supabase that the identity call used to pay, rising from about
+ * 65 to about 90 ms. About 15 ms saved, for tokens that would outlive sign-out
+ * by up to an hour — so it is not used here.
  */
-const PUBLIC_KEYS = ((): JsonWebKey[] | undefined => {
-  try {
-    const keys = (JSON.parse(env('RELAY_JWKS') || 'null') as { keys?: unknown } | null)?.keys;
-    return Array.isArray(keys) ? (keys as JsonWebKey[]) : undefined;
-  } catch {
-    return undefined;
-  }
-})();
-
-const verify = cacheVerifier(
-  createJwksVerifier(SUPABASE_URL, {
-    fallback: createSupabaseVerifier(SUPABASE_URL, ANON_KEY),
-    ...(PUBLIC_KEYS ? { keys: PUBLIC_KEYS } : {}),
-  }),
-);
+const verify = cacheVerifier(createSupabaseVerifier(SUPABASE_URL, ANON_KEY));
 const ledger = createSupabaseLedger(SUPABASE_URL, SERVICE_ROLE_KEY);
 // What each call cost, in the units the provider bills. Same door as the
 // meter: the service role, through a definer function, so a student holding
