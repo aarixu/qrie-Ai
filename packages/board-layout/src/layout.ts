@@ -1666,10 +1666,26 @@ export function layoutBeat(
      * a page.
      */
     type BandItem = { at: number; point?: number; list?: Block };
+    /**
+     * A LINE THAT ALSO WRITES WHAT THE BAND CANNOT HOLD GOES WHOLE TO THE NEXT
+     * PAGE (2026-10-02). A card, a note, an equation goes to the page after
+     * the picture; a key point or a list said in the same line used to stay in
+     * the band — one line on two pages, the camera on the newer one, and the
+     * list in the Respiration class prepared that night never on screen. So
+     * that line's points and lists leave the band with it.
+     */
+    const offBandLines = new Set(
+      blocks
+        .filter((b) => b !== labelledHost && b.kind !== 'write' && b.kind !== 'list' && b.at !== null)
+        .map((b) => lineOf[b.at as number]),
+    );
+    const leavesBand = (at: number): boolean => offBandLines.has(lineOf[at]);
     const bandItems: BandItem[] = [
       ...pendingWrites.map((p, n): BandItem => ({ at: p.at, point: n })),
       ...written.map((block): BandItem => ({ at: block.at ?? -1, list: block })),
-    ].sort((a, b) => a.at - b.at);
+    ]
+      .filter((item) => !leavesBand(item.at))
+      .sort((a, b) => a.at - b.at);
     const tallness = (item: BandItem): number =>
       item.point !== undefined
         ? band.lines[item.point].length * bandLead + POINT_GAP
@@ -1698,7 +1714,11 @@ export function layoutBeat(
      * 6). It now goes to the stacker, which starts on the page after this
      * figure's last one, so nothing is drawn over the picture or its band.
      */
-    const leftover = blocks.filter((b) => b !== labelledHost && b.kind !== 'write' && b.kind !== 'list');
+    const leftover = blocks.filter(
+      (b) =>
+        b !== labelledHost &&
+        ((b.kind !== 'write' && b.kind !== 'list') || (b.at !== null && leavesBand(b.at))),
+    );
     blocks.length = 0;
     blocks.push(...leftover);
     firstSheet = bandSheets;

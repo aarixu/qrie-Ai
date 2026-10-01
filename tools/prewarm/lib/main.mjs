@@ -48,6 +48,7 @@ import {
   dropRefused,
   loadRefused,
   markTopic,
+  refusedPath,
   saveRefused,
   saveState,
   shouldStop,
@@ -650,6 +651,14 @@ export async function main(argv) {
             ...(e?.issues?.length ? { issues: e.issues } : {}),
             ...((e?.gateProblems ?? e?.mathsProblems)?.length ? { gate: e.gateProblems ?? e.mathsProblems } : {}),
           });
+          // A plan stopped before its pictures: written down beside the
+          // refused classes, so the layout fault can be reproduced for nothing.
+          if (e?.plan) {
+            const file = refusedPath(opts.stateDir, p.syllabusId, row.path).replace(/\.json$/, '.plan.json');
+            fs.mkdirSync(path.dirname(file), { recursive: true });
+            fs.writeFileSync(file, `${JSON.stringify({ prepId, reason, plan: e.plan }, null, 2)}\n`);
+            console.log(`  saved     its plan: ${file}`);
+          }
           if (gate) stoppedBy = gate;
           else consecutiveFailures += 1;
           console.error(

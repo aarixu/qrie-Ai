@@ -1281,7 +1281,9 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         `The class would not be kept: it still fails the keep gate (${listed(problems)}), so preparation ` +
           `stopped before ${before}.`,
       ),
-      { gateProblems: [...problems], issues: [...issues] },
+      // The plan rides on the error, so a caller can lay the refused class out
+      // again at no cost and see the problem for itself.
+      { gateProblems: [...problems], issues: [...issues], plan: blueprint },
     );
   };
 
