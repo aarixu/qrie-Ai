@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { hasMath, type Beat, type Lesson } from '@ai-tutor/lesson-format';
-import { Scene, lineToHtml } from '@ai-tutor/stage';
+import { Scene } from '@ai-tutor/stage';
 import { usePlayer, type TtsAdapter } from '@ai-tutor/player';
 import {
   buildContext,
@@ -22,7 +22,7 @@ import {
   requestMic,
   type MicStatus,
 } from '../lib/mic';
-import { listenOnce } from '../lib/ear';
+import { listenOnce, type Heard } from '../lib/ear';
 import { resolveCrossQuestion, resolveSpokenAnswer } from '../lib/judge';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
@@ -34,10 +34,10 @@ import {
 } from '../stores/outcomes';
 import { masteryFromModel } from '../lib/learnerModel';
 import { useClassLedger } from '../lib/classLedger';
-import { warmUpFor, type WarmUpQuestion } from '../lib/warmUp';
+import { readWarmUpAnswer, warmUpFor, type WarmUpQuestion } from '../lib/warmUp';
 import { profileStore } from '../stores/profile';
 import { settingsStore } from '../stores/settings';
-import { preferencesStore, setPreference } from '../stores/preferences';
+import { preferencesStore, showCaptions } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { Skeleton } from '../ui/States';
@@ -69,9 +69,7 @@ import { TutorTile, type TutorMode } from '../ui/TutorTile';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
 import { SupportScreen } from '../ui/SupportScreen';
-import { WorkPanel, type WorkedStep } from '../ui/WorkPanel';
-import { sameEquation } from '@ai-tutor/maths-check';
-import { expectedEquation, isFinalValue, restates, solvesAsExpected, workStartOf } from '../lib/workAnswer';
+import { dontKnowIn } from '@ai-tutor/tutor-judge';
 
 /**
  * How long the controls stay after the last touch. Long enough to find the
@@ -95,6 +93,14 @@ const PREPARE_MS = 5_000;
  * long a Class 6-10 student thinks before they are stuck (UNVERIFIED).
  */
 const QUIET_BEFORE_NUDGE_MS = 20_000;
+
+/**
+ * Turns the room could not use on one question — the judge failed, nothing
+ * clear was heard, or she declined an off-limits reply — before the class
+ * goes on without an answer. Nothing on screen can end a held question now,
+ * so every way of not answering has to run out somewhere.
+ */
+const UNUSABLE_TURNS = 3;
 
 /**
  * How long the class waits, before anything is said, for the warm-up lookup
@@ -315,16 +321,11 @@ export function ClassRoom({
    * this one only has to start writing things down, because a class taught
    * before the record exists is a class nobody can ever learn from.
    */
-  /** The warm-up question on screen (E6-E8), if any — see `runWarmUp`. */
-  const [warmUp, setWarmUp] = useState<{
-    question: WarmUpQuestion;
-    step: number;
-    of: number;
-    chosen: number | null;
-  } | null>(null);
+  /** A warm-up question is being asked aloud (E6-E8) — see `runWarmUp`. */
+  const [warmingUp, setWarmingUp] = useState(false);
   // A warm-up is time on task: its answers are this sitting's, and so are its
   // minutes (second review — they were answers with no time under them).
-  const ledger = useClassLedger(lesson, player.state === 'playing' || warmUp !== null, player.state === 'ended');
+  const ledger = useClassLedger(lesson, player.state === 'playing' || warmingUp, player.state === 'ended');
 
   // Refs so the (stable) handoff and the halt always reach the latest controls.
   const playerRef = useRef(player);
@@ -423,25 +424,8 @@ export function ClassRoom({
     }
   };
 
-  /**
-   * Bumped by every tap and hint request on a held question. The ear's listen
-   * polls it, so a tap closes the open mic at once — its silence timer used to
-   * run on under her feedback and the silence nudge cut her off mid-sentence
-   * (overnight review #20). `tapSettled` resolves when her reply to the tap is
-   * over, which is when the ear may listen again.
-   */
-  const tapEpoch = useRef(0);
   /** The held question whose last line was a C7 follow-up, waiting on their reasoning. */
   const followUpOpen = useRef<string | null>(null);
-  const tapSettled = useRef<Promise<void>>(Promise.resolve());
-  const beginTap = (): (() => void) => {
-    tapEpoch.current += 1;
-    let settle: () => void = () => undefined;
-    tapSettled.current = new Promise<void>((resolve) => {
-      settle = resolve;
-    });
-    return settle;
-  };
 
   /** The held question's answer as an option index, for a gate she closes herself. */
   const correctIndex = (ask: { options?: readonly { correct?: boolean }[] }): number =>
@@ -449,364 +433,65 @@ export function ClassRoom({
     (ask.options ?? []).findIndex((o) => o.correct === true);
 
   /**
-   * The student answers a held question.
+   * WHAT THE STUDENT SAYS TO A HELD QUESTION: OUT LOUD, OR TYPED WITHOUT A MIC.
    *
-   * Order matters on a RIGHT answer: the why is spoken while the class is
-   * still holding, THEN the gate opens — answering first would start the next
-   * beat's line and cancel the why mid-sentence. A wrong answer resolves
-   * nothing: the hint is spoken and the chips stay, because wrong gets a
-   * nudge and another try, never the solution on the first miss.
+   * The class shows no question and nothing to tap (Aarav, 2026-10-01). She
+   * asks out loud and they answer out loud. A student whose mic is refused or
+   * will not open gets one box under the board, "Type your answer", and what
+   * they type goes down the same road as a spoken answer: the same screen,
+   * judge, ladder and silence policy (the held-question effect below).
    */
-  /**
-   * "Give me a hint" (a quick reply). The next rung up to the hint, decided by
-   * decide() like every other help, filed as ASKED-FOR help before it is said,
-   * and written into the question's work area.
-   */
-  /**
-   * "Explain it another way" (H4) goes the same road as a hint asked for:
-   * decide() picks an authored re-explanation that does not give the answer
-   * away, files it as the L7 it is, and the ladder does not climb.
-   */
-  const requestHint = () => requestHelp('hintRequest');
-  const requestExplain = () => requestHelp('explainRequest');
-  const requestHelp = async (verdict: 'hintRequest' | 'explainRequest') => {
-    if (halt.halted) return;
-    const ask = player.pendingAsk;
-    if (!ask || !player.beat) return;
-    const beatId = player.beat.id;
-    setAskBusy(true);
-    const settle = beginTap();
-    try {
-      const action = decide({
-        verdict,
-        attempt: (tapTries.current.get(beatId) ?? 0) + 1,
-        rungSoFar: tapRung.current.get(beatId) ?? 0,
-        ask,
-        lang: tutorLanguage(),
-        now: Date.now(),
-        recentLines: recentLines.current,
-      });
-      tapRung.current.set(beatId, action.rung);
-      if (action.helped !== null) ledger.helped(beatId, action.helped, true, action.strategy);
-      followUpOpen.current = null;
-      // Only what decide() approved goes on the board: it has refused an
-      // authored hint that gives the answer away, and falling back to that
-      // hint here put the answer up anyway (overnight review #11/#22).
-      const hintText = action.boardIntent?.text;
-      if (hintText) board.writeHeld(beatId, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: hintText }] }] }]);
-      if (action.say) {
-        recentLines.current = [...recentLines.current.slice(-8), action.say];
-        const spoken = await sayLine(action.say);
-        if (spoken.halted) return;
-      }
-      ledger.reopened(beatId, Date.now());
-    } finally {
-      setAskBusy(false);
-      settle();
-    }
+  const [answerBy, setAnswerBy] = useState<'voice' | 'text' | null>(null);
+  const [answerDraft, setAnswerDraft] = useState('');
+  /** The room is waiting on a typed answer: hand it the words. */
+  const typedWaiting = useRef<((text: string) => void) | null>(null);
+  /** A line typed while she was still talking: the next wait takes it at once. */
+  const typedEarly = useRef<string | null>(null);
+  const submitTyped = (): void => {
+    const text = answerDraft.trim();
+    if (!text) return;
+    setAnswerDraft('');
+    if (typedWaiting.current) typedWaiting.current(text);
+    else typedEarly.current = text;
   };
-
   /**
-   * WORKING IT OUT, STEP BY STEP (T8.1). On an open question whose board form
-   * holds one equation the checker can follow (`workStartOf`), the student can
-   * type their working a line at a time; each step is screened like a typed
-   * doubt, checked against the last (maths-check `checkStep`), written on the
-   * board in their name with a tick or a cross, and answered in her words. The
-   * answer asked for (`solvesAsExpected`, `expectedEquation`) is recorded as
-   * typed; a wrong final value is filed as a wrong answer (eighth review).
+   * One typed answer, returned the way `listenOnce` returns a spoken one: the
+   * words; 'silence' once QUIET_BEFORE_NUDGE_MS has passed with none; or
+   * 'cancelled'.
    */
-  const [working, setWorking] = useState(false);
-  const workStart = useMemo(() => workStartOf(player.pendingAsk), [player.pendingAsk]);
-  const workable = Boolean(player.pendingAsk && !(player.pendingAsk.options ?? []).length && workStart);
-  /**
-   * While they work, the ear is paused: what a child reads out of their own
-   * working is not an answer (third review). Opening the panel takes the turn
-   * the way a tap does (`beginTap`) and closing it gives the turn back; and the
-   * ear's loop waits while `workingRef` is set, so an ear started afresh by a
-   * pause or a hand does not listen either (fourth review).
-   */
-  const workTurn = useRef<(() => void) | null>(null);
-  const workingRef = useRef(false);
-  workingRef.current = working;
-  /** Their steps and half-typed line, held here so a pause or a hand that unmounts the panel keeps them. */
-  const [workSteps, setWorkSteps] = useState<WorkedStep[]>([]);
-  const [workDraft, setWorkDraft] = useState('');
-  const openWorking = (): void => {
-    workTurn.current?.();
-    workTurn.current = beginTap();
-    setWorking(true);
-  };
-  const closeWorking = (): void => {
-    setWorking(false);
-    workTurn.current?.();
-    workTurn.current = null;
-  };
-  useEffect(() => {
-    closeWorking();
-    setWorkSteps([]);
-    setWorkDraft('');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player.beat?.id]);
-
-  const onWorkedStep = async (step: WorkedStep) => {
-    if (halt.halted || askBusyRef.current) return;
-    const ask = player.pendingAsk;
-    if (!ask || !player.beat) return;
-    const beatId = player.beat.id;
-    // Answered already, and only her praise was cut short: nothing more to file.
-    if (answeredRight.current === beatId) return;
-    const hi = tutorLanguage() === 'hi-en';
-    // The turn is taken before anything is said about the step — her redirect
-    // too, or closing the panel opened the mic under it (fifth review).
-    const settle = beginTap();
-    try {
-      // The student's own words: screened like a typed doubt before anything is
-      // written or said. Distress halts the class; an off-limits line gets her
-      // redirect; neither reaches the board.
-      const screened = halt.typedDoubt(step.text);
-      if (screened.forward === null) {
-        if (screened.reply !== null) await sayLine(inLanguage(screened.reply, tutorLanguage()));
+  const typedOnce = (isCancelled: () => boolean): Promise<Heard> =>
+    new Promise((resolve) => {
+      const early = typedEarly.current;
+      typedEarly.current = null;
+      if (early !== null) {
+        resolve({ text: early, reason: 'heard' });
         return;
       }
-      // What leaves this function is the cleaned text — a phone number or an
-      // address masked — the same as a typed doubt's (third review).
-      const said = screen(step.text, 'from-student');
-      const shown = said.kind === 'clean' ? said.text : step.text;
-      const v = step.verdict;
-      const mark = v.ok === true ? '✓' : v.ok === false ? '✗' : '?';
-      board.writeHeld(beatId, [{ author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `${mark} ${shown}` }] }] }]);
-      // The question restated is not a step; a step on the way is not the answer;
-      // a sum on the side never is (fifth review).
-      const restated = restates(workStart, step.text);
-      const expectedEq = expectedEquation(ask.expect, workStart);
-      const isTheAnswer =
-        v.ok === true &&
-        v.aside !== true &&
-        !restated &&
-        ((v.solved !== undefined && solvesAsExpected(ask.expect, v.solved)) ||
-          (expectedEq !== null && sameEquation(expectedEq, step.text)));
-      if (isTheAnswer) {
-        // Solved: their answer, worked out and checked line by line. Nothing
-        // to tap while she praises it, and the question is answered once —
-        // a pause or a hand that cuts the praise brings it back answered.
-        answeredRight.current = beatId;
-        setAskBusy(true);
-        closeWorking();
-        recordAnswerAtBeat(lesson, beatId, true);
-        ledger.answered({ beatId, correct: true, surface: 'text', answerText: shown });
-        const praise = decide({
-          verdict: 'right',
-          attempt: (tapTries.current.get(beatId) ?? 0) + 1,
-          rungSoFar: tapRung.current.get(beatId) ?? 0,
-          ask,
-          lang: tutorLanguage(),
-          now: Date.now(),
-          recentLines: recentLines.current,
-        });
-        try {
-          if (praise.say) {
-            const spoken = await sayLine(praise.say);
-            if (spoken.halted) return;
-          }
-          // Not this question any more (a seek), or not held right now (a
-          // pause or a hand): the held-question effect opens the gate when it
-          // comes back (`answeredRight`).
-          if (playerRef.current.pendingAsk !== ask) return;
-          playerRef.current.answer(correctIndex(ask));
-        } finally {
-          setAskBusy(false);
-        }
-        return;
-      }
-      // A wrong final value is their answer too, and a wrong one: filed, and
-      // the next is another try (eighth review: only the right one was).
-      if (v.ok === false && isFinalValue(step.text)) {
-        recordAnswerAtBeat(lesson, beatId, false);
-        ledger.answered({ beatId, correct: false, surface: 'text', answerText: shown });
-        tapTries.current.set(beatId, (tapTries.current.get(beatId) ?? 0) + 1);
-      }
-      const solvedNotTaken = v.ok === true && v.solved !== undefined && !restated;
-      const aside = v.ok === true && v.aside === true;
-      const line = aside
-        ? hi
-          ? 'Yeh hisaab sahi hai — ab ise apni working mein lagao.'
-          : 'That sum is right — now use it in your working.'
-        : solvedNotTaken
-        ? hi
-          ? 'Sahi — ab isse sawaal ka jawab nikaalo.'
-          : 'Right — now use that to answer the question.'
-        : restated
-        ? hi
-          ? 'Yeh toh wahi sawaal hai — ab isme ek step lo.'
-          : "That's the equation we started with — now change it by one step."
-        : v.ok === true
-          ? hi ? 'Haan, yeh step sahi hai. Aage badho.' : 'Good — that step holds. Keep going.'
-          : v.ok === false && v.kind === 'arithmetic'
-            ? hi ? 'Method theek hai, par ek calculation galat hai — use dobara nikaalo.' : 'Your method is fine, but one calculation is off — work it out again.'
-            : v.ok === false && v.kind === 'value'
-              ? hi
-                ? 'Yeh value pichhli line mein daal ke dekho — kya woh sahi baithti hai? Yeh step dobara karo.'
-                : 'Put that value back into the line before — does it hold? Try that step again.'
-              : v.ok === false
-                ? hi ? 'Hmm, isse equation badal gaya. Jo ek side ke saath karo, wahi doosri side ke saath bhi karo.' : 'Hmm, that changes the equation. Whatever you do to one side, do to the other.'
-                : hi ? 'Yeh step main padh nahi paayi — aise likho: 3x + 12 = 21.' : "I couldn't read that step — write it like 3x + 12 = 21.";
-      const spoken = await sayLine(line);
-      if (!spoken.halted && v.ok === false && isFinalValue(step.text)) ledger.reopened(beatId, Date.now());
-    } finally {
-      settle();
-    }
-  };
+      const started = Date.now();
+      const done = (heard: Heard): void => {
+        clearInterval(poll);
+        typedWaiting.current = null;
+        resolve(heard);
+      };
+      const poll = setInterval(() => {
+        if (isCancelled()) done({ text: null, reason: 'cancelled' });
+        else if (Date.now() - started >= QUIET_BEFORE_NUDGE_MS) done({ text: null, reason: 'silence' });
+      }, 100);
+      typedWaiting.current = (text) => done({ text, reason: 'heard' });
+    });
+  /** One answer, by whichever way this student can give one. */
+  const answerOnce = (by: 'voice' | 'text', isCancelled: () => boolean): Promise<Heard> =>
+    by === 'voice' ? listenOnce({ isCancelled }) : typedOnce(isCancelled);
 
-  /** Per held question: taps so far, and the highest ladder rung delivered (decide()). */
-  const tapTries = useRef(new Map<string, number>());
+  /** Per held question: answers judged so far, and the highest ladder rung delivered (decide()). */
+  const triesAt = useRef(new Map<string, number>());
   /** Held questions the student raised a hand on — help, so no "win" is noted there. */
   const helpedByDoubt = useRef(new Set<string>());
-  const tapRung = useRef(new Map<string, AssistanceRung>());
+  const rungAt = useRef(new Map<string, AssistanceRung>());
   /** Her recent fixed lines, so decide() never says the same one twice in a row. */
   const recentLines = useRef<string[]>([]);
 
-  // True while an answer is being weighed or spoken about — the choices hide
-  // AT ONCE on a tap or a heard answer, so nothing on screen suggests the
-  // class did not register it. They return only if the answer was wrong.
-  const [askBusy, setAskBusy] = useState(false);
-
-  /**
-   * A TAP NEVER COST ANYTHING AND STILL DOES NOT.
-   *
-   * The whyProbe change below is about the SPOKEN path: a tapped chip already
-   * names its option, so `option.why` was always spoken with no model in the
-   * loop. A probe on the same beat mirrors those options rather than replacing
-   * them (`askedAs: 'options'` is the confusable-pairs exception), so there is
-   * nothing here to rewire.
-   */
-  const answerAsk = async (index: number) => {
-    if (halt.halted) return;
-    const ask = player.pendingAsk;
-    if (!ask || !player.beat) return;
-    const option = ask.options?.[index];
-    const correct = option ? option.correct === true : true;
-    const beatId = player.beat.id;
-    // Answered right already, its praise cut short: the gate opens, nothing is filed again.
-    if (answeredRight.current === beatId) return;
-    /**
-     * An OPEN ask has no options, and its button is a "carry on" — the
-     * player's gate resolution, not an answer. It used to be recorded as a
-     * correct answer at rung 0, which is the strongest evidence this system
-     * can hold, invented from a tap that said nothing about what the student
-     * knows. An open question is answered by SPEAKING, and the ear's path
-     * records that; a student with no microphone records nothing here, which
-     * is the honest outcome.
-     */
-    const isEvidence = Boolean(option);
-    if (isEvidence) {
-      recordAnswerAtBeat(lesson, beatId, correct);
-      ledger.answered({ beatId, correct, surface: 'tap', chosenIndex: index });
-    }
-    setAskBusy(true);
-    const settle = beginTap();
-    try {
-      // An open ask's "carry on" is not an answer: it only opens the gate.
-      if (!option) {
-        player.answer(index);
-        return;
-      }
-      /**
-       * THE LADDER, DECIDED BY THE LAM, NOT BY A LITERAL (E2/E3, 2026-09-29).
-       *
-       * `decide()` (@ai-tutor/tutor-control) picks the action from this ask's
-       * attempt and the help already given: a first miss gets a content-free
-       * "look again" (L1), a second the authored hint (L3), a third the answer
-       * and why (L8); a right answer gets brief praise with the authored why.
-       * Its words are the lesson's own or fixed persona lines — never invented
-       * — in the child's language. The help is filed BEFORE it is said or
-       * written, so the next attempt already stands on the right rung.
-       *
-       * They go through the halt's voice for the lesson (`sayAuthored`):
-       * refused once the class has halted, and a line that trips the distress
-       * screen is withheld rather than said (lib/sessionHalt.ts).
-       */
-      const attempt = (tapTries.current.get(beatId) ?? 0) + 1;
-      tapTries.current.set(beatId, attempt);
-      const action = decide({
-        verdict: correct ? 'right' : 'wrong',
-        attempt,
-        rungSoFar: tapRung.current.get(beatId) ?? 0,
-        ask,
-        matchedOption: index,
-        lang: tutorLanguage(),
-        now: Date.now(),
-        recentLines: recentLines.current,
-      });
-      tapRung.current.set(beatId, action.rung);
-      if (action.helped !== null) ledger.helped(beatId, action.helped, action.requested, action.strategy);
-      if (action.say) recentLines.current = [...recentLines.current.slice(-8), action.say];
-      // A follow-up asked about their pick: what they say next is reasoning.
-      followUpOpen.current = action.followUp ? beatId : null;
-      // Her notebook (lib/studentMemory.ts): a miss marks the topic hard; a
-      // right answer with no help at all marks it a win.
-      const where = { topic: player.beat.topic, lessonId: lesson.id };
-      if (remember && !correct) recordStruggle(where);
-      else if (remember && (tapRung.current.get(beatId) ?? 0) === 0 && attempt === 1 && !helpedByDoubt.current.has(beatId))
-        recordWin(where);
-      if (correct) {
-        answeredRight.current = beatId;
-        if (action.say) {
-          const spoken = await sayLine(action.say);
-          if (spoken.halted) return;
-        }
-        player.answer(index);
-      } else {
-        player.answer(index);
-        /**
-         * THE BOARD AT A HELD QUESTION (T2.5): their pick goes into the work
-         * area under the question, and the hint or the answer beside it — the
-         * way a tutor writes the student's attempt down before helping with it.
-         * Only what decide() approved: its leak check has already refused a
-         * hint that gives the answer away (overnight review #11/#22).
-         */
-        const written = action.boardIntent?.text;
-        board.writeHeld(beatId, [
-          { author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `✗ ${option.text}` }] }] },
-          ...(written ? [{ author: 'lesson' as const, steps: [{ say: '', ink: [{ op: 'note', text: written }] }] }] : []),
-        ]);
-        if (action.say) {
-          const spoken = await sayLine(action.say);
-          if (spoken.halted) return;
-        }
-        /**
-         * "LET'S KEEP GOING" HAS TO MEAN IT (overnight review #10/#26). After
-         * the reveal, decide() moves on and schedules a retest; she says so,
-         * and the class used to stay on the question with the chips back.
-         * The gate opens on the answer she has already shown — nothing new is
-         * recorded, the miss above stands.
-         */
-        if (action.kind === 'moveOn') {
-          player.answer(correctIndex(ask));
-          return;
-        }
-        // And the clock on the retry starts when she stops, not when they
-        // missed: the chips come back now. Same rule as the spoken path.
-        ledger.reopened(beatId, Date.now());
-      }
-    } finally {
-      setAskBusy(false);
-      settle();
-    }
-  };
-
   const [handoffState, setHandoffState] = useState<HandoffState>('PLAYING');
-  /**
-   * "I'M NOT SURE" MEANS SOMETHING, SO THE CHIP SAYS IT (overnight review #28).
-   *
-   * It used to raise a hand and stop: Meera asked "what's your doubt?" and
-   * waited on typing, and on a phone the input stayed hidden behind the
-   * keyboard button. Now the chip's own words go to her as the student's
-   * first message once the doubt is live — she already knows the question
-   * that is holding and must not answer it (geminiAgent's board brief) — and
-   * the typing row is opened for whatever they say next.
-   */
-  const notSureOpener = useRef<string | null>(null);
-  const sendTextRef = useRef<(text: string, opts?: { opener?: boolean }) => void>(() => undefined);
   const [textLines, setTextLines] = useState<TranscriptLine[]>([]);
   const [, setRecallBeatId] = useState<string | null>(null);
 
@@ -1017,14 +702,6 @@ export function ClassRoom({
   useEffect(() => {
     const offState = handoff.on('statechange', () => {
       setHandoffState(handoff.state);
-      // The "I'm not sure" chip's words, said for them the moment she is
-      // there to hear them (overnight review #28).
-      if (handoff.state === 'LIVE' && notSureOpener.current !== null) {
-        const opener = notSureOpener.current;
-        notSureOpener.current = null;
-        sendTextRef.current(opener, { opener: true });
-      }
-      if (handoff.state === 'PLAYING') notSureOpener.current = null;
       if (handoff.state === 'PLAYING') {
         // Doubt over — clear the room so the next one starts fresh.
         setTextLines([]);
@@ -1049,15 +726,17 @@ export function ClassRoom({
   /**
    * THE EAR. When she asks, the mic opens on its own, waits for the spoken
    * answer, and closes when it lands — the raise-hand button stays for the
-   * doubts the STUDENT starts. The chips stay tappable underneath as the
-   * fallback for a denied mic, a silent room, or a dead network.
+   * doubts the STUDENT starts. Nothing on screen answers for them (Aarav,
+   * 2026-10-01): no options, no chips. A student with no working mic types
+   * into the one box under the board, and this same loop takes what they type
+   * — "the ear" below means either.
    *
-   * Two rounds at most: an answer, and after a hint one more try. Then the
-   * ear rests and the chips carry it — a mic that reopens forever nags.
+   * EVERY HELD QUESTION ENDS HERE, because nothing on screen can end one now:
+   * a right answer; the ladder run to its reveal; quiet through the nudge and
+   * the hint, which gets the answer and its why; or UNUSABLE_TURNS turns the
+   * room could not use. Each opens the gate, and the class goes on.
    */
   const [ear, setEar] = useState<'off' | 'listening' | 'thinking'>('off');
-  /** Her cross-question about a right spoken answer is waiting on their reasoning. */
-  const [probing, setProbing] = useState(false);
   // A halted class holds no question: blanking it here is also what runs the
   // ear effect's cleanup below.
   const heldAskBeat =
@@ -1073,15 +752,13 @@ export function ClassRoom({
    * questions put, and with it the attempt a first answer was recorded at.
    */
   const askFiled = useRef<string | null>(null);
-  /** The held question the ear has taken (mic granted): its silences are the ear's to nudge. */
-  const earHeld = useRef<string | null>(null);
 
   /** The held question answered right whose gate has not opened yet (a cut-short praise). */
   const answeredRight = useRef<string | null>(null);
 
   // The question surfacing is what starts the clock on an answer. It is its own
-  // effect because the ear's effect returns early on a denied mic, and a
-  // student without a microphone still answers by tapping.
+  // effect so the clock starts at once, while the ear may still be waiting on
+  // the mic question.
   useEffect(() => {
     // The class moved on: whatever was standing is over, and if that beat
     // comes round again — a seek back — it is genuinely being asked afresh.
@@ -1121,18 +798,33 @@ export function ClassRoom({
      * or speak.
      */
     const over = (): boolean => cancelled || halt.halted;
-    // Whether the ear said a nudge on this question. If it gives up without
-    // one — a mic that will not open, a judge that failed — the quiet-tapper
-    // timer takes the question back (second review, 2026-09-29).
-    let nudged = false;
-    if (earHeld.current === heldAskBeat) earHeld.current = null;
     // A follow-up is a window of one reply, and a new ear starts with none.
     followUpOpen.current = null;
+    // A line typed for another question is not an answer to this one.
+    typedEarly.current = null;
+    /** Her fixed line for a moment, in their language, avoiding one just said. */
+    const fixed = (lines: Record<'en' | 'hi-en', readonly string[]>): string => {
+      const all = lines[tutorLanguage()];
+      return all.find((l) => !recentLines.current.includes(l)) ?? all[0];
+    };
+    /**
+     * The class goes on: her line, then the gate opens on the answer the ask
+     * holds. Nothing is filed here — whoever calls it has filed what it gave.
+     */
+    const goOn = async (line: string | undefined): Promise<void> => {
+      setEar('off');
+      if (line) {
+        recentLines.current = [...recentLines.current.slice(-8), line];
+        const spoken = await sayLine(line);
+        if (over() || spoken.halted) return;
+      }
+      const standing = playerRef.current.pendingAsk;
+      if (standing) playerRef.current.answer(correctIndex(standing));
+    };
     (async () => {
-      if ((await askForMic()) !== 'granted') return;
+      let by: 'voice' | 'text' = (await askForMic()) === 'granted' ? 'voice' : 'text';
       if (over()) return;
-      // The ear has this question: its nudges, not the quiet-tapper timer's.
-      earHeld.current = heldAskBeat;
+      setAnswerBy(by);
       /**
        * The exchange, Aarav's shape: a wrong answer gets a hint and another
        * try; a RIGHT answer is not the exit either — she asks one why/how/
@@ -1140,8 +832,30 @@ export function ClassRoom({
        * and only then the class moves. Thinking is the point, both ways.
        */
       let probe: { answer: string; question: string; askedAt: number } | null = null;
-      let tries = 0;
       let silences = 0;
+      /** Turns the room could not use on this question (UNUSABLE_TURNS). */
+      let unusable = 0;
+      /**
+       * One more turn the room could not use. Under the limit the ear listens
+       * again, after `line` if she has not already answered the turn; at the
+       * limit the class goes on. True when the question is over.
+       */
+      const unusableTurn = async (line: string | null): Promise<boolean> => {
+        unusable += 1;
+        setEar('off');
+        if (unusable >= UNUSABLE_TURNS) {
+          await goOn(fixed(LINES.carryOn));
+          return true;
+        }
+        if (line !== null) {
+          recentLines.current = [...recentLines.current.slice(-8), line];
+          const spoken = await sayLine(line);
+          if (over() || spoken.halted) return true;
+        }
+        ledger.reopened(heldAskBeat, Date.now());
+        quietSince = Date.now();
+        return false;
+      };
       /**
        * When the quiet began: the question surfacing, or her last line.
        * The endpointer gives up on a listen after a few seconds of silence,
@@ -1152,49 +866,21 @@ export function ClassRoom({
       let quietSince = Date.now();
       // Her last nudge offered a hint, so a bare "haan" now means yes please.
       let offeredHint = false;
-      let epoch = tapEpoch.current;
       while (!over()) {
         const ask = playerRef.current.pendingAsk;
         if (!ask) return;
-        // Working it out: what they read out of their own working is not an
-        // answer. A pause or a hand brings a fresh ear with the panel still
-        // open, so it waits here rather than on the turn it never saw.
-        if (workingRef.current) {
-          setEar('off');
-          await new Promise((r) => setTimeout(r, 200));
-          // The quiet is measured from when they stopped working (fifth review).
-          quietSince = Date.now();
-          offeredHint = false;
-          continue;
-        }
-        if (tapEpoch.current !== epoch) {
-          // A tap took this turn. Wait out her reply to it, then listen afresh
-          // — and any turn taken while waiting: a step solved while the panel
-          // was open is praised after the panel closes (fourth review).
-          setEar('off');
-          let waited: Promise<void>;
-          do {
-            waited = tapSettled.current;
-            await waited;
-            if (over()) return;
-          } while (waited !== tapSettled.current);
-          epoch = tapEpoch.current;
-          quietSince = Date.now();
-          offeredHint = false;
-          continue;
-        }
         setEar('listening');
-        // Polled on every chunk: a halt, or a tap, closes the mic on the next one.
-        const heard = await listenOnce({ isCancelled: () => over() || tapEpoch.current !== epoch });
-        // A tap landed while the mic was open or the words were being heard:
-        // the tap is the answer, and this one is dropped rather than recorded
-        // on top of it (second review, 2026-09-29).
-        if (!over() && (heard.reason === 'cancelled' || tapEpoch.current !== epoch)) {
-          // Words that were transcribed before the tap landed are dropped as
-          // an answer but still screened: distress in them stops the class
-          // (third review). A listen the tap CANCELLED was never transcribed,
-          // so there are no words to screen — that audio is discarded.
-          if (heard.text && fromStudent(heard.text, lesson.id).say !== null && halt.heard(heard.text, 'ear')) return;
+        // Polled on every chunk (or every 100 ms of a typed wait): a halt
+        // closes the mic on the next one.
+        const heard = await answerOnce(by, over);
+        if (over()) return;
+        // A mic that will not open is not a quiet student — the OS gave it to
+        // a call, or the page lost it. The box under the board takes over for
+        // the rest of this question. (Their reasoning, below, files it as
+        // unheard instead.)
+        if (heard.reason === 'error' && by === 'voice' && !probe) {
+          by = 'text';
+          setAnswerBy('text');
           continue;
         }
         /**
@@ -1274,11 +960,11 @@ export function ClassRoom({
           if (close?.halt && heard.text !== null && halt.heard(heard.text, 'ear')) return;
           const spoken = close ? await sayLine(inLanguage(close.say, tutorLanguage()), 'ear') : null;
           if (over()) return;
-          // She has just declined to go somewhere (close.halt), or her own
-          // reply was swapped for the support line and the class has halted
-          // (spoken.halted). Resolving the question and moving the class on
-          // would be the app talking over either.
-          if (close?.halt || spoken?.halted) return;
+          // Her own reply swapped for the support line: the class has halted.
+          if (spoken?.halted) return;
+          // Closed — or declined, where their reasoning went somewhere off
+          // limits (close.halt), her line said in full. The answer itself was
+          // right and is on record, so the class goes on either way.
           playerRef.current.answer(Math.max(0, correctIndex(ask)));
           return;
         }
@@ -1290,38 +976,44 @@ export function ClassRoom({
            * A tutor who asked and heard nothing does not just wait forever: she
            * says "take your time — want a hint?" once (content-free, filed as
            * L1 help), listens again, and on a second silence gives the authored
-           * hint (L3). After that the chips carry it. A mic that failed
-           * ('error') is not a quiet student and gets no nudge.
+           * hint (L3). On a third she gives the answer and its why (L8), and
+           * the class goes on (`stillSilent`, 2026-10-01): nothing on screen is
+           * left to carry the question.
            */
           if (heard.reason !== 'silence') return;
           if (Date.now() - quietSince < QUIET_BEFORE_NUDGE_MS) continue;
-          if (silences >= 2) return;
           silences += 1;
+          const verdict = silences === 1 ? 'silent' : silences === 2 ? 'hintRequest' : 'stillSilent';
           const nudge = decide({
-            verdict: silences === 1 ? 'silent' : 'hintRequest',
-            attempt: (tapTries.current.get(heldAskBeat) ?? 0) + 1,
-            rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
+            verdict,
+            attempt: (triesAt.current.get(heldAskBeat) ?? 0) + 1,
+            rungSoFar: rungAt.current.get(heldAskBeat) ?? 0,
             ask,
             lang: tutorLanguage(),
             now: Date.now(),
             recentLines: recentLines.current,
           });
-          tapRung.current.set(heldAskBeat, nudge.rung);
+          rungAt.current.set(heldAskBeat, nudge.rung);
           // Help they did not ask for: silence is not a request, even when
           // decide() was asked for the hint on its behalf.
           if (nudge.helped !== null) ledger.helped(heldAskBeat, nudge.helped, false, nudge.strategy);
           // A nudge closes a follow-up's window: what they say next is an answer.
           followUpOpen.current = null;
-          const nudgeHint = nudge.boardIntent?.text;
-          if (nudgeHint) board.writeHeld(heldAskBeat, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: nudgeHint }] }] }]);
-          if (!nudge.say) return;
+          const nudgeNote = nudge.boardIntent?.text;
+          if (nudgeNote) board.writeHeld(heldAskBeat, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: nudgeNote }] }] }]);
+          if (verdict === 'stillSilent') {
+            await goOn(nudge.say);
+            return;
+          }
+          quietSince = Date.now();
+          // Every line would repeat or leak: nothing said, and the next quiet climbs.
+          if (!nudge.say) continue;
           recentLines.current = [...recentLines.current.slice(-8), nudge.say];
           setEar('off');
           const spokenNudge = await sayLine(nudge.say);
           if (over() || spokenNudge.halted) return;
           ledger.reopened(heldAskBeat, Date.now());
           quietSince = Date.now();
-          nudged = true;
           // Only a line that actually offered one makes a bare "haan" a yes.
           offeredHint = silences === 1 && /hint/i.test(nudge.say);
           continue;
@@ -1347,14 +1039,14 @@ export function ClassRoom({
           const help = decide({
             // "Phir se samjhao" is asking for another way to see it (H4).
             verdict: explainAsked ? 'explainRequest' : 'hintRequest',
-            attempt: (tapTries.current.get(heldAskBeat) ?? 0) + 1,
-            rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
+            attempt: (triesAt.current.get(heldAskBeat) ?? 0) + 1,
+            rungSoFar: rungAt.current.get(heldAskBeat) ?? 0,
             ask,
             lang: tutorLanguage(),
             now: Date.now(),
             recentLines: recentLines.current,
           });
-          tapRung.current.set(heldAskBeat, help.rung);
+          rungAt.current.set(heldAskBeat, help.rung);
           if (help.helped !== null) ledger.helped(heldAskBeat, help.helped, true, help.strategy);
           followUpOpen.current = null;
           const helpText = help.boardIntent?.text;
@@ -1392,14 +1084,12 @@ export function ClassRoom({
           const screened = fromStudent(heard.text, lesson.id);
           if (screened.say !== null) {
             if (halt.heard(heard.text, 'ear')) return;
-            // Off-limits: her redirect, not "thanks" (fifth review). The ear
-            // rests; the chips carry the question.
-            setEar('off');
-            await sayLine(inLanguage(screened.say, tutorLanguage()));
-            return;
+            // Off-limits: her redirect, not "thanks" (fifth review) — a turn
+            // the room could not use.
+            if (await unusableTurn(inLanguage(screened.say, tutorLanguage()))) return;
+            continue;
           }
-          const thanks = LINES.afterFollowUp[tutorLanguage()];
-          const line = thanks.find((l) => !recentLines.current.includes(l)) ?? thanks[0];
+          const line = fixed(LINES.afterFollowUp);
           recentLines.current = [...recentLines.current.slice(-8), line];
           setEar('off');
           const spokenThanks = await sayLine(line);
@@ -1421,11 +1111,13 @@ export function ClassRoom({
          */
         const resolved = await resolveSpokenAnswer(ask, heard.text).catch(() => null);
         if (over()) return;
-        // Distress first, then a tap that landed meanwhile (third review).
+        // Distress first (third review).
         if (resolved?.verdict.halt && halt.heard(heard.text, 'ear')) return;
-        if (tapEpoch.current !== epoch) continue;
-        // A judge that failed says nothing and leaves the chips standing.
-        if (resolved === null) return;
+        // A judge that failed knows nothing about the student: ask again.
+        if (resolved === null) {
+          if (await unusableTurn(fixed(LINES.sayAgain))) return;
+          continue;
+        }
         const judged = resolved.verdict;
         /**
          * DISTRESS IN THE ANSWER STOPS THE CLASS HERE, before anything is
@@ -1449,14 +1141,15 @@ export function ClassRoom({
           probed: ask.whyProbe !== undefined,
         });
         /**
-         * One count of tries per question, whichever way they answered: a
-         * spoken miss used to be invisible to the tap ladder, so a tap after
-         * it was read as a first attempt at rung 0 (overnight review #16).
+         * One count of tries per question, kept across a pause or a raised
+         * hand, so a later answer is never read as a first attempt at rung 0
+         * (overnight review #16).
          */
-        const priorTries = tapTries.current.get(heldAskBeat) ?? 0;
-        if (judged.verdict !== 'unclear') tapTries.current.set(heldAskBeat, priorTries + 1);
+        const priorTries = triesAt.current.get(heldAskBeat) ?? 0;
+        if (judged.verdict !== 'unclear') triesAt.current.set(heldAskBeat, priorTries + 1);
         // "unclear" is not evidence about the student — nothing is recorded.
-        // Her notebook: the same marks for a spoken answer as for a tap.
+        // Her notebook: a miss marks the topic hard; a right answer with no
+        // help at all marks it a win.
         {
           const where = { topic: playerRef.current.beat?.topic ?? lesson.title, lessonId: lesson.id };
           if (remember && judged.verdict === 'wrong') recordStruggle(where);
@@ -1464,14 +1157,11 @@ export function ClassRoom({
             remember &&
             judged.verdict === 'right' &&
             priorTries === 0 &&
-            (tapRung.current.get(heldAskBeat) ?? 0) === 0 &&
+            (rungAt.current.get(heldAskBeat) ?? 0) === 0 &&
             !helpedByDoubt.current.has(heldAskBeat)
           )
             recordWin(where);
         }
-        // A right answer is on record from here: the chips step aside now,
-        // not after her reply, or a tap during it filed a second answer.
-        if (judged.verdict === 'right') setProbing(true);
         if (judged.verdict !== 'unclear') {
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
           if (judged.verdict === 'right') answeredRight.current = heldAskBeat;
@@ -1481,7 +1171,7 @@ export function ClassRoom({
           ledger.answered({
             beatId: heldAskBeat,
             correct: judged.verdict === 'right',
-            surface: 'voice',
+            surface: by,
             verdict: judged.verdict,
             // THE SCREENED WORDS, never `heard.text`. The screen had already
             // found and removed whatever a child should not have had to put in
@@ -1509,14 +1199,14 @@ export function ClassRoom({
          * standing on the right rung.
          */
         /**
-         * A WRONG SPOKEN ANSWER CLIMBS THE SAME LADDER AS A TAP (E2, 2026-09-29).
+         * A WRONG ANSWER CLIMBS THE LADDER (E2, 2026-09-29).
          *
          * The judge only CLASSIFIES here; `decide()` chooses the help — look
-         * again (L1), the authored hint (L3), the answer and why (L8) — so a
-         * spoken answer and a tapped one get the same tutor, in the child's
-         * language, never with a model-invented hint. Filed before it is said,
-         * and their (screened) answer and the hint are written in the
-         * question's work area. When decide() has nothing authored to say, the
+         * again (L1), the authored hint (L3), the answer and why (L8) — in the
+         * child's language, never with a model-invented hint. Filed before it
+         * is said, and the hint is written in the question's work area. Their
+         * own words are not written on the board (Aarav, 2026-10-01): the
+         * board is hers. When decide() has nothing authored to say, the
          * judge's own line is the fallback, screened as a model's.
          */
         let ladderLine: string | null = null;
@@ -1525,7 +1215,7 @@ export function ClassRoom({
           const action = decide({
             verdict: 'wrong',
             attempt: priorTries + 1,
-            rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
+            rungSoFar: rungAt.current.get(heldAskBeat) ?? 0,
             ask,
             // Which option their words were, so a named misconception gets
             // its own follow-up question (C7) rather than the generic rethink.
@@ -1534,8 +1224,10 @@ export function ClassRoom({
             now: Date.now(),
             recentLines: recentLines.current,
           });
-          tapRung.current.set(heldAskBeat, action.rung);
-          movingOn = action.kind === 'moveOn';
+          rungAt.current.set(heldAskBeat, action.rung);
+          // The answer and its why, or "let's keep going" after them: either
+          // way the question is over once she has said it.
+          movingOn = action.kind === 'moveOn' || action.kind === 'reveal';
           followUpOpen.current = action.followUp ? heldAskBeat : null;
           /**
            * What decide() gave, or nothing. The old fallback filed rung 2 or 3
@@ -1552,14 +1244,11 @@ export function ClassRoom({
           }
           // Only what decide() approved: it has refused a leaking hint (#11/#22).
           const hintText = action.boardIntent?.text;
-          board.writeHeld(heldAskBeat, [
-            ...(judged.heard ? [{ author: 'student' as const, steps: [{ say: '', ink: [{ op: 'write', text: `✗ ${judged.heard}` }] }] }] : []),
-            ...(hintText ? [{ author: 'lesson' as const, steps: [{ say: '', ink: [{ op: 'note', text: hintText }] }] }] : []),
-          ]);
+          if (hintText) board.writeHeld(heldAskBeat, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: hintText }] }] }]);
         }
         // A whyProbe matched on the device answers with the lesson's own
-        // why or hint, so it is the lesson speaking (`sayAuthored`, like a
-        // tap); anything the judge's model wrote is screened as a model's.
+        // why or hint, so it is the lesson speaking (`sayAuthored`); anything
+        // the judge's model wrote is screened as a model's.
         const spoken =
           ladderLine !== null
             ? await sayLine(ladderLine)
@@ -1567,12 +1256,16 @@ export function ClassRoom({
               ? await sayLine(inLanguage(judged.say, tutorLanguage()))
               : await sayLine(inLanguage(judged.say, tutorLanguage()), 'ear');
         if (over()) return;
-        // An off-limits answer (judged.halt): she has just declined it, and
-        // reopening the mic to ask the question again would talk over her —
-        // the chips carry it. A model reply swapped for the support line, or
-        // a class halted while she spoke (spoken.halted): `over()` already
-        // caught it.
-        if (judged.halt || spoken.halted) return;
+        // A model reply swapped for the support line, or a class halted while
+        // she spoke (spoken.halted): `over()` already caught it.
+        if (spoken.halted) return;
+        // An off-limits answer (judged.halt), or one the judge could not make
+        // out ('unclear'): she has just said so, in full, and the ear listens
+        // again — a turn the room could not use.
+        if (judged.halt || judged.verdict === 'unclear') {
+          if (await unusableTurn(null)) return;
+          continue;
+        }
         if (judged.verdict === 'right') {
           /**
            * A LOCALLY RESOLVED RIGHT ANSWER ENDS HERE, AND THAT IS THE COST
@@ -1609,14 +1302,12 @@ export function ClassRoom({
           // that stood here reached for exactly the raw transcript `heard` was
           // added to make unreachable, on a path that can never need it.
           probe = { answer: judged.heard ?? '', question: judged.say, askedAt: Date.now() };
-          // Their reasoning is asked for out loud: the chips step aside, or a
-          // tap would file a second answer to a question already answered.
-          setProbing(true);
           quietSince = Date.now();
           continue;
         }
-        // "Let's keep going" after the reveal: she said it, so the class goes
-        // on — the gate opens on the answer already shown (overnight review #10/#26).
+        // The answer and its why, or "let's keep going" after them: she said
+        // it, so the class goes on — the gate opens on the answer she gave
+        // (overnight review #10/#26).
         if (movingOn) {
           playerRef.current.answer(correctIndex(ask));
           return;
@@ -1628,92 +1319,21 @@ export function ClassRoom({
         // judge round trip this whole change exists to take out.
         ledger.reopened(heldAskBeat, Date.now());
         quietSince = Date.now();
-        tries += 1;
-        // Three misses: look again, the hint, then the answer and why — after
-        // that the chips wait, and a tap on the right one closes it.
-        if (tries >= 3) return;
+        // No count here: each miss climbs decide()'s ladder, and the ladder
+        // ends in the reveal, which ends the question above.
       }
     })().finally(() => {
-      setProbing(false);
-      if (!nudged && earHeld.current === heldAskBeat) earHeld.current = null;
-      if (!cancelled) setEar('off');
+      if (!cancelled) {
+        setEar('off');
+        setAnswerBy(null);
+      }
     });
     return () => {
       cancelled = true;
       setEar('off');
+      setAnswerBy(null);
     };
   }, [heldAskBeat, lesson, tts]);
-
-  /**
-   * THE QUIET TAPPER GETS A NUDGE TOO (E4, 2026-09-29).
-   *
-   * The ear's loop nudges a student who is silent at an open mic. A student
-   * with no mic (denied, "not now", none on the device) only taps, and until
-   * now a held question simply waited on them forever. After
-   * QUIET_BEFORE_NUDGE_MS of quiet — counted again from their last tap — she
-   * says one content-free line, once per question (filed as L1 help).
-   *
-   * Never over her own voice, and never on a question the ear holds: it used
-   * to fire whenever the ear read 'off', which is also what the ear reads
-   * while she is SPEAKING, and cut her off mid-sentence (overnight review #25).
-   */
-  const earRef = useRef(ear);
-  earRef.current = ear;
-  const askBusyRef = useRef(askBusy);
-  askBusyRef.current = askBusy;
-  const micAskRef = useRef(micAsk);
-  micAskRef.current = micAsk;
-  useEffect(() => {
-    if (!heldAskBeat) return;
-    const beatId = heldAskBeat;
-    let seen = tapEpoch.current;
-    let timer: ReturnType<typeof setTimeout>;
-    const tryNudge = (): void => {
-      if (halt.halted) return;
-      // The ear has it for now; look again, in case it gives the question back.
-      if (earHeld.current === beatId) {
-        timer = setTimeout(tryNudge, 4_000);
-        return;
-      }
-      const ask = playerRef.current.pendingAsk;
-      if (!ask || playerRef.current.beat?.id !== beatId) return;
-      // A tap since the last look: they are not stuck, so the quiet starts again.
-      if (tapEpoch.current !== seen) {
-        seen = tapEpoch.current;
-        timer = setTimeout(tryNudge, QUIET_BEFORE_NUDGE_MS);
-        return;
-      }
-      // Something is happening — she is talking, a tap is being answered, the
-      // mic question is up. Look again shortly.
-      // Working it out is not silence (fifth review: a no-mic student typing
-      // a step was nudged, and the nudge filed as help).
-      if (speaking.current > 0 || askBusyRef.current || micAskRef.current !== null || earRef.current !== 'off' || workingRef.current) {
-        timer = setTimeout(tryNudge, 4_000);
-        return;
-      }
-      const nudge = decide({
-        verdict: 'silent',
-        attempt: (tapTries.current.get(beatId) ?? 0) + 1,
-        rungSoFar: tapRung.current.get(beatId) ?? 0,
-        ask,
-        lang: tutorLanguage(),
-        now: Date.now(),
-        recentLines: recentLines.current,
-      });
-      if (nudge.helped !== null) ledger.helped(beatId, nudge.helped, nudge.requested, nudge.strategy);
-      if (!nudge.say) return;
-      recentLines.current = [...recentLines.current.slice(-8), nudge.say];
-      void sayLine(nudge.say);
-    };
-    timer = setTimeout(tryNudge, QUIET_BEFORE_NUDGE_MS);
-    return () => clearTimeout(timer);
-    // Once per held question; the refs carry the live state.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [heldAskBeat]);
-
-  // The choices leave the screen the moment an answer is in flight — a tap,
-  // or a spoken answer being judged. What remains is the status chip.
-  const askChoicesHidden = askBusy || ear === 'thinking' || probing;
 
   // Only a class that is actually playing hides its controls. Paused, finished,
   // not yet started or mid-doubt, they stay: in every one of those states the
@@ -1953,82 +1573,127 @@ export function ClassRoom({
   }, [classStarted, player.beatIndex, player.state, lesson, halt, remember]);
 
   /**
-   * THE WARM-UP (E6-E8, 2026-09-29). When a review is due, the class opens
-   * with one or two questions on it — before her greeting's recap (the warm-up
-   * says hello), before the first beat, and never on a resumed class. Looked
-   * up while the room gets ready; a lookup that has not answered
-   * WARM_UP_WAIT_MS after the class starts is dropped and she greets them. A tap is filed cold (`ledger.warmedUp`), she
-   * says whether it was right, and a skip files nothing.
+   * THE WARM-UP (E6-E8, 2026-09-29), ASKED OUT LOUD (2026-10-01). When a
+   * review is due, the class opens with one or two questions on it — before
+   * her greeting's recap (the warm-up says hello), before the first beat, and
+   * never on a resumed class. Looked up while the room gets ready; a lookup
+   * that has not answered WARM_UP_WAIT_MS after the class starts is dropped
+   * and she greets them.
+   *
+   * Nothing is shown (Aarav, 2026-10-01). She reads the question and its
+   * choices, and they answer the way they answer anything in the class: out
+   * loud, or in the box under the board without a mic. Words that name one
+   * choice are filed cold (`ledger.warmedUp`) and she says whether it was
+   * right. Silence, or words that name no choice twice over, file nothing:
+   * she says the answer and goes on. A question with maths in it is not
+   * asked, because her voice reads no LaTeX and nothing is on screen to read
+   * it from.
    */
   const warmUpReady = useRef<Promise<WarmUpQuestion[]> | null>(null);
-  const warmUpTap = useRef<((chosen: number | null) => void) | null>(null);
   useEffect(() => {
     warmUpReady.current = warmUpFor(lesson.topicRef, outcomesOf(lesson));
   }, [lesson]);
-  // Leaving mid-question lets the waiting class start go; it stops on `left`.
-  useEffect(() => () => warmUpTap.current?.(null), []);
 
   /** Runs the warm-up if one is due; whether it ran. */
   const runWarmUp = async (): Promise<boolean> => {
-    const items = await Promise.race([
+    const due = await Promise.race([
       warmUpReady.current ?? Promise.resolve([]),
       new Promise<WarmUpQuestion[]>((resolve) => setTimeout(() => resolve([]), WARM_UP_WAIT_MS)),
     ]);
-    if (items.length === 0 || left.current || halt.halted) return false;
+    const items = due.filter((q) => !hasMath(q.question) && !q.options.some((o) => hasMath(o)));
+    const done = (): boolean => left.current || halt.halted;
+    if (items.length === 0 || done()) return false;
     const hi = tutorLanguage() === 'hi-en';
     const first = firstName(profileStore.get().name);
     const who = first ? ` ${first}` : '';
     track('warm_up_started', { lessonId: lesson.id, items: items.length });
-    for (const [step, question] of items.entries()) {
-      setWarmUp({ question, step, of: items.length, chosen: null });
-      const tapped = new Promise<number | null>((resolve) => {
-        warmUpTap.current = resolve;
-      });
-      // The clock starts when she has finished asking; a tap before that is
-      // timed from when the card appeared.
-      let clockFrom = Date.now();
-      let answered = false;
-      // Never the outcome's title before the tap: in 63 of the bank's probes
-      // the title holds the answer word for word (second review).
-      // A student with no class behind them — only the placement test, whose
-      // answers fall due the next day — is met, not welcomed back (third review).
-      const returning = greetingMemory(hi ? 'hi-en' : 'en').lastTitle !== undefined;
-      const lead =
-        step === 0
-          ? returning
-            ? hi
-              ? `Welcome back${who}! Class se pehle ek chhota sa warm-up — pichhli class se ek sawaal.`
-              : `Welcome back${who}! Before we start, a quick warm-up question from an earlier class.`
+    setWarmingUp(true);
+    try {
+      let by: 'voice' | 'text' = (await askForMic()) === 'granted' ? 'voice' : 'text';
+      for (const [step, question] of items.entries()) {
+        if (done()) break;
+        // Never the outcome's title: in 63 of the bank's probes the title
+        // holds the answer word for word (second review).
+        // A student with no class behind them — only the placement test, whose
+        // answers fall due the next day — is met, not welcomed back (third review).
+        const returning = greetingMemory(hi ? 'hi-en' : 'en').lastTitle !== undefined;
+        const lead =
+          step === 0
+            ? returning
+              ? hi
+                ? `Welcome back${who}! Class se pehle ek chhota sa warm-up — pichhli class se ek sawaal.`
+                : `Welcome back${who}! Before we start, a quick warm-up question from an earlier class.`
+              : hi
+                ? `Hi${who}! Main Meera hoon. Class se pehle ek chhota sa warm-up sawaal.`
+                : `Hi${who}! I'm Meera. Before we start, a quick warm-up question.`
             : hi
-              ? `Hi${who}! Main Meera hoon. Class se pehle ek chhota sa warm-up sawaal.`
-              : `Hi${who}! I'm Meera. Before we start, a quick warm-up question.`
-          : hi
-            ? 'Ek aur.'
-            : 'One more.';
-      void sayLine(lead).then(() => {
-        if (!answered) clockFrom = Date.now();
-      });
-      const chosen = await tapped;
-      answered = true;
-      warmUpTap.current = null;
-      if (chosen === null || left.current || halt.halted) break;
-      ledger.warmedUp(question, chosen, Date.now() - clockFrom);
-      setWarmUp({ question, step, of: items.length, chosen });
-      // A LaTeX option is named by its letter: the voice reads no LaTeX.
-      const option = question.options[question.correctIndex];
-      const answer = hasMath(option) ? String.fromCharCode(65 + question.correctIndex) : option;
-      const said = await sayLine(
-        chosen === question.correctIndex
-          ? hi
-            ? 'Bilkul sahi — tumhe yaad tha!'
-            : "That's right — you remembered it!"
-          : hi
-            ? `Sahi jawab hai ${answer}. Koi baat nahi — ise jaldi phir dekhenge.`
-            : `The answer is ${answer}. No worries — we'll come back to it soon.`,
-      );
-      if (said.halted || left.current) break;
+              ? 'Ek aur.'
+              : 'One more.';
+        const options = question.options;
+        const choices = hi
+          ? `${options.slice(0, -1).join(', ')} ya ${options[options.length - 1]}?`
+          : `Is it ${options.slice(0, -1).join(', ')} or ${options[options.length - 1]}?`;
+        const asked = await sayLine(`${lead} ${question.question} ${choices}`);
+        if (asked.halted || done()) break;
+        // The clock starts when she has finished asking.
+        const clockFrom = Date.now();
+        // The endpointer gives up on one listen after a few seconds; the
+        // question is not over until QUIET_BEFORE_NUDGE_MS of quiet.
+        let quietSince = clockFrom;
+        setAnswerBy(by);
+        let chosen: number | null = null;
+        for (let tries = 0; tries < 2 && chosen === null && !done(); ) {
+          const heard = await answerOnce(by, done);
+          if (done()) break;
+          // A mic that will not open: the box takes this answer instead.
+          if (heard.reason === 'error' && by === 'voice') {
+            by = 'text';
+            setAnswerBy('text');
+            continue;
+          }
+          if (heard.text === null) {
+            if (Date.now() - quietSince < QUIET_BEFORE_NUDGE_MS) continue;
+            break;
+          }
+          tries += 1;
+          const screened = fromStudent(heard.text, lesson.id);
+          // Distress stops the class on the one halt every path shares.
+          if (screened.say !== null && halt.heard(heard.text, 'ear')) return true;
+          // Only a choice they named (`readWarmUpAnswer`).
+          chosen = screened.text === null ? null : readWarmUpAnswer(screened.text, options);
+          if (chosen !== null) break;
+          if (tries >= 2 || (screened.text !== null && dontKnowIn(screened.text) === 'only')) break;
+          // Off limits: her redirect. Otherwise, once: say it again.
+          const again = screened.say !== null ? inLanguage(screened.say, tutorLanguage()) : LINES.sayAgain[tutorLanguage()][0];
+          setAnswerBy(null);
+          const said = await sayLine(again);
+          if (said.halted || done()) break;
+          quietSince = Date.now();
+          setAnswerBy(by);
+        }
+        setAnswerBy(null);
+        if (done()) break;
+        const answer = options[question.correctIndex];
+        if (chosen !== null) ledger.warmedUp(question, chosen, Date.now() - clockFrom);
+        const said = await sayLine(
+          chosen === question.correctIndex
+            ? hi
+              ? 'Bilkul sahi — tumhe yaad tha!'
+              : "That's right — you remembered it!"
+            : chosen !== null
+              ? hi
+                ? `Sahi jawab hai ${answer}. Koi baat nahi — ise jaldi phir dekhenge.`
+                : `The answer is ${answer}. No worries — we'll come back to it soon.`
+              : hi
+                ? `Koi baat nahi — jawab hai ${answer}. Ise jaldi phir dekhenge.`
+                : `That's okay — the answer is ${answer}. We'll come back to it soon.`,
+        );
+        if (said.halted || done()) break;
+      }
+    } finally {
+      setAnswerBy(null);
+      setWarmingUp(false);
     }
-    setWarmUp(null);
     return true;
   };
 
@@ -2094,17 +1759,6 @@ export function ClassRoom({
     setEntryPhase('inClass');
   };
 
-  /** The "I'm not sure" chip: raise a hand, open the typing row, and say it for them (#28). */
-  const notSure = () => {
-    if (halt.halted) return;
-    notSureOpener.current =
-      tutorLanguage() === 'hi-en'
-        ? 'Mujhe samajh nahi aa raha, is sawaal ka jawab kaise doon?'
-        : "I'm not sure how to answer this question.";
-    setTyping(true);
-    void raiseHand();
-  };
-
   /**
    * A typed doubt, screened on the way out.
    *
@@ -2113,7 +1767,7 @@ export function ClassRoom({
    * what LEAVES the device is the cleaned version, and a sentence that needs a
    * person halts the class (lib/sessionHalt.ts) instead of reaching a model.
    */
-  const sendText = (text: string, opts?: { opener?: boolean }) => {
+  const sendText = (text: string) => {
     if (halt.halted) return;
     setTextLines((prev) => [...prev, { role: 'student', text, final: true }]);
     const out = halt.typedDoubt(text);
@@ -2130,10 +1784,8 @@ export function ClassRoom({
     // Its length, never its words. clean() would drop the text anyway; not
     // writing it is the clearer statement.
     track('doubt_message_sent', { lessonId: lesson.id, length: text.length });
-    handoff.sendUserText(out.forward, opts);
+    handoff.sendUserText(out.forward);
   };
-
-  sendTextRef.current = sendText;
 
   const endDoubt = () => {
     if (!halt.halted) handoff.endDoubt();
@@ -2160,25 +1812,29 @@ export function ClassRoom({
                 ? 'Meera is answering…'
                 : "Couldn't hear you — you can type instead";
 
-  const notStarted = !inDoubt && (player.state === 'idle' || player.state === 'ended');
-  // The joining overlay: only over a class that has not begun. Once the class
-  // ran to its end the room offers a replay instead.
-  const joining = notStarted && player.state === 'idle' && entryPhase !== 'inClass';
-  // Beat progress fills the top hairline the way established lesson players do.
-  const progress =
-    player.state === 'ended' ? 1 : (player.beatIndex + (player.state === 'idle' ? 0 : 1)) / lesson.beats.length;
+  // The joining overlay: only over a class that has not begun.
+  const joining = !inDoubt && player.state === 'idle' && entryPhase !== 'inClass';
 
+  /**
+   * CAPTIONS ARE A SETTING, OFF BY DEFAULT, AND NEVER ON THE BOARD (Aarav,
+   * 2026-10-01): the board is hers to write on. On, they run in a strip
+   * under it — and they are on whenever her voice is off, because then they
+   * are the only way to hear her (`showCaptions`).
+   */
+  const captionsOn = showCaptions(preferences);
   // During a doubt the caption carries the conversation's latest line — on a
   // phone it is the only place the conversation is visible.
   const lastDoubtLine = doubtLines[doubtLines.length - 1];
   // Her own line while she says one — praise, a hint, a nudge — else the narration.
   // During the warm-up only her own lines: the class's first line, under a
   // question about another topic, read as part of it (production, 2026-09-29).
-  const caption = inDoubt
-    ? (lastDoubtLine?.text ?? '')
-    : preferences.captions
-      ? (tutorLine ?? (warmUp ? '' : player.caption))
-      : '';
+  const caption = !captionsOn
+    ? ''
+    : inDoubt
+      ? (lastDoubtLine?.text ?? '')
+      : (tutorLine ?? (warmingUp ? '' : player.caption));
+  // The box under the board, while a question waits on a student with no mic.
+  const answerBoxShown = answerBy === 'text' && !inDoubt;
 
   const barsShown = controlsShown || !canHideControls;
   const barClasses = barsShown ? 'opacity-100' : 'opacity-0 pointer-events-none';
@@ -2195,280 +1851,126 @@ export function ClassRoom({
       onKeyDown={revealControls}
       className="fixed inset-0 bg-stage text-stage-ink flex flex-col overflow-hidden font-body-md antialiased select-none"
     >
-      {/* Beat progress, a hairline at the very top */}
-      <div className="h-[3px] bg-white/15 flex-shrink-0">
-        <div
-          className="h-full bg-stage-blue rounded-r transition-all duration-500 ease-out"
-          style={{ width: `${Math.round(progress * 100)}%` }}
-        />
-      </div>
-
-      {/* Top bar: whose class, and whether this is the recording or the live tutor */}
+      {/* Top bar: whose class, the class clock, and the way to report
+          something. Nothing here says "recording" (Aarav, 2026-10-01). */}
       <header
         className={`flex items-center gap-2.5 px-3 py-2 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
       >
-        <button
-          onClick={onExit}
-          aria-label="Leave the class"
-          className="w-9 h-9 rounded-full grid place-items-center hover:bg-white/10 transition-colors flex-shrink-0"
-        >
-          <Icon name="arrow_back" className="text-[22px]" />
-        </button>
         <div className="min-w-0">
           <h1 className="font-headline-md text-[15px] leading-5 font-semibold text-stage-ink truncate">
             {lesson.title}
           </h1>
-          <p className="font-label-sm text-[11.5px] leading-4 text-stage-ink-dim truncate">
-            {lesson.subtitle ? `${lesson.subtitle} · ` : ''}
-            {player.beatIndex + (player.state === 'idle' ? 0 : 1)}/{lesson.beats.length}
-          </p>
+          {lesson.subtitle && (
+            <p className="font-label-sm text-[11.5px] leading-4 text-stage-ink-dim truncate">{lesson.subtitle}</p>
+          )}
         </div>
         <div className="flex-1" />
-        {inDoubt ? (
-          <span className="flex items-center gap-1.5 bg-stage-green-container text-stage-green-ink rounded-full px-2.5 py-1 font-label-sm text-label-sm font-bold tracking-wide flex-shrink-0">
-            <span className="w-[7px] h-[7px] rounded-full bg-stage-green animate-pulse" />
-            LIVE · DOUBT
-          </span>
-        ) : (
-          <span className="flex items-center gap-1.5 bg-white/10 text-stage-ink rounded-full px-2.5 py-1 font-label-sm text-label-sm font-bold tracking-wide flex-shrink-0">
-            <span className="w-[7px] h-[7px] rounded-full bg-stage-red" />
-            REC
-          </span>
-        )}
         <span className="font-label-md text-[13px] font-semibold tabular-nums flex-shrink-0">
           {formatClock(elapsed)}
         </span>
+        {/* A student must always have a way to say "this was wrong", and the
+            moment they want it is the moment it happened. Up here, so the
+            toolbar keeps only its two controls. */}
+        <button
+          onClick={() => setReporting(true)}
+          aria-label="Report something in this class"
+          className="w-9 h-9 rounded-full grid place-items-center hover:bg-white/10 transition-colors flex-shrink-0"
+        >
+          <Icon name="flag" className="text-[20px]" />
+        </button>
       </header>
 
       {/* The room: the board, and (wide screens) the rail with Meera + the doubt */}
       <main className="flex-1 min-h-0 flex gap-3 px-3 pb-3">
-        <section className="relative flex-1 min-w-0 bg-white rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
-          <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
+        <div className="flex-1 min-w-0 flex flex-col gap-2">
+          <section className="relative flex-1 min-h-0 bg-white rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
+            <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
 
-          {/* The caption over the board, like a call's captions: up to three
-              lines. The clamp is on the inner span — on the padded box the
-              fourth line showed through the padding (production, phone). */}
-          {caption && (
-            <p
-              className={`absolute left-3 bottom-3 max-w-[calc(100%-128px)] lg:max-w-[calc(100%-24px)] rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white ${
-                inDoubt ? 'bg-stage-green-container/95' : 'bg-stage/85'
-              }`}
-            >
-              {/* Two lines while the chips are up, so they sit clear of it. */}
-              <span className={player.pendingAsk && !inDoubt ? 'line-clamp-2' : 'line-clamp-3'}>{caption}</span>
-            </p>
-          )}
-
-          {/* The class is holding on a question. The chips ARE the answer
-              sheet: tap one, and what she says next is never "correct!" — a
-              right answer gets its why, a wrong one gets its hint and another
-              try. The whys live in the lesson, not on the board. */}
-          {player.pendingAsk && !inDoubt && (
-            <div className="absolute inset-x-3 bottom-[76px] z-30 flex flex-wrap justify-center gap-2">
-              {/* The ear's status over the chips: red while it listens, the
-                  way a call shows a hot mic. */}
-              {ear !== 'off' && (
-                <span className="w-full flex justify-center">
-                  <span className="flex items-center gap-2 rounded-full bg-stage-red px-3.5 py-1.5 font-label-md text-[12.5px] font-semibold text-white shadow-md">
-                    <Icon
-                      name={ear === 'listening' ? 'mic' : 'graphic_eq'}
-                      filled
-                      className="text-[15px] animate-pulse"
-                    />
-                    {ear === 'listening'
-                      ? 'Mic on — say your answer out loud'
-                      : 'Meera is listening to your answer…'}
-                  </span>
-                </span>
-              )}
-              {/* An OPEN ask has no options — she wants it said out loud, and
-                  until she can hear, one honest button stands in for the ear.
-                  Without it the chips row rendered empty and the class held
-                  forever on its very first question. */}
-              {!askChoicesHidden && !working && (player.pendingAsk.options ?? []).length === 0 && (
-                <button
-                  onClick={() => void answerAsk(0)}
-                  className="rounded-2xl bg-stage-primary px-5 py-2.5 font-label-md text-label-md font-semibold text-on-stage-primary shadow-md transition-transform active:scale-95"
-                >
-                  Say your answer out loud, then tap here
-                </button>
-              )}
-              {!askChoicesHidden &&
-                (player.pendingAsk.options ?? []).map((option, i) => (
-                <button
-                  key={i}
-                  onClick={() => void answerAsk(i)}
-                  className="max-w-[46%] rounded-2xl bg-stage-surface px-4 py-2.5 text-left font-body-md text-[13.5px] leading-snug text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95 hover:ring-stage-blue"
-                >
-                  <span className="font-bold text-stage-blue">{String.fromCharCode(65 + i)}.</span>{' '}
-                  {option.text}
-                </button>
-              ))}
-              {/* QUICK REPLIES (2026-09-29): what a student says to a tutor
-                  who is waiting on them — ask for a hint, or say they are
-                  lost. A hint goes through decide() like any other help; "not
-                  sure" opens a doubt with Meera about this very question. */}
-              {/* Hidden while they work: on a phone the panel and the row together
-                  covered the board (eighth review). */}
-              {!askChoicesHidden && !working && (
-                <span className="w-full flex flex-wrap justify-center gap-2">
+            {/* Joining: the room readies itself, then the class begins on its own. */}
+            {joining && (
+              <div className="absolute inset-0 grid place-items-center bg-stage/40 backdrop-blur-[2px]">
+                {entryPhase === 'preparing' ? (
+                  <div className="flex flex-col items-center gap-4 px-6 text-center">
+                    <div className="flex items-end gap-1.5 h-6" aria-hidden>
+                      {[10, 20, 14, 22, 12].map((h, i) => (
+                        <span
+                          key={i}
+                          className="w-1.5 rounded-full bg-white sound-bar"
+                          style={{ height: h, animationDelay: `${i * 0.15}s` }}
+                        />
+                      ))}
+                    </div>
+                    <p className="font-headline-md text-[17px] leading-6 font-semibold text-white">
+                      {canResume ? 'Picking up where you left off…' : 'Meera is getting your class ready…'}
+                    </p>
+                    {/* PREPARE_MS worth of fill, so the wait visibly ends. */}
+                    <div className="w-48 h-1.5 rounded-full bg-white/25 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-white"
+                        style={{ animation: `prepare-fill ${PREPARE_MS}ms linear forwards` }}
+                      />
+                    </div>
+                  </div>
+                ) : (
                   <button
-                    onClick={() => void requestHint()}
-                    className="min-h-[44px] rounded-full bg-stage-primary px-4 py-2 font-label-md text-[13px] font-semibold text-on-stage-primary shadow-md transition-transform active:scale-95"
+                    onClick={joinClass}
+                    className="flex items-center gap-2 bg-stage-primary text-on-stage-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
                   >
-                    💡 Give me a hint
-                  </button>
-                  <button
-                    onClick={notSure}
-                    className="min-h-[44px] rounded-full bg-stage-surface px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95"
-                  >
-                    🙋 I'm not sure
-                  </button>
-                  {(player.pendingAsk.alternates ?? []).length > 0 && (
-                    <button
-                      onClick={() => void requestExplain()}
-                      className="min-h-[44px] rounded-full bg-stage-surface px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95"
-                    >
-                      🔄 Explain another way
-                    </button>
-                  )}
-                  {workable && (
-                    <button
-                      onClick={openWorking}
-                      className="min-h-[44px] rounded-full bg-stage-surface px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95"
-                    >
-                      ✍️ Work it out
-                    </button>
-                  )}
-                </span>
-              )}
-              {/* Hidden while an answer is weighed. Its steps and its half-typed
-                  line are held by the room (`workSteps`, `workDraft`), so a pause
-                  or a hand that unmounts it loses nothing (third to fifth reviews). */}
-              {working && player.pendingAsk && (
-                <span className={askChoicesHidden ? 'hidden' : 'w-full'}>
-                  <WorkPanel
-                    start={workStart}
-                    steps={workSteps}
-                    onSteps={setWorkSteps}
-                    draft={workDraft}
-                    onDraft={setWorkDraft}
-                    onStep={(step) => void onWorkedStep(step)}
-                    onClose={closeWorking}
-                  />
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* The warm-up: a due review, asked before the first beat. */}
-          {warmUp && !inDoubt && (
-            <div className="absolute inset-0 z-30 grid place-items-center bg-stage/40 backdrop-blur-[2px] px-4">
-              <div className="w-full max-w-md rounded-2xl bg-stage-surface p-4 text-stage-ink shadow-lg ring-1 ring-white/15">
-                <p className="font-label-sm text-[11.5px] font-bold uppercase tracking-wide text-stage-blue">
-                  Warm-up · {warmUp.step + 1} of {warmUp.of}
-                </p>
-                {/* The outcome's title only once they have answered: it can hold the answer. */}
-                {warmUp.chosen !== null && (
-                  <p className="mt-0.5 font-label-sm text-[12px] text-stage-ink-dim">{warmUp.question.title}</p>
-                )}
-                {/* Bank text: words escaped, $…$ maths typeset (KaTeX, trust off). */}
-                <p
-                  className="mt-2 font-body-md text-[15px] leading-snug"
-                  dangerouslySetInnerHTML={{ __html: lineToHtml(warmUp.question.question) }}
-                />
-                <div className="mt-3 grid gap-2">
-                  {warmUp.question.options.map((option, i) => {
-                    const shown = warmUp.chosen !== null;
-                    const tone = !shown
-                      ? 'hover:ring-stage-blue'
-                      : i === warmUp.question.correctIndex
-                        ? 'ring-2 ring-stage-green'
-                        : i === warmUp.chosen
-                          ? 'ring-2 ring-stage-red'
-                          : 'opacity-60';
-                    return (
-                      <button
-                        key={i}
-                        disabled={shown}
-                        onClick={() => warmUpTap.current?.(i)}
-                        className={`min-h-[44px] rounded-xl bg-stage/60 px-3.5 py-2 text-left font-body-md text-[14px] leading-snug ring-1 ring-white/15 transition-transform active:scale-95 ${tone}`}
-                      >
-                        <span className="font-bold text-stage-blue">{String.fromCharCode(65 + i)}.</span>{' '}
-                        <span dangerouslySetInnerHTML={{ __html: lineToHtml(option) }} />
-                      </button>
-                    );
-                  })}
-                </div>
-                {warmUp.chosen === null && (
-                  <button
-                    onClick={() => warmUpTap.current?.(null)}
-                    className="mt-3 min-h-[44px] w-full rounded-full px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink-dim hover:text-stage-ink"
-                  >
-                    Skip warm-up
+                    <Icon name="play_arrow" filled />
+                    {canResume ? 'Rejoin class' : 'Join class'}
                   </button>
                 )}
               </div>
-            </div>
+            )}
+          </section>
+
+          {/* Captions, when they are on: a strip under the board, never on it.
+              Up to two lines, and clear of her picture on a phone. During a
+              doubt on a wide screen the rail already shows the conversation. */}
+          {caption && (
+            <p
+              data-caption
+              className={`flex-shrink-0 max-w-[calc(100%-120px)] lg:max-w-none rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white ${
+                inDoubt ? 'bg-stage-green-container/95 lg:hidden' : 'bg-stage-surface'
+              }`}
+            >
+              <span className="line-clamp-2">{caption}</span>
+            </p>
           )}
 
-          {/* Joining: the room readies itself, then the class begins on its own. */}
-          {joining && (
-            <div className="absolute inset-0 grid place-items-center bg-stage/40 backdrop-blur-[2px]">
-              {entryPhase === 'preparing' ? (
-                <div className="flex flex-col items-center gap-4 px-6 text-center">
-                  <div className="flex items-end gap-1.5 h-6" aria-hidden>
-                    {[10, 20, 14, 22, 12].map((h, i) => (
-                      <span
-                        key={i}
-                        className="w-1.5 rounded-full bg-white sound-bar"
-                        style={{ height: h, animationDelay: `${i * 0.15}s` }}
-                      />
-                    ))}
-                  </div>
-                  <p className="font-headline-md text-[17px] leading-6 font-semibold text-white">
-                    {canResume ? 'Picking up where you left off…' : 'Meera is getting your class ready…'}
-                  </p>
-                  {/* PREPARE_MS worth of fill, so the wait visibly ends. */}
-                  <div className="w-48 h-1.5 rounded-full bg-white/25 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-white"
-                      style={{ animation: `prepare-fill ${PREPARE_MS}ms linear forwards` }}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <button
-                  onClick={joinClass}
-                  className="flex items-center gap-2 bg-stage-primary text-on-stage-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
-                >
-                  <Icon name="play_arrow" filled />
-                  {canResume ? 'Rejoin class' : 'Join class'}
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* A finished class replays on request — the one press-to-play left. */}
-          {!inDoubt && player.state === 'ended' && (
-            <div className="absolute inset-0 grid place-items-center bg-stage/40 backdrop-blur-[2px]">
+          {/* A held question, and no mic to hear the answer: the one box she
+              reads from. Under the board, never on it. */}
+          {answerBoxShown && (
+            <div className="flex gap-2 flex-shrink-0">
+              <input
+                autoFocus
+                value={answerDraft}
+                onChange={(e) => setAnswerDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') submitTyped();
+                }}
+                placeholder="Type your answer…"
+                aria-label="Type your answer"
+                className="flex-1 min-w-0 h-11 px-3.5 rounded-xl bg-stage-surface text-stage-ink font-body-md text-[14px] placeholder:text-stage-ink-dim outline-none focus:ring-2 focus:ring-stage-blue"
+              />
               <button
-                onClick={startClass}
-                className="flex items-center gap-2 bg-stage-primary text-on-stage-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
+                onClick={submitTyped}
+                aria-label="Send answer"
+                className="w-11 h-11 rounded-xl bg-stage-primary text-on-stage-primary grid place-items-center flex-shrink-0"
               >
-                <Icon name="replay" filled />
-                Watch again
+                <Icon name="send" filled className="text-[18px]" />
               </button>
             </div>
           )}
-        </section>
+        </div>
 
         {/* The rail: Meera's window over the doubt conversation. Wide screens only. */}
         <aside className="hidden lg:flex w-[300px] flex-shrink-0 flex-col gap-3">
           <TutorTile mode={tutorMode} variant="rail" clone={tile} />
+          {/* The conversation's lines are captions too: shown only with them on. */}
           <DoubtPanel
             active={inDoubt}
-            lines={doubtLines}
+            lines={captionsOn ? doubtLines : []}
             status={doubtStatus}
             onSend={inDoubt ? sendText : undefined}
             onDone={inDoubt ? endDoubt : undefined}
@@ -2477,11 +1979,10 @@ export function ClassRoom({
       </main>
 
       {/* On a phone Meera floats over the board, Meet PiP style — and steps
-          out while the answer chips or the typing row are up: wherever she
-          floated she covered one of them on a small phone (overnight review
-          #29; fifth review measured option B and the send button). Her lines
-          stay in the caption. */}
-      {!((player.pendingAsk && !inDoubt) || (inDoubt && typing) || warmUp) && (
+          out while a typing row is up: wherever she floated she covered part
+          of it on a small phone (overnight review #29; fifth review measured
+          the send button). */}
+      {!((inDoubt && typing) || answerBoxShown) && (
         <div className="lg:hidden absolute right-4 bottom-[96px] z-40">
           <TutorTile mode={tutorMode} variant="pip" clone={tile} />
         </div>
@@ -2517,19 +2018,14 @@ export function ClassRoom({
         </div>
       )}
 
-      {/* The toolbar. It fades like Meet's — the board stays exactly where it is. */}
+      {/* The toolbar: raise a hand, or end the class — nothing else (Aarav,
+          2026-10-01). It fades like Meet's; the board stays exactly where it is. */}
       <nav
         aria-hidden={!barsShown}
         className={`flex justify-center items-center gap-3.5 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-1 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
       >
         {!inDoubt ? (
           <>
-            <ToolButton
-              icon={player.state === 'playing' ? 'pause' : 'play_arrow'}
-              label={player.state === 'playing' ? 'Pause the class' : 'Play the class'}
-              onClick={() => (player.state === 'playing' ? player.pause() : player.play())}
-              disabled={notStarted}
-            />
             <ToolButton
               icon="front_hand"
               label="Raise hand and ask a doubt"
@@ -2538,18 +2034,7 @@ export function ClassRoom({
               onClick={raiseHand}
               disabled={player.state !== 'playing' && player.state !== 'paused'}
             />
-            <ToolButton
-              icon="closed_caption"
-              label={preferences.captions ? 'Hide captions' : 'Show captions'}
-              tone={preferences.captions ? 'lit' : 'plain'}
-              onClick={() => setPreference('captions', !preferences.captions)}
-            />
-            <ToolButton
-              icon="error"
-              label="Report something in this class"
-              onClick={() => setReporting(true)}
-            />
-            <ToolButton icon="call_end" label="Leave the class" tone="red" onClick={onExit} />
+            <ToolButton icon="call_end" label="End the class" tone="red" onClick={onExit} />
           </>
         ) : (
           <>
@@ -2582,18 +2067,7 @@ export function ClassRoom({
               </div>
             )}
             <ToolButton icon="check" label="Got it — back to the class" tone="green" big onClick={endDoubt} />
-            <ToolButton
-              icon="closed_caption"
-              label={preferences.captions ? 'Hide captions' : 'Show captions'}
-              tone={preferences.captions ? 'lit' : 'plain'}
-              onClick={() => setPreference('captions', !preferences.captions)}
-            />
-            <ToolButton
-              icon="error"
-              label="Report something in this class"
-              onClick={() => setReporting(true)}
-            />
-            <ToolButton icon="call_end" label="Leave the class" tone="red" onClick={onExit} disabled />
+            <ToolButton icon="call_end" label="End the class" tone="red" onClick={onExit} disabled />
           </>
         )}
       </nav>

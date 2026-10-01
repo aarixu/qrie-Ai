@@ -44,6 +44,8 @@ export const FAST_WRONG_MS = 3000;
  *     any help, or cold against a weak unassisted record, a retest on a
  *     different item is scheduled;
  *   - silent → a content-free nudge, filed as L1, never a climb;
+ *   - stillSilent (quiet through the nudge and the hint) → the answer and why
+ *     (L8) and a retest; with none authored, or once it is out, move on;
  *   - unclear → "say that again", which is not help and moves nothing;
  *   - hintRequest → up to L3 and no further: a request can never pull out the
  *     worked example or the answer;
@@ -95,6 +97,20 @@ export function decide(input: DecideInput): Action {
         lines: LINES.nudge[input.lang],
         because: `${ctx.head}: content-free nudge, filed as L1; silence never climbs the ladder`,
       });
+    case 'stillSilent':
+      // Nothing on screen to fall back on: the answer and why, help they did
+      // not ask for, and a retest. Once it is out, or with none authored, on.
+      if (ctx.floor >= 8) {
+        return act(ctx, {
+          kind: 'moveOn',
+          rung: ctx.floor,
+          helped: null,
+          lines: LINES.moveOn[input.lang],
+          scheduleRetest: true,
+          because: `${ctx.head}: still silent and the answer is already out; move on and retest`,
+        });
+      }
+      return revealOrMoveOn(ctx, []);
     case 'unclear':
       return act(ctx, {
         kind: 'nudge',

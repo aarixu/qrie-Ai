@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { validateLesson, type Lesson } from '@ai-tutor/lesson-format';
 import type { TtsAdapter } from '@ai-tutor/player';
 import { SUPPORT_REPLY } from '@ai-tutor/safety';
+import { LINES } from '@ai-tutor/tutor-control';
 
 /**
  * NO PROJECT, NO SIGN-IN, NO ANALYTICS. The room drives the real `relayFetch`
@@ -18,34 +19,41 @@ vi.mock('../src/lib/telemetry', () => ({ track: () => undefined }));
 /**
  * THE MICROPHONE, AND ONLY THE MICROPHONE.
  *
- * jsdom has no getUserMedia, so the mic is reported granted and `listenOnce`
- * hands back whatever transcript a test queued. Everything past the
- * transcript is real: `resolveSpokenAnswer`'s screen, the halt, the room. The
- * `isCancelled` the room passes in is KEPT, because polling it is how
- * ClassRoom closes a mic in flight — so a test can ask it afterwards whether
- * the mic would now close. With nothing queued, the mic stays open and hears
- * nothing, which is a student who taps instead.
+ * jsdom has no getUserMedia, so the mic is reported as `ear.mic` says and
+ * `listenOnce` hands back whatever a test queued. Everything past that is
+ * real: `resolveSpokenAnswer`'s screen, the halt, the room. The `isCancelled`
+ * the room passes in is KEPT, because polling it is how ClassRoom closes a mic
+ * in flight — so a test can ask it afterwards whether the mic would now close.
+ *
+ * A queued `null` is a quiet listen that ends a long silence: the clock is
+ * moved past the room's wait before a nudge. A queued `ERROR` is a mic that
+ * will not open. With nothing queued, the mic stays open and hears nothing.
  */
+const ERROR = Symbol('a mic that will not open');
 const ear = vi.hoisted(() => ({
-  queued: [] as string[],
+  queued: [] as (string | null | symbol)[],
   polls: [] as (() => boolean)[],
   listens: 0,
   /** Holds a heard answer back, like the transcription round trip does. */
   hold: null as Promise<void> | null,
+  mic: 'granted' as 'granted' | 'denied',
+  /** How far the room's clock has been moved on by quiet listens. */
+  skew: 0,
 }));
 vi.mock('../src/lib/mic', async (real) => ({
   ...(await real<typeof import('../src/lib/mic')>()),
-  micStatus: () => 'granted',
+  micStatus: () => ear.mic,
+  micExplained: () => true,
+  requestMic: async () => ear.mic,
 }));
 vi.mock('../src/lib/ear', async (real) => ({
   ...(await real<typeof import('../src/lib/ear')>()),
   listenOnce: async (opts: { isCancelled?: () => boolean } = {}) => {
     ear.listens += 1;
     if (opts.isCancelled) ear.polls.push(opts.isCancelled);
-    const text = ear.queued.shift();
-    // Nothing to say yet: the mic stays open until the room closes it, the
-    // way the real one closes on its next chunk.
-    if (text === undefined)
+    if (ear.queued.length === 0)
+      // Nothing to say yet: the mic stays open until the room closes it, the
+      // way the real one closes on its next chunk.
       return new Promise((resolve) => {
         const poll = setInterval(() => {
           if (opts.isCancelled?.()) {
@@ -54,8 +62,14 @@ vi.mock('../src/lib/ear', async (real) => ({
           }
         }, 10);
       });
+    const next = ear.queued.shift();
+    if (typeof next === 'symbol') return { text: null, reason: 'error' as const };
+    if (next === null) {
+      ear.skew += 25_000;
+      return { text: null, reason: 'silence' as const };
+    }
     if (ear.hold) await ear.hold;
-    return { text, reason: 'heard' as const };
+    return { text: next, reason: 'heard' as const };
   },
 }));
 
@@ -75,6 +89,7 @@ import { flagStore, recentFlags } from '../src/stores/flags';
 import { progressStore } from '../src/stores/progress';
 import { ledgerOutbox, resetLedgerOutbox } from '../src/stores/ledger';
 import { setLastSession } from '../src/lib/studentMemory';
+import { setPreference } from '../src/stores/preferences';
 
 /**
  * THE EXIT GATE FOR THIS FIX, IN THE REAL ROOM.
@@ -84,8 +99,7 @@ import { setLastSession } from '../src/lib/studentMemory';
  * mounts the whole classroom — real player, real handoff, real typed tutor —
  * with only the network, the voice and the microphone faked, raises a hand,
  * types, and looks at what the student would see and what left the device.
- * The spoken-answer and tapped-option paths, below, go through the same
- * mounted room.
+ * The answer paths, below, go through the same mounted room.
  */
 
 const lesson: Lesson = (() => {
@@ -99,6 +113,8 @@ const ANSWER = '{"say":"Blood carries oxygen in red blood cells.","recallBeatId"
 
 const roots: Root[] = [];
 let llmCalls = 0;
+/** What /api/llm answers with. */
+let llmReply = ANSWER;
 let spoken: string[] = [];
 let exited = 0;
 
@@ -181,18 +197,30 @@ async function raiseHand(host: HTMLElement): Promise<void> {
   await tick();
 }
 
-async function typeDoubt(host: HTMLElement, text: string): Promise<void> {
-  const input = byLabel(host, 'Type your doubt') as HTMLInputElement;
+/** Types into a labelled box and presses its send button. */
+async function typeInto(host: HTMLElement, label: string, send: string, text: string): Promise<void> {
+  const input = byLabel(host, label) as HTMLInputElement;
   const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
   await act(async () => {
     setter.call(input, text);
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
   await act(async () => {
-    byLabel(host, 'Send doubt').click();
+    byLabel(host, send).click();
   });
   await tick();
 }
+
+const typeDoubt = (host: HTMLElement, text: string) => typeInto(host, 'Type your doubt', 'Send doubt', text);
+const typeAnswer = (host: HTMLElement, text: string) => typeInto(host, 'Type your answer', 'Send answer', text);
+
+const buttonWith = (host: HTMLElement, text: string): boolean =>
+  [...host.querySelectorAll('button')].some((b) => b.textContent?.includes(text));
+
+const pending = (kind: string) =>
+  ledgerOutbox.get().pending.filter((e) => e.kind === kind).map((e) => e.payload as Record<string, unknown>);
+
+const realNow = Date.now;
 
 beforeEach(() => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -213,12 +241,16 @@ beforeEach(() => {
   // goes straight to the typed tutor, which is the one that ships.
   vi.stubEnv('VITE_GEMINI_API_KEY', '');
   llmCalls = 0;
+  llmReply = ANSWER;
   spoken = [];
   exited = 0;
   ear.queued = [];
   ear.polls = [];
   ear.listens = 0;
   ear.hold = null;
+  ear.mic = 'granted';
+  ear.skew = 0;
+  vi.spyOn(Date, 'now').mockImplementation(() => realNow() + ear.skew);
   warm.items = [];
   resetLedgerOutbox();
   vi.stubGlobal('fetch', async (url: string) => {
@@ -226,7 +258,7 @@ beforeEach(() => {
     return {
       ok: true,
       status: 200,
-      json: async () => ({ choices: [{ message: { content: ANSWER } }] }),
+      json: async () => ({ choices: [{ message: { content: llmReply } }] }),
     };
   });
 });
@@ -236,6 +268,7 @@ afterEach(() => {
   document.body.innerHTML = '';
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
+  vi.restoreAllMocks();
   settingsStore.update((s) => ({ ...s, klass: null }));
 });
 
@@ -281,9 +314,10 @@ describe('a typed distress line in a real doubt', () => {
 });
 
 /**
- * The fixture lesson with a question on its first beat: two options, the
- * right one carrying `why`. `why` is the line she says about a tapped right
- * answer.
+ * The fixture lesson with a question on its first beat. Its options are the
+ * judge's ears, never shown (2026-10-01): the probe mirrors them with a why
+ * for each, so a spoken answer is read on the device with no model. `why` is
+ * the line she says about a right answer.
  */
 function askingLesson(why: string): Lesson {
   const raw = JSON.parse(readFileSync('content/class10-blood/lesson.json', 'utf8'));
@@ -291,15 +325,26 @@ function askingLesson(why: string): Lesson {
     question: 'How many components does blood have?',
     options: [
       { text: 'Four', correct: true, why },
-      { text: 'Two', hint: 'Count the workers on the board.' },
+      { text: 'Just plasma', hint: 'Count the workers on the board.' },
     ],
   };
   const result = validateLesson(raw);
   if (!result.ok) throw new Error(`asking lesson is invalid: ${result.errors.join('; ')}`);
+  result.lesson.beats[0].ask = {
+    ...result.lesson.beats[0].ask!,
+    whyProbe: {
+      askedAs: 'open',
+      options: [
+        { text: 'Four', correct: true, why },
+        { text: 'Just plasma', correct: false, why: 'Only two were counted.', hint: 'Count the workers on the board.' },
+      ],
+    },
+  } as never;
   return result.lesson;
 }
 
 const RIGHT_WHY = 'Plasma, red cells, white cells and platelets — four workers.';
+const nextBeat = () => spoken.includes(lesson.beats[1].narration);
 
 /**
  * THE EAR, THROUGH THE REAL ROOM.
@@ -327,117 +372,111 @@ describe('a spoken answer that is distress, in the real room', () => {
     expect(llmCalls).toBe(0);
     expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
     expect(spoken.join(' ')).not.toContain('kill myself');
-    // The room is gone: no chips to tap, no hand to raise.
+    // The room is gone: no hand to raise.
     expect(host.querySelector('[aria-label="Raise hand and ask a doubt"]')).toBeNull();
-    expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Four'))).toBe(false);
   });
 });
 
 /**
- * A TAP IS NOT A WAY INTO THE HALT (lib/sessionHalt.ts, `sayAuthored`).
- *
- * The line she says about a tapped option is the lesson's own, screened where
- * the lesson was made with a reader that lets a curriculum line through. Here
- * it has no reader, so a line that trips the screen is withheld — and the
- * class carries on, because the student said nothing at all.
+ * THE LESSON'S OWN WHY IS NOT A WAY INTO THE HALT (lib/sessionHalt.ts,
+ * `sayAuthored`). The line she says about a right answer read on the device
+ * is the lesson's own, screened where the lesson was made with a reader that
+ * lets a curriculum line through. Here it has no reader, so a line that trips
+ * the screen is withheld — and the class carries on.
  */
-describe('a tapped option whose why trips the distress screen', () => {
-  const tapFour = async (host: HTMLElement): Promise<void> => {
-    const four = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Four'));
-    if (!four) throw new Error('the question never surfaced');
-    await act(async () => {
-      four.click();
-    });
-    await tick();
-  };
-
+describe('a right answer whose why trips the distress screen', () => {
   it('is not said, does not halt, and the class moves on', async () => {
     const why = "In Premchand's story the farmer says i want to kill myself — that is the story's point.";
+    ear.queued = ['Four'];
     const host = await openClass({ lesson: askingLesson(why), tts: quickVoice() });
-    await tick();
-
-    await tapFour(host);
+    await tick(10);
 
     expect(spoken.join(' ')).not.toContain('kill myself');
     expect(host.querySelector('[role="alertdialog"]')).toBeNull();
     expect(host.querySelector('[aria-label="Raise hand and ask a doubt"]')).not.toBeNull();
     // The right answer opened the gate: the next beat is being taught.
-    expect(spoken).toContain(lesson.beats[1].narration);
-    // Nothing the child said, so nothing filed as the child's distress.
+    expect(nextBeat()).toBe(true);
+    // The child said nothing distressing, so nothing is filed as their distress.
     expect(recentFlags(flagStore.get()).filter((f) => f.kind === 'distress')).toHaveLength(0);
     expect(llmCalls).toBe(0);
   });
 
   it('an ordinary why is said, then the class moves on', async () => {
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
-    await tick();
-
-    await tapFour(host);
-
-    // Since 2026-09-29 the praise is decide()'s (a short persona line) with
-    // the authored why inside it — so the why itself is what must be heard.
+    ear.queued = ['Four'];
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
     expect(spoken.some((line) => line.includes(RIGHT_WHY))).toBe(true);
-    expect(spoken).toContain(lesson.beats[1].narration);
+    expect(nextBeat()).toBe(true);
   });
 });
 
 /**
- * THE HELD QUESTION'S LADDER, IN THE REAL ROOM (overnight review, 2026-09-29).
+ * THE HELD QUESTION, IN THE REAL ROOM (2026-10-01).
  *
- * decide() is tested as a table next door (packages/tutor-control). These are
- * the wiring faults the review found in the room around it: a "let's keep
- * going" that did not, a hint chip that wrote the leaking hint decide() had
- * refused, a tap the open mic kept listening through, "hint do" judged as an
- * answer, and a greeting that started the class after they had left.
+ * Nothing on screen asks or answers: no question, no options, no chips. She
+ * asks out loud and the ear takes it from there — and every way of not
+ * answering has to end, because nothing on screen can end it now.
  */
 describe('the held question, in the real room', () => {
-  const tap = async (host: HTMLElement, label: string): Promise<void> => {
-    const chip = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes(label));
-    if (!chip) throw new Error(`no "${label}" on screen`);
-    await act(async () => {
-      chip.click();
-    });
-    await tick();
-  };
-
-  it('moves the class on when she says "let\'s keep going" after the reveal', async () => {
+  it('puts nothing on screen to answer with: no question, no options, no chips', async () => {
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick();
-    // Look again, the hint, the answer — then a fourth miss.
-    for (let i = 0; i < 4; i += 1) await tap(host, 'Two');
-    expect(spoken.some((l) => /keep going|carry on/i.test(l))).toBe(true);
-    expect(spoken).toContain(lesson.beats[1].narration);
+    expect(ear.listens).toBeGreaterThan(0);
+    expect(host.textContent).not.toContain('How many components');
+    for (const text of ['Four', 'Just plasma', 'hint', 'not sure', 'another way', 'Work it out', 'Say your answer']) {
+      expect(buttonWith(host, text), text).toBe(false);
+    }
+    // The ear can hear them, so there is no box either.
+    expect(host.querySelector('[aria-label="Type your answer"]')).toBeNull();
   });
 
-  it('never writes a hint decide() refused for giving the answer away', async () => {
+  it('gives the answer and its why, and goes on, when the answers keep missing', async () => {
+    ear.queued = ['Just plasma', 'Just plasma', 'Just plasma'];
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(20);
+    // Look again, the hint, then the answer and why — and the class goes on.
+    expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
+    expect(spoken.some((l) => /answer is Four/.test(l))).toBe(true);
+    expect(nextBeat()).toBe(true);
+    expect(pending('answered').map((a) => a.correct)).toEqual([false, false, false]);
+  });
+
+  it('gives the answer and goes on when they stay quiet through the nudge and the hint', async () => {
+    const quiet = askingLesson(RIGHT_WHY);
+    quiet.beats[0].ask!.hint = 'Count the workers on the board.';
+    ear.queued = [null, null, null];
+    await openClass({ lesson: quiet, tts: quickVoice() });
+    await tick(20);
+    expect(spoken.some((l) => LINES.nudge.en.includes(l))).toBe(true);
+    expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
+    expect(spoken.some((l) => /answer is Four/.test(l))).toBe(true);
+    expect(nextBeat()).toBe(true);
+    // Help they never asked for, and no answer on record: silence is not one.
+    expect(pending('helped').map((h) => [h.rung, h.requested])).toEqual([
+      [1, false],
+      [3, false],
+      [8, false],
+    ]);
+    expect(pending('answered')).toHaveLength(0);
+  });
+
+  it('waits out a short quiet without a word', async () => {
+    // The endpointer gives up after a few seconds; that is not a stuck student.
+    ear.queued = ['Four'];
+    ear.skew = 0;
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(spoken.some((l) => LINES.nudge.en.includes(l))).toBe(false);
+  });
+
+  it('never says a hint decide() refused for giving the answer away', async () => {
     const leaky = askingLesson(RIGHT_WHY);
-    leaky.beats[0].ask!.hint = 'It is Four, so tap Four.';
+    leaky.beats[0].ask!.hint = 'It is Four, so say Four.';
+    ear.queued = ['hint do'];
     const host = await openClass({ lesson: leaky, tts: quickVoice() });
-    await tick();
-    await tap(host, 'Give me a hint');
+    await tick(10);
     expect(host.textContent).not.toContain('It is Four');
     expect(spoken.join(' ')).not.toContain('It is Four');
-  });
-
-  it('writes the hint decide() approved', async () => {
-    const fine = askingLesson(RIGHT_WHY);
-    fine.beats[0].ask!.hint = 'Count the workers on the board.';
-    const host = await openClass({ lesson: fine, tts: quickVoice() });
-    await tick();
-    await tap(host, 'Give me a hint');
-    expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
-  });
-
-  it('closes the open mic the moment they tap', async () => {
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
-    await tick();
-    expect(ear.polls.length).toBeGreaterThan(0);
-    const listening = ear.polls[ear.polls.length - 1];
-    expect(listening()).toBe(false);
-    const opened = ear.listens;
-    await tap(host, 'Two');
-    // That listen was closed by the tap, and a fresh one opened after her reply.
-    expect(ear.listens).toBeGreaterThan(opened);
   });
 
   it('hears "hint do" as a request for the hint, not as an answer to judge', async () => {
@@ -450,21 +489,33 @@ describe('the held question, in the real room', () => {
     expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
     // Not a wrong answer on record: no "not quite" for asking.
     expect(spoken.some((l) => /not quite|not yet|miss hua/i.test(l))).toBe(false);
+    expect(pending('helped')[0]).toMatchObject({ rung: 3, requested: true });
   });
 
-  it('drops a spoken answer that lands after they tapped (second review)', async () => {
-    let release: () => void = () => undefined;
-    ear.hold = new Promise<void>((r) => (release = r));
-    ear.queued = ['Four'];
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Two');
-    release();
-    await tick(10);
-    // Their tap was the answer: no judge call for the words, no praise, no move on.
-    expect(llmCalls).toBe(0);
-    expect(spoken.some((l) => l.includes(RIGHT_WHY))).toBe(false);
-    expect(spoken).not.toContain(lesson.beats[1].narration);
+  it('writes her hint on the board, and none of their words', async () => {
+    const written = askingLesson(RIGHT_WHY);
+    written.beats[0].workArea = { id: 'wa', x: 40, y: 380, w: 900, h: 220 };
+    ear.queued = ['Just plasma', 'Just plasma'];
+    const host = await openClass({ lesson: written, tts: quickVoice() });
+    await tick(20);
+    expect(pending('answered')).toHaveLength(2);
+    const board = host.querySelector('section')?.textContent ?? '';
+    expect(board).toContain('Count the workers on the board.');
+    expect(board).not.toContain('✗');
+    expect(board).not.toContain('Just plasma');
+  });
+
+  it('asks again when the judge fails, and goes on after the third such turn', async () => {
+    const open = askingLesson(RIGHT_WHY);
+    open.beats[0].ask = { question: 'What does plasma carry?', expect: 'dissolved food, salts and wastes' } as never;
+    llmReply = 'no json here';
+    ear.queued = ['salt water', 'salt water', 'salt water'];
+    await openClass({ lesson: open, tts: quickVoice() });
+    await tick(20);
+    expect(spoken.filter((l) => LINES.sayAgain.en.includes(l))).toHaveLength(2);
+    expect(spoken.some((l) => LINES.carryOn.en.includes(l))).toBe(true);
+    expect(nextBeat()).toBe(true);
+    expect(pending('answered')).toHaveLength(0);
   });
 
   it('starts the class after the greeting under StrictMode, as development runs it', async () => {
@@ -484,124 +535,42 @@ describe('the held question, in the real room', () => {
     expect(spoken).toContain(lesson.beats[0].narration);
   });
 
-  it('says "I am not sure" for them, so Meera starts guiding instead of waiting on typing (#28)', async () => {
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
-    await tick();
-    await tap(host, "I'm not sure");
-    await tick(10);
-    expect(host.textContent).toContain("I'm not sure how to answer this question.");
-    expect(llmCalls).toBe(1);
-  });
-
-  it('still halts on distress in words that landed after a tap (third review)', async () => {
-    let release: () => void = () => undefined;
-    ear.hold = new Promise<void>((r) => (release = r));
-    ear.queued = ['i want to kill myself'];
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Two');
-    release();
-    await tick(10);
-    expect(host.querySelector('[role="alertdialog"]')).not.toBeNull();
-    expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
-  });
-
-  it('hears the reply to a follow-up question as reasoning, not as a second answer (C7)', async () => {
-    const probed = askingLesson(RIGHT_WHY);
-    probed.beats[0].ask = {
-      ...probed.beats[0].ask!,
+  const probed = (): Lesson => {
+    const l = askingLesson(RIGHT_WHY);
+    l.beats[0].ask = {
+      ...l.beats[0].ask!,
       whyProbe: {
-        askedAs: 'options',
+        askedAs: 'open',
         options: [
           { text: 'Four', correct: true, why: RIGHT_WHY },
-          { text: 'Two', correct: false, why: 'Only two were counted.', followUp: 'Which two did you count?' },
+          { text: 'Just plasma', correct: false, why: 'Only two were counted.', followUp: 'Which two did you count?' },
         ],
       },
     } as never;
-    const host = await openClass({ lesson: probed, tts: quickVoice() });
-    await tick();
-    // Said after the tap: the open listen closes on the tap, the next one hears it.
-    ear.queued = ['I counted the red cells and the plasma'];
-    await tap(host, 'Two');
+    return l;
+  };
+
+  it('hears the reply to a follow-up question as reasoning, not as a second answer (C7)', async () => {
+    ear.queued = ['Just plasma', 'I counted the red cells and the plasma'];
+    await openClass({ lesson: probed(), tts: quickVoice() });
     await tick(20);
     expect(spoken).toContain('Which two did you count?');
     expect(llmCalls).toBe(0);
     expect(spoken.some((l) => /another go|once more/i.test(l))).toBe(true);
-    // Not judged: no hint for answering what she asked.
-    expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(false);
+    // Not judged: one answer on record, not two.
+    expect(pending('answered')).toHaveLength(1);
   });
 
   it('judges a reply to a follow-up that says the answer, and moves on (fifth review)', async () => {
-    const probed = askingLesson(RIGHT_WHY);
-    probed.beats[0].ask = {
-      ...probed.beats[0].ask!,
-      whyProbe: {
-        askedAs: 'options',
-        options: [
-          { text: 'Four', correct: true, why: RIGHT_WHY },
-          { text: 'Two', correct: false, why: 'Only two were counted.', followUp: 'Which two did you count?' },
-        ],
-      },
-    } as never;
-    const host = await openClass({ lesson: probed, tts: quickVoice() });
-    await tick();
-    // Said after the tap and her follow-up.
-    ear.queued = ['oh wait, it is Four'];
-    await tap(host, 'Two');
+    ear.queued = ['Just plasma', 'oh wait, it is Four'];
+    await openClass({ lesson: probed(), tts: quickVoice() });
     await tick(20);
     expect(spoken).toContain('Which two did you count?');
     expect(spoken.some((l) => /another go|once more/i.test(l))).toBe(false);
-    expect(spoken).toContain(lesson.beats[1].narration);
+    expect(nextBeat()).toBe(true);
   });
 
-  it('checks typed working step by step, and takes a solving step as the answer (T8.1)', async () => {
-    const worked = askingLesson(RIGHT_WHY);
-    worked.beats[0].ask = { question: 'Solve three times x plus four equals twenty one.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' } as never;
-    const host = await openClass({ lesson: worked, tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    const type = async (text: string) => {
-      const input = byLabel(host, 'Your next step') as HTMLInputElement;
-      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
-      await act(async () => {
-        setter.call(input, text);
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-      });
-      await tap(host, 'Check step');
-    };
-    await type('3x + 4 = 21');
-    expect(spoken.some((l) => /changes the equation/.test(l))).toBe(true);
-    await type('3x + 12 = 21');
-    expect(spoken.some((l) => /that step holds/.test(l))).toBe(true);
-    await type('3x = 21 - 12 = 8');
-    expect(spoken.some((l) => /calculation is off/.test(l))).toBe(true);
-    await type('x = 3');
-    await tick(10);
-    expect(spoken).toContain(lesson.beats[1].narration);
-  });
-
-  it('takes a step that is the equation the question asks for as the answer', async () => {
-    const worked = askingLesson(RIGHT_WHY);
-    worked.beats[0].ask = {
-      question: 'If you remove one x from both sides, what remains?',
-      written: 'If you remove one $x$ from both sides of $2x + 3 = x + 7$, what remains?',
-      expect: 'What remains is x + 3 = 7.',
-    } as never;
-    const host = await openClass({ lesson: worked, tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    const input = byLabel(host, 'Your next step') as HTMLInputElement;
-    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
-    await act(async () => {
-      setter.call(input, 'x + 3 = 7');
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-    });
-    await tap(host, 'Check step');
-    await tick(10);
-    expect(spoken).toContain(lesson.beats[1].narration);
-  });
-
-  it('explains it another way when asked, by tap or out loud (H4)', async () => {
+  it('explains it another way when asked out loud, a different way each time (H4)', async () => {
     const alt = askingLesson(RIGHT_WHY);
     alt.beats[0].ask = {
       ...alt.beats[0].ask!,
@@ -610,13 +579,12 @@ describe('the held question, in the real room', () => {
         { mode: 'everyday', say: 'Like a school with teachers, guards and cooks, each doing one job.' },
       ],
     } as never;
-    const host = await openClass({ lesson: alt, tts: quickVoice() });
-    await tick();
-    ear.queued = ['phir se samjhao'];
-    await tap(host, 'Explain another way');
-    await tick(10);
+    ear.queued = ['phir se samjhao', 'phir se samjhao'];
+    await openClass({ lesson: alt, tts: quickVoice() });
+    await tick(20);
     const explained = spoken.filter((l) => /delivery team|school with teachers/.test(l));
     expect(explained.length).toBe(2);
+    expect(explained[0]).not.toBe(explained[1]);
     expect(llmCalls).toBe(0);
   });
 
@@ -643,11 +611,88 @@ describe('the held question, in the real room', () => {
 });
 
 /**
- * THE CLASS OPENS WITH A WARM-UP WHEN A REVIEW IS DUE (E6-E8).
+ * NO MIC, ONE BOX (2026-10-01). A student the ear cannot hear types their
+ * answer into one box under the board, and it goes down the spoken answer's
+ * road: the same screen, the same judge, the same ladder.
+ */
+describe('a held question without a mic', () => {
+  it('gets one box under the board, and what they type is judged like speech', async () => {
+    ear.mic = 'denied';
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(host.querySelector('[aria-label="Type your answer"]')).not.toBeNull();
+    expect(host.querySelector('section [aria-label="Type your answer"]')).toBeNull();
+    await typeAnswer(host, 'Four');
+    await tick(10);
+    expect(spoken.some((l) => l.includes(RIGHT_WHY))).toBe(true);
+    expect(nextBeat()).toBe(true);
+    expect(pending('answered')[0]).toMatchObject({ correct: true });
+    expect(host.querySelector('[aria-label="Type your answer"]')).toBeNull();
+  });
+
+  it('screens what they type: distress halts the class', async () => {
+    ear.mic = 'denied';
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    await typeAnswer(host, 'i want to kill myself');
+    await tick(10);
+    expect(host.querySelector('[role="alertdialog"]')).not.toBeNull();
+    expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
+    expect(llmCalls).toBe(0);
+  });
+
+  it('hands the question to the box when the mic will not open', async () => {
+    ear.queued = [ERROR];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(host.querySelector('[aria-label="Type your answer"]')).not.toBeNull();
+    // A mic that failed is not a quiet student: no nudge for it.
+    expect(spoken.some((l) => LINES.nudge.en.includes(l))).toBe(false);
+  });
+});
+
+/** Aarav, 2026-10-01: nothing that says "recording", and no subtitles on the board. */
+describe('the room around the board', () => {
+  it('keeps only raise hand and end class on the toolbar', async () => {
+    const host = await openClass({ tts: quickVoice() });
+    const toolbar = [...host.querySelectorAll('nav [aria-label]')].map((b) => b.getAttribute('aria-label'));
+    expect(toolbar).toEqual(['Raise hand and ask a doubt', 'End the class']);
+    expect(host.textContent).not.toContain('REC');
+    expect(host.querySelector('header')?.textContent ?? '').not.toMatch(/\d+\/\d+/);
+    await act(async () => {
+      byLabel(host, 'End the class').click();
+    });
+    expect(exited).toBe(1);
+  });
+
+  it('still lets them report something, from the top bar', async () => {
+    const host = await openClass({ tts: quickVoice() });
+    expect(host.querySelector('header [aria-label="Report something in this class"]')).not.toBeNull();
+  });
+
+  it('shows no captions by default', async () => {
+    const host = await openClass({ tts: quickVoice() });
+    await tick();
+    expect(host.querySelector('[data-caption]')).toBeNull();
+  });
+
+  it('puts captions under the board, never on it, once they are turned on', async () => {
+    setPreference('captions', true);
+    const host = await openClass({ tts: voice() });
+    await tick();
+    const caption = host.querySelector('[data-caption]');
+    expect(caption?.textContent).toContain(lesson.beats[0].narration.slice(0, 20));
+    expect(host.querySelector('section [data-caption]')).toBeNull();
+  });
+});
+
+/**
+ * THE CLASS OPENS WITH A WARM-UP WHEN A REVIEW IS DUE (E6-E8), ASKED OUT LOUD.
  *
  * One authored probe per due outcome, asked after her greeting and before the
- * first beat; the tap is filed cold under the probe's own outcome, she says
- * whether it was right, and the class begins.
+ * first beat. Nothing is shown: she reads the question and its choices, the
+ * spoken answer is filed cold under the probe's own outcome, she says whether
+ * it was right, and the class begins.
  */
 describe('the class-start warm-up', () => {
   const question = {
@@ -660,120 +705,89 @@ describe('the class-start warm-up', () => {
     correctIndex: 1,
     misconceptions: ['', '', '', ''],
   };
-  const tapText = async (host: HTMLElement, text: string): Promise<void> => {
-    const chip = [...host.querySelectorAll('button')].find((b) => b.textContent?.trim().endsWith(text));
-    if (!chip) throw new Error(`no button reads "${text}"`);
-    await act(async () => {
-      chip.click();
-    });
-    await tick(10);
-  };
   const answered = () => ledgerOutbox.get().pending.filter((e) => e.kind === 'answered');
 
-  it('asks the due review before the class, files the tap cold, and then teaches', async () => {
+  it('asks the due review aloud before the class, files the spoken answer cold, and then teaches', async () => {
     warm.items = [question];
+    ear.queued = ['4'];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
 
-    expect(host.textContent).toContain('If 2x = 8, what is x?');
-    // The class has not begun under it: the first beat's chips are not up.
-    expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Four'))).toBe(false);
-
-    await tapText(host, '4');
+    const asked = spoken.find((l) => l.includes('If 2x = 8, what is x?')) ?? '';
+    expect(asked).toContain('Is it 2, 4, 6 or 16?');
+    expect(host.textContent).not.toContain('If 2x = 8');
     expect(answered()).toHaveLength(1);
     expect(answered()[0]).toMatchObject({ outcomeIds: ['maths8-lin-solve'], topicRef: 'class8-maths/linear/solve' });
     expect(answered()[0].payload).toMatchObject({ probeId: 'probe-7', chosenIndex: 1, correct: true, assistanceRung: 0 });
     expect(spoken.some((l) => /remembered/i.test(l))).toBe(true);
-
-    await tick(10);
-    expect(host.textContent).not.toContain('If 2x = 8, what is x?');
-    expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Four'))).toBe(true);
+    // Asked before the first beat, which follows it.
+    expect(spoken.indexOf(asked)).toBeLessThan(spoken.indexOf(lesson.beats[0].narration));
   });
 
   it('says the right answer after a wrong one', async () => {
     warm.items = [question];
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    ear.queued = ['16'];
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
-    await tapText(host, '16');
     expect(answered()[0].payload).toMatchObject({ chosenIndex: 3, correct: false, assistanceRung: 0 });
     expect(spoken.some((l) => l.includes('The answer is 4'))).toBe(true);
   });
 
-  it('captions only her own lines while it is up, never the class waiting under it', async () => {
-    warm.items = [question];
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
-    await tick(10);
-    const firstLine = askingLesson(RIGHT_WHY).beats[0].narration.slice(0, 30);
-    expect(host.textContent).toContain('If 2x = 8, what is x?');
-    expect(host.textContent).not.toContain(firstLine);
-  });
-
   // Second review: 63 bank titles hold their probe's answer word for word.
-  it('keeps the outcome title out of her mouth and off the card until they answer', async () => {
+  it('keeps the outcome title out of her mouth and off the screen', async () => {
     warm.items = [question];
-    // Her praise is held, so the card is still up after the tap.
-    const tts: TtsAdapter = {
-      speak(text) {
-        spoken.push(text);
-        return /remembered/.test(text) ? new Promise<void>(() => undefined) : Promise.resolve();
-      },
-      cancel() {},
-    };
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts });
+    ear.queued = ['4'];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
     expect(spoken.join(' ')).not.toContain(question.title);
     expect(host.textContent).not.toContain(question.title);
-    await tapText(host, '4');
-    expect(host.textContent).toContain(question.title);
   });
 
   // Plan T3.5: a recap before the warm-up names what is due.
   it('asks before any recap of the last class', async () => {
     setLastSession({ lessonId: 'an-older-class', title: 'Solving linear equations', beatsDone: 20, total: 20 });
     warm.items = [question];
+    ear.queued = ['4'];
     await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
-    expect(spoken.some((l) => /Last time/.test(l))).toBe(false);
-    const host = document.body.lastElementChild as HTMLElement;
-    await tapText(host, '4');
-    await tick(10);
-    expect(spoken.some((l) => /Last time we did Solving linear equations/.test(l))).toBe(true);
+    const ask = spoken.findIndex((l) => l.includes('If 2x = 8'));
+    const recap = spoken.findIndex((l) => /Last time we did Solving linear equations/.test(l));
+    expect(ask).toBeGreaterThanOrEqual(0);
+    expect(recap).toBeGreaterThan(ask);
   });
 
-  it('typesets a probe in LaTeX and names the right option by its letter', async () => {
+  it('does not ask a question it cannot read aloud', async () => {
     warm.items = [{ ...question, question: 'The area is', options: [String.raw`$154\text{ cm}^2$`, '44 cm', '22 cm', '7 cm'], correctIndex: 0 }];
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
-    expect(host.querySelector('.katex')).not.toBeNull();
-    await tapText(host, '44 cm');
-    expect(spoken.some((l) => l.includes('The answer is A'))).toBe(true);
+    expect(spoken.some((l) => /warm-up/i.test(l))).toBe(false);
     expect(spoken.join(' ')).not.toContain('$');
+    expect(spoken).toContain(lesson.beats[0].narration);
   });
 
   it('asks each due question in turn', async () => {
     warm.items = [question, { ...question, id: 'probe-8', question: 'If x + 1 = 3, what is x?', options: ['1', '2', '3', '4'] }];
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
-    await tick(10);
-    expect(host.textContent).toContain('1 of 2');
-    await tapText(host, '4');
-    await tick(10);
-    expect(host.textContent).toContain('2 of 2');
-    expect(host.textContent).toContain('If x + 1 = 3, what is x?');
+    ear.queued = ['4', '2'];
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(20);
+    expect(spoken.some((l) => l.includes('If 2x = 8, what is x?'))).toBe(true);
+    expect(spoken.some((l) => l.includes('If x + 1 = 3, what is x?'))).toBe(true);
+    expect(answered()).toHaveLength(2);
   });
 
   it('is not asked on a class picked up where it was left', async () => {
     progressStore.set({ lessons: { [lesson.id]: { beatIndex: 2 } }, lastLessonId: lesson.id } as never);
     warm.items = [question];
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
-    expect(host.textContent).not.toContain('If 2x = 8, what is x?');
+    expect(spoken.join(' ')).not.toContain('If 2x = 8, what is x?');
   });
 
   it('counts the warm-up as time on task', async () => {
     warm.items = [question];
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
-    expect(host.textContent).toContain('If 2x = 8, what is x?');
+    expect(spoken.some((l) => l.includes('If 2x = 8, what is x?'))).toBe(true);
     await act(async () => {
       await new Promise((r) => setTimeout(r, 120));
     });
@@ -787,6 +801,7 @@ describe('the class-start warm-up', () => {
   // student heard "Welcome back … from an earlier class" and never "I'm Meera".
   it('introduces her on a first class, and does not call the placement an earlier class', async () => {
     warm.items = [question];
+    ear.queued = ['4'];
     await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
     const lead = spoken.find((l) => /warm-up/i.test(l)) ?? '';
@@ -794,13 +809,34 @@ describe('the class-start warm-up', () => {
     expect(lead).not.toContain('earlier class');
   });
 
-  it('files nothing when it is skipped, and the class begins', async () => {
+  it('files nothing when they stay quiet, says the answer, and the class begins', async () => {
+    warm.items = [question];
+    ear.queued = [null];
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(answered()).toHaveLength(0);
+    expect(spoken.some((l) => l.includes('the answer is 4'))).toBe(true);
+    expect(spoken).toContain(lesson.beats[0].narration);
+  });
+
+  it('asks once more when the words name no choice, then says the answer', async () => {
+    warm.items = [question];
+    ear.queued = ['banana', 'banana'];
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(spoken.filter((l) => LINES.sayAgain.en.includes(l))).toHaveLength(1);
+    expect(answered()).toHaveLength(0);
+    expect(spoken.some((l) => l.includes('the answer is 4'))).toBe(true);
+  });
+
+  it('takes a typed answer when there is no mic', async () => {
+    ear.mic = 'denied';
     warm.items = [question];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
-    await tapText(host, 'Skip warm-up');
-    expect(answered()).toHaveLength(0);
-    expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Four'))).toBe(true);
+    await typeAnswer(host, '4');
+    await tick(10);
+    expect(answered()[0].payload).toMatchObject({ chosenIndex: 1, correct: true });
   });
 });
 
@@ -839,337 +875,26 @@ describe('her greeting when the last class was this one', () => {
   });
 });
 
-/**
- * WORKING IT OUT, EIGHTH REVIEW: the panel reads the question as it means,
- * is offered only where it can follow the working to an answer, takes only
- * the answer asked for, screens what is typed, files a wrong final value, and
- * answers the question once.
- */
-describe('working it out, eighth review', () => {
-  const tap = async (host: HTMLElement, label: string): Promise<void> => {
-    const chip = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes(label));
-    if (!chip) throw new Error(`no "${label}" on screen`);
-    await act(async () => {
-      chip.click();
-    });
-    await tick();
-  };
-  const withAsk = (ask: Record<string, unknown>): Lesson => {
-    const worked = askingLesson(RIGHT_WHY);
-    worked.beats[0].ask = ask as never;
-    return worked;
-  };
-  const hasButton = (host: HTMLElement, text: string): boolean =>
-    [...host.querySelectorAll('button')].some((b) => b.textContent?.includes(text));
-  const typeStep = async (host: HTMLElement, text: string): Promise<void> => {
-    const input = byLabel(host, 'Your next step') as HTMLInputElement;
-    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
-    await act(async () => {
-      setter.call(input, text);
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-    });
-    await tap(host, 'Check step');
-    await tick(10);
-  };
-  const answeredRows = () => ledgerOutbox.get().pending.filter((e) => e.kind === 'answered').map((e) => e.payload as Record<string, unknown>);
-  const moved = () => spoken.includes(lesson.beats[1].narration);
-
-  it('is not offered where it cannot follow the working to the answer', async () => {
-    for (const written of [
-      String.raw`Find $x$: $2^{x} = 32$`,
-      'Is $x = 5$ a solution of $2x + 3 = 11$?',
-      'If $x = 3$, find the value of $2x + 5$',
-      'Solve $x^{2} - 5x + 6 = 0$',
-    ]) {
-      const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written, expect: 'x = 5' }), tts: quickVoice() });
-      await tick();
-      expect(hasButton(host, 'Work it out'), written).toBe(false);
-      for (const root of roots.splice(0)) act(() => root.unmount());
-    }
-  });
-
-  it('reads a fraction as it means, and takes its answer', async () => {
-    const host = await openClass({
-      lesson: withAsk({ question: 'Solve x minus two over four equals three.', written: String.raw`Solve $\frac{x-2}{4} = 3$`, expect: 'x = 14' }),
-      tts: quickVoice(),
-    });
-    await tick();
-    await tap(host, 'Work it out');
-    await typeStep(host, 'x = 14');
-    expect(moved()).toBe(true);
-  });
-
-  it('takes neither the question restated nor a step on the way as the answer', async () => {
-    const host = await openClass({
-      lesson: withAsk({ question: 'Solve two x plus three equals eleven.', written: 'Solve $2x + 3 = 11$', expect: 'Subtract 3 from both sides: 2x = 8, so x = 4.' }),
-      tts: quickVoice(),
-    });
-    await tick();
-    await tap(host, 'Work it out');
-    await typeStep(host, '2x + 3 = 11');
-    await typeStep(host, '2x = 8');
-    expect(moved()).toBe(false);
-    expect(answeredRows()).toHaveLength(0);
-    await typeStep(host, 'x = 4');
-    expect(moved()).toBe(true);
-  });
-
-  it('screens typed working like a typed doubt', async () => {
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' }), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    await typeStep(host, 'i want to kill myself');
-    expect(host.querySelector('[role="alertdialog"]')).not.toBeNull();
-    expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
-    expect(llmCalls).toBe(0);
-  });
-
-  it('files a wrong final value as a wrong answer, and the right one as the next try', async () => {
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    await typeStep(host, 'x = 6');
-    await typeStep(host, 'x = 3');
-    expect(answeredRows().map((r) => [r.correct, r.attempt])).toEqual([
-      [false, 1],
-      [true, 2],
-    ]);
-  });
-
-  // Third review: the ear thinking unmounted the panel, and the steps went.
-  it('keeps their working while the mic is open, and does not judge what it hears', async () => {
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' }), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    const listened = ear.listens;
-    // Said aloud while they work: the next listen would hear it.
-    ear.queued = ['three x plus twelve equals twenty one'];
-    await typeStep(host, '3x + 12 = 21');
-    await tick(20);
-    expect(ear.listens).toBe(listened);
-    expect(host.querySelector('[aria-label="Work it out"]')?.textContent).toContain('3x + 12 = 21');
-    expect(answeredRows()).toHaveLength(0);
-  });
-
-  it('takes the right answer however the expected answer is written', async () => {
-    for (const expect_ of [
-      'x is 4, since 2x = 8',
-      'Four, since 2 × 4 + 3 = 11',
-      String.raw`$x = \frac{8}{2}$`,
-      'The answer is 4 because 2(4) + 3 = 11.',
-    ]) {
-      spoken = [];
-      // Each class from its start: the last one saved its place past the question.
-      progressStore.set({ lessons: {}, lastLessonId: null });
-      const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $2x + 3 = 11$', expect: expect_ }), tts: quickVoice() });
-      await tick();
-      await tap(host, 'Work it out');
-      await typeStep(host, 'x = 4');
-      expect(moved(), expect_).toBe(true);
-      for (const root of roots.splice(0)) act(() => root.unmount());
-    }
-  });
-
-  it('is not offered when the question asks for another expression', async () => {
-    const host = await openClass({
-      lesson: withAsk({ question: 'Find it.', written: 'If $3x + 2 = 11$, find the value of $2x + 1$.', expect: '7' }),
-      tts: quickVoice(),
-    });
-    await tick();
-    expect(hasButton(host, 'Work it out')).toBe(false);
-  });
-
-  // Fourth review: a pause emptied the panel and opened the mic with it open.
-  it('keeps their working, and the mic closed, through a pause', async () => {
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' }), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    await typeStep(host, '3x + 12 = 21');
-    const listened = ear.listens;
-    await act(async () => {
-      byLabel(host, 'Pause the class').click();
-    });
-    await tick(5);
-    await act(async () => {
-      byLabel(host, 'Play the class').click();
-    });
-    await tick(20);
-    expect(ear.listens).toBe(listened);
-    expect(host.querySelector('[aria-label="Work it out"]')?.textContent).toContain('3x + 12 = 21');
-  });
-
-  it('takes a sum on the side, and reads the next step against the equation', async () => {
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x + 12 = 21$', expect: 'x = 3' }), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    await typeStep(host, '21 - 12 = 9');
-    await typeStep(host, '3x = 9');
-    expect(spoken.some((l) => /changes the equation/.test(l))).toBe(false);
-    await typeStep(host, 'x = 3');
-    expect(moved()).toBe(true);
-  });
-
-  // Production, on a phone: three rows of chips rode over a three-line caption.
-  it('keeps the caption to two lines under the chips, and the chips above it', async () => {
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts: quickVoice() });
-    await tick();
-    const chips = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Give me a hint'))!.closest('div.absolute')!;
-    expect(chips.className).toContain('bottom-[76px]');
-    const caption = host.querySelector('p span.line-clamp-2, p span.line-clamp-3');
-    expect(caption).not.toBeNull();
-    expect(caption!.className).toBe('line-clamp-2');
-  });
-
-  // Fifth review: a true check sum ("8 + 3 = 11") was taken as the answer.
-  it('never takes a sum on the side as the answer', async () => {
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $2x + 3 = 11$', expect: 'Four, since 2 × 4 + 3 = 11' }), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    await typeStep(host, '8 + 3 = 11');
-    expect(moved()).toBe(false);
-    expect(answeredRows()).toHaveLength(0);
-    await typeStep(host, 'x = 4');
-    expect(moved()).toBe(true);
-  });
-
-  // Fifth review: a pause during her praise re-asked the question, and the
-  // answer was filed twice.
-  it('files a solved answer once, even when a pause cuts her praise', async () => {
-    const held: Array<() => void> = [];
-    let holding = false;
-    const tts: TtsAdapter = {
-      speak(text) {
-        spoken.push(text);
-        return holding ? new Promise<void>((r) => held.push(r)) : Promise.resolve();
-      },
-      cancel() {
-        for (const r of held.splice(0)) r();
-      },
-    };
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts });
-    await tick();
-    await tap(host, 'Work it out');
-    holding = true;
-    await typeStep(host, 'x = 3');
-    await act(async () => {
-      byLabel(host, 'Pause the class').click();
-    });
-    holding = false;
-    await tick(5);
-    await act(async () => {
-      byLabel(host, 'Play the class').click();
-    });
-    await tick(20);
-    expect(answeredRows()).toHaveLength(1);
-    expect(moved()).toBe(true);
-  });
-
-  // Fifth review: a half-typed line went with the panel on a pause.
-  it('keeps a half-typed step through a pause', async () => {
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' }), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    const input = byLabel(host, 'Your next step') as HTMLInputElement;
-    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
-    await act(async () => {
-      setter.call(input, '3x + 12');
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-    });
-    await act(async () => {
-      byLabel(host, 'Pause the class').click();
-    });
-    await tick(5);
-    await act(async () => {
-      byLabel(host, 'Play the class').click();
-    });
-    await tick(10);
-    expect((byLabel(host, 'Your next step') as HTMLInputElement).value).toBe('3x + 12');
-  });
-
-  it('hides the quick replies while they work', async () => {
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Work it out');
-    expect(hasButton(host, 'Give me a hint')).toBe(false);
-    // Production, on a phone: the "say it" button covered the question on the board.
-    expect(hasButton(host, 'Say your answer out loud')).toBe(false);
-    // And what they type is legible: dark ink on the light field.
-    expect(byLabel(host, 'Your next step').className).not.toContain('text-stage-ink');
-    expect(byLabel(host, 'Your next step').className).toMatch(/(^|\s)text-stage(\s|$)/);
-  });
-
-  it('answers the question once, with nothing to tap while she praises it', async () => {
-    let holding = false;
-    const held: Array<() => void> = [];
-    const tts: TtsAdapter = {
-      speak(text) {
-        spoken.push(text);
-        return holding ? new Promise<void>((r) => held.push(r)) : Promise.resolve();
-      },
-      cancel() {
-        for (const r of held.splice(0)) r();
-      },
-    };
-    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts });
-    await tick();
-    await tap(host, 'Work it out');
-    const listened = ear.listens;
-    holding = true;
-    await typeStep(host, 'x = 3');
-    await tick(10);
-    // Fourth review: the mic reopened while she praised the solved step.
-    expect(ear.listens).toBe(listened);
-    expect(hasButton(host, 'Work it out')).toBe(false);
-    expect(host.querySelector('[aria-label="Your next step"]')).toBeNull();
-    holding = false;
-    await act(async () => {
-      for (const r of held.splice(0)) r();
-    });
-    await tick(10);
-    expect(answeredRows()).toHaveLength(1);
-  });
-});
-
 /** H4/H5 in the room (second review: neither reached a room test). */
 describe('how she helped, on the record', () => {
-  const tap = async (host: HTMLElement, label: string): Promise<void> => {
-    const chip = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes(label));
-    if (!chip) throw new Error(`no "${label}" on screen`);
-    await act(async () => {
-      chip.click();
-    });
+  it('files the strategy with the help a wrong answer gets (H5)', async () => {
+    ear.queued = ['Just plasma'];
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
-  };
-  const helped = () =>
-    ledgerOutbox.get().pending.filter((e) => e.kind === 'helped').map((e) => e.payload as Record<string, unknown>);
-  const withAlternates = (): Lesson => {
+    expect(pending('helped')[0]).toMatchObject({ rung: 1, requested: false });
+    expect(typeof pending('helped')[0].strategy).toBe('string');
+  });
+
+  it('files an asked-for explanation as L7, asked for, by its mode (H4)', async () => {
     const alt = askingLesson(RIGHT_WHY);
     alt.beats[0].ask = {
       ...alt.beats[0].ask!,
       alternates: [{ mode: 'analogy', say: 'Think of blood as a delivery team with different workers.' }],
     } as never;
-    return alt;
-  };
-
-  it('files the strategy with the help a wrong tap gets (H5)', async () => {
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Two');
-    expect(helped()[0]).toMatchObject({ rung: 1, requested: false });
-    expect(typeof helped()[0].strategy).toBe('string');
-  });
-
-  it('files an asked-for explanation as L7, asked for, by its mode (H4)', async () => {
-    const host = await openClass({ lesson: withAlternates(), tts: quickVoice() });
-    await tick();
-    await tap(host, 'Explain another way');
-    expect(helped()[0]).toMatchObject({ rung: 7, requested: true, strategy: 'analogy' });
+    ear.queued = ['phir se samjhao'];
+    await openClass({ lesson: alt, tts: quickVoice() });
+    await tick(10);
+    expect(pending('helped')[0]).toMatchObject({ rung: 7, requested: true, strategy: 'analogy' });
     expect(spoken.some((l) => l.includes('Think of blood as a delivery team'))).toBe(true);
-  });
-
-  it('offers "Explain another way" only when there is another way authored', async () => {
-    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
-    await tick();
-    expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Explain another way'))).toBe(false);
   });
 });

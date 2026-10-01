@@ -122,6 +122,21 @@ const moveOn: Fixed = {
   ],
 };
 
+/**
+ * Nothing usable came back on a question — it could not be heard, or could
+ * not be judged — and the class goes on. Nothing in it says they were wrong.
+ */
+const carryOn: Fixed = {
+  en: [
+    "Let's carry on for now — we'll come back to this question later.",
+    "Let's keep going, and try this one again another time.",
+  ],
+  'hi-en': [
+    'Chalo, abhi aage badhte hain — yeh sawaal baad mein phir karenge.',
+    'Chalo aage chalte hain, isse kabhi aur phir try karenge.',
+  ],
+};
+
 /** Right, cold. Brief. */
 const praise: Fixed = {
   en: ["Yes — that's right.", 'Exactly.', "That's it — well reasoned.", 'Right, nicely done.'],
@@ -191,6 +206,7 @@ export const LINES = {
   sayAgain,
   afterFollowUp,
   moveOn,
+  carryOn,
   praise,
   praiseAfterHelp,
   praiseAfterReveal,
