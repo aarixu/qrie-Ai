@@ -1100,24 +1100,24 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     );
 
   say('planning', 'Working out how to teach this…', 0.05);
-  const raw = await planner.complete(
-    PLANNER_SYSTEM,
-    plannerUser(topic, klass, minutes, opts.studentLines, opts.teacherStyle, opts.outcomes, language),
-  );
+  const brief = plannerUser(topic, klass, minutes, opts.studentLines, opts.teacherStyle, opts.outcomes, language);
+  const raw = await planner.complete(PLANNER_SYSTEM, brief);
 
   // Unreadable JSON gets the same second chance a bad plan does. A model that
   // drops a brace has still done the thinking; failing the whole class over
   // punctuation throws that away.
+  //
+  // The second ask is the WHOLE brief again — the topic, the class, the
+  // outcomes — and not a fragment of the bad reply. It used to send the reply's
+  // first 4,000 characters and nothing else; a plan rewritten from that knew no
+  // outcomes, tagged no `checks`, and the keep gate refused every ask it held
+  // (Respiration, 2026-10-02).
   let blueprint = parsePlan(raw);
   if (!blueprint) {
     issues.push('The first plan was not readable JSON.');
     say('planning', 'That came back garbled — asking again…', 0.2);
     const retry = await repairCall(
-      repairPlanUser(
-        raw.slice(0, 4000),
-        ['The reply was not valid JSON. Return the whole plan again, as one JSON object.'],
-        language,
-      ),
+      `${brief}\n\nYour last reply to this was not valid JSON. Return the whole plan again, as one JSON object.`,
       0.2,
     );
     blueprint = parsePlan(retry);

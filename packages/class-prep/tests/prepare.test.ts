@@ -255,6 +255,29 @@ describe('prepareClass', () => {
     expect(result.lesson.beats.length).toBeGreaterThan(0);
     expect(result.report.issues.join(' ')).toContain('not readable JSON');
   });
+
+  it('asks again with the whole brief — the outcomes included — not a fragment of the bad reply', async () => {
+    // 2026-10-02: the second ask carried only the first 4,000 characters of the
+    // garbled reply, and no outcome list; the Respiration plan came back with
+    // no `checks`, and the keep gate refused every ask it held.
+    const asked: string[] = [];
+    const planner: LlmAdapter = {
+      complete: async (_system, user) => {
+        asked.push(user);
+        return asked.length === 1 ? '{"beats": [ oops' : JSON.stringify(blueprint);
+      },
+    };
+    await prepareClass({
+      topic: 'Speed',
+      klass: 9,
+      planner,
+      artist: fakeArtist([svg(['axes', 'line_fast'])]),
+      outcomes: [{ id: 'sci9-motion-speed', statement: 'Calculate speed as distance over time' }],
+    });
+    expect(asked[1]).toContain('sci9-motion-speed');
+    expect(asked[1]).toContain(asked[0]);
+    expect(asked[1]).toMatch(/not valid JSON/);
+  });
 });
 
 describe('a plan that fails validation gets one repair round', () => {
