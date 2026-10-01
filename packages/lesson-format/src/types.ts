@@ -549,6 +549,14 @@ export interface Lesson {
 
 export const CANVAS_W = 1000;
 export const CANVAS_H = 620;
+
+/**
+ * The shape of the screen every page is watched through: 16:9 on every device,
+ * phones included, like a long-form video (Aarav, 2026-10-01; canvas C2). The
+ * page stays 1000x620; the camera frames a 16:9 window onto it, so a whole page
+ * shows with a little board either side.
+ */
+export const STAGE_ASPECT = 16 / 9;
 /**
  * How far apart two pages of the endless board sit.
  *

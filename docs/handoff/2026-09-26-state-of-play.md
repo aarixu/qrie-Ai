@@ -328,6 +328,17 @@ Smart-board design research covered what the board can do today and how speech c
 3. **Size floors raised to 24–28 units,** and a gate on rendered pixel size.
 4. **Chrome gives its space back,** and the tutor picture moves off the board.
 
+**C2 STATUS (2026-10-02, ~01:45): DONE, not yet deployed.** Items 2 and 3 above were replaced by Aarav's decision 3 below (16:9 everywhere).
+- **The stage is 16:9 on every screen** (`ClassRoom.tsx`, `lib/useMediaQuery.ts`). Three rooms:
+  - **wide** (≥1024 px): the largest 16:9 that fits the column (a CSS size container), with the rail (Meera + the doubt) beside it. 1280x720: a 944x531 stage.
+  - **sideways** (landscape, under 1024 px): the stage takes the full height; a 128 px column beside it holds Meera's small window, the clock, the report flag and the two controls. Nothing sits on the board. 812x375: a 652x367 stage.
+  - **upright** (everything else): the stage across the top like a video (390x219 on a 390 px phone), and Meera standing in her study in the room under it.
+  - Only one tutor tile is ever mounted, so there is one WebGL context, not two.
+- **The page stays 1000x620;** the camera frames a 16:9 window onto it (Scene measures its box; verified viewBox 731x411 on the sideways phone). `STAGE_ASPECT` in lesson-format; the gate's `on-camera` rule now frames at 16:9. The fuzz stays at 0 classes off camera.
+- **Text size, measured** (`class-prep/tests/boardPixels.test.ts`, 300 seeded classes): sideways phone median 22 px, 11.3% of lines under 14 px, 7.1% under 12 px; laptop median 30 px, none under 12; upright phone median 13 px (that view is the video in portrait).
+  - Most of the small lines are connector labels, which shrink to fit the run between two drawn things (floor 17 units).
+  - Tried and left: a label floor of 19–20 units cut lines under 12 px to ~2.5%, but turned 1 overlapping class in 300 into 2–3. Each one is a class refused after its spend. Fixing this properly means wrapping a long label onto two lines.
+
 **C3 — The smart board.** Effort L. Built with live-tutor phase 2, because the live drivers carry the ink.
 
 1. **A visible pen tip that leads every stroke** and becomes her pointer, while her avatar looks at the board.

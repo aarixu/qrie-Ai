@@ -14,7 +14,7 @@ export type {
   AlternateMode,
   WorkArea,
 } from './types';
-export { ALTERNATE_MODES, CANVAS_W, CANVAS_H, PAGE_STRIDE } from './types';
+export { ALTERNATE_MODES, CANVAS_W, CANVAS_H, PAGE_STRIDE, STAGE_ASPECT } from './types';
 export { validateLesson, findBeat, elementsForBeat, splitPartRef, PART_SEPARATOR } from './validate';
 export type { ValidationResult } from './validate';
 export {

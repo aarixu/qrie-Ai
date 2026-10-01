@@ -199,7 +199,8 @@ async function raiseHand(host: HTMLElement): Promise<void> {
 
 /** Types into a labelled box and presses its send button. */
 async function typeInto(host: HTMLElement, label: string, send: string, text: string): Promise<void> {
-  const input = byLabel(host, label) as HTMLInputElement;
+  const input = host.querySelector<HTMLInputElement>(`input[aria-label="${label}"]`);
+  if (!input) throw new Error(`no box is labelled "${label}"`);
   const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
   await act(async () => {
     setter.call(input, text);
@@ -211,7 +212,19 @@ async function typeInto(host: HTMLElement, label: string, send: string, text: st
   await tick();
 }
 
-const typeDoubt = (host: HTMLElement, text: string) => typeInto(host, 'Type your doubt', 'Send doubt', text);
+/**
+ * jsdom has no matchMedia, so the room is laid out for a phone held upright:
+ * there the doubt box is a row the keyboard button brings up, as a student
+ * would tap it.
+ */
+async function typeDoubt(host: HTMLElement, text: string): Promise<void> {
+  if (!host.querySelector('input[aria-label="Type your doubt"]')) {
+    await act(async () => {
+      host.querySelector<HTMLButtonElement>('button[aria-label="Type your doubt"]')!.click();
+    });
+  }
+  await typeInto(host, 'Type your doubt', 'Send doubt', text);
+}
 const typeAnswer = (host: HTMLElement, text: string) => typeInto(host, 'Type your answer', 'Send answer', text);
 
 const buttonWith = (host: HTMLElement, text: string): boolean =>

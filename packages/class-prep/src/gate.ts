@@ -1,5 +1,5 @@
 import { assertNoOverlap, OverlapError, type Bond } from '@ai-tutor/board-layout';
-import { boxOf, CANVAS_H, CANVAS_W, PAGE_STRIDE, type Beat, type Element, type Lesson } from '@ai-tutor/lesson-format';
+import { boxOf, CANVAS_H, CANVAS_W, PAGE_STRIDE, STAGE_ASPECT, type Beat, type Element, type Lesson } from '@ai-tutor/lesson-format';
 // The camera itself, by relative path for the reason given just below: it is
 // pure geometry over lesson-format, and importing the package would pull in
 // the React renderer.
@@ -69,7 +69,7 @@ import type { TopicOutcome } from './prompts.ts';
  *                    camera frames one page, so the rest of that line's ink
  *                    was drawn where nobody was looking (16% of moments).
  *   on-camera        every element is inside the frame the camera chooses
- *                    (stage's `computeFrame`, at the board's own shape) at
+ *                    (stage's `computeFrame`, at the stage's 16:9) at
  *                    least once in the class. 2.7% of kept elements never were.
  *   drawn            every board instruction that writes words — a title, a
  *                    write, a note, a caption, a card, an equation, a list, a
@@ -436,7 +436,8 @@ function boardProblems(lesson: Lesson): GateProblem[] {
   });
 
   const seen = new Set<string>();
-  const aspect = CANVAS_W / CANVAS_H;
+  // The shape every student sees: the stage is 16:9 on every screen (canvas C2).
+  const aspect = STAGE_ASPECT;
   for (const beat of lesson.beats) {
     const frame = computeFrame(lesson, beat.frame ?? beat.show, beat.focus ?? [], aspect);
     for (const id of beat.show) {

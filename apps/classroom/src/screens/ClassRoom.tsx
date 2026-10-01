@@ -70,6 +70,7 @@ import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
 import { SupportScreen } from '../ui/SupportScreen';
 import { withoutAskInk } from '../lib/askInk';
+import { useMediaQuery } from '../lib/useMediaQuery';
 import { dontKnowIn } from '@ai-tutor/tutor-judge';
 
 /**
@@ -246,12 +247,21 @@ function ToolButton({
 }
 
 /**
+ * The board's box where the room around it is not 16:9: the largest 16:9 that
+ * fits the box it stands in (STAGE_BOX makes that box a size container, so
+ * `cqw`/`cqh` are its width and height).
+ */
+const STAGE_BOX = { containerType: 'size' } as const;
+const STAGE_FIT = { width: 'min(100cqw, calc(100cqh * 16 / 9))', aspectRatio: '16 / 9' } as const;
+
+/**
  * The classroom — laid out the way Meet lays out a call with a presentation,
  * because "a Google Meet where an AI teacher is taking a live class" is the
  * product. The board is the shared screen and takes everything; Meera is a
- * participant tile (side rail on wide screens, PiP on a phone); the top bar
- * says whose class this is and whether it is the recording or the live tutor;
- * the toolbar holds the controls and fades away like Meet's.
+ * participant tile (side rail on wide screens, a small window beside the board
+ * on a phone held sideways, the room under it on one held upright); the top
+ * bar says which class this is; the toolbar holds the controls and fades away
+ * like Meet's.
  *
  * Wiring only — every decision this screen appears to make is actually made
  * inside a package:
@@ -1841,6 +1851,22 @@ export function ClassRoom({
   // The box under the board, while a question waits on a student with no mic.
   const answerBoxShown = answerBy === 'text' && !inDoubt;
 
+  /**
+   * THE BOARD IS 16:9 ON EVERY SCREEN (Aarav, 2026-10-01: "like long-form
+   * YouTube"; canvas C2). Three rooms around it:
+   *   wide     a laptop: the stage as large as the room allows, Meera and the
+   *            doubt in the rail beside it;
+   *   sideways a phone held sideways: the stage fills the screen, and only the
+   *            two controls, her small picture and the report flag float on it;
+   *   upright  everything else: the stage across the top like a video, and
+   *            Meera's tile in the room under it.
+   * The camera frames whatever box the stage is (Scene measures it), so every
+   * frame comes out 16:9 with no change to the camera.
+   */
+  const wide = useMediaQuery('(min-width: 1024px)');
+  const sideways = useMediaQuery('(orientation: landscape) and (max-height: 500px)') && !wide;
+  const fitted = wide || sideways;
+
   const barsShown = controlsShown || !canHideControls;
   const barClasses = barsShown ? 'opacity-100' : 'opacity-0 pointer-events-none';
 
@@ -1849,233 +1875,293 @@ export function ClassRoom({
   // a stray tap or a keyboard. Its one way out is the way out of the class.
   if (support !== null) return <SupportScreen line={support} onLeave={onExit} />;
 
+  // The board. Its box is 16:9 in every room; Scene frames whatever box it is.
+  const stage = (
+    <section
+      style={fitted ? STAGE_FIT : undefined}
+      className={`relative bg-white overflow-hidden ${
+        fitted ? 'rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.5)]' : 'w-full aspect-video flex-shrink-0'
+      }`}
+    >
+      <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
+
+      {/* Joining: the room readies itself, then the class begins on its own. */}
+      {joining && (
+        <div className="absolute inset-0 grid place-items-center bg-stage/40 backdrop-blur-[2px]">
+          {entryPhase === 'preparing' ? (
+            <div className="flex flex-col items-center gap-4 px-6 text-center">
+              <div className="flex items-end gap-1.5 h-6" aria-hidden>
+                {[10, 20, 14, 22, 12].map((h, i) => (
+                  <span
+                    key={i}
+                    className="w-1.5 rounded-full bg-white sound-bar"
+                    style={{ height: h, animationDelay: `${i * 0.15}s` }}
+                  />
+                ))}
+              </div>
+              <p className="font-headline-md text-[17px] leading-6 font-semibold text-white">
+                {canResume ? 'Picking up where you left off…' : 'Meera is getting your class ready…'}
+              </p>
+              {/* PREPARE_MS worth of fill, so the wait visibly ends. */}
+              <div className="w-48 h-1.5 rounded-full bg-white/25 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-white"
+                  style={{ animation: `prepare-fill ${PREPARE_MS}ms linear forwards` }}
+                />
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={joinClass}
+              className="flex items-center gap-2 bg-stage-primary text-on-stage-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
+            >
+              <Icon name="play_arrow" filled />
+              {canResume ? 'Rejoin class' : 'Join class'}
+            </button>
+          )}
+        </div>
+      )}
+    </section>
+  );
+
+  /** The stage in a box that is not 16:9: as large as fits, centred. */
+  const fittedStage = (
+    <div className="flex-1 min-h-0 min-w-0 grid place-items-center" style={STAGE_BOX}>
+      {stage}
+    </div>
+  );
+
+  // Captions, when they are on: a strip under the board, never on it. Up to
+  // two lines. During a doubt on a wide screen the rail already shows the
+  // conversation, so the strip steps aside there.
+  const captionStrip = caption && !(inDoubt && wide) && (
+    <p
+      data-caption
+      className={`flex-shrink-0 rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white ${
+        inDoubt ? 'bg-stage-green-container/95' : 'bg-stage-surface'
+      }`}
+    >
+      <span className="line-clamp-2">{caption}</span>
+    </p>
+  );
+
+  // A held question, and no mic to hear the answer: the one box she reads
+  // from. Under the board, never on it.
+  const answerBox = answerBoxShown && (
+    <div className="flex gap-2 flex-shrink-0">
+      <input
+        autoFocus
+        value={answerDraft}
+        onChange={(e) => setAnswerDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') submitTyped();
+        }}
+        placeholder="Type your answer…"
+        aria-label="Type your answer"
+        className="flex-1 min-w-0 h-11 px-3.5 rounded-xl bg-stage-surface text-stage-ink font-body-md text-[14px] placeholder:text-stage-ink-dim outline-none focus:ring-2 focus:ring-stage-blue"
+      />
+      <button
+        onClick={submitTyped}
+        aria-label="Send answer"
+        className="w-11 h-11 rounded-xl bg-stage-primary text-on-stage-primary grid place-items-center flex-shrink-0"
+      >
+        <Icon name="send" filled className="text-[18px]" />
+      </button>
+    </div>
+  );
+
+  // A typed doubt where there is no rail: a slim input row the keyboard
+  // button summons.
+  const doubtRow = !wide && inDoubt && typing && (
+    <div className="flex gap-2 flex-shrink-0">
+      <input
+        autoFocus
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key !== 'Enter' || !draft.trim()) return;
+          sendText(draft.trim());
+          setDraft('');
+        }}
+        placeholder="Type your doubt…"
+        aria-label="Type your doubt"
+        className="flex-1 min-w-0 h-11 px-3.5 rounded-xl bg-stage-surface text-stage-ink font-body-md text-[14px] placeholder:text-stage-ink-dim outline-none focus:ring-2 focus:ring-stage-blue"
+      />
+      <button
+        onClick={() => {
+          if (!draft.trim()) return;
+          sendText(draft.trim());
+          setDraft('');
+        }}
+        aria-label="Send doubt"
+        className="w-11 h-11 rounded-xl bg-stage-primary text-on-stage-primary grid place-items-center flex-shrink-0"
+      >
+        <Icon name="send" filled className="text-[18px]" />
+      </button>
+    </div>
+  );
+
+  // A student must always have a way to say "this was wrong", and the moment
+  // they want it is the moment it happened. Beside the clock, so the toolbar
+  // keeps only its two controls.
+  const reportButton = (
+    <button
+      onClick={() => setReporting(true)}
+      aria-label="Report something in this class"
+      className="w-9 h-9 rounded-full grid place-items-center hover:bg-white/10 transition-colors flex-shrink-0"
+    >
+      <Icon name="flag" className="text-[20px]" />
+    </button>
+  );
+  const clock = (
+    <span className="font-label-md text-[13px] font-semibold tabular-nums flex-shrink-0">{formatClock(elapsed)}</span>
+  );
+
+  // The toolbar: raise a hand, or end the class — nothing else (Aarav,
+  // 2026-10-01). It fades like Meet's; the board stays exactly where it is,
+  // because no room puts the toolbar on it.
+  const toolbar = (
+    <nav
+      aria-hidden={!barsShown}
+      className={`transition-opacity duration-300 ${barClasses} ${
+        sideways
+          ? 'w-full flex flex-wrap justify-center items-center gap-2'
+          : 'flex justify-center items-center gap-3.5 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-1 flex-shrink-0'
+      }`}
+    >
+      {!inDoubt ? (
+        <>
+          <ToolButton
+            icon="front_hand"
+            label="Raise hand and ask a doubt"
+            tone="primary"
+            big
+            onClick={raiseHand}
+            disabled={player.state !== 'playing' && player.state !== 'paused'}
+          />
+          <ToolButton icon="call_end" label="End the class" tone="red" onClick={onExit} />
+        </>
+      ) : (
+        <>
+          {voiceMode && (
+            <ToolButton
+              icon={muted ? 'mic_off' : 'mic'}
+              label={muted ? 'Unmute microphone' : 'Mute microphone'}
+              tone={muted ? 'plain' : 'primary'}
+              onClick={() => setMuted((m) => !m)}
+              disabled={handoffState !== 'LIVE'}
+            />
+          )}
+          {/* Where there is no rail to type in, the keyboard brings up the doubt row. */}
+          {!wide && (
+            <ToolButton
+              icon="keyboard"
+              label="Type your doubt"
+              tone={typing ? 'lit' : 'plain'}
+              onClick={() => setTyping((t) => !t)}
+            />
+          )}
+          <ToolButton icon="check" label="Got it — back to the class" tone="green" big onClick={endDoubt} />
+          <ToolButton icon="call_end" label="End the class" tone="red" onClick={onExit} disabled />
+        </>
+      )}
+    </nav>
+  );
+
   return (
     <div
       onPointerDown={revealControls}
       onPointerMove={revealControls}
       onKeyDown={revealControls}
-      className="fixed inset-0 bg-stage text-stage-ink flex flex-col overflow-hidden font-body-md antialiased select-none"
+      className={`fixed inset-0 bg-stage text-stage-ink flex overflow-hidden font-body-md antialiased select-none ${
+        sideways ? 'flex-row' : 'flex-col'
+      }`}
     >
-      {/* Top bar: whose class, the class clock, and the way to report
-          something. Nothing here says "recording" (Aarav, 2026-10-01). */}
-      <header
-        className={`flex items-center gap-2.5 px-3 py-2 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
-      >
-        <div className="min-w-0">
-          <h1 className="font-headline-md text-[15px] leading-5 font-semibold text-stage-ink truncate">
-            {lesson.title}
-          </h1>
-          {lesson.subtitle && (
-            <p className="font-label-sm text-[11.5px] leading-4 text-stage-ink-dim truncate">{lesson.subtitle}</p>
-          )}
-        </div>
-        <div className="flex-1" />
-        <span className="font-label-md text-[13px] font-semibold tabular-nums flex-shrink-0">
-          {formatClock(elapsed)}
-        </span>
-        {/* A student must always have a way to say "this was wrong", and the
-            moment they want it is the moment it happened. Up here, so the
-            toolbar keeps only its two controls. */}
-        <button
-          onClick={() => setReporting(true)}
-          aria-label="Report something in this class"
-          className="w-9 h-9 rounded-full grid place-items-center hover:bg-white/10 transition-colors flex-shrink-0"
-        >
-          <Icon name="flag" className="text-[20px]" />
-        </button>
-      </header>
-
-      {/* The room: the board, and (wide screens) the rail with Meera + the doubt */}
-      <main className="flex-1 min-h-0 flex gap-3 px-3 pb-3">
-        <div className="flex-1 min-w-0 flex flex-col gap-2">
-          <section className="relative flex-1 min-h-0 bg-white rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
-            <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
-
-            {/* Joining: the room readies itself, then the class begins on its own. */}
-            {joining && (
-              <div className="absolute inset-0 grid place-items-center bg-stage/40 backdrop-blur-[2px]">
-                {entryPhase === 'preparing' ? (
-                  <div className="flex flex-col items-center gap-4 px-6 text-center">
-                    <div className="flex items-end gap-1.5 h-6" aria-hidden>
-                      {[10, 20, 14, 22, 12].map((h, i) => (
-                        <span
-                          key={i}
-                          className="w-1.5 rounded-full bg-white sound-bar"
-                          style={{ height: h, animationDelay: `${i * 0.15}s` }}
-                        />
-                      ))}
-                    </div>
-                    <p className="font-headline-md text-[17px] leading-6 font-semibold text-white">
-                      {canResume ? 'Picking up where you left off…' : 'Meera is getting your class ready…'}
-                    </p>
-                    {/* PREPARE_MS worth of fill, so the wait visibly ends. */}
-                    <div className="w-48 h-1.5 rounded-full bg-white/25 overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-white"
-                        style={{ animation: `prepare-fill ${PREPARE_MS}ms linear forwards` }}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <button
-                    onClick={joinClass}
-                    className="flex items-center gap-2 bg-stage-primary text-on-stage-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
-                  >
-                    <Icon name="play_arrow" filled />
-                    {canResume ? 'Rejoin class' : 'Join class'}
-                  </button>
-                )}
-              </div>
+      {sideways ? (
+        <>
+          {/* A phone held sideways: the stage takes the screen's full height,
+              and everything else stands in a slim column beside it — Meera
+              small at the top, the controls under her. Nothing is on the board. */}
+          <main className="flex-1 min-w-0 flex flex-col gap-2 p-1">
+            {fittedStage}
+            {captionStrip}
+            {answerBox}
+            {doubtRow}
+          </main>
+          <aside className="w-[128px] flex-shrink-0 flex flex-col items-center gap-2 py-2 pr-2">
+            {/* She steps out while a typing row is up, so the row has the
+                height it needs on a short screen. */}
+            {!((inDoubt && typing) || answerBoxShown) && (
+              <TutorTile mode={tutorMode} variant="pip" clone={tile} />
             )}
-          </section>
-
-          {/* Captions, when they are on: a strip under the board, never on it.
-              Up to two lines, and clear of her picture on a phone. During a
-              doubt on a wide screen the rail already shows the conversation. */}
-          {caption && (
-            <p
-              data-caption
-              className={`flex-shrink-0 max-w-[calc(100%-120px)] lg:max-w-none rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white ${
-                inDoubt ? 'bg-stage-green-container/95 lg:hidden' : 'bg-stage-surface'
-              }`}
-            >
-              <span className="line-clamp-2">{caption}</span>
-            </p>
-          )}
-
-          {/* A held question, and no mic to hear the answer: the one box she
-              reads from. Under the board, never on it. */}
-          {answerBoxShown && (
-            <div className="flex gap-2 flex-shrink-0">
-              <input
-                autoFocus
-                value={answerDraft}
-                onChange={(e) => setAnswerDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') submitTyped();
-                }}
-                placeholder="Type your answer…"
-                aria-label="Type your answer"
-                className="flex-1 min-w-0 h-11 px-3.5 rounded-xl bg-stage-surface text-stage-ink font-body-md text-[14px] placeholder:text-stage-ink-dim outline-none focus:ring-2 focus:ring-stage-blue"
-              />
-              <button
-                onClick={submitTyped}
-                aria-label="Send answer"
-                className="w-11 h-11 rounded-xl bg-stage-primary text-on-stage-primary grid place-items-center flex-shrink-0"
-              >
-                <Icon name="send" filled className="text-[18px]" />
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* The rail: Meera's window over the doubt conversation. Wide screens only. */}
-        <aside className="hidden lg:flex w-[300px] flex-shrink-0 flex-col gap-3">
-          <TutorTile mode={tutorMode} variant="rail" clone={tile} />
-          {/* The conversation's lines are captions too: shown only with them on. */}
-          <DoubtPanel
-            active={inDoubt}
-            lines={captionsOn ? doubtLines : []}
-            status={doubtStatus}
-            onSend={inDoubt ? sendText : undefined}
-            onDone={inDoubt ? endDoubt : undefined}
-          />
-        </aside>
-      </main>
-
-      {/* On a phone Meera floats over the board, Meet PiP style — and steps
-          out while a typing row is up: wherever she floated she covered part
-          of it on a small phone (overnight review #29; fifth review measured
-          the send button). */}
-      {!((inDoubt && typing) || answerBoxShown) && (
-        <div className="lg:hidden absolute right-4 bottom-[96px] z-40">
-          <TutorTile mode={tutorMode} variant="pip" clone={tile} />
-        </div>
-      )}
-
-      {/* Typed doubt on a phone: a slim input row the keyboard button summons. */}
-      {inDoubt && typing && (
-        <div className="lg:hidden flex gap-2 px-3 pb-2 z-30">
-          <input
-            autoFocus
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key !== 'Enter' || !draft.trim()) return;
-              sendText(draft.trim());
-              setDraft('');
-            }}
-            placeholder="Type your doubt…"
-            aria-label="Type your doubt"
-            className="flex-1 min-w-0 h-11 px-3.5 rounded-xl bg-stage-surface text-stage-ink font-body-md text-[14px] placeholder:text-stage-ink-dim outline-none focus:ring-2 focus:ring-stage-blue"
-          />
-          <button
-            onClick={() => {
-              if (!draft.trim()) return;
-              sendText(draft.trim());
-              setDraft('');
-            }}
-            aria-label="Send doubt"
-            className="w-11 h-11 rounded-xl bg-stage-primary text-on-stage-primary grid place-items-center flex-shrink-0"
+            <header className={`flex items-center justify-between w-full transition-opacity duration-300 ${barClasses}`}>
+              {clock}
+              {reportButton}
+            </header>
+            <div className="flex-1" />
+            {toolbar}
+          </aside>
+        </>
+      ) : (
+        <>
+          {/* Top bar: whose class, the class clock, and the way to report
+              something. Nothing here says "recording" (Aarav, 2026-10-01). */}
+          <header
+            className={`flex items-center gap-2.5 px-3 py-2 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
           >
-            <Icon name="send" filled className="text-[18px]" />
-          </button>
-        </div>
-      )}
+            <div className="min-w-0">
+              <h1 className="font-headline-md text-[15px] leading-5 font-semibold text-stage-ink truncate">
+                {lesson.title}
+              </h1>
+              {lesson.subtitle && (
+                <p className="font-label-sm text-[11.5px] leading-4 text-stage-ink-dim truncate">{lesson.subtitle}</p>
+              )}
+            </div>
+            <div className="flex-1" />
+            {clock}
+            {reportButton}
+          </header>
 
-      {/* The toolbar: raise a hand, or end the class — nothing else (Aarav,
-          2026-10-01). It fades like Meet's; the board stays exactly where it is. */}
-      <nav
-        aria-hidden={!barsShown}
-        className={`flex justify-center items-center gap-3.5 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-1 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
-      >
-        {!inDoubt ? (
-          <>
-            <ToolButton
-              icon="front_hand"
-              label="Raise hand and ask a doubt"
-              tone="primary"
-              big
-              onClick={raiseHand}
-              disabled={player.state !== 'playing' && player.state !== 'paused'}
-            />
-            <ToolButton icon="call_end" label="End the class" tone="red" onClick={onExit} />
-          </>
-        ) : (
-          <>
-            {voiceMode ? (
-              <ToolButton
-                icon={muted ? 'mic_off' : 'mic'}
-                label={muted ? 'Unmute microphone' : 'Mute microphone'}
-                tone={muted ? 'plain' : 'primary'}
-                onClick={() => setMuted((m) => !m)}
-                disabled={handoffState !== 'LIVE'}
-              />
-            ) : (
-              <div className="lg:hidden">
-                <ToolButton
-                  icon="keyboard"
-                  label="Type your doubt"
-                  tone={typing ? 'lit' : 'plain'}
-                  onClick={() => setTyping((t) => !t)}
-                />
+          {wide ? (
+            /* A wide screen: the stage as large as the room allows, and the
+               rail beside it with Meera over the doubt conversation. */
+            <main className="flex-1 min-h-0 flex gap-3 px-3 pb-3">
+              <div className="flex-1 min-w-0 flex flex-col gap-2">
+                {fittedStage}
+                {captionStrip}
+                {answerBox}
               </div>
-            )}
-            {voiceMode && (
-              <div className="lg:hidden">
-                <ToolButton
-                  icon="keyboard"
-                  label="Type your doubt"
-                  tone={typing ? 'lit' : 'plain'}
-                  onClick={() => setTyping((t) => !t)}
+              <aside className="w-[300px] flex-shrink-0 flex flex-col gap-3">
+                <TutorTile mode={tutorMode} variant="rail" clone={tile} />
+                {/* The conversation's lines are captions too: shown only with them on. */}
+                <DoubtPanel
+                  active={inDoubt}
+                  lines={captionsOn ? doubtLines : []}
+                  status={doubtStatus}
+                  onSend={inDoubt ? sendText : undefined}
+                  onDone={inDoubt ? endDoubt : undefined}
                 />
+              </aside>
+            </main>
+          ) : (
+            /* A phone held upright: the stage across the top like a video,
+               and Meera in the room under it. */
+            <main className="flex-1 min-h-0 flex flex-col gap-2 pb-2">
+              {stage}
+              <div className="flex-1 min-h-0 flex flex-col gap-2 px-3">
+                {captionStrip}
+                {answerBox}
+                {doubtRow}
+                <div className="flex-1 min-h-0">
+                  <TutorTile mode={tutorMode} variant="fill" clone={tile} />
+                </div>
               </div>
-            )}
-            <ToolButton icon="check" label="Got it — back to the class" tone="green" big onClick={endDoubt} />
-            <ToolButton icon="call_end" label="End the class" tone="red" onClick={onExit} disabled />
-          </>
-        )}
-      </nav>
+            </main>
+          )}
+
+          {toolbar}
+        </>
+      )}
 
       {micAsk && <MicRationale onAllow={() => micAsk(true)} onSkip={() => micAsk(false)} />}
 
