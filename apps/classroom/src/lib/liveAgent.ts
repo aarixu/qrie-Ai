@@ -47,8 +47,11 @@ import {
  *
  * Both were verified on this key against real pushed speech. Neither is ever
  * asked to greet: the bridge line belongs to the handoff, not to the model
- * (see the setupComplete case below), which is also what keeps 3.1 usable —
- * every path that makes a model speak first is blocked on 3.1 somewhere.
+ * (see the setupComplete case below). An earlier version of this comment said
+ * every path that makes a model speak first is blocked on 3.1; measured
+ * 2026-09-30 that is false for a `clientContent` user turn sent after
+ * setupComplete — 18 of 18 openers spoke on 3.1 and 3.8
+ * (tools/live-sim/SPIKE.md).
  */
 export const LIVE_MODELS = [
   'gemini-3.1-flash-live-preview',
@@ -555,10 +558,8 @@ export function createLiveAgent(opts: LiveAgentOptions): AgentAdapter {
             // on top of it is the student being welcomed twice in four seconds,
             // at exactly the seam the whole product is built around.
             //
-            // It also keeps every live model usable: asking a model to speak
-            // first is the one thing that is blocked on 3.1. Silence here is
-            // not dead air — she is listening, and the student was just asked a
-            // question.
+            // Silence here is not dead air — she is listening, and the student
+            // was just asked a question.
             break;
           }
 
