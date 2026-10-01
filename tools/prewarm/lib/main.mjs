@@ -56,6 +56,7 @@ import {
 import { PER_TOPIC_INR, estimate } from './estimate.mjs';
 import { parseModelPriceSql } from './modelPriceSql.mjs';
 import { readEnvLocal } from './envLocal.mjs';
+import { writeClassTo } from './out.mjs';
 import { createRelayClient, priceCalls } from './relayAdapters.mjs';
 
 // The pipeline itself — imported by path, READ-ONLY. Any browser-coupling
@@ -106,6 +107,8 @@ export function parseArgs(argv) {
     acceptUnreviewed: false,
     force: false,
     rekeep: false,
+    out: undefined,
+    as: undefined,
     relay: process.env.PREWARM_RELAY_URL,
     token: process.env.PREWARM_TOKEN,
     stateDir: path.resolve(HERE, '../state'),
@@ -127,6 +130,8 @@ export function parseArgs(argv) {
     else if (a === '--i-accept-unreviewed') args.acceptUnreviewed = true;
     else if (a === '--force') args.force = true;
     else if (a === '--rekeep') args.rekeep = true;
+    else if (a === '--out') args.out = path.resolve(next());
+    else if (a === '--as') args.as = next();
     else if (a === '--relay') args.relay = next();
     else if (a === '--token') args.token = next();
     else if (a === '--state-dir') args.stateDir = path.resolve(next());
@@ -140,6 +145,11 @@ export function parseArgs(argv) {
   }
   if ((args.chapter || args.topic) && args.syllabi.length !== 1) {
     throw new Error('--chapter/--topic filters need exactly one --syllabus');
+  }
+  // `--as` puts ONE class in the place of one lesson; two topics under one id
+  // would overwrite each other.
+  if (args.as && (!args.out || !args.topic)) {
+    throw new Error('--as <id> needs --out <dir> and exactly one --topic');
   }
   return args;
 }
@@ -307,7 +317,7 @@ const metaFor = (row) => ({
  * paid for, and throwing it away over an icon would put it back in the
  * pending set and buy it again next run.
  */
-async function dressAndKeep(made, row, client, keepRefused) {
+async function dressAndKeep(made, row, client, keepRefused, writeOut) {
   let graphics = {};
   try {
     graphics = await dressNouns(
@@ -336,6 +346,9 @@ async function dressAndKeep(made, row, client, keepRefused) {
     throw Object.assign(new Error(reason), { issues: made.report.issues, gateProblems: made.report.gate?.problems ?? [] });
   }
 
+  // Written out BEFORE the keep, so a keep the catalogue refuses (a topic it
+  // already holds) still leaves the class that was paid for on disk.
+  writeOut?.(saved);
   const kept = await client.keep(saved);
   if (!kept.ok) {
     throw new Error(`keep refused (${kept.status}): ${kept.body?.error?.message ?? 'no message'}`);
@@ -343,7 +356,7 @@ async function dressAndKeep(made, row, client, keepRefused) {
   return { keptId: saved.id, issues: made.report.issues };
 }
 
-async function warmOne(row, opts, client, keepRefused) {
+async function warmOne(row, opts, client, keepRefused, writeOut) {
   // Exactly what LiveClass.tsx builds from a topicRef: title as the topic,
   // the syllabus' own minutes clamped to 1..4, subtitle for the catalogue.
   const minutes = Math.min(4, Math.max(1, row.topic.estMinutes ?? 2));
@@ -384,7 +397,7 @@ async function warmOne(row, opts, client, keepRefused) {
     keepRefused?.(made, metaFor(row), reason);
     throw Object.assign(new Error(reason), { issues: made.report.issues, gateProblems: made.report.gate.problems });
   }
-  return dressAndKeep(made, row, client, keepRefused);
+  return dressAndKeep(made, row, client, keepRefused, writeOut);
 }
 
 /**
@@ -393,7 +406,7 @@ async function warmOne(row, opts, client, keepRefused) {
  * the ordinary way. Throws, with the gate's words, when today's layout still
  * refuses it — and leaves its record where it was for the next fix.
  */
-async function rekeepOne(row, record, client) {
+async function rekeepOne(row, record, client, writeOut) {
   const again = rekeep(record.made, { outcomes: outcomesFor(row.path) });
   if (again.problems.length > 0) {
     throw Object.assign(
@@ -404,7 +417,7 @@ async function rekeepOne(row, record, client) {
       { gateProblems: again.problems },
     );
   }
-  return dressAndKeep(again.made, row, client);
+  return dressAndKeep(again.made, row, client, undefined, writeOut);
 }
 
 // --------------------------------------------------------------- main -------
@@ -546,7 +559,8 @@ export async function main(argv) {
         const refused = opts.rekeep ? loadRefused(opts.stateDir, p.syllabusId, row.path) : null;
         if (opts.rekeep ? !refused : !p.pending.has(row.path)) continue;
 
-        if (await alreadyKeptLive(probe, row.path)) {
+        // With --out the class is wanted on disk whatever the catalogue holds.
+        if (!opts.out && (await alreadyKeptLive(probe, row.path))) {
           // Carry forward what an earlier failed attempt spent. The topic is
           // genuinely in the catalogue now, so paying again would buy a class
           // the keep would silently discard — but the money already burnt on
@@ -581,8 +595,11 @@ export async function main(argv) {
           });
           console.log(`  saved     the refused class for --rekeep: ${file}`);
         };
+        const writeOut = opts.out
+          ? (saved) => console.log(`  written   ${path.join(opts.out, writeClassTo(opts.out, saved, opts.as))}`)
+          : undefined;
         try {
-          const done = refused ? await rekeepOne(row, refused, client) : await warmOne(row, opts, client, keepRefused);
+          const done = refused ? await rekeepOne(row, refused, client, writeOut) : await warmOne(row, opts, client, keepRefused, writeOut);
           if (refused) dropRefused(opts.stateDir, p.syllabusId, row.path);
           const spend = priceCalls(client.calls, prices);
           totalInr += spend.inr;

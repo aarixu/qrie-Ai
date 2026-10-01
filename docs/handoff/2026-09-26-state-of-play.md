@@ -376,6 +376,19 @@ Smart-board design research covered what the board can do today and how speech c
    - the layout gate.
    - A failing check drops the ink, never the class.
 
+**C3 STATUS (2026-10-02, ~02:20 IST): the prepared-class half is DONE, not yet deployed.** Pushed as `9c86d32`, `52700c5`, `73180eb`, `1fba8fd`, `866c908`. Each item has tests, is in the planner prompt, and is in the 300-class fuzz (an opt-in smart-board beat), with no gate rule broken.
+- **Chemistry:** the stage loads KaTeX mhchem, so `$\ce{C6H12O6 + 6O2 -> 6CO2 + 6H2O}$` sets properly. `maths-check/chem` counts atoms on both sides.
+- **Three new gate rules** (`class-prep/src/boardChecks.ts`):
+  - `echo`: ink that copies the line she is saying (8+ words, 80% from the line, covering 60% of it).
+  - `tex`: only whitelisted LaTeX commands, braces closed.
+  - `chem`: every `\ce` reaction balances, unless the line says it is skeletal.
+- **`newPage`:** a clean page from the start of that spoken line.
+- **Marks on her own writing:** `write`/`equation` take an `id`. `annotate` targets it with `box`, `highlight` or `underline`; `span` narrows the mark to those words.
+- **`plot`:** a line graph computed from a formula of x by a safe reader (`lesson-format/safeExpr.ts`, no eval). It has a gap where there is no value, and is laid out as a figure.
+- **`derive`:** working step under step, equals signs aligned, each step 1.4 s after the one above. The maths check reads the chain; a wrong step is refused.
+- **Anchor words:** `at` on a write or an equation delays its ink until she reaches that word (~14 characters a second, measured).
+- **Not done:** the live-tutor half (driver A/B ink scripts) waits for live-tutor phase 2. Also not done: roughjs/perfect-freehand strokes, smiles-drawer, and picture part boxes found by Gemini. The pen tip was dropped by Aarav's decision 4.
+
 **Order:**
 - C0 and C1 together, now: neither needs model spend to build.
 - Then C2.
