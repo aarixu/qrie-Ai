@@ -146,6 +146,196 @@ Professional courses and the sandbox come later.
 
 ---
 
+## ► NEXT TRACK (Aarav, 2026-10-01): the canvas — stop the money leak, then build the smart board. PLAN, NOT BUILT
+
+Aarav, after three class preparations spent about Rs 34 and kept nothing: *"pahle canvas ko hi fix karo, kyunki aise to paise waste hote rahenge."*
+
+**His vision for the board:**
+- A smart board the tutor works on the whole time she teaches. She annotates pictures as she explains, draws charts and graphs, and writes maths and science in LaTeX step by step — like a real teacher who keeps writing and drawing, so the student's eyes stay on the board.
+- **Not interactive for the student.**
+- When she asks a question, **it does not appear on screen and there are no options**. It is a spoken exchange.
+- **No subtitles on the board.** It should feel like a human tutor teaching at a board.
+
+The vision is also in memory (`canvas-vision.md`).
+
+**Where this comes from.** A read-only audit (2026-10-01), with no model spend. The scripts that reproduce every number below are in the session scratchpad: `canvas/`, `replay/`, `prompts/`, `render/`, `outside/`. Five angles were covered:
+- the gates and the money;
+- a replay of all 11 kept classes and the 15 authored lessons, plus about 9,000 synthetic beats;
+- prompt and gate contradictions;
+- what the student sees;
+- outside research and libraries.
+
+Smart-board design research covered what the board can do today and how speech can drive ink.
+
+### What is wrong today (MEASURED 2026-10-01 unless marked)
+
+**1. The money leak: we pay for a whole class, then throw it away.**
+- After its one repair round, preparation enforces only the maths rule.
+  - Overlap, outcomes and the other rules wait for the keep gate (`packages/class-prep/src/prepare.ts:1259-1267, 1284, 1496, 1684`). That gate runs after the fact-check and after every picture is paid for.
+  - A plan that fails validation is never gated (`prepare.ts:1171`), so its gate problems never reach the repair.
+  - Pictures are bought even after the gate has failed (`tools/prewarm/lib/main.mjs:305-331`).
+- **About 30 of the 36 paid calls on 2026-10-01 came after the failure could already be seen.**
+- **A refused class is discarded, paid pictures included** (`main.mjs:331-342`). It cannot be replayed with a layout fix, so Respiration and Transportation (about Rs 22) must be bought again.
+- **12 of 15 first plans needed a paid repair round.**
+
+**2. Our own rules contradict each other.**
+- **Teach, then retrieve.** The prompt asks for it. The validator refuses a beat that is "taught and checked in the same beat" — a rule the prompt never states. This failed 7 of 15 first plans.
+- **The opening question.** The prompt makes it a question from the student's life. The gate demands it claim an outcome. It failed **6 of 6 kept science classes**, and Excretion.
+- **"A spoken question must be written on the board"** (`saidNotWritten.ts` rule 1). This fails on the prompt's own example lines. It is also exactly what Aarav does not want.
+- **The overlap repair message** names layout ids the planner cannot map to anything ("b3_7_label"), so the repair cannot act on it.
+
+**3. Layout bugs: overlaps, lost ink, ink off the board.** All reproduced with today's code.
+
+| Bug | Where | How often (measured) |
+|---|---|---|
+| Picture labels pile up once the parts are known; prep cannot see it | `layout.ts:1161-1195` | 34.5% of pictures with 3-6 labels refused at keep (0% in prep). Sorting the labels top-to-bottom gives 8.6% |
+| A connector's label is left on a picture, because key points have no leash and the solver pushes them up into the only free strip | `scene.ts:354-371`, `layout.ts:702-738` | 17.9% of scene beats that share a page with key points (2.5% alone), so about 45% of classes. This is the Respiration/Transportation failure. Measured fix: a label lane plus leashed key points brings it to 1.7% |
+| Card text is one line that never wraps | `layout.ts:838-854` | Every 3-card row with bodies over ~46 characters; every 2-card row over ~67 |
+| Ink silently deleted: a labelled-picture beat drops its cards, notes and equations | `layout.ts:1381` | Seen in 3 of 6 kept science classes (upper bound) |
+| The figure-plus-key-points column never turns the page, so ink goes below the board | `layout.ts:1384-1429` | 70% of figure beats that carry the ask (16% without one); one kept maths class has answer lines at y 696-825 on a 620-high board. Measured fix (the column turns the page, keeping a question with its work area): 0% |
+| One spoken line's ink split across two pages; the camera shows one | `layout.ts:1443-1458`, `frame.ts:152-207` | 16% of moments in all 11 kept classes. 2.7% of their elements and 10% of authored-lesson elements are never on camera at all |
+| The text ruler does not match the drawn fonts | `geometry.ts:29,175` | Caveat is drawn at 0.62× the estimate. 'Quicksand' is never loaded under that name, so cards fall back to Segoe UI |
+
+**4. What the student sees on a phone** (375×812 portrait):
+- **Text is tiny.** The board is a 1000×620 landscape page, so it uses ~260 px of a 375 px screen. Board text has a median size of 6.7 px; half of it is under 8 px, and some is 3.9 px.
+- **Chrome and overlays eat the board.**
+  - The top and bottom bars take 145 px even when hidden.
+  - The caption, answer chips and tutor picture cover the lower board. In landscape the tutor picture covers 60% of the board's height.
+- **The question is written on the board, twice in one class**, plus option lists and a "work area".
+- **The board is drawn before she teaches.** The first board is finished under the joining screen. Pictures are not preloaded (one is 1.6 MB), so a picture appears blank while she says "look".
+
+**5. What the vision needs that does not exist:**
+- **Live writing** (the tutor writing during a live class):
+  - live LaTeX: it is stripped today;
+  - writing on part of a picture during a live class;
+  - a visible pen or pointer: `point` is parsed but never drawn.
+- **Board content:**
+  - chemistry notation (Respiration's equation shows with no subscripts);
+  - computed graphs: graphs today are model-drawn pictures whose numbers are never checked;
+  - wiping the board.
+- **A portrait layout.**
+
+### What research says the board must do (sources in the research report)
+
+- **Remove verbatim text.** Words on screen that repeat what she says hurt learning (redundancy: 16 of 16 tests). So: no subtitles, no written question, no option chips.
+- **Keep short labels.** 1–4 words beside the part they name help.
+- **Write while she speaks, not in turns.** Temporal contiguity: d = 1.22.
+- **Show a visible pen or hand leading every stroke.** Watching a teacher draw beats a finished drawing, but the same drawing appearing with no visible hand gives no benefit (Fiorella & Mayer 2016). The pen doubles as her pointer.
+- **Point and circle.** Signalling helps (24 of 28 tests). Her avatar should look at the board while she writes.
+- **Let the student produce answers.** Spoken, open answers beat picking an option.
+
+### The plan: four steps, each shippable
+
+**C0 — Stop the leak.** No model spend to build; every fix is checked by the audit's harnesses. Effort S–M.
+
+1. **Fail fast.**
+   - Run the full keep gate on the first plan, even one that fails validation, and give the one repair round every problem in planner terms.
+   - Never pay for fact-checking or pictures while the plan cannot be kept. Prewarm stops; the app still teaches the class but does not keep it.
+   - Log what the re-gate finds.
+2. **Never throw paid work away.** Save a refused class (plan, lesson, pictures). Add `--rekeep`, which lays it out again with the fixed code and keeps it at Rs 0.
+3. **End the contradictions.**
+   - Place `teaches` before the retrieval question.
+   - The opening life-question needs no outcome.
+   - Give the repair prompt the topic's outcome list.
+   - Delete "a spoken question must be written".
+4. **Fix the layout bugs in section 3.**
+   - Sort labels by part position.
+   - Give connector labels a lane above the row.
+   - Wrap card text.
+   - Never delete ink (spill it to the next page).
+   - Make the column branch turn pages.
+   - Turn pages only between spoken lines, and point the camera at the newest ink.
+   - Correct the text ruler and load 'Quicksand Variable'.
+5. **Add free gate rules:**
+   - ink stays on the board;
+   - every board instruction produced ink;
+   - no spoken line is split across pages;
+   - every element is on camera at least once.
+6. **Make the replay and fuzz a no-spend test** that runs on every layout change.
+
+**Result:**
+- A failing topic costs about one repair call instead of the whole class.
+- A layout-only refusal is re-kept for free.
+- Then re-prepare the 10 no-question lessons.
+
+**C1 — Aarav's board rules: no quiz screen, no subtitles.** Effort S–M; it also cuts overlaps.
+
+1. **Asked questions write nothing on the board.**
+   - No option list, no work area.
+   - Invert the `one-question` rule to "written zero times".
+   - Kept classes are either re-prepared or have their question ink filtered at playback.
+2. **Remove the quiz overlays.**
+   - The answer panel: "Say your answer out loud, then tap here", the option chips, "Give me a hint", "I'm not sure", "Explain another way", "Work it out", and the warm-up card.
+   - The student's words are no longer written on the board.
+   - **Prerequisite:** an always-on spoken-answer path with a silence policy. Today the tap button is what stops a class holding forever when the ear is off.
+3. **Remove captions from the board.** Whether they stay as an off-board accessibility setting is a decision below.
+4. **Measured side effect:** with the asked question removed, the same picture-and-points beat fits one page with 0 overlaps instead of overflowing.
+
+**C2 — A board made for the phone.** Effort M–L.
+
+1. **A "follow the pen" camera:**
+   - frame the current step's ink, not the whole page;
+   - a floor of ~14 px rendered text;
+   - preload the next pictures;
+   - pan only between steps.
+2. **A portrait page format**, a narrow ~540-unit column like a notebook page. This is format v2.
+3. **Size floors raised to 24–28 units,** and a gate on rendered pixel size.
+4. **Chrome gives its space back,** and the tutor picture moves off the board.
+
+**C3 — The smart board.** Effort L. Built with live-tutor phase 2, because the live drivers carry the ink.
+
+1. **A visible pen tip that leads every stroke** and becomes her pointer, while her avatar looks at the board.
+2. **Ink timed to her voice:**
+   - per sentence, from the voice's start signal;
+   - per phrase, through anchor words;
+   - pen speed matched to her speech.
+   - **Driver A (Gemini Live):** the model draws nothing. The conductor attaches a prepared, already-checked ink script to each move, and transcript keywords time it.
+   - **Driver B (text model):** the text model writes `{say, ink}`, which is checked before any audio plays.
+3. **The ink vocabulary.** The model names targets, never coordinates.
+   - `write`
+   - `tex`: LaTeX written in segments, so a part of it can be circled
+   - `derive`: aligned step-by-step working
+   - `mark`: circle, underline, box, tick, cross, highlight — on any element or on part of a picture
+   - `arrow`
+   - `label`
+   - `plot`: computed line and bar graphs
+   - `point`
+   - `scene`
+   - `newPage` / wipe
+4. **Content:**
+   - KaTeX `mhchem` for chemistry, plus an atom-balance check;
+   - our own `plot` element with a safe evaluator (`expr-eval-fork`, MIT);
+   - roughjs (MIT) for hand-drawn circles and arrows, perfect-freehand (MIT) for marker strokes;
+   - part boxes for pictures found at prep with Gemini;
+   - smiles-drawer (MIT) for carbon compounds later.
+   - Excluded: Desmos (paid), GeoGebra (non-commercial), tldraw (proprietary).
+5. **Checks before any ink shows:**
+   - the safety screen;
+   - the leak check;
+   - ask-echo and say-echo, which keep subtitles out;
+   - a TeX whitelist;
+   - maths and chemistry checks;
+   - grounding in the plan;
+   - the layout gate.
+   - A failing check drops the ink, never the class.
+
+**Order:**
+- C0 and C1 together, now: neither needs model spend to build.
+- Then C2.
+- Then C3, alongside live-tutor phase 2.
+- The 10 lessons are re-prepared after C0 and C1.
+
+### Decisions only Aarav can make
+
+1. **Captions.** Delete them entirely, or keep an off-board accessibility setting (off by default)? Research: they help second-language listening and deaf students.
+2. **Short labels.** May 1–4-word labels beside the part they name stay? Research says they help, and they are not subtitles.
+3. **Recording-style controls.** Remove "REC", play/pause, the n/N counter, the progress line and "Watch again"?
+4. **Hints.** When she gives a hint, may she write a short note while saying it? That is her ink, not the question.
+5. **Phone board.** Build the portrait page format (best result, bigger change), or the follow-the-pen camera first?
+6. **The pen.** A pen tip / marker, or a drawn hand?
+
+---
+
 ## ► NEXT TRACK (Aarav, 2026-09-30): a live tutor — proactive, Socratic, human — and the LAM that drives her. PLAN, NOT BUILT
 
 Aarav, after taking the Respiration class: *"aisa laga ki main koi recorded class dekh raha hoon. Usne welcome kiya aur fir recorded class ki tarah bolne laga. Use proactive and humanoid nature ka hona chahiye jo natural human tutor ko mimic kare."* He also asked how the LAM gets better. And he set the school scope: **CBSE first, Class 6–12. Class 6–10: English, Social Science, Science, Maths. Class 11–12: the science stream only — Physics, Chemistry, Maths, Biology.** School comes before college.
