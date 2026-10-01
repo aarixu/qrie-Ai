@@ -1,5 +1,6 @@
 import type { ScriptBeat } from '@ai-tutor/board-layout';
-import type { Lesson } from '@ai-tutor/lesson-format';
+import type { ImagePart, Lesson } from '@ai-tutor/lesson-format';
+import type { TutorLanguage } from './prompts.ts';
 import type { ReviewProblem } from './review.ts';
 import type { GateProblem } from './gate.ts';
 
@@ -161,6 +162,23 @@ export interface PrepResult {
   /** SVG markup per diagram element id, for `<Scene assets={…}>`. */
   assets: Record<string, string>;
   report: PrepReport;
+  /**
+   * What the kept copy was laid out FROM — the plan, the pictures that were
+   * drawn, their measured parts and shapes — so a class the keep refused for
+   * its layout can be laid out again with a fixed layout engine and kept
+   * without buying the plan, the review or a single picture again (`rekeep`,
+   * canvas C0 item 2). Plain JSON, so it survives being written to a file.
+   */
+  replay?: Replay;
+}
+
+export interface Replay {
+  blueprint: Blueprint;
+  /** The pictures that were drawn, by brief id. */
+  drawn: string[];
+  parts: Record<string, ImagePart[]>;
+  shapes: Record<string, number>;
+  language: TutorLanguage;
 }
 
 /** Progress, so a student waiting a minute sees something happening. */

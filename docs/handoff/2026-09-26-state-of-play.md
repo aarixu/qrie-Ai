@@ -274,10 +274,14 @@ Smart-board design research covered what the board can do today and how speech c
   | Overlap | 1 class | 1 class |
 
   The guards hold these numbers.
-- **Still open:**
-  - **Item 2:** save a refused class, and add `--rekeep`.
-  - **Item 5, fourth rule:** every board instruction drew something. It needs assemble to report it, like `unspoken`. The dropped-ink bug it guards against was fixed in `2e7e4d2`.
-  - **The handwriting ruler.** Measured in the browser, Caveat draws at 0.35 em a character; the ruler assumes 0.58. Handwriting is over-measured by about 66%, so lines wrap early and pages turn too often. Correcting it moves every layout, so it is its own change, measured with the fuzz test.
+- **C0 DONE (2026-10-02, ~01:30).** The remaining pieces landed after this was first written:
+  - **The handwriting ruler** (`702529b`). `handWidth` measures Caveat per character class, using browser measurements. It is never under the real width (1.04–1.18× over).
+    - Pages per class: 6.81 → 6.34.
+    - Wrapped continuation lines: 12.0% → 0.4%.
+    - Off-board: 1 → 0.
+    - Connector labels keep the sans sizing; measured narrower, they grew and overlapped.
+  - **Item 5, fourth rule: `drawn`.** The layout reports word-bearing instructions that drew nothing (`undrawn`), and the gate refuses them. Measured: the layout draws every such instruction today, so this is a guard against regressions.
+  - **Item 2: `--rekeep`.** `prepareClass` records `replay`, which holds the inputs of the kept layout. Prewarm saves a class refused at the end to `state/refused/`. `prewarm --rekeep` lays it out again with today's engine, with no planner, reviewer or picture call, and keeps it if the gate now passes. See `tools/prewarm/README.md`.
 
 **C1 — Aarav's board rules: no quiz screen, no subtitles.** Effort S–M; it also cuts overlaps.
 

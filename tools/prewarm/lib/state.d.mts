@@ -60,6 +60,29 @@ export declare function pendingTopics(state: PrewarmState, refs: readonly string
 export declare function loadState(dir: string, syllabus: string): PrewarmState;
 export declare function saveState(dir: string, state: PrewarmState): void;
 /**
+ * A class the keep refused at the end, paid for: the prepared class (with its
+ * `replay`) and the meta it would be kept under, for `--rekeep`.
+ */
+export interface RefusedRecord {
+  topicRef: string;
+  savedAt: string;
+  prepId?: string;
+  reason?: string;
+  meta: Record<string, unknown>;
+  made: { lesson: unknown; assets: Record<string, string>; report: unknown; replay?: unknown };
+}
+export declare const refusedDir: (dir: string, syllabus: string) => string;
+export declare const refusedPath: (dir: string, syllabus: string, topicRef: string) => string;
+export declare function saveRefused(
+  dir: string,
+  syllabus: string,
+  topicRef: string,
+  record: Omit<RefusedRecord, 'topicRef' | 'savedAt'>,
+): string;
+export declare function loadRefused(dir: string, syllabus: string, topicRef: string): RefusedRecord | null;
+export declare function dropRefused(dir: string, syllabus: string, topicRef: string): void;
+
+/**
  * Throws, naming the holding pid, when another run already owns this syllabus:
  * two runs would prepare and PAY FOR the same topics. `--force` takes it
  * anyway, for when the holder is dead.

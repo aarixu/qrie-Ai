@@ -366,6 +366,14 @@ export function layoutBeat(
   pages: number;
   /** The questions this beat stops on, by the index of the say that asks. */
   asks: { step: number; ask: NonNullable<Beat['ask']> }[];
+  /**
+   * Board instructions that write words and drew nothing — by their index on
+   * the board, with the words. Their ink never depends on a picture or its
+   * parts, so drawing nothing is always a fault of the layout or of the
+   * instruction, never a picture that failed; the keep gate's `drawn` rule
+   * reads it.
+   */
+  undrawn: { index: number; do: Instruction['do']; text: string }[];
 } {
   const elements: Element[] = [];
   const show: string[] = [];
@@ -1786,6 +1794,12 @@ export function layoutBeat(
     byBoard.set(n, [...(byBoard.get(n) ?? []), ...ids]);
   }
 
+  const undrawn = beat.board.flatMap((step, index) =>
+    WRITES_WORDS.has(step.do) && (byBoard.get(index) ?? []).length === 0
+      ? [{ index, do: step.do, text: wordsOf(step) }]
+      : [],
+  );
+
   return {
     elements: settled,
     laid: { show, focus: keptFocus },
@@ -1794,7 +1808,43 @@ export function layoutBeat(
     leashes,
     pages: sheetsUsed,
     asks,
+    undrawn,
   };
+}
+
+/** The instructions whose ink is words of their own, with no picture behind them. */
+const WRITES_WORDS: ReadonlySet<Instruction['do']> = new Set([
+  'title',
+  'write',
+  'note',
+  'caption',
+  'card',
+  'equation',
+  'list',
+  'flow',
+  'chart',
+]);
+
+/** A few of an instruction's own words, for a message that names it. */
+function wordsOf(step: Instruction): string {
+  switch (step.do) {
+    case 'title':
+    case 'write':
+    case 'note':
+    case 'caption':
+    case 'equation':
+      return step.text;
+    case 'card':
+      return step.heading;
+    case 'list':
+      return step.heading ?? step.items[0]?.term ?? '';
+    case 'flow':
+      return step.steps[0]?.label ?? '';
+    case 'chart':
+      return step.caption ?? step.data[0]?.label ?? '';
+    default:
+      return '';
+  }
 }
 
 /**

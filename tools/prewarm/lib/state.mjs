@@ -91,6 +91,41 @@ export function saveState(dir, state) {
 }
 
 /**
+ * A CLASS REFUSED AT THE END IS KEPT HERE, PAID FOR, FOR `--rekeep`.
+ *
+ * By the time the keep refuses a class at the end, its plan, its review and
+ * every picture are already bought. Thrown away, a fix to the layout engine
+ * means buying them all again; written here — the prepared class with what it
+ * was laid out from (`replay`) and the meta it would be kept under — a later
+ * `--rekeep` lays it out again with the fixed engine and keeps it without a
+ * single model call for the class itself (canvas C0, item 2). One file per
+ * topic, named for its path, written atomically like the state file.
+ */
+export const refusedDir = (dir, syllabus) => path.join(dir, 'refused', syllabus);
+export const refusedPath = (dir, syllabus, topicRef) =>
+  path.join(refusedDir(dir, syllabus), `${topicRef.replace(/[^A-Za-z0-9._-]+/g, '__')}.json`);
+
+export function saveRefused(dir, syllabus, topicRef, record) {
+  const file = refusedPath(dir, syllabus, topicRef);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const tmp = `${file}.${process.pid}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify({ topicRef, savedAt: new Date().toISOString(), ...record }), 'utf8');
+  fs.renameSync(tmp, file);
+  return file;
+}
+
+/** The refused record for this topic, or null when there is none. */
+export function loadRefused(dir, syllabus, topicRef) {
+  const file = refusedPath(dir, syllabus, topicRef);
+  if (!fs.existsSync(file)) return null;
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+export function dropRefused(dir, syllabus, topicRef) {
+  fs.rmSync(refusedPath(dir, syllabus, topicRef), { force: true });
+}
+
+/**
  * ONE RUN AT A TIME PER SYLLABUS.
  *
  * The writes above are atomic, which stops a torn file — it does not stop two

@@ -66,6 +66,48 @@ describe('one spoken line draws on one page', () => {
   });
 });
 
+describe('every instruction that writes words draws them', () => {
+  it('names the planner beat and the instruction that never reached the board', () => {
+    const lesson = lessonOf([hw('b2_1', 400, 300, 'Seen')], [{ id: 'b2_1', topic: 't', narration: 'Look.', show: ['b2_1'] }]);
+    const found = gateLesson(lesson, { mathsCheck: noMaths, undrawn: [{ beat: 'b2', do: 'chart', text: 'Rainfall' }] }).filter(
+      (p) => p.rule === 'drawn',
+    );
+    expect(found).toHaveLength(1);
+    expect(found[0].message).toContain('Beat "b2"');
+    expect(found[0].message).toContain('chart "Rainfall"');
+  });
+
+  /**
+   * A GUARD, NOT A CATCH TODAY: measured 2026-10-02, the layout draws every
+   * instruction that writes words — two titles, two captions, an empty list,
+   * flow or chart, and every piece of a labelled-picture beat (whose cards it
+   * used to drop until 2e7e4d2). So the layout reports nothing here, and the
+   * rule exists for the day a change makes it drop one again.
+   */
+  it('is reported by the layout for none of the shapes that once dropped ink', async () => {
+    const { layoutBeat } = await import('@ai-tutor/board-layout');
+    const boards = [
+      [{ do: 'title', text: 'One' }, { do: 'title', text: 'Two' }, { do: 'say', text: 'x' }, { do: 'write', text: 'A point' }],
+      [{ do: 'say', text: 'x' }, { do: 'caption', text: 'First caption' }, { do: 'caption', text: 'Second caption' }],
+      [{ do: 'say', text: 'x' }, { do: 'chart', caption: 'Rainfall', data: [] }, { do: 'list', heading: 'H', items: [] }],
+      [
+        { do: 'picture', ref: 'p' },
+        { do: 'say', text: 'x' },
+        { do: 'label', target: 'p#a', text: 'A' },
+        { do: 'write', text: 'Point' },
+        { do: 'caption', text: 'Cap' },
+        { do: 'note', text: 'A note' },
+        { do: 'equation', text: 'x = 1' },
+        { do: 'card', heading: 'Rule', body: 'A body' },
+      ],
+    ];
+    const parts = new Map([['p', [{ name: 'a', x: 0.1, y: 0.1, w: 0.2, h: 0.2 }]]]);
+    for (const board of boards) {
+      expect(layoutBeat({ id: 'b1', topic: 't', narration: '', board } as never, parts).undrawn).toEqual([]);
+    }
+  });
+});
+
 describe('everything is on camera at least once', () => {
   it('fails ink the camera never frames', () => {
     // The camera frames from the newest ink back, one page at most: shown

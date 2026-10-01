@@ -45,7 +45,10 @@ import { ALL_CLASS_9_10_SCIENCE, outcomesFor } from './topics.mjs';
 import { dedupeSyllabi, planFor } from './plan.mjs';
 import {
   acquireStateLock,
+  dropRefused,
+  loadRefused,
   markTopic,
+  saveRefused,
   saveState,
   shouldStop,
   MAX_CONSECUTIVE_FAILURES,
@@ -62,6 +65,7 @@ import {
   drawMissingIcons,
   pickIcons,
   prepareClass,
+  rekeep,
   saveable,
   whyNotSaveable,
 } from '../../../packages/class-prep/src/index.ts';
@@ -101,6 +105,7 @@ export function parseArgs(argv) {
     review: true,
     acceptUnreviewed: false,
     force: false,
+    rekeep: false,
     relay: process.env.PREWARM_RELAY_URL,
     token: process.env.PREWARM_TOKEN,
     stateDir: path.resolve(HERE, '../state'),
@@ -121,6 +126,7 @@ export function parseArgs(argv) {
     else if (a === '--no-review') args.review = false;
     else if (a === '--i-accept-unreviewed') args.acceptUnreviewed = true;
     else if (a === '--force') args.force = true;
+    else if (a === '--rekeep') args.rekeep = true;
     else if (a === '--relay') args.relay = next();
     else if (a === '--token') args.token = next();
     else if (a === '--state-dir') args.stateDir = path.resolve(next());
@@ -282,7 +288,62 @@ async function dressNouns(lesson, topic, picker, iconArtist) {
 
 // ---------------------------------------------------------- one topic -------
 
-async function warmOne(row, opts, client) {
+/** The meta a topic is kept under — the same for a first keep and a re-keep. */
+const metaFor = (row) => ({
+  topicRef: row.path,
+  klass: row.klass,
+  subject: row.subject,
+  subtitle: `Class ${row.klass} · ${row.chapterTitle}`,
+  // Anonymous by construction — the runner has no student and passes no
+  // studentLines, so the name check has nothing to catch. Stated so the
+  // empty array is a decision, not an omission.
+  studentNames: [],
+});
+
+/**
+ * Dress a prepared class's nouns and keep it. Divergence 2 from the header:
+ * the app's try/catch, for the app's reason ("The board shows what it has",
+ * liveClass.ts). Here it is a money rule as well — the lesson is bought and
+ * paid for, and throwing it away over an icon would put it back in the
+ * pending set and buy it again next run.
+ */
+async function dressAndKeep(made, row, client, keepRefused) {
+  let graphics = {};
+  try {
+    graphics = await dressNouns(
+      made.lesson,
+      row.topic.title,
+      client.llm(PICKER_MODEL, { json: true }),
+      client.llm(ARTIST_MODEL),
+    );
+  } catch (e) {
+    console.warn(
+      `    nouns left undressed (${e instanceof Error ? e.message : e}) — keeping the class` +
+        ' anyway, as the app does',
+    );
+  }
+  Object.assign(made.assets, graphics);
+
+  const meta = metaFor(row);
+  const saved = saveable(made, meta);
+  if (!saved) {
+    // WHICH rule refused it, from the same function saveable refuses by, and
+    // the report itself carried on the error: this topic is already paid for,
+    // and the state file is the only place left to diagnose it from.
+    const why = whyNotSaveable(made, meta);
+    const reason = `prepared but NOT kept — ${why.length > 0 ? why.join('; ') : 'saveable named no reason'}; nothing was kept`;
+    keepRefused?.(made, meta, reason);
+    throw Object.assign(new Error(reason), { issues: made.report.issues, gateProblems: made.report.gate?.problems ?? [] });
+  }
+
+  const kept = await client.keep(saved);
+  if (!kept.ok) {
+    throw new Error(`keep refused (${kept.status}): ${kept.body?.error?.message ?? 'no message'}`);
+  }
+  return { keptId: saved.id, issues: made.report.issues };
+}
+
+async function warmOne(row, opts, client, keepRefused) {
   // Exactly what LiveClass.tsx builds from a topicRef: title as the topic,
   // the syllabus' own minutes clamped to 1..4, subtitle for the catalogue.
   const minutes = Math.min(4, Math.max(1, row.topic.estMinutes ?? 2));
@@ -315,66 +376,35 @@ async function warmOne(row, opts, client) {
 
   // A class the keep gate refused is not dressed: the icon picker and the
   // icon artist are paid calls, and saveable would refuse the class anyway.
+  // Everything already bought for it is written down for `--rekeep`.
   if (made.report.gate && made.report.gate.problems.length > 0) {
+    const reason = `prepared but NOT kept — the keep gate failed it: ${made.report.gate.problems
+      .map((p) => `${p.rule}@${p.where}`)
+      .join(', ')}; nothing was kept, and its nouns were not dressed`;
+    keepRefused?.(made, metaFor(row), reason);
+    throw Object.assign(new Error(reason), { issues: made.report.issues, gateProblems: made.report.gate.problems });
+  }
+  return dressAndKeep(made, row, client, keepRefused);
+}
+
+/**
+ * `--rekeep`: one refused class, laid out again with today's engine
+ * (class-prep `rekeep`, no model call for the class), then dressed and kept
+ * the ordinary way. Throws, with the gate's words, when today's layout still
+ * refuses it — and leaves its record where it was for the next fix.
+ */
+async function rekeepOne(row, record, client) {
+  const again = rekeep(record.made, { outcomes: outcomesFor(row.path) });
+  if (again.problems.length > 0) {
     throw Object.assign(
       new Error(
-        `prepared but NOT kept — the keep gate failed it: ${made.report.gate.problems
-          .map((p) => `${p.rule}@${p.where}`)
-          .join(', ')}; nothing was kept, and its nouns were not dressed`,
+        `laid out again, still refused: ${again.problems.map((p) => `${p.rule}@${p.where}`).join(', ')}; ` +
+          'the record stays for the next fix',
       ),
-      { issues: made.report.issues, gateProblems: made.report.gate.problems },
+      { gateProblems: again.problems },
     );
   }
-
-  // Divergence 2 from the header: the app's try/catch, for the app's reason
-  // ("The board shows what it has", liveClass.ts). Here it is a money rule as
-  // well — the lesson above is bought and paid for, and throwing it away over
-  // an icon would put it back in the pending set and buy it again next run.
-  let graphics = {};
-  try {
-    graphics = await dressNouns(
-      made.lesson,
-      row.topic.title,
-      client.llm(PICKER_MODEL, { json: true }),
-      client.llm(ARTIST_MODEL),
-    );
-  } catch (e) {
-    console.warn(
-      `    nouns left undressed (${e instanceof Error ? e.message : e}) — keeping the class` +
-        ' anyway, as the app does',
-    );
-  }
-  Object.assign(made.assets, graphics);
-
-  const meta = {
-    topicRef: row.path,
-    klass: row.klass,
-    subject: row.subject,
-    subtitle: `Class ${row.klass} · ${row.chapterTitle}`,
-    // Anonymous by construction — the runner has no student and passes no
-    // studentLines, so the name check has nothing to catch. Stated so the
-    // empty array is a decision, not an omission.
-    studentNames: [],
-  };
-  const saved = saveable(made, meta);
-  if (!saved) {
-    // WHICH rule refused it, from the same function saveable refuses by, and
-    // the report itself carried on the error: this topic is already paid for,
-    // and the state file is the only place left to diagnose it from.
-    const why = whyNotSaveable(made, meta);
-    throw Object.assign(
-      new Error(
-        `prepared but NOT kept — ${why.length > 0 ? why.join('; ') : 'saveable named no reason'}; nothing was kept`,
-      ),
-      { issues: made.report.issues, gateProblems: made.report.gate?.problems ?? [] },
-    );
-  }
-
-  const kept = await client.keep(saved);
-  if (!kept.ok) {
-    throw new Error(`keep refused (${kept.status}): ${kept.body?.error?.message ?? 'no message'}`);
-  }
-  return { keptId: saved.id, issues: made.report.issues };
+  return dressAndKeep(again.made, row, client);
 }
 
 // --------------------------------------------------------------- main -------
@@ -457,10 +487,18 @@ export async function main(argv) {
         ' Use --dry-run to see the plan without either.',
     );
   }
+  // --rekeep touches only topics with a refused record, and buys no plan,
+  // review or picture for them — only their nouns' icons and the keep.
+  const refusedCount = opts.rekeep
+    ? plan.reduce((n, p) => n + p.rows.filter((r) => loadRefused(opts.stateDir, p.syllabusId, r.path)).length, 0)
+    : 0;
   if (!opts.spend) {
     throw new Error(
-      `this run would prepare ${pendingCount} topics for roughly ${inr(est.plan)} of real money` +
-        ` (band ${inr(est.low)}–${inr(est.high)}). Add --spend if you mean it, or --dry-run to look.`,
+      opts.rekeep
+        ? `this run would lay out again and keep ${refusedCount} refused classes, paying only for their icons and` +
+            ' the keep. Add --spend if you mean it.'
+        : `this run would prepare ${pendingCount} topics for roughly ${inr(est.plan)} of real money` +
+            ` (band ${inr(est.low)}–${inr(est.high)}). Add --spend if you mean it, or --dry-run to look.`,
     );
   }
   if (!opts.review && !opts.acceptUnreviewed) {
@@ -505,7 +543,8 @@ export async function main(argv) {
       if (stoppedBy) break;
       for (const row of p.rows) {
         if (stoppedBy) break;
-        if (!p.pending.has(row.path)) continue;
+        const refused = opts.rekeep ? loadRefused(opts.stateDir, p.syllabusId, row.path) : null;
+        if (opts.rekeep ? !refused : !p.pending.has(row.path)) continue;
 
         if (await alreadyKeptLive(probe, row.path)) {
           // Carry forward what an earlier failed attempt spent. The topic is
@@ -526,13 +565,25 @@ export async function main(argv) {
           continue;
         }
 
-        console.log(`\n  warming   ${row.path} — ${row.topic.title}`);
+        console.log(`\n  ${refused ? 'rekeeping' : 'warming  '} ${row.path} — ${row.topic.title}`);
         // One prep id per topic, minted here so the FAILED arm can still write
         // it down beside what the failure cost.
         const prepId = randomUUID();
         const client = createRelayClient({ relayUrl: opts.relay, token: opts.token, prepId });
+        /** A class refused at the end, written down with everything it was laid out from. */
+        const keepRefused = (made, meta, reason) => {
+          if (!made.replay) return;
+          const file = saveRefused(opts.stateDir, p.syllabusId, row.path, {
+            prepId,
+            reason,
+            meta,
+            made: { lesson: made.lesson, assets: made.assets, report: made.report, replay: made.replay },
+          });
+          console.log(`  saved     the refused class for --rekeep: ${file}`);
+        };
         try {
-          const done = await warmOne(row, opts, client);
+          const done = refused ? await rekeepOne(row, refused, client) : await warmOne(row, opts, client, keepRefused);
+          if (refused) dropRefused(opts.stateDir, p.syllabusId, row.path);
           const spend = priceCalls(client.calls, prices);
           totalInr += spend.inr;
           totalUnmeasured += spend.unmeasured;
@@ -547,6 +598,7 @@ export async function main(argv) {
             // and the repair round had to say. A catalogue children read
             // forever should not make a later operator guess either.
             reviewed: opts.review,
+            ...(refused ? { rekept: true, firstPrepId: refused.prepId } : {}),
             ...(done.issues?.length ? { issues: done.issues } : {}),
           });
           consecutiveFailures = 0;

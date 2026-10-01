@@ -71,6 +71,13 @@ import type { TopicOutcome } from './prompts.ts';
  *   on-camera        every element is inside the frame the camera chooses
  *                    (stage's `computeFrame`, at the board's own shape) at
  *                    least once in the class. 2.7% of kept elements never were.
+ *   drawn            every board instruction that writes words — a title, a
+ *                    write, a note, a caption, a card, an equation, a list, a
+ *                    flow, a chart — drew something. Their ink depends on no
+ *                    picture, so nothing drawn is a fault, never a picture
+ *                    that failed. Read from what assemble reported
+ *                    (`undrawn`), because a lesson cannot say what it lacks.
+ *                    A labelled-picture beat once dropped its cards this way.
  *
  * NOT IN `validateLesson`, ON PURPOSE. The classroom validates every lesson
  * it loads and shows one that fails as "not available"
@@ -95,7 +102,17 @@ export type GateRule =
   | 'unspoken'
   | 'on-board'
   | 'one-page'
-  | 'on-camera';
+  | 'on-camera'
+  | 'drawn';
+
+/** A board instruction that writes words and drew nothing — assemble's `undrawn`. */
+export interface Undrawn {
+  /** The planner beat. */
+  beat: string;
+  do: string;
+  /** A few of its own words. */
+  text: string;
+}
 
 export interface GateProblem {
   rule: GateRule;
@@ -161,6 +178,11 @@ export interface GateOptions {
    * Absent: every ask is held to the rule, as before.
    */
   opening?: readonly string[];
+  /**
+   * Board instructions that write words and drew nothing — `assemble(...).undrawn`.
+   * Absent: rule `drawn` has nothing to read and finds nothing.
+   */
+  undrawn?: readonly Undrawn[];
 }
 
 /** The planner beat a lesson beat or element id came from: `b3_4` -> `b3`, `b3__pen` -> `b3`. */
@@ -450,5 +472,12 @@ export function gateLesson(lesson: Lesson, opts: GateOptions = {}): GateProblem[
     ...notationProblems(lesson),
     ...unspokenProblems(lesson, opts.unspoken ?? []),
     ...boardProblems(lesson),
+    ...(opts.undrawn ?? []).map((u) => ({
+      rule: 'drawn' as const,
+      where: u.beat,
+      message:
+        `Beat "${u.beat}": its ${u.do}${u.text ? ` "${u.text.slice(0, 50)}"` : ''} never reaches the board. ` +
+        `Check it has words to write (a chart needs its data, a list its items), or move it to a beat of its own.`,
+    })),
   ];
 }

@@ -4,7 +4,7 @@ export type { TopicOutcome } from './prompts.ts';
 // capChecks, dropInventedOutcomes and dropBadProbes are deliberately NOT
 // exported: they mutate a blueprint in place, they have no consumer outside
 // this package, and a public export is a contract somebody else builds on.
-export { prepareClass, assemble, parsePlan, type LlmAdapter, type PrepOptions } from './prepare.ts';
+export { prepareClass, assemble, parsePlan, rekeep, type LlmAdapter, type PrepOptions } from './prepare.ts';
 export {
   reviewLesson,
   reviewerUser,
@@ -23,6 +23,7 @@ export type {
   VisualOutcome,
   PrepReport,
   PrepResult,
+  Replay,
   PrepPhase,
   PrepProgress,
 } from './types.ts';

@@ -118,6 +118,28 @@ two state objects loaded from one file: doubled count, doubled bill, and the
 second pass's save erasing the first pass's record of what was already paid
 for.
 
+## A class refused at the end is kept for `--rekeep`
+
+When the keep refuses a class at the END — its keep gate failed after the
+reviewer and the pictures, or `saveable` turned it down — everything expensive
+in it is already bought. It is written to
+`state/refused/<syllabus>/<topic>.json`: the prepared class, what it was laid
+out from (the plan, the drawn pictures and their measured parts and shapes),
+and the meta it would be kept under. The topic is still `failed`.
+
+```
+# after a layout fix, lay the refused classes out again and keep them:
+node tools/prewarm/run.mjs --syllabus class10-science --rekeep --relay <url> --token <token> --spend
+```
+
+`--rekeep` touches only topics with a refused record. For each one it lays the
+same plan out again with today's engine (class-prep `rekeep`: no planner, no
+reviewer, no picture is called), runs the same keep gate, and keeps it if it
+now passes — paying only for its nouns' icons and the keep. A class today's
+layout still refuses keeps its record for the next fix. A class refused EARLY
+(prepareClass stopped it before the reviewer and the pictures) has nothing
+worth keeping, so nothing is written.
+
 ## Why the duplicate check reads the catalogue, and what happens without it
 
 Before spending on a topic the runner asks the project's `prepared_class`

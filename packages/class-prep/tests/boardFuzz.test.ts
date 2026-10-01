@@ -40,6 +40,7 @@ describe('300 seeded classes through assemble and the keep gate', () => {
     const problems = gateLesson(checked.lesson as Lesson, {
       bonds: made.bonds,
       unspoken: made.unspoken,
+      undrawn: made.undrawn,
       mathsCheck: () => ({ ok: true, failures: [] }),
     });
     for (const rule of new Set(problems.map((p) => p.rule))) classesWith.set(rule, (classesWith.get(rule) ?? 0) + 1);
@@ -66,5 +67,9 @@ describe('300 seeded classes through assemble and the keep gate', () => {
   it('leaves no ink after an ask without a line, and asks nothing it writes', () => {
     expect(count('unspoken')).toBe(0);
     expect(count('one-question')).toBe(0);
+  });
+
+  it('draws every instruction that writes words', () => {
+    expect(count('drawn')).toBe(0);
   });
 });

@@ -12,7 +12,51 @@ import {
   saveState,
   shouldStop,
   statePath,
+  dropRefused,
+  loadRefused,
+  refusedPath,
+  saveRefused,
 } from '../lib/state.mjs';
+
+/**
+ * A CLASS REFUSED AT THE END IS WRITTEN DOWN, PAID FOR (canvas C0, item 2):
+ * `--rekeep` lays it out again later instead of buying it again.
+ */
+describe('refused classes, kept for --rekeep', () => {
+  const dir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'prewarm-refused-'));
+  const record = {
+    prepId: 'p-1',
+    reason: 'prepared but NOT kept — the keep gate failed it: one-page@b3_3',
+    meta: { topicRef: 'class10-science/life-processes/respiration', klass: 10 },
+    made: { lesson: { id: 'resp' }, assets: { pic: 'data:image/png;base64,AAAA' }, report: { issues: [] }, replay: { blueprint: { id: 'resp' } } },
+  };
+
+  it('writes one file per topic, under its syllabus, and reads it back whole', () => {
+    const d = dir();
+    const ref = 'class10-science/life-processes/respiration';
+    const file = saveRefused(d, 'class10-science', ref, record);
+    expect(file).toBe(refusedPath(d, 'class10-science', ref));
+    expect(path.basename(file)).not.toContain('/');
+    const back = loadRefused(d, 'class10-science', ref);
+    expect(back).toMatchObject({ topicRef: ref, ...record });
+    expect(typeof back?.savedAt).toBe('string');
+  });
+
+  it('has nothing for a topic that was never refused, and nothing once dropped', () => {
+    const d = dir();
+    const ref = 'class10-science/life-processes/respiration';
+    expect(loadRefused(d, 'class10-science', ref)).toBeNull();
+    saveRefused(d, 'class10-science', ref, record);
+    dropRefused(d, 'class10-science', ref);
+    expect(loadRefused(d, 'class10-science', ref)).toBeNull();
+  });
+
+  it('takes --rekeep on the command line', async () => {
+    const { parseArgs } = await import('../lib/main.mjs');
+    expect(parseArgs(['--syllabus', 'class10-science', '--rekeep']).rekeep).toBe(true);
+    expect(parseArgs(['--syllabus', 'class10-science']).rekeep).toBe(false);
+  });
+});
 
 /**
  * The state file is what makes a re-run RESUME instead of RE-PAY. Every rule

@@ -32,7 +32,7 @@ import {
 } from './prompts.ts';
 import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
-import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck } from './gate.ts';
+import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck, type Undrawn } from './gate.ts';
 import { askAgainLater, type RepairRetry } from './notNow.ts';
 export { REPAIR_WAITS_MS, type RepairRetry } from './notNow.ts';
 import { checkLines } from '../../maths-check/src/index.ts';
@@ -41,6 +41,7 @@ import type {
   PrepProgress,
   PrepReport,
   PrepResult,
+  Replay,
   VisualBrief,
   VisualOutcome,
 } from './types.ts';
@@ -479,10 +480,16 @@ export function assemble(
    * GateOptions.opening in gate.ts for why that one ask files no outcome.
    */
   opening: string[];
+  /**
+   * Board instructions that write words and drew nothing, by planner beat —
+   * board-layout's `undrawn`, for the keep gate's `drawn` rule.
+   */
+  undrawn: Undrawn[];
 } {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
   const bonds: Bond[] = [];
   const unspoken: string[] = [];
+  const undrawn: Undrawn[] = [];
   const opening: string[] = [];
   /** The planner's first beat — the opening, by the prompt's own contract. */
   const openingBeat = blueprint.beats[0];
@@ -560,8 +567,10 @@ export function assemble(
       pages: sheets,
       asks,
       bonds: meant,
+      undrawn: missing,
     } = layoutBeat({ ...beat, board }, partsByRef, shapesByRef);
     bonds.push(...meant);
+    for (const m of missing) undrawn.push({ beat: beat.id, do: m.do, text: m.text });
 
     /**
      * Re-attach each ask's whyProbe. The layout engine copies an ask FIELD BY
@@ -758,6 +767,7 @@ export function assemble(
     bonds,
     unspoken,
     opening,
+    undrawn,
   };
 }
 
@@ -1211,7 +1221,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
   say('checking', 'Checking the class holds together…', 0.15);
   const first = assemble(blueprint, promised, pictureParts, pictureShapes, language);
-  let { aliases, bonds, unspoken, opening } = first;
+  let { aliases, bonds, unspoken, opening, undrawn } = first;
 
   let validated = validateLesson(first.lesson);
 
@@ -1232,9 +1242,9 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const gateOf = (
     candidate: unknown,
     checked: ReturnType<typeof validateLesson>,
-    made: { bonds: readonly Bond[]; unspoken: readonly string[]; opening: readonly string[] },
+    made: { bonds: readonly Bond[]; unspoken: readonly string[]; opening: readonly string[]; undrawn: readonly Undrawn[] },
   ): GateProblem[] | null => {
-    const read = { bonds: made.bonds, unspoken: made.unspoken, opening: made.opening, outcomes: opts.outcomes };
+    const read = { bonds: made.bonds, unspoken: made.unspoken, opening: made.opening, undrawn: made.undrawn, outcomes: opts.outcomes };
     if (checked.ok) return gateLesson(checked.lesson as Lesson, { ...read, mathsCheck: opts.mathsCheck });
     const maths = opts.mathsCheck ?? checkLessonMaths;
     try {
@@ -1362,6 +1372,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         aliases = rebuilt.aliases;
         bonds = rebuilt.bonds;
         unspoken = rebuilt.unspoken;
+        undrawn = rebuilt.undrawn;
         opening = rebuilt.opening;
         blueprint = fixed;
         gate = regate;
@@ -1571,6 +1582,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           aliases = rebuilt.aliases;
           bonds = rebuilt.bonds;
           unspoken = rebuilt.unspoken;
+          undrawn = rebuilt.undrawn;
           opening = rebuilt.opening;
           lesson = revalidated.lesson as Lesson;
           repaired = true;
@@ -1782,6 +1794,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   let final = lesson;
   let finalBonds = bonds;
   let finalUnspoken = unspoken;
+  let finalUndrawn = undrawn;
   let finalOpening = opening;
   if (pictureShapes.size > 0 || pictureParts.size > 0) {
     const refitted = assemble({ ...blueprint, beats }, promised, pictureParts, pictureShapes, language);
@@ -1790,6 +1803,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       final = revalidated.lesson as Lesson;
       finalBonds = refitted.bonds;
       finalUnspoken = refitted.unspoken;
+      finalUndrawn = refitted.undrawn;
       finalOpening = refitted.opening;
       // A copy of a picture needs the markup under its own id, and the copy
       // ids are decided by this second layout rather than the first.
@@ -1817,6 +1831,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     gateLesson(final, {
       bonds: finalBonds,
       unspoken: finalUnspoken,
+      undrawn: finalUndrawn,
       opening: finalOpening,
       outcomes: opts.outcomes,
       mathsCheck: opts.mathsCheck,
@@ -1845,6 +1860,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       final = lesson;
       finalBonds = bonds;
       finalUnspoken = unspoken;
+      finalUndrawn = undrawn;
       finalOpening = opening;
       keepGate = gateFinal();
     }
@@ -1863,5 +1879,63 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     gate: { problems: keepGate },
   };
   say('done', 'Ready.', 1);
-  return { lesson: final, assets, report };
+  const replay: Replay = {
+    blueprint: { ...blueprint, beats },
+    drawn: [...promised],
+    parts: Object.fromEntries([...pictureParts].map(([id, ps]) => [id, [...ps]])),
+    shapes: Object.fromEntries(pictureShapes),
+    language,
+  };
+  return { lesson: final, assets, report, replay };
+}
+
+/**
+ * A REFUSED CLASS, LAID OUT AGAIN WITH TODAY'S LAYOUT — AND NOTHING BOUGHT.
+ *
+ * When the keep gate refuses a class for its layout, everything expensive in
+ * it — the plan, the review, every picture — was already paid for, and the
+ * fault is in the engine, which gets fixed. This lays the same plan out again
+ * from what the class was laid out from (`replay`), with the same pictures, and
+ * runs the same keep gate. No model is called. Empty `problems` means the
+ * returned class may be kept; otherwise it still may not, and they say why.
+ *
+ * The report is the original one, its gate replaced, with a line saying the
+ * class was re-laid out — a reviewer later should not have to guess why a
+ * class kept on Thursday carries a Tuesday prep.
+ */
+export function rekeep(
+  made: PrepResult & { replay: Replay },
+  opts: { outcomes?: readonly TopicOutcome[]; mathsCheck?: MathsCheck } = {},
+): { made: PrepResult & { replay: Replay }; problems: GateProblem[] } {
+  const r = made.replay;
+  const laid = assemble(r.blueprint, new Set(r.drawn), new Map(Object.entries(r.parts)), new Map(Object.entries(r.shapes)), r.language);
+  const checked = validateLesson(laid.lesson);
+  if (!checked.ok) {
+    const problems = checked.errors.map((e) => ({ rule: 'maths' as const, where: made.lesson.id, message: `laid out again, it does not validate: ${e}` }));
+    return { made, problems };
+  }
+  const problems = gateLesson(checked.lesson as Lesson, {
+    bonds: laid.bonds,
+    unspoken: laid.unspoken,
+    opening: laid.opening,
+    undrawn: laid.undrawn,
+    outcomes: opts.outcomes,
+    mathsCheck: opts.mathsCheck,
+  });
+  const assets = { ...made.assets };
+  // A copy of a picture needs the markup under its own id, decided by THIS layout.
+  for (const [copy, original] of Object.entries(laid.aliases)) if (assets[original]) assets[copy] = assets[original];
+  return {
+    made: {
+      lesson: checked.lesson as Lesson,
+      assets,
+      report: {
+        ...made.report,
+        issues: [...made.report.issues, 'Laid out again from the same plan and pictures, after the keep refused its layout.'],
+        gate: { problems },
+      },
+      replay: r,
+    },
+    problems,
+  };
 }
