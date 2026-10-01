@@ -94,7 +94,9 @@ export function Profile() {
           hasDiagnostic(profile)
             ? 'Find out what has changed since last time'
             : 'A few questions, so lessons start where you are',
-          '/diagnostic',
+          // A retake is asked for, not assumed: screens/Placement.tsx starts
+          // one only behind this flag, and only when nothing is still owed.
+          hasDiagnostic(profile) ? '/diagnostic?retake=1' : '/diagnostic',
         )}
         {row('bookmark', 'Saved lessons', 'The ones you kept for later', '/bookmarks')}
         {row('edit_note', 'My notes', 'What you wrote down, at the moment you wrote it', '/notes')}

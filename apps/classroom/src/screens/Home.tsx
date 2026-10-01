@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from '../lib/content';
 import { useAsync, dataOr } from '../lib/async';
 import { OfflineNotice } from '../ui/States';
 import { progressStore, isCompleted, computeStreak } from '../stores/progress';
 import { profileStore } from '../stores/profile';
+import { placementStore } from '../stores/placement';
+import { klassOf, settingsStore } from '../stores/settings';
+import { placementStatus } from '../lib/placement';
 import { BRAND } from '../brand';
 import { StreakFlame } from '../ui/StreakFlame';
 import { useStore } from '../stores/localStore';
@@ -40,6 +43,16 @@ export function Home() {
   const navigate = useNavigate();
   const progress = useStore(progressStore);
   const profile = useStore(profileStore);
+  const settings = useStore(settingsStore);
+  const placement = useStore(placementStore);
+  /**
+   * THE PLACEMENT TEST, STILL OWED. Every visit starts here, so this is where a
+   * student who skipped it before it was mandatory — or paused it — is asked
+   * to finish. The class routes are shut until then (App.tsx gateTo); this
+   * says so before a tap finds out.
+   */
+  const owed = placementStatus(placement, profile, klassOf(settings, profile));
+  const placementStarted = owed.owed.some((s) => (owed.answered[s] ?? 0) > 0);
   const { state: catalogState } = useAsync(fetchCatalog, []);
   const catalog = dataOr<CatalogEntry[] | null>(catalogState, null);
   const [resumeEntry, setResumeEntry] = useState<CatalogEntry | null>(null);
@@ -140,6 +153,31 @@ export function Home() {
         {/* Said once, here, rather than on every screen a tap might lead to.
             It disappears by itself when the connection comes back. */}
         <OfflineNotice className="col-span-4 md:col-span-12" />
+
+        {owed.owed.length > 0 && (
+          <section className="col-span-4 md:col-span-12 mb-stack-md">
+            <div className="bg-primary-fixed rounded-[24px] p-card-padding flex flex-col md:flex-row md:items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-surface-container-lowest grid place-items-center shrink-0">
+                <Icon name="explore" filled className="text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="font-headline-md text-headline-md text-on-primary-fixed mb-1">
+                  {placementStarted ? 'Finish your placement test' : 'Take your placement test'}
+                </h2>
+                <p className="font-body-md text-body-md text-on-primary-fixed-variant">
+                  Your classes open once it is done. It is a few quick questions on{' '}
+                  {owed.owed.join(', ')}, and you can stop and carry on later.
+                </p>
+              </div>
+              <Link
+                to="/diagnostic"
+                className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-2 border-on-primary-fixed-variant text-center active:scale-95 transition-transform"
+              >
+                {placementStarted ? 'Carry on' : 'Start'}
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* Hero: continue where you left off */}
         <section className="col-span-4 md:col-span-12 mb-stack-lg">

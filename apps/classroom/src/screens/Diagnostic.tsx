@@ -8,20 +8,28 @@ import {
   startSession,
   type DiagnosticSession,
 } from '@ai-tutor/diagnostic';
-import { applyDoubt, applyTaught, type DiagnosticResult } from '@ai-tutor/knowledge-graph';
+import { applyDoubt, applyTaught, type DiagnosticResult, type Mastery } from '@ai-tutor/knowledge-graph';
 import { loadDiagnosticDataFor } from '../lib/diagnosticData';
 import { evidenceSet } from '@ai-tutor/learner-model';
 import { loadModel } from '../lib/learnerModel';
 import { modelStore, trainOnSession } from '../stores/model';
 import { useDiagnosticLedger } from '../lib/diagnosticLedger';
+import { restoreSitting, saveSitting } from '../lib/placement';
+import type { SavedSitting } from '../stores/placement';
 import { outcomeStore } from '../stores/outcomes';
 import { BRAND } from '../brand';
 import { EmptyState } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
 
 /**
- * The adaptive placement test, built to the Stitch design: a close button, a
- * progress bar, one question, four option cards, and a quiet way out.
+ * The adaptive placement test, built to the Stitch design: a progress bar, one
+ * question, four option cards, "I'm not sure", and "Finish later".
+ *
+ * NOT A WAY OUT, A PAUSE. The test is mandatory (Aarav, 2026-09-30): the top
+ * corner used to be a close button that dropped the sitting, and a student
+ * could leave and never come back to it. Every answer is now handed to
+ * `onProgress` as a saved sitting, and a sitting handed back in as `resume`
+ * opens on the same question it was left on — so "Finish later" is true.
  *
  * The engine (@ai-tutor/diagnostic) decides everything that matters — which
  * question comes next, when to stop, and what the plan is. This screen only
@@ -94,16 +102,32 @@ const chapterLabel = (chapterId: string): string =>
 export function Diagnostic({
   klass,
   subjects,
+  resume,
+  onProgress,
   onComplete,
-  onSkip,
+  onFinishLater,
 }: {
   klass: number;
-  /** Subjects the student picked at onboarding; empty means every subject. */
+  /**
+   * The subjects this sitting places — one, when the caller runs the test a
+   * subject at a time (screens/Placement.tsx). Empty means every subject.
+   */
   subjects: string[];
-  /** Called once, with the study plan, when the test finishes. */
-  onComplete: (result: DiagnosticResult) => void;
-  /** Called when the student closes the test, or when no map exists for them. */
-  onSkip: () => void;
+  /**
+   * A sitting saved by `onProgress` earlier. Resumed on the same question when
+   * it still fits this class, these subjects and this map; otherwise ignored
+   * and a fresh sitting starts (lib/placement.ts restoreSitting says when).
+   */
+  resume?: SavedSitting | null;
+  /** Called after every answer with the sitting as it now stands. */
+  onProgress?: (sitting: SavedSitting) => void;
+  /** Called once, with the study plan and the finished sitting, when the test finishes. */
+  onComplete: (result: DiagnosticResult, sitting: SavedSitting) => void;
+  /**
+   * The student is leaving for now: "Finish later", or "Continue" past a class
+   * with no map. Answers given so far have already gone to `onProgress`.
+   */
+  onFinishLater: () => void;
 }) {
   // The merged map: the student's class plus the levels behind it, scoped to
   // their subjects with lineage (Class 11 Biology looks back into Class 10
@@ -116,10 +140,17 @@ export function Diagnostic({
 
   // The session is the entire state of the test, created once: the engine is
   // pure, so rebuilding it mid-test would silently restart the student. The
-  // caller mounts this screen per placement test, so a different class is a new
-  // mount and gets its own session.
-  const [session, setSession] = useState<DiagnosticSession | null>(() => {
+  // caller mounts this screen per placement test, so a different class or
+  // subject is a new mount and gets its own session.
+  //
+  // `start` is read once, in the same initializer as the session, so a saved
+  // sitting and the beliefs it began from cannot come from two different reads.
+  const [start] = useState<{ session: DiagnosticSession; before: Mastery } | null>(() => {
     if (!data) return null;
+    // A paused sitting picks up where it was: same beliefs, same answers, and
+    // therefore — selection being deterministic — the same next question.
+    const resumed = restoreSitting(resume, data, klass, subjects);
+    if (resumed) return resumed;
     const fresh = startSession(data.index, data.bank, {
       klass,
       subjects: data.subjects,
@@ -129,8 +160,10 @@ export function Diagnostic({
     // outcomes they have been taught, and which ones they stopped the class
     // on. Starting the test from those beliefs rather than from the prior
     // means their first question is already informed by their term's work.
-    return seedFromClassroom(fresh, outcomeStore.get());
+    const seeded = seedFromClassroom(fresh, outcomeStore.get());
+    return { session: seeded, before: seeded.mastery };
   });
+  const [session, setSession] = useState<DiagnosticSession | null>(start?.session ?? null);
 
   // What this install has learned about its own questions and edges so far.
   // Read once per test: parameters that shifted mid-test would mean two
@@ -144,7 +177,8 @@ export function Diagnostic({
 
   // The beliefs the test STARTED from, kept for calibration. An item judged
   // against beliefs that already include its own answer always looks perfect.
-  const beliefsBefore = useRef(session?.mastery ?? {}).current;
+  // A resumed sitting carries its own, saved when it began — not today's.
+  const beliefsBefore = start?.before ?? {};
 
   // Having no probe left to ask IS the finish line, whether that is because the
   // engine has seen enough or because the bank ran dry, so both cases collapse
@@ -184,8 +218,9 @@ export function Diagnostic({
         // never asked about.
         knownEvidence: evidenceSet(loadModel()),
       }),
+      saveSitting(session, beliefsBefore, data.index, klass, subjects),
     );
-  }, [data, session, probe, onComplete, beliefsBefore, ledger]);
+  }, [data, session, probe, onComplete, beliefsBefore, ledger, klass, subjects]);
 
   if (!data || !session) {
     return (
@@ -194,10 +229,12 @@ export function Diagnostic({
           <EmptyState
             icon="explore_off"
             title="Placement test not ready"
+            // True because a subject with no map is never owed
+            // (lib/placement.ts placementSubjects), so nothing waits on it.
             body={`${BRAND.name} has not mapped Class ${klass} yet, so there is nothing to place you against. Start learning — nothing is blocked.`}
             action={
               <button
-                onClick={onSkip}
+                onClick={onFinishLater}
                 className="mt-2 bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
               >
                 Continue
@@ -237,7 +274,11 @@ export function Diagnostic({
     // The ledger keeps what the belief update cannot: which distractor they
     // chose, and therefore the named misconception behind it.
     ledger.answered(probe, chosenIndex, ms);
-    setSession(answerProbe(session, data.index, probe, chosenIndex, ms, params));
+    const next = answerProbe(session, data.index, probe, chosenIndex, ms, params);
+    setSession(next);
+    // Saved on every answer rather than on the way out: a phone locked, a tab
+    // closed or a battery gone is a way out with no button pressed.
+    onProgress?.(saveSitting(next, beliefsBefore, data.index, klass, subjects));
   };
 
   const node = data.index.node(probe.nodeId);
@@ -246,12 +287,13 @@ export function Diagnostic({
     <div className="bg-background text-on-background min-h-screen font-body-md flex flex-col">
       <div className="w-full max-w-md mx-auto flex flex-col flex-grow">
         <header className="flex items-center px-margin-mobile py-4 sticky top-0 bg-background z-10">
+          {/* A pause, named as one. The answers so far are already saved
+              (onProgress above), so leaving here keeps them. */}
           <button
-            onClick={onSkip}
-            aria-label="Close placement test"
-            className="w-10 h-10 -ml-2 grid place-items-center rounded-full flex-shrink-0 text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95"
+            onClick={onFinishLater}
+            className="-ml-2 px-3 py-2 rounded-full flex-shrink-0 font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95"
           >
-            <Icon name="close" />
+            Finish later
           </button>
 
           <div

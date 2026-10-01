@@ -13,7 +13,7 @@ import { Icon } from '../ui/Icon';
 const FAQ: { q: string; a: string }[] = [
   {
     q: 'What is the placement test for?',
-    a: `It finds the last thing you are solid on, so your lessons can start there instead of at page one. ${BRAND.name} turns your answers into a study plan: what is worth fixing first, and what you can skip because you already know it. There are no marks, and nothing to revise beforehand.`,
+    a: `It finds the last thing you are solid on, so your lessons can start there instead of at page one. ${BRAND.name} turns your answers into a study plan: what is worth fixing first, and what you can skip because you already know it. There are no marks, and nothing to revise beforehand. It is a few questions for each of your subjects that has one, and your classes open once it is done — you can stop at any point and carry on later from the same question.`,
   },
   {
     q: 'Why does it not tell me if I got a question right?',

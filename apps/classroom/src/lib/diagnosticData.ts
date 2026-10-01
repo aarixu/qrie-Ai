@@ -178,6 +178,26 @@ export function loadDiagnosticDataFor(klass: number, subjects: readonly string[]
   return data;
 }
 
+/**
+ * WHETHER ONE SUBJECT CAN BE PLACED IN THIS CLASS, without building its map.
+ *
+ * The same test `loadDiagnosticDataFor(klass, [subject])` applies before it
+ * returns null — a map of the student's own class under the subject or a name
+ * it descends from — read off the maps already loaded, so the Gate can ask it
+ * on every navigation without building a GraphIndex. The two must agree: a
+ * subject this calls placeable and the loader cannot load would be a test that
+ * shuts every class and can never be taken (tests/placementMandatory.test.tsx
+ * checks every class and subject against the loader).
+ */
+export function hasPlacementFor(klass: number, subject: string): boolean {
+  const wanted = new Set(lineageSubjects([subject]));
+  for (const map of maps().values()) {
+    const sample = map.graph.nodes[0];
+    if (sample && sample.klass === klass && wanted.has(sample.subject)) return true;
+  }
+  return false;
+}
+
 /** The pre-lineage loader, kept for callers that only know a class. */
 export function loadDiagnosticData(klass: number): DiagnosticData | null {
   return loadDiagnosticDataFor(klass, []);

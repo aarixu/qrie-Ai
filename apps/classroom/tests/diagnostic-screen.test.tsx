@@ -48,7 +48,7 @@ const decode = (html: string): string =>
 
 const renderScreen = (klass: number): string =>
   renderToString(
-    <Diagnostic klass={klass} subjects={SUBJECTS} onComplete={noop} onSkip={noop} />,
+    <Diagnostic klass={klass} subjects={SUBJECTS} onComplete={noop} onFinishLater={noop} />,
   );
 
 describe('Diagnostic: the question', () => {

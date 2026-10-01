@@ -10,19 +10,21 @@ import {
   useParams,
 } from 'react-router-dom';
 import { GraphIndex } from '@ai-tutor/knowledge-graph';
-import { settingsStore, isOnboarded } from './stores/settings';
+import { settingsStore, isOnboarded, klassOf } from './stores/settings';
 import { watchTheme } from './lib/theme';
-import { profileStore, saveDiagnostic, hasDiagnostic } from './stores/profile';
+import { profileStore, hasDiagnostic } from './stores/profile';
+import { placementStore } from './stores/placement';
 import { flagStore, replayUnsent, unsentReports } from './stores/flags';
 import { preferencesStore } from './stores/preferences';
 import { useStore } from './stores/localStore';
 import { loadDiagnosticDataFor } from './lib/diagnosticData';
-import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from './lib/content';
+import { fetchCatalog, findEntry, type CatalogEntry } from './lib/content';
 import { hrefFor } from './lib/destination';
 import { currentAccount } from './lib/supabase';
 import { reportCrash, track } from './lib/telemetry';
 import { isNative } from './lib/platform';
 import { isTrialPath, isTrialSession, mayPersist } from './lib/workspace';
+import { adoptLegacyPlacement, isPlacementGated, placementStatus } from './lib/placement';
 import type { QuizOutcome } from './lib/quiz';
 import type { PlanChange } from './lib/adaptPlan';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
@@ -43,7 +45,9 @@ const Profile = lazy(() => import('./screens/Profile').then((m) => ({ default: m
 const Search = lazy(() => import('./screens/Search').then((m) => ({ default: m.Search })));
 const Syllabus = lazy(() => import('./screens/Syllabus').then((m) => ({ default: m.Syllabus })));
 const Progress = lazy(() => import('./screens/Progress').then((m) => ({ default: m.Progress })));
-const Diagnostic = lazy(() => import('./screens/Diagnostic').then((m) => ({ default: m.Diagnostic })));
+const PlacementRoute = lazy(() =>
+  import('./screens/Placement').then((m) => ({ default: m.PlacementRoute })),
+);
 const StudyPlan = lazy(() => import('./screens/StudyPlan').then((m) => ({ default: m.StudyPlan })));
 const PracticeQuiz = lazy(() => import('./screens/PracticeQuiz').then((m) => ({ default: m.PracticeQuiz })));
 const QuizResult = lazy(() => import('./screens/QuizResult').then((m) => ({ default: m.QuizResult })));
@@ -71,39 +75,6 @@ import { ActionLab } from './screens/ActionLab';
 import { CanvasLab } from './screens/CanvasLab';
 import { ModelInspector } from './screens/ModelInspector';
 import { AvatarLab } from './screens/AvatarLab';
-
-/**
- * The subjects a student is being placed in.
- *
- * Their own choice from onboarding wins. Only when that is missing — a profile
- * from before onboarding asked the question — do we fall back to whatever the
- * syllabus covers for the class, which is the honest answer rather than a
- * list we would be inventing.
- */
-const subjectsForClass = (klass: number, chosen: string[]): string[] =>
-  chosen.length > 0
-    ? chosen
-    : Array.from(new Set(SYLLABI.filter((s) => s.klass === klass).map((s) => s.subject)));
-
-/** /diagnostic — reads the class from settings and hands the engine to the screen. */
-function DiagnosticRoute() {
-  const navigate = useNavigate();
-  const settings = useStore(settingsStore);
-  const profile = useStore(profileStore);
-  if (settings.klass === null) return <Navigate to="/onboarding" replace />;
-
-  return (
-    <Diagnostic
-      klass={settings.klass}
-      subjects={subjectsForClass(settings.klass, profile.subjects)}
-      onComplete={(result) => {
-        saveDiagnostic(result);
-        navigate('/plan', { replace: true });
-      }}
-      onSkip={() => navigate('/', { replace: true })}
-    />
-  );
-}
 
 /** /plan — renders the stored result. Nothing to show means nothing was taken. */
 function StudyPlanRoute() {
@@ -230,7 +201,8 @@ function QuizRoute() {
 }
 
 /**
- * First run goes to onboarding; everything else passes through.
+ * First run goes to onboarding; a placement test still owed shuts the routes
+ * that open a class (gateTo, below); everything else passes through.
  *
  * The splash is held for MIN_SPLASH_MS even when startup is instant — a splash
  * that appears for eighty milliseconds reads as a rendering glitch, not a brand.
@@ -242,6 +214,8 @@ function QuizRoute() {
  */
 export function Gate({ children }: { children: React.ReactNode }) {
   const settings = useStore(settingsStore);
+  const profile = useStore(profileStore);
+  const placement = useStore(placementStore);
   const location = useLocation();
   const [booting, setBooting] = useState(true);
 
@@ -249,6 +223,16 @@ export function Gate({ children }: { children: React.ReactNode }) {
     const timer = setTimeout(() => setBooting(false), MIN_SPLASH_MS);
     return () => clearTimeout(timer);
   }, []);
+
+  /**
+   * A student who finished the old one-sitting placement is placed; this
+   * writes that down once (lib/placement.ts withLegacy says why, and why only
+   * once). Not during a trial: a trial writes nothing that outlives it.
+   */
+  useEffect(() => {
+    if (!isOnboarded(settings) || !mayPersist()) return;
+    adoptLegacyPlacement();
+  }, [settings, profile.diagnostic, placement]);
 
   // The dev benches are not the product and have no student behind them.
   // Sending them through onboarding just puts a name form in front of a tool
@@ -326,10 +310,19 @@ export function Gate({ children }: { children: React.ReactNode }) {
    * isTrialSession is session-scoped, so all of this ends with the tab.
    */
   if (booting && !isBench) return <Splash />;
+  /**
+   * THE PLACEMENT, OWED. Asked only on a route it shuts, so the maps are not
+   * read for every screen; gateTo decides what it means.
+   */
+  const placementDue =
+    isPlacementGated(location.pathname) &&
+    placementStatus(placement, profile, klassOf(settings, profile)).owed.length > 0;
   const to = gateTo(location.pathname, {
     settled: isOnboarded(settings),
     trial: isTrialSession(),
     bench: isBench,
+    placementDue,
+    search: location.search,
   });
   return to === null ? <>{children}</> : <Navigate to={to} replace />;
 }
@@ -348,11 +341,32 @@ export function Gate({ children }: { children: React.ReactNode }) {
  *   - a bench is a dev tool with no student behind it and is never gated;
  *   - a trial is CONFINED, and the comment above says at length why;
  *   - the doors are reached by people who have not onboarded, which is what
- *     they are for, so the onboarding redirect must not swallow them.
+ *     they are for, so the onboarding redirect must not swallow them;
+ *   - a settled student who still owes a placement test (Aarav, 2026-09-30:
+ *     mandatory, per chosen subject) is sent to it from any route that opens
+ *     a class or a lesson (lib/placement.ts isPlacementGated), carrying where
+ *     they were going so a deep link still lands once the test is done.
+ *
+ * `placementDue` defaults to false, so a caller that does not say is gated
+ * exactly as before; the Gate above always says.
  */
 export function gateTo(
   pathname: string,
-  { settled, trial, bench }: { settled: boolean; trial: boolean; bench: boolean },
+  {
+    settled,
+    trial,
+    bench,
+    placementDue = false,
+    search = '',
+  }: {
+    settled: boolean;
+    trial: boolean;
+    bench: boolean;
+    /** This student has a chosen subject that has never been placed. */
+    placementDue?: boolean;
+    /** The query string of the path asked for, kept with it on the way to the test. */
+    search?: string;
+  },
 ): string | null {
   if (bench) return null;
   const isDoor = pathname === '/enrol' || pathname === '/try';
@@ -363,6 +377,9 @@ export function gateTo(
     return `/try?blocked=${encodeURIComponent(pathname)}`;
   }
   if (!isDoor && !settled && pathname !== '/onboarding') return '/onboarding';
+  if (settled && placementDue && isPlacementGated(pathname)) {
+    return `/diagnostic?next=${encodeURIComponent(pathname + search)}`;
+  }
   return null;
 }
 
@@ -601,7 +618,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/diagnostic" element={<DiagnosticRoute />} />
+            <Route path="/diagnostic" element={<PlacementRoute />} />
             <Route path="/plan" element={<StudyPlanRoute />} />
             <Route path="/syllabus" element={<Syllabus />} />
             <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />

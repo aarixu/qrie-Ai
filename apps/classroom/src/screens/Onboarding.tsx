@@ -5,7 +5,8 @@ import { settingsStore } from '../stores/settings';
 import { profileStore } from '../stores/profile';
 import { subjectsAvailable } from '../lib/content';
 import { capName, firstName, MAX_NAME_CHARS } from '../lib/student';
-import { loadDiagnosticData } from '../lib/diagnosticData';
+import { placementSubjects } from '../lib/placement';
+import { DEFAULT_CONFIG } from '@ai-tutor/diagnostic';
 import { Icon } from '../ui/Icon';
 import {
   DEFAULT_SCHEDULE,
@@ -160,8 +161,10 @@ export function Onboarding() {
 
   const index = STEPS.indexOf(step);
   const available = klass !== null ? subjectsAvailable(klass) : [];
-  // The placement test exists class by class; only offer what can be taken.
-  const hasPlacement = klass !== null && loadDiagnosticData(klass) !== null;
+  // The placement test exists per class and subject; only what can be taken is
+  // owed (lib/placement.ts), and only what is owed is asked for here.
+  const placed = klass !== null ? placementSubjects(klass, subjects) : [];
+  const hasPlacement = placed.length > 0;
 
   const toggleSubject = (subject: string) =>
     setSubjects((current) =>
@@ -595,6 +598,11 @@ export function Onboarding() {
             </div>
           )}
 
+          {/* NO SKIP (Aarav, 2026-09-30). The placement test is how the first
+              class knows where to start, so this step leads to it and nowhere
+              else. It can be paused — "Finish later" inside the test keeps
+              every answer (screens/Placement.tsx) — and until it is done the
+              Gate sends any class back to it (App.tsx gateTo). */}
           {step === 'ready' &&
             (hasPlacement ? (
               <div className="text-center">
@@ -604,18 +612,20 @@ export function Onboarding() {
                 <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
                   Let's find your level
                 </h1>
+                <p className="font-body-md text-body-md text-on-surface-variant mb-stack-sm">
+                  {/* Named, not "each subject you picked": a subject with no
+                      map has no test (lib/placement.ts placementSubjects). */}
+                  Up to {DEFAULT_CONFIG.maxQuestions} quick questions for{' '}
+                  {placed.length === 1 ? placed[0] : `each of ${placed.slice(0, -1).join(', ')} and ${placed[placed.length - 1]}`}
+                  {' '}— no marks, nothing to revise. I use them to work out what to teach you first,
+                  and what to skip.
+                </p>
                 <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                  20 quick questions on what you've studied before — no marks, nothing to
-                  revise. I use them to work out what to teach you first, and what to skip.
+                  Your classes open once it is done. You can stop at any point and finish later —
+                  your answers are kept.
                 </p>
                 <button onClick={() => finish(true)} className={PRIMARY}>
                   Start the placement test
-                </button>
-                <button
-                  onClick={() => finish(false)}
-                  className="w-full mt-3 py-3 font-label-md text-label-md text-on-surface-variant underline underline-offset-2"
-                >
-                  Skip for now
                 </button>
               </div>
             ) : (
