@@ -7,10 +7,12 @@ import type { TeachingPlan } from '../../src/index';
  * Shaped so every branch has something to run on: `idea-what` has a
  * prediction and `idea-oxygen` has none; `q-where` has a misconception, a
  * worked example and two alternates (the whole ladder); `q-gas` has no worked
- * example (L5 skipped); `idea-what` has three checks (two retests available),
- * `idea-oxygen` two. No hint,
- * follow-up, reason, alternate or worked step gives away its question's
- * answer, and no point states its own quick question's answer.
+ * example (L5 skipped); `idea-what` has three checks (two retests available:
+ * `c-hungry` on `resp.site` and `resp.definition`, `c-name` on
+ * `resp.definition`, so a missed `q-where` or `c-release` has a retest on its
+ * own node and a missed `q-gas`, on `resp.products`, has none), `idea-oxygen`
+ * two. No hint, follow-up, reason, alternate or worked step gives away its
+ * question's answer, and no point states its own quick question's answer.
  */
 export const PLAN: TeachingPlan = {
   formatVersion: 1,
@@ -130,14 +132,14 @@ export const PLAN: TeachingPlan = {
         },
         {
           id: 'c-hungry',
-          question: 'Why do you feel hungry after playing football for an hour?',
-          expect: 'the body used up its energy',
-          answer: 'Your cells used up energy by respiring',
-          why: 'Respiring muscles burn through food, so the body asks for more.',
-          hint: 'What were your muscles doing the whole match?',
+          question: 'After an hour of football you feel hungry. Where in your body was the food used up?',
+          expect: 'in the muscle cells',
+          answer: 'In the cells of your muscles',
+          why: 'Respiring muscle cells burn through food, so the body asks for more.',
+          hint: 'Which parts of you were working hardest the whole match?',
           misconceptions: [],
           alternates: [{ mode: 'analogy', say: 'A car that drives all day needs a full tank again.' }],
-          nodeIds: ['resp.definition'],
+          nodeIds: ['resp.site', 'resp.definition'],
         },
         {
           id: 'c-name',

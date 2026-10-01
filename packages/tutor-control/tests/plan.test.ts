@@ -218,6 +218,15 @@ describe('validatePlan: nothing said while a question is held gives its answer a
     ]);
   });
 
+  it("refuses a point that states its own quick question's answer: the question would be an echo, its right answer no evidence", () => {
+    expect(after((p) => (p.ideas[0].points[1].say = 'Cells give out carbon dioxide and water as waste.'))).toEqual([
+      'ideas[0].points[1].say: contains the answer "Carbon dioxide"',
+    ]);
+    expect(after((p) => (p.ideas[0].points[0].say = 'Respiration happens in every cell of the body.'))).toEqual([
+      'ideas[0].points[0].say: gives away the answer ("in every cell")',
+    ]);
+  });
+
   it('finds the answer as written where the leak check has no needle, and only at word boundaries', () => {
     // An answer of joining words only: leakTokens reduces it to nothing.
     const withHint = (hint: string) =>

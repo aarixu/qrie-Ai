@@ -101,14 +101,14 @@ describe('a whole class', () => {
     });
     expect(predict.evidence).toBeUndefined();
 
-    // A wrong prediction is fine: acknowledged, not graded, then the point.
+    // A wrong prediction is fine: acknowledged, not graded, resolved, then the point.
     const explain = c.hear(r('wrong'));
     expect(explain).toMatchObject({
       kind: 'explain',
       heldQuestionId: 'q-where',
       ack: { of: 'wrong' },
-      content: { say: IDEA0.points[0].say, ask: Q_WHERE.question },
-      maxSentences: 3,
+      content: { say: `${IDEA0.predict!.answer}. ${IDEA0.predict!.why} ${IDEA0.points[0].say}`, ask: Q_WHERE.question },
+      maxSentences: 4,
       board: null,
       mustNotReveal: SECRETS_WHERE,
     });
@@ -248,22 +248,25 @@ describe('the help ladder on a graded question', () => {
       expect(m.handsOver).toBe(true);
     }
 
+    // The reveal stays on q-where: the answer and why, then q-where again to say back.
     const reveal = c.hear(r('wrong'));
     expect(reveal).toMatchObject({
       kind: 'reveal',
       ack: { of: 'wrong' },
-      heldQuestionId: 'q-gas',
+      heldQuestionId: 'q-where',
       helped: 8,
       strategy: 'reveal',
       handsOver: true,
-      content: { ask: Q_GAS.question },
+      content: { say: `In every living cell. ${Q_WHERE.why}`, ask: Q_WHERE.question },
       evidence: { questionId: 'q-where', correct: false, rung: 7 },
-      // It carries the next point's explanation, so it takes the explain cap.
       maxSentences: 3,
+      mustNotReveal: [],
     });
-    expect(reveal.content.say).toBe(`In every living cell. ${Q_WHERE.why} ${IDEA0.points[1].say}`);
-    expect(reveal.mustNotReveal).toEqual(['carbon dioxide', 'Carbon dioxide']);
-    expect(reveal.because).toMatch(/answer and why \(L8\).*retest c-hungry queued/);
+    expect(reveal.because).toMatch(/answer and why \(L8\).*put again for them to say it back/);
+
+    const readBack = c.hear(r('right'));
+    expect(readBack).toMatchObject({ kind: 'explain', heldQuestionId: 'q-gas', evidence: { questionId: 'q-where', correct: true, rung: 8 } });
+    expect(readBack.because).toMatch(/retest c-hungry queued/);
 
     c.hear(r('right')); // q-gas → c-release
     c.hear(r('right')); // → teach-back
@@ -283,13 +286,14 @@ describe('the help ladder on a graded question', () => {
     expect(c.hear(r('right')).kind).toBe('recap');
   });
 
-  it('keeps one queued retest per idea', () => {
+  it('lets a queued retest on the same node stand in for a second one', () => {
     const { c } = setup();
     toQWhere(c);
     c.hear(r('wrong'));
-    expect(c.hear(r('right')).because).toMatch(/retest c-hungry queued/);
+    expect(c.hear(r('right')).because).toMatch(/retest c-hungry queued .*\(on resp\.site\)/);
+    c.hear(r('right')); // q-gas → c-release, on resp.definition
     c.hear(r('wrong'));
-    expect(c.hear(r('right')).because).toMatch(/a retest of idea idea-what is already queued/);
+    expect(c.hear(r('right')).because).toMatch(/retest c-hungry, already queued, is on resp\.definition too/);
   });
 
   it('skips the worked example where none is authored', () => {
@@ -301,7 +305,8 @@ describe('the help ladder on a graded question', () => {
     const alt = c.hear(r('wrong'));
     expect(alt).toMatchObject({ kind: 'anotherWay', content: { say: Q_GAS.alternates[0].say } });
     expect(alt.because).toMatch(/no usable worked example: none authored/);
-    expect(c.hear(r('wrong'))).toMatchObject({ kind: 'reveal', heldQuestionId: 'c-release' });
+    expect(c.hear(r('wrong'))).toMatchObject({ kind: 'reveal', heldQuestionId: 'q-gas' });
+    expect(c.hear(r('wrong'))).toMatchObject({ kind: 'check', heldQuestionId: 'c-release', evidence: { questionId: 'q-gas', rung: 8 } });
   });
 
   it('asks for the missing part on a first partly, then treats a second like a miss', () => {
@@ -311,7 +316,7 @@ describe('the help ladder on a graded question', () => {
     expect(probe).toMatchObject({
       kind: 'probeMore',
       ack: { of: 'partly' },
-      content: { ask: Q_WHERE.hint },
+      content: { ask: Q_WHERE.question },
       helped: 1,
       strategy: 'probe-more',
       evidence: { correct: false, rung: 0 },
@@ -388,7 +393,8 @@ describe('a named misconception', () => {
     c.hear(r('right'));
     c.hear(r('right')); // → c-release
     expect(c.hear(r('wrong', 'breathing-is-respiration')).kind).toBe('probeWhy');
-    expect(c.hear(r('dontKnow'))).toMatchObject({ kind: 'check', maxSentences: 2, heldQuestionId: 'c-release' });
+    // The reason sits in the ack and in `say` (said once), and the cap holds both and the question.
+    expect(c.hear(r('dontKnow'))).toMatchObject({ kind: 'check', maxSentences: 3, heldQuestionId: 'c-release' });
   });
 });
 
@@ -414,12 +420,12 @@ describe('doubts, off-topic, unclear and chat', () => {
     expect(after.evidence).toEqual(before.evidence);
   });
 
-  it('redirects off-topic, and asks again after unclear or chat, with no evidence', () => {
+  it('redirects off-topic, asks to hear it again after unclear, and nudges after chat, with no evidence', () => {
     const { c } = setup();
     toQWhere(c);
     expect(c.hear(r('offTopic'))).toMatchObject({ kind: 'redirect', ack: { of: 'offTopic' }, content: { ask: Q_WHERE.question }, helped: null });
     expect(c.hear(r('unclear'))).toMatchObject({ kind: 'sayAgain', ack: { of: 'unclear' }, content: { ask: Q_WHERE.question } });
-    expect(c.hear(r('chat'))).toMatchObject({ kind: 'sayAgain', ack: { of: 'chat' } });
+    expect(c.hear(r('chat'))).toMatchObject({ kind: 'nudge', helped: null, content: { ask: Q_WHERE.question } });
     expect(c.snapshot()).toMatchObject({ attempt: 1, rung: 0, evidence: [] });
   });
 
@@ -431,7 +437,7 @@ describe('doubts, off-topic, unclear and chat', () => {
 });
 
 describe('silence', () => {
-  it('nudges, then checks in, then gives help as a hint request they did not make', () => {
+  it('nudges, then checks in, then gives help as a hint request they did not make, then moves on', () => {
     const { c } = setup();
     toQWhere(c);
     const nudge = c.silence(5000);
@@ -447,11 +453,16 @@ describe('silence', () => {
     const hint = c.silence(5000);
     expect(hint).toMatchObject({ kind: 'hint', helped: 3, requested: false, content: { say: Q_WHERE.hint, ask: Q_WHERE.question } });
     expect(hint.because).toMatch(/silence 3 \(5000 ms\), answered as a hint request they did not make/);
-    expect(c.silence(5000)).toMatchObject({ kind: 'hint', helped: 3, requested: false });
 
     const right = c.hear(r('right'));
     expect(right.evidence).toMatchObject({ questionId: 'q-where', correct: true, rung: 3 });
     expect(right.because).toMatch(/retest c-hungry queued/);
+
+    // A fourth silence in a row moves on with no evidence (the review tests below follow it further).
+    const quiet = setup().c;
+    toQWhere(quiet);
+    for (let i = 0; i < 3; i += 1) quiet.silence(5000);
+    expect(quiet.silence(5000)).toMatchObject({ kind: 'explain', heldQuestionId: 'q-gas', helped: null });
   });
 
   it('counts only silences in a row: any spoken turn resets it', () => {
@@ -477,8 +488,11 @@ describe('silence', () => {
 
   it('in the recap: nudge, check in, then the next prompt', () => {
     const { c } = setup();
-    toQWhere(c);
-    c.end(); // → recap
+    toTeachBack(c);
+    c.hear(r('right')); // → q-sprint
+    c.hear(r('right')); // → c-aerobic
+    c.hear(r('right')); // → idea-oxygen's teach-back
+    expect(c.hear(r('right'))).toMatchObject({ kind: 'recap', content: { ask: PLAN.recap.prompts[0] } });
     expect(c.silence(4000)).toMatchObject({ kind: 'nudge', content: { ask: PLAN.recap.prompts[0] }, heldQuestionId: null });
     expect(c.silence(4000)).toMatchObject({ kind: 'checkIn' });
     expect(c.silence(4000)).toMatchObject({ kind: 'recap', content: { ask: PLAN.recap.prompts[1] } });
@@ -550,17 +564,20 @@ describe('the teach-back', () => {
     }
   });
 
-  it('gives the core once on a miss, files it, and moves on with no ladder', () => {
+  it('gives the core once on a miss, files it, and moves on after the reply with no ladder', () => {
     for (const cls of ['wrong', 'dontKnow'] as const) {
       const { c } = setup();
       toTeachBack(c);
       const m = c.hear(r(cls));
       expect(m.evidence).toEqual({ questionId: 'idea-what#teach-back', nodeIds: IDEA0.nodeIds, correct: false, rung: 0 });
-      expect(m).toMatchObject({ kind: 'explain', ideaId: 'idea-oxygen', ack: { of: cls, why: IDEA0.points[0].say } });
+      expect(m).toMatchObject({ kind: 'reveal', heldQuestionId: 'idea-what#teach-back', ack: { of: cls }, content: { say: IDEA0.points[0].say }, helped: 8 });
+      const on = c.hear(r(cls));
+      expect(on).toMatchObject({ kind: 'explain', ideaId: 'idea-oxygen', evidence: { correct: false, rung: 8 } });
+      expect(on.because).toMatch(/again after the core.*no ladder on a teach-back/);
     }
   });
 
-  it('helps once another way (L7), then moves on without evidence', () => {
+  it('helps once another way (L7), then gives the core, then moves on without evidence', () => {
     const { c } = setup();
     toTeachBack(c);
     const help = c.hear(r('hintRequest'));
@@ -572,8 +589,12 @@ describe('the teach-back', () => {
       requested: true,
       strategy: 'analogy',
     });
+    const core = c.hear(r('explainRequest'));
+    expect(core).toMatchObject({ kind: 'reveal', heldQuestionId: 'idea-what#teach-back', content: { say: IDEA0.points[0].say }, helped: 8, requested: true });
+    expect(core.evidence).toBeUndefined();
     const on = c.hear(r('explainRequest'));
-    expect(on).toMatchObject({ kind: 'explain', ideaId: 'idea-oxygen', ack: { of: 'explainRequest', why: IDEA0.points[0].say } });
+    expect(on).toMatchObject({ kind: 'explain', ideaId: 'idea-oxygen', ack: { of: 'explainRequest' } });
+    expect(on.ack?.why).toBeUndefined();
     expect(on.evidence).toBeUndefined();
   });
 
@@ -611,15 +632,25 @@ describe('mustNotReveal', () => {
     expect(c.end().mustNotReveal).toEqual([]);
   });
 
-  it('leaves out, for that move only, a secret the move itself must say', () => {
+  it('protects nothing once the question is revealed, and the next question from the move that reaches it', () => {
+    const { c } = setup();
+    toQWhere(c);
+    for (let i = 0; i < 5; i += 1) c.hear(r('wrong'));
+    expect(c.snapshot()).toMatchObject({ heldQuestionId: 'q-where', rung: 8 });
+    // After the reveal, a nudge on the same question has nothing left to protect.
+    expect(c.silence(4000)).toMatchObject({ kind: 'nudge', heldQuestionId: 'q-where', mustNotReveal: [] });
+    expect(c.hear(r('right'))).toMatchObject({ heldQuestionId: 'q-gas', mustNotReveal: ['carbon dioxide', 'Carbon dioxide'] });
+  });
+
+  it('leaves out, on a move that stays, a secret its own content states', () => {
+    // A teach-back's alternate that states the teach-back's expect (no plan check covers it).
     const plan = planCopy();
-    plan.ideas[0].points[1].say = 'Cells give out carbon dioxide and water as waste.';
+    plan.ideas[0].teachBack.expect = 'each cell is a tiny kitchen';
+    plan.ideas[0].points[0].ask.alternates[0].say = 'Think of it this way: each cell is a tiny kitchen.';
     expect(validatePlan(plan).ok).toBe(true);
     const { c } = setup({}, plan);
-    toQWhere(c);
-    const explain = c.hear(r('right'));
-    expect(explain).toMatchObject({ kind: 'explain', heldQuestionId: 'q-gas', mustNotReveal: [] });
-    expect(c.hear(r('wrong')).mustNotReveal).toEqual(['carbon dioxide', 'Carbon dioxide']);
+    expect(toTeachBack(c).mustNotReveal).toEqual(['each cell is a tiny kitchen']);
+    expect(c.hear(r('hintRequest'))).toMatchObject({ kind: 'anotherWay', mustNotReveal: [] });
   });
 });
 
@@ -630,8 +661,10 @@ describe('time', () => {
     c.hear(r('right')); // → predict
     at(20 * MIN);
     const m = c.hear(r('wrong'));
-    expect(m).toMatchObject({ kind: 'recap', ack: { of: 'wrong' }, content: { ask: PLAN.recap.prompts[0] }, heldQuestionId: null });
-    expect(m.because).toMatch(/time is up \(20\.0 of 20 min\): straight to the recap, skipping 1 idea\(s\) not begun and 0 queued retest\(s\)/);
+    expect(m).toMatchObject({ kind: 'recap', ack: { of: 'wrong' }, content: { ask: GENERAL_RECAP }, heldQuestionId: null });
+    expect(m.because).toMatch(
+      /time is up \(20\.0 of 20 min\): straight to the recap, skipping the rest of idea idea-what \(point p-what, point p-waste, check c-release, its teach-back\), 1 idea\(s\) not begun, 0 queued retest\(s\)/,
+    );
   });
 
   it('does not cut a ladder short, and closes at the hard stop keeping the answer as evidence', () => {
@@ -681,7 +714,7 @@ describe('end, stop and the close', () => {
     const { c } = setup();
     toQWhere(c);
     const recap = c.end();
-    expect(recap).toMatchObject({ kind: 'recap', content: { ask: PLAN.recap.prompts[0] }, heldQuestionId: null });
+    expect(recap).toMatchObject({ kind: 'recap', content: { ask: GENERAL_RECAP }, heldQuestionId: null });
     expect(recap.ack).toBeUndefined();
     expect(recap.because).toMatch(/the recap first/);
     expect(c.end()).toMatchObject({ kind: 'close', content: { say: 'Today we worked through What respiration is.' } });
@@ -708,6 +741,359 @@ describe('end, stop and the close', () => {
 
     const b = setup().c;
     expect(b.end()).toMatchObject({ seq: 1, kind: 'close', content: { say: 'We stopped before the first idea of Respiration.' } });
+  });
+});
+
+// ─── The phase-1 reviews' findings, each as the scenario that showed it ────
+
+const GENERAL_RECAP = 'Tell me one thing you learned today.';
+const Q_HUNGRY = IDEA0.check[1];
+
+describe('review: a misconception follow-up answered right', () => {
+  it('is the answer: praised with both reasons, filed after help, moved on, retested', () => {
+    const { c } = setup();
+    toQWhere(c);
+    c.hear(r('wrong', 'breathing-is-respiration')); // the follow-up
+    const m = c.hear(r('right'));
+    expect(m).toMatchObject({
+      kind: 'explain',
+      heldQuestionId: 'q-gas',
+      ack: { of: 'right', why: `${MIS.why} ${Q_WHERE.why}` },
+      evidence: { questionId: 'q-where', correct: true, rung: 1 },
+    });
+    expect(m.because).toMatch(/right after help/);
+    expect(m.because).toMatch(/retest c-hungry queued/);
+  });
+});
+
+describe('review: an opener or a prediction not answered right is resolved', () => {
+  const P = IDEA0.predict!;
+
+  it('a wrong prediction naming a misconception: the answer and why it is not so, before the point', () => {
+    const { c } = setup();
+    c.start();
+    c.hear(r('right'));
+    const m = c.hear(r('wrong', 'plants-only-photosynthesise'));
+    expect(m).toMatchObject({ kind: 'explain', heldQuestionId: 'q-where', ack: { of: 'wrong', misconceptionId: 'plants-only-photosynthesise' } });
+    expect(m.content.say).toBe(`${P.answer}. ${P.misconceptions[0].why} ${IDEA0.points[0].say}`);
+    expect(m.maxSentences).toBeGreaterThanOrEqual(4);
+  });
+
+  it('"don\'t know" to a prediction: the answer and its reason', () => {
+    const { c } = setup();
+    c.start();
+    c.hear(r('right'));
+    expect(c.hear(r('dontKnow')).content.say).toBe(`${P.answer}. ${P.why} ${IDEA0.points[0].say}`);
+  });
+
+  it('a wrong opener, and an opener left in silence, are resolved before the prediction', () => {
+    const resolved = `${PLAN.opener.answer}. ${PLAN.opener.why}`;
+    const a = setup().c;
+    a.start();
+    expect(a.hear(r('wrong'))).toMatchObject({ kind: 'predict', content: { say: resolved, ask: P.question } });
+    const b = setup().c;
+    b.start();
+    for (let i = 0; i < 3; i += 1) b.silence(4000);
+    expect(b.silence(4000)).toMatchObject({ kind: 'predict', content: { say: resolved } });
+  });
+
+  it('a right opener gets its reason in the reaction and nothing more', () => {
+    const { c } = setup();
+    c.start();
+    const m = c.hear(r('right'));
+    expect(m.ack?.why).toBe(PLAN.opener.why);
+    expect(m.content.say).toBeUndefined();
+  });
+});
+
+describe('review: a class cut short recaps only what was taught', () => {
+  it('cut by time before any teach-back: one general prompt, and the skipped steps named', () => {
+    const { c, at } = setup();
+    toQWhere(c);
+    at(21 * MIN);
+    const m = c.hear(r('right'));
+    expect(m).toMatchObject({ kind: 'recap', content: { ask: GENERAL_RECAP } });
+    expect(m.because).toMatch(/skipping the rest of idea idea-what \(point p-waste, check c-release, its teach-back\), 1 idea\(s\) not begun, 0 queued retest\(s\)/);
+    expect(m.because).toMatch(/one general prompt/);
+    expect(c.hear(r('right')).kind).toBe('close');
+  });
+
+  it('cut by time after one idea: that idea\'s teach-back prompt only', () => {
+    const { c, at } = setup();
+    toTeachBack(c);
+    c.hear(r('right')); // → q-sprint
+    at(20 * MIN);
+    const m = c.hear(r('right'));
+    expect(m).toMatchObject({ kind: 'recap', content: { ask: IDEA0.teachBack.prompt } });
+    expect(c.hear(r('right')).kind).toBe('close');
+  });
+
+  it('end() mid-ladder: the general prompt, never the answer not yet given', () => {
+    const { c } = setup();
+    toQWhere(c);
+    c.hear(r('wrong'));
+    const m = c.end();
+    expect(m).toMatchObject({ kind: 'recap', content: { ask: GENERAL_RECAP } });
+    expect(m.because).toMatch(/skipping the rest of idea idea-what \(q-where unanswered, point p-waste, check c-release, its teach-back\)/);
+  });
+});
+
+describe('review: silence on a graded question', () => {
+  it('after the hint, moves on with no evidence and a retest queued', () => {
+    const { c } = setup();
+    toQWhere(c);
+    expect(c.silence(5000).kind).toBe('nudge');
+    expect(c.silence(5000).kind).toBe('checkIn');
+    expect(c.silence(5000).kind).toBe('hint');
+    const on = c.silence(5000);
+    expect(on).toMatchObject({ kind: 'explain', heldQuestionId: 'q-gas', helped: null });
+    expect(on.evidence).toBeUndefined();
+    expect(on.because).toMatch(/silence 4 .*move on with no evidence; retest c-hungry queued/);
+  });
+
+  it('a student who never speaks reaches the recap, with at most one hint per question', () => {
+    const { c, tick } = setup();
+    c.start();
+    const moves: Move[] = [];
+    for (let i = 0; i < 200 && !c.snapshot().done; i += 1) {
+      tick(20_000);
+      moves.push(c.silence(20_000));
+    }
+    expect(moves.some((m) => m.kind === 'recap')).toBe(true);
+    const hints = new Map<string, number>();
+    for (const m of moves) if (m.kind === 'hint') hints.set(m.heldQuestionId!, (hints.get(m.heldQuestionId!) ?? 0) + 1);
+    for (const n of hints.values()) expect(n).toBe(1);
+  });
+});
+
+describe('review: nothing said on reaching a question gives its answer away', () => {
+  it('a right answer\'s reason that holds the next question\'s answer is left unsaid, and that answer stays protected', () => {
+    const plan = planCopy();
+    plan.ideas[0].points[1].ask.why = 'Breaking glucose down with oxygen releases energy and leaves carbon dioxide behind.';
+    expect(validatePlan(plan).ok).toBe(true);
+    const { c } = setup({}, plan);
+    toQWhere(c);
+    c.hear(r('right')); // → q-gas
+    const m = c.hear(r('right')); // → c-release, expect "energy"
+    expect(m).toMatchObject({ kind: 'check', heldQuestionId: 'c-release', ack: { of: 'right' }, mustNotReveal: ['energy', 'Energy'] });
+    expect(m.ack?.why).toBeUndefined();
+    expect(m.because).toMatch(/1 reason\(s\) left unsaid: .*c-release/);
+  });
+
+  it('a missed teach-back no longer carries the core into the next question', () => {
+    const { c } = setup();
+    toQWhere(c);
+    c.hear(r('wrong'));
+    c.hear(r('right')); // c-hungry queued (resp.site)
+    c.hear(r('right')); // → c-release
+    c.hear(r('right')); // → teach-back
+    c.hear(r('right')); // → q-sprint
+    c.hear(r('right')); // → retest c-hungry
+    c.hear(r('wrong'));
+    c.hear(r('right')); // c-name queued (resp.definition), → c-aerobic
+    c.hear(r('right')); // → idea-oxygen's teach-back
+    expect(c.hear(r('wrong'))).toMatchObject({ kind: 'reveal', heldQuestionId: 'idea-oxygen#teach-back', content: { say: IDEA1.points[0].say } });
+    const retest = c.hear(r('right'));
+    expect(retest).toMatchObject({ kind: 'check', heldQuestionId: 'c-name', mustNotReveal: ['energy', 'Energy'] });
+    expect(retest.ack?.why).toBeUndefined();
+  });
+});
+
+describe('review: one teaching per turn, and a cap that holds it', () => {
+  it('the reveal stays on the revealed question, files L8 there, and hands it back', () => {
+    const { c } = setup();
+    toQWhere(c);
+    for (let i = 0; i < 4; i += 1) c.hear(r('wrong'));
+    const reveal = c.hear(r('wrong'));
+    expect(reveal).toMatchObject({
+      kind: 'reveal',
+      heldQuestionId: 'q-where',
+      helped: 8,
+      board: null,
+      content: { say: `${Q_WHERE.answer}. ${Q_WHERE.why}`, ask: Q_WHERE.question },
+      evidence: { questionId: 'q-where', correct: false, rung: 7 },
+      mustNotReveal: [],
+    });
+    expect(reveal.maxSentences).toBeGreaterThanOrEqual(3);
+    const next = c.hear(r('right'));
+    expect(next).toMatchObject({
+      kind: 'explain',
+      heldQuestionId: 'q-gas',
+      content: { say: IDEA0.points[1].say },
+      evidence: { questionId: 'q-where', correct: true, rung: 8 },
+      mustNotReveal: ['carbon dioxide', 'Carbon dioxide'],
+    });
+    expect(next.because).toMatch(/at rung 8.*right after help.*retest c-hungry queued/);
+  });
+
+  it('a wrong read-back after the reveal moves on, filed at L8, with the retest', () => {
+    const { c } = setup();
+    toQWhere(c);
+    for (let i = 0; i < 5; i += 1) c.hear(r('wrong'));
+    const on = c.hear(r('partly'));
+    expect(on).toMatchObject({ kind: 'explain', heldQuestionId: 'q-gas', evidence: { questionId: 'q-where', correct: false, rung: 8 } });
+    expect(on.because).toMatch(/retest c-hungry queued/);
+  });
+
+  it('a worked example of two steps gets a cap of steps + the question', () => {
+    const plan = planCopy();
+    const ask = plan.ideas[0].points[0].ask;
+    ask.workedExample = {
+      steps: [...ask.workedExample!.steps, { say: 'Take a root: it respires underground, far from any lungs.', line: 'root: no lungs, still respires' }],
+    };
+    expect(validatePlan(plan).ok).toBe(true);
+    const { c } = setup({}, plan);
+    toQWhere(c);
+    c.hear(r('wrong'));
+    c.hear(r('wrong'));
+    const worked = c.hear(r('wrong'));
+    expect(worked.kind).toBe('workedExample');
+    expect(worked.maxSentences).toBe(3);
+  });
+
+  it('a missed teach-back: the core on the teach-back itself, handed back; the next idea after, with no reason carried', () => {
+    const { c } = setup();
+    toTeachBack(c);
+    const miss = c.hear(r('wrong'));
+    expect(miss).toMatchObject({
+      kind: 'reveal',
+      ideaId: 'idea-what',
+      heldQuestionId: 'idea-what#teach-back',
+      helped: 8,
+      board: null,
+      content: { say: IDEA0.points[0].say, ask: IDEA0.teachBack.prompt },
+      evidence: { questionId: 'idea-what#teach-back', correct: false, rung: 0 },
+      mustNotReveal: [],
+    });
+    const on = c.hear(r('partly'));
+    expect(on).toMatchObject({ kind: 'explain', ideaId: 'idea-oxygen', ack: { of: 'partly' }, evidence: { questionId: 'idea-what#teach-back', correct: true, rung: 8 } });
+    expect(on.ack?.why).toBeUndefined();
+  });
+});
+
+describe('review: "don\'t know", "haan" and "ok"', () => {
+  it('"pata nahi" before any help gets the hint as the smaller step, not the same question', () => {
+    const { c } = setup();
+    toQWhere(c);
+    const m = c.hear(r('dontKnow'));
+    expect(m).toMatchObject({
+      kind: 'hint',
+      ack: { of: 'dontKnow' },
+      content: { say: Q_WHERE.hint, ask: Q_WHERE.question },
+      helped: 3,
+      requested: false,
+      evidence: { questionId: 'q-where', correct: false, rung: 0 },
+    });
+    expect(c.hear(r('wrong')).kind).toBe('workedExample');
+  });
+
+  it('"haan" to her check-in takes the hint she offered', () => {
+    const { c } = setup();
+    toQWhere(c);
+    c.silence(5000);
+    c.silence(5000);
+    const m = c.hear(r('chat'));
+    expect(m).toMatchObject({ kind: 'hint', ack: { of: 'chat' }, content: { say: Q_WHERE.hint, ask: Q_WHERE.question }, helped: 3, requested: false });
+    expect(m.evidence).toBeUndefined();
+  });
+
+  it('"haan" to her check-in on the opener takes its hint; on a teach-back, the other way', () => {
+    const a = setup().c;
+    a.start();
+    a.silence(4000);
+    a.silence(4000);
+    expect(a.hear(r('chat'))).toMatchObject({ kind: 'hint', content: { say: PLAN.opener.hint }, helped: null });
+    const b = setup().c;
+    toTeachBack(b);
+    b.silence(4000);
+    b.silence(4000);
+    expect(b.hear(r('chat'))).toMatchObject({ kind: 'anotherWay', helped: 7, requested: false });
+  });
+
+  it('"ok" with no offer made puts the question again as a nudge, filing nothing', () => {
+    const { c } = setup();
+    toQWhere(c);
+    const m = c.hear(r('chat'));
+    expect(m).toMatchObject({ kind: 'nudge', helped: null, content: { ask: Q_WHERE.question }, heldQuestionId: 'q-where' });
+    expect(m.ack).toBeUndefined();
+    expect(m.evidence).toBeUndefined();
+  });
+});
+
+describe('review: `because` says what was filed and what comes next', () => {
+  it('right after another way asked for, or after a silence nudge, is "right after help", not "right cold"', () => {
+    const a = setup().c;
+    toQWhere(a);
+    a.hear(r('explainRequest'));
+    const m = a.hear(r('right'));
+    expect(m.evidence).toMatchObject({ correct: true, rung: 7 });
+    expect(m.because).toMatch(/right after help/);
+    expect(m.because).not.toMatch(/right cold/);
+
+    const b = setup().c;
+    toQWhere(b);
+    b.silence(4000);
+    const n = b.hear(r('right'));
+    expect(n.evidence).toMatchObject({ correct: true, rung: 1 });
+    expect(n.because).toMatch(/right after help/);
+  });
+
+  it('asking to be told on the opener does not promise the explanation next; the answer is given', () => {
+    const { c } = setup();
+    c.start();
+    const m = c.hear(r('explainRequest'));
+    expect(m).toMatchObject({ kind: 'predict', content: { say: `${PLAN.opener.answer}. ${PLAN.opener.why}` } });
+    expect(m.because).not.toMatch(/explanation comes next/);
+  });
+});
+
+describe('review: a retest is on the node that failed', () => {
+  it('a missed q-where (resp.site) is retested by the check on resp.site', () => {
+    const { c } = setup();
+    toQWhere(c);
+    c.hear(r('wrong'));
+    expect(c.hear(r('right')).because).toMatch(/retest c-hungry queued/);
+    expect(Q_HUNGRY.nodeIds).toContain('resp.site');
+  });
+
+  it('says so when no check is on that node', () => {
+    const plan = planCopy();
+    plan.ideas[0].check[1].nodeIds = ['resp.definition'];
+    const { c } = setup({}, plan);
+    toQWhere(c);
+    c.hear(r('wrong'));
+    const m = c.hear(r('right'));
+    expect(m.because).toMatch(/no unused check of idea idea-what is on resp\.site, so it is not retested/);
+    expect(m.because).not.toMatch(/retest c-hungry queued/);
+  });
+});
+
+describe('review: a first partly', () => {
+  it('asks for the missing part with nothing new said; the hint comes once, on the next miss', () => {
+    const { c } = setup();
+    toQWhere(c);
+    const probe = c.hear(r('partly'));
+    expect(probe).toMatchObject({ kind: 'probeMore', ack: { of: 'partly' }, content: { ask: Q_WHERE.question }, helped: 1 });
+    expect(probe.content.say).toBeUndefined();
+    const hint = c.hear(r('partly'));
+    expect(hint).toMatchObject({ kind: 'hint', content: { say: Q_WHERE.hint }, helped: 3 });
+  });
+});
+
+describe('review: preview and hear across the time limit', () => {
+  it('hear after a preview runs at the preview\'s clock reading, so it makes the move previewed', () => {
+    const { c, at } = setup();
+    c.start();
+    c.hear(r('right'));
+    c.hear(r('right')); // q-where held
+    at(19 * MIN + 58_500);
+    const preview = c.preview({ class: 'right' });
+    expect(preview).toMatchObject({ kind: 'explain', heldQuestionId: 'q-gas' });
+    at(20 * MIN + 500);
+    expect(c.preview({ class: 'right' })).toEqual(preview);
+    expect(c.hear(r('right'))).toEqual(preview);
+    // The next turn reads the clock afresh: time is up.
+    expect(c.hear(r('right')).kind).toBe('recap');
   });
 });
 
@@ -751,8 +1137,8 @@ function apply(c: Conductor, e: Ev): Move {
   return c.hear(r(e.hear, e.m));
 }
 
-/** A fresh class with `events` played, `stepMs` of clock apart. */
-function replay(events: readonly Ev[], stepMs: number): Conductor {
+/** A fresh class with `events` played, `stepMs` of clock apart; `tick` moves its clock on. */
+function replay(events: readonly Ev[], stepMs: number): { c: Conductor; tick: (ms: number) => void } {
   const { c, tick } = setup();
   c.start();
   for (const e of events) {
@@ -760,30 +1146,63 @@ function replay(events: readonly Ev[], stepMs: number): Conductor {
     apply(c, e);
   }
   tick(stepMs);
-  return c;
+  return { c, tick };
 }
 
-/** The contract's promises about any single move. */
-function checkMove(m: Move, held: PlanQuestion | null): void {
+/** Sentences in a text, split after `.`, `!` or `?` and a space — counted here independently of the conductor. */
+function sentenceCount(t: string | undefined): number {
+  const s = t?.trim() ?? '';
+  return s ? s.split(/(?<=[.!?])\s+/).filter((x) => x.trim()).length : 0;
+}
+
+/**
+ * The contract's promises about any single move, given the move before it
+ * (null for the first) and the questions revealed so far.
+ */
+function checkMove(m: Move, held: PlanQuestion | null, prev: Move | null, revealed: ReadonlySet<string>): void {
   expect(m.because.trim().length).toBeGreaterThan(0);
   expect(m.final).toBe(m.kind === 'close');
   expect(m.handsOver).toBe(m.kind !== 'close');
   if (m.handsOver) expect(m.content.ask?.trim()).toBeTruthy();
   expect(m.heldQuestionId).toBe(held?.id ?? null);
-  const cap = m.kind === 'open' || m.kind === 'explain' || m.kind === 'close' ? 3 : 2;
-  expect(m.maxSentences === cap || (m.kind === 'reveal' && m.maxSentences === 3)).toBe(true);
   if (m.kind === 'nudge' || m.kind === 'checkIn' || m.kind === 'open') expect(m.ack).toBeUndefined();
-  if (m.evidence) expect(m.evidence.rung).toBeGreaterThanOrEqual(0);
+
+  // The cap is the kind's own at least, and always holds what the move must say.
+  const base = m.kind === 'open' || m.kind === 'explain' || m.kind === 'close' ? 3 : 2;
+  const needed =
+    sentenceCount(m.ack?.why) +
+    sentenceCount(m.content.say) +
+    (m.content.steps ?? []).reduce((n, s) => n + sentenceCount(s.say), 0) +
+    sentenceCount(m.content.ask);
+  expect(m.maxSentences).toBe(Math.max(base, needed));
+
+  // Help and evidence are about the question they name: help is filed on a
+  // move that stays on what was held; evidence is about what was held before.
+  if (m.helped !== null) {
+    expect(m.heldQuestionId).not.toBeNull();
+    expect(m.heldQuestionId).toBe(prev?.heldQuestionId);
+  }
+  if (m.evidence) {
+    expect(m.evidence.rung).toBeGreaterThanOrEqual(0);
+    expect(m.evidence.questionId).toBe(prev?.heldQuestionId);
+  }
+
+  // Nothing the move itself says gives away what it must not reveal.
+  const spoken = [m.content.say, m.ack?.why, ...(m.content.steps ?? []).flatMap((s) => [s.say, s.line])].filter(
+    (t): t is string => typeof t === 'string',
+  );
+  for (const t of spoken) expect(leaks(t, m.mustNotReveal)).toBe(false);
+
   if (!held) {
     expect(m.mustNotReveal).toEqual([]);
     return;
   }
-  // Every secret of what is held is protected, unless this move must itself say it.
-  const spoken = [m.content.say, m.ack?.why, ...(m.content.steps ?? []).flatMap((s) => [s.say, s.line])].filter(
-    (t): t is string => typeof t === 'string',
-  );
+  // A move that reaches a question protects all of it. One that stays on it
+  // may leave out only a secret its own content states, or one already revealed.
+  const arrived = prev === null || prev.heldQuestionId !== m.heldQuestionId;
   for (const secret of [held.expect, held.answer]) {
-    expect(m.mustNotReveal.includes(secret.trim()) || spoken.some((t) => leaks(t, [secret]))).toBe(true);
+    if (arrived) expect(m.mustNotReveal).toContain(secret.trim());
+    else expect(m.mustNotReveal.includes(secret.trim()) || revealed.has(held.id) || spoken.some((t) => leaks(t, [secret]))).toBe(true);
   }
 }
 
@@ -791,8 +1210,9 @@ describe('properties', () => {
   it('every move keeps the contract, across 40 scripted classes', () => {
     for (let seed = 1; seed <= 40; seed += 1) {
       const { c, tick } = setup();
+      const revealed = new Set<string>();
       let last = c.start();
-      checkMove(last, c.held());
+      checkMove(last, c.held(), null, revealed);
       for (const e of script(seed, 120, true)) {
         tick(STEP_MS);
         const m = apply(c, e);
@@ -801,7 +1221,8 @@ describe('properties', () => {
           continue;
         }
         expect(m.seq).toBe(last.seq + 1);
-        checkMove(m, c.held());
+        if (m.helped === 8 && m.heldQuestionId) revealed.add(m.heldQuestionId);
+        checkMove(m, c.held(), last, revealed);
         expect(c.snapshot().seq).toBe(m.seq);
         last = m;
       }
@@ -818,7 +1239,7 @@ describe('properties', () => {
       const events = script(seed, 55, false);
       for (let k = 0; k <= events.length; k += 1) {
         const prefix = events.slice(0, k);
-        const probe = replay(prefix, stepMs);
+        const probe = replay(prefix, stepMs).c;
         phases.add(probe.snapshot().phase);
         const held = probe.held();
         const readings: Omit<Reading, 'said'>[] = [
@@ -827,13 +1248,16 @@ describe('properties', () => {
           { class: 'wrong', misconceptionId: 'not-in-the-plan' },
         ];
         for (const reading of readings) {
-          const c = replay(prefix, stepMs);
+          const { c, tick } = replay(prefix, stepMs);
           const snapshot = c.snapshot();
           const before = c.held();
           const preview = c.preview(reading);
           expect(c.snapshot()).toEqual(snapshot);
           expect(c.held()).toEqual(before);
+          // The words layer takes its time: the clock moves on between the preview and the hear.
+          tick(2_500);
           expect(c.preview(reading)).toEqual(preview);
+          tick(2_500);
           const heard = c.hear({ ...reading, said: 'whatever they said' });
           expect(heard).toEqual(preview);
         }

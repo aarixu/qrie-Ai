@@ -24,13 +24,18 @@ import type { AlternateMode, TeachingPlan } from './types.ts';
  *     alternate or worked-example step of a question gives away that
  *     question's `expect` or `answer` under `leaks()`, and no hint, follow-up
  *     or alternate holds the `answer` as written (`holdsAnswer`). All of
- *     these are said while the question is still held.
+ *     these are said while the question is still held. Nor does a point's
+ *     `say` give away its own quick question's answer, either way: it is said
+ *     straight before the question, which would make the question an echo.
  *
  * NOT CHECKED, so nobody reads more into a pass: a paraphrase of an answer
  * (what `leaks()` cannot see); a question whose own words hold its answer, as
- * a choice question does ("with oxygen or without?"); and a point that states
- * its own quick question's answer, which the conductor allows by leaving that
- * secret out of that one move's `mustNotReveal`.
+ * a choice question does ("with oxygen or without?"); and what is said in
+ * reaction to one question — a right answer's `why`, an opener's or a
+ * prediction's `answer` and `why` — giving away a question asked later. Which
+ * question comes next depends on the class, so the conductor checks that at
+ * run time and leaves such a reaction unsaid when the question it gives away
+ * is the one asked straight after it.
  *
  * Every problem is reported, not just the first, each as `path: what is
  * wrong`, so one pass over a model-written plan says everything to fix.
@@ -103,8 +108,11 @@ export function validatePlan(plan: unknown, opts: PlanCheckOptions = {}): PlanCh
         return;
       }
       if (c.text(`${pat}.id`, point.id)) c.claim(point.id, pat);
-      c.text(`${pat}.say`, point.say);
       c.question(`${pat}.ask`, point.ask);
+      // Said straight before its quick question is asked: a point that states
+      // the answer makes the question an echo, and a right reply to it says
+      // nothing about what they know.
+      if (c.text(`${pat}.say`, point.say) && isObj(point.ask)) c.guard(`${pat}.say`, point.say, point.ask, true);
     });
 
     c.list(`${at}.check`, idea.check, 1, 3)?.forEach((q, j) => c.question(`${at}.check[${j}]`, q));
@@ -140,7 +148,15 @@ class Checker {
   /** Every question, point and idea id seen, and where it was first seen. */
   readonly ids = new Map<string, string>();
 
-  constructor(private readonly problems: string[]) {}
+  // A plain field, not a constructor parameter property: Node 22's type
+  // stripping refuses parameter properties, so with one a Node script could
+  // not import this file (or conductor.ts, which imports it) the way
+  // tools/prewarm/lib/register.mjs runs workspace TypeScript.
+  private readonly problems: string[];
+
+  constructor(problems: string[]) {
+    this.problems = problems;
+  }
 
   text(at: string, v: unknown): v is string {
     if (filled(v)) return true;
@@ -198,18 +214,7 @@ class Checker {
     if (this.text(`${at}.id`, v.id)) this.claim(v.id, at);
     for (const field of ['question', 'expect', 'answer', 'why', 'hint'] as const) this.text(`${at}.${field}`, v[field]);
 
-    const secrets = [v.expect, v.answer].filter(filled).map((s) => s.trim());
-    const answer = filled(v.answer) ? v.answer : undefined;
-    // `keyTerm`: also refused for holding the answer as written (see `holdsAnswer`).
-    const guard = (where: string, t: unknown, keyTerm: boolean) => {
-      if (!filled(t)) return;
-      if (keyTerm && answer !== undefined && holdsAnswer(t, answer)) {
-        this.problems.push(`${where}: contains the answer "${answer.trim()}"`);
-        return;
-      }
-      const leaked = secrets.find((s) => leaks(t, [s]));
-      if (leaked !== undefined) this.problems.push(`${where}: gives away the answer ("${leaked}")`);
-    };
+    const guard = (where: string, t: unknown, keyTerm: boolean) => this.guard(where, t, v, keyTerm);
 
     guard(`${at}.hint`, v.hint, true);
 
@@ -258,6 +263,23 @@ class Checker {
     }
 
     this.texts(`${at}.nodeIds`, v.nodeIds, 1, Infinity);
+  }
+
+  /**
+   * `t`, said while question `q` is held or just before it is asked, must not
+   * give `q`'s `expect` or `answer` away under `leaks()`. `keyTerm`: also
+   * refused for holding the answer as written (see `holdsAnswer`).
+   */
+  guard(where: string, t: unknown, q: Obj, keyTerm: boolean): void {
+    if (!filled(t)) return;
+    const answer = filled(q.answer) ? q.answer : undefined;
+    if (keyTerm && answer !== undefined && holdsAnswer(t, answer)) {
+      this.problems.push(`${where}: contains the answer "${answer.trim()}"`);
+      return;
+    }
+    const secrets = [q.expect, q.answer].filter(filled).map((s) => s.trim());
+    const leaked = secrets.find((s) => leaks(t, [s]));
+    if (leaked !== undefined) this.problems.push(`${where}: gives away the answer ("${leaked}")`);
   }
 }
 

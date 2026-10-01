@@ -172,12 +172,19 @@ export type MoveKind =
   | 'check'
   /** A named misconception's follow-up: find out why before explaining. */
   | 'probeWhy'
-  /** Partly right: ask for the missing part. */
+  /**
+   * The question again, nothing new said: for the missing part of a partly
+   * right answer, or to rethink after a first miss that names no misconception.
+   */
   | 'probeMore'
   | 'hint'
   | 'workedExample'
   | 'anotherWay'
-  /** Give the answer with its reason, after the ladder ran out. */
+  /**
+   * Give the answer with its reason after the ladder ran out (or a missed
+   * teach-back's core), then put the same question again for them to say it
+   * back. The question stays held; the next step comes on the move after.
+   */
   | 'reveal'
   /** "Explain it to me in your own words." */
   | 'teachBack'
@@ -187,7 +194,11 @@ export type MoveKind =
   | 'redirect'
   /** Nothing usable heard: ask them to say it again. */
   | 'sayAgain'
-  /** Silence: a smaller step, never the answer. */
+  /**
+   * Silence, or an "ok" that answers nothing on a graded question or a
+   * teach-back: what she is waiting on, put again — content-free, never the
+   * answer.
+   */
   | 'nudge'
   /** Repeated silence or struggle: ask how it is going, offer another way. */
   | 'checkIn'
@@ -231,11 +242,19 @@ export interface Move {
   board: { beatId: string; focus?: string[] } | null;
   /** What nothing said or written for this move may contain (the leak check). */
   mustNotReveal: string[];
-  /** The talk cap for this turn, in sentences. */
+  /**
+   * The talk cap for this turn, in sentences. Never below what the move's own
+   * content takes — the sentences of `ack.why`, `content.say`, each worked
+   * step's `say`, and `content.ask` — so a line that says all of it fits.
+   */
   maxSentences: number;
   /** Why this move, for the ledger and the lab's panel. Never spoken. */
   because: string;
-  /** Help to file BEFORE a word is said (the ledger's `helped`), or null. */
+  /**
+   * Help to file BEFORE a word is said (the ledger's `helped`), or null. It
+   * is help on `heldQuestionId`: a move that files help stays on the question
+   * it was held on.
+   */
   helped: AssistanceRung | null;
   /** Whether the student asked for that help. */
   requested: boolean;
@@ -289,7 +308,9 @@ export interface Conductor {
    * The move `hear(reading)` WOULD make now, without changing anything. The
    * one-call words layer reads every class's preview so the model can write
    * the line for whichever class it reads; `hear` must then return exactly
-   * that move.
+   * that move. It does: `hear` from the same state runs at the clock reading
+   * the preview took, so a time limit passing between the two calls applies
+   * from the next turn.
    */
   preview(reading: Omit<Reading, 'said'>): Move;
   /** The question currently held, for reading their reply against. */

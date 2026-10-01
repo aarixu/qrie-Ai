@@ -31,39 +31,74 @@ import type {
  *
  * PURE: every call is one transition `step(state, event) → { state, move }`
  * over a copied state. It reads nothing but the plan, the state, the event and
- * the caller's options — its clock (`opts.now`, read once per call),
+ * the caller's options — its clock (`opts.now`, read at most once per call),
  * `opts.mastery` and `opts.lang`; no randomness, no I/O, no model call. That
  * is how `preview(reading)` returns exactly the move `hear(reading)` makes from
- * the same state at the same clock reading: both run the same transition, and
+ * the same state: both run the same transition at the same clock reading (a
+ * preview pins the reading it took, and `hear` from that state reuses it), and
  * preview throws the new state away. Called before `start()`, `hear` and
  * `silence` start the class (their reading is not used) and `end` closes it.
  *
  * GRADING. Only a point's quick question, a check and a retest are graded:
  * their answers become evidence, and a wrong one climbs the package's own help
  * ladder through `decide()`, so rungs, help filed, strategies and `because`
- * stay what the rest of the product files. The opener and a prediction are
- * elicitation (acknowledged, never evidence). A teach-back is graded loosely,
- * with no ladder: right or partly counts as correct; wrong or "don't know"
- * counts as not, and gets the idea's core once. The recap is acknowledged,
- * never graded.
+ * stay what the rest of the product files. When the ladder runs out the answer
+ * is revealed on the question itself, filed as L8 there, and the question is
+ * put again for them to say it back; an answer to it is filed at L8 and the
+ * class moves on.
+ *
+ * The opener and a prediction are elicitation: acknowledged, never evidence.
+ * One not answered right — a wrong, partial, "don't know" or "ok" reply, a
+ * request to be told, its hint given and help needed again, or silence past
+ * the hint — is resolved before the next step's own content: its answer, and
+ * the named misconception's reason or else its own. Their misconceptions'
+ * follow-ups are not asked: nothing is graded there to diagnose.
+ *
+ * A teach-back is graded loosely, with no ladder: right or partly counts as
+ * correct. A first wrong or "don't know" counts as not, and gets the idea's
+ * core on the teach-back itself (a reveal, L8), handed back for them to say
+ * it back; an answer to it is filed at L8 and the class moves on. Help asked
+ * for on a teach-back: the idea another way once (L7), then the core (L8) if
+ * it has not been given, then move on. The recap is acknowledged, never
+ * graded.
+ *
+ * TURNS THAT ANSWER NOTHING. Silence on a held question: a content-free
+ * nudge, then a check-in offering help, then the help where some is authored,
+ * then the class moves on with no evidence (a graded question queues its
+ * retest); in the recap, a nudge, a check-in, then the next prompt. "Haan" or
+ * "ok" (`chat`) straight after the check-in on a held question takes the help
+ * offered; anywhere else on a graded question or a teach-back it is a nudge,
+ * the held question put again; to the opener, a prediction or a recap prompt
+ * it is a reply like any other.
  *
  * RETESTS. A graded question answered right only after help (any help filed,
  * a silence's nudge included), answered right cold against a weak unassisted
- * record (`decide()`'s rule), or revealed, queues the idea's next check
- * (`check[1]`, then `check[2]`): one queued retest per idea at a time, asked
- * after the NEXT idea's points and before its check (interleaved), and any
- * left over before the recap.
+ * record (`decide()`'s rule), or left after the reveal or a run of silence,
+ * queues a retest on the same knowledge-graph node: the first of its idea's
+ * later checks (`check[1]`, `check[2]`) not used yet that shares a node with
+ * it. A retest already queued that shares a node stands in for it; with no
+ * such check the node is not retested, and `because` says so. Retests are
+ * asked after the NEXT idea's points and before its check (interleaved), and
+ * any left over before the recap.
  *
  * TIME. Once `minutes` have passed, the next time the class would move on
- * from a held question it goes straight to the recap, skipping the ideas and
- * retests not yet reached; a ladder under way is not cut short. From
- * `minutes + HARD_STOP_MINUTES`, every move is the close.
+ * from a held question it goes straight to the recap, skipping the rest of the
+ * current idea, the ideas not begun and the queued retests (`because` lists
+ * the idea's steps and counts the rest); a ladder under way is not cut short. The plan's recap prompts are
+ * asked only when every idea reached its teach-back; a class cut short — by
+ * time or by `end()` — recaps only what was taught: the teach-back prompts of
+ * the ideas whose teach-back was reached, or, before any was, one general
+ * prompt. From `minutes + HARD_STOP_MINUTES`, every move is the close.
  *
  * MUST NOT REVEAL. While a question is held, its `expect` and `answer` — the
  * opener's, a prediction's and a teach-back's too, since each asks before it
  * tells — until it is answered right, revealed or left behind; nothing in the
- * recap or the close. The one exception is on a single move: a secret that
- * move must itself say (see `build`).
+ * recap or the close, nor on a question already revealed. A move that reaches
+ * a question protects all of it: what the move says in reaction to the turn
+ * before (a right answer's reason, an opener or prediction resolved) is left
+ * unsaid where it would give that question away, and `because` says so. Only
+ * a move that stays on the question it reacts to may leave out a secret its
+ * own content states (see `build`).
  */
 
 /** A node at or above this unassisted mastery is held cold: its idea skips the prediction, never the check. */
@@ -78,6 +113,12 @@ const CHECK_IN = {
   elicit: 'Would a hint help, or shall we find out together?',
   recap: 'Want to have another go, or shall we move on to the next one?',
 } as const;
+
+/** The recap of a class cut short before any idea reached its teach-back: it asks about nothing in particular. */
+const GENERAL_RECAP = 'Tell me one thing you learned today.';
+
+/** At most this many recap prompts from a class cut short, as many as a plan's own recap may have. */
+const RECAP_MAX = 3;
 
 type Board = NonNullable<Move['board']>;
 type Evidence = NonNullable<Move['evidence']>;
@@ -112,9 +153,9 @@ interface State {
   // The held question. Reset whenever a new step is reached.
   /** Which try the next answer is, 1-based. */
   attempt: number;
-  /** `decide()`'s rung in force (its `rungSoFar`): climbs only on the ladder. */
+  /** `decide()`'s rung in force (its `rungSoFar`): climbs only on the ladder. 8 once the answer is revealed. */
   ladder: AssistanceRung;
-  /** The highest rung of help filed (`helped`), including help that does not climb. */
+  /** The highest rung of help filed (`helped`), including help that does not climb. 8 once revealed. */
   delivered: AssistanceRung;
   /** `partly` answers so far. */
   partly: number;
@@ -128,8 +169,12 @@ interface State {
   altsUsed: string[];
   // The class.
   retests: Retest[];
-  /** Per idea: the next check index a retest would use. */
-  nextCheck: number[];
+  /** The ids of checks taken for a retest, so none is asked twice. */
+  checksUsed: string[];
+  /** The last idea whose teach-back was reached; -1 before any. */
+  taughtThrough: number;
+  /** The recap's prompts, fixed when the recap begins. */
+  recapPrompts: string[];
   boardShown: Board | null;
   recapRan: boolean;
   evidence: Evidence[];
@@ -161,7 +206,7 @@ interface Held {
   kind: MoveKind;
 }
 
-/** What a move is built from: a move that keeps what is held, or one `finish` has assembled. */
+/** What a move is built from: a move that stays as decided, or one `finish` has assembled on arrival. */
 interface Parts {
   kind: MoveKind;
   ack?: Ack;
@@ -177,17 +222,20 @@ interface Parts {
 
 /** The reaction to a turn that moves the class on; the next step's own move follows it. */
 interface Reaction {
+  /** Never with a `why`: reasons go in `whys`, so each can be left unsaid on its own. */
   ack?: Ack;
+  /** The reasons the reaction gives, said as the ack's `why`. Blank ones are dropped. */
+  whys?: (string | undefined)[];
+  /** Said before the next step's own content: an opener or a prediction resolved. */
+  tell?: string[];
   evidence?: Evidence;
   because: string;
-  /** A move kind of its own that still hands over with the next step's question: the reveal. */
-  lead?: { kind: MoveKind; say: string; helped: AssistanceRung | null; requested: boolean; strategy: string };
 }
 
 type Decision = { stay: Parts } | { go: Reaction; to?: Pos };
 
-/** Replies that, after a misconception's follow-up, are the student's reasoning. */
-const REASONING: ReadonlySet<StudentClass> = new Set(['right', 'partly', 'wrong', 'dontKnow']);
+/** Replies that, after a misconception's follow-up, are the student's reasoning rather than an answer. */
+const REASONING: ReadonlySet<StudentClass> = new Set(['partly', 'wrong', 'dontKnow']);
 
 /**
  * A conductor for one class. The plan must be one `validatePlan` accepts: it
@@ -203,10 +251,20 @@ export function createConductor(plan: TeachingPlan, opts: ConductorOptions): Con
     capMs: minutes * 60_000,
     hardMs: (minutes + HARD_STOP_MINUTES) * 60_000,
   };
-  let state = initialState(plan);
+  let state = initialState();
+  /**
+   * The clock reading the last preview took, and the state it was taken in.
+   * Every preview from that same state, and the `hear` that follows, reuse it,
+   * so `hear` makes the move previewed even when the class length or the hard
+   * stop passes between the calls (a words layer spends seconds writing the
+   * line); the limit then applies from the next transition. Any transition
+   * makes a new state, which retires the reading.
+   */
+  let pinned: { state: State; now: number } | null = null;
+  const clock = (): number => (pinned !== null && pinned.state === state ? pinned.now : opts.now());
 
-  const run = (event: Event): Move => {
-    const next = step(cfg, state, event, opts.now());
+  const run = (event: Event, now: number): Move => {
+    const next = step(cfg, state, event, now);
     state = next.state;
     return next.move;
   };
@@ -214,17 +272,21 @@ export function createConductor(plan: TeachingPlan, opts: ConductorOptions): Con
     r.misconceptionId === undefined ? { class: r.class } : { class: r.class, misconceptionId: r.misconceptionId };
 
   return {
-    start: () => run({ type: 'start' }),
-    hear: (reading) => run({ type: 'hear', reading: heard(reading) }),
-    silence: (ms) => run({ type: 'silence', ms }),
-    end: () => run({ type: 'end' }),
-    preview: (reading) => step(cfg, state, { type: 'hear', reading: heard(reading) }, opts.now()).move,
+    start: () => run({ type: 'start' }, opts.now()),
+    hear: (reading) => run({ type: 'hear', reading: heard(reading) }, clock()),
+    silence: (ms) => run({ type: 'silence', ms }, opts.now()),
+    end: () => run({ type: 'end' }, opts.now()),
+    preview: (reading) => {
+      const now = clock();
+      pinned = { state, now };
+      return step(cfg, state, { type: 'hear', reading: heard(reading) }, now).move;
+    },
     held: () => heldAt(plan, state.pos)?.q ?? null,
     snapshot: () => snapshotOf(plan, state),
   };
 }
 
-function initialState(plan: TeachingPlan): State {
+function initialState(): State {
   return {
     pos: { at: 'ready' },
     seq: 0,
@@ -239,7 +301,9 @@ function initialState(plan: TeachingPlan): State {
     requests: 0,
     altsUsed: [],
     retests: [],
-    nextCheck: plan.ideas.map(() => 1),
+    checksUsed: [],
+    taughtThrough: -1,
+    recapPrompts: [],
     boardShown: null,
     recapRan: false,
     evidence: [],
@@ -253,7 +317,8 @@ function clone(s: State): State {
     ...s,
     altsUsed: [...s.altsUsed],
     retests: [...s.retests],
-    nextCheck: [...s.nextCheck],
+    checksUsed: [...s.checksUsed],
+    recapPrompts: [...s.recapPrompts],
     evidence: [...s.evidence],
   };
 }
@@ -274,7 +339,7 @@ function step(cfg: Cfg, state: State, event: Event, now: number): { state: State
     const open = arrive(cfg, s, { at: 'opener' });
     const parts: Parts = { kind: open.kind, helped: null, requested: false, strategy: open.strategy, because: open.because };
     if (open.ask) parts.ask = open.ask;
-    return { state: s, move: build(cfg, s, parts, open.board) };
+    return { state: s, move: build(cfg, s, parts, open.board, 'arrive') };
   }
 
   const decision =
@@ -282,7 +347,7 @@ function step(cfg: Cfg, state: State, event: Event, now: number): { state: State
       ? onHear(cfg, s, event.reading, now)
       : event.type === 'silence'
         ? onSilence(cfg, s, event.ms, now)
-        : onEnd(s);
+        : onEnd(cfg, s);
   return { state: s, move: finish(cfg, s, decision, now) };
 }
 
@@ -308,43 +373,57 @@ function onHear(cfg: Cfg, s: State, reading: Omit<Reading, 'said'>, now: number)
   }
 
   if (s.pos.at === 'recap') {
-    const n = cfg.plan.recap.prompts.length;
+    const n = s.recapPrompts.length;
     return { go: { ack: { of: cls }, because: `recap ${s.pos.prompt + 1} of ${n}: ${cls}, acknowledged; the recap is not graded` } };
   }
 
   const h = heldAt(cfg.plan, s.pos);
   if (!h) return { go: { because: `${where}: nothing is held; move on` } };
   const r = { class: cls, misconceptionId: reading.misconceptionId };
-  if (h.grading === 'elicit') return onElicitReply(s, h, r);
-  if (h.grading === 'teachBack') return onTeachBackReply(cfg, s, h, r.class);
-  return onGradedReply(cfg, s, h, r, now);
+  // "Haan" straight after her check-in is a yes to the help it offered.
+  const accepted = cls === 'chat' && s.last?.kind === 'checkIn';
+  if (h.grading === 'elicit') return onElicitReply(s, h, r, accepted);
+  if (h.grading === 'teachBack') return onTeachBackReply(cfg, s, h, r.class, accepted);
+  return onGradedReply(cfg, s, h, r, accepted, now);
 }
 
-/** The opener and a prediction: elicitation, never evidence. */
-function onElicitReply(s: State, h: Held, r: { class: StudentClass; misconceptionId?: string }): Decision {
+/** The opener and a prediction: elicitation, never evidence; resolved unless answered right. */
+function onElicitReply(s: State, h: Held, r: { class: StudentClass; misconceptionId?: string }, accepted: boolean): Decision {
   const q = h.q;
   const what = h.kind === 'open' ? 'the opener' : 'a prediction';
-  if (r.class === 'hintRequest') return elicitHelp(s, h, 'hintRequest');
-  if (r.class === 'explainRequest') {
-    return { go: { ack: { of: 'explainRequest' }, because: `${q.id}: they asked to be told, on ${what}; the explanation comes next, so move on` } };
+  if (r.class === 'hintRequest') return elicitHelp(s, h, 'hintRequest', true);
+  if (accepted) return elicitHelp(s, h, 'chat', false);
+  if (r.class === 'right') {
+    return {
+      go: {
+        ack: { of: 'right' },
+        whys: [q.why],
+        because: `${q.id}: right to ${what}; not graded, no evidence: acknowledge it with its reason and move on`,
+      },
+    };
   }
-  // right, partly, wrong, dontKnow, chat
+  // partly, wrong, dontKnow, chat, explainRequest: not answered right.
   const m = r.class === 'wrong' ? misconceptionOf(q, r.misconceptionId) : undefined;
-  const fine = h.kind === 'predict' && r.class !== 'right' ? ' (a prediction that is not right is fine: the explanation follows)' : '';
+  const how = r.class === 'explainRequest' ? 'they asked to be told' : r.class;
+  const reason = m ? `why ${m.id} is not so` : 'its reason';
   return {
     go: {
-      ack: ackOf(r.class, m?.id, r.class === 'right' ? q.why : undefined),
-      because: `${q.id}: ${r.class} to ${what}; not graded, no evidence: acknowledge it and move on${fine}`,
+      ack: ackOf(r.class, m?.id),
+      tell: [resolutionOf(q, m)],
+      because: `${q.id}: ${how}, on ${what}; not graded, no evidence: say its answer and ${reason}, then move on`,
     },
   };
 }
 
-/** Help on the opener or a prediction: its hint once, then move on. Nothing is filed: it is not graded. */
-function elicitHelp(s: State, h: Held, asked: StudentClass | null): Decision {
+/**
+ * Help on the opener or a prediction: its hint once, then move on with it
+ * resolved. Nothing is filed: it is not graded.
+ */
+function elicitHelp(s: State, h: Held, asked: StudentClass | null, requested: boolean): Decision {
   s.requests += 1;
   const q = h.q;
   const what = h.kind === 'open' ? 'the opener' : 'a prediction';
-  const how = asked ? 'a hint asked for' : `silence ${s.silences}`;
+  const how = asked === null ? `silence ${s.silences}` : asked === 'chat' ? 'a yes to the help she offered' : 'a hint asked for';
   const ack = asked ? { ack: { of: asked } } : {};
   if (s.requests === 1 && q.hint.trim()) {
     return {
@@ -354,21 +433,28 @@ function elicitHelp(s: State, h: Held, asked: StudentClass | null): Decision {
         say: q.hint.trim(),
         ask: q.question,
         helped: null,
-        requested: asked !== null,
+        requested,
         strategy: 'hint',
         because: `${q.id}: ${how} on ${what}: give its hint; not filed as help, since ${what} is not graded`,
       },
     };
   }
   const why = s.requests === 1 ? 'no hint authored' : 'help needed again';
-  return { go: { ...ack, because: `${q.id}: ${how} on ${what}, ${why}; it is not graded, so move on` } };
+  return {
+    go: {
+      ...ack,
+      tell: [resolutionOf(q)],
+      because: `${q.id}: ${how} on ${what}, ${why}; it is not graded: say its answer and its reason, then move on`,
+    },
+  };
 }
 
 /** "Explain it to me": graded loosely, no ladder. */
-function onTeachBackReply(cfg: Cfg, s: State, h: Held, cls: StudentClass): Decision {
+function onTeachBackReply(cfg: Cfg, s: State, h: Held, cls: StudentClass, accepted: boolean): Decision {
   const idea = cfg.plan.ideas[h.idea ?? 0];
   const q = h.q;
   const rung = evidenceRung(s);
+  const told = s.delivered >= 8;
   switch (cls) {
     case 'right':
     case 'partly':
@@ -376,36 +462,69 @@ function onTeachBackReply(cfg: Cfg, s: State, h: Held, cls: StudentClass): Decis
         go: {
           ack: { of: cls },
           evidence: evidenceOf(q, true, rung),
-          because: `${q.id}: ${cls} teach-back, counted as correct on ${q.nodeIds.join(', ')} at rung ${rung}`,
+          because: `${q.id}: ${cls} teach-back${told ? ', said back after the core' : ''}, counted as correct on ${q.nodeIds.join(', ')} at rung ${rung}`,
         },
       };
     case 'wrong':
     case 'dontKnow':
-      return {
-        go: {
-          ack: ackOf(cls, undefined, q.why),
-          evidence: evidenceOf(q, false, rung),
-          because: `${q.id}: ${cls} teach-back at rung ${rung}: give the idea's core once and move on (no ladder on a teach-back)`,
-        },
-      };
+      if (told) {
+        return {
+          go: {
+            ack: { of: cls },
+            evidence: evidenceOf(q, false, rung),
+            because: `${q.id}: ${cls} again after the core, at rung ${rung}: no ladder on a teach-back, so move on`,
+          },
+        };
+      }
+      return { stay: teachBackCore(s, q, cls, evidenceOf(q, false, rung), false, `${q.id}: ${cls} teach-back at rung ${rung}`) };
     case 'hintRequest':
     case 'explainRequest':
-      return teachBackHelp(s, h, idea, cls);
+      return teachBackHelp(s, h, idea, cls, true);
     default:
-      return { stay: talk('sayAgain', cls, q.question, 'say-again', `${q.id}: a reply that answers nothing; ask them to say it again (no evidence)`) };
+      // chat: the other replies were handled before the held question was read.
+      if (accepted) return teachBackHelp(s, h, idea, 'chat', false);
+      return { stay: nudgeAgain(q.question, `${q.id}: a reply that answers nothing; put the teach-back again as a nudge (no evidence, nothing moves)`) };
   }
 }
 
 /**
- * Help on a teach-back: once, the idea another way — the first alternate of
- * its first point's question, filed as L7 — then, if help is needed again,
- * move on with no evidence.
+ * The idea's core, on the teach-back itself (filed as L8: it tells them what
+ * the teach-back asked them to explain), and the teach-back put again for
+ * them to say it back. The next idea comes on the move after, never in this
+ * one.
  */
-function teachBackHelp(s: State, h: Held, idea: PlanIdea, asked: StudentClass | null): Decision {
+function teachBackCore(s: State, q: PlanQuestion, of: StudentClass, evidence: Evidence | undefined, requested: boolean, head: string): Parts {
+  s.delivered = 8;
+  const parts: Parts = {
+    kind: 'reveal',
+    ack: { of },
+    say: q.why.trim(),
+    ask: q.question,
+    helped: 8,
+    requested,
+    strategy: 'reveal',
+    because: `${head}: give the idea's core (L8) on the teach-back, then they say it back; the next idea comes after`,
+  };
+  if (evidence) parts.evidence = evidence;
+  return parts;
+}
+
+/**
+ * Help on a teach-back: once, the idea another way — the first alternate of
+ * its first point's question, filed as L7. Asked for again (or with no
+ * alternate), the idea's core, once. After that, or when the help was for a
+ * silence, move on with no evidence.
+ */
+function teachBackHelp(s: State, h: Held, idea: PlanIdea, asked: StudentClass | null, requested: boolean): Decision {
   s.requests += 1;
   const q = h.q;
   const alt = idea.points[0]?.ask.alternates.find((a) => a.say.trim());
-  const how = asked ? `${asked} on the teach-back` : `silence ${s.silences} on the teach-back`;
+  const how =
+    asked === null
+      ? `silence ${s.silences} on the teach-back`
+      : asked === 'chat'
+        ? 'a yes to the help she offered on the teach-back'
+        : `${asked} on the teach-back`;
   if (s.requests === 1 && alt) {
     s.delivered = maxRung(s.delivered, 7);
     return {
@@ -415,17 +534,20 @@ function teachBackHelp(s: State, h: Held, idea: PlanIdea, asked: StudentClass | 
         say: alt.say.trim(),
         ask: q.question,
         helped: 7,
-        requested: asked !== null,
+        requested,
         strategy: alt.mode,
         because: `${q.id}: ${how}: the idea another way (L7, ${alt.mode}, from its first point's question), then ask again`,
       },
     };
   }
   const why = s.requests === 1 ? 'no alternate authored' : 'help needed again';
+  if (asked !== null && s.delivered < 8) {
+    return { stay: teachBackCore(s, q, asked, undefined, requested, `${q.id}: ${how}, ${why}`) };
+  }
   return {
     go: {
-      ...(asked ? { ack: ackOf(asked, undefined, q.why) } : {}),
-      because: `${q.id}: ${how}, ${why}: no ladder on a teach-back, so move on with no evidence`,
+      ...(asked ? { ack: { of: asked } } : {}),
+      because: `${q.id}: ${how}, ${asked === null ? `${why}, and no reply` : why}: no ladder on a teach-back, so move on with no evidence`,
     },
   };
 }
@@ -436,16 +558,22 @@ function onGradedReply(
   s: State,
   h: Held,
   r: { class: StudentClass; misconceptionId?: string },
+  accepted: boolean,
   now: number,
 ): Decision {
   const q = h.q;
 
-  // After a misconception's follow-up the reply is their reasoning, not a
-  // second answer: the reason it is not so, then the question again (C7).
-  if (s.followUp !== null && REASONING.has(r.class)) {
+  // After a misconception's follow-up a right answer is the answer: they
+  // worked it out, and the misconception's reason goes with the praise. Any
+  // other answer is their reasoning, not a second answer: the reason it is
+  // not so, then the question again (C7).
+  let followedUp: PlanMisconception | undefined;
+  if (s.followUp !== null && (r.class === 'right' || REASONING.has(r.class))) {
     const m = misconceptionOf(q, s.followUp);
     s.followUp = null;
-    if (m) {
+    if (m && r.class === 'right') {
+      followedUp = m;
+    } else if (m) {
       return {
         stay: {
           kind: h.kind,
@@ -462,12 +590,21 @@ function onGradedReply(
   }
 
   if (r.class === 'chat') {
-    return { stay: talk('sayAgain', 'chat', currentAsk(cfg, s), 'say-again', `${q.id}: a reply that answers nothing; ask them to say it again (no evidence, nothing moves)`) };
+    if (accepted) {
+      s.followUp = null;
+      return fromAction(cfg, s, h, decideFor(cfg, s, q, 'hintRequest', undefined, now), {
+        ack: { of: 'chat' },
+        lead: 'a yes to the help she offered, answered as a hint request: ',
+        requested: false,
+      });
+    }
+    return { stay: nudgeAgain(currentAsk(cfg, s), `${q.id}: a reply that answers nothing; put what is held again as a nudge (no evidence, nothing moves)`) };
   }
 
   const rung = evidenceRung(s);
+  const revealed = s.ladder >= 8;
 
-  if (r.class === 'partly' && s.partly === 0) {
+  if (r.class === 'partly' && s.partly === 0 && !revealed) {
     const attempt = s.attempt;
     s.partly = 1;
     s.attempt += 1;
@@ -477,29 +614,35 @@ function onGradedReply(
       stay: {
         kind: 'probeMore',
         ack: { of: 'partly' },
-        ask: q.hint.trim(),
+        ask: q.question,
         helped: 1,
         requested: false,
         strategy: 'probe-more',
         evidence: evidenceOf(q, false, rung),
-        because: `${q.id}: partly on attempt ${attempt} at rung ${rung}: ask for the missing part with the hint's question (L1)`,
+        because: `${q.id}: partly on attempt ${attempt} at rung ${rung}: ask for the missing part, the question again with nothing new said (L1)`,
       },
     };
   }
 
+  // "Pata nahi" before any help: the hint is the smaller step; the same
+  // question again would give them nothing new to go on.
+  const smallerStep = r.class === 'dontKnow' && s.ladder === 0 && s.attempt <= 1;
   const m = r.class === 'wrong' ? misconceptionOf(q, r.misconceptionId) : undefined;
   const verdict: Verdict =
     r.class === 'right'
       ? 'right'
-      : r.class === 'hintRequest'
+      : r.class === 'hintRequest' || smallerStep
         ? 'hintRequest'
         : r.class === 'explainRequest'
           ? 'explainRequest'
           : m
             ? 'wrong'
-            : 'unmatched'; // a second partly, dontKnow, or a wrong that names no misconception of this question
-  const answered = verdict !== 'hintRequest' && verdict !== 'explainRequest';
-  const action = decideFor(cfg, s, q, verdict, m, now);
+            : 'unmatched'; // a second partly, a later dontKnow, or a wrong that names no misconception of this question
+  const answered = r.class !== 'hintRequest' && r.class !== 'explainRequest';
+  // A right answer is judged against all the help filed — a nudge or another
+  // way included, which do not climb — so its praise, retest and `because`
+  // match the rung it is filed at.
+  const action = decideFor(cfg, s, q, verdict, m, now, verdict === 'right' ? rung : undefined);
   if (answered) {
     if (r.class === 'partly') s.partly += 1;
     s.attempt += 1;
@@ -511,7 +654,13 @@ function onGradedReply(
     ack: ackOf(r.class, m?.id),
     ...(answered ? { evidence: evidenceOf(q, verdict === 'right', rung) } : {}),
     ...(m ? { misconception: m } : {}),
-    lead: '',
+    ...(followedUp ? { alsoWhy: followedUp.why } : {}),
+    lead: followedUp
+      ? `right after the follow-up on ${followedUp.id}, so it is the answer, praised with that misconception's reason too: `
+      : smallerStep
+        ? "don't know before any help, answered with the hint as the smaller step: "
+        : '',
+    ...(smallerStep ? { requested: false } : {}),
   });
 }
 
@@ -521,7 +670,7 @@ function onSilence(cfg: Cfg, s: State, ms: number, now: number): Decision {
   const lead = `silence ${n} (${Math.round(ms)} ms)`;
 
   if (s.pos.at === 'recap') {
-    const where = `recap ${s.pos.prompt + 1} of ${cfg.plan.recap.prompts.length}`;
+    const where = `recap ${s.pos.prompt + 1} of ${s.recapPrompts.length}`;
     if (n === 1) return { stay: quiet('nudge', currentAsk(cfg, s), null, `${where}: ${lead}: a content-free nudge, the prompt again`) };
     if (n === 2) return { stay: quiet('checkIn', CHECK_IN.recap, null, `${where}: ${lead}: check in`) };
     return { go: { because: `${where}: ${lead}: move on` } };
@@ -545,18 +694,25 @@ function onSilence(cfg: Cfg, s: State, ms: number, now: number): Decision {
   }
   if (h.grading === 'graded') {
     s.followUp = null;
-    return fromAction(cfg, s, h, decideFor(cfg, s, q, 'hintRequest', undefined, now), {
-      lead: `${lead}, answered as a hint request they did not make: `,
-      requested: false,
-    });
+    if (n === 3) {
+      return fromAction(cfg, s, h, decideFor(cfg, s, q, 'hintRequest', undefined, now), {
+        lead: `${lead}, answered as a hint request they did not make: `,
+        requested: false,
+      });
+    }
+    const note = queueRetest(cfg, s, h);
+    return { go: { because: `${q.id}: ${lead}, still no reply after the help: move on with no evidence${note}` } };
   }
-  if (h.grading === 'teachBack') return teachBackHelp(s, h, cfg.plan.ideas[h.idea ?? 0], null);
-  return elicitHelp(s, h, null);
+  if (h.grading === 'teachBack') return teachBackHelp(s, h, cfg.plan.ideas[h.idea ?? 0], null, false);
+  return elicitHelp(s, h, null, false);
 }
 
-function onEnd(s: State): Decision {
+function onEnd(cfg: Cfg, s: State): Decision {
   if (!s.recapRan && s.ideaIndex >= 0) {
-    return { go: { because: 'the class is being ended: the recap first, since it has not run' }, to: { at: 'recap', prompt: 0 } };
+    return {
+      go: { because: `the class is being ended: the recap first, since it has not run; skipping ${skippedFrom(cfg, s, true)}` },
+      to: { at: 'recap', prompt: 0 },
+    };
   }
   const why = s.recapRan ? 'the recap has begun' : 'no idea has begun';
   return { go: { because: `the class is being ended and ${why}: close` }, to: { at: 'close' } };
@@ -571,12 +727,14 @@ function decideFor(
   verdict: Verdict,
   m: PlanMisconception | undefined,
   now: number,
+  /** In place of the ladder's rung: the rung a right answer is filed at. */
+  rungSoFar?: AssistanceRung,
 ): Action {
   const mastery = masteryOf(cfg.opts, q);
   const action = decide({
     verdict,
     attempt: s.attempt,
-    rungSoFar: s.ladder,
+    rungSoFar: rungSoFar ?? s.ladder,
     ask: askInputOf(q),
     // The why-probe lists the answer first, then the misconceptions in order.
     ...(m ? { matchedOption: 1 + q.misconceptions.indexOf(m) } : {}),
@@ -624,9 +782,11 @@ interface FromAction {
   ack?: Ack;
   evidence?: Evidence;
   misconception?: PlanMisconception;
+  /** A reason said with the praise, before the question's own: a followed-up misconception's. */
+  alsoWhy?: string;
   /** Put before `decide()`'s own `because`. */
   lead: string;
-  /** Overrides `decide()`'s `requested` (a silence answered as a hint request was not asked for). */
+  /** Overrides `decide()`'s `requested` (help they did not ask for: a silence, a yes to an offer, "don't know"). */
   requested?: boolean;
 }
 
@@ -642,12 +802,10 @@ function fromAction(cfg: Cfg, s: State, h: Held, action: Action, ctx: FromAction
 
   switch (action.kind) {
     case 'praise': {
-      // decide() retests after a climb and after a cold right on a weak
-      // record; help filed without a climb (a silence's nudge, another way
-      // asked for) is in the evidence rung, and retests here too.
-      const assisted = (ctx.evidence?.rung ?? 0) > 0;
-      const note = action.scheduleRetest || assisted ? queueRetest(cfg, s, h) : '';
-      return { go: { ...reacted, ack: ackOf('right', undefined, q.why), because: `${because}${note}` } };
+      // decide() retests after any help (it is given the rung the answer is
+      // filed at) and after a cold right on a weak record.
+      const note = action.scheduleRetest ? queueRetest(cfg, s, h) : '';
+      return { go: { ...reacted, ack: ackOf('right'), whys: [ctx.alsoWhy, q.why], because: `${because}${note}` } };
     }
     case 'rethink': {
       const m = ctx.misconception;
@@ -682,16 +840,20 @@ function fromAction(cfg: Cfg, s: State, h: Held, action: Action, ctx: FromAction
       if (ctx.evidence) nudge.evidence = ctx.evidence;
       return { stay: nudge };
     }
-    case 'reveal': {
-      const note = queueRetest(cfg, s, h);
+    case 'reveal':
+      // On the question itself, so the L8 help is filed against it, and it
+      // is put again for them to say back: the reply is read at rung 8 by
+      // decide() (praise after the reveal, or move on), with the retest.
       return {
-        go: {
+        stay: {
+          kind: 'reveal',
           ...reacted,
-          because: `${because}${note}`,
-          lead: { kind: 'reveal', say: sentences(q.answer, q.why), ...help },
+          ...help,
+          say: sentences(q.answer, q.why),
+          ask: q.question,
+          because: `${because}; the question is put again for them to say it back`,
         },
       };
-    }
     case 'moveOn': {
       const note = queueRetest(cfg, s, h);
       return { go: { ...reacted, because: `${because}${note}` } };
@@ -712,20 +874,30 @@ function alternateSaid(q: PlanQuestion, action: Action, used: readonly string[])
 }
 
 /**
- * Queue the idea's next check as a retest, due after the next idea's points.
- * One queued retest per idea at a time. Returns the note for `because`.
+ * Queue a retest of the held question's node: the first of its idea's later
+ * checks not used yet that shares a node with it, due after the next idea's
+ * points. A queued retest that already shares a node stands in for it.
+ * Returns the note for `because`.
  */
 function queueRetest(cfg: Cfg, s: State, h: Held): string {
   if (h.idea === null) return '';
-  const idea = cfg.plan.ideas[h.idea];
-  if (s.retests.some((r) => r.of === h.idea)) return `; a retest of idea ${idea.id} is already queued`;
-  const k = s.nextCheck[h.idea] ?? 1;
-  if (k >= idea.check.length) return `; no fresh check left on idea ${idea.id} to retest with`;
+  const plan = cfg.plan;
+  const idea = plan.ideas[h.idea];
+  const nodes = h.q.nodeIds;
+  const shared = (c: PlanQuestion) => c.nodeIds.filter((n) => nodes.includes(n));
+
+  for (const r of s.retests) {
+    const c = plan.ideas[r.of].check[r.check];
+    const on = shared(c);
+    if (on.length > 0) return `; retest ${c.id}, already queued, is on ${on.join(', ')} too`;
+  }
+  const k = idea.check.findIndex((c, i) => i > 0 && c.id !== h.q.id && !s.checksUsed.includes(c.id) && shared(c).length > 0);
+  if (k < 0) return `; no unused check of idea ${idea.id} is on ${nodes.join(', ')}, so it is not retested`;
   const due = s.ideaIndex + 1;
   s.retests.push({ of: h.idea, check: k, due });
-  s.nextCheck[h.idea] = k + 1;
-  const when = due < cfg.plan.ideas.length ? `after idea ${cfg.plan.ideas[due].id}'s points` : 'before the recap';
-  return `; retest ${idea.check[k].id} queued for ${when}`;
+  s.checksUsed.push(idea.check[k].id);
+  const when = due < plan.ideas.length ? `after idea ${plan.ideas[due].id}'s points` : 'before the recap';
+  return `; retest ${idea.check[k].id} queued for ${when} (on ${shared(idea.check[k]).join(', ')})`;
 }
 
 // ─── Where the class goes next ────────────────────────────────────────────
@@ -736,16 +908,15 @@ function nextPos(cfg: Cfg, s: State, now: number): { pos: Pos; note?: string } {
   const p = s.pos;
   if (p.at === 'close') return { pos: p };
   if (p.at === 'recap') {
-    return { pos: p.prompt + 1 < plan.recap.prompts.length ? { at: 'recap', prompt: p.prompt + 1 } : { at: 'close' } };
+    return { pos: p.prompt + 1 < s.recapPrompts.length ? { at: 'recap', prompt: p.prompt + 1 } : { at: 'close' } };
   }
 
   const elapsed = now - s.startedAt;
   if (elapsed >= cfg.capMs && p.at !== 'ready') {
     if (s.ideaIndex < 0) return { pos: { at: 'close' }, note: `time is up (${mins(elapsed)} of ${cfg.minutes} min) before any idea began` };
-    const left = plan.ideas.length - (s.ideaIndex + 1);
     return {
       pos: { at: 'recap', prompt: 0 },
-      note: `time is up (${mins(elapsed)} of ${cfg.minutes} min): straight to the recap, skipping ${left} idea(s) not begun and ${s.retests.length} queued retest(s)`,
+      note: `time is up (${mins(elapsed)} of ${cfg.minutes} min): straight to the recap, skipping ${skippedFrom(cfg, s, false)}`,
     };
   }
 
@@ -767,6 +938,43 @@ function nextPos(cfg: Cfg, s: State, now: number): { pos: Pos; note?: string } {
     case 'teachBack':
       return { pos: p.idea + 1 < plan.ideas.length ? ideaStart(cfg, s, p.idea + 1) : leftoverOrRecap(s) };
   }
+}
+
+/**
+ * What going to the recap now leaves out: the rest of the current idea, the
+ * ideas not begun and the retests queued. `held`: the step now held is left
+ * too (the class is being ended, not moved on from it).
+ */
+function skippedFrom(cfg: Cfg, s: State, held: boolean): string {
+  const plan = cfg.plan;
+  const p = s.pos;
+  const h = held ? heldAt(plan, p) : null;
+  const items: string[] = h ? [h.grading === 'teachBack' ? 'its teach-back unanswered' : `${h.q.id} unanswered`] : [];
+  const restOf = (i: number, firstPoint: number): string[] => [
+    ...plan.ideas[i].points.slice(firstPoint).map((pt) => `point ${pt.id}`),
+    `check ${plan.ideas[i].check[0].id}`,
+    'its teach-back',
+  ];
+  let idea = -1;
+  if (p.at === 'predict') {
+    idea = p.idea;
+    items.push(...restOf(p.idea, 0));
+  } else if (p.at === 'point') {
+    idea = p.idea;
+    items.push(...restOf(p.idea, p.point + 1));
+  } else if (p.at === 'retest' && p.slot >= 0) {
+    idea = p.slot;
+    items.push(`check ${plan.ideas[p.slot].check[0].id}`, 'its teach-back');
+  } else if (p.at === 'check') {
+    idea = p.idea;
+    items.push('its teach-back');
+  } else if (p.at === 'teachBack') {
+    idea = p.idea;
+  }
+  const parts: string[] = [];
+  if (items.length > 0) parts.push(idea >= 0 ? `the rest of idea ${plan.ideas[idea].id} (${items.join(', ')})` : items.join(', '));
+  parts.push(`${plan.ideas.length - (s.ideaIndex + 1)} idea(s) not begun`, `${s.retests.length} queued retest(s)`);
+  return parts.join(', ');
 }
 
 /** An idea opens on its prediction, unless it has none or every node of it is held cold. */
@@ -797,6 +1005,24 @@ function retestOrCheck(s: State, i: number): Pos {
 function leftoverOrRecap(s: State): Pos {
   const r = s.retests.shift();
   return r ? { at: 'retest', slot: -1, of: r.of, check: r.check } : { at: 'recap', prompt: 0 };
+}
+
+/**
+ * The recap's prompts: the plan's own when every idea reached its teach-back;
+ * else the teach-back prompts of the ideas that did (the first `RECAP_MAX`);
+ * else one general prompt. The plan's prompts are about the whole class, so a
+ * class cut short would be asked to recall what it was never taught.
+ */
+function recapOf(plan: TeachingPlan, taughtThrough: number): { prompts: string[]; note: string } {
+  if (taughtThrough >= plan.ideas.length - 1) return { prompts: [...plan.recap.prompts], note: "the plan's prompts: every idea reached its teach-back" };
+  const taught = plan.ideas.slice(0, taughtThrough + 1).slice(0, RECAP_MAX);
+  if (taught.length > 0) {
+    return {
+      prompts: taught.map((i) => i.teachBack.prompt),
+      note: `cut short, so only what was taught: the teach-back prompt of ${taught.map((i) => i.id).join(', ')}`,
+    };
+  }
+  return { prompts: [GENERAL_RECAP], note: 'cut short before any idea reached its teach-back, so one general prompt' };
 }
 
 // ─── Reaching a step, and building the move ───────────────────────────────
@@ -868,7 +1094,7 @@ function arrive(cfg: Cfg, s: State, pos: Pos): Arrival {
         ask: q.question,
         board: null,
         strategy: 'retest',
-        because: `retest of idea ${idea.id} on a fresh question, ${q.id}, queued when an earlier one needed help or met a weak record; ${when}`,
+        because: `retest of idea ${idea.id} on a fresh question, ${q.id}, queued when an earlier one on ${q.nodeIds.join(', ')} needed help or met a weak record; ${when}`,
       };
     }
     case 'check': {
@@ -885,6 +1111,7 @@ function arrive(cfg: Cfg, s: State, pos: Pos): Arrival {
     case 'teachBack': {
       const idea = plan.ideas[pos.idea];
       s.ideaIndex = pos.idea;
+      s.taughtThrough = Math.max(s.taughtThrough, pos.idea);
       return {
         kind: 'teachBack',
         ask: idea.teachBack.prompt,
@@ -894,14 +1121,19 @@ function arrive(cfg: Cfg, s: State, pos: Pos): Arrival {
       };
     }
     case 'recap': {
+      let source = '';
+      if (pos.prompt === 0) {
+        const recap = recapOf(plan, s.taughtThrough);
+        s.recapPrompts = recap.prompts;
+        source = `; ${recap.note}`;
+      }
       s.recapRan = true;
-      const n = plan.recap.prompts.length;
       return {
         kind: 'recap',
-        ask: plan.recap.prompts[pos.prompt],
+        ask: s.recapPrompts[pos.prompt],
         board: null,
         strategy: 'recap',
-        because: `recap ${pos.prompt + 1} of ${n}: they recall the class; she does not repeat it`,
+        because: `recap ${pos.prompt + 1} of ${s.recapPrompts.length}: they recall the class; she does not repeat it${source}`,
       };
     }
     case 'close': {
@@ -923,61 +1155,90 @@ function finish(cfg: Cfg, s: State, decision: Decision, now: number): Move {
   const elapsed = now - s.startedAt;
   const closing = 'go' in d && d.to?.at === 'close';
   if (!closing && elapsed >= cfg.hardMs) {
-    const r = 'stay' in d ? d.stay : d.go;
+    const r = 'stay' in d ? reactionOf(d.stay) : d.go;
     d = {
-      go: {
-        ...(r.ack ? { ack: r.ack } : {}),
-        ...(r.evidence ? { evidence: r.evidence } : {}),
-        because: `${r.because}; hard stop: ${mins(elapsed)} min is past ${cfg.minutes} + ${HARD_STOP_MINUTES} min, so close`,
-      },
+      go: { ...r, because: `${r.because}; hard stop: ${mins(elapsed)} min is past ${cfg.minutes} + ${HARD_STOP_MINUTES} min, so close` },
       to: { at: 'close' },
     };
   }
 
   if ('stay' in d) {
     if (d.stay.evidence) s.evidence.push(d.stay.evidence);
-    return build(cfg, s, d.stay, null);
+    return build(cfg, s, d.stay, null, 'stay');
   }
 
   const r = d.go;
   if (r.evidence) s.evidence.push(r.evidence);
   const next: { pos: Pos; note?: string } = d.to ? { pos: d.to } : nextPos(cfg, s, now);
   const arrival = arrive(cfg, s, next.pos);
-  const lead = arrival.kind === 'close' ? undefined : r.lead;
-  const kind = lead?.kind ?? arrival.kind;
-  const parts: Parts = {
-    kind,
-    helped: lead ? lead.helped : null,
-    requested: lead ? lead.requested : false,
-    strategy: lead?.strategy ?? arrival.strategy,
-    because: `${r.because}; next: ${next.note ? `${next.note}; ` : ''}${arrival.because}`,
+
+  // What is said in reaction to the turn before comes straight before the
+  // question just reached: anything in it that gives that question away is
+  // left unsaid, so the answer that follows is still worth filing.
+  const h = heldAt(cfg.plan, s.pos);
+  const secrets = h ? secretsOf(h.q) : [];
+  let unsaid = 0;
+  const keep = (t: string | undefined): t is string => {
+    if (!t || t.trim().length === 0) return false;
+    if (leaks(t, secrets)) {
+      unsaid += 1;
+      return false;
+    }
+    return true;
   };
-  if (r.ack) parts.ack = r.ack;
-  const say = [lead?.say, arrival.say].filter((t): t is string => !!t && t.trim().length > 0).join(' ');
+  const whys = (r.whys ?? []).filter(keep).map((t) => t.trim());
+  const tells = (r.tell ?? []).filter(keep).map((t) => t.trim());
+  const left = unsaid > 0 && h ? `; ${unsaid} reason(s) left unsaid: they would give away ${h.q.id}'s answer, asked next` : '';
+
+  const parts: Parts = {
+    kind: arrival.kind,
+    helped: null,
+    requested: false,
+    strategy: arrival.strategy,
+    because: `${r.because}${left}; next: ${next.note ? `${next.note}; ` : ''}${arrival.because}`,
+  };
+  if (r.ack) parts.ack = ackOf(r.ack.of, r.ack.misconceptionId, whys.length > 0 ? sentences(...whys) : undefined);
+  const say = [...tells, arrival.say].filter((t): t is string => !!t && t.trim().length > 0).join(' ');
   if (say) parts.say = say;
   if (arrival.ask) parts.ask = arrival.ask;
   if (r.evidence) parts.evidence = r.evidence;
-  // A reveal that carries the next point's explanation takes the explain cap.
-  return build(cfg, s, parts, arrival.board, Math.max(capOf(kind), capOf(arrival.kind)));
+  return build(cfg, s, parts, arrival.board, 'arrive');
 }
 
-function build(cfg: Cfg, s: State, parts: Parts, board: Board | null, maxSentences = capOf(parts.kind)): Move {
+/** A move that would have stayed, as the reaction the hard stop's close carries: its ack and evidence. */
+function reactionOf(p: Parts): Reaction {
+  const r: Reaction = { because: p.because };
+  if (p.ack) {
+    r.ack = ackOf(p.ack.of, p.ack.misconceptionId);
+    r.whys = [p.ack.why];
+  }
+  if (p.evidence) r.evidence = p.evidence;
+  return r;
+}
+
+/**
+ * The move. `how`: whether it reaches the step now held (`arrive`) or stays
+ * on the question it reacts to (`stay`).
+ */
+function build(cfg: Cfg, s: State, parts: Parts, board: Board | null, how: 'arrive' | 'stay'): Move {
   const h = heldAt(cfg.plan, s.pos);
   const content: Move['content'] = {};
   if (parts.say) content.say = parts.say;
   if (parts.ask) content.ask = parts.ask;
   if (parts.steps) content.steps = parts.steps.map((st) => ({ say: st.say, line: st.line }));
 
-  // What the move must say — its content, and the reason in its reaction —
-  // is never also what it must not: an authored point may state its own quick
-  // question's answer, and a reason given in reaction (a right answer's why, a
-  // reveal) may state the next question's. Leaving such a secret out for this
-  // one move is what lets the words layer say it; the next move that holds
-  // the question protects it again.
-  const spoken = [parts.say, parts.ack?.why, ...(parts.steps ?? []).flatMap((st) => [st.say, st.line])].filter(
+  // Once revealed (the answer, or a teach-back's core), nothing is left to
+  // protect. A move that reaches a question protects all of it (`finish` has
+  // already left unsaid any reaction that would give it away; a point never
+  // states its own question's answer, `validatePlan`). A move that stays on
+  // the question it reacts to may leave out, for that move only, a secret its
+  // own content states — what it must say is never also what it must not.
+  const spoken = [parts.say, parts.ack?.why, ...(parts.steps ?? []).map((st) => st.say), ...(parts.steps ?? []).map((st) => st.line)].filter(
     (t): t is string => !!t && t.trim().length > 0,
   );
-  const mustNotReveal = h ? secretsOf(h.q).filter((secret) => !spoken.some((t) => leaks(t, [secret]))) : [];
+  const revealed = s.ladder >= 8 || s.delivered >= 8;
+  const mustNotReveal =
+    !h || revealed ? [] : secretsOf(h.q).filter((secret) => how === 'arrive' || !spoken.some((t) => leaks(t, [secret])));
 
   s.seq += 1;
   const move: Move = {
@@ -990,7 +1251,7 @@ function build(cfg: Cfg, s: State, parts: Parts, board: Board | null, maxSentenc
     handsOver: parts.kind !== 'close',
     board: board ? copyBoard(board) : null,
     mustNotReveal,
-    maxSentences,
+    maxSentences: Math.max(capOf(parts.kind), sentencesNeeded(content, parts.ack)),
     because: parts.because,
     helped: parts.helped,
     requested: parts.requested,
@@ -1047,7 +1308,7 @@ function teachBackQuestion(idea: PlanIdea): PlanQuestion {
 
 /** What she is waiting on: a pending follow-up, else the held question, else the recap prompt. */
 function currentAsk(cfg: Cfg, s: State): string | undefined {
-  if (s.pos.at === 'recap') return cfg.plan.recap.prompts[s.pos.prompt];
+  if (s.pos.at === 'recap') return s.recapPrompts[s.pos.prompt];
   const h = heldAt(cfg.plan, s.pos);
   if (!h) return undefined;
   if (s.followUp !== null) {
@@ -1060,12 +1321,17 @@ function currentAsk(cfg: Cfg, s: State): string | undefined {
 function whereOf(cfg: Cfg, s: State): string {
   const h = heldAt(cfg.plan, s.pos);
   if (h) return h.q.id;
-  if (s.pos.at === 'recap') return `recap ${s.pos.prompt + 1} of ${cfg.plan.recap.prompts.length}`;
+  if (s.pos.at === 'recap') return `recap ${s.pos.prompt + 1} of ${s.recapPrompts.length}`;
   return s.pos.at;
 }
 
 function misconceptionOf(q: PlanQuestion, id: string | undefined): PlanMisconception | undefined {
   return id === undefined ? undefined : q.misconceptions.find((m) => m.id === id);
+}
+
+/** An opener or a prediction resolved: its answer, then the named misconception's reason, else its own. */
+function resolutionOf(q: PlanQuestion, m?: PlanMisconception): string {
+  return sentences(q.answer, m ? m.why : q.why);
 }
 
 function ackOf(of: StudentClass, misconceptionId?: string, why?: string): Ack {
@@ -1086,6 +1352,11 @@ function quiet(kind: 'nudge' | 'checkIn', ask: string | undefined, helped: Assis
   const parts: Parts = { kind, helped, requested: false, strategy: kind === 'checkIn' ? 'check-in' : 'nudge', because };
   if (ask) parts.ask = ask;
   return parts;
+}
+
+/** A reply that answers nothing ("ok"): what is held, put again as a nudge — no reaction (a nudge has none), no help filed. */
+function nudgeAgain(ask: string | undefined, because: string): Parts {
+  return quiet('nudge', ask, null, because);
 }
 
 /** The rung their answer is filed at: the help filed so far, and at least L1 on a later try (B4). */
@@ -1141,17 +1412,35 @@ function summaryOf(plan: TeachingPlan, ideaIndex: number): string {
   return `Today we worked through ${listed}.`;
 }
 
+/** The talk cap a kind of move starts from, before its content is counted: 3 for the open, a point and the close, 2 for the rest. */
 function capOf(kind: MoveKind): number {
   return kind === 'open' || kind === 'explain' || kind === 'close' ? 3 : 2;
+}
+
+/**
+ * The sentences the move's own content takes: its reason (`ack.why`), its
+ * `say`, each worked step's `say`, and its question. The cap is never set
+ * below it, so a line that says all of it fits.
+ */
+function sentencesNeeded(content: Move['content'], ack: Ack | undefined): number {
+  const steps = (content.steps ?? []).reduce((n, st) => n + sentenceCount(st.say), 0);
+  return sentenceCount(ack?.why) + sentenceCount(content.say) + steps + sentenceCount(content.ask);
+}
+
+/** Sentences in `text`, split after `.`, `!` or `?` and a space: an abbreviation counts one too many, never one too few. */
+function sentenceCount(text: string | undefined): number {
+  const t = text?.trim() ?? '';
+  if (t.length === 0) return 0;
+  return t.split(/(?<=[.!?])\s+/).filter((x) => x.trim().length > 0).length;
 }
 
 function maxRung(a: number, b: number): AssistanceRung {
   return Math.min(8, Math.max(0, Math.floor(a), Math.floor(b))) as AssistanceRung;
 }
 
-function sentences(...parts: string[]): string {
+function sentences(...parts: (string | undefined)[]): string {
   return parts
-    .map((p) => p.trim())
+    .map((p) => p?.trim() ?? '')
     .filter((p) => p.length > 0)
     .map((p) => (/[.!?]$/.test(p) ? p : `${p}.`))
     .join(' ');
