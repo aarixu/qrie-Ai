@@ -13,10 +13,20 @@ export type TutorLanguage = 'en' | 'hi-en';
  * - `unclear`: nothing usable was heard, or the judge's numbers disagreed with
  *   the expected value (E2/E3). Not evidence either way.
  * - `silent`: the wait ran out with nothing said.
+ * - `stillSilent`: still nothing, after the nudge and the hint. The caller
+ *   decides when that is; `decide()` gives the answer and moves on.
  * - `hintRequest`: the student asked for help.
  * - `explainRequest`: the student asked for it to be explained another way.
  */
-export type Verdict = 'right' | 'wrong' | 'unmatched' | 'unclear' | 'silent' | 'hintRequest' | 'explainRequest';
+export type Verdict =
+  | 'right'
+  | 'wrong'
+  | 'unmatched'
+  | 'unclear'
+  | 'silent'
+  | 'stillSilent'
+  | 'hintRequest'
+  | 'explainRequest';
 
 /**
  * A SIMILAR PROBLEM, WORKED STEP BY STEP — L5's content, in the canvas

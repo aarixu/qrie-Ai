@@ -1,5 +1,6 @@
 import { migrateModel, type LearnerModel } from '@ai-tutor/learner-model';
 import type { GraphIndex, Probe } from '@ai-tutor/knowledge-graph';
+import { MATCH_FLOOR, dontKnowIn, matchSpokenAnswer } from '@ai-tutor/tutor-judge';
 import { learnerModelStore } from './learnerModel';
 
 /**
@@ -34,6 +35,43 @@ export interface WarmUpQuestion {
   correctIndex: number;
   /** Aligned to `options`; the correct index holds ''. */
   misconceptions: string[];
+}
+
+const NUMBER_WORDS = [
+  'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+  'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty',
+];
+const NUMBER = /^\d+(?:\.\d+)?$/;
+/** Lower-cased words and numbers, with "four" read as "4". */
+const tokens = (text: string): string[] =>
+  (text.toLowerCase().match(/\d+(?:\.\d+)?|\p{L}+/gu) ?? []).map((w) => {
+    const n = NUMBER_WORDS.indexOf(w);
+    return n >= 0 ? String(n) : w;
+  });
+
+/**
+ * WHICH CHOICE A WARM-UP ANSWER NAMED, or null (2026-10-01).
+ *
+ * She reads the choices out loud and nothing is on screen, so only a choice
+ * they NAMED is read: the choice said back whole; on a numeric question, the
+ * one number they said when it is a choice; otherwise the words of a choice.
+ * Never a letter or a position — nothing was lettered, and "four" can be a
+ * value as well as a place in a list they only heard. A shrug names nothing.
+ */
+export function readWarmUpAnswer(said: string, options: readonly string[]): number | null {
+  const heard = tokens(said).join(' ');
+  if (heard === '') return null;
+  const whole = options.map((o) => tokens(o).join(' '));
+  if (whole.filter((o) => o === heard).length === 1) return whole.indexOf(heard);
+  if (options.some((o) => NUMBER.test(o.trim()))) {
+    const numbers = tokens(said).filter((t) => NUMBER.test(t));
+    if (numbers.length !== 1) return null;
+    const at = options.findIndex((o) => o.trim() === numbers[0]);
+    return at >= 0 ? at : null;
+  }
+  if (dontKnowIn(said) === 'only') return null;
+  const match = matchSpokenAnswer(said, options);
+  return match.by === 'words' && match.index !== null && match.confidence >= MATCH_FLOOR ? match.index : null;
 }
 
 export function pickWarmUp(input: {

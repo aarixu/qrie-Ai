@@ -271,6 +271,23 @@ Smart-board design research covered what the board can do today and how speech c
 3. **Remove captions from the board.** Whether they stay as an off-board accessibility setting is a decision below.
 4. **Measured side effect:** with the asked question removed, the same picture-and-points beat fits one page with 0 overlaps instead of overflowing.
 
+**C1 STATUS (2026-10-01, late): BUILT in worktree `wf_16028799-3e6-2`.** Not merged or deployed when this was written; check `git log` on phase3-completion.
+- **Classroom** (`2a5d957`):
+  - The chips, the answer button, "Give me a hint", "I'm not sure", "Explain another way", "Work it out" (WorkPanel and `lib/workAnswer` deleted), the warm-up card, and the student's words with ✓/✗ on the board are all gone.
+  - The toolbar keeps **Raise hand** and **End the class** only. Report moved to the top bar.
+  - Captions are a setting, off by default, in a strip under the board.
+  - **Every held question now ends:** after the ladder's reveal; after quiet through the nudge and the hint (new `decide()` verdict `stillSilent`: the answer and why, L8); or after 3 unusable turns (new `LINES.carryOn`).
+  - No mic means one **"Type your answer"** box under the board, judged down the spoken road.
+  - The warm-up is asked aloud (`readWarmUpAnswer`); a question with maths in it is skipped.
+- **Board:**
+  - `layoutBeat` lays an ask out as a marker only: no question, no options, no work area.
+  - Gate `one-question` now means "written zero times".
+  - `saidNotWritten` rule 1 is deleted. The landing line is now the last line that does not ask.
+  - The prompt says a question is only spoken; LaTeX is allowed in `write`.
+  - `assemble` keeps a beat that is only its question (it used to drop it).
+  - Kept classes play without their question ink (`apps/classroom/src/lib/askInk.ts`; the evaporation class loses 8 questions, 15 wrapped lines).
+- **Gave up, on purpose:** her hint and reveal notes are spoken only on new classes, because there is no work area to write them into. Notes written during a hint come with C3's timed ink.
+
 **C2 — A board made for the phone.** Effort M–L.
 
 1. **A "follow the pen" camera:**

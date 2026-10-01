@@ -9,46 +9,22 @@ import type { Instruction, ScriptBeat } from '@ai-tutor/board-layout';
  * question, and a beat's closing line — "there is a force between particles" —
  * said over a board that gained nothing.
  *
- * A prompt asks; this CHECKS. Two rules, both deterministic, both taken
- * straight from that mark-up:
+ * A prompt asks; this CHECKS, deterministically, the rule taken straight from
+ * that mark-up: the LANDING line of a beat writes something. The landing is
+ * the key point, and a key point that is only heard is homework nobody can
+ * copy. Earlier says may be bare — a teacher talks to a blank board while
+ * setting a scene — but the landing is ink.
  *
- *   1. A `say` that asks a question is matched, in the same breath, by a
- *      written question — some ink that ends in a question mark. Not the
- *      answer; the question. The student is meant to sit with it.
- *   2. The LAST say of a beat writes something. The landing line is the key
- *      point, and a key point that is only heard is homework nobody can copy.
- *      Earlier says may be bare — a teacher talks to a blank board while
- *      setting a scene — but the landing is ink.
+ * The landing is the beat's last line that does not ASK. A beat may end on a
+ * question, and since 2026-10-01 a question is only spoken (Aarav: nothing of
+ * it on the board, and the ask writes nothing), so the line before it is the
+ * one that landed what was taught. There used to be a second rule here — a
+ * spoken question must be matched by a written one — and it was deleted for
+ * the same reason.
  *
  * The errors feed the same one-round repair every other validation failure
  * uses, so the model fixes exactly what is named and nothing else moves.
  */
-
-const writtenTextOf = (step: Instruction): string => {
-  switch (step.do) {
-    case 'write':
-    case 'note':
-    case 'caption':
-      return step.text;
-    case 'card':
-      return `${step.heading} ${step.body}`;
-    case 'label':
-      return step.text;
-    case 'equation':
-      return step.text;
-    case 'list':
-      return `${step.heading ?? ''} ${step.items.map((i) => `${i.term} ${i.meaning ?? ''}`).join(' ')}`;
-    // An ask IS written ink: the layout writes its question on the board
-    // (board-layout's layoutBeat expands it into a `write`). Not counting it
-    // here sent every plan that asked properly to repair for an "unwritten"
-    // question, and the repair wrote a second copy — all four asks of the
-    // first maths class carried two question lines.
-    case 'ask':
-      return step.question;
-    default:
-      return '';
-  }
-};
 
 export function saidButNotWritten(beats: readonly ScriptBeat[]): string[] {
   const errors: string[] = [];
@@ -60,27 +36,14 @@ export function saidButNotWritten(beats: readonly ScriptBeat[]): string[] {
       if (step.do === 'say') stretches.push({ say: step, after: [] });
       else stretches[stretches.length - 1]?.after.push(step);
     }
-    if (stretches.length === 0) continue;
-
-    for (const { say, after } of stretches) {
-      if (!say.text.includes('?')) continue;
-      const questionWritten = after.some((step) => writtenTextOf(step).includes('?'));
-      if (!questionWritten) {
-        errors.push(
-          `${beat.id}: the line "${say.text.slice(0, 60)}…" asks a question, but no question is ` +
-            `written on the board in that step. Put it up with {"do":"ask"}, which writes the ` +
-            `question for you and waits for the answer — once, never also as a "write".`,
-        );
-      }
-    }
-
-    const landing = stretches[stretches.length - 1];
+    const landing = [...stretches].reverse().find(({ after }) => !after.some((step) => step.do === 'ask'));
+    if (!landing) continue;
     // Landing means the board GAINED something — words, a drawing, a mark. A
     // final line that places the scene it just described has landed; only
     // `point`, which merely relights what is already there, does not count.
     if (!landing.after.some((step) => step.do !== 'point')) {
       errors.push(
-        `${beat.id}: the beat's final say — "${landing.say.text.slice(0, 60)}…" — writes nothing. ` +
+        `${beat.id}: the line that lands the beat — "${landing.say.text.slice(0, 60)}…" — writes nothing. ` +
           `The line that lands a beat is its key point; put it on the board (a "write", "list" ` +
           `or "card") so the student can copy it.`,
       );

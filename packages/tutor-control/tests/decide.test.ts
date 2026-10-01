@@ -196,6 +196,37 @@ describe('decide: the wrong-answer ladder (TD1)', () => {
   });
 });
 
+/**
+ * STILL QUIET AFTER THE NUDGE AND THE HINT (2026-10-01). The class shows no
+ * question and nothing to tap, so a held question that nobody answers has to
+ * end somewhere: she gives the answer and its why, and the class goes on.
+ */
+describe('decide: still silent after the help', () => {
+  it('gives the answer and its why, L8, as help they did not ask for', () => {
+    const a = decide(base({ verdict: 'stillSilent', rungSoFar: 3 }));
+    expect(a.kind).toBe('reveal');
+    expect(a.rung).toBe(8);
+    expect(a.helped).toBe(8);
+    expect(a.requested).toBe(false);
+    expect(say(a)).toContain('x = 4');
+    expect(a.scheduleRetest).toBe(true);
+  });
+
+  it('gives the answer even before any rung was climbed', () => {
+    const a = decide(base({ verdict: 'stillSilent', ask: OPEN_WITH_PROBE }));
+    expect(a.kind).toBe('reveal');
+    expect(say(a)).toContain('too small to see');
+  });
+
+  it('moves on with nothing to reveal, and once the answer is already out', () => {
+    expect(decide(base({ verdict: 'stillSilent', ask: NOTHING_TO_REVEAL })).kind).toBe('moveOn');
+    const after = decide(base({ verdict: 'stillSilent', rungSoFar: 8 }));
+    expect(after.kind).toBe('moveOn');
+    expect(after.helped).toBeNull();
+    expect(LINES.moveOn.en).toContain(say(after));
+  });
+});
+
 describe('decide: a right answer', () => {
   it('is praised warmly and briefly when it came cold, with no retest', () => {
     const a = decide(base({ verdict: 'right' }));
@@ -406,7 +437,7 @@ describe('decide: response-time rules, built and off until TD14', () => {
 describe('decide: over every branch', () => {
   afterEach(() => vi.restoreAllMocks());
 
-  const verdicts: Verdict[] = ['right', 'wrong', 'unmatched', 'unclear', 'silent', 'hintRequest', 'explainRequest'];
+  const verdicts: Verdict[] = ['right', 'wrong', 'unmatched', 'unclear', 'silent', 'stillSilent', 'hintRequest', 'explainRequest'];
   const WITH_ALTS: AskInput = {
     ...WITH_EXAMPLE,
     alternates: [{ mode: 'analogy', say: 'Think of a balance: take the same from both pans.' }],

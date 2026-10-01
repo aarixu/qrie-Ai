@@ -180,8 +180,8 @@ export interface ResolvedAnswer {
   confidence?: number;
   /**
    * The index of the probe option the words matched, when that index means
-   * the same option to `decide()` — the child saw no list, or saw the probe's
-   * own. Local path only. It is how a spoken miss gets its option's C7
+   * the same option to `decide()` — the ask carries no options, or carries the
+   * probe's own list. Local path only. It is how a spoken miss gets its option's C7
    * follow-up (second review, 2026-09-29).
    */
   matched?: number;
@@ -248,6 +248,7 @@ function readLocally(
   ask: PlayableAsk,
   probe: WhyProbe,
   said: string,
+  listShown: boolean,
 ): ResolvedAnswer | null {
   const match = matchSpokenAnswer(said, probe.options.map((o) => o.text));
 
@@ -278,13 +279,18 @@ function readLocally(
    * different list. A false refusal here costs one model call; a false accept
    * tells a child who was right that they were wrong, which is the thing this
    * whole file is arranged to prevent — so when in doubt this escalates.
+   *
+   * AND THE CALLER MUST SAY IT WAS SHOWN (`listShown`). The class puts no
+   * question and no options on screen at all (Aarav, 2026-10-01), so a probe
+   * marked 'options' over a mirrored `ask.options` is still a child looking at
+   * nothing unless the screen that asked really drew the list.
    */
   const shown = ask.options ?? [];
-  const sawAList =
-    probe.askedAs === 'options' &&
+  const sameList =
     shown.length === probe.options.length &&
     shown.length > 0 &&
     shown.every((o, i) => same(o.text, probe.options[i].text));
+  const sawAList = listShown && probe.askedAs === 'options' && sameList;
 
   /**
    * THE ORDINAL READINGS, REFUSED ON AN OPEN ASK.
@@ -315,8 +321,9 @@ function readLocally(
   const option = probe.options[match.index];
   if (!option) return null;
 
-  // decide() reads the shown options when there are any, else the probe's.
-  const matched = shown.length === 0 || sawAList ? { matched: match.index } : {};
+  // decide() reads `ask.options` when there are any, else the probe's — so the
+  // index means the same option whenever the two lists are one list.
+  const matched = shown.length === 0 || sameList ? { matched: match.index } : {};
 
   if (option.correct === true) {
     return {
@@ -403,10 +410,15 @@ const shrugIsAnAnswer = (ask: PlayableAsk): boolean =>
  *
  * `heard` is the SCREENED copy on every path, the one thing a caller may put
  * in the ledger. The raw transcript never leaves this function.
+ *
+ * `listShown` is true only when the screen that asked drew the options. The
+ * class draws none, so it is false unless a caller says otherwise, and a
+ * letter or a position word is then never read as a pick.
  */
 export async function resolveSpokenAnswer(
   ask: PlayableAsk,
   heard: string,
+  { listShown = false }: { listShown?: boolean } = {},
 ): Promise<ResolvedAnswer> {
   const screened = fromStudent(heard);
   if (screened.text === null) {
@@ -431,7 +443,7 @@ export async function resolveSpokenAnswer(
   const shrug = dontKnowIn(said);
   if (shrug === 'only' && !shrugIsAnAnswer(ask)) return notKnown(ask, said);
   if (ask.whyProbe && shrug === null) {
-    const local = readLocally(ask, ask.whyProbe, said);
+    const local = readLocally(ask, ask.whyProbe, said, listShown);
     if (local) return local;
   }
 

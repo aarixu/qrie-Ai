@@ -5,8 +5,14 @@ import { renderToString } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { BRAND } from '../src/brand';
-import { createLocalStore } from '../src/stores/localStore';
-import { preferencesStore, setPreference, type Preferences } from '../src/stores/preferences';
+import { createLocalStore, registeredStores } from '../src/stores/localStore';
+import {
+  preferencesStore,
+  readPreferences,
+  setPreference,
+  showCaptions,
+  type Preferences,
+} from '../src/stores/preferences';
 import { profileStore } from '../src/stores/profile';
 import { subjectsAvailable } from '../src/lib/content';
 import { settingsStore } from '../src/stores/settings';
@@ -67,14 +73,50 @@ const asStudent = (preferences: Preferences): void => {
 };
 
 describe('preferences store', () => {
-  it('ships with sound and captions on and autoplay off', () => {
+  // Aarav, 2026-10-01: captions leave the board and stay only as a setting,
+  // off by default.
+  it('ships with sound on, captions off and autoplay off', () => {
     expect(shipped).toEqual({
       theme: 'system',
       voice: true,
-      captions: true,
+      captions: false,
       autoplayNext: false,
       reducedMotion: false,
     });
+  });
+
+  /**
+   * Captions came on by default until 2026-10-01, so a stored `captions: true`
+   * from before then is the old default, not a choice. It reads as off — on
+   * this device, and when sync brings the value in from another one.
+   */
+  it('reads a stored value from before the change with captions off', () => {
+    const before = { theme: 'dark' as const, voice: true, captions: true, autoplayNext: true, reducedMotion: false };
+    expect(readPreferences(before)).toEqual({ ...before, captions: false });
+    // As sync writes it: straight into the registered store, over the cache.
+    registeredStores().get('ai-tutor:preferences')!.set(before);
+    expect(preferencesStore.get().captions).toBe(false);
+    expect(preferencesStore.get().theme).toBe('dark');
+  });
+
+  it('keeps captions on once the student has turned them on in Settings', () => {
+    registeredStores().get('ai-tutor:preferences')!.set({ ...shipped, captions: true });
+    setPreference('captions', true);
+    // Another preference written afterwards does not undo the choice.
+    setPreference('autoplayNext', false);
+    expect(preferencesStore.get().captions).toBe(true);
+    const reopened = createLocalStore<Record<string, unknown>>('ai-tutor:preferences', {});
+    expect(readPreferences(reopened.get()).captions).toBe(true);
+    setPreference('captions', false);
+    expect(preferencesStore.get().captions).toBe(false);
+  });
+
+  // A silent class with no words on screen says nothing at all: with her
+  // voice off, what she says is shown beside the board whatever the switch.
+  it('shows captions when the student asked for them, or when her voice is off', () => {
+    expect(showCaptions({ ...shipped, captions: false, voice: true })).toBe(false);
+    expect(showCaptions({ ...shipped, captions: true, voice: true })).toBe(true);
+    expect(showCaptions({ ...shipped, captions: false, voice: false })).toBe(true);
   });
 
   it('round-trips a change through storage, so a later session reads it back', () => {
@@ -129,6 +171,11 @@ describe('Settings', () => {
     for (const key of ['voice', 'captions', 'autoplayNext', 'reducedMotion'] as const) {
       expect(switchFor(html, key)).toContain('role="switch"');
     }
+  });
+
+  // The switch is the only place captions are turned on (2026-10-01).
+  it('says where captions go: beside the board, never on it', () => {
+    expect(html).toContain('beside the board');
   });
 
   it('reports each switch as checked exactly when the stored preference is on', () => {

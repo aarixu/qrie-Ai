@@ -72,7 +72,11 @@ describe('outcome ids on every ask (T1.3)', () => {
   });
 });
 
-describe('the question is written once (T1.2)', () => {
+/**
+ * It was "written once" (T1.2): the first maths class wrote every question
+ * twice. Since 2026-10-01 a question is only spoken, so ONE copy is a failure.
+ */
+describe('the question is written nowhere (T1.2, Aarav 2026-10-01)', () => {
   const oneBeat = (board: NonNullable<ReturnType<typeof substitutionClean>['beats'][number]['board']>) =>
     lessonOf({
       id: 'find-x',
@@ -119,7 +123,7 @@ describe('the question is written once (T1.2)', () => {
     expect(twice(made)).toEqual([]);
   });
 
-  it('passes the ask written once, imperative or not', () => {
+  it('passes an ask whose question is not written, imperative or not', () => {
     const made = oneBeat([
       { do: 'say', text: 'Two added to a number gives seven.' },
       { do: 'write', text: 'x + 2 = 7' },
@@ -128,6 +132,21 @@ describe('the question is written once (T1.2)', () => {
       { do: 'write', text: 'x is five' },
     ]);
     expect(twice(made)).toEqual([]);
+    // And the ask itself put nothing of the question on the board.
+    expect(JSON.stringify(made.lesson.elements)).not.toContain('Find the value of x');
+  });
+
+  it('fails any ink with a question mark that arrives as the question is asked', () => {
+    const made = oneBeat([
+      { do: 'say', text: 'Two added to a number gives seven.' },
+      { do: 'write', text: 'x + 2 = 7' },
+      { do: 'say', text: 'So, what number is it?' },
+      { do: 'write', text: 'x = ?' },
+      { do: 'ask', question: 'What number is x?' },
+      { do: 'say', text: 'Take two from seven.' },
+      { do: 'write', text: 'x is five' },
+    ]);
+    expect(twice(made)).toHaveLength(1);
   });
 });
 
@@ -184,19 +203,22 @@ describe('notation is never spoken (T1.5)', () => {
   });
 });
 
-describe('a work area on every held-ask page (T1.5)', () => {
-  it('reserves one under each of the four held questions', () => {
+/**
+ * T1.5 kept room under every held question for the student's working. Since
+ * 2026-10-01 nothing of an ask is on the board, so none is reserved — but a
+ * class kept before then carries one, and the gate still guards it.
+ */
+describe('work areas', () => {
+  it('reserves none under the four held questions now', () => {
     const { lesson } = lessonOf();
-    for (const beat of held(lesson)) {
-      expect(beat.workArea, beat.id).toBeDefined();
-      expect(beat.workArea!.w).toBeGreaterThan(0);
-      expect(beat.workArea!.h).toBeGreaterThan(0);
-    }
+    expect(held(lesson)).toHaveLength(4);
+    for (const beat of held(lesson)) expect(beat.workArea, beat.id).toBeUndefined();
   });
 
-  it('fails prepared ink written inside one', () => {
+  it('fails prepared ink written inside one a kept class carries', () => {
     const { lesson, bonds } = lessonOf();
-    const area = held(lesson)[2].workArea!;
+    const area = { id: 'kept_work', x: 1040, y: 420, w: 300, h: 100 };
+    held(lesson)[2].workArea = area;
     lesson.elements.push({
       kind: 'handwrite',
       id: 'intruder',

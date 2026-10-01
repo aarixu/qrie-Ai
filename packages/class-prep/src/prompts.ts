@@ -43,13 +43,13 @@ export type TutorLanguage = 'en' | 'hi-en';
  * the misconception would say it — but nobody ever hears it. It is the local
  * matcher's rubric (`matchSpokenAnswer`, packages/tutor-judge/src/match.ts),
  * which is what keeps a spoken answer off a paid judge and therefore under
- * the Rs 5 ceiling, and on the confusable-pairs exception it is also the
- * lettered list the board writes (packages/board-layout/src/layout.ts:400).
- * `judge.ts`'s sawAList guard (apps/classroom/src/lib/judge.ts:253-258)
- * additionally requires `ask.options[i].text` and `whyProbe.options[i].text`
- * to read identically, so a register that sent one to Hinglish and left the
- * other in English would break that guard by construction. Whatever is chosen,
- * it has to be chosen for BOTH lists.
+ * the Rs 5 ceiling. Until 2026-10-01 it was also the lettered list the board
+ * wrote on the confusable-pairs exception; an ask writes nothing now.
+ * `judge.ts` (apps/classroom/src/lib/judge.ts, `sameList`) reads a matched
+ * index as the same option only when `ask.options[i].text` and
+ * `whyProbe.options[i].text` read identically, so a register that sent one to
+ * Hinglish and left the other in English would break that by construction.
+ * Whatever is chosen, it has to be chosen for BOTH lists.
  *
  * WHAT KEEPING THEM ENGLISH COSTS, measured in a file rather than in a
  * sentence: packages/class-prep/tests/matcherRegister.test.ts. An earlier
@@ -63,12 +63,13 @@ export type TutorLanguage = 'en' | 'hi-en';
  * English-worded options scores 0.200, under MATCH_FLOOR 0.55, and goes to the
  * paid judge.
  *
- * SO THE RULE BELOW IS A TRADE AND NOT A FREE CHOICE, and it is kept for the
- * OTHER reason rather than the matcher: on the confusable-pairs exception an
- * option's `text` is what the board writes, and the board stays English because
- * it is what a child copies into a notebook for an English exam. Whether that
- * is worth a model call on every close Hinglish answer is a product decision
- * nobody has made deliberately yet.
+ * SO THE RULE BELOW IS A TRADE AND NOT A FREE CHOICE. It was kept for the
+ * OTHER reason rather than the matcher: an option's `text` was what the board
+ * wrote on the confusable-pairs exception, and the board stays English because
+ * it is what a child copies into a notebook for an English exam. That reason
+ * went on 2026-10-01, when asks stopped writing anything. Whether English
+ * option text is still worth a model call on every close Hinglish answer is a
+ * product decision nobody has made deliberately yet.
  *
  * The honest other half, also in that test: English option text does not RESCUE
  * a Hinglish paraphrase either — a paraphrase escalates in every combination of
@@ -99,9 +100,9 @@ is read straight off the matching option — its "hint" on a first wrong try,
 otherwise its "why" — so an English one is an English reply in the middle of a
 Hinglish class.
 
-An ask's "question" is what she SAYS: write it in Hinglish. Its "written" is
-what the board shows: English, with the maths in LaTeX between $…$ — the one
-board field that takes LaTeX (an "equation" stays plain text).
+An ask's "question" is what she SAYS: write it in Hinglish. Nothing of an ask
+is written on the board. On the board, a "write" may carry its maths in LaTeX
+between $…$ (an "equation" stays plain text).
 
 EVERYTHING ELSE STAYS IN ENGLISH, and this is not a matter of style:
 - Every field name, and every value that is an id: "id", "beatId", "ref",
@@ -461,10 +462,11 @@ every beat he flagged, the concrete thing that was SAID — the question, the
 example, what happened in the experiment — never reached the board. Only its
 abstract conclusion did. So:
 
-- ANY QUESTION YOU ASK OUT LOUD IS WRITTEN on the board — by its
-  {"do":"ask"}, which writes the question for you — and you ask the student
-  for the answer before you give it. One question, written once: never also
-  "write" or "note" the same question.
+- A QUESTION IS ONLY SPOKEN. Its {"do":"ask"} writes nothing on the board —
+  no question, no options — and you never "write" or "note" it either: the
+  student hears it, thinks, and answers out loud, the way they would to a
+  teacher in the room. You ask for the answer before you give it. What the
+  board shows is what you TEACH: the example, what happened, the rule.
 - THE PICTURE IS OF THE EXAMPLE YOU ARE SPEAKING ABOUT, not of the concept
   behind it. If you are talking about incense (agarbatti) filling a room, the
   board shows incense with its smoke — not a beaker of ink. If you change
@@ -488,16 +490,14 @@ abstract conclusion did. So:
 
 The class can stop. Use it:
 
-- {"do":"ask","question","written","expect","hint"}   The class HOLDS on this
-  until the student answers OUT LOUD, in their own words.
+- {"do":"ask","question","expect","hint"}   The class HOLDS on this until the
+  student answers OUT LOUD, in their own words.
   The "question" is SPOKEN: it is the last thing she says before the hold, so the say before the
   ask sets it up and does not ask a question of its own — and like every
-  spoken line it says maths in words. "written" is the same question as the
-  board shows it, with EVERY piece of maths in LaTeX between $…$: question
-  "If x plus y equals seven, how do you write x in terms of y?", written
-  "If $x + y = 7$, how do you write $x$ in terms of $y$?". Give "written" whenever
-  the question has any maths in it; a question with none may leave it out. "expect" is what a right answer
-  contains — one plain sentence, for the ear that judges them, never written.
+  spoken line it says maths in words: "If x plus y equals seven, how do you
+  write x in terms of y?". The maths it is about is already on the board,
+  written while you taught it. "expect" is what a right answer contains —
+  one plain sentence, for the ear that judges them, never written.
   "hint" is what a wrong try gets — a why/how/when question short of the
   answer. Give both, every time.
 - After the ask, write nothing until the next say. The answer, the working,
@@ -510,7 +510,9 @@ The class can stop. Use it:
   thinking; the answer must come out of their own head. The ONE exception:
   when two ideas are genuinely confused with each other (mass and weight,
   melting and dissolving), a forced choice teaches — then, and only then,
-  use "options":[{"text","correct"?,"why","hint"?}], 2 to 4 of them, exactly
+  she SAYS the choices as part of the question ("is it the mass or the
+  weight that changes?"; they are never shown), and you list them in
+  "options":[{"text","correct"?,"why","hint"?}], 2 to 4 of them, exactly
   one "correct":true, every option carrying its "why".
 - EVERY ask ALSO carries "whyProbe" — and it is NOT an option list. The
   no-options rule above is about what the student SEES; the whyProbe is what
@@ -528,7 +530,7 @@ The class can stop. Use it:
   wrong answer. Every option's "why" is written to be SPOKEN by the tutor in
   reply — the reason in her voice, never "correct!" or "wrong". "askedAs" is
   "open" for a normal spoken ask; "options" only when the ask itself uses the
-  confusable-pairs exception above and genuinely shows its options.
+  confusable-pairs exception above and says its choices out loud.
 - Each DISTRACTOR in "whyProbe" also carries "followUp": ONE short question
   that finds out WHY a student gave that answer, asked before anything is
   explained — "What did you get when you opened the bracket?", "Where did
@@ -536,8 +538,8 @@ The class can stop. Use it:
 - EVERY ask ALSO carries "workedExample": a SIMILAR problem with DIFFERENT
   numbers or a different case, solved in 2 to 4 steps —
     "workedExample":{"steps":[{"say","line"}, ...]}
-  "line" is what she writes on the board (maths in symbols, correct and
-  exact); "say" is the same step in words, never reading notation aloud. It
+  "line" is the step in symbols, correct and exact; "say" is the same step
+  in words, never reading notation aloud. It
   must NOT contain this ask's own answer: it is the help a stuck student gets
   after the hint, to copy the method, not the result.
 - EVERY ask ALSO carries "alternates": 2 short re-explanations of the IDEA
@@ -547,7 +549,7 @@ The class can stop. Use it:
   "mode" is one of "analogy" (a balance, a pizza, a race), "everyday"
   (money, cricket, a kitchen), "visual" (what to picture) or "steps" (the
   same idea in smaller steps). "say" is 1 to 3 spoken sentences, maths in
-  words; "line" is an optional short line she writes. Never this ask's own
+  words; "line" is an optional short line of it in symbols. Never this ask's own
   answer, and not a repeat of the narration.
 
 Where an ask earns its place:

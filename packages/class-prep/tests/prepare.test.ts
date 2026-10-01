@@ -444,16 +444,14 @@ describe('the shape of a picture reaches the board', () => {
   });
 });
 
-describe('a question she asks reaches the board, or the repair round hears about it', () => {
+describe('a key point she only says reaches the board, or the repair round hears about it', () => {
   /**
-   * The spoken question with nothing on the board for it. This used to be an
-   * ASK followed by an observation, and the "fix" wrote the question a second
-   * time — because the check did not count the ask's own question as ink.
-   * That fix is exactly how the first maths class came to write all four of
-   * its questions twice (T1.2), so the unwritten case is now a question with
-   * no ask at all, and the fix is the ask.
+   * The line that lands the beat, said over a board that gained nothing. (This
+   * block used to send an UNWRITTEN QUESTION to repair; since 2026-10-01 a
+   * question is only spoken, and the landing line is the one that must write.)
+   * The beat ends on its question, so the landing is the line before it.
    */
-  const asking: Blueprint = {
+  const landing: Blueprint = {
     ...blueprint,
     beats: [
       {
@@ -461,52 +459,54 @@ describe('a question she asks reaches the board, or the repair round hears about
         topic: 'spaces',
         narration: '',
         board: [
-          { do: 'say', text: 'Where did the sugar go?' },
+          { do: 'say', text: 'Watch the level as the sugar goes in.' },
           { do: 'write', text: 'Observation: the level did not rise' },
           { do: 'say', text: 'It slips into the spaces between particles.' },
-          { do: 'write', text: 'Particles have spaces between them' },
+          { do: 'say', text: 'So where did the sugar go?' },
+          { do: 'ask', question: 'Where did the sugar go?' },
         ],
       },
     ],
     visuals: [],
   };
   const fixedBeats: Blueprint = {
-    ...asking,
+    ...landing,
     beats: [
       {
-        ...asking.beats[0],
+        ...landing.beats[0],
         board: [
-          { do: 'say', text: 'Where did the sugar go?' },
-          { do: 'ask', question: 'Where did the sugar go?' },
-          { do: 'say', text: 'It slips into the spaces between particles.' },
+          { do: 'say', text: 'Watch the level as the sugar goes in.' },
           { do: 'write', text: 'Observation: the level did not rise' },
+          { do: 'say', text: 'It slips into the spaces between particles.' },
           { do: 'write', text: 'Particles have spaces between them' },
+          { do: 'say', text: 'So where did the sugar go?' },
+          { do: 'ask', question: 'Where did the sugar go?' },
         ],
       },
     ],
   };
 
-  it('sends the unwritten question to the one repair round, and takes the fix', async () => {
+  it('sends the unwritten key point to the one repair round, and takes the fix', async () => {
     const seen: string[] = [];
     let calls = 0;
     const planner: LlmAdapter = {
       complete: async (_s, user) => {
         seen.push(user);
         calls += 1;
-        return JSON.stringify(calls === 1 ? asking : fixedBeats);
+        return JSON.stringify(calls === 1 ? landing : fixedBeats);
       },
     };
     const result = await prepareClass({ topic: 'Matter', klass: 9, planner, artist: fakeArtist(['']) });
     expect(calls).toBe(2);
-    expect(seen[1]).toMatch(/asks a question/);
+    expect(seen[1]).toMatch(/lands the beat/);
     expect(result.report.issues.join(' ')).toContain('repaired and passed');
     expect(result.report.issues.join(' ')).not.toContain('Still unwritten');
   });
 
   it('still holds the class when the repair does not fix it — reported, never fatal', async () => {
-    const planner: LlmAdapter = { complete: async () => JSON.stringify(asking) };
+    const planner: LlmAdapter = { complete: async () => JSON.stringify(landing) };
     const result = await prepareClass({ topic: 'Matter', klass: 9, planner, artist: fakeArtist(['']) });
-    // A class with one unwritten question is a worse class, not no class.
+    // A class with one unwritten key point is a worse class, not no class.
     expect(result.lesson.beats.length).toBeGreaterThan(0);
     expect(result.report.issues.join(' ')).toContain('Still unwritten');
   });

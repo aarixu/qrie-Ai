@@ -136,8 +136,11 @@ describe('the board shows what is being SAID, not only its summary', () => {
    * example, the result of the experiment — never reached the board. Only its
    * abstract conclusion did. His rules, in his words, are the spec.
    */
-  it('writes the question she asks, and asks the student for the answer', () => {
-    expect(PLANNER_SYSTEM).toMatch(/question you ask out loud .*written/i);
+  // Aarav again, 2026-10-01: the question itself is only spoken.
+  it('speaks the question she asks and writes none of it, and asks the student for the answer', () => {
+    expect(PLANNER_SYSTEM).toMatch(/A QUESTION IS ONLY SPOKEN/);
+    expect(PLANNER_SYSTEM).toMatch(/writes nothing on the board/i);
+    expect(PLANNER_SYSTEM).toMatch(/ask for the answer before you give it/i);
   });
 
   it('draws the example being spoken, not the concept behind it', () => {
@@ -287,9 +290,10 @@ describe('one question per ask, in words (T1.2, T1.5)', () => {
    * to write each question it asked AND to put it in an ask, and the ask
    * writes its own — and read "7x - 15y = 2" aloud.
    */
-  it('no longer asks for the question to be written as well as asked', () => {
+  it('asks for the question to be written nowhere, and never as a "write" or "note"', () => {
     expect(PLANNER_SYSTEM).not.toContain('The question goes on the board.');
-    expect(PLANNER_SYSTEM).toMatch(/never\s+also\s+"write"\s+or\s+"note"\s+the\s+same\s+question/i);
+    expect(PLANNER_SYSTEM).not.toMatch(/IS WRITTEN on the board/);
+    expect(PLANNER_SYSTEM).toMatch(/never\s+"write"\s+or\s+"note"\s+it/i);
   });
 
   it('says the question is the last thing spoken before the hold', () => {

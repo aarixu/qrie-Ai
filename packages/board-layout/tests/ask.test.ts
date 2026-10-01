@@ -4,14 +4,11 @@ import { layoutBeat } from '../src/layout';
 import type { Instruction, ScriptBeat } from '../src/types';
 
 /**
- * The ASK instruction: the question goes on the board, the options under it,
- * and the beat is marked so the player knows to stop and listen.
- *
- * The board half is nothing new — a written question and a lettered list, the
- * same ink as everything else, so the said-but-not-written check is satisfied
- * by construction. The new half is the MARKER: layout tells the assembler
- * which spoken moment carries the question, and the assembler puts it on the
- * lesson beat the player will hold on.
+ * The ASK instruction: the beat is marked so the player knows to stop and
+ * listen, and NOTHING goes on the board (Aarav, 2026-10-01: no question and
+ * no options on screen — she asks out loud). The MARKER is the whole of it:
+ * layout tells the assembler which spoken moment carries the question, and
+ * the assembler puts it on the lesson beat the player will hold on.
  */
 
 const board: Instruction[] = [
@@ -36,21 +33,17 @@ const board: Instruction[] = [
 const laid = layoutBeat({ id: 'a', topic: 'matter', narration: '', board } as ScriptBeat);
 
 describe('what the ask puts on the board', () => {
-  it('writes the question itself, ink ending in a question mark', () => {
+  it('writes no question', () => {
     const written = laid.elements.filter(
       (el): el is Extract<Element, { kind: 'handwrite' }> => el.kind === 'handwrite',
     );
-    expect(written.some((el) => el.text.includes('?'))).toBe(true);
+    expect(written.some((el) => el.text.includes('?'))).toBe(false);
+    expect(JSON.stringify(laid.elements)).not.toContain('Where did the sugar go');
   });
 
-  it('lists the options, lettered, so a student can point at one', () => {
-    const list = laid.elements.find((el) => el.kind === 'list') as Extract<
-      Element,
-      { kind: 'list' }
-    >;
-    expect(list).toBeDefined();
-    expect(list.items).toHaveLength(2);
-    expect(list.items.map((i) => i.term)).toEqual(['A', 'B']);
+  it('lists no options', () => {
+    expect(laid.elements.some((el) => el.kind === 'list')).toBe(false);
+    expect(JSON.stringify(laid.elements)).not.toContain('It melted into liquid');
   });
 
   it('never puts the answer or the whys on the board before the student speaks', () => {
@@ -59,7 +52,7 @@ describe('what the ask puts on the board', () => {
     expect(everything).not.toContain('correct');
   });
 
-  it('keeps question and options clear of everything else', () => {
+  it('leaves nothing on the board overlapping', () => {
     for (let i = 0; i < laid.elements.length; i += 1) {
       for (let j = i + 1; j < laid.elements.length; j += 1) {
         const a = laid.elements[i];

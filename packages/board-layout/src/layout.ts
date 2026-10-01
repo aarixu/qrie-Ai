@@ -16,7 +16,6 @@ import {
   listBoxHeight,
   type Element,
   type Beat,
-  type WorkArea,
 } from '@ai-tutor/lesson-format';
 import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
 import {
@@ -94,17 +93,6 @@ const LANE_CLEAR = 8;
 /** A label's box with the room the solver wants round it (collide.ts BREATHING). */
 const padLabel = (r: Rect): Rect => ({ x: r.x - 6, y: r.y - 6, w: r.w + 12, h: r.h + 12 });
 /**
- * The work area under a held question: room for three lines of handwriting at
- * the default handwriting size (26, what `boxOf` assumes for a `handwrite`),
- * and never less than two. Below two lines there is no working to hold, so no area is reserved and
- * a live board opens a fresh page instead (see `Beat.workArea`).
- *
- * Functions rather than constants because `handLead` is declared further down.
- */
-const workFull = (): number => 3 * handLead(26);
-const workLeast = (): number => 2 * handLead(26);
-
-/**
  * A figure with the key points written under it.
  *
  * A labelled picture has already given both margins to the names of its parts,
@@ -156,20 +144,11 @@ interface Block {
    * arrangement: a picture with written points belongs BESIDE them, not above
    * them, and recognising that shape needs to know which block is which.
    */
-  kind: Instruction['do'] | 'work';
+  kind: Instruction['do'];
   /** The artwork this block places, when it places artwork. */
   ref?: string;
   /** Fixed height, or null to share whatever is left over. */
   height: number | null;
-  /**
-   * Must share a page with the block before it.
-   *
-   * Set on the pieces of a held question — its lettered options and the work
-   * area under it — so the stacker never turns the page between a question
-   * and the room reserved for answering it. When a glued block does not fit,
-   * the blocks it is glued to move to the next page WITH it.
-   */
-  glued?: boolean;
   /**
    * Whether this can be drawn in half a board without becoming unreadable.
    *
@@ -382,12 +361,8 @@ export function layoutBeat(
    * assembler has to know how far to slide whatever comes next.
    */
   pages: number;
-  /**
-   * The questions this beat stops on, by the index of the say that asks — and
-   * the board kept clear under each one for the student's working, when the
-   * question's page had room for it.
-   */
-  asks: { step: number; ask: NonNullable<Beat['ask']>; workArea?: WorkArea }[];
+  /** The questions this beat stops on, by the index of the say that asks. */
+  asks: { step: number; ask: NonNullable<Beat['ask']> }[];
 } {
   const elements: Element[] = [];
   const show: string[] = [];
@@ -396,9 +371,9 @@ export function layoutBeat(
 
   /**
    * Which element ids each ITEM produced, keyed by the item's index in the
-   * expanded list below. Reveal reads by BOARD index, and an ask with options
-   * is one board instruction but two items, so `origin` maps one onto the
-   * other before reveal ever sees it (see the end of this function).
+   * list below. Reveal reads by BOARD index, and an ask is a board instruction
+   * that is no item at all, so `origin` maps one onto the other before reveal
+   * ever sees it (see the end of this function).
    */
   const byInstruction = new Map<number, string[]>();
   let current = -1;
@@ -414,28 +389,17 @@ export function layoutBeat(
   };
 
   /**
-   * An ask becomes ordinary ink plus a marker.
+   * AN ASK IS A MARKER AND WRITES NOTHING (Aarav, 2026-10-01).
    *
-   * Expanded here, before anything else reads the board, so there is exactly
-   * one code path for writing and listing: the question is a `write` and the
-   * options are a lettered `list`, laid out and revealed like any other ink.
-   * The marker records WHICH spoken moment carries the question, for the
+   * She asks out loud and the student answers out loud: no question, no
+   * options and no room for working go on the board, which stays hers. The
+   * marker records WHICH spoken moment carries the question, for the
    * assembler to pin on the lesson beat the player will hold.
    */
-  const asks: { step: number; ask: NonNullable<Beat['ask']>; workArea?: WorkArea }[] = [];
+  const asks: { step: number; ask: NonNullable<Beat['ask']> }[] = [];
   const items: Instruction[] = [];
   /** The board index each item came from: `origin[item] = board index`. */
   const origin: number[] = [];
-  /** Item index of each ask's written question, by ask number. */
-  const questionItem = new Map<number, number>();
-  /** Items that must share a page with the item before them. */
-  const gluedItems = new Set<number>();
-  /** The last item of an ask, after which its work area goes, by ask number. */
-  const workAfter = new Map<number, number>();
-  /** How tall each ask's work area is; absent when its page has no room. */
-  const workHeight = new Map<number, number>();
-  /** Where each work area landed, by ask number, filled in as blocks are placed. */
-  const workRects = new Map<number, Rect>();
   let saysSeen = 0;
   beat.board.forEach((step, boardIndex) => {
     if (step.do === 'say') saysSeen += 1;
@@ -444,7 +408,6 @@ export function layoutBeat(
       origin.push(boardIndex);
       return;
     }
-    const n = asks.length;
     asks.push({
       step: Math.max(0, saysSeen - 1),
       ask: {
@@ -455,47 +418,6 @@ export function layoutBeat(
         ...(step.hint ? { hint: step.hint } : {}),
       },
     });
-    // Written with its maths as maths (T6): the LaTeX form when there is one.
-    items.push({ do: 'write', text: step.written ?? step.question, tone: 'accent' });
-    origin.push(boardIndex);
-    questionItem.set(n, items.length - 1);
-    /** What the question and its options take, so the work area gets the rest of a page. */
-    let taken = WRITE_H;
-    if (step.options && step.options.length > 0) {
-      const lettered = step.options.map((option, k) => ({
-        term: String.fromCharCode(65 + k),
-        meaning: option.text,
-      }));
-      items.push({ do: 'list', items: lettered });
-      origin.push(boardIndex);
-      gluedItems.add(items.length - 1);
-      taken += GUTTER + listBoxHeight(lettered, undefined, WIDTH * 0.82);
-    }
-    const room = Math.min(workFull(), MAIN.h - taken - GUTTER);
-    if (room >= workLeast()) {
-      workAfter.set(items.length - 1, n);
-      workHeight.set(n, room);
-    }
-  });
-
-  /**
-   * THE WORK AREA: board kept clear under a held question.
-   *
-   * A block with no ink of its own. It is glued to the question (and the
-   * options, when there are any) so it always lands on the question's page,
-   * and where it lands is recorded for the assembler to put on the lesson
-   * beat. Nothing is ever placed in it here; the overlap gate in class-prep
-   * checks that nothing else was either.
-   */
-  const workBlock = (n: number, height: number): Block => ({
-    kind: 'work',
-    at: null,
-    height,
-    glued: true,
-    place: (r) => {
-      workRects.set(n, { x: r.x, y: r.y, w: r.w, h: r.h });
-      return [];
-    },
   });
 
   // The scene is laid out as ONE block, because a connector cannot be drawn
@@ -1079,12 +1001,6 @@ export function layoutBeat(
         break;
       }
     }
-
-    // A held question's options stay on its page, and so does the room under
-    // it for the student's working.
-    if (gluedItems.has(index) && blocks.length > 0) blocks[blocks.length - 1].glued = true;
-    const workFor = workAfter.get(index);
-    if (workFor !== undefined) blocks.push(workBlock(workFor, workHeight.get(workFor)!));
   }
 
   /**
@@ -1531,11 +1447,7 @@ export function layoutBeat(
     pendingWrites.forEach((point, n) => {
       current = point.at;
       const lines = band.lines[n];
-      // A held question keeps the room for its working on its own page, so
-      // the page turns BEFORE the question when the two do not fit together.
-      const asked = [...questionItem].find(([, item]) => item === point.at)?.[0];
-      const workH = asked === undefined ? undefined : workHeight.get(asked);
-      roomFor(lines.length * bandLead + (workH === undefined ? 0 : POINT_GAP + workH));
+      roomFor(lines.length * bandLead);
       const px = (sheet === 0 ? bandLeft : SIDE) + sheet * PAGE_STRIDE;
       lines.forEach((line, k) => {
         const id = k === 0 ? point.id : `${point.id}_l${k}`;
@@ -1557,10 +1469,6 @@ export function layoutBeat(
         leashes.push({ id, region: { x: x - 16, y: y - 12, w: 32, h: 24 } });
       });
       by += lines.length * bandLead + POINT_GAP;
-      if (asked !== undefined && workH !== undefined) {
-        workRects.set(asked, { x: px, y: by, w: SIDE + WIDTH + sheet * PAGE_STRIDE - px, h: workH });
-        by += workH + POINT_GAP;
-      }
     });
 
     /**
@@ -1592,17 +1500,15 @@ export function layoutBeat(
     /**
      * WHAT THE ARRANGEMENT ABOVE DID NOT PLACE GOES ON THE NEXT PAGE.
      *
-     * The figure, its names, its key points, its lists and the room under its
-     * questions were all placed by hand above. Everything else — a note, a card,
+     * The figure, its names, its key points and its lists were all placed by
+     * hand above. Everything else — a note, a card,
      * an equation, a scene, a second figure — used to be thrown away with the
      * rest of the block list: a definition banner the prompt asks for beside
      * every demonstration simply never appeared (canvas audit 2026-10-01, item
      * 6). It now goes to the stacker, which starts on the page after this
      * figure's last one, so nothing is drawn over the picture or its band.
      */
-    const leftover = blocks.filter(
-      (b) => b !== labelledHost && b.kind !== 'write' && b.kind !== 'list' && b.kind !== 'work',
-    );
+    const leftover = blocks.filter((b) => b !== labelledHost && b.kind !== 'write' && b.kind !== 'list');
     blocks.length = 0;
     blocks.push(...leftover);
     firstSheet = bandSheets;
@@ -1614,8 +1520,7 @@ export function layoutBeat(
     figures.length === 1 &&
     figures[0].narrow !== false &&
     beside.length > 0 &&
-    // A work area has no ink and does not change what shape the beat is.
-    blocks.filter((b) => b.kind !== 'work').length === 1 + beside.length
+    blocks.length === 1 + beside.length
   ) {
     const GAP = 26;
     // A list needs more of the width than a key point does — it carries a
@@ -1643,56 +1548,33 @@ export function layoutBeat(
      * 2026-10-01, item 6: 19.1% of random beats with a diagram and two to four
      * points ran off the board). It stops where the labelled figure's band stops, above the
      * caption, and carries on at the top of the next page across the full
-     * width. A held question goes WITH the room under it (and its options):
-     * the chain of glued blocks is measured together and moved together.
+     * width.
      */
     const columnBottom = MAIN.y + MAIN.h + SPARE_BELOW;
     let sheet = 0;
     let ry = MAIN.y;
     const columnAt = (): { x: number; w: number } =>
       sheet === 0 ? { x: SIDE + figureW + GAP, w: columnW } : { x: SIDE + sheet * PAGE_STRIDE, w: WIDTH };
-    /** Where a run of blocks would end if written from `y` — placed, measured, thrown away. */
-    const endOf = (chain: readonly Block[], y: number): number => {
-      let at = y;
-      for (const block of chain) {
-        if (block.kind === 'work') {
-          at += (block.height ?? 0) + BETWEEN_POINTS;
-          continue;
-        }
-        let bottom = at;
-        for (const el of block.place({ ...columnAt(), y: at, h: WRITE_H })) {
-          bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
-        }
-        at = bottom + BETWEEN_POINTS;
+    /** Where a block would end if written from `y` — placed, measured, thrown away. */
+    const endOf = (block: Block, y: number): number => {
+      let bottom = y;
+      for (const el of block.place({ ...columnAt(), y, h: WRITE_H })) {
+        bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
       }
-      return at - BETWEEN_POINTS;
+      return bottom;
     };
-    const rest = blocks.filter((b) => b !== figures[0]);
-    for (let k = 0; k < rest.length; ) {
-      let end = k + 1;
-      while (end < rest.length && rest[end].glued) end += 1;
-      const chain = rest.slice(k, end);
-      if (ry > MAIN.y && endOf(chain, ry) > columnBottom) {
+    for (const block of blocks.filter((b) => b !== figures[0])) {
+      if (ry > MAIN.y && endOf(block, ry) > columnBottom) {
         sheet += 1;
         ry = MAIN.y;
       }
-      for (const block of chain) {
-        // The room under a held question, kept in the column it was asked in.
-        if (block.kind === 'work') {
-          const h = block.height ?? 0;
-          block.place({ ...columnAt(), y: ry, h });
-          ry += h + BETWEEN_POINTS;
-          continue;
-        }
-        current = block.at ?? -1;
-        let bottom = ry;
-        for (const el of block.place({ ...columnAt(), y: ry, h: WRITE_H })) {
-          emit(el);
-          bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
-        }
-        ry = bottom + BETWEEN_POINTS;
+      current = block.at ?? -1;
+      let bottom = ry;
+      for (const el of block.place({ ...columnAt(), y: ry, h: WRITE_H })) {
+        emit(el);
+        bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
       }
-      k = end;
+      ry = bottom + BETWEEN_POINTS;
     }
     columnSheets = sheet + 1;
 
@@ -1715,13 +1597,8 @@ export function layoutBeat(
     const here = sheets[sheets.length - 1];
     const gutter = here.length > 0 ? GUTTER : 0;
     if (here.length > 0 && taken + gutter + leastOf(block) > MAIN.h) {
-      // A glued block takes what it is glued to onto the new page with it:
-      // a held question, its options and the room under it are one piece.
-      const chain: Block[] = [block];
-      while (chain[0].glued && here.length > 0) chain.unshift(here.pop()!);
-      const onto = here.length === 0 ? here : (sheets.push([]), sheets[sheets.length - 1]);
-      onto.push(...chain);
-      taken = chain.reduce((sum, b, k) => sum + leastOf(b) + (k > 0 ? GUTTER : 0), 0);
+      sheets.push([block]);
+      taken = leastOf(block);
       continue;
     }
     here.push(block);
@@ -1796,18 +1673,7 @@ export function layoutBeat(
   // BETWEEN and OVER them — a connector's label, a mark — which follow whatever
   // they refer to and so can land anywhere. Fixing those case by case fixes one
   // lesson at a time; this fixes every lesson.
-  //
-  // The work areas go in as OBSTACLES — frames with no words, which the solver
-  // never moves — so a label it nudges cannot settle in the room kept for the
-  // student's working. They come out again before anything is returned.
-  const WORK_PREFIX = '__work_area_';
-  const obstacles: Element[] = [...workRects].map(([n, r]) => ({
-    kind: 'box',
-    id: `${WORK_PREFIX}${n}`,
-    ...r,
-    label: '',
-  }));
-  const settled = resolveOverlaps([...elements, ...obstacles], bonds, [
+  const settled = resolveOverlaps(elements, bonds, [
     // A label's first room is MAIN, where its scene lives. The whole canvas
     // was once its playground, and a stuck label got parked above the lesson
     // title — clear space, wrong room.
@@ -1816,7 +1682,7 @@ export function layoutBeat(
     // label near the caption reads as a footnote; one over the heading reads
     // as a mistake.
     { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: CANVAS_H - MAIN.y },
-  ], leashes).filter((el) => !el.id.startsWith(WORK_PREFIX));
+  ], leashes);
 
   // A part can only be pointed at if its picture is on the board this beat.
   const shown = new Set(show);
@@ -1826,10 +1692,9 @@ export function layoutBeat(
    * FROM ITEMS BACK TO BOARD INSTRUCTIONS, before reveal reads anything.
    *
    * Reveal walks `beat.board` and asks what each board instruction drew. An
-   * ask with options is ONE board instruction and TWO items (the question and
-   * the lettered list), so keyed by item every instruction after it answered
-   * for its neighbour: the options were never shown, and the next key point
-   * came one line late or not at all.
+   * ask is a board instruction with NO item, so keyed by item every
+   * instruction after it would answer for its neighbour, and a key point
+   * would come one line late or not at all.
    */
   const byBoard = new Map<number, string[]>();
   for (const [item, ids] of byInstruction) {
@@ -1844,11 +1709,7 @@ export function layoutBeat(
     bonds,
     leashes,
     pages: sheetsUsed,
-    asks: asks.map((a, n) => {
-      const r = workRects.get(n);
-      if (!r) return a;
-      return { ...a, workArea: { id: `${idFor(beat.id, questionItem.get(n)!)}_work`, ...r } };
-    }),
+    asks,
   };
 }
 

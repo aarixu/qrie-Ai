@@ -23,41 +23,21 @@ const beat = (id: string, board: ScriptBeat['board']): ScriptBeat => ({
   board,
 });
 
-describe('a spoken question is a written question', () => {
-  it('passes when the question she asks is also on the board', () => {
-    const errors = saidButNotWritten([
-      beat('b1', [
-        { do: 'say', text: 'Where did the sugar go? Why did the level not rise?' },
-        { do: 'write', text: 'Where did the sugar go?' },
-        { do: 'say', text: 'Because of the spaces between particles.' },
-        { do: 'write', text: 'Particles have spaces between them' },
-      ]),
-    ]);
-    expect(errors).toEqual([]);
-  });
-
-  it('flags a question that was asked and never written', () => {
-    // The real beat 2: the OBSERVATION was written, the question was not.
+/**
+ * A SPOKEN QUESTION IS ONLY SPOKEN (Aarav, 2026-10-01). This file used to
+ * demand that a question she asked was also written; the board is hers now,
+ * and nothing of a question goes on it.
+ */
+describe('a spoken question needs no ink', () => {
+  it('passes a question asked and never written, when the landing line writes', () => {
+    // The real beat 2, which this check used to send back: the OBSERVATION
+    // was written and the question was not. That is the board as it should be.
     const errors = saidButNotWritten([
       beat('b1', [
         { do: 'say', text: 'Where did the sugar go? Why did the level not rise?' },
         { do: 'write', text: 'Observation: sugar dissolves, level does NOT rise' },
         { do: 'say', text: 'It slips into the spaces.' },
         { do: 'write', text: 'Particles have spaces' },
-      ]),
-    ]);
-    expect(errors).toHaveLength(1);
-    expect(errors[0]).toMatch(/b1/);
-    expect(errors[0]).toMatch(/question/i);
-  });
-
-  it('accepts the question written as a card or note too', () => {
-    const errors = saidButNotWritten([
-      beat('b1', [
-        { do: 'say', text: 'What changed when we lit it?' },
-        { do: 'note', text: 'What changed when we lit it?' },
-        { do: 'say', text: 'The particles gained energy.' },
-        { do: 'write', text: 'Heat increases kinetic energy' },
       ]),
     ]);
     expect(errors).toEqual([]);
@@ -76,7 +56,7 @@ describe('the line that lands the beat writes something', () => {
     ]);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatch(/b3/);
-    expect(errors[0]).toMatch(/final|last/i);
+    expect(errors[0]).toMatch(/lands the beat/i);
   });
 
   it('passes when the landing line lands something', () => {
@@ -111,14 +91,8 @@ describe('the line that lands the beat writes something', () => {
   });
 });
 
-describe('an ask is the written question (T1.2)', () => {
-  /**
-   * The first maths class wrote every question twice. The layout writes an
-   * ask's question on the board by itself, and this check did not count the
-   * ask as ink — so it sent the plan to repair for an "unwritten" question,
-   * and the repair dutifully wrote a second copy (b1_9, b2_8, b3_10, b4_4).
-   */
-  it('passes a spoken question whose only ink is the ask', () => {
+describe('a beat that ends on its question lands on the line before it', () => {
+  it('passes a spoken question whose ask writes nothing', () => {
     const errors = saidButNotWritten([
       beat('b1', [
         { do: 'say', text: 'How could you find the cost of the pen without guessing?' },
@@ -128,6 +102,33 @@ describe('an ask is the written question (T1.2)', () => {
       ]),
     ]);
     expect(errors).toEqual([]);
+  });
+
+  it('holds the line before the asking one to the landing rule', () => {
+    const bare = saidButNotWritten([
+      beat('b2', [
+        { do: 'say', text: 'The heart has four chambers, two up and two down.' },
+        { do: 'say', text: 'So which side pumps blood to the lungs?' },
+        { do: 'ask', question: 'Which side pumps blood to the lungs?' },
+      ]),
+    ]);
+    expect(bare).toHaveLength(1);
+    expect(bare[0]).toContain('four chambers');
+    const landed = saidButNotWritten([
+      beat('b2', [
+        { do: 'say', text: 'The heart has four chambers, two up and two down.' },
+        { do: 'write', text: 'Four chambers: two atria, two ventricles' },
+        { do: 'say', text: 'So which side pumps blood to the lungs?' },
+        { do: 'ask', question: 'Which side pumps blood to the lungs?' },
+      ]),
+    ]);
+    expect(landed).toEqual([]);
+  });
+
+  it('asks nothing of a beat that is only its question', () => {
+    expect(
+      saidButNotWritten([beat('b1', [{ do: 'say', text: 'What did you have for breakfast?' }, { do: 'ask', question: 'What did you have for breakfast?' }])]),
+    ).toEqual([]);
   });
 });
 

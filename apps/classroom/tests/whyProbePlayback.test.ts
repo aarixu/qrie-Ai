@@ -107,6 +107,7 @@ describe('a spoken answer against an authored whyProbe', () => {
     const resolved = await resolveSpokenAnswer(
       ask({ whyProbe: shown, options: shown.options.map((o) => ({ text: o.text })) }),
       'B hoga na',
+      { listShown: true },
     );
     expect(completions).toHaveLength(0);
     expect(resolved.path).toBe('local');
@@ -143,6 +144,7 @@ describe('a spoken answer against an authored whyProbe', () => {
         options: shown.options.slice(0, 2).map((o) => ({ text: o.text })),
       }),
       'C',
+      { listShown: true },
     );
     expect(resolved.path).toBe('model');
     expect(completions).toHaveLength(1);
@@ -161,6 +163,7 @@ describe('a spoken answer against an authored whyProbe', () => {
         options: [...shown.options].reverse().map((o) => ({ text: o.text })),
       }),
       'A',
+      { listShown: true },
     );
     expect(resolved.path).toBe('model');
     expect(completions).toHaveLength(1);
@@ -178,9 +181,41 @@ describe('a spoken answer against an authored whyProbe', () => {
         options: shown.options.map((o) => ({ text: '  ' + o.text.toUpperCase() + ' ' })),
       }),
       'B hoga na',
+      { listShown: true },
     );
     expect(completions).toHaveLength(0);
     expect(resolved.path).toBe('local');
+  });
+
+  /**
+   * THE CLASS SHOWS NO LIST AT ALL (Aarav, 2026-10-01): no question and no
+   * options on screen. An options probe with a mirrored `ask.options` is then
+   * still a student looking at nothing, so a letter names nothing — unless the
+   * caller says a list really was shown.
+   */
+  it('reads no letter on an options probe when no list is shown, which is the default', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    reply = '{"verdict":"unclear","say":"Say that once more?"}';
+    const shown = probe();
+    shown.askedAs = 'options';
+    const resolved = await resolveSpokenAnswer(
+      ask({ whyProbe: shown, options: shown.options.map((o) => ({ text: o.text })) }),
+      'B hoga na',
+    );
+    expect(resolved.path).toBe('model');
+    expect(completions).toHaveLength(1);
+  });
+
+  it('still names the option the words matched when the two lists are the same, shown or not', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    const shown = probe();
+    shown.askedAs = 'options';
+    const resolved = await resolveSpokenAnswer(
+      ask({ whyProbe: shown, options: shown.options.map((o) => ({ text: o.text })) }),
+      'the sugar melted into the water',
+    );
+    expect(resolved.path).toBe('local');
+    expect(resolved.matched).toBe(1);
   });
 
   it('ESCALATES an unconfident read rather than guessing at it', async () => {

@@ -35,25 +35,29 @@ type Framed = Record<TutorLanguage, readonly ((content: string) => string)[]>;
 const rethink: Fixed = {
   en: [
     'Hmm, not quite — take another look at the board. What do you notice?',
-    'Not yet. Read the question once more — what is it really asking?',
+    'Not yet. Think about the question once more — what is it really asking?',
     "Let's pause on that. Look back at the board — which step does this come from?",
   ],
   'hi-en': [
     'Hmm, abhi thoda sa miss hua — board ko dhyaan se dekho, kya dikh raha hai?',
-    'Abhi nahi hua. Sawaal ek baar phir padho — asal mein kya pooch raha hai?',
+    'Abhi nahi hua. Sawaal pe ek baar phir socho — asal mein kya pooch raha hai?',
     'Ek second ruko. Board pe wapas dekho — yeh kis step se aata hai?',
   ],
 };
 
-/** A fast wrong answer: read it again, slowly. Used only with the TD14 rules on. */
+/**
+ * A fast wrong answer: think it over again, slowly. Used only with the TD14
+ * rules on. The question is heard, never written (2026-10-01), so nothing
+ * here asks them to READ it.
+ */
 const reread: Fixed = {
   en: [
-    'That was quick! Read the question again, slowly, and then tell me.',
-    'Slow down a little — read it carefully once more. What is it asking?',
+    "That was quick! Think about the question again, slowly, and then tell me.",
+    'Slow down a little — think it through once more. What is it asking?',
   ],
   'hi-en': [
-    'Arre, bahut jaldi! Sawaal aaram se dobara padho, phir batao.',
-    'Thoda dheere — sawaal dhyaan se phir padho. Kya pooch raha hai?',
+    'Arre, bahut jaldi! Sawaal pe aaram se dobara socho, phir batao.',
+    'Thoda dheere — sawaal pe phir se socho. Kya pooch raha hai?',
   ],
 };
 
@@ -119,6 +123,21 @@ const moveOn: Fixed = {
   'hi-en': [
     'Koi baat nahi — yeh thoda tricky hai. Hum isse baad mein phir dekhenge, chalo aage badhte hain.',
     'Chinta mat karo — aisa sawaal baad mein phir karenge. Chalo aage.',
+  ],
+};
+
+/**
+ * Nothing usable came back on a question — it could not be heard, or could
+ * not be judged — and the class goes on. Nothing in it says they were wrong.
+ */
+const carryOn: Fixed = {
+  en: [
+    "Let's carry on for now — we'll come back to this question later.",
+    "Let's keep going, and try this one again another time.",
+  ],
+  'hi-en': [
+    'Chalo, abhi aage badhte hain — yeh sawaal baad mein phir karenge.',
+    'Chalo aage chalte hain, isse kabhi aur phir try karenge.',
   ],
 };
 
@@ -191,6 +210,7 @@ export const LINES = {
   sayAgain,
   afterFollowUp,
   moveOn,
+  carryOn,
   praise,
   praiseAfterHelp,
   praiseAfterReveal,
