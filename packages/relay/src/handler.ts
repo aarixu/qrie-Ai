@@ -322,12 +322,13 @@ export async function handleTicket(req: RelayRequest, gate: Gate): Promise<Relay
 }
 
 /**
- * A Live token, for a verified caller whose claim for one whole class was
- * allowed — in that order, and both before Google is called.
+ * A Live token, for a verified caller whose claim for one session was
+ * allowed — in that order, and both before Google is called. A class is
+ * several sessions, each its own call here (liveToken.ts LIVE_SESSION_TURNS).
  *
- * The meter has to be paid HERE because it never sees the class: the session
- * runs from the browser straight to Google, so this mint is the only request
- * of a Live class that reaches the relay. `UNITS.live` in gate.ts is what it
+ * The meter has to be paid HERE because it never sees the session: it runs
+ * from the browser straight to Google, so this mint is the only request of
+ * a Live session that reaches the relay. `UNITS.live` in gate.ts is what it
  * costs and why. No usage row is written, deliberately: `UsageEvent` in
  * usage.ts says why 'live' cannot be one yet.
  *
@@ -398,7 +399,7 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     return handleTicket(req, deps.gate);
   }
   // Below the switch for the ticket's reason: a Live token outlives the
-  // switch by its whole half hour.
+  // switch by its whole life, LIVE_TOKEN_TTL_MS (six minutes).
   if (last === 'live-token') return handleLiveToken(req, deps);
 
   // The route families beside the relays. Each does its own admission —

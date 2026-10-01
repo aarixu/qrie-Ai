@@ -6,9 +6,11 @@ import { fail, type RelayRequest, type RelayResponse } from './relays.ts';
  * Gemini Live is a socket the BROWSER opens to Google, and until now the only
  * way to open it was `?key=<the API key>` (apps/classroom/src/lib/liveAgent.ts
  * `connect`). Vite inlines VITE_ variables into the bundle, so ClassRoom.tsx
- * fences that key to DEV and a production build has no voice at all. This mints what Google built for exactly this: an EPHEMERAL TOKEN,
- * short-lived and pinned to one model, made here with the key and handed to
- * the browser in the key's place. The key never leaves the server.
+ * fences that key to DEV and a production build has no voice at all. This
+ * mints what Google built for exactly this: an EPHEMERAL TOKEN, short-lived,
+ * good for one session and pinned to one model speaking aloud, made here with
+ * the key and handed to the browser in the key's place. The key never leaves
+ * the server.
  *
  * WHAT GOOGLE'S DOCS SAY, read 2026-09-30:
  *
@@ -34,39 +36,64 @@ import { fail, type RelayRequest, type RelayResponse } from './relays.ts';
  *     wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained?access_token=<token>
  *     https://ai.google.dev/gemini-api/docs/live-api/get-started-websocket
  *
- * THE MASK, AND WHY IT IS NOT OPTIONAL HERE. The AuthToken reference says:
- * with `bidiGenerateContentSetup` set and `fieldMask` EMPTY, the effective
- * setup is taken ENTIRELY from the token and the setup the connection sends is
- * ignored; with a mask, only the masked fields overwrite the connection's.
- * The browser writes its own system instruction, tools and voice into its
- * setup frame — liveAgent.ts `buildSetupFrame` does today, and the lab's Live
- * driver needs the same for its conductor tool — so this pins `model` and
- * nothing else, with `fieldMask: "model"`, the mask the official JS SDK builds
- * for a setup holding only a model (js-genai src/tokens.ts `getFieldMasks`,
- * `lockAdditionalFields: []`).
+ * MEASURED against the real API by the Live spike on 2026-09-30
+ * (tools/live-sim/SPIKE.md §1, probe-live.mjs; merged into phase3-completion
+ * at 2457b12), so these are facts, not readings of the docs:
+ *   - The body `mintLiveToken` sends — `bidiGenerateContentSetup` holding the
+ *     model and `responseModalities: ['AUDIO']`, with
+ *     `fieldMask: "model,generationConfig.responseModalities"` — answers 200.
+ *     The docs page's own REST sample, `liveConnectConstraints`, answers
+ *     400 `Unknown name "liveConnectConstraints"`: that is the SDK's name,
+ *     not the REST field.
+ *   - The token is the response's `name`, its only field: 76 characters
+ *     starting `auth_tokens/`. Minting took 420–792 ms (n=11).
+ *   - The Constrained v1beta URL with `?access_token=` reached setupComplete
+ *     in 1142–1821 ms (n=8).
+ *   - A masked field overrides the page: a page asking for TEXT on this
+ *     token still got AUDIO.
+ *   - A one-use token cannot open a second NEW session: the socket closed
+ *     1011 "Token has been used too many times".
  *
- * UNVERIFIED, all of it until the Live spike makes a real call:
- *   - The docs page's own curl example posts `liveConnectConstraints:
- *     {model, config}`, while the AuthToken reference names
- *     `bidiGenerateContentSetup` and `fieldMask`, and the JS SDK source
- *     (src/converters/_tokens_converters.ts) translates liveConnectConstraints
- *     INTO bidiGenerateContentSetup before posting. This sends the reference's
- *     shape. If Google answers 400, this shape is the first thing to check.
- *   - That the token's `models/<name>` beats a different model named in the
- *     browser's setup frame, as the mask semantics above say it should.
- *   - Whether a connection that fails before setupComplete spends a use.
+ * THE MASK, AND WHY IT IS NOT OPTIONAL HERE. With NO mask, the spike's page
+ * lost its systemInstruction and its tools — she said "My name is Gemini."
+ * and never called `next_move` (2 of 2) — while its outputAudioTranscription
+ * and sessionResumption still worked; which other page fields a maskless
+ * token keeps is UNVERIFIED. With this mask she was Meera and called the
+ * tool (2 of 2). The browser writes its own system instruction, tools and
+ * voice into its setup frame — liveAgent.ts `buildSetupFrame` does today, and
+ * the lab's Live driver needs the same for its conductor tool — so the token
+ * pins only the model and the voice-out modality, with the exact mask that
+ * was measured. `fieldMask: "model"` alone was never tried.
  *
- * USES: 1, NOT THE 3 THIS ROUTE WAS SPECIFIED WITH, and here is the reason.
- * Three was meant as "one session plus up to two resumptions". Google's page
- * says resumption does NOT spend a use: a session must be resumed every ten
- * minutes and "this can be done with the same token even if `uses: 1`"
- * (ephemeral-tokens page), and the AuthToken reference says resumption is not
- * counted as a use. Read that way — UNVERIFIED until the spike tries it —
- * `uses` counts NEW sessions, and 3 would let one mint open three separately
- * billed sessions inside the two-minute window while `admit` claimed the price
- * of one. One mint, one claim, one session. If a failed connect spends the use
- * (UNVERIFIED, above), the retry needs a new mint, and that mint is claimed
- * again.
+ * STILL UNVERIFIED:
+ *   - The model lock on its own: that the token's `models/<name>` beats a
+ *     DIFFERENT model named in the page's setup (the spike's page always
+ *     named the same one).
+ *   - Whether a connection that fails before setupComplete spends the use.
+ *     If it does, the retry needs a new mint, and that mint is claimed again.
+ *   - Resuming a session on the same token (below).
+ *
+ * USES: 1, NOT THE 3 THIS ROUTE WAS SPECIFIED WITH. Three was meant as "one
+ * session plus up to two resumptions". Google's docs say resumption does NOT
+ * spend a use: the AuthToken reference on `uses` says "Resuming a Live API
+ * session does not count as a use", and the ephemeral-tokens page says a
+ * session can be resumed "with the same token even if `uses: 1`" until
+ * `expireTime`. So `uses` counts NEW sessions, and 3 would let one mint open
+ * three separately billed sessions inside the two-minute window while `admit`
+ * claimed the price of one. One mint, one claim, one session.
+ *
+ * HOW A BROWSER GETS ITS NEXT TOKEN:
+ *   - A NEW session — the turn budget is spent, the token is near its
+ *     expireTime, or a socket closed and the session cannot be resumed —
+ *     needs a NEW mint, and that is a new claim. Measured: reusing a spent
+ *     token closes 1011.
+ *   - RESUMING this session with a sessionResumption handle, after a dropped
+ *     connection, is documented to reuse THIS token until its expireTime.
+ *     The spike never resumed, so this is UNVERIFIED; a driver whose resume
+ *     is refused mints again. The same page says a connection has to be
+ *     resumed about every ten minutes; a token that lives LIVE_TOKEN_TTL_MS,
+ *     six, should not reach one (UNVERIFIED: the spike saw no goAway, every
+ *     session being under 30 s).
  */
 
 /**
@@ -91,13 +118,47 @@ export const LIVE_CONSTRAINED_URL =
 export const LIVE_TOKEN_USES = 1;
 
 /**
- * Thirty minutes of life: longer than the ~10-minute class the claim prices,
- * with room for resumed connections, and far under Google's 20-hour limit.
+ * WHAT ONE MINT SELLS: ONE SESSION OF AT MOST EIGHT STUDENT TURNS, AND AT
+ * MOST SIX MINUTES — not a whole class. `UNITS.live` in gate.ts prices
+ * exactly this, from the spike's measured usage, and says why a whole class
+ * in one session cannot be priced inside a student's day.
+ *
+ * The turn budget is handed to the browser (`maxStudentTurns`) and only the
+ * browser can keep it: no turn passes this server. The six minutes are the
+ * one bound the relay holds itself, as the token's expireTime, and they are
+ * eight turns at the Respiration plan's own pace: `minutes: 20` for its 28
+ * student turns (content/plans/class10-respiration.json at 35832aa) is
+ * ~43 s a turn, and eight of those are 343 s. At the spike's measured pace
+ * a spoken turn is ~11–13 s of machine and talk — her one-sentence line (4.4–6.8 s of
+ * audio on the openers), ~1.5 s from the student's turn to her first voice
+ * (whole-turn medians 1385–1548 ms on 3.8), and the 5 s answer the price
+ * assumes — so the rest of the 45 s a turn is the student's thinking. A
+ * session that runs out of time before its eighth turn ends early, and the
+ * class's next session is the next mint.
  */
-export const LIVE_TOKEN_TTL_MS = 30 * 60_000;
+export const LIVE_SESSION_TURNS = 8;
+export const LIVE_SESSION_MS = 6 * 60_000;
+
+/**
+ * The token lives exactly as long as the session its claim paid for. It was
+ * thirty minutes, three times the class it was priced for, and the kill
+ * switch cannot end a token already issued — so its life is also how long a
+ * token outlives the switch (the phase-1 security review of this route). After
+ * expireTime, Google rejects "messages in BidiGenerateContent sessions"
+ * using the token (the AuthToken reference, read 2026-10-01; not measured —
+ * every spike session ended long before its token). Far under Google's
+ * 20-hour limit.
+ */
+export const LIVE_TOKEN_TTL_MS = LIVE_SESSION_MS;
 
 /** A new session must open within two minutes of the mint: mint on the tap, not ahead of it. */
 export const LIVE_TOKEN_NEW_SESSION_MS = 2 * 60_000;
+
+/**
+ * The fields the token pins, and nothing else: the mask the spike measured
+ * keeping the page's own systemInstruction and tools. See THE MASK above.
+ */
+export const LIVE_TOKEN_FIELD_MASK = 'model,generationConfig.responseModalities';
 
 /** The browser sends at most `{"model":"..."}`. Anything bigger did not come from the app. */
 export const MAX_LIVE_TOKEN_REQUEST_BYTES = 1024;
@@ -105,7 +166,29 @@ export const MAX_LIVE_TOKEN_REQUEST_BYTES = 1024;
 /** Google's own ceiling on both deadlines. */
 const GOOGLE_MAX_TTL_MS = 20 * 60 * 60_000;
 
-const MINT_TIMEOUT_MS = 10_000;
+/**
+ * HOW HARD ONE CLAIM TRIES FOR ITS TOKEN.
+ *
+ * The claim is taken before the mint and cannot be refunded — claim_relay
+ * refuses a negative cost (0016:73) — so a mint that fails on a busy moment
+ * used to cost the student a session they never had, and their own retry
+ * was claimed again. Google's pricing page (read 2026-10-01) lists no charge
+ * for creating a token, only for the tokens a session reads and writes
+ * (UNVERIFIED against a bill), so a busy moment is asked again here, inside
+ * the one claim: up to
+ * three asks, waiting 0.5 s and then 1.5 s. Only a busy answer is asked
+ * again — a thrown fetch (including this timeout), 408, 429 or any 5xx. A
+ * 400/401/403/404 is about our key or our body and would say the same twice.
+ *
+ * Five seconds an ask, not the ten it was: the spike measured mints at
+ * 420–792 ms, and three asks at ten seconds would leave a student staring
+ * at "connecting" for over half a minute before being told.
+ */
+const MINT_ATTEMPTS = 3;
+const MINT_BACKOFF_MS = [500, 1_500] as const;
+const MINT_TIMEOUT_MS = 5_000;
+
+const isBusy = (status: number): boolean => status === 408 || status === 429 || status >= 500;
 
 export interface LiveTokenOptions {
   /** One of LIVE_TOKEN_MODELS; defaults to the first. */
@@ -113,7 +196,10 @@ export interface LiveTokenOptions {
   now?: () => number;
   /** Injected in tests; the global fetch otherwise, read at call time. */
   fetch?: typeof fetch;
+  /** The wait between asks. Injected in tests; a real timer otherwise. */
+  sleep?: (ms: number) => Promise<void>;
   uses?: number;
+  /** At most LIVE_SESSION_MS: a token may not outlive what its claim paid for. */
   ttlMs?: number;
   newSessionMs?: number;
 }
@@ -121,13 +207,23 @@ export interface LiveTokenOptions {
 /** The JSON the browser receives. */
 export interface LiveTokenReply {
   token: string;
-  /** Epoch ms: the token's expireTime. A session using it stops being served after this. */
+  /**
+   * Epoch ms: the token's expireTime. A session using it stops being served
+   * after this, so the browser opens its next session (a new mint) before.
+   */
   expiresAt: number;
   /** Epoch ms: the token's newSessionExpireTime. The socket must be OPEN by this. */
   newSessionExpiresAt: number;
   model: LiveTokenModel;
   /** The websocket URL WITHOUT the token; the client appends `?access_token=`. */
   url: string;
+  /**
+   * LIVE_SESSION_TURNS: the student turns this token's claim paid for. The
+   * browser ends the session at this many and mints the next. Nothing here
+   * can enforce it; a driver that runs past it spends money the meter never
+   * saw, at a cost that grows with every turn (gate.ts UNITS.live).
+   */
+  maxStudentTurns: number;
 }
 
 export const isLiveTokenModel = (model: unknown): model is LiveTokenModel =>
@@ -150,7 +246,7 @@ export function liveTokenUnconfigured(): RelayResponse {
 
 /**
  * Which model the browser asked for, read BEFORE the meter: a request that
- * was never going to be served must not spend a class's worth of units on
+ * was never going to be served must not spend a session's worth of units on
  * being told so. An empty body means the default.
  */
 export function readLiveTokenRequest(
@@ -189,6 +285,11 @@ export function readLiveTokenRequest(
  *
  * Checks that need no network (the model, the numbers) come first, so a bad
  * call never reaches Google.
+ *
+ * A busy Google is asked again, up to MINT_ATTEMPTS times (see there). Each
+ * ask computes its deadlines from its own moment, so the token handed out
+ * lives LIVE_TOKEN_TTL_MS from the ask that got it, and the browser is told
+ * those same deadlines.
  */
 export async function mintLiveToken(apiKey: string, opts: LiveTokenOptions = {}): Promise<RelayResponse> {
   if (!apiKey) return liveTokenUnconfigured();
@@ -199,54 +300,82 @@ export async function mintLiveToken(apiKey: string, opts: LiveTokenOptions = {})
   const uses = opts.uses ?? LIVE_TOKEN_USES;
   const ttlMs = opts.ttlMs ?? LIVE_TOKEN_TTL_MS;
   const newSessionMs = opts.newSessionMs ?? LIVE_TOKEN_NEW_SESSION_MS;
-  // `uses: 0` is Google's "no limit", so it is refused rather than sent. A new
-  // session window longer than the token's own life means nothing.
+  // `uses: 0` is Google's "no limit", so it is refused rather than sent. A
+  // token longer-lived than the session its claim paid for would sell Live
+  // the meter never charged. A new session window longer than the token's own
+  // life means nothing.
   const sane =
     Number.isInteger(uses) &&
     uses >= 1 &&
     Number.isFinite(ttlMs) &&
     ttlMs > 0 &&
+    ttlMs <= LIVE_SESSION_MS &&
     ttlMs < GOOGLE_MAX_TTL_MS &&
     Number.isFinite(newSessionMs) &&
     newSessionMs > 0 &&
     newSessionMs <= ttlMs;
   if (!sane) return fail(500, 'the live token options are out of range');
 
-  const now = (opts.now ?? Date.now)();
-  const expiresAt = now + ttlMs;
-  const newSessionExpiresAt = now + newSessionMs;
+  const clock = opts.now ?? Date.now;
   const doFetch = opts.fetch ?? globalThis.fetch;
+  const sleep = opts.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
 
-  let res: Response;
-  try {
-    res = await doFetch(LIVE_TOKEN_ENDPOINT, {
-      method: 'POST',
-      headers: { 'x-goog-api-key': apiKey, 'content-type': 'application/json' },
-      body: JSON.stringify({
-        uses,
-        expireTime: new Date(expiresAt).toISOString(),
-        newSessionExpireTime: new Date(newSessionExpiresAt).toISOString(),
-        bidiGenerateContentSetup: { model: `models/${model}` },
-        fieldMask: 'model',
-      }),
-      ...(typeof AbortSignal !== 'undefined' && 'timeout' in AbortSignal
-        ? { signal: AbortSignal.timeout(MINT_TIMEOUT_MS) }
-        : {}),
-    });
-  } catch {
-    return fail(502, 'Google could not be reached for a live token.');
+  for (let attempt = 1; ; attempt += 1) {
+    const now = clock();
+    const expiresAt = now + ttlMs;
+    const newSessionExpiresAt = now + newSessionMs;
+
+    let res: Response | null;
+    try {
+      res = await doFetch(LIVE_TOKEN_ENDPOINT, {
+        method: 'POST',
+        headers: { 'x-goog-api-key': apiKey, 'content-type': 'application/json' },
+        body: JSON.stringify({
+          uses,
+          expireTime: new Date(expiresAt).toISOString(),
+          newSessionExpireTime: new Date(newSessionExpiresAt).toISOString(),
+          bidiGenerateContentSetup: {
+            model: `models/${model}`,
+            generationConfig: { responseModalities: ['AUDIO'] },
+          },
+          fieldMask: LIVE_TOKEN_FIELD_MASK,
+        }),
+        // A fresh timer for every ask: one shared signal would leave the
+        // second ask only what the first one had not used.
+        ...(typeof AbortSignal !== 'undefined' && 'timeout' in AbortSignal
+          ? { signal: AbortSignal.timeout(MINT_TIMEOUT_MS) }
+          : {}),
+      });
+    } catch {
+      res = null;
+    }
+
+    if ((res === null || isBusy(res.status)) && attempt < MINT_ATTEMPTS) {
+      // Nothing of a refused answer is read; let its body go.
+      await res?.body?.cancel().catch(() => undefined);
+      await sleep(MINT_BACKOFF_MS[attempt - 1]);
+      continue;
+    }
+    if (res === null) return fail(502, 'Google could not be reached for a live token.');
+    if (!res.ok) return fail(502, `Google refused the live token (${res.status}).`);
+
+    const answer = (await res.json().catch(() => null)) as { name?: unknown } | null;
+    const token = answer && typeof answer.name === 'string' ? answer.name : '';
+    if (token === '') return fail(502, 'Google answered without a live token.');
+
+    const reply: LiveTokenReply = {
+      token,
+      expiresAt,
+      newSessionExpiresAt,
+      model,
+      url: LIVE_CONSTRAINED_URL,
+      maxStudentTurns: LIVE_SESSION_TURNS,
+    };
+    return {
+      status: 200,
+      // A credential, however short-lived: no cache along the way may keep it.
+      headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
+      body: { kind: 'json', value: reply },
+    };
   }
-  if (!res.ok) return fail(502, `Google refused the live token (${res.status}).`);
-
-  const answer = (await res.json().catch(() => null)) as { name?: unknown } | null;
-  const token = answer && typeof answer.name === 'string' ? answer.name : '';
-  if (token === '') return fail(502, 'Google answered without a live token.');
-
-  const reply: LiveTokenReply = { token, expiresAt, newSessionExpiresAt, model, url: LIVE_CONSTRAINED_URL };
-  return {
-    status: 200,
-    // A credential, however short-lived: no cache along the way may keep it.
-    headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
-    body: { kind: 'json', value: reply },
-  };
 }

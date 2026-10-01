@@ -109,7 +109,12 @@ if (env.GEMINI_API_KEY) {
   lines.push(`GEMINI_API_KEY=${env.GEMINI_API_KEY}`);
   WANTED.push('GEMINI_API_KEY');
 } else {
-  console.log(`No GEMINI_API_KEY in ${path.relative(ROOT, ENV_FILE)}; /relay/live-token will answer 503 (unconfigured).`);
+  // Not "will answer 503": `secrets set` never unsets a key it was not given,
+  // so a project that was sent one before still mints with it.
+  console.log(
+    `No GEMINI_API_KEY in ${path.relative(ROOT, ENV_FILE)}, so it is not pushed. The project keeps any value ` +
+      'it already holds; if it holds none, /relay/live-token answers 503 (unconfigured).',
+  );
 }
 
 const accountPath = path.resolve(ROOT, ACCOUNT_FILE);
