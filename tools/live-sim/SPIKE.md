@@ -120,8 +120,9 @@ from section 6 on each token:
   `responseModalities: ['TEXT']`, still answered in audio: 11 chunks, no text parts.
 - **A one-use token cannot open a second connection.** The socket closed `1011 "Token
   has been used too many times"`, 639–977 ms after the socket was created.
-  - A reconnect after goAway, or a resumption, therefore needs a fresh token (or
-    `uses` > 1). Resumption with a token was not tried (UNVERIFIED).
+  - A new connection therefore needs a fresh token (or `uses` > 1). Google's docs
+    (read 2026-10-01) say resuming a session with `sessionResumption` on the same
+    token does not count as a use; resumption was not tried here (UNVERIFIED).
 
 ## 2. Per model
 
@@ -408,7 +409,8 @@ These follow from the measurements above. How to build each one is not measured.
   voice would finish at real-time pace from the first chunk. How that lines up with
   the player's 60 ms lead is UNVERIFIED.
 - The relay has to mint the token: `uses: 1` plus a fieldMask, and a fresh token for
-  every reconnect.
+  every new connection (measured). Resuming on the same token is documented as free
+  (UNVERIFIED).
 
 ## Re-running
 
