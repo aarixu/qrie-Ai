@@ -160,6 +160,21 @@ export function fuzzPlan(
       graph.push({ do: 'say', text: sentence(20, 60) }, { do: 'write', text: sentence(14, 40) });
     }
     beats.push({ id: `b${b + 2}`, topic: `Part ${b + 2}`, narration: '', board: [...graph, ...ask()] });
+    // Working, step under step.
+    const [p, q] = [int(2, 9), int(1, 20)];
+    const answer = int(1, 12);
+    beats.push({
+      id: `b${b + 3}`,
+      topic: `Part ${b + 3}`,
+      narration: '',
+      board: [
+        { do: 'say', text: sentence(20, 60) },
+        { do: 'derive', steps: [`${p}x + ${q} = ${p * answer + q}`, `${p}x = ${p * answer}`, `x = ${answer}`] },
+        { do: 'say', text: sentence(20, 60) },
+        { do: 'write', text: sentence(14, 40) },
+        ...ask(),
+      ],
+    });
   }
   return { plan: { id: `fuzz-${seed}`, title: 'Fuzz', visuals, beats }, drawn, parts, shapes };
 }

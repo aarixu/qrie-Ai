@@ -23,6 +23,26 @@ const curve = (html: string): { x: number; y: number }[] => {
   return [...d.matchAll(/[ML] ([\d.-]+) ([\d.-]+)/g)].map((m) => ({ x: Number(m[1]), y: Number(m[2]) }));
 };
 
+describe('a line of working that waits for the one above it', () => {
+  it('pops in after its delay, and the first line at once', () => {
+    const lesson: Lesson = {
+      formatVersion: 1,
+      id: 'd',
+      title: 'Working',
+      language: 'en',
+      canvas: { w: 1000, h: 620 },
+      elements: [
+        { kind: 'formula', id: 'w0', x: 500, y: 200, text: '2x = 8' },
+        { kind: 'formula', id: 'w1', x: 500, y: 244, text: 'x = 4', after: 1400 },
+      ],
+      beats: [{ id: 'b', topic: 't', narration: 'n', show: ['w0', 'w1'] }],
+    };
+    const html = renderToString(<Scene lesson={lesson} visible={['w0', 'w1']} focus={[]} />);
+    // On the second line's group only (the stylesheet Scene embeds names the property too).
+    expect(html.match(/style="animation-delay:[^"]*"/g)).toEqual(['style="animation-delay:1400ms"']);
+  });
+});
+
 describe('a plot on the board', () => {
   it('draws a straight line for 2x + 1, rising left to right', () => {
     const pts = curve(boardWith('2x + 1', 0, 5));

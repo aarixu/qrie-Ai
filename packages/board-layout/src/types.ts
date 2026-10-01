@@ -82,6 +82,12 @@ export type Instruction =
    */
   | { do: 'equation'; text: string; id?: string }
   /**
+   * Working, step under step, the equals signs in one column, each step
+   * written after the one above it (canvas C3). Plain maths like `equation`;
+   * the maths check reads the chain.
+   */
+  | { do: 'derive'; steps: string[] }
+  /**
    * A line the tutor writes out by hand while speaking. Slow; use sparingly.
    * `id` lets a later `annotate` mark it — box it, highlight a word of it.
    */

@@ -78,6 +78,10 @@ const MIN_FLEXIBLE_H = 150;
 
 /** Heights the renderer needs to agree with; see the notes on each. */
 const EQUATION_H = 52;
+/** A derivation's line pitch, how many steps a page takes, and how far apart they arrive. */
+const DERIVE_LEAD = 44;
+const MAX_DERIVE_STEPS = 7;
+const DERIVE_STEP_MS = 1400;
 const WRITE_H = 62;
 const CARD_H = 128;
 /** The sizes a card's body may wrap at, largest first; see the card block. */
@@ -701,6 +705,43 @@ export function layoutBeat(
               text: item.text,
             },
           ],
+        });
+        i += 1;
+        break;
+      }
+
+      case 'derive': {
+        const steps = item.steps.map((s) => s.trim()).filter((s) => s.length > 0).slice(0, MAX_DERIVE_STEPS);
+        if (steps.length === 0) {
+          i += 1;
+          break;
+        }
+        blocks.push({
+          kind: item.do,
+          at: index,
+          height: steps.length * DERIVE_LEAD + 10,
+          // The equals signs in one column, the block centred on it in the
+          // rectangle it was given. Measured as the board measures a formula
+          // (an evenly spaced line), so the column is the board's own.
+          place: (r) => {
+            const ruler = (text: string) => boxOf({ kind: 'formula', id: '_', x: 0, y: 0, text }).w;
+            const widths = steps.map(ruler);
+            const lefts = steps.map((s, n) => {
+              const eq = s.indexOf('=');
+              return eq < 0 ? widths[n] / 2 : (widths[n] * (eq + 0.5)) / s.length;
+            });
+            const left = Math.max(...lefts);
+            const right = Math.max(...widths.map((w, n) => w - lefts[n]));
+            const column = r.x + (r.w - (left + right)) / 2 + left;
+            return steps.map((text, n) => ({
+              kind: 'formula' as const,
+              id: n === 0 ? idFor(beat.id, index) : idFor(beat.id, index, `_l${n}`),
+              x: column - lefts[n] + widths[n] / 2,
+              y: r.y + DERIVE_LEAD * (n + 0.7),
+              text,
+              ...(n > 0 ? { after: n * DERIVE_STEP_MS } : {}),
+            }));
+          },
         });
         i += 1;
         break;
@@ -1940,6 +1981,7 @@ const WRITES_WORDS: ReadonlySet<Instruction['do']> = new Set([
   'flow',
   'chart',
   'plot',
+  'derive',
 ]);
 
 /** A few of an instruction's own words, for a message that names it. */
@@ -1961,6 +2003,8 @@ function wordsOf(step: Instruction): string {
       return step.caption ?? step.data[0]?.label ?? '';
     case 'plot':
       return step.caption ?? step.fn;
+    case 'derive':
+      return step.steps[0] ?? '';
     default:
       return '';
   }

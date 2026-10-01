@@ -1324,7 +1324,14 @@ function SceneElement({
         mask={sweeping ? `url(#stage-sweep-${el.id})` : undefined}
         style={glow}
       >
-        <g className={isNew && !isStroke ? 'stage-pop' : undefined}>{renderElement(el, svg, litParts)}</g>
+        <g
+          className={isNew && !isStroke ? 'stage-pop' : undefined}
+          // A line of working arrives after the one above it; the pop's
+          // `both` fill keeps it hidden until then.
+          style={isNew && el.kind === 'formula' && el.after ? { animationDelay: `${el.after}ms` } : undefined}
+        >
+          {renderElement(el, svg, litParts)}
+        </g>
       </g>
     </>
   );

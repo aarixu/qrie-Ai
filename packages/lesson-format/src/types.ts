@@ -186,7 +186,11 @@ export type Element =
     }
   | { kind: 'arrow'; id: string; from: Point; to: Point; label?: string; dashed?: boolean; tone?: Tone }
   | { kind: 'pen'; id: string; points: Point[]; tone?: Tone }
-  | { kind: 'formula'; id: string; x: number; y: number; text: string }
+  /**
+   * A line of maths. `after` holds it back that many milliseconds: a line of
+   * working written after the one above it (canvas C3, `derive`).
+   */
+  | { kind: 'formula'; id: string; x: number; y: number; text: string; after?: number }
   /**
    * A generated picture of a real thing — an organ, a cross-section, a scene.
    *

@@ -98,10 +98,11 @@ describe('300 seeded classes through assemble and the keep gate', () => {
 /**
  * The same classes with two more beats of the smart board's moves (canvas C3):
  * a key point boxed, a word of it highlighted, a clean page, an equation
- * underlined; then a graph with key points beside it. The beats before them
+ * underlined; a graph with key points beside it; working, step under step. The
+ * beats before them
  * are unchanged, so any new problem is the new beats'.
  */
-describe('300 seeded classes with marks on her writing, a clean page and a graph', () => {
+describe('300 seeded classes with marks on her writing, a clean page, a graph and working', () => {
   const { invalid, count, framed, highlighted, plotted } = run({ smartBoard: true });
 
   it('frames and highlights her writing, and draws a graph, in every class', () => {

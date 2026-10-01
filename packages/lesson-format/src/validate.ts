@@ -85,6 +85,7 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
     case 'formula':
       need(isNum(el.x) && isNum(el.y), 'formula needs numeric x,y');
       need(isStr(el.text), 'formula needs non-empty text');
+      if (el.after !== undefined) need(isNum(el.after) && el.after >= 0, 'formula after must be a non-negative number');
       break;
     case 'image':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'image needs numeric x,y,w,h');
