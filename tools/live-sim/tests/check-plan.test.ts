@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkPlan, keyTerms, loadPlanContext } from '../check-plan.mjs';
+import { checkPlan, fold, keyTerms, loadPlanContext } from '../check-plan.mjs';
 
 /**
  * THE RESPIRATION PLAN, AND THE CHECK THAT GUARDS IT. The plan is authored
@@ -32,35 +32,68 @@ describe('the committed Respiration plan', () => {
 describe('the checker catches', () => {
   it('a hint that says the answer', () => {
     const { plan, context } = copy();
-    // oxygen-check-1: "Where in the cell is pyruvate broken down using oxygen?"
-    plan.ideas[2].check[0].hint = 'Is it in the mitochondria?';
+    // oxygen-check-2: "Where in the cell is pyruvate broken down using oxygen?"
+    plan.ideas[2].check[1].hint = 'Is it in the mitochondria?';
     const { errors } = checkPlan(plan, context);
-    expect(errors.some((e) => e.startsWith('ideas[2].check[0].hint') && e.includes('contains the answer'))).toBe(true);
+    expect(errors.some((e) => e.startsWith('ideas[2].check[1].hint') && e.includes('contains the answer'))).toBe(true);
   });
 
-  it('a follow-up that carries every key term of a short answer', () => {
+  it('a follow-up that carries every key term of a short answer, a plural ending apart', () => {
     const { plan, context } = copy();
-    // muscle-check-1's answer: "Lactic acid. When it builds up in the muscles, it causes cramps."
-    plan.ideas[3].check[0].misconceptions[0].followUp = 'Did you know lactic acid causes cramps?';
+    // muscle-check-2's answer: "Lactic acid. When it builds up in the muscles, it causes cramps."
+    // "build" and "cramp" are its "builds" and "cramps" with the ending off.
+    plan.ideas[3].check[1].misconceptions[0].followUp = 'Did you know that lactic acid can build up and give you a cramp?';
     const { errors } = checkPlan(plan, context);
     expect(
-      errors.some((e) => e.startsWith('ideas[3].check[0].misconceptions[0].followUp') && e.includes('every key term')),
+      errors.some((e) => e.startsWith('ideas[3].check[1].misconceptions[0].followUp') && e.includes('every key term')),
     ).toBe(true);
   });
 
   it('a worked example that gives the answer only across its steps', () => {
     const { plan, context } = copy();
-    // Neither step alone holds all four key terms of muscle-check-1; the two together do.
-    plan.ideas[3].check[0].workedExample = {
+    // Neither step alone holds all four key terms of muscle-check-2; the two together do.
+    plan.ideas[3].check[1].workedExample = {
       steps: [
         { say: 'The muscle makes lactic acid.', line: 'lactic acid' },
-        { say: 'And that is what causes cramps.', line: 'cramps' },
+        { say: 'When it builds up, it gives you cramps.', line: 'cramps' },
       ],
     };
     const { errors } = checkPlan(plan, context);
-    expect(errors.filter((e) => e.startsWith('ideas[3].check[0].workedExample'))).toEqual([
-      "ideas[3].check[0].workedExample (all steps together): carries every key term of muscle-check-1's answer (lactic, acid, causes, cramps)",
+    expect(errors.filter((e) => e.startsWith('ideas[3].check[1].workedExample'))).toEqual([
+      "ideas[3].check[1].workedExample (all steps together): carries every key term of muscle-check-2's answer (lactic, acid, builds, cramps)",
     ]);
+  });
+
+  it("a reason that gives away the next question's answer in the same move", () => {
+    const { plan, context } = copy();
+    // The plan as it was before the pedagogy review: the definitional check
+    // first, after a reason that names its answer.
+    const idea = plan.ideas[2];
+    idea.check = [idea.check[1], idea.check[0]];
+    idea.points[1].ask.why =
+      'The pathway with oxygen releases far more energy than any pathway without it, and that pathway runs in the mitochondria.';
+    const { errors } = checkPlan(plan, context);
+    const at = 'ideas[2].points[1].ask.why, said in the move that asks ideas[2].check[0]';
+    expect(errors).toContain(`${at}: contains the answer or expect of oxygen-check-2`);
+    expect(errors).toContain(`${at}: carries every key term of oxygen-check-2's answer (mitochondria)`);
+  });
+
+  it('a reason that gives away a retest asked after it', () => {
+    const { plan, context } = copy();
+    // A retest of idea 2 (check[1]) is asked after idea 3's points, straight after this reason.
+    plan.ideas[3].points[1].ask.why = 'Lactic acid is made when pyruvate never reaches the mitochondria.';
+    const { errors } = checkPlan(plan, context);
+    expect(errors).toContain(
+      "ideas[3].points[1].ask.why, said in the move that asks ideas[2].check[1]: carries every key term of oxygen-check-2's answer (mitochondria)",
+    );
+  });
+
+  it("a question longer than its move's cap", () => {
+    const { plan, context } = copy();
+    plan.ideas[4].predict.question =
+      'Picture this. You stir some yeast into sugar water in a bottle and stretch a balloon over its mouth. What do you think happens to the balloon?';
+    const { errors } = checkPlan(plan, context);
+    expect(errors).toContain("ideas[4].predict.question: 3 sentences; a predict move's cap is 2");
   });
 
   it('a focus id the beat does not show', () => {
@@ -137,12 +170,27 @@ describe('keyTerms', () => {
         answer: 'In the mitochondria.',
       }),
     ).toEqual(['mitochondria']);
+    // "causes" is dropped because the question already says "cause"; "builds" is kept against "build-up".
     expect(
       keyTerms({
         question: 'What do your muscle cells make when they run short of oxygen, and what does it cause?',
         expect: 'Lactic acid, whose build-up causes cramps.',
         answer: 'Lactic acid. When it builds up in the muscles, it causes cramps.',
       }),
-    ).toEqual(['lactic', 'acid', 'causes', 'cramps']);
+    ).toEqual(['lactic', 'acid', 'builds', 'cramps']);
+  });
+});
+
+describe('fold', () => {
+  it('takes plural and tense endings off, and errs toward missing', () => {
+    expect(fold('cramps')).toBe(fold('cramp'));
+    expect(fold('causes')).toBe(fold('caused'));
+    expect(fold('causes')).toBe(fold('cause'));
+    expect(fold('building')).toBe(fold('builds'));
+    expect(fold('gases')).toBe(fold('gas'));
+    expect(fold('glass')).toBe('glass');
+    // Irregular forms stay apart: a missed match, never a false one.
+    expect(fold('used')).not.toBe(fold('use'));
+    expect(fold('ran')).not.toBe(fold('run'));
   });
 });

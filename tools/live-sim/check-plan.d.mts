@@ -16,6 +16,7 @@ export declare const RULES: {
   facts: [number, number];
   workedSteps: [number, number];
   pointSaySentences: [number, number];
+  questionSentences: { opener: number; predict: number; check: number; teachBack: number };
   maxSentenceWords: number;
   keyTermsMax: number;
 };
@@ -43,7 +44,15 @@ export interface PlanCheck {
 
 export declare function sentences(text: string): string[];
 
+export declare function fold(token: string): string;
+
 export declare function keyTerms(q: { question: string; expect: string; answer: string }): string[];
+
+export declare function sameMove(
+  opener: unknown,
+  ideas: unknown[],
+  guard: (line: unknown, q: unknown, where: string) => void,
+): void;
 
 export declare function loadGraphNodes(): Map<string, GraphNode>;
 
