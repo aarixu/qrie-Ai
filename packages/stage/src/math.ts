@@ -126,6 +126,23 @@ export function formulaTex(text: string): string {
     .replace(/(?<![\\A-Za-z{])(sin|cos|tan|cot|sec|log)(?![A-Za-z])/g, String.raw`\$1`);
 }
 
+const SUBSCRIPT = '₀₁₂₃₄₅₆₇₈₉';
+
+/**
+ * A formula KaTeX does not set, as the board writes it in plain text: an
+ * arrow drawn as an arrow, and — in a reaction (an arrow and a formula like
+ * "O2") — the atom counts as subscripts: "6O2 -> 6CO2" reads "6O₂ → 6CO₂".
+ * A count follows a letter or a bracket; a coefficient does not, so it stays
+ * full size. The planner writes chemistry as plain text in an equation, and
+ * this is that text, made readable; the letters and numbers are unchanged.
+ */
+export function plainFormula(text: string): string {
+  const arrows = text.replace(/<=>/g, '⇌').replace(/-->|->/g, '→');
+  if (arrows === text && !/[→⇌]/.test(text)) return text;
+  if (!/[A-Z][a-z]?\d/.test(arrows)) return arrows;
+  return arrows.replace(/(?<=[A-Za-z)\]])\d+/g, (digits) => [...digits].map((d) => SUBSCRIPT[Number(d)]).join(''));
+}
+
 /** A board line with `$…$` maths in it, as HTML: words escaped, maths typeset. */
 export function lineToHtml(text: string): string {
   let out = '';

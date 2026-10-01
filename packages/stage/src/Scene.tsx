@@ -12,7 +12,7 @@ import {
   type Tone,
 } from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
-import { formulaTex, hasMath, lineToHtml, texToHtml, typesetsAsMaths } from './math';
+import { formulaTex, hasMath, lineToHtml, plainFormula, texToHtml, typesetsAsMaths } from './math';
 import {
   graphicLabelSize,
   textWidth,
@@ -1213,7 +1213,7 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
       }
       return (
         <text x={el.x} y={el.y} textAnchor="middle" fontFamily={FONT_MONO} fontStyle="italic" fontSize={24} letterSpacing={0.5} fill={INK}>
-          {el.text}
+          {plainFormula(el.text)}
         </text>
       );
     }

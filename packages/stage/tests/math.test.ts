@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lineToHtml, texToHtml } from '../src/math';
+import { lineToHtml, plainFormula, texToHtml } from '../src/math';
 
 /** T6: maths typeset, and nothing a model wrote reaches the page as HTML. */
 describe('maths on the board', () => {
@@ -25,6 +25,18 @@ describe('maths on the board', () => {
     expect(html).not.toBeNull();
     expect(html).toContain('msupsub');
     expect(html).not.toContain('-&gt;');
+  });
+
+  it('writes a plain chemical equation with real subscripts and arrow, coefficients left alone', () => {
+    expect(plainFormula('C6H12O6 + 6O2 -> 6CO2 + 6H2O + 38 ATP')).toBe('C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + 38 ATP');
+    expect(plainFormula('Pyruvate -> Ethanol (C2H5OH) + CO2 + 2 ATP')).toBe('Pyruvate → Ethanol (C₂H₅OH) + CO₂ + 2 ATP');
+  });
+
+  it('turns only the arrow in a word equation, and leaves maths as it is', () => {
+    expect(plainFormula('Pyruvate (3-carbon) -> Lactic Acid (3-carbon) + 2 ATP')).toBe(
+      'Pyruvate (3-carbon) → Lactic Acid (3-carbon) + 2 ATP',
+    );
+    expect(plainFormula('Profit % = (Profit / CP) × 100')).toBe('Profit % = (Profit / CP) × 100');
   });
 
   it('shows maths it cannot read as its source, never an error box', () => {
