@@ -27,6 +27,9 @@ import { spawnSync } from 'node:child_process';
  * spend Cloud credits, so it goes the same way as the rest: out of a file,
  * through a temp env file, deleted afterwards, and never onto a command line.
  *
+ * GEMINI_API_KEY is pushed the same way when .env.local has it, and skipped
+ * when it does not; it only mints Live tokens (see below).
+ *
  * Run: node tools/bin/relay-secrets.mjs
  */
 
@@ -91,6 +94,28 @@ if (!env.RELAY_TICKET_SECRET) {
 }
 
 const lines = WANTED.map((k) => `${k}=${env[k]}`);
+
+/**
+ * The Gemini Developer API key, for Live tokens only (/relay/live-token).
+ *
+ * Pushed ONLY when .env.local has one. Added to WANTED unconditionally, the
+ * line above would write the literal `GEMINI_API_KEY=undefined`, and the relay
+ * would then try to mint with the word "undefined" as its key. Absent here,
+ * nothing about it is pushed: a project that never had it answers 503 on that
+ * one route, and one that had it keeps the value it already holds. Its value
+ * is never printed: the "Pushing …" line below names keys, not values.
+ */
+if (env.GEMINI_API_KEY) {
+  lines.push(`GEMINI_API_KEY=${env.GEMINI_API_KEY}`);
+  WANTED.push('GEMINI_API_KEY');
+} else {
+  // Not "will answer 503": `secrets set` never unsets a key it was not given,
+  // so a project that was sent one before still mints with it.
+  console.log(
+    `No GEMINI_API_KEY in ${path.relative(ROOT, ENV_FILE)}, so it is not pushed. The project keeps any value ` +
+      'it already holds; if it holds none, /relay/live-token answers 503 (unconfigured).',
+  );
+}
 
 const accountPath = path.resolve(ROOT, ACCOUNT_FILE);
 if (fs.existsSync(accountPath)) {

@@ -46,7 +46,16 @@ export interface UsageEvent {
    * for every call outside a preparation, which is most of them.
    */
   prepId?: string | null;
-  relay: RelayName;
+  /**
+   * Every relay but 'live', and the type says so on purpose. usage_event's
+   * CHECK (0008) admits only llm, speech, hear, class and icons, and
+   * `createSupabaseUsage` swallows the refusal — so a 'live' row would vanish
+   * without a sound. A Live session bills the browser's socket, not this
+   * server, and its real token counts arrive only in the session's own
+   * usageMetadata. Recording them server-side needs an LMS-lane migration
+   * widening that CHECK (and its provider CHECK) first.
+   */
+  relay: Exclude<RelayName, 'live'>;
   provider: 'vertex' | 'openrouter' | 'storage';
   model: string | null;
   /** The upstream status, so a failed call is visible rather than invisible. */

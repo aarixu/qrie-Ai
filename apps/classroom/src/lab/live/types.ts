@@ -8,8 +8,11 @@ import type { TutorLanguage } from '../../lib/workspace';
  *
  * Two drivers run the same conducted class on one topic, so the difference he
  * sees is the delivery, not the teaching:
- *   - 'a': the whole class inside one Gemini Live session (speech to speech);
- *     the conductor is a tool the model calls after every student turn.
+ *   - 'a': the class spoken inside Gemini Live (speech to speech), as a run
+ *     of short Live sessions — one /api/live-token mint each, at most its
+ *     `maxStudentTurns` student turns (packages/relay/src/gate.ts UNITS.live
+ *     says why one session for the whole class cannot be paid for); the
+ *     conductor is a tool the model calls after every student turn.
  *   - 'b': a pipeline — the ear (/api/hear) → the conductor → a text model
  *     writes the line (/api/llm) → Gemini TTS (/api/speech).
  * The screen owns the board, the captions and the numbers; a driver owns the

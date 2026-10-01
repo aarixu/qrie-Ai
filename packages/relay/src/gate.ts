@@ -27,7 +27,19 @@ import { COMPRESSED_HEAR_SECONDS, hearFormat } from './hearFormat.ts';
  * file cannot tell the difference.
  */
 
-export type RelayName = 'llm' | 'speech' | 'hear' | 'class' | 'icons';
+/**
+ * `live` is not a relay the way the others are: nothing passes through it.
+ * It mints a token (liveToken.ts) and the browser then talks to Google
+ * directly, so the mint is the ONLY moment the meter sees a Live session. It is
+ * named here so that moment is priced like any other call.
+ *
+ * It needs no migration to be claimed. claim_relay (0016, the current body)
+ * declares `p_relay` and never reads it, and relay_usage has no relay column,
+ * so 'live' is metered, counted against both daily ceilings and the per-minute
+ * window exactly like 'llm'. It is NOT recordable as usage: see `UsageEvent`
+ * in usage.ts.
+ */
+export type RelayName = 'llm' | 'speech' | 'hear' | 'class' | 'icons' | 'live';
 
 /**
  * The route families that spend no vendor money: a report, a prep lock, an
@@ -100,12 +112,97 @@ export type Price =
   | { per: 'character'; units: number }
   | { per: 'second'; units: number };
 
+/**
+ * ONE LIVE SESSION, CLAIMED AT THE MINT, BECAUSE THE MINT IS ALL WE SEE.
+ *
+ * A Live session bills Google straight from the browser; no byte of it passes
+ * this server. So the session is claimed when its token is minted — per call,
+ * flat, like llm and for a stronger version of llm's reason: nothing about
+ * the session exists yet. What one mint sells is LIVE_SESSION_TURNS (8)
+ * student turns in at most LIVE_SESSION_MS (6 minutes), liveToken.ts; a
+ * class is several sessions, each its own mint and its own claim.
+ *
+ * FROM WHAT THE LIVE SPIKE MEASURED (tools/live-sim/SPIKE.md §4–5,
+ * gemini-3.8-live, 2026-09-30, typed input, spoken replies). Every frame is a
+ * generation, and every generation re-reads the WHOLE context, her own past
+ * speech included, as audio: prompt tokens ran 1071 → 1232 → 1319 → 1475 →
+ * 1558. A student turn is two passes, the tool call and her reply. At the
+ * published rates for the 3.8 / 3.1 Live row — text in $0.75/M, audio in
+ * $3/M, text out $4.50/M, audio out $12/M, thinking priced as text out
+ * (UNVERIFIED for Live) — run 2's frames cost:
+ *
+ *   opener                    1071 in (187 audio), 120 audio out,
+ *                             90 thinking                         $0.00307
+ *   student turn 1            call + reply                        $0.00562
+ *   student turn 2            call + reply                        $0.00639
+ *   so each turn costs $0.00077 more than the one before.
+ *
+ * Spoken input is NOT measured — every spike turn was typed. A 5 s answer
+ * at the docs' 25 audio tokens a second is 125 tokens x $3/M, read by both
+ * passes: $0.00075 on its own turn and on every turn after it. So student
+ * turn k costs about
+ *
+ *   $0.00562 + $0.00077 (k - 1) + $0.00075 k
+ *
+ * and a session of the opener and 8 such turns:
+ *
+ *   0.00307 + 8 x 0.00562 + 0.00077 x 28 + 0.00075 x 36  =  $0.0966
+ *   x Rs 95.6/USD (the table's rate) = Rs 9.23 = 923 paise -> 1,000 units,
+ *   rounded up to the next hundred.
+ *
+ * The BLOCKING run, the mode SPIKE.md picks for driver A (one frame per student turn),
+ * prices the same session at 916 paise. tests/liveToken.test.ts recomputes
+ * both from the frames themselves, so this number cannot pass by being typed
+ * twice.
+ *
+ * A PROJECTION, UNVERIFIED until the lab measures whole classes from its
+ * CostLines: it extends two measured turns to eight; 3.8's measured replies
+ * were one sentence, and a point (say + ask) is longer, so this is a floor;
+ * and it assumes only the student's speech reaches the context — whether a
+ * mic streaming silence between turns is billed and kept is not known.
+ * Re-price from the lab's numbers.
+ *
+ * WHY A SESSION AND NOT A WHOLE CLASS. Because every turn re-reads all the
+ * turns before it, one session's cost grows with the square of its turns.
+ * The Respiration plan walked with every answer right first time is 28
+ * student turns — the opener, 5 predictions, 9 point asks, 5 checks, 5
+ * teach-backs and 3 recap prompts (content/plans/class10-respiration.json
+ * at 35832aa): in ONE session that is about 7,220 paise, and past 37
+ * spoken turns one session costs more than a student's whole 12,000-unit
+ * day — no flat per-mint price could cover it, and claim_relay's 12,000 is a
+ * plpgsql constant (0016:62). As sessions of 8, 8, 8 and 4, each starting
+ * from an empty context, the same 28 turns cost about 3,129 paise. So the
+ * lab's driver A cannot run the whole class inside one Live session and
+ * stay on the meter: it has to open a fresh session (a fresh mint) every
+ * LIVE_SESSION_TURNS turns or before the token expires, whichever is first.
+ *
+ * WHAT THIS NUMBER DOES TO THE DAY, said out loud: 1,000 of a student's
+ * 12,000 units is twelve sessions, 96 student turns — three classes of up to
+ * 32 turns (four sessions each) for one tester, and nothing else that day.
+ * A 28-turn class whose sessions run out of time at six turns takes five
+ * sessions, 5,000 units, and then two fit. 50,000 a project day is fifty
+ * sessions.
+ *
+ * AND WHAT IT DOES TO OUR EXPOSURE. The meter counts sessions; only the
+ * token's six-minute life bounds what one session spends, and a caller that
+ * ignores the turn budget — or fills the context with text — can spend far
+ * more than 923 paise in it. One reply over a full context, the 131,072
+ * input tokens SPIKE.md §1 lists for both models, re-read as text, is
+ * 131,072 x $0.75/M = $0.098, about 940 paise: a whole session's price in
+ * a single generation. How many such generations one caller can drive in
+ * six minutes is UNVERIFIED. A cheaper session means more tokens a day
+ * under the same project cap, so this price makes the project's 50,000 a
+ * weaker bound on Live spend than 8,200 was. The claim is made before the
+ * mint and is never refunded; a busy Google is asked again inside the one
+ * claim (liveToken.ts MINT_ATTEMPTS).
+ */
 export const UNITS: Record<RelayName, Price> = {
   llm: { per: 'call', units: 85 },
   hear: { per: 'second', units: 0.69 },
   speech: { per: 'character', units: 0.29 },
   class: { per: 'call', units: 10 },
   icons: { per: 'call', units: 1 },
+  live: { per: 'call', units: 1_000 },
 };
 
 /**

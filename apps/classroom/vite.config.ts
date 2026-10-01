@@ -31,6 +31,7 @@ import {
   transcribeViaFormData,
   type Gate,
   type HeardAudio,
+  type TokenSource,
   type UsageEvent,
 } from '../../packages/relay/src/index.ts';
 // The markup gate, imported from the package that defines it rather than
@@ -57,7 +58,7 @@ const pkg = (name: string) =>
  *   - the ticket secret is a fixed dev string, so a restart does not invalidate
  *     a ticket the open page is still using.
  */
-function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Plugin {
+function openRouterRelays(key: string, supabaseUrl: string, anonKey: string, geminiApiKey: string): Plugin {
   const gate: Gate = {
     verify: cacheVerifier(createSupabaseVerifier(supabaseUrl, anonKey)),
     ledger: createMemoryLedger(),
@@ -113,6 +114,14 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
     ...(process.env.RELAY_DISABLED ? { disabled: true } : {}),
     ...(vertex ? { vertex } : {}),
     /**
+     * GEMINI_API_KEY from the root .env.local (or the shell's environment,
+     * which loadEnv with the '' prefix also reads), for /api/live-token only —
+     * so the dev server mints Live tokens exactly as production does. It
+     * reaches this function through loadEnv in the config below, never through
+     * import.meta.env: only VITE_-prefixed names are put in the client bundle.
+     */
+    ...(geminiApiKey ? { geminiApiKey } : {}),
+    /**
      * The wave-2 route families, on their memory halves — the SAME
      * handleRelay decisions as production, counted in maps because a laptop
      * has no Postgres. A report logs one line here (no OPS_ALERT_WEBHOOK in
@@ -148,6 +157,11 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
       ? '  relays: models and speech on Vertex'
       : '  relays: everything on OpenRouter (no service account file found)',
   );
+  console.log(
+    geminiApiKey
+      ? '  relays: live tokens minted with GEMINI_API_KEY'
+      : '  relays: no GEMINI_API_KEY, so /api/live-token answers 503',
+  );
 
   return {
     name: 'curie-openrouter-relays',
@@ -156,7 +170,16 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
       // /api/prep and /api/enroll are PREFIX mounts: connect matches the
       // prefix, and the URL rebuilt below carries the tail (/lock, /state,
       // /otp, …) back to routeFor exactly as production sees it.
-      for (const route of ['/api/llm', '/api/speech', '/api/hear', '/api/ticket', '/api/report', '/api/prep', '/api/enroll']) {
+      for (const route of [
+        '/api/llm',
+        '/api/speech',
+        '/api/hear',
+        '/api/ticket',
+        '/api/live-token',
+        '/api/report',
+        '/api/prep',
+        '/api/enroll',
+      ]) {
         server.middlewares.use(route, (req, res) => {
           void (async () => {
             const relayRequest = await toRelayRequest(req);
@@ -360,6 +383,7 @@ export default defineConfig(({ mode }) => {
         env.OPENROUTER_API_KEY ?? '',
         env.VITE_SUPABASE_URL ?? '',
         env.VITE_SUPABASE_ANON_KEY ?? '',
+        env.GEMINI_API_KEY ?? '',
       ),
       iconRelay(),
       classWriter(),
