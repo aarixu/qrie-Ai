@@ -9,6 +9,7 @@ import { startAccountSync } from './lib/account';
 import { drainLedger, startLedgerDrain } from './lib/ledgerSync';
 import { ensureIdentity } from './lib/relay';
 import { nudgeIfDue, watchScheduleForNative } from './lib/reminders';
+import { unlockAudio } from './avatar/avatarBus';
 
 // Body owns no colour: the page ground is `html { background }` in index.css,
 // which reads --c-background and so follows the theme. An inline background
@@ -16,6 +17,15 @@ import { nudgeIfDue, watchScheduleForNative } from './lib/reminders';
 // exactly what it used to be, and what a dark-theme student saw when the page
 // overscrolled.
 document.body.style.margin = '0';
+
+/**
+ * Her voice, unlocked by the first tap anywhere (avatar/avatarBus.ts
+ * `unlockAudio`): iPhone Safari plays nothing through a context made outside a
+ * tap, and the class starts her talking after the tap has passed.
+ */
+for (const event of ['pointerdown', 'touchend', 'keydown'] as const) {
+  document.addEventListener(event, unlockAudio, { capture: true, passive: true });
+}
 
 /**
  * Before anything else that can fail.

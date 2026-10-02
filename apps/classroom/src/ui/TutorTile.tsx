@@ -21,8 +21,12 @@ export type TutorMode = 'idle' | 'teaching' | 'listening';
  * "a normal background like a drawing room", not tied to the topic), the way a
  * tutor on a video call is in one. Her renderer draws with a transparent clear
  * (HumanAvatar), so the room is simply the tile's own background.
+ *
+ * A RENDERED room, not a photograph (Aarav, the same evening: "avatar 3d meta
+ * human style hai, to bg bhi aisa hi hona chahiye"): a 3D character in front
+ * of a photo looks pasted on. Made by tools/avatar/background.mjs.
  */
-const ROOM = `${import.meta.env.BASE_URL}avatars/backgrounds/study.webp`;
+const ROOM = `${import.meta.env.BASE_URL}avatars/backgrounds/room3d.webp`;
 
 export function TutorTile({
   mode,

@@ -27,21 +27,29 @@ import { readEnvLocal } from '../prewarm/lib/envLocal.mjs';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../..');
 const OUT = join(HERE, 'out');
-const KEEP = join(ROOT, 'content/avatars/backgrounds/study.webp');
+const KEEP = join(ROOT, 'content/avatars/backgrounds/room3d.webp');
 /**
  * The model class preparation draws its pictures with, asked through the
  * project's own relay (Vertex), the way a class's pictures are. The AI Studio
  * key came back 429 "quota exceeded" for every image model (2026-10-02).
  */
 const MODEL = 'google/gemini-3.1-flash-image';
-const CANDIDATES = 3;
+const CANDIDATES = 4;
 
+/**
+ * A 3D-RENDERED ROOM, NOT A PHOTOGRAPH (Aarav, 2026-10-02: "avatar ka bg
+ * realistic hai jabki avatar ek 3d meta human style hai, to bg bhi aisa hi
+ * thoda hona chahiye"). The first room was a photo, and a rendered character in
+ * front of a photo looks pasted on. This asks for the same kind of room as a
+ * rendered scene, in the look of a high-quality real-time 3D engine, so she and
+ * the room are one picture.
+ */
 const PROMPT = [
-  'A photograph of a warm, tidy home study corner in an Indian home, seen from where a video-call camera would sit,',
-  'used as the background of a friendly tutor on a video call.',
-  'Wooden bookshelf with neatly arranged books, a small potted plant, a desk lamp glowing softly, a window with daylight,',
-  'a cream wall. Calm, inviting, uncluttered.',
-  'Shallow depth of field: the whole room is softly out of focus, like a portrait-mode background.',
+  'A 3D-rendered interior, in the style of a high-quality real-time game engine scene (like Unreal Engine 5), not a photograph:',
+  'a calm, modern study corner for a friendly online tutor, seen from where a video-call camera would sit.',
+  'Wooden bookshelf with neatly arranged books, a small potted plant, a desk lamp glowing softly, a window with soft daylight,',
+  'a warm cream wall. Soft global illumination, gentle rim light, slightly stylised materials, clean and uncluttered.',
+  'Shallow depth of field: the whole room is softly out of focus behind where the person would stand.',
   'Nobody in the frame. No text, no logos, no screens, no posters with writing.',
   'Landscape, 16:9.',
 ].join(' ');
@@ -87,7 +95,7 @@ for (let n = 1; n <= CANDIDATES; n += 1) {
     console.log(`candidate ${n}: ${res.status} ${JSON.stringify(body.error ?? body).slice(0, 300)}`);
     continue;
   }
-  const file = join(OUT, `study-${n}.png`);
+  const file = join(OUT, `room3d-${n}.png`);
   writeFileSync(file, Buffer.from(data, 'base64'));
   console.log(`candidate ${n}: ${file} (${Math.round(statSync(file).size / 1024)} KB)`);
 }

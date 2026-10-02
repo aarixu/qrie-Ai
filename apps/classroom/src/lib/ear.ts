@@ -145,6 +145,9 @@ const MIC_STALL_MS = 3_000;
 export async function listenOnce(
   opts: { isCancelled?: () => boolean; stallMs?: number; graceMs?: number } = {},
 ): Promise<Heard> {
+  // The class's mic, still opening: wait for it rather than open a second
+  // capture beside it (a phone may mute one for the other).
+  if (open === null && opening !== null) await opening;
   if (open !== null) return listenOnOpenEar(open, opts);
   const isCancelled = opts.isCancelled ?? ((): boolean => false);
   const stallMs = opts.stallMs ?? MIC_STALL_MS;
@@ -382,9 +385,9 @@ export function openEar(): Promise<boolean> {
     lastChunkAt: Date.now(),
   };
   ear.mic = createMicCapture((pcm) => hearChunk(ear, pcm), CHUNK_MS);
-  opening = ear.mic.start().then(
+  const attempt: Promise<boolean> = ear.mic.start().then(
     () => {
-      opening = null;
+      if (opening === attempt) opening = null;
       if (mine !== generation) {
         ear.mic.stop();
         return false;
@@ -393,16 +396,19 @@ export function openEar(): Promise<boolean> {
       return true;
     },
     () => {
-      opening = null;
+      if (opening === attempt) opening = null;
+      ear.mic.stop();
       return false;
     },
   );
-  return opening;
+  opening = attempt;
+  return attempt;
 }
 
-/** Close the class's mic. Any listen on it ends as cancelled. */
+/** Close the class's mic. Any listen on it ends as cancelled; one still opening is let go when it opens. */
 export function closeEar(): void {
   generation += 1;
+  opening = null;
   const ear = open;
   open = null;
   if (ear === null) return;
@@ -472,7 +478,13 @@ async function listenOnOpenEar(
   ear.fired = false;
 
   if (state === 'cancelled') return { text: null, reason: 'cancelled' };
-  if (state === 'dead') return { text: null, reason: 'error' };
+  if (state === 'dead') {
+    // The class's mic stopped for good (the app went to the background, a
+    // call took the device). Closed, so the next answer opens a fresh mic
+    // instead of failing at once on this one.
+    if (open === ear) closeEar();
+    return { text: null, reason: 'error' };
+  }
   if (state === 'nothing') return { text: null, reason: 'silence' };
 
   let end = kept.length;

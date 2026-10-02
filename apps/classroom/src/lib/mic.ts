@@ -41,6 +41,15 @@ export async function requestMic(): Promise<MicStatus> {
 }
 
 /**
+ * The mic was opened some other way — the class's own open ear (lib/ear.ts
+ * `openEar`), which asks the browser itself. Recorded so nothing asks again
+ * with a second capture beside it.
+ */
+export function noteMicGranted(): void {
+  cached = 'granted';
+}
+
+/**
  * HAVE WE EXPLAINED OURSELVES YET?
  *
  * Remembered across launches, not just for the session, because the cost of

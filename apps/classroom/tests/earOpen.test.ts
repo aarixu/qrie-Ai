@@ -15,6 +15,8 @@ const mic = vi.hoisted(() => ({
   onChunk: null as ((pcm: Int16Array) => void) | null,
   started: 0,
   stopped: 0,
+  /** Holds a mic's start, the way a permission prompt does. */
+  gate: Promise.resolve() as Promise<void>,
 }));
 const posts = vi.hoisted(() => [] as { type: string; bytes: number }[]);
 
@@ -24,17 +26,22 @@ const loud = () => new Int16Array(CHUNK).fill(3000);
 
 vi.mock('@ai-tutor/voice', async (real) => ({
   ...(await real<typeof import('@ai-tutor/voice')>()),
-  createMicCapture: (onChunk: (pcm: Int16Array) => void) => ({
-    start: async () => {
-      mic.started += 1;
-      mic.onChunk = onChunk;
-    },
-    stop: () => {
-      mic.stopped += 1;
-      mic.onChunk = null;
-    },
-    recording: async () => null,
-  }),
+  createMicCapture: (onChunk: (pcm: Int16Array) => void) => {
+    let running = true;
+    return {
+      start: async () => {
+        mic.started += 1;
+        await mic.gate;
+        if (running) mic.onChunk = onChunk;
+      },
+      stop: () => {
+        running = false;
+        mic.stopped += 1;
+        if (mic.onChunk === onChunk) mic.onChunk = null;
+      },
+      recording: async () => null,
+    };
+  },
 }));
 
 vi.mock('../src/lib/relay', () => ({
@@ -55,6 +62,7 @@ const tick = () => new Promise((r) => setTimeout(r, 0));
 beforeEach(() => {
   mic.started = 0;
   mic.stopped = 0;
+  mic.gate = Promise.resolve();
   posts.length = 0;
 });
 afterEach(() => closeEar());
@@ -127,6 +135,43 @@ describe('the open ear', () => {
     await listening;
     expect(heard).not.toHaveBeenCalled();
     off();
+  });
+
+  it('closes itself when its mic stops delivering, so the next answer gets a fresh mic', async () => {
+    // A phone backgrounded mid-class, a call taking the device: the open mic
+    // goes quiet for good. Left open it failed every later listen at once.
+    await openEar();
+    const heard = await listenOnce({ stallMs: 300 });
+    expect(heard.reason).toBe('error');
+    expect(isEarOpen()).toBe(false);
+  });
+
+  it('a listen while the mic is still opening waits for it, rather than opening a second one', async () => {
+    let release: () => void = () => undefined;
+    mic.gate = new Promise((r) => (release = r));
+    const opening = openEar();
+    const listening = listenOnce();
+    release();
+    await opening;
+    await tick();
+    push(loud, 8);
+    push(quiet, 12);
+    expect((await listening).reason).toBe('heard');
+    expect(mic.started).toBe(1);
+  });
+
+  it('lets go of a mic that finishes opening after the class closed it, and opens afresh after', async () => {
+    let release: () => void = () => undefined;
+    mic.gate = new Promise((r) => (release = r));
+    const first = openEar();
+    closeEar();
+    release();
+    expect(await first).toBe(false);
+    expect(mic.stopped).toBe(1);
+    mic.gate = Promise.resolve();
+    expect(await openEar()).toBe(true);
+    expect(isEarOpen()).toBe(true);
+    expect(mic.started).toBe(2);
   });
 
   it('never hands the same answer to the next listen', async () => {

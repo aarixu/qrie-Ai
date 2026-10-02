@@ -94,13 +94,17 @@ const roots: Root[] = [];
 let llmBodies: string[] = [];
 let spoken: string[] = [];
 
-/** Holds the class's first line (she is mid-sentence) until it is cancelled; says the rest at once. */
-function voice(): TtsAdapter {
+/**
+ * Holds the class's first line (she is mid-sentence) until it is cancelled,
+ * and any line `holds` names; says the rest at once.
+ */
+function voice(holds: (text: string) => boolean = () => false): TtsAdapter {
   const waiting: Array<() => void> = [];
   let first = true;
   return {
     speak(text) {
       spoken.push(text);
+      if (holds(text)) return new Promise<void>((resolve) => waiting.push(resolve));
       if (/^(Hi|Welcome back)\b/.test(text)) return Promise.resolve();
       if (!first) return Promise.resolve();
       first = false;
@@ -120,14 +124,14 @@ async function tick(times = 8): Promise<void> {
   }
 }
 
-async function openClass(lesson: Lesson): Promise<HTMLElement> {
+async function openClass(lesson: Lesson, tts: TtsAdapter = voice()): Promise<HTMLElement> {
   const host = document.body.appendChild(document.createElement('div'));
   const root = createRoot(host);
   roots.push(root);
   await act(async () => {
     root.render(
       <MemoryRouter initialEntries={['/lesson/class10-blood']}>
-        <ClassRoom lesson={lesson} tts={voice()} diagrams={{}} onExit={() => undefined} warm />
+        <ClassRoom lesson={lesson} tts={tts} diagrams={{}} onExit={() => undefined} warm />
       </MemoryRouter>,
     );
   });
@@ -219,5 +223,53 @@ describe('talking over her question', () => {
     await tick(12);
     const answered = ledgerOutbox.get().pending.filter((e) => e.kind === 'answered');
     expect(answered.map((e) => (e.payload as { verdict?: string }).verdict)).toEqual(['right']);
+  });
+
+  it('does not judge her own question, back through the speaker, as their answer', async () => {
+    await openClass(asking);
+    // The ear first hears her question leaking through; then the student.
+    ear.queued = [asking.beats[0].narration, 'Four'];
+    await talk();
+    await tick(16);
+    const answered = ledgerOutbox.get().pending.filter((e) => e.kind === 'answered');
+    expect(answered.map((e) => (e.payload as { verdict?: string }).verdict)).toEqual(['right']);
+  });
+});
+
+describe('the review’s cases (2026-10-02)', () => {
+  it('talking over her reply in a doubt: she stops, and what they say goes to her next', async () => {
+    const reply = 'Blood carries oxygen in red blood cells.';
+    const host = await openClass(teaching, voice((t) => t === reply));
+    ear.queued = ['wait, why is blood red?'];
+    await talk(); // opens the doubt; her reply is now being said (held)
+    expect(inDoubt(host)).toBe(true);
+    expect(spoken).toContain(reply);
+    ear.queued = ['but why not blue?'];
+    await talk(); // over her reply
+    await tick(16);
+    expect(llmBodies.some((b) => b.includes('but why not blue?'))).toBe(true);
+  });
+
+  it('a hand raised while she is hearing an interruption opens one doubt, and the class is not restarted under it', async () => {
+    const host = await openClass(teaching);
+    await talk(); // nothing queued: the interruption's listen is still open
+    const said = spoken.length;
+    await act(async () => {
+      host.querySelector<HTMLElement>('[aria-label="Raise hand and ask a doubt"]')!.click();
+    });
+    await tick(16);
+    expect(inDoubt(host)).toBe(true);
+    expect(ledgerOutbox.get().pending.filter((e) => e.kind === 'confused')).toHaveLength(1);
+    // The beat was not said again under the doubt.
+    expect(spoken.slice(said)).not.toContain(teaching.beats[0].narration);
+  });
+
+  it('a beat whose own line set the ear off is not interrupted again', async () => {
+    await openClass(teaching);
+    ear.queued = [teaching.beats[0].narration.split(' ').slice(0, 8).join(' ')]; // her echo
+    await talk();
+    const listens = ear.listens;
+    await talk(); // the same leak, the same beat
+    expect(ear.listens).toBe(listens);
   });
 });

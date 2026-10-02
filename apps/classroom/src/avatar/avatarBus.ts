@@ -57,6 +57,45 @@ export function avatarAudio(src: string): SpeechElement {
   return el as unknown as SpeechElement;
 }
 
+/** Her voice's one context, made once: by the first tap (`unlockAudio`) or her first line. */
+function voiceContext(): AudioContext {
+  if (audioCtx === null) {
+    audioCtx = new AudioContext();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 512;
+    samples = new Uint8Array(analyser.fftSize);
+    analyser.connect(audioCtx.destination);
+  }
+  return audioCtx;
+}
+
+let unlocked = false;
+
+/**
+ * HER VOICE ON A PHONE (Aarav, 2026-10-02: "ise mobile use ke liye ready
+ * karo"). The context her voice plays through used to be made when she first
+ * spoke — after the student's tap had passed — and iPhone Safari keeps a
+ * context made outside a tap suspended, which plays nothing: a silent tutor.
+ * Called on the first tap anywhere in the app (main.tsx), this makes the
+ * context INSIDE the tap, wakes it, and plays one silent sample, which is what
+ * unlocks audio on iOS. Later taps cost nothing. Where there is no Web Audio
+ * it does nothing; her voice falls back to the browser's own there.
+ */
+export function unlockAudio(): void {
+  if (unlocked) return;
+  try {
+    const ctx = voiceContext();
+    if (ctx.state === 'suspended') void ctx.resume().catch(() => undefined);
+    const silence = ctx.createBufferSource();
+    silence.buffer = ctx.createBuffer(1, 1, 22_050);
+    silence.connect(ctx.destination);
+    silence.start(0);
+    unlocked = true;
+  } catch {
+    // No Web Audio in this browser.
+  }
+}
+
 /**
  * HER VOICE AS WEB AUDIO (2026-09-28): the Gemini PCM stream is scheduled as
  * buffers, not played by an element, so the face listens to the same
@@ -67,15 +106,8 @@ let pcmStartedAt: number | null = null;
 
 export function avatarPcmOutput(): PcmOutput | null {
   try {
-    if (audioCtx === null) {
-      audioCtx = new AudioContext();
-      analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 512;
-      samples = new Uint8Array(analyser.fftSize);
-      analyser.connect(audioCtx.destination);
-    }
-    const out = createWebAudioOutput(audioCtx, analyser!);
-    const ctx = audioCtx;
+    const ctx = voiceContext();
+    const out = createWebAudioOutput(ctx, analyser!);
     return {
       ...out,
       play(s, rate, at) {
