@@ -59,7 +59,13 @@ export function Work() {
                 'flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-colors',
                 subject === s ? 'border-transparent font-medium text-white' : 'bg-card text-muted-foreground'
               )}
-              style={subject === s ? { background: s ? subjectHue(s).solid : 'var(--primary)', color: s ? '#ffffff' : 'var(--primary-foreground)' } : undefined}
+              style={
+                subject === s
+                  ? s
+                    ? { background: `color-mix(in oklab, ${subjectHue(s).solid} 80%, black)`, color: '#ffffff' }
+                    : { background: 'var(--primary)', color: 'var(--primary-foreground)' }
+                  : undefined
+              }
             >
               {s && subject !== s && <span className='size-2 rounded-full' style={{ background: subjectHue(s).solid }} />}
               {s ?? 'All subjects'}

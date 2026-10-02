@@ -256,6 +256,7 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
       queryFn: () => api.assignmentResults(a.id),
     })),
   })
+  const photos = usePhotos(results.flatMap((r) => (r.data ?? []).map((x) => x.studentUserId)))
   if (work.isPending || results.some((r) => r.isPending)) return <Loading what='the gradebook' />
   const failed = work.error ?? results.find((r) => r.isError)?.error
   if (failed) return <Problem error={failed} />
@@ -299,8 +300,11 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
             return (
               <TableRow key={row.studentUserId}>
                 <TableCell className='sticky left-0 bg-background font-medium'>
-                  <span className='me-2 text-muted-foreground tabular-nums'>{row.rollNumber}</span>
-                  <StudentLink id={row.studentUserId} name={row.displayName} />
+                  <span className='flex items-center gap-2'>
+                    <span className='w-5 text-end text-muted-foreground tabular-nums'>{row.rollNumber}</span>
+                    <PersonAvatar userId={row.studentUserId} name={row.displayName} photo={photos.get(row.studentUserId)} className='size-7' />
+                    <StudentLink id={row.studentUserId} name={row.displayName} />
+                  </span>
                 </TableCell>
                 {published.map((a, i) => (
                   <TableCell key={a.id} className='text-center'>

@@ -27,7 +27,7 @@ export function applyBrand(me: Me | null): void {
   const { primary, accent } = brandColours(me)
   root.style.setProperty('--primary', primary)
   root.style.setProperty('--primary-foreground', readableOn(primary))
-  root.style.setProperty('--ring', primary)
+  root.style.setProperty('--brand-primary', primary)
   root.style.setProperty('--brand-accent', accent)
   root.style.setProperty('--brand-accent-foreground', readableOn(accent))
   document.title = me ? me.schoolName : 'Qrie'

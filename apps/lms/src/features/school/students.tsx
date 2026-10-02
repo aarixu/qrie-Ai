@@ -196,7 +196,10 @@ function StudentCard({ s, photo }: { s: SchoolStudent; photo: string | undefined
 function Stat({ label, value, colour, bad }: { label: string; value: string; colour: string; bad?: boolean }) {
   return (
     <div className='rounded-lg px-1 py-1.5' style={{ background: `${colour}14` }}>
-      <p className={cn('text-sm font-bold tabular-nums', bad && 'text-destructive')} style={bad ? undefined : { color: colour }}>
+      <p
+        className={cn('text-sm font-bold tabular-nums', bad && 'text-destructive')}
+        style={bad ? undefined : { color: `color-mix(in oklab, ${colour} 72%, black)` }}
+      >
         {value}
       </p>
       <p className='text-[10px] text-muted-foreground uppercase'>{label}</p>

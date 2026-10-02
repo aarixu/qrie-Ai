@@ -139,7 +139,7 @@ function Stat({
       <span className='mx-auto mb-1 flex size-8 items-center justify-center rounded-full' style={{ background: `${colour}26`, color: colour }}>
         <Icon className='size-4' />
       </span>
-      <p className='text-2xl font-bold tabular-nums' style={{ color: colour }}>
+      <p className='text-2xl font-bold tabular-nums' style={{ color: `color-mix(in oklab, ${colour} 72%, black)` }}>
         {value}
       </p>
       <p className='text-[11px] text-muted-foreground'>{label}</p>

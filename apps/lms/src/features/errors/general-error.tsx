@@ -15,19 +15,19 @@ export function GeneralError({
   return (
     <div className={cn('h-svh w-full', className)}>
       <div className='m-auto flex h-full w-full flex-col items-center justify-center gap-2'>
-        {!minimal && (
-          <h1 className='text-[7rem] leading-tight font-bold'>500</h1>
-        )}
-        <span className='font-medium'>Oops! Something went wrong {`:')`}</span>
-        <p className='text-center text-muted-foreground'>
-          We apologize for the inconvenience. <br /> Please try again later.
+        <span className='text-lg font-semibold'>This page could not load</span>
+        <p className='max-w-sm text-center text-muted-foreground'>
+          Try again in a moment. If it keeps happening, tell your school office what you were doing.
         </p>
         {!minimal && (
           <div className='mt-6 flex gap-4'>
             <Button variant='outline' onClick={() => history.go(-1)}>
-              Go Back
+              Go back
             </Button>
-            <Button onClick={() => navigate({ to: '/' })}>Back to Home</Button>
+            <Button onClick={() => window.location.reload()}>Try again</Button>
+            <Button variant='ghost' onClick={() => navigate({ to: '/' })}>
+              Home
+            </Button>
           </div>
         )}
       </div>

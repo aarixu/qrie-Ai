@@ -20,9 +20,10 @@ export function brandColours(me: Me | null): { primary: string; accent: string }
 
 /**
  * The school's colours on the teacher app, as on the student app
- * (apps/student/src/lib/brand.ts): `primary` for what is pressed and the
- * first chart series, `accent` for highlights, each with black or white text
- * chosen for contrast.
+ * (apps/student/src/lib/brand.ts): `primary` for what is pressed, the
+ * sidebar and the focus ring, `accent` for highlights, each with black or
+ * white text chosen for contrast. Charts keep one colour per measure
+ * (features/analytics/charts.tsx MEASURE), whatever the school's.
  */
 export function applyBrand(me: Me | null): void {
   const root = document.documentElement
@@ -30,10 +31,9 @@ export function applyBrand(me: Me | null): void {
   const set = (name: string, value: string) => root.style.setProperty(name, value)
   set('--primary', primary)
   set('--primary-foreground', readableOn(primary))
-  set('--ring', primary)
+  set('--brand-primary', primary)
   set('--sidebar-primary', primary)
   set('--sidebar-primary-foreground', readableOn(primary))
-  set('--chart-1', primary)
   set('--brand-accent', accent)
   set('--brand-accent-foreground', readableOn(accent))
 }

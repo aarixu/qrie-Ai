@@ -6,7 +6,9 @@ import { Image as ImageIcon, Pencil } from 'lucide-react'
 import { toast } from 'sonner'
 import type { AssignmentOverview, ItemStats, ResultRow, WorkStatus } from '@ai-tutor/lms-client'
 import { api, backend } from '@/lib/backend'
+import { usePhotos } from '@/lib/photos'
 import { cn } from '@/lib/utils'
+import { PersonAvatar } from '@/components/person-avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -192,6 +194,7 @@ function Students({
   photo: boolean
   checklist: boolean
 }) {
+  const photos = usePhotos(rows.map((r) => r.studentUserId))
   const [marking, setMarking] = useState<{ row: ResultRow; kind: 'mcq' | 'photo' } | null>(null)
   const [picked, setPicked] = useState<Set<string>>(new Set())
   const toggle = (id: string, on: boolean) => {
@@ -236,7 +239,12 @@ function Students({
                 />
               </TableCell>
               <TableCell className='tabular-nums'>{r.rollNumber}</TableCell>
-              <TableCell className='font-medium'>{r.displayName}</TableCell>
+              <TableCell className='font-medium'>
+                <span className='flex items-center gap-2'>
+                  <PersonAvatar userId={r.studentUserId} name={r.displayName} photo={photos.get(r.studentUserId)} className='size-7' />
+                  {r.displayName}
+                </span>
+              </TableCell>
               <TableCell>
                 {r.submitted ? (
                   <span className={cn(r.late && 'text-orange-600')}>
@@ -578,6 +586,7 @@ function ReleaseResults({ a }: { a: AssignmentOverview }) {
 
 /** Marks for a test on paper: one box per student, saved as the teacher moves on (lms.record_paper_mark). */
 function PaperMarks({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
+  const photos = usePhotos(rows.map((r) => r.studentUserId))
   const entered = rows.filter((r) => r.paperScore !== null || r.teacherStatus === 'absent').length
   return (
     <div className='space-y-2'>
@@ -598,7 +607,12 @@ function PaperMarks({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
             {rows.map((r) => (
               <TableRow key={r.studentUserId}>
                 <TableCell className='tabular-nums'>{r.rollNumber}</TableCell>
-                <TableCell className='font-medium'>{r.displayName}</TableCell>
+                <TableCell className='font-medium'>
+                <span className='flex items-center gap-2'>
+                  <PersonAvatar userId={r.studentUserId} name={r.displayName} photo={photos.get(r.studentUserId)} className='size-7' />
+                  {r.displayName}
+                </span>
+              </TableCell>
                 <TableCell>
                   <MarkBox a={a} row={r} />
                 </TableCell>

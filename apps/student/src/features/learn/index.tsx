@@ -60,7 +60,7 @@ export function Learn() {
                   'flex shrink-0 items-center gap-2 rounded-full border py-1 ps-1 pe-3 text-sm transition-colors',
                   current === s ? 'border-transparent font-medium text-white' : 'bg-card text-muted-foreground'
                 )}
-                style={current === s ? { background: subjectHue(s).solid } : undefined}
+                style={current === s ? { background: `color-mix(in oklab, ${subjectHue(s).solid} 80%, black)` } : undefined}
               >
                 <SubjectBadge subject={s} className={cn('size-7 rounded-full', current === s && 'bg-white/90!')} />
                 {s}
