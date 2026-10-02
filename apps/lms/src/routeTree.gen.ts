@@ -21,6 +21,7 @@ import { Route as AuthenticatedBankRouteImport } from './routes/_authenticated/b
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedSchoolIndexRouteImport } from './routes/_authenticated/school/index'
+import { Route as AuthenticatedSchoolActivityRouteImport } from './routes/_authenticated/school/activity'
 import { Route as AuthenticatedSchoolClassesRouteImport } from './routes/_authenticated/school/classes'
 import { Route as AuthenticatedSchoolPeopleRouteImport } from './routes/_authenticated/school/people'
 import { Route as AuthenticatedSchoolSettingsRouteImport } from './routes/_authenticated/school/settings'
@@ -94,6 +95,12 @@ const AuthenticatedSchoolIndexRoute =
   AuthenticatedSchoolIndexRouteImport.update({
     id: '/school/',
     path: '/school/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSchoolActivityRoute =
+  AuthenticatedSchoolActivityRouteImport.update({
+    id: '/school/activity',
+    path: '/school/activity',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSchoolClassesRoute =
@@ -180,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/bank': typeof AuthenticatedBankRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/school/activity': typeof AuthenticatedSchoolActivityRoute
   '/school/classes': typeof AuthenticatedSchoolClassesRoute
   '/school/people': typeof AuthenticatedSchoolPeopleRoute
   '/school/settings': typeof AuthenticatedSchoolSettingsRoute
@@ -204,6 +212,7 @@ export interface FileRoutesByTo {
   '/bank': typeof AuthenticatedBankRoute
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/school/activity': typeof AuthenticatedSchoolActivityRoute
   '/school/classes': typeof AuthenticatedSchoolClassesRoute
   '/school/people': typeof AuthenticatedSchoolPeopleRoute
   '/school/settings': typeof AuthenticatedSchoolSettingsRoute
@@ -231,6 +240,7 @@ export interface FileRoutesById {
   '/_authenticated/bank': typeof AuthenticatedBankRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/school/activity': typeof AuthenticatedSchoolActivityRoute
   '/_authenticated/school/classes': typeof AuthenticatedSchoolClassesRoute
   '/_authenticated/school/people': typeof AuthenticatedSchoolPeopleRoute
   '/_authenticated/school/settings': typeof AuthenticatedSchoolSettingsRoute
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/bank'
     | '/errors/$error'
+    | '/school/activity'
     | '/school/classes'
     | '/school/people'
     | '/school/settings'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/bank'
     | '/'
     | '/errors/$error'
+    | '/school/activity'
     | '/school/classes'
     | '/school/people'
     | '/school/settings'
@@ -308,6 +320,7 @@ export interface FileRouteTypes {
     | '/_authenticated/bank'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/school/activity'
     | '/_authenticated/school/classes'
     | '/_authenticated/school/people'
     | '/_authenticated/school/settings'
@@ -419,6 +432,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSchoolIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/school/activity': {
+      id: '/_authenticated/school/activity'
+      path: '/school/activity'
+      fullPath: '/school/activity'
+      preLoaderRoute: typeof AuthenticatedSchoolActivityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/school/classes': {
       id: '/_authenticated/school/classes'
       path: '/school/classes'
@@ -527,6 +547,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBankRoute: typeof AuthenticatedBankRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedSchoolActivityRoute: typeof AuthenticatedSchoolActivityRoute
   AuthenticatedSchoolClassesRoute: typeof AuthenticatedSchoolClassesRoute
   AuthenticatedSchoolPeopleRoute: typeof AuthenticatedSchoolPeopleRoute
   AuthenticatedSchoolSettingsRoute: typeof AuthenticatedSchoolSettingsRoute
@@ -545,6 +566,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBankRoute: AuthenticatedBankRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedSchoolActivityRoute: AuthenticatedSchoolActivityRoute,
   AuthenticatedSchoolClassesRoute: AuthenticatedSchoolClassesRoute,
   AuthenticatedSchoolPeopleRoute: AuthenticatedSchoolPeopleRoute,
   AuthenticatedSchoolSettingsRoute: AuthenticatedSchoolSettingsRoute,

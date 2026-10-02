@@ -307,6 +307,29 @@ describe('adding people from the school portal', () => {
     }
   });
 
+  it('closes the door on someone who has left: no sign-in, and their open session ends', async () => {
+    const admin = await signedIn('DEMO-T05');
+    const kid = await signedIn('DEMO-8A-5');
+    expect((await kid.api.me())?.loginId).toBe('DEMO-8A-5');
+    await admin.api.markLeft('DEMO-8A-5');
+    await expect(kid.api.me()).rejects.toThrow(/sign in again/i);
+    await expect(demoBackend(server.url, memorySession()).signIn('DEMO-8A-5', login('DEMO-8A-5').pin)).rejects.toThrow(
+      /closed/,
+    );
+    await admin.api.restoreAccount('DEMO-8A-5');
+    await signedIn('DEMO-8A-5');
+  });
+
+  it('ends every open session of someone given a new PIN, and logs who did it', async () => {
+    const admin = await signedIn('DEMO-T05');
+    const kid = await signedIn('DEMO-8A-6');
+    await admin.resetPin('DEMO-8A-6');
+    await expect(kid.api.me()).rejects.toThrow(/sign in again/i);
+    const log = (await admin.api.auditLog()).map((e) => `${e.actorName}: ${e.action} ${e.target}`);
+    expect(log).toContain('Anita Desai: pin-reset DEMO-8A-6');
+    expect(log.some((l) => /^Anita Desai: people-added /.test(l))).toBe(true);
+  });
+
   it("lets the admin give anyone in the school a new PIN, and nobody else's", async () => {
     const admin = await signedIn('DEMO-T05');
     const { loginId, pin } = await admin.resetPin('DEMO-8A-2');

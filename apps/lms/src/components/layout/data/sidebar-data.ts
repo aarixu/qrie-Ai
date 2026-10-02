@@ -1,6 +1,7 @@
 import {
   BookOpenCheck,
   GraduationCap,
+  History,
   LayoutDashboard,
   Library,
   Palette,
@@ -34,6 +35,7 @@ export function sidebarFor(kind: AccountKind | undefined): SidebarData {
             { title: 'Students', url: '/school/students', icon: GraduationCap },
             { title: 'Teachers', url: '/school/teachers', icon: Users },
             { title: 'Add people', url: '/school/people', icon: UserPlus },
+            { title: 'Activity log', url: '/school/activity', icon: History },
             { title: 'School settings', url: '/school/settings', icon: BookOpenCheck },
           ],
         },

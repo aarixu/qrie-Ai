@@ -16,11 +16,12 @@ import { setPin } from './auth.ts';
  * commits cannot both pass their checks against the same school, and a
  * failure part-way creates nobody.
  *
- * A PIN leaves the server only in the answer to the commit. So that a lost
- * answer does not lose the PINs, the answer is kept in this process's memory
- * for 15 minutes under the key the admin's browser sent, and a retry with
- * that key from the same admin gets it again. A PIN lost for good is replaced
- * with "new PIN".
+ * A new person's PIN leaves the server only in the answer to the commit. So
+ * that a lost answer does not lose the PINs, the answer is kept in this
+ * process's memory for 15 minutes under the key the admin's browser sent, and
+ * a retry with that key from the same admin gets it again. A PIN lost for
+ * good is replaced with "new PIN", whose answer carries the new one and which
+ * signs the person out everywhere.
  */
 
 export class ImportRefused extends Error {
@@ -79,6 +80,12 @@ export async function importForAdmin(db: PGlite, caller: string, request: Import
     }
     const result = await applyPlan(preview.plan, pgliteStore(t));
     for (const c of result.created) await setPin(t, c.loginId, c.userId, c.pin);
+    if (result.created.length) {
+      await t.query(
+        `insert into lms.audit_event (org_id, actor, action, target, details) values ($1, $2, 'people-added', $3, $4)`,
+        [org, caller, `${result.created.length} people`, JSON.stringify({ ids: result.created.map((c) => c.loginId) })],
+      );
+    }
     const rolls = new Map(preview.people.map((p) => [p.loginId, p.roll]));
     return {
       ...checked,
@@ -112,7 +119,17 @@ export async function resetPinForAdmin(
   const who = rows[0];
   if (!who) throw new ImportRefused(404, `There is no one in your school with the ID ${id || '(none)'}.`);
   const pin = newPin(who.kind);
-  await setPin(db, id, who.user_id, pin);
+  await db.transaction(async (tx) => {
+    const t = tx as unknown as PGlite;
+    await setPin(t, id, who.user_id, pin);
+    // Whoever held the old PIN is signed out everywhere.
+    await t.query(`delete from demo_auth.session where user_id = $1`, [who.user_id]);
+    await t.query(`insert into lms.audit_event (org_id, actor, action, target) values ($1, $2, 'pin-reset', $3)`, [
+      org,
+      caller,
+      id,
+    ]);
+  });
   return { loginId: id, displayName: who.display_name, pin };
 }
 

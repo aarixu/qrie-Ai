@@ -18,6 +18,8 @@ import { ChartCard, MEASURE } from '@/features/analytics/charts'
 import { PersonAvatar } from '@/components/person-avatar'
 import { usePhotos } from '@/lib/photos'
 import { PhotoUploadButton } from './photo-upload'
+import { useAuthStore } from '@/stores/auth-store'
+import { LeaveButton, LeftList } from './leavers'
 import { ResetPinButton } from './reset-pin'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
@@ -25,6 +27,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 export function SchoolTeachersPage() {
   const teachers = useQuery({ queryKey: ['school', 'teachers'], queryFn: api.schoolTeachers })
   const photos = usePhotos((teachers.data ?? []).map((t) => t.userId))
+  const me = useAuthStore((s) => s.me)
   return (
     <Page
       title='Teachers'
@@ -96,7 +99,10 @@ export function SchoolTeachersPage() {
                       {t.testsToRelease}
                     </TableCell>
                     <TableCell className='text-end'>
-                      <ResetPinButton loginId={t.loginId} name={t.displayName} size='sm' />
+                      <span className='flex justify-end gap-1'>
+                        <ResetPinButton loginId={t.loginId} name={t.displayName} size='sm' />
+                        {t.userId !== me?.userId && <LeaveButton loginId={t.loginId} name={t.displayName} kind={t.kind} size='sm' />}
+                      </span>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -105,6 +111,7 @@ export function SchoolTeachersPage() {
           </div>
         </div>
       )}
+      <LeftList kinds={['teacher', 'admin']} title='Staff who have left' />
     </Page>
   )
 }

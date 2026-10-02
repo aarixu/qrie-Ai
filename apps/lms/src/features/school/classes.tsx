@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import type { SchoolClass } from '@ai-tutor/lms-client'
@@ -7,6 +8,13 @@ import { api } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -107,6 +115,9 @@ function ClassTrendSheet({ c }: { c: SchoolClass }) {
           {c.teacherName} · {c.students} students · {c.workSet} pieces of work
         </SheetDescription>
       </SheetHeader>
+      <div className='px-4'>
+        <ChangeTeacher c={c} />
+      </div>
       <div className='space-y-4 overflow-y-auto px-4 pb-6'>
         {trend.isPending ? (
           <Loading what='the trend' />
@@ -134,5 +145,47 @@ function ClassTrendSheet({ c }: { c: SchoolClass }) {
         </Button>
       </div>
     </>
+  )
+}
+
+/** Gives the class to another teacher (lms.set_teaching): the new one first, then the old one off. */
+function ChangeTeacher({ c }: { c: SchoolClass }) {
+  const queryClient = useQueryClient()
+  const teachers = useQuery({ queryKey: ['school', 'teachers'], queryFn: api.schoolTeachers })
+  const [next, setNext] = useState<string>('')
+  const move = useMutation({
+    mutationFn: async () => {
+      await api.setTeaching(c.sectionId, c.subjectId, next, true)
+      await api.setTeaching(c.sectionId, c.subjectId, c.teacherLoginId, false)
+    },
+    onSuccess: () => {
+      toast.success('The class has a new teacher.')
+      queryClient.invalidateQueries({ queryKey: ['school'] })
+      setNext('')
+    },
+    onError: (e) => toast.error((e as Error).message),
+  })
+  const others = (teachers.data ?? []).filter((t) => t.loginId !== c.teacherLoginId)
+  return (
+    <div className='flex flex-wrap items-end gap-2 rounded-lg border p-3'>
+      <div className='min-w-48 flex-1 space-y-1'>
+        <p className='text-xs font-medium text-muted-foreground'>Give this class to</p>
+        <Select value={next} onValueChange={setNext}>
+          <SelectTrigger aria-label='New teacher' className='w-full'>
+            <SelectValue placeholder='Choose a teacher' />
+          </SelectTrigger>
+          <SelectContent>
+            {others.map((t) => (
+              <SelectItem key={t.loginId} value={t.loginId}>
+                {t.displayName} ({t.loginId})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <Button disabled={!next || move.isPending} onClick={() => move.mutate()}>
+        {move.isPending ? 'Saving…' : 'Change teacher'}
+      </Button>
+    </div>
   )
 }

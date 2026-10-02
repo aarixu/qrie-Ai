@@ -22,6 +22,7 @@ import { MEASURE, band, pct } from '@/features/analytics/charts'
 import { PersonAvatar } from '@/components/person-avatar'
 import { hueFor } from '@/lib/palette'
 import { usePhotos } from '@/lib/photos'
+import { LeftList } from './leavers'
 import { PhotoUploadButton } from './photo-upload'
 import { brandOf, inTurn, reportFor } from '@/features/students/report-pdf'
 import { useSchoolClasses, useSchoolStudents } from './overview'
@@ -133,6 +134,7 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
           ))}
         </div>
       )}
+      <LeftList kinds={['student']} title='Students who have left' />
     </Page>
   )
 }

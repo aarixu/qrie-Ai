@@ -448,6 +448,7 @@ export interface SchoolClass {
   grade: number;
   subjectName: string;
   teacherName: string;
+  teacherLoginId: string;
   students: number;
   workSet: number;
   handinRate: number | null;
@@ -492,6 +493,25 @@ export interface AccountPhoto {
   userId: string;
   base64: string;
   updatedAt: string;
+}
+
+/** Someone marked as having left the school (0034). */
+export interface LeftAccount {
+  userId: string;
+  displayName: string;
+  loginId: string;
+  kind: AccountKind;
+  leftAt: string;
+}
+
+/** One thing an admin did (0034): who, what, to whom, when. */
+export interface AuditEvent {
+  at: string;
+  actorName: string | null;
+  action: string;
+  /** A school ID, or a school ID and a class, e.g. 'SAF-T2 8A Mathematics'. */
+  target: string;
+  details: Record<string, unknown>;
 }
 
 /** The school's logo (0032): a PNG or JPEG, as base64. */
@@ -701,6 +721,27 @@ export function createLmsClient(t: Transport) {
     },
     /** The photos of these people the caller may see; people with none, or out of sight, are left out. */
     accountPhotos: (userIds: string[]) => rows<AccountPhoto>('account_photos', { p_users: userIds }),
+    /** A student or teacher who has left: they and their classes' children stop seeing each other at once. */
+    async markLeft(loginId: string): Promise<void> {
+      await t.value('mark_left', { p_login_id: loginId });
+    },
+    /** Everyone marked as left, newest first. The admin only. */
+    schoolLeft: () => rows<LeftAccount>('school_left'),
+    /** Undoes markLeft. */
+    async restoreAccount(loginId: string): Promise<void> {
+      await t.value('restore_account', { p_login_id: loginId });
+    },
+    /** Gives a class (section and subject) to a teacher, by school ID, or takes it away. */
+    async setTeaching(sectionId: string, subjectId: string, teacherLoginId: string, teaches: boolean): Promise<void> {
+      await t.value('set_teaching', {
+        p_section: sectionId,
+        p_subject: subjectId,
+        p_teacher_login_id: teacherLoginId,
+        p_teaches: teaches,
+      });
+    },
+    /** What the school's admins have done, newest first (lms.audit_log). */
+    auditLog: (limit?: number) => rows<AuditEvent>('audit_log', { p_limit: limit }),
     /** A PNG or JPEG as base64, or (null, null) to remove the logo. */
     async setSchoolLogo(mime: SchoolLogo['mime'] | 'image/svg+xml' | null, base64: string | null): Promise<void> {
       await t.value('set_school_logo', { p_mime: mime, p_data: base64 });

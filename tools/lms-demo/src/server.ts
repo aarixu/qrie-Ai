@@ -96,7 +96,8 @@ export async function startDemoServer(opts: {
     const token = tokenOf(req);
     const { rows } = token
       ? await db.query<{ user_id: string }>(
-          `select user_id from demo_auth.session where token_hash = $1 and until > now()`,
+          `select s.user_id from demo_auth.session s join lms.account a on a.user_id = s.user_id
+            where s.token_hash = $1 and s.until > now() and a.left_at is null`,
           [hashOf(token)],
         )
       : { rows: [] };

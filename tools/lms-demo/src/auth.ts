@@ -17,6 +17,7 @@ import { WRONG_PIN } from '../../../packages/lms-client/src/backend.ts';
 
 export { WRONG_PIN };
 export const LOCKED = 'This ID is locked after too many wrong PINs. Try again in 15 minutes, or ask your teacher.';
+export const CLOSED = 'This account is closed. Ask your school office.';
 const MAX_FAILURES = 5;
 
 // A demo of 87 accounts is rebuilt often; N=2^12 keeps that under a second.
@@ -53,6 +54,9 @@ export async function checkPin(
   const ok = timingSafeEqual(await hash(pin, row.salt), Buffer.from(row.hash, 'hex'));
   if (ok) {
     await db.query(`update demo_auth.login set failures = 0, locked_until = null where login_id = $1`, [id]);
+    // Said only to someone who knows the PIN, so it tells a stranger nothing.
+    const { rows: left } = await db.query(`select 1 from lms.account where user_id = $1 and left_at is not null`, [row.user_id]);
+    if (left.length) return { error: CLOSED };
     return { userId: row.user_id };
   }
   await db.query(

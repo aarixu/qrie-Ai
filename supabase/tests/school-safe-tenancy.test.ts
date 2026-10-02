@@ -238,7 +238,26 @@ describe('the backfill, against accounts that predate the migration', () => {
 });
 
 describe('what the ledger accepts', () => {
-  it.each(['homework', 'test', 'practice', 'api'])('accepts a %s session and its events', async (source) => {
+  // The constraint takes every LMS source; since 0034 a phone may write only
+  // the tutor's own (and 'api'): homework, test and practice evidence comes
+  // from the school's functions alone (packages/lms-client/tests/safety.test.ts).
+  it.each(['homework', 'test', 'practice'])('accepts a %s session from the school’s own functions, not a phone', async (source) => {
+    const student = await createUser(db);
+    const insert = (tx: Parameters<Parameters<typeof asUser>[2]>[0]) =>
+      tx.query(
+        `insert into public.learning_session (id, org_id, user_id, source, started_at)
+         select $1, org_id, $2, $3, now() from public.membership where user_id = $2`,
+        [crypto.randomUUID(), student, source],
+      );
+    await expect(asUser(db, student, insert)).rejects.toThrow(/row-level security/);
+    await db.query(
+      `insert into public.learning_session (id, org_id, user_id, source, started_at)
+       select $1, org_id, $2, $3, now() from public.membership where user_id = $2`,
+      [crypto.randomUUID(), student, source],
+    );
+  });
+
+  it.each(['api'])('accepts a %s session and its events', async (source) => {
     const student = await createUser(db);
     const session = crypto.randomUUID();
     await asUser(db, student, async (tx) => {

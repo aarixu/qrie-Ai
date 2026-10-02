@@ -155,14 +155,21 @@ describe("a class's trend", () => {
 });
 
 describe('learn: chapter-wise practice', () => {
-  it('offers the chapters of the student’s subjects, counting only approved questions not on open work', async () => {
+  it('offers the chapters of the student’s subjects, counting only approved questions not on open work or any test', async () => {
     // items 0-3 approved (0-1 on closed homework, 2-3 on a closed test); 4-7 not.
     let chapters = await riya.practiceChapters();
-    expect(chapters.find((c) => c.chapter === 'rational-numbers')).toMatchObject({ subjectName: 'Mathematics', questions: 4 });
+    expect(chapters.find((c) => c.chapter === 'rational-numbers')).toMatchObject({ subjectName: 'Mathematics', questions: 2 });
     const added = await teacher.approveChapter(8, 'Mathematics', 'rational-numbers');
     expect(added).toBe(4);
     chapters = await riya.practiceChapters();
-    expect(chapters.find((c) => c.chapter === 'rational-numbers')?.questions).toBe(8);
+    expect(chapters.find((c) => c.chapter === 'rational-numbers')?.questions).toBe(6);
+  });
+
+  it("never offers a test's questions, even once the test is over — practice shows the answer", async () => {
+    const qs = await riya.practiceQuestions('Mathematics', 'rational-numbers', 20);
+    expect(qs.map((q) => q.itemId)).not.toContain(items[2]);
+    expect(qs.map((q) => q.itemId)).not.toContain(items[3]);
+    await expect(riya.checkPracticeAnswer(crypto.randomUUID(), items[2], 0)).rejects.toThrow(/not a practice question/);
   });
 
   it('never offers a question that is on open work', async () => {
@@ -174,7 +181,7 @@ describe('learn: chapter-wise practice', () => {
     await teacher.publishAssignment(open);
     const qs = await riya.practiceQuestions('Mathematics', 'rational-numbers', 20);
     expect(qs.map((q) => q.itemId)).not.toContain(items[5]);
-    expect(qs).toHaveLength(7);
+    expect(qs).toHaveLength(5);
     expect(JSON.stringify(qs)).not.toMatch(/correct/i);
   });
 

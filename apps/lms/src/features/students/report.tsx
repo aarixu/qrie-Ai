@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import { AlertTriangle, BookCheck, Brain, ClipboardList, Target } from 'lucide-react'
 import {
@@ -30,6 +30,7 @@ import { Loading, Page, Problem } from '@/components/layout/page'
 import { ChartCard, Kpi, MEASURE, MasteryBars, band, pct } from '@/features/analytics/charts'
 import { kindLabel } from '@/features/homework/kinds'
 import { ResetPinButton } from '@/features/school/reset-pin'
+import { LeaveButton } from '@/features/school/leavers'
 import { ProfileHeader } from './profile-header'
 import { ReportCardButtons } from './report-buttons'
 
@@ -60,6 +61,7 @@ const mean = (xs: (number | null)[]) => {
  */
 export function StudentReport({ studentId }: { studentId: string }) {
   const me = useAuthStore((s) => s.me)
+  const navigate = useNavigate()
   const card = useQuery({ queryKey: ['student', studentId, 'card'], queryFn: () => api.studentCard(studentId) })
   const subjects = useQuery({ queryKey: ['student', studentId, 'subjects'], queryFn: () => api.studentSubjects(studentId) })
   const chapters = useQuery({ queryKey: ['student', studentId, 'chapters'], queryFn: () => api.studentChapters(studentId) })
@@ -81,6 +83,14 @@ export function StudentReport({ studentId }: { studentId: string }) {
           <>
             <ReportCardButtons studentId={studentId} />
             {me?.kind === 'admin' && <ResetPinButton loginId={card.data.loginId} name={card.data.displayName} />}
+            {me?.kind === 'admin' && (
+              <LeaveButton
+                loginId={card.data.loginId}
+                name={card.data.displayName}
+                kind='student'
+                onDone={() => navigate({ to: '/school/students' })}
+              />
+            )}
           </>
         )
       }
