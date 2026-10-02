@@ -481,6 +481,19 @@ export interface SchoolTeacher {
   testsToRelease: number;
 }
 
+/** The school's colours (0033), each #rrggbb: the main one, and a second for highlights. */
+export interface SchoolBrand {
+  primary?: string;
+  accent?: string;
+}
+
+/** A person's photo (0033): a small JPEG, as base64. */
+export interface AccountPhoto {
+  userId: string;
+  base64: string;
+  updatedAt: string;
+}
+
 /** The school's logo (0032): a PNG or JPEG, as base64. */
 export interface SchoolLogo {
   mime: 'image/png' | 'image/jpeg';
@@ -679,9 +692,15 @@ export function createLmsClient(t: Transport) {
     schoolClasses: () => rows<SchoolClass>('school_classes'),
     schoolStudents: (sectionId?: string) => rows<SchoolStudent>('school_students', { p_section: sectionId }),
     schoolTeachers: () => rows<SchoolTeacher>('school_teachers'),
-    async setSchoolBrand(brand: { primary?: string }): Promise<void> {
+    async setSchoolBrand(brand: SchoolBrand): Promise<void> {
       await t.value('set_school_brand', { p_brand: brand });
     },
+    /** A person's photo, a small JPEG as base64, by school ID; null removes it. The admin only. */
+    async setAccountPhoto(loginId: string, base64: string | null): Promise<void> {
+      await t.value('set_account_photo', { p_login_id: loginId, p_data: base64 });
+    },
+    /** The photos of these people the caller may see; people with none, or out of sight, are left out. */
+    accountPhotos: (userIds: string[]) => rows<AccountPhoto>('account_photos', { p_users: userIds }),
     /** A PNG or JPEG as base64, or (null, null) to remove the logo. */
     async setSchoolLogo(mime: SchoolLogo['mime'] | 'image/svg+xml' | null, base64: string | null): Promise<void> {
       await t.value('set_school_logo', { p_mime: mime, p_data: base64 });

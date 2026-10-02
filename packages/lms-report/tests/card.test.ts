@@ -476,6 +476,18 @@ describe('reportCardPdf', () => {
     expect(pages[0]).toContain('Demo Public School');
   });
 
+  it("shows the student's photo when the school has given one, and none (without failing) when it is not an image", async () => {
+    const withPhoto = new TextDecoder('latin1').decode(bytesOf([{ ...riya, photo: JPEG }]));
+    expect(withPhoto).toContain('/Subtype /Image');
+    expect(withPhoto).toContain('/Filter /DCTDecode');
+    let broken: Uint8Array | undefined;
+    expect(() => {
+      broken = bytesOf([{ ...riya, photo: 'not a jpeg' }]);
+    }).not.toThrow();
+    expect(new TextDecoder('latin1').decode(broken!)).not.toContain('/Subtype /Image');
+    expect((await readPdf(broken!)).pages[0]).toContain('Riya Sharma');
+  });
+
   it('embeds a JPEG logo as a JPEG', () => {
     const bytes = bytesOf([riya], {
       brand: { schoolName: 'Demo Public School', logo: { mime: 'image/jpeg', base64: JPEG } },

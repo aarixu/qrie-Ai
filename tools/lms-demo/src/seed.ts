@@ -78,6 +78,7 @@ export interface SeedOptions {
 const DATA = new URL('../data/', import.meta.url);
 const DAY = 86_400_000;
 const DEMO_COLOUR = '#0e7490';
+const DEMO_ACCENT = '#fb923c';
 
 // Which students carry a planted misconception: class, subject, which of the
 // class's homeworks sets the chapter, and roll numbers.
@@ -127,7 +128,7 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
 
   // The school's look (0031, 0032), set by its admin as a real school would.
   const office = createLmsClient(pgliteTransport(db, imported.created.find((a) => a.kind === 'admin')!.userId));
-  await office.setSchoolBrand({ primary: DEMO_COLOUR });
+  await office.setSchoolBrand({ primary: DEMO_COLOUR, accent: DEMO_ACCENT });
   await office.setSchoolLogo('image/png', demoLogoPng(DEMO_COLOUR).toString('base64'));
 
   // 2. Questions -----------------------------------------------------------------

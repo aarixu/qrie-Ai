@@ -14,7 +14,8 @@ import type {
  *
  * One or more A4 pages per student, drawn as vectors with jsPDF's own
  * primitives — no screenshot of a screen, no DOM — so the same code runs in
- * the teacher's browser and in a test. The school's logo is the one picture.
+ * the teacher's browser and in a test. The pictures are the school's logo and,
+ * when the school has given one, the student's photo.
  * Every name, number and date on a card comes from the `ReportData` and
  * `ReportOptions` it is given; nothing else is looked up.
  */
@@ -32,6 +33,8 @@ export interface ReportData {
   chapters: StudentChapter[];
   timeline: TimelineRow[];
   mistakes: StudentMistake[];
+  /** The student's photo, a JPEG as base64 (lms.account_photos); none drawn when absent or not an image. */
+  photo?: string | null;
 }
 
 export interface ReportOptions {
@@ -288,6 +291,7 @@ interface Sheet {
   palette: Palette;
   opts: ReportOptions;
   card: StudentCard;
+  photo?: string | null;
   y: number;
 }
 
@@ -377,17 +381,25 @@ function smallHeader(s: Sheet): void {
   s.y = 22;
 }
 
+const PHOTO = 22;
+
 function studentBlock(s: Sheet): void {
   const { doc, card } = s;
-  put(doc, card.displayName, MARGIN, s.y + 5, { size: 18, bold: true, maxWidth: CONTENT_W });
+  const top = s.y;
+  const photo = s.photo
+    ? logo(doc, { mime: 'image/jpeg', base64: s.photo }, PAGE_W - MARGIN - PHOTO, top - 1, PHOTO)
+    : false;
+  const width = photo ? CONTENT_W - PHOTO - 6 : CONTENT_W;
+  put(doc, card.displayName, MARGIN, s.y + 5, { size: 18, bold: true, maxWidth: width });
   const who = `Class ${orDash(card.className)} · Roll ${orDash(card.rollNumber)} · ID ${card.loginId}`;
-  put(doc, who, MARGIN, s.y + 11, { size: 9.5, colour: MUTED, maxWidth: CONTENT_W });
+  put(doc, who, MARGIN, s.y + 11, { size: 9.5, colour: MUTED, maxWidth: width });
   s.y += 11;
   if (s.opts.scopeNote) {
-    put(doc, s.opts.scopeNote, MARGIN, s.y + 5, { size: 8.5, italic: true, colour: MUTED, maxWidth: CONTENT_W });
+    put(doc, s.opts.scopeNote, MARGIN, s.y + 5, { size: 8.5, italic: true, colour: MUTED, maxWidth: width });
     s.y += 5;
   }
   s.y += 6;
+  if (photo) s.y = Math.max(s.y, top + PHOTO + 4);
 }
 
 interface Kpi {
@@ -704,7 +716,7 @@ function footer(doc: jsPDF, page: number, n: number, of: number, name: string, g
 
 /** One student's card, from the top of a fresh page. */
 function drawStudent(doc: jsPDF, palette: Palette, opts: ReportOptions, r: ReportData): void {
-  const s: Sheet = { doc, palette, opts, card: r.card, y: header(doc, palette, opts) };
+  const s: Sheet = { doc, palette, opts, card: r.card, photo: r.photo, y: header(doc, palette, opts) };
   studentBlock(s);
   kpis(s, r.subjects);
   subjectsTable(s, r.subjects);
