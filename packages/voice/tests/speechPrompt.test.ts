@@ -54,8 +54,10 @@ describe('buildSpeechPrompt', () => {
   it('still sets a scene when the live path knows neither', () => {
     const prompt = buildSpeechPrompt(NARRATION);
     expect(prompt).toContain('## THE SCENE');
-    expect(prompt).toContain('A quiet classroom.');
+    expect(prompt).toContain('A classroom.');
     expect(prompt).not.toContain('undefined');
+    // A normal classroom pace (Aarav, 2026-10-02), not the slow, soothing one.
+    expect(prompt).not.toMatch(/no hurry|unhurried|vocal smile/i);
   });
 
   it('lets a caller override the persona and the notes', () => {

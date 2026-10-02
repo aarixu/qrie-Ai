@@ -43,8 +43,14 @@ export const DEFAULT_SPEAKER_DESCRIPTION = TUTOR.voice;
 export const DEFAULT_ACCENT =
   'Indian English as spoken by an educated schoolteacher in Delhi - clear,\nnatural Indian English, not anglicised and not a caricature.';
 
-const DEFAULT_STYLE = 'Warm and encouraging, with a vocal smile. Patient, never condescending.';
-const DEFAULT_PACING = 'Unhurried. A beat of silence after each new term so it lands.';
+/**
+ * A normal classroom voice, the same notes the live voice carries (relay
+ * vertexSpeech.ts, Aarav 2026-10-02: the old warm, unhurried notes made her slow
+ * and soothing).
+ */
+const DEFAULT_STYLE =
+  'Clear, confident and natural, the way a good teacher talks in class. Friendly but matter-of-fact: no sing-song, no breathiness, no soothing or dramatic tone.';
+const DEFAULT_PACING = 'A normal conversational pace, like everyday speech. Keep it moving, with no long pauses between phrases.';
 
 export interface SpeechStyle {
   /** Name in the audio profile header. Pass `TUTOR.name`. */
@@ -74,21 +80,17 @@ function describeScene(style: SpeechStyle): string {
   const { lessonTitle, beatTopic } = style;
   if (lessonTitle !== undefined && beatTopic !== undefined) {
     return [
-      `A quiet classroom. She is at the board teaching "${lessonTitle}", and this moment`,
-      `is about "${beatTopic}". One student is listening. There is no hurry and no`,
-      'audience - nothing to prove, only to explain.',
+      `A classroom. She is at the board teaching "${lessonTitle}", and this moment`,
+      `is about "${beatTopic}". She is talking directly to the one student in front of her.`,
     ].join('\n');
   }
   if (lessonTitle !== undefined) {
     return [
-      `A quiet classroom. She is at the board teaching "${lessonTitle}". One student is`,
-      'listening. There is no hurry and no audience - nothing to prove, only to explain.',
+      `A classroom. She is at the board teaching "${lessonTitle}", talking directly to`,
+      'the one student in front of her.',
     ].join('\n');
   }
-  return [
-    'A quiet classroom. She is at the board with one student who is a little behind the',
-    'rest. There is no hurry and no audience - nothing to prove, only to explain.',
-  ].join('\n');
+  return 'A classroom. She is at the board, talking directly to the one student in front of her.';
 }
 
 /**

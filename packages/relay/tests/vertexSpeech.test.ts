@@ -343,6 +343,14 @@ describe('speechPrompt', () => {
     expect(p).toContain('Indian English');
     expect(p).not.toContain('Hinglish');
   });
+
+  it('asks for a normal classroom pace, not a slow and soothing one (Aarav, 2026-10-02)', () => {
+    // The old notes ("no hurry", "unhurried", "a vocal smile") made one English
+    // line 10.7 s; these made it 8.5 s, about 150 words a minute.
+    const p = speechPrompt('Let us look at the heart.', 'en');
+    expect(p).toMatch(/normal conversational pace/i);
+    expect(p).not.toMatch(/hurry|unhurried|vocal smile|warm/i);
+  });
 });
 
 // ---------------------------------------- overnight review #1, #2, #4 ----

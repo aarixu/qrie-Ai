@@ -68,16 +68,25 @@ const ACCENT: Record<SpeechLanguage, string> = {
     'Hinglish, the way a Delhi schoolteacher really talks to a student: Hindi words said as a native Hindi speaker says them, English and science terms in clear Indian English, switching between the two naturally mid-sentence.',
 };
 
+/**
+ * A NORMAL CLASSROOM VOICE (Aarav, 2026-10-02: "voice bahut zyada hi slow aur
+ * pleasing hai, ise normal voice hona chahiye"). The notes used to ask for a
+ * warm tutor with "a vocal smile", "no hurry" and "a small pause after a new
+ * idea", and got exactly that: one 128-character English class line took
+ * 10.7 s, 11.9 characters a second. These notes made the same line 8.5 s, 15.1
+ * a second — about 150 words a minute, ordinary speech
+ * (tools/voice-probe/voices.mjs, same voice, same model).
+ */
 export function speechPrompt(text: string, lang: SpeechLanguage = 'en'): string {
   return [
     PREAMBLE,
     '# AUDIO PROFILE: Meera',
-    '## a warm, patient school teacher who explains rather than lectures, and who is glad you asked',
+    '## a school teacher taking a live class',
     '## THE SCENE',
-    'A quiet room. She is at the board with one student, talking to them directly. There is no hurry.',
+    'A classroom. She is teaching one student and talking to them directly.',
     "### DIRECTOR'S NOTES",
-    'Style: Warm and encouraging, with a vocal smile. Patient, never condescending. Conversational, like a real tutor sitting beside the student.',
-    'Pacing: Natural and unhurried, with a small pause after a new idea.',
+    'Style: Clear, confident and natural, the way a good teacher talks in class. Friendly but matter-of-fact: no sing-song, no breathiness, no soothing or dramatic tone.',
+    'Pacing: A normal conversational pace, like everyday speech. Keep it moving, with no long pauses between phrases.',
     `Accent: ${ACCENT[lang]}`,
     LABEL,
     text.trim(),
