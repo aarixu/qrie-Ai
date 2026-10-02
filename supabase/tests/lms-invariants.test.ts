@@ -26,11 +26,22 @@ describe('the lms schema', () => {
     expect(rows.map((r) => r.name)).toEqual([]);
   });
 
-  it('gives a signed-out browser (anon) no function at all', async () => {
+  it('gives a signed-out browser (anon) no function but the sign-in screen’s school look', async () => {
     const { rows } = await db.query<{ name: string }>(
       `select p.proname || '(' || pg_get_function_identity_arguments(p.oid) || ')' as name
          from pg_proc p join pg_namespace n on n.oid = p.pronamespace
         where n.nspname = 'lms' and has_function_privilege('anon', p.oid, 'EXECUTE') order by 1`,
+    );
+    expect(rows.map((r) => r.name)).toEqual(['school_brand(p_code text)']);
+  });
+
+  it('lets a signed-out browser read, write or change no table', async () => {
+    const { rows } = await db.query<{ name: string }>(
+      `select c.relname as name from pg_class c join pg_namespace n on n.oid = c.relnamespace
+        where n.nspname = 'lms' and c.relkind in ('r', 'v')
+          and (has_table_privilege('anon', c.oid, 'SELECT') or has_table_privilege('anon', c.oid, 'INSERT')
+               or has_table_privilege('anon', c.oid, 'UPDATE') or has_table_privilege('anon', c.oid, 'DELETE'))
+        order by 1`,
     );
     expect(rows.map((r) => r.name)).toEqual([]);
   });

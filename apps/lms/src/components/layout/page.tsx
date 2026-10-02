@@ -1,4 +1,5 @@
 import { Link, type LinkProps } from '@tanstack/react-router'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { ArrowLeft } from 'lucide-react'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
@@ -67,10 +68,6 @@ export function Loading({ what }: { what: string }) {
 
 export function Problem({ error }: { error: unknown }) {
   return (
-    <p className='text-destructive'>
-      {error instanceof TypeError
-        ? 'Could not reach the school server. Is it running?'
-        : (error as Error).message}
-    </p>
+    <p className='text-destructive'>{friendlyError(error)}</p>
   )
 }

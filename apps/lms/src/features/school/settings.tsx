@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Check, ImageUp, RotateCcw, Sparkles, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -60,7 +61,7 @@ export function SchoolSettingsPage() {
       const fresh = await api.me()
       if (fresh) setMe(fresh)
     },
-    onError: (e) => toast.error((e as Error).message),
+    onError: (e) => toast.error(friendlyError(e)),
   })
 
   const queryClient = useQueryClient()
@@ -76,7 +77,7 @@ export function SchoolSettingsPage() {
       toast.success(file ? 'Logo saved.' : 'Logo removed.')
       queryClient.invalidateQueries({ queryKey: ['school-logo'] })
     },
-    onError: (e) => toast.error((e as Error).message),
+    onError: (e) => toast.error(friendlyError(e)),
   })
   const suggest = useMutation({
     mutationFn: () => coloursOfLogo(logo!),

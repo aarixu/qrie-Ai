@@ -1,9 +1,9 @@
 import { useState } from 'react'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { FileDown, Search, UserPlus } from 'lucide-react'
 import { toast } from 'sonner'
-import { classFileName, deliverPdf, reportCardBytes } from '@ai-tutor/lms-report'
 import { useAuthStore } from '@/stores/auth-store'
 import type { SchoolStudent } from '@ai-tutor/lms-client'
 import { cn } from '@/lib/utils'
@@ -27,6 +27,7 @@ import { PhotoUploadButton } from './photo-upload'
 import { brandOf, inTurn, reportFor } from '@/features/students/report-pdf'
 import { useSchoolClasses, useSchoolStudents } from './overview'
 
+const PAGE = 48
 const ALL = 'all'
 type BandFilter = 'all' | 'help' | 'there' | 'secure' | 'none'
 
@@ -46,7 +47,7 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
   const students = useSchoolStudents(section)
   const [query, setQuery] = useState('')
   const [bandFilter, setBandFilter] = useState<BandFilter>('all')
-  const photos = usePhotos((students.data ?? []).map((x) => x.userId))
+  const [count, setCount] = useState(PAGE)
   const sections = [...new Map((classes.data ?? []).map((c) => [c.sectionId, c.className])).entries()]
 
   const shown = (students.data ?? []).filter(
@@ -77,7 +78,10 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
           <Search className='absolute top-2.5 left-2.5 size-4 text-muted-foreground' />
           <Input
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value)
+              setCount(PAGE)
+            }}
             placeholder='Search by name or ID'
             className='w-64 ps-8'
             aria-label='Search students'
@@ -99,7 +103,13 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
             ))}
           </SelectContent>
         </Select>
-        <Select value={bandFilter} onValueChange={(v) => setBandFilter(v as BandFilter)}>
+        <Select
+          value={bandFilter}
+          onValueChange={(v) => {
+            setBandFilter(v as BandFilter)
+            setCount(PAGE)
+          }}
+        >
           <SelectTrigger className='w-44' aria-label='Mastery'>
             <SelectValue />
           </SelectTrigger>
@@ -128,11 +138,7 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
       ) : shown.length === 0 ? (
         <p className='text-muted-foreground'>No students match.</p>
       ) : (
-        <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-          {shown.map((s) => (
-            <StudentCard key={s.userId} s={s} photo={photos.get(s.userId)} />
-          ))}
-        </div>
+        <Grid students={shown.slice(0, count)} more={shown.length - count} onMore={() => setCount((c) => c + PAGE)} />
       )}
       <LeftList kinds={['student']} title='Students who have left' />
     </Page>
@@ -213,6 +219,30 @@ function Stat({ label, value, colour, bad }: { label: string; value: string; col
  * Every shown student's report card in one PDF, a page or more each, for
  * printing or sending to a class's parents in one go.
  */
+/** One page of cards at a time, and the photos of those only. */
+function Grid({ students, more, onMore }: { students: SchoolStudent[]; more: number; onMore: () => void }) {
+  const photos = usePhotos(students.map((x) => x.userId))
+  return (
+    <>
+      <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        {students.map((s) => (
+          <StudentCard key={s.userId} s={s} photo={photos.get(s.userId)} />
+        ))}
+      </div>
+      {more > 0 && (
+        <div className='mt-6 flex justify-center'>
+          <Button variant='outline' onClick={onMore}>
+            Show {Math.min(more, PAGE)} more of {more}
+          </Button>
+        </div>
+      )}
+    </>
+  )
+}
+
+/** The most report cards one PDF is made of, in the browser; more is a class at a time. */
+const MOST_CARDS = 200
+
 function AllCards({ students, name }: { students: SchoolStudent[]; name: string }) {
   const me = useAuthStore((s) => s.me)
   const [made, setMade] = useState<number | null>(null)
@@ -220,21 +250,32 @@ function AllCards({ students, name }: { students: SchoolStudent[]; name: string 
     if (!me || students.length === 0) return
     setMade(0)
     try {
+      const { classFileName, deliverPdf, reportCardBytes } = await import('@ai-tutor/lms-report')
       const reports = await inTurn(students, 4, (s) => reportFor(s.userId), setMade)
       const bytes = reportCardBytes(reports, { brand: await brandOf(me), generatedAt: new Date() })
       const file = name === 'all' ? 'All-students-report-cards.pdf' : classFileName(name)
       await deliverPdf(bytes, file, 'download', `${me.schoolName} — report cards`)
       toast.success(`${reports.length} report cards downloaded.`)
     } catch (e) {
-      toast.error((e as Error).message)
+      toast.error(friendlyError(e))
     } finally {
       setMade(null)
     }
   }
   return (
-    <Button variant='outline' className='ms-auto' disabled={made !== null || students.length === 0} onClick={make}>
+    <Button
+      variant='outline'
+      className='ms-auto'
+      disabled={made !== null || students.length === 0 || students.length > MOST_CARDS}
+      title={students.length > MOST_CARDS ? `Choose a class first: at most ${MOST_CARDS} report cards go in one PDF.` : undefined}
+      onClick={make}
+    >
       <FileDown />{' '}
-      {made !== null ? `Making ${made} of ${students.length}…` : `Report cards for these ${students.length} (PDF)`}
+      {made !== null
+        ? `Making ${made} of ${students.length}…`
+        : students.length > MOST_CARDS
+          ? `Choose a class for report cards`
+          : `Report cards for these ${students.length} (PDF)`}
     </Button>
   )
 }

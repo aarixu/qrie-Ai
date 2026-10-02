@@ -24,6 +24,7 @@ import { ImportRefused, importForAdmin, resetPinForAdmin } from './import.ts';
  *   POST /admin/import {students?, teachers?, commit?, acceptWarnings?, importKey?}
  *                                      the admin adding people (./import.ts)
  *   POST /admin/reset-pin {loginId}    → {loginId, displayName, pin}
+ *   GET  /public/school-brand/<code>   → {rows}   the sign-in screen's school look, unsigned
  *
  * Every database call runs as `authenticated` with auth.uid() set to the
  * caller, so RLS decides what each person sees, as in production. It listens
@@ -154,6 +155,17 @@ export async function startDemoServer(opts: {
       const token = tokenOf(req);
       if (token) await db.query(`delete from demo_auth.session where token_hash = $1`, [hashOf(token)]);
       return send(res, 200, {});
+    }
+
+    // The sign-in screen's school look (0035): the one call made before
+    // anyone signs in, run as a signed-out browser would be (anon).
+    const brandOf = /^\/public\/school-brand\/([A-Z0-9]{3,12})$/.exec(route);
+    if (req.method === 'GET' && brandOf) {
+      const rows = await db.transaction(async (tx) => {
+        await tx.exec('set local role anon');
+        return (await tx.query(`select * from lms.school_brand($1)`, [brandOf[1]])).rows;
+      });
+      return send(res, 200, { rows });
     }
 
     if (req.method === 'POST' && (route === '/admin/import' || route === '/admin/reset-pin')) {

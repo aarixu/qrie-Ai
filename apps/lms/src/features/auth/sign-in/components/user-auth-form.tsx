@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -35,11 +35,14 @@ const formSchema = z.object({
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
   redirectTo?: string
+  /** Told the ID as it is typed, so the screen can show the school's look. */
+  onLoginIdChange?: (loginId: string) => void
 }
 
 export function UserAuthForm({
   className,
   redirectTo,
+  onLoginIdChange,
   ...props
 }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
@@ -51,6 +54,8 @@ export function UserAuthForm({
     resolver: zodResolver(formSchema),
     defaultValues: { loginId: '', pin: '' },
   })
+  const typed = form.watch('loginId')
+  useEffect(() => onLoginIdChange?.(typed), [typed, onLoginIdChange])
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)

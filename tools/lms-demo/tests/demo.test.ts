@@ -194,6 +194,17 @@ describe('the two apps, joined', () => {
   });
 });
 
+describe('the sign-in screen', () => {
+  it("wears the school's look from its code alone, before anyone signs in", async () => {
+    const b = demoBackend(server.url, memorySession());
+    const brand = await b.schoolBrand('DEMO');
+    expect(brand).toMatchObject({ schoolName: 'Qrie Demo School', primary: '#0e7490', accent: '#fb923c' });
+    expect(brand?.logo?.mime).toBe('image/png');
+    expect(await b.schoolBrand('NOPE')).toBeNull();
+    expect(await b.schoolBrand('demo-8a-1')).toBeNull();
+  });
+});
+
 describe('adding people from the school portal', () => {
   const students = 'grade,section,roll,name\n8,A,1,Aarohi Sen\n';
   const fresh = 'grade,section,roll,name\n8,A,31,Kavya Iyer\n8,B,31,Dev Khanna\n';

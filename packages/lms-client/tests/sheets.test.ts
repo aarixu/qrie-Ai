@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { credentialsCsv, STUDENTS_TEMPLATE, TEACHERS_TEMPLATE } from '../src/sheets.ts';
+import { credentialsCsv, STUDENTS_TEMPLATE, TEACHERS_TEMPLATE, toCsv } from '../src/sheets.ts';
 
 describe('the sheets a school downloads', () => {
   it('templates are just the columns', () => {
@@ -22,6 +22,10 @@ describe('the sheets a school downloads', () => {
       'Sunita Rao,teacher,,,DEMO-T06,48213957,DEMO',
       '',
     ]);
+  });
+
+  it('writes any table the same safe way', () => {
+    expect(toCsv([['Roll', 'Name', 'Quiz, week 1'], ['1', '+Riya', '50%']])).toBe('Roll,Name,"Quiz, week 1"\r\n1,"\'+Riya",50%\r\n');
   });
 
   it('quotes commas and quotes, and never lets a name become a spreadsheet formula', () => {

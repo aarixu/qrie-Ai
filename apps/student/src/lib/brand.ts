@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { readableOn, type Me } from '@ai-tutor/lms-client'
-import { api } from '@/lib/backend'
+import { readableOn, type Me, type SchoolPublicBrand } from '@ai-tutor/lms-client'
+import { api, backend } from '@/lib/backend'
 
 const HEX = /^#[0-9a-f]{6}$/i
 
@@ -23,14 +24,19 @@ export function brandColours(me: Me | null): { primary: string; accent: string }
  * anybody signs in or when the school has chosen none.
  */
 export function applyBrand(me: Me | null): void {
+  applyColours(me?.brand?.primary, me?.brand?.accent)
+  document.title = me ? me.schoolName : 'Qrie'
+}
+
+/** The colours themselves, each falling back to Qrie's. */
+export function applyColours(primaryWanted: unknown, accentWanted: unknown): void {
   const root = document.documentElement
-  const { primary, accent } = brandColours(me)
+  const { primary, accent } = brandColours({ brand: { primary: primaryWanted, accent: accentWanted } } as unknown as Me)
   root.style.setProperty('--primary', primary)
   root.style.setProperty('--primary-foreground', readableOn(primary))
   root.style.setProperty('--brand-primary', primary)
   root.style.setProperty('--brand-accent', accent)
   root.style.setProperty('--brand-accent-foreground', readableOn(accent))
-  document.title = me ? me.schoolName : 'Qrie'
 }
 
 /** The school's logo as an address an <img> can show, or null (lms.school_logo). */
@@ -42,4 +48,30 @@ export function useSchoolLogo(enabled = true): string | null {
     staleTime: 10 * 60_000,
   })
   return logo.data ? `data:${logo.data.mime};base64,${logo.data.base64}` : null
+}
+
+/**
+ * The school a sign-in screen is for, from the code at the front of the ID
+ * being typed (DEMO-8A-1 → DEMO) or from a link's ?school=DEMO: its name,
+ * colours and logo (lms.school_brand), worn by the screen as soon as found.
+ */
+export function useSignInSchool(loginId: string): SchoolPublicBrand | null {
+  const fromLink = typeof location === 'undefined' ? '' : (new URLSearchParams(location.search).get('school') ?? '')
+  const code = (loginId.trim().split('-')[0] || fromLink).toUpperCase()
+  const [asked, setAsked] = useState(code)
+  useEffect(() => {
+    const t = setTimeout(() => setAsked(code), 350)
+    return () => clearTimeout(t)
+  }, [code])
+  const school = useQuery({
+    queryKey: ['school-brand', asked],
+    queryFn: () => backend.schoolBrand(asked),
+    enabled: /^[A-Z0-9]{3,12}$/.test(asked),
+    staleTime: 10 * 60_000,
+  })
+  const found = school.data ?? null
+  useEffect(() => {
+    applyColours(found?.primary, found?.accent)
+  }, [found?.primary, found?.accent])
+  return found
 }

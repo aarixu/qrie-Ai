@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Camera, CheckCircle2, ImagePlus, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
@@ -114,7 +115,7 @@ export function PhotoUploadButton() {
               }}
             />
           </label>
-          {people.isError && <p className='text-sm text-destructive'>{(people.error as Error).message}</p>}
+          {people.isError && <p className='text-sm text-destructive'>{friendlyError(people.error)}</p>}
           {picks.length > 0 && (
             <ul className='max-h-72 divide-y overflow-auto rounded-md border text-sm'>
               {picks.map((p) => (

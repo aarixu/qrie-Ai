@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { DoorOpen, Undo2 } from 'lucide-react'
@@ -46,7 +47,7 @@ export function LeaveButton({
       setOpen(false)
       onDone?.()
     },
-    onError: (e) => toast.error((e as Error).message),
+    onError: (e) => toast.error(friendlyError(e)),
   })
   return (
     <>
@@ -91,7 +92,7 @@ export function LeftList({ kinds, title }: { kinds: AccountKind[]; title: string
       toast.success(`${loginId} is back.`)
       queryClient.invalidateQueries({ queryKey: ['school'] })
     },
-    onError: (e) => toast.error((e as Error).message),
+    onError: (e) => toast.error(friendlyError(e)),
   })
   const rows = (left.data ?? []).filter((p) => kinds.includes(p.kind))
   if (rows.length === 0) return null

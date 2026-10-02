@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Link } from '@tanstack/react-router'
@@ -163,7 +164,7 @@ function ChangeTeacher({ c }: { c: SchoolClass }) {
       queryClient.invalidateQueries({ queryKey: ['school'] })
       setNext('')
     },
-    onError: (e) => toast.error((e as Error).message),
+    onError: (e) => toast.error(friendlyError(e)),
   })
   const others = (teachers.data ?? []).filter((t) => t.loginId !== c.teacherLoginId)
   return (

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { useMutation } from '@tanstack/react-query'
 import { Copy, KeyRound } from 'lucide-react'
 import { toast } from 'sonner'
@@ -48,7 +49,7 @@ export function ResetPinButton({ loginId, name, size = 'default' }: { loginId: s
               <dd className='font-mono text-2xl font-bold tracking-widest'>{reset.data.pin}</dd>
             </dl>
           )}
-          {reset.isError && <p className='text-sm text-destructive'>{(reset.error as Error).message}</p>}
+          {reset.isError && <p className='text-sm text-destructive'>{friendlyError(reset.error)}</p>}
           <DialogFooter>
             {reset.data ? (
               <>

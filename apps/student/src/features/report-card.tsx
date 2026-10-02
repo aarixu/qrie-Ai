@@ -1,11 +1,20 @@
 import { useState } from 'react'
 import { FileDown, Share2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { canSharePdf, deliverPdf, reportCardBytes, reportFileName } from '@ai-tutor/lms-report'
 import { api, say } from '@/lib/backend'
 import { brandColours } from '@/lib/brand'
 import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
+
+/** Whether this browser can hand a PDF to the phone's share sheet; checked without loading the PDF code. */
+function canShareFiles(): boolean {
+  try {
+    const file = new File([new Uint8Array(1)], 'x.pdf', { type: 'application/pdf' })
+    return typeof navigator !== 'undefined' && typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] })
+  } catch {
+    return false
+  }
+}
 
 /**
  * The child's own report card as a PDF, to keep or send home. It is built
@@ -20,6 +29,7 @@ export function MyReportCard() {
     setBusy(true)
     try {
       const id = me.userId
+      const { deliverPdf, reportCardBytes, reportFileName } = await import('@ai-tutor/lms-report')
       const [card, subjects, chapters, timeline, mistakes, logo, photos] = await Promise.all([
         api.studentCard(id),
         api.studentSubjects(id),
@@ -53,7 +63,7 @@ export function MyReportCard() {
       <Button className='h-11 flex-1' disabled={busy} onClick={() => make('download')}>
         <FileDown /> {busy ? 'Making it…' : 'My report card (PDF)'}
       </Button>
-      {canSharePdf() && (
+      {canShareFiles() && (
         <Button variant='outline' className='h-11' disabled={busy} onClick={() => make('share')} aria-label='Share my report card'>
           <Share2 />
         </Button>

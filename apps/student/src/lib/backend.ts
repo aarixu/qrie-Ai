@@ -1,4 +1,4 @@
-import { browserSession, demoBackend } from '@ai-tutor/lms-client'
+import { browserSession, demoBackend, friendlyError } from '@ai-tutor/lms-client'
 
 /** The demo school today (`npm run demo`); the hosted project once `lms` is live there. */
 export const DEMO_URL =
@@ -14,9 +14,7 @@ export function isSignedOutError(error: unknown): boolean {
   )
 }
 
-/** What to tell a child when a call fails. */
+/** What to tell a child when a call fails (the school's own words, or one plain sentence). */
 export function say(error: unknown): string {
-  return error instanceof TypeError
-    ? 'Could not reach your school. Check your internet and try again.'
-    : (error as Error).message
+  return friendlyError(error)
 }

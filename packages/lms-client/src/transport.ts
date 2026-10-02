@@ -19,12 +19,20 @@ export interface Transport {
   value(fn: string, args?: Record<string, unknown>): Promise<unknown>;
 }
 
+type RpcAnswer = { data: unknown; error: { message: string } | null };
+
 /** The part of a supabase-js client this needs; keeps supabase-js out of the package. */
 export interface RpcClient {
   schema(name: 'lms'): {
-    rpc(fn: string, args?: Record<string, unknown>): PromiseLike<{ data: unknown; error: { message: string } | null }>;
+    rpc(
+      fn: string,
+      args?: Record<string, unknown>,
+    ): PromiseLike<RpcAnswer> & { range?(from: number, to: number): PromiseLike<RpcAnswer> };
   };
 }
+
+/** PostgREST's max-rows: the most one call hands back, the rest dropped without a word. */
+const PAGE = 1000;
 
 export function supabaseTransport(client: RpcClient): Transport {
   const call = async (fn: string, args: Record<string, unknown> = {}): Promise<unknown> => {
@@ -33,9 +41,19 @@ export function supabaseTransport(client: RpcClient): Transport {
     return data;
   };
   return {
-    async rows(fn, args) {
-      const data = await call(fn, args);
-      return Array.isArray(data) ? (data as Record<string, unknown>[]) : [];
+    // Page by page, so a school bigger than one page loses nobody. Each page
+    // runs the function again; every function here that returns many rows
+    // only reads.
+    async rows(fn, args = {}) {
+      const out: Record<string, unknown>[] = [];
+      for (let from = 0; ; from += PAGE) {
+        const q = client.schema('lms').rpc(fn, args);
+        const { data, error } = await (q.range ? q.range(from, from + PAGE - 1) : q);
+        if (error) throw new Error(error.message);
+        const page = Array.isArray(data) ? (data as Record<string, unknown>[]) : [];
+        out.push(...page);
+        if (!q.range || page.length < PAGE) return out;
+      }
     },
     async value(fn, args) {
       return (await call(fn, args)) ?? null;

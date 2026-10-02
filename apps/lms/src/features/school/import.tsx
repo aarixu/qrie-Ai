@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, CheckCircle2, Download, Eye, EyeOff, FileSpreadsheet, Upload, XCircle } from 'lucide-react'
 import {
@@ -180,7 +181,7 @@ export function SchoolImportPage() {
               <Button disabled={(!students && !teachers) || check.isPending || locked} onClick={() => check.mutate()}>
                 {check.isPending ? 'Checking…' : 'Check the sheets'}
               </Button>
-              {check.isError && <p className='text-sm text-destructive'>{(check.error as Error).message}</p>}
+              {check.isError && <p className='text-sm text-destructive'>{friendlyError(check.error)}</p>}
             </CardContent>
           </Card>
 
@@ -195,7 +196,7 @@ export function SchoolImportPage() {
                 commit.isError
                   ? commit.error instanceof TypeError
                     ? 'The school server did not answer. Press the button again: if the people were added, the same IDs and PINs come back.'
-                    : (commit.error as Error).message
+                    : friendlyError(commit.error)
                   : null
               }
             />

@@ -80,6 +80,21 @@ describe("the school's logo", () => {
     await expect(admin.setSchoolLogo('image/png', big)).rejects.toThrow(/256 KB/);
   });
 
+  it('is shown on the sign-in screen by school code, before anyone signs in: name, colours and logo only', async () => {
+    await admin.setSchoolLogo('image/png', PNG);
+    await admin.setSchoolBrand({ primary: '#0e7490', accent: '#fb923c' });
+    const asAnon = async (code: string) =>
+      db.transaction(async (tx) => {
+        await tx.exec('set local role anon');
+        return (await tx.query(`select * from lms.school_brand($1)`, [code])).rows;
+      });
+    expect(await asAnon('LOGO')).toEqual([
+      { school_name: 'LOGO Public School', brand: { primary: '#0e7490', accent: '#fb923c' }, logo_mime: 'image/png', logo_base64: PNG },
+    ]);
+    expect(await asAnon('NOPE')).toEqual([]);
+    expect(await asAnon("LOGO'; --")).toEqual([]);
+  });
+
   it('is set by the admin only', async () => {
     await expect(teacher.setSchoolLogo('image/png', PNG)).rejects.toThrow(/only the school admin/);
     await expect(riya.setSchoolLogo('image/png', PNG)).rejects.toThrow(/only the school admin/);

@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { useQueries, useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { format } from 'date-fns'
-import { CalendarPlus, ChevronDown, Plus } from 'lucide-react'
+import { CalendarPlus, ChevronDown, Download, Plus } from 'lucide-react'
+import { toCsv } from '@ai-tutor/lms-client'
+import { downloadText } from '@/lib/download'
 import type { AssignmentSummary, ResultRow } from '@ai-tutor/lms-client'
 import { api } from '@/lib/backend'
 import { cn } from '@/lib/utils'
@@ -273,7 +275,29 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
     }
   })
 
+  const download = () => {
+    const header = ['Roll', 'Name', 'School ID', ...published.map((a) => a.title), 'Average']
+    const lines = [...byStudent.values()].map(({ row, cells }) => {
+      const scores = cells.map(scoreOf).filter((x): x is number => x !== null)
+      const avg = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : null
+      return [
+        row.rollNumber ?? '',
+        row.displayName,
+        row.loginId,
+        ...published.map((a, i) => gradeText(cells[i], new Date(a.dueAt) < new Date())),
+        avg === null ? '' : `${Math.round(avg * 100)}%`,
+      ]
+    })
+    downloadText(`gradebook-${sectionId.slice(0, 8)}.csv`, toCsv([header, ...lines]))
+  }
+
   return (
+    <div className='space-y-2'>
+    <div className='flex justify-end'>
+      <Button variant='outline' size='sm' onClick={download}>
+        <Download /> Download (CSV)
+      </Button>
+    </div>
     <div className='overflow-x-auto rounded-md border'>
       <Table>
         <TableHeader>
@@ -322,6 +346,7 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
         </TableBody>
       </Table>
     </div>
+    </div>
   )
 }
 
@@ -333,6 +358,16 @@ export function scoreOf(r: ResultRow | undefined): number | null {
   if (r.machineTotal) return (r.machineCorrect ?? 0) / r.machineTotal
   if (r.photoTeacherScore !== null && r.photoTeacherMax) return r.photoTeacherScore / r.photoTeacherMax
   return null
+}
+
+/** A gradebook cell as words, for the CSV: the same reading as GradeCell. */
+function gradeText(r: ResultRow | undefined, past: boolean): string {
+  if (r?.teacherStatus === 'absent') return 'Absent'
+  if (r?.teacherStatus === 'not_done') return 'Not done'
+  if (!r || !r.submitted) return past ? 'Missing' : ''
+  const s = scoreOf(r)
+  const text = s !== null ? `${Math.round(s * 100)}%` : r.tasksTotal > 0 && r.tasksDone === r.tasksTotal ? 'Done' : 'To mark'
+  return r.late ? `${text} (late)` : text
 }
 
 function GradeCell({ r, past }: { r: ResultRow | undefined; past: boolean }) {

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CheckCheck, PenLine } from 'lucide-react'
 import { toast } from 'sonner'
@@ -75,7 +76,7 @@ export function QuestionBank() {
       )
       queryClient.invalidateQueries({ queryKey: ['library'] })
     },
-    onError: (e) => toast.error((e as Error).message),
+    onError: (e) => toast.error(friendlyError(e)),
   })
 
   return (

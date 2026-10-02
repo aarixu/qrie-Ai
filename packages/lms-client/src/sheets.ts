@@ -20,7 +20,12 @@ function field(value: string | undefined): string {
   return /[",\r\n']/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
 }
 
-const rollOrder = (r: string | undefined) => (r && /^\d{1,9}$/.test(r) ? Number(r) : Number.MAX_SAFE_INTEGER);
+/** Any table as a CSV, every field written the formula-safe way above. */
+export function toCsv(rows: (string | undefined)[][]): string {
+  return `${rows.map((r) => r.map(field).join(',')).join('\r\n')}\r\n`;
+}
+
+const rollOrder =(r: string | undefined) => (r && /^\d{1,9}$/.test(r) ? Number(r) : Number.MAX_SAFE_INTEGER);
 
 /** Students by class and roll number, then staff by ID. */
 export function credentialsCsv(schoolCode: string, created: ImportedAccount[]): string {

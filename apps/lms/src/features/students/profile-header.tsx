@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { friendlyError } from '@ai-tutor/lms-client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Camera, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -35,7 +36,7 @@ export function ProfileHeader({
       toast.success(file ? 'Photo saved.' : 'Photo removed.')
       queryClient.invalidateQueries({ queryKey: ['photos'] })
     },
-    onError: (e) => toast.error((e as Error).message),
+    onError: (e) => toast.error(friendlyError(e)),
   })
   const hue = hueFor(card.className ?? card.displayName)
 

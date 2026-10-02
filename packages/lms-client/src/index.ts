@@ -4,3 +4,4 @@ export * from './api.ts';
 export * from './backend.ts';
 export * from './sheets.ts';
 export * from './colour.ts';
+export * from './errors.ts';

@@ -5,6 +5,7 @@ import {
   Activity,
   Brain,
   CalendarPlus,
+  CheckCircle2,
   ClipboardList,
   GraduationCap,
   School,
@@ -23,6 +24,7 @@ import { BrandHero, greeting } from '@/components/brand-hero'
 import { PersonAvatar } from '@/components/person-avatar'
 import { usePhotos } from '@/lib/photos'
 import { useAuthStore } from '@/stores/auth-store'
+import { useSchoolLogo } from '@/lib/brand'
 import { EventDialog } from '@/features/events/event-dialog'
 import { UpcomingList } from '@/features/events/upcoming'
 
@@ -41,6 +43,7 @@ export function SchoolOverviewPage() {
   const students = useSchoolStudents()
   const [eventOpen, setEventOpen] = useState(false)
   const me = useAuthStore((s) => s.me)
+  const logo = useSchoolLogo(!!me)
   const o = overview.data
 
   return (
@@ -68,6 +71,13 @@ export function SchoolOverviewPage() {
         <Problem error={overview.error} />
       ) : !o ? null : (
         <div className='space-y-6'>
+          <GettingStarted
+            people={o.students > 0 && o.teachers > 0}
+            logo={!!logo}
+            colours={typeof me?.brand?.primary === 'string'}
+            work={o.workSet30d > 0}
+            school={o.schoolName}
+          />
           <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
             <Kpi label='Students' icon={GraduationCap} value={o.students} hint={`${o.activeStudents7d} active in the last 7 days`} />
             <Kpi label='Teachers' icon={Users} value={o.teachers} hint={`${o.classes} sections, ${o.subjects} subjects`} />
@@ -105,7 +115,10 @@ export function SchoolOverviewPage() {
                 <ClassBars rows={classes.data.map((c) => ({ name: shortClass(c.className, c.subjectName), handin: c.handinRate, score: c.averageScore }))} />
               )}
             </ChartCard>
-            <ChartCard title='Where students stand' description='By the learning model’s belief, all subjects.'>
+            <ChartCard
+              title='Where students stand'
+              description='Mastery is Qrie’s estimate, from every answer a student gives, of how well they know each chapter — not a mark. Secure is 70% or more, Getting there 40–70%, Needs help under 40%.'
+            >
               {students.isPending ? <Loading what='the students' /> : students.isError ? <Problem error={students.error} /> : <Bands rows={students.data} />}
             </ChartCard>
           </div>
@@ -203,5 +216,85 @@ function Bands({ rows }: { rows: SchoolStudent[] }) {
         ))}
       </ul>
     </div>
+  )
+}
+
+/**
+ * A new school's first steps, until each is done or the admin hides the card
+ * (remembered on this device only).
+ */
+function GettingStarted({
+  people,
+  logo,
+  colours,
+  work,
+  school,
+}: {
+  people: boolean
+  logo: boolean
+  colours: boolean
+  work: boolean
+  school: string
+}) {
+  const key = `qrie.setup-hidden.${school}`
+  const [hidden, setHidden] = useState(() => {
+    try {
+      return localStorage.getItem(key) === '1'
+    } catch {
+      return false
+    }
+  })
+  const steps = [
+    { done: people, label: 'Add your students and teachers, and give them their IDs and PINs', to: '/school/people' as const },
+    { done: logo, label: 'Upload your school’s logo', to: '/school/settings' as const },
+    { done: colours, label: 'Choose your school’s colours', to: '/school/settings' as const },
+    { done: work, label: 'Teachers set their first homework or test', to: '/school/teachers' as const },
+  ]
+  const done = steps.filter((x) => x.done).length
+  if (hidden || done === steps.length) return null
+  return (
+    <Card className='border-primary/30'>
+      <CardHeader className='flex flex-row items-start justify-between gap-3 space-y-0'>
+        <div>
+          <CardTitle>Getting started</CardTitle>
+          <CardDescription>
+            {done} of {steps.length} done. Each step makes the apps your school’s own.
+          </CardDescription>
+        </div>
+        <Button
+          variant='ghost'
+          size='sm'
+          onClick={() => {
+            setHidden(true)
+            try {
+              localStorage.setItem(key, '1')
+            } catch {
+              /* hidden for this visit only */
+            }
+          }}
+        >
+          Hide
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <div className='mb-3 h-2 overflow-hidden rounded-full bg-muted'>
+          <div className='h-full rounded-full bg-primary transition-all' style={{ width: `${(done / steps.length) * 100}%` }} />
+        </div>
+        <ul className='space-y-1.5'>
+          {steps.map((x) => (
+            <li key={x.label}>
+              <Link to={x.to} className='flex items-center gap-2 rounded-md px-1 py-1 text-sm hover:bg-accent/50'>
+                {x.done ? (
+                  <CheckCircle2 className='size-5 shrink-0 text-green-600' />
+                ) : (
+                  <span className='size-5 shrink-0 rounded-full border-2' />
+                )}
+                <span className={x.done ? 'text-muted-foreground line-through' : 'font-medium'}>{x.label}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   )
 }

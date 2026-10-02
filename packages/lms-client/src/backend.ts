@@ -33,6 +33,31 @@ export interface Backend {
   importPeople(request: ImportRequest): Promise<ImportResponse>;
   /** The school admin giving somebody in the school a new PIN; the old one stops working. */
   resetPin(loginId: string): Promise<{ loginId: string; displayName: string; pin: string }>;
+  /** A school's name, colours and logo by its code, for the sign-in screen; null for no such school. */
+  schoolBrand(code: string): Promise<SchoolPublicBrand | null>;
+}
+
+export interface SchoolPublicBrand {
+  schoolName: string;
+  primary?: string;
+  accent?: string;
+  logo?: { mime: 'image/png' | 'image/jpeg'; base64: string };
+}
+
+const SCHOOL_CODE = /^[A-Z0-9]{3,12}$/;
+
+/** One row of lms.school_brand as the apps use it (0035). */
+function publicBrand(row: Record<string, unknown> | undefined): SchoolPublicBrand | null {
+  if (!row) return null;
+  const brand = (row.brand ?? {}) as { primary?: unknown; accent?: unknown };
+  return {
+    schoolName: String(row.school_name),
+    ...(typeof brand.primary === 'string' ? { primary: brand.primary } : {}),
+    ...(typeof brand.accent === 'string' ? { accent: brand.accent } : {}),
+    ...(typeof row.logo_base64 === 'string'
+      ? { logo: { mime: row.logo_mime as 'image/png' | 'image/jpeg', base64: row.logo_base64 } }
+      : {}),
+  };
 }
 
 export interface ImportRequest {
@@ -151,6 +176,12 @@ export function supabaseBackend(supabase: SupabaseLike): Backend {
     async resetPin() {
       throw new Error('New PINs from the portal work in the demo school only, for now.');
     },
+    async schoolBrand(code) {
+      if (!SCHOOL_CODE.test(code)) return null;
+      const { data, error } = await supabase.schema('lms').rpc('school_brand', { p_code: code });
+      if (error) throw new Error(error.message);
+      return publicBrand(Array.isArray(data) ? (data[0] as Record<string, unknown> | undefined) : undefined);
+    },
   };
 }
 
@@ -262,6 +293,11 @@ export function demoBackend(baseUrl: string, session: SessionStore = memorySessi
     },
     async resetPin(loginId) {
       return (await post('/admin/reset-pin', { loginId })) as { loginId: string; displayName: string; pin: string };
+    },
+    async schoolBrand(code) {
+      if (!SCHOOL_CODE.test(code)) return null;
+      const { rows } = (await (await send(`/public/school-brand/${code}`)).json()) as { rows: Record<string, unknown>[] };
+      return publicBrand(rows[0]);
     },
   };
 }

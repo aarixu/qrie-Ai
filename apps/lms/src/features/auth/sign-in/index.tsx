@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useSearch } from '@tanstack/react-router'
 import { backend } from '@/lib/backend'
+import { useSignInSchool } from '@/lib/brand'
 import {
   Card,
   CardContent,
@@ -13,9 +15,11 @@ import { UserAuthForm } from './components/user-auth-form'
 
 export function SignIn() {
   const { redirect } = useSearch({ from: '/(auth)/sign-in' })
+  const [loginId, setLoginId] = useState('')
+  const school = useSignInSchool(loginId)
 
   return (
-    <AuthLayout>
+    <AuthLayout school={school}>
       <Card className='max-w-sm gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
@@ -26,7 +30,7 @@ export function SignIn() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <UserAuthForm redirectTo={redirect} />
+          <UserAuthForm redirectTo={redirect} onLoginIdChange={setLoginId} />
         </CardContent>
         <CardFooter>
           <p className='text-center text-sm text-muted-foreground'>

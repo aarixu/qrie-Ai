@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Logo } from '@/assets/logo'
+import { useSignInSchool } from '@/lib/brand'
 
 export function SignIn() {
   const navigate = useNavigate()
@@ -16,6 +17,7 @@ export function SignIn() {
   const [pin, setPin] = useState('')
   const [busy, setBusy] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
+  const school = useSignInSchool(loginId)
 
   const idOk = /^[A-Za-z0-9-]{3,40}$/.test(loginId.trim())
   const pinOk = /^\d{6,8}$/.test(pin)
@@ -48,8 +50,16 @@ export function SignIn() {
 
   return (
     <div className='mx-auto flex min-h-svh max-w-md flex-col justify-center px-6 py-10'>
-      <Logo className='mb-4 size-14' />
-      <h1 className='mb-1 text-3xl font-bold tracking-tight'>Qrie</h1>
+      {school?.logo ? (
+        <img
+          src={`data:${school.logo.mime};base64,${school.logo.base64}`}
+          alt=''
+          className='mb-4 size-16 rounded-2xl bg-white object-contain p-1 shadow-sm'
+        />
+      ) : (
+        <Logo className='mb-4 size-14' />
+      )}
+      <h1 className='mb-1 text-3xl font-bold tracking-tight'>{school?.schoolName ?? 'Qrie'}</h1>
       <p className='mb-8 text-muted-foreground'>Sign in with the ID and PIN your school gave you.</p>
       <form onSubmit={submit} className='space-y-4' noValidate>
         {problem && (
