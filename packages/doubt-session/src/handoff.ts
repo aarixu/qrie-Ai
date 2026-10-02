@@ -96,8 +96,13 @@ export interface HandoffOptions {
 
 export interface Handoff {
   readonly state: HandoffState;
-  /** Legal only from PLAYING; otherwise a no-op (a double-tap must not crash a class). */
-  raiseHand(ctx: DoubtContext): void;
+  /**
+   * Legal only from PLAYING; otherwise a no-op (a double-tap must not crash a class).
+   * `quiet`: the student opened this doubt by talking over her and is already
+   * saying it, so her entry line is not spoken over them — the class pauses and
+   * the tutor is ready at once (Aarav, 2026-10-02).
+   */
+  raiseHand(ctx: DoubtContext, opts?: { quiet?: boolean }): void;
   /** Forward a student message to the live session. No-op outside LIVE. */
   sendUserText(text: string, opts?: SendOptions): void;
   /** Manual end; the agent's io.done() ends it too. */
@@ -268,7 +273,7 @@ export function createHandoff(opts: HandoffOptions): Handoff {
     setState('HALTED');
   }
 
-  function raiseHand(ctx: DoubtContext): void {
+  function raiseHand(ctx: DoubtContext, raise: { quiet?: boolean } = {}): void {
     // Covers the double-tap AND ✋ during a leaving sequence: nothing but
     // PLAYING accepts a new hand, so mid-seam taps wait for the seam to close.
     // HALTED never accepts one.
@@ -283,7 +288,7 @@ export function createHandoff(opts: HandoffOptions): Handoff {
     opts.onPause();
     setState('AGENT_ENTERING');
     void (async () => {
-      await voice(entryLine(ctx));
+      if (!raise.quiet) await voice(entryLine(ctx));
       if (myEpoch !== epoch) return; // cancelled (endDoubt) while the bridge line played
       session = opts.agent.start(ctx, io);
       setState('LIVE');

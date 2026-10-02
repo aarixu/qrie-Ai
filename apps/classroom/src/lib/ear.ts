@@ -6,8 +6,11 @@ import { relayFetch } from './relay';
  *
  * Aarav's spec, verbatim: when the tutor asks a question the mic opens on its
  * own, waits for the student's spoken answer, and closes when it has one. The
- * raise-hand button stays for the doubts the STUDENT starts; this ear only
- * exists inside a held ask.
+ * raise-hand button stays for the doubts the STUDENT starts.
+ *
+ * Since 2026-10-02 a class keeps ONE mic open instead (`openEar`, below), so
+ * a student can talk over her; `listenOnce` then takes its answer from that
+ * mic. The per-answer mic here is what a class without it still uses.
  *
  * Split the same way voice/audio.ts is: the decisions (when has the student
  * started speaking, when have they finished) are a pure endpointer that is
@@ -140,14 +143,15 @@ export interface Heard {
 const MIC_STALL_MS = 3_000;
 
 export async function listenOnce(
-  opts: { isCancelled?: () => boolean; stallMs?: number } = {},
+  opts: { isCancelled?: () => boolean; stallMs?: number; graceMs?: number } = {},
 ): Promise<Heard> {
+  if (open !== null) return listenOnOpenEar(open, opts);
   const isCancelled = opts.isCancelled ?? ((): boolean => false);
   const stallMs = opts.stallMs ?? MIC_STALL_MS;
   let lastChunkAt = Date.now();
   const preroll: Int16Array[] = [];
   const kept: Int16Array[] = [];
-  const pointer = createEndpointer();
+  const pointer = createEndpointer(opts.graceMs !== undefined ? { graceMs: opts.graceMs } : {});
   const levels: number[] = [];
   let speechEndedAt: number | undefined;
 
@@ -262,6 +266,228 @@ export async function listenOnce(
   const ended = speechEndedAt !== undefined ? { speechEndedAt } : {};
   try {
     const res = await postAnswer(recording, pcm);
+    const data = (await res.json().catch(() => ({}))) as { text?: string };
+    if (!res.ok) return { text: null, reason: 'error', ...ended };
+    const text = (data.text ?? '').trim();
+    return text ? { text, reason: 'heard', ...ended } : { text: null, reason: 'silence', ...ended };
+  } catch {
+    return { text: null, reason: 'error', ...ended };
+  }
+}
+
+/**
+ * THE EAR THAT STAYS OPEN (Aarav, 2026-10-02: "STT kaam nahi kar raha, tutor
+ * interrupt nahi ho rahi").
+ *
+ * The ear above opens a mic for each answer, and only once she has finished
+ * asking — so a student who answered while she was still talking, or who
+ * spoke up to stop her, was never heard at all. On a production class driven
+ * by a real Chrome with a fake microphone the ear itself worked (an answer was
+ * heard in 2 s and judged right); what a student could not do was talk over
+ * her. And a mic whose audio starts long after the last tap is one a phone may
+ * never let run.
+ *
+ * So the room opens ONE mic, on a tap, and keeps it for the class:
+ *   - it says when the student starts talking (`onStudentSpeech`) — sustained
+ *     speech, BARGE_IN.ms of it, so a cough or a door is not a sentence — and
+ *     the room stops her and listens;
+ *   - a listen on it keeps the last RING_CHUNKS of audio, so speech that began
+ *     before the listen (while she was finishing her question) is part of the
+ *     answer, not lost at its start;
+ *   - while a listen is taking an answer down, nothing is reported: the
+ *     listen is the one deciding when they have finished.
+ * Its answers go up as WAV (the compressed recording is per-mic and this mic
+ * outlives every answer); the upload is a few hundred kilobytes at most.
+ * Echo cancellation stays on (packages/voice createMicCapture): her voice from
+ * the same speaker must not read as the student.
+ */
+const RING_CHUNKS = 15;
+/** Talking over her: this loud, for this long, after this much quiet ends a stretch. */
+export const BARGE_IN = { level: 0.15, ms: 400, resetMs: 300 };
+
+interface Tap {
+  chunk(pcm: Int16Array, level: number): void;
+  cancel(): void;
+}
+
+interface OpenEar {
+  mic: ReturnType<typeof createMicCapture>;
+  ring: { pcm: Int16Array; level: number }[];
+  taps: Set<Tap>;
+  loudMs: number;
+  quietMs: number;
+  fired: boolean;
+  lastChunkAt: number;
+}
+
+let open: OpenEar | null = null;
+let opening: Promise<boolean> | null = null;
+/** Bumped by every close, so a mic that finishes opening after one is let go. */
+let generation = 0;
+const speechListeners = new Set<() => void>();
+
+/** The student started talking while nothing was listening for them. */
+export function onStudentSpeech(listen: () => void): () => void {
+  speechListeners.add(listen);
+  return () => {
+    speechListeners.delete(listen);
+  };
+}
+
+export function isEarOpen(): boolean {
+  return open !== null;
+}
+
+function hearChunk(ear: OpenEar, pcm: Int16Array): void {
+  ear.lastChunkAt = Date.now();
+  const level = micLevelOf(pcm);
+  ear.ring.push({ pcm, level });
+  if (ear.ring.length > RING_CHUNKS) ear.ring.shift();
+  if (ear.taps.size > 0) {
+    for (const tap of [...ear.taps]) tap.chunk(pcm, level);
+    return;
+  }
+  if (level >= BARGE_IN.level) {
+    ear.loudMs += CHUNK_MS;
+    ear.quietMs = 0;
+  } else {
+    ear.quietMs += CHUNK_MS;
+    if (ear.quietMs >= BARGE_IN.resetMs) {
+      ear.loudMs = 0;
+      ear.fired = false;
+    }
+  }
+  if (!ear.fired && ear.loudMs >= BARGE_IN.ms) {
+    ear.fired = true;
+    for (const listen of [...speechListeners]) listen();
+  }
+}
+
+/**
+ * Open the class's mic, once. Call it from a tap: a phone lets audio capture
+ * start only inside one. Resolves false when there is no mic or it was refused
+ * — never throws.
+ */
+export function openEar(): Promise<boolean> {
+  if (open !== null) return Promise.resolve(true);
+  if (opening !== null) return opening;
+  const mine = generation;
+  const ear: OpenEar = {
+    mic: undefined as unknown as OpenEar['mic'],
+    ring: [],
+    taps: new Set(),
+    loudMs: 0,
+    quietMs: BARGE_IN.resetMs,
+    fired: false,
+    lastChunkAt: Date.now(),
+  };
+  ear.mic = createMicCapture((pcm) => hearChunk(ear, pcm), CHUNK_MS);
+  opening = ear.mic.start().then(
+    () => {
+      opening = null;
+      if (mine !== generation) {
+        ear.mic.stop();
+        return false;
+      }
+      open = ear;
+      return true;
+    },
+    () => {
+      opening = null;
+      return false;
+    },
+  );
+  return opening;
+}
+
+/** Close the class's mic. Any listen on it ends as cancelled. */
+export function closeEar(): void {
+  generation += 1;
+  const ear = open;
+  open = null;
+  if (ear === null) return;
+  for (const tap of [...ear.taps]) tap.cancel();
+  ear.mic.stop();
+}
+
+/** One answer, from the open mic: `listenOnce`'s contract, with what was already being said. */
+async function listenOnOpenEar(
+  ear: OpenEar,
+  opts: { isCancelled?: () => boolean; stallMs?: number; graceMs?: number },
+): Promise<Heard> {
+  const isCancelled = opts.isCancelled ?? ((): boolean => false);
+  const stallMs = opts.stallMs ?? MIC_STALL_MS;
+  const pointer = createEndpointer(opts.graceMs !== undefined ? { graceMs: opts.graceMs } : {});
+  const preroll: Int16Array[] = [];
+  const kept: Int16Array[] = [];
+  const levels: number[] = [];
+  let speechEndedAt: number | undefined;
+
+  let finish: (state: 'heard' | 'nothing' | 'cancelled' | 'dead') => void = () => undefined;
+  let done = false;
+  const outcome = new Promise<'heard' | 'nothing' | 'cancelled' | 'dead'>((resolve) => {
+    finish = (state) => {
+      if (!done) {
+        done = true;
+        resolve(state);
+      }
+    };
+  });
+  const take = (pcm: Int16Array, level: number): void => {
+    if (done) return;
+    if (isCancelled()) {
+      finish('cancelled');
+      return;
+    }
+    const state = pointer.feed(level, CHUNK_MS);
+    if (state === 'waiting') {
+      preroll.push(pcm);
+      if (preroll.length > PREROLL_CHUNKS) preroll.shift();
+      return;
+    }
+    kept.push(pcm);
+    levels.push(level);
+    if (state === 'heard') speechEndedAt = performance.now();
+    if (state === 'heard' || state === 'nothing') finish(state);
+  };
+
+  // The student may already be talking — they began while she was finishing.
+  // Then the whole ring is theirs to keep; otherwise only a lead-in.
+  const talking = ear.loudMs > 0 || (ear.fired && ear.quietMs < BARGE_IN.resetMs);
+  for (const { pcm, level } of talking ? ear.ring : ear.ring.slice(-PREROLL_CHUNKS)) take(pcm, level);
+
+  const tap: Tap = { chunk: take, cancel: () => finish('cancelled') };
+  ear.taps.add(tap);
+  const watchdog = setInterval(() => {
+    if (isCancelled()) finish('cancelled');
+    else if (Date.now() - ear.lastChunkAt > stallMs) finish('dead');
+  }, 250);
+  const state = await outcome;
+  clearInterval(watchdog);
+  ear.taps.delete(tap);
+  // What this listen heard is spent: the next one must not hear it again.
+  ear.ring.length = 0;
+  ear.loudMs = 0;
+  ear.quietMs = BARGE_IN.resetMs;
+  ear.fired = false;
+
+  if (state === 'cancelled') return { text: null, reason: 'cancelled' };
+  if (state === 'dead') return { text: null, reason: 'error' };
+  if (state === 'nothing') return { text: null, reason: 'silence' };
+
+  let end = kept.length;
+  while (end > 1 && levels[end - 1] < EAR_DEFAULTS.stopLevel) end -= 1;
+  end = Math.min(kept.length, end + TRAILING_QUIET_CHUNKS);
+  const all = [...preroll, ...kept.slice(0, end)];
+  const pcm = new Int16Array(all.reduce((n, c) => n + c.length, 0));
+  let at = 0;
+  for (const c of all) {
+    pcm.set(c, at);
+    at += c.length;
+  }
+  const ended = speechEndedAt !== undefined ? { speechEndedAt } : {};
+  try {
+    const res = await postAnswer(null, pcm);
     const data = (await res.json().catch(() => ({}))) as { text?: string };
     if (!res.ok) return { text: null, reason: 'error', ...ended };
     const text = (data.text ?? '').trim();

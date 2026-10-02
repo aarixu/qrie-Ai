@@ -36,6 +36,11 @@ import { Icon } from './Icon';
  *     recording" is a sentence about Qrie. What Google keeps of a request under
  *     its own terms is not something this code controls, so the screen does not
  *     speak for Google.
+ *   - Since 2026-10-02 the mic stays on for the whole class (lib/ear.ts
+ *     `openEar`), so a student can stop her any time; it closes when the room
+ *     does, or the class halts. On the device it only listens for someone
+ *     speaking; what is sent is what a listen took down — an answer, a doubt,
+ *     the words that interrupted her. Hence "only what you say to her is sent".
  *
  * tests/privacyClaims.test.tsx reads the 90 out of this checkout's
  * migrations. If the window changes, or the purge stops deleting by age alone,
@@ -59,7 +64,7 @@ export function MicRationale({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Let Meera hear your answers"
+      aria-label="Let Meera hear you"
       className="fixed inset-0 z-50 grid place-items-end sm:place-items-center bg-black/50 px-4 pb-4 sm:pb-0"
     >
       <div className="w-full max-w-md bg-surface-container-lowest rounded-[24px] p-card-padding shadow-lg font-body-md flex flex-col gap-4">
@@ -67,17 +72,17 @@ export function MicRationale({
           <div className="w-16 h-16 rounded-full bg-primary-container grid place-items-center">
             <Icon name="mic" filled className="text-3xl text-on-primary-container" />
           </div>
-          <h2 className="font-headline-md text-[20px] leading-7 text-on-surface">
-            Let Meera hear your answers
-          </h2>
+          <h2 className="font-headline-md text-[20px] leading-7 text-on-surface">Let Meera hear you</h2>
           <p className="font-body-md text-body-md text-on-surface-variant">
-            When she asks you something, the mic opens on its own so you can just say it — in
-            English, Hindi, or both. It closes the moment you finish.
+            The mic stays on while the class is on, so you can answer out loud, or stop her any
+            time to ask something — in English, Hindi, or both. It turns off when you leave the
+            class.
           </p>
           <p className="font-label-md text-label-md text-on-surface-variant">
-            A speech service from Google turns what you say into text. We never save the
-            recording, only a short written copy of your answer so we can check she marked it
-            fairly. That copy is deleted after 90 days. Your phone will ask you next.
+            Only what you say to her is sent to a speech service from Google, which turns it into
+            text. We never save the recording, only a short written copy of your answers to her
+            questions so we can check she marked it fairly. That copy is deleted after 90 days.
+            Your phone will ask you next.
           </p>
         </div>
 

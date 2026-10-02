@@ -405,6 +405,20 @@ Smart-board design research covered what the board can do today and how speech c
 - **Not done:** the live-tutor half (driver A/B ink scripts) waits for live-tutor phase 2. smiles-drawer is "later" in the plan. Picture part boxes found by Gemini already exist (class-prep's `eyes`, at prep). The pen tip was dropped by Aarav's decision 4.
 - **Left out on purpose: roughjs and perfect-freehand.** The marks already draw as single hand strokes (a looping circle, an uneven box, a curved underline, a marker highlight), and Aarav chose a clean board with no pen. roughjs's sketchy double lines would add a dependency to make the board look rougher. Say the word and it goes in; it is one renderer change in `Scene.tsx` `renderMark`.
 
+**VOICE, EAR AND INTERRUPTION (2026-10-02 evening).** Aarav tested the deployed class and reported: "STT kaam nahi kar raha, tutor interrupt nahi ho rahi, voice bahut slow aur pleasing hai."
+- **The voice was slow because her prompt asked for it** ("a vocal smile", "no hurry", "a small pause after a new idea"). New notes ask for a clear, matter-of-fact, normal conversational pace. The same 128-character English line went from 10.7 s to 8.5 s (11.9 → 15.1 chars/s, about 150 wpm), on the same voice and model. Relay deployed (`6b0f3bb`), and `relay-check` passed afterwards. Six takes were sent to Aarav to choose a voice (`tools/voice-probe/voices.mjs`); still Sulafat until he picks.
+- **Diagnosis of STT, by evidence:**
+  - A real Chrome with a fake microphone on the production class: the ear works. The answer was heard in 2 s and judged right.
+  - What failed is timing. The mic opened only after she finished a question, so anything said while she talked was never heard, and nothing could stop her.
+  - The mic's AudioContext was also created outside a tap with no `resume()`, which a phone can leave silent.
+  - `usage_event` has **no hear rows at all** (the 16 probe calls are missing too), so the cost meter cannot see the ear. Still open.
+- **The open ear:** one mic, opened on a tap (Join, or the mic card at class start), kept for the class, closed on leave or halt (`lib/ear.ts` `openEar`). On-device detection of speech triggers on 400 ms above 0.15. A listen replays the last 1.5 s.
+  - **Talking over her question** stops her line; the answer already being said is taken.
+  - **Talking over her teaching** pauses the class. If what was heard is real words, a doubt opens quietly (no entry line) with those words as its first message. Silence, or her own sentence back through the speaker, resumes the class.
+  - **In a doubt,** she is heard after each reply, and "got it" / "samajh aa gaya" ends it.
+  - The mic card copy now says the mic stays on for the class and that only what they say is sent.
+  - Verified with the fake-mic Chrome on the local build: interruption → heard → quiet doubt → heard again in the doubt → resumed.
+
 **Order:**
 - C0 and C1 together, now: neither needs model spend to build.
 - Then C2.

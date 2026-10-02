@@ -369,6 +369,12 @@ export function createMicCapture(
     // Ask for the rate the API wants; browsers that refuse are handled by
     // reading the rate back and resampling, which is why it is captured here.
     ctx = new AudioContext({ sampleRate: MIC_SAMPLE_RATE });
+    // A context made outside a tap can start suspended (iOS Safari, a page
+    // that has not been touched), and a suspended one delivers no samples: the
+    // ear's watchdog then calls the mic dead. Asked to run, not awaited — a
+    // resume the browser will not allow yet stays pending, and must not hold
+    // the mic's start hostage.
+    if (ctx.state === 'suspended') void ctx.resume().catch(() => undefined);
     const rate = ctx.sampleRate;
     source = ctx.createMediaStreamSource(stream);
 
