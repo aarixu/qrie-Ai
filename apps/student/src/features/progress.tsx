@@ -4,6 +4,7 @@ import type { StudentSubject, TimelineRow } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth-store'
+import { SubjectBadge } from '@/components/subject-icon'
 import { MyReportCard } from './report-card'
 
 export const chapterTitle = (slug: string) => {
@@ -53,8 +54,8 @@ export function ProgressPage() {
       <h1 className='text-2xl font-bold'>Your progress</h1>
       <MyReportCard />
       <div className='grid grid-cols-2 gap-2'>
-        <Ring label='Work handed in' value={due ? handed / due : null} hint={`${handed} of ${due}`} />
-        <Ring label='Average mark' value={average} hint='Marked work' />
+        <Ring label='Work handed in' value={due ? handed / due : null} hint={`${handed} of ${due}`} colour='#059669' />
+        <Ring label='Average mark' value={average} hint='Marked work' colour='#2563eb' />
       </div>
 
       {timeline.data && <Marks rows={timeline.data} />}
@@ -75,13 +76,13 @@ export function ProgressPage() {
   )
 }
 
-function Ring({ label, value, hint }: { label: string; value: number | null; hint: string }) {
+function Ring({ label, value, hint, colour }: { label: string; value: number | null; hint: string; colour: string }) {
   const deg = (value ?? 0) * 360
   return (
     <div className='flex flex-col items-center rounded-2xl border bg-card p-4'>
       <div
         className='flex size-20 items-center justify-center rounded-full'
-        style={{ background: `conic-gradient(var(--primary) ${deg}deg, var(--muted) 0deg)` }}
+        style={{ background: `conic-gradient(${colour} ${deg}deg, var(--muted) 0deg)` }}
       >
         <div className='flex size-16 items-center justify-center rounded-full bg-card text-lg font-bold tabular-nums'>
           {pct(value)}
@@ -133,12 +134,15 @@ function Marks({ rows }: { rows: TimelineRow[] }) {
 function SubjectCard({ s }: { s: StudentSubject }) {
   const st = standingOf(s.mastery, s.chaptersSeen > 0 ? 3 : 0)
   return (
-    <div className='rounded-xl border bg-card p-3'>
-      <div className='flex items-baseline justify-between gap-2'>
-        <p className='font-medium'>{s.subjectName}</p>
+    <div className='rounded-2xl border bg-card p-3'>
+      <div className='flex items-center gap-3'>
+        <SubjectBadge subject={s.subjectName} className='size-10 rounded-xl' />
+        <div className='min-w-0 flex-1'>
+          <p className='font-medium'>{s.subjectName}</p>
+          {s.teacherName && <p className='text-xs text-muted-foreground'>{s.teacherName}</p>}
+        </div>
         <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-xs font-medium', st.tone)}>{st.word}</span>
       </div>
-      {s.teacherName && <p className='text-xs text-muted-foreground'>{s.teacherName}</p>}
       <div className='mt-2 grid grid-cols-2 gap-3 text-xs'>
         <div>
           <div className='flex justify-between text-muted-foreground'>
@@ -185,7 +189,10 @@ function Chapters() {
       <div className='space-y-4'>
         {subjects.map((subject) => (
           <div key={subject} className='rounded-xl border bg-card p-3'>
-            <p className='mb-2 font-medium'>{subject}</p>
+            <p className='mb-2 flex items-center gap-2 font-medium'>
+              <SubjectBadge subject={subject} className='size-7 rounded-lg' />
+              {subject}
+            </p>
             <ul className='space-y-2.5'>
               {mine.data
                 .filter((c) => c.subject === subject)

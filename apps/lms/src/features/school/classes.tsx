@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/table'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { TrendChart, band, pct } from '@/features/analytics/charts'
+import { SubjectBadge } from '@/components/subject-icon'
 import { useSchoolClasses } from './overview'
 
 /** Every class and subject in the school, with how it is going (lms.school_classes). */
@@ -51,7 +52,12 @@ export function SchoolClassesPage() {
                 return (
                   <TableRow key={`${c.sectionId}-${c.subjectId}`} className='cursor-pointer' onClick={() => setOpen(c)}>
                     <TableCell className='font-medium'>{c.className}</TableCell>
-                    <TableCell>{c.subjectName}</TableCell>
+                    <TableCell>
+                      <span className='flex items-center gap-2'>
+                        <SubjectBadge subject={c.subjectName} className='size-8' />
+                        {c.subjectName}
+                      </span>
+                    </TableCell>
                     <TableCell className='text-muted-foreground'>{c.teacherName}</TableCell>
                     <TableCell className='text-center tabular-nums'>{c.students}</TableCell>
                     <TableCell className='text-center tabular-nums'>{c.workSet}</TableCell>

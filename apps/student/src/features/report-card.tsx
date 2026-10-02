@@ -3,6 +3,7 @@ import { FileDown, Share2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { canSharePdf, deliverPdf, reportCardBytes, reportFileName } from '@ai-tutor/lms-report'
 import { api, say } from '@/lib/backend'
+import { brandColours } from '@/lib/brand'
 import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 
@@ -19,19 +20,21 @@ export function MyReportCard() {
     setBusy(true)
     try {
       const id = me.userId
-      const [card, subjects, chapters, timeline, mistakes, logo] = await Promise.all([
+      const [card, subjects, chapters, timeline, mistakes, logo, photos] = await Promise.all([
         api.studentCard(id),
         api.studentSubjects(id),
         api.studentChapters(id),
         api.studentTimeline(id),
         api.studentMistakes(id),
         api.schoolLogo().catch(() => null),
+        api.accountPhotos([id]).catch(() => []),
       ])
       if (!card) throw new Error('Your report could not be found.')
-      const bytes = reportCardBytes([{ card, subjects, chapters, timeline, mistakes }], {
+      const photo = photos[0]?.base64 ?? null
+      const bytes = reportCardBytes([{ card, subjects, chapters, timeline, mistakes, photo }], {
         brand: {
           schoolName: me.schoolName,
-          primary: typeof me.brand?.primary === 'string' ? me.brand.primary : null,
+          primary: brandColours(me).primary,
           logo: logo ? { mime: logo.mime, base64: logo.base64 } : null,
         },
         generatedAt: new Date(),

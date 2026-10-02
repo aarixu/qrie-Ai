@@ -7,8 +7,6 @@ import { classFileName, deliverPdf, reportCardBytes } from '@ai-tutor/lms-report
 import { useAuthStore } from '@/stores/auth-store'
 import type { SchoolStudent } from '@ai-tutor/lms-client'
 import { cn } from '@/lib/utils'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -20,8 +18,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Loading, Page, Problem } from '@/components/layout/page'
-import { band, pct } from '@/features/analytics/charts'
-import { initials } from '@/features/students/report'
+import { MEASURE, band, pct } from '@/features/analytics/charts'
+import { PersonAvatar } from '@/components/person-avatar'
+import { hueFor } from '@/lib/palette'
+import { usePhotos } from '@/lib/photos'
+import { PhotoUploadButton } from './photo-upload'
 import { brandOf, inTurn, reportFor } from '@/features/students/report-pdf'
 import { useSchoolClasses, useSchoolStudents } from './overview'
 
@@ -44,6 +45,7 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
   const students = useSchoolStudents(section)
   const [query, setQuery] = useState('')
   const [bandFilter, setBandFilter] = useState<BandFilter>('all')
+  const photos = usePhotos((students.data ?? []).map((x) => x.userId))
   const sections = [...new Map((classes.data ?? []).map((c) => [c.sectionId, c.className])).entries()]
 
   const shown = (students.data ?? []).filter(
@@ -59,11 +61,14 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
       title='Students'
       description='Every student’s card. Open one for their full report, subject by subject.'
       actions={
-        <Button asChild variant='outline'>
-          <Link to='/school/people'>
-            <UserPlus /> Add students
-          </Link>
-        </Button>
+        <>
+          <PhotoUploadButton />
+          <Button asChild variant='outline'>
+            <Link to='/school/people'>
+              <UserPlus /> Add students
+            </Link>
+          </Button>
+        </>
       }
     >
       <div className='mb-4 flex flex-wrap gap-2'>
@@ -124,7 +129,7 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
       ) : (
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
           {shown.map((s) => (
-            <StudentCard key={s.userId} s={s} />
+            <StudentCard key={s.userId} s={s} photo={photos.get(s.userId)} />
           ))}
         </div>
       )}
@@ -132,54 +137,70 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
   )
 }
 
-function StudentCard({ s }: { s: SchoolStudent }) {
+function StudentCard({ s, photo }: { s: SchoolStudent; photo: string | undefined }) {
   const b = band(s.mastery)
+  const classHue = hueFor(s.className)
   return (
     <Link
       to='/students/$studentId'
       params={{ studentId: s.userId }}
       className='rounded-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none'
     >
-      <Card className='h-full gap-3 py-4 transition-colors hover:bg-accent/50'>
-        <CardContent className='space-y-3 px-4'>
-          <div className='flex items-center gap-3'>
-            <Avatar className='size-10'>
-              <AvatarFallback className='bg-primary/10 text-primary'>{initials(s.displayName)}</AvatarFallback>
-            </Avatar>
-            <div className='min-w-0'>
+      <Card className='h-full gap-0 overflow-hidden py-0 transition-all hover:-translate-y-0.5 hover:shadow-md'>
+        <div
+          className='relative h-14'
+          style={{ background: `linear-gradient(120deg, ${classHue.solid}33, ${classHue.solid}0d)` }}
+        >
+          <span
+            className='absolute top-2 right-3 rounded-full px-2 py-0.5 text-xs font-semibold'
+            style={{ background: classHue.soft, color: classHue.solid }}
+          >
+            Class {s.className}
+          </span>
+        </div>
+        <CardContent className='-mt-8 space-y-3 px-4 pb-4'>
+          <div className='flex items-end gap-3'>
+            <PersonAvatar
+              userId={s.userId}
+              name={s.displayName}
+              photo={photo}
+              ring={b.colour}
+              className='size-16 border-4 border-card'
+            />
+            <div className='min-w-0 pb-1'>
               <p className='truncate font-semibold'>{s.displayName}</p>
               <p className='text-xs text-muted-foreground'>
-                Class {s.className} · Roll {s.rollNumber ?? '—'} · <span className='font-mono'>{s.loginId}</span>
+                Roll {s.rollNumber ?? '—'} · <span className='font-mono'>{s.loginId}</span>
               </p>
             </div>
           </div>
-          <div className='space-y-1'>
-            <div className='flex justify-between text-xs'>
-              <span className='text-muted-foreground'>Handed in</span>
-              <span className={cn('tabular-nums', (s.handinRate ?? 1) < 0.6 && 'text-destructive')}>
-                {pct(s.handinRate)} of {s.workDue}
-              </span>
-            </div>
-            <div className='h-1.5 overflow-hidden rounded-full bg-muted'>
-              <div className='h-full rounded-full bg-primary' style={{ width: `${(s.handinRate ?? 0) * 100}%` }} />
-            </div>
+          <div className='grid grid-cols-3 gap-2 text-center'>
+            <Stat label='Handed in' value={pct(s.handinRate)} colour={MEASURE.handin} bad={(s.handinRate ?? 1) < 0.6} />
+            <Stat label='Average' value={pct(s.averageScore)} colour={MEASURE.average} bad={(s.averageScore ?? 1) < 0.5} />
+            <Stat label='Mastery' value={pct(s.mastery)} colour={b.colour} />
           </div>
           <div className='flex items-center justify-between text-xs'>
+            <span className={cn('font-medium', b.text)}>{b.label}</span>
             <span className='text-muted-foreground'>
-              Average <span className='font-medium text-foreground tabular-nums'>{pct(s.averageScore)}</span>
+              {s.lastActive
+                ? `Active ${formatDistanceToNowStrict(new Date(s.lastActive), { addSuffix: true })}`
+                : 'Not active yet'}
             </span>
-            <Badge variant='outline' className={cn('font-medium', b.text)}>
-              {s.mastery === null ? b.label : `${pct(s.mastery)} ${b.label}`}
-            </Badge>
           </div>
-          <p className='text-xs text-muted-foreground'>
-            {s.lastActive
-              ? `Last active ${formatDistanceToNowStrict(new Date(s.lastActive), { addSuffix: true })}`
-              : 'Not active yet'}
-          </p>
         </CardContent>
       </Card>
     </Link>
+  )
+}
+
+function Stat({ label, value, colour, bad }: { label: string; value: string; colour: string; bad?: boolean }) {
+  return (
+    <div className='rounded-lg px-1 py-1.5' style={{ background: `${colour}14` }}>
+      <p className={cn('text-sm font-bold tabular-nums', bad && 'text-destructive')} style={bad ? undefined : { color: colour }}>
+        {value}
+      </p>
+      <p className='text-[10px] text-muted-foreground uppercase'>{label}</p>
+    </div>
   )
 }
 

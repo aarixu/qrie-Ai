@@ -8,6 +8,7 @@ import {
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { isSignedOutError } from '@/lib/backend'
+import { applyBrand } from '@/lib/brand'
 import { signOut } from '@/stores/auth-store'
 import { routeTree } from './routeTree.gen'
 import './styles/index.css'
@@ -41,6 +42,9 @@ declare module '@tanstack/react-router' {
     router: typeof router
   }
 }
+
+// Qrie's colours until a student signs in and their school's take over.
+applyBrand(null)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>

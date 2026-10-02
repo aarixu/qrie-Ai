@@ -9,6 +9,7 @@ import {
   GraduationCap,
   School,
   Target,
+  UserPlus,
   Users,
 } from 'lucide-react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
@@ -18,6 +19,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { ChartCard, ClassBars, Kpi, band, pct, shortClass } from '@/features/analytics/charts'
+import { BrandHero, greeting } from '@/components/brand-hero'
+import { PersonAvatar } from '@/components/person-avatar'
+import { usePhotos } from '@/lib/photos'
+import { useAuthStore } from '@/stores/auth-store'
 import { EventDialog } from '@/features/events/event-dialog'
 import { UpcomingList } from '@/features/events/upcoming'
 
@@ -35,16 +40,26 @@ export function SchoolOverviewPage() {
   const classes = useSchoolClasses()
   const students = useSchoolStudents()
   const [eventOpen, setEventOpen] = useState(false)
+  const me = useAuthStore((s) => s.me)
   const o = overview.data
 
   return (
     <Page
       title='School overview'
-      description={o ? o.schoolName : undefined}
-      actions={
-        <Button variant='outline' onClick={() => setEventOpen(true)}>
-          <CalendarPlus /> New school event
-        </Button>
+      hero={
+        <BrandHero
+          title={greeting(me?.displayName)}
+          subtitle={o ? `${o.students} students · ${o.teachers} teachers · ${o.classes} sections` : 'Your school at a glance.'}
+        >
+          <Button variant='secondary' onClick={() => setEventOpen(true)}>
+            <CalendarPlus /> New school event
+          </Button>
+          <Button asChild variant='secondary'>
+            <Link to='/school/people'>
+              <UserPlus /> Add people
+            </Link>
+          </Button>
+        </BrandHero>
       }
     >
       {overview.isPending ? (
@@ -129,6 +144,7 @@ export function atRisk(rows: SchoolStudent[]): SchoolStudent[] {
 }
 
 function AtRiskList({ rows }: { rows: SchoolStudent[] }) {
+  const photos = usePhotos(rows.map((r) => r.userId))
   if (rows.length === 0) return <p className='text-sm text-muted-foreground'>Nobody below the line. All good.</p>
   return (
     <ul className='divide-y'>
@@ -137,11 +153,14 @@ function AtRiskList({ rows }: { rows: SchoolStudent[] }) {
           <Link
             to='/students/$studentId'
             params={{ studentId: s.userId }}
-            className='flex flex-wrap items-center justify-between gap-x-3 gap-y-0.5 py-2 hover:bg-accent/50'
+            className='flex flex-wrap items-center justify-between gap-x-3 gap-y-0.5 rounded-md px-1 py-2 hover:bg-accent/50'
           >
-            <span>
-              <span className='font-medium'>{s.displayName}</span>{' '}
-              <span className='text-sm text-muted-foreground'>Class {s.className}</span>
+            <span className='flex items-center gap-3'>
+              <PersonAvatar userId={s.userId} name={s.displayName} photo={photos.get(s.userId)} className='size-9' />
+              <span>
+                <span className='font-medium'>{s.displayName}</span>{' '}
+                <span className='text-sm text-muted-foreground'>Class {s.className}</span>
+              </span>
             </span>
             <span className='flex gap-3 text-sm whitespace-nowrap tabular-nums'>
               <span className={(s.handinRate ?? 1) < 0.6 ? 'text-destructive' : 'text-muted-foreground'}>

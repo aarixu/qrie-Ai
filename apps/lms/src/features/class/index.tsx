@@ -31,6 +31,8 @@ import { UpcomingList } from '@/features/events/upcoming'
 import { WORK_KINDS, kindLabel } from '@/features/homework/kinds'
 import { ClassAnalytics } from './analytics'
 import { Insights } from './insights'
+import { PersonAvatar } from '@/components/person-avatar'
+import { usePhotos } from '@/lib/photos'
 
 type ClassPageProps = { sectionId: string; subjectId: string }
 
@@ -357,6 +359,7 @@ function Roster({ sectionId }: { sectionId: string }) {
     queryKey: ['roster', sectionId],
     queryFn: () => api.classRoster(sectionId),
   })
+  const photos = usePhotos((roster.data ?? []).map((s) => s.studentUserId))
   if (roster.isPending) return <Loading what='the students' />
   if (roster.isError) return <Problem error={roster.error} />
   return (
@@ -374,7 +377,10 @@ function Roster({ sectionId }: { sectionId: string }) {
             <TableRow key={s.studentUserId}>
               <TableCell className='tabular-nums'>{s.rollNumber ?? '—'}</TableCell>
               <TableCell className='font-medium'>
-                <StudentLink id={s.studentUserId} name={s.displayName} />
+                <span className='flex items-center gap-3'>
+                  <PersonAvatar userId={s.studentUserId} name={s.displayName} photo={photos.get(s.studentUserId)} className='size-8' />
+                  <StudentLink id={s.studentUserId} name={s.displayName} />
+                </span>
               </TableCell>
               <TableCell className='font-mono text-sm'>{s.loginId}</TableCell>
             </TableRow>

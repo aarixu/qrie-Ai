@@ -1,18 +1,20 @@
 import type { Me } from '@ai-tutor/lms-client'
 import type { ReportBrand, ReportData } from '@ai-tutor/lms-report'
 import { api } from '@/lib/backend'
+import { brandColours } from '@/lib/brand'
 
 /** Everything one student's report card shows, as the caller may see it (lms.student_*). */
 export async function reportFor(studentId: string): Promise<ReportData> {
-  const [card, subjects, chapters, timeline, mistakes] = await Promise.all([
+  const [card, subjects, chapters, timeline, mistakes, photos] = await Promise.all([
     api.studentCard(studentId),
     api.studentSubjects(studentId),
     api.studentChapters(studentId),
     api.studentTimeline(studentId),
     api.studentMistakes(studentId),
+    api.accountPhotos([studentId]).catch(() => []),
   ])
   if (!card) throw new Error('No such student.')
-  return { card, subjects, chapters, timeline, mistakes }
+  return { card, subjects, chapters, timeline, mistakes, photo: photos[0]?.base64 ?? null }
 }
 
 /** The school's name, colour and logo, for the top of the card. */
@@ -20,7 +22,7 @@ export async function brandOf(me: Me): Promise<ReportBrand> {
   const logo = await api.schoolLogo().catch(() => null)
   return {
     schoolName: me.schoolName,
-    primary: typeof me.brand?.primary === 'string' ? me.brand.primary : null,
+    primary: brandColours(me).primary,
     logo: logo ? { mime: logo.mime, base64: logo.base64 } : null,
   }
 }

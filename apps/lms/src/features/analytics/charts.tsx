@@ -13,6 +13,7 @@ import {
 } from 'recharts'
 import { format } from 'date-fns'
 import type { TrendPoint } from '@ai-tutor/lms-client'
+import { hueFor } from '@/lib/palette'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -41,6 +42,29 @@ export function band(m: number | null | undefined): { label: string; colour: str
   return { label: 'Secure', colour: '#16a34a', text: 'text-green-600' }
 }
 
+/** One colour per measure, the same on every screen and chart, whatever the school's colours. */
+export const MEASURE = {
+  handin: '#059669',
+  average: '#2563eb',
+  work: '#d97706',
+  mastery: '#c026d3',
+} as const
+
+const KPI_HUE: Record<string, string> = {
+  Students: '#4f46e5',
+  Teachers: '#7c3aed',
+  'Work set': MEASURE.work,
+  'Hand-in rate': MEASURE.handin,
+  'Work handed in': MEASURE.handin,
+  'Average score': MEASURE.average,
+  'Average mark': MEASURE.average,
+  Mastery: MEASURE.mastery,
+  Classes: '#0891b2',
+  'Need attention': '#e11d48',
+  'Handed in late': '#ea580c',
+  'Chapters practised': '#0d9488',
+}
+
 export function Kpi({
   label,
   value,
@@ -54,11 +78,21 @@ export function Kpi({
   icon?: React.ElementType
   tone?: 'bad' | 'good'
 }) {
+  const colour = KPI_HUE[label] ?? hueFor(label).solid
   return (
-    <Card className='gap-2 py-4'>
+    <Card className='relative gap-2 overflow-hidden py-4'>
+      <span className='absolute inset-x-0 top-0 h-1' style={{ background: colour }} aria-hidden />
       <CardHeader className='flex flex-row items-center justify-between space-y-0 px-4'>
         <CardTitle className='text-sm font-medium text-muted-foreground'>{label}</CardTitle>
-        {Icon && <Icon className='size-4 text-muted-foreground' />}
+        {Icon && (
+          <span
+            className='flex size-9 items-center justify-center rounded-xl'
+            style={{ background: `${colour}1f`, color: colour }}
+            aria-hidden
+          >
+            <Icon className='size-[18px]' />
+          </span>
+        )}
       </CardHeader>
       <CardContent className='px-4'>
         <div
@@ -129,8 +163,8 @@ export function TrendChart({ points, height = 260 }: { points: TrendPoint[]; hei
           labelFormatter={(_, payload) => (payload?.[0]?.payload as { title?: string } | undefined)?.title ?? ''}
         />
         <Legend wrapperStyle={{ fontSize: 12 }} />
-        <Line type='monotone' dataKey='Average score' stroke='var(--chart-1)' strokeWidth={2} dot={{ r: 3 }} connectNulls />
-        <Line type='monotone' dataKey='Handed in' stroke='var(--chart-2)' strokeWidth={2} dot={{ r: 3 }} connectNulls />
+        <Line type='monotone' dataKey='Average score' stroke={MEASURE.average} strokeWidth={2.5} dot={{ r: 3.5 }} connectNulls />
+        <Line type='monotone' dataKey='Handed in' stroke={MEASURE.handin} strokeWidth={2.5} dot={{ r: 3.5 }} connectNulls />
       </LineChart>
     </ResponsiveContainer>
   )
@@ -154,8 +188,8 @@ export function ClassBars({
         <YAxis domain={[0, 100]} tick={axis} tickLine={false} axisLine={false} unit='%' width={44} />
         <Tooltip contentStyle={tooltipStyle} formatter={(v) => `${v}%`} cursor={{ fill: 'var(--muted)' }} />
         <Legend wrapperStyle={{ fontSize: 12 }} />
-        <Bar dataKey='Handed in' fill='var(--chart-2)' radius={[4, 4, 0, 0]} />
-        <Bar dataKey='Average score' fill='var(--chart-1)' radius={[4, 4, 0, 0]} />
+        <Bar dataKey='Handed in' fill={MEASURE.handin} radius={[4, 4, 0, 0]} />
+        <Bar dataKey='Average score' fill={MEASURE.average} radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   )

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
+import { subjectHue } from '@/lib/palette'
 import { Section, standing } from './home'
 
 type Tab = 'todo' | 'done'
@@ -53,11 +54,14 @@ export function Work() {
             <button
               key={s ?? 'all'}
               onClick={() => setSubject(s)}
+              aria-pressed={subject === s}
               className={cn(
-                'shrink-0 rounded-full border px-3 py-1 text-sm transition-colors',
-                subject === s ? 'border-primary bg-primary text-primary-foreground' : 'bg-card text-muted-foreground'
+                'flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-colors',
+                subject === s ? 'border-transparent font-medium text-white' : 'bg-card text-muted-foreground'
               )}
+              style={subject === s ? { background: s ? subjectHue(s).solid : 'var(--primary)', color: s ? '#ffffff' : 'var(--primary-foreground)' } : undefined}
             >
+              {s && subject !== s && <span className='size-2 rounded-full' style={{ background: subjectHue(s).solid }} />}
               {s ?? 'All subjects'}
             </button>
           ))}

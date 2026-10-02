@@ -16,7 +16,6 @@ import { api } from '@/lib/backend'
 import { chapterTitle } from '@/lib/curriculum'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth-store'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -28,9 +27,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Loading, Page, Problem } from '@/components/layout/page'
-import { ChartCard, Kpi, MasteryBars, band, pct } from '@/features/analytics/charts'
+import { ChartCard, Kpi, MEASURE, MasteryBars, band, pct } from '@/features/analytics/charts'
 import { kindLabel } from '@/features/homework/kinds'
 import { ResetPinButton } from '@/features/school/reset-pin'
+import { ProfileHeader } from './profile-header'
 import { ReportCardButtons } from './report-buttons'
 
 export const initials = (name: string) =>
@@ -74,8 +74,7 @@ export function StudentReport({ studentId }: { studentId: string }) {
 
   return (
     <Page
-      title={s ? s.displayName : 'Student'}
-      description={s ? `Class ${s.className ?? '—'} · Roll ${s.rollNumber ?? '—'} · ${s.loginId}` : undefined}
+      title='Student report'
       back={back}
       actions={
         card.data && (
@@ -94,18 +93,12 @@ export function StudentReport({ studentId }: { studentId: string }) {
         <p className='text-muted-foreground'>No such student.</p>
       ) : (
         <div className='space-y-6'>
-          <div className='flex items-center gap-4'>
-            <Avatar className='size-14 text-lg'>
-              <AvatarFallback className='bg-primary text-primary-foreground'>{initials(s.displayName)}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className='text-lg font-semibold'>{s.displayName}</p>
-              <p className='text-sm text-muted-foreground'>
-                {s.schoolName} · Class {s.className ?? '—'}
-                {me?.kind !== 'admin' && ' · the subjects you teach them'}
-              </p>
-            </div>
-          </div>
+          <ProfileHeader
+            card={s}
+            ring={band(mean((subjects.data ?? []).map((x) => x.mastery))).colour}
+            canEditPhoto={me?.kind === 'admin'}
+            note={me?.kind !== 'admin' ? 'Showing the subjects you teach them.' : undefined}
+          />
 
           {subjects.isError ? (
             <Problem error={subjects.error} />
@@ -275,7 +268,7 @@ function ScoreHistory({ rows }: { rows: TimelineRow[] }) {
           formatter={(v) => `${v}%`}
           labelFormatter={(_, p) => (p?.[0]?.payload as { title?: string } | undefined)?.title ?? ''}
         />
-        <Line type='monotone' dataKey='Score' stroke='var(--chart-1)' strokeWidth={2} dot={{ r: 4 }} />
+        <Line type='monotone' dataKey='Score' stroke={MEASURE.average} strokeWidth={2.5} dot={{ r: 4 }} />
       </LineChart>
     </ResponsiveContainer>
   )

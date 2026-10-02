@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { ChevronsUpDown, LogOut, Palette } from 'lucide-react'
 import useDialogState from '@/hooks/use-dialog-state'
 import { useAuthStore } from '@/stores/auth-store'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { MyAvatar } from '@/components/person-avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,11 +38,7 @@ export function NavUser() {
 
   const who = (
     <>
-      <Avatar className='h-8 w-8 rounded-lg'>
-        <AvatarFallback className='rounded-lg'>
-          {initials(me.displayName)}
-        </AvatarFallback>
-      </Avatar>
+      <MyAvatar className='size-8' />
       <div className='grid flex-1 text-start text-sm leading-tight'>
         <span className='truncate font-semibold'>{me.displayName}</span>
         <span className='truncate text-xs'>{me.loginId}</span>

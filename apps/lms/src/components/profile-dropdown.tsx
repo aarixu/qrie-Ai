@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import useDialogState from '@/hooks/use-dialog-state'
 import { useAuthStore } from '@/stores/auth-store'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { MyAvatar } from '@/components/person-avatar'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { initials } from '@/components/layout/nav-user'
 import { SignOutDialog } from '@/components/sign-out-dialog'
 
 export function ProfileDropdown() {
@@ -28,9 +27,7 @@ export function ProfileDropdown() {
             className='relative h-8 w-8 rounded-full'
             aria-label='Your account'
           >
-            <Avatar className='h-8 w-8'>
-              <AvatarFallback>{initials(me.displayName)}</AvatarFallback>
-            </Avatar>
+            <MyAvatar className='size-8' />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className='w-56' align='end' forceMount>

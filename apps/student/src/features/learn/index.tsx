@@ -5,6 +5,8 @@ import { Bot, ChevronRight, Lock } from 'lucide-react'
 import type { PracticeChapter } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
+import { subjectHue } from '@/lib/palette'
+import { SubjectBadge } from '@/components/subject-icon'
 import { chapterTitle, standingOf } from '../progress'
 
 /**
@@ -33,13 +35,14 @@ export function Learn() {
         </p>
       </div>
 
-      <div className='flex items-center gap-3 rounded-2xl border border-dashed p-4'>
-        <div className='flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
+      <div className='relative flex items-center gap-3 overflow-hidden rounded-2xl bg-primary p-4 text-primary-foreground'>
+        <span className='pointer-events-none absolute -top-12 -right-12 size-24 rounded-full bg-brand-accent opacity-50' aria-hidden />
+        <div className='relative flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/20'>
           <Bot className='size-6' />
         </div>
-        <div>
+        <div className='relative'>
           <p className='font-semibold'>Your AI tutor is coming soon</p>
-          <p className='text-xs text-muted-foreground'>It will teach each chapter with you, step by step.</p>
+          <p className='text-xs opacity-85'>It will teach each chapter with you, step by step.</p>
         </div>
       </div>
 
@@ -52,11 +55,14 @@ export function Learn() {
               <button
                 key={s}
                 onClick={() => setSubject(s)}
+                aria-pressed={current === s}
                 className={cn(
-                  'shrink-0 rounded-full border px-3 py-1 text-sm transition-colors',
-                  current === s ? 'border-primary bg-primary text-primary-foreground' : 'bg-card text-muted-foreground'
+                  'flex shrink-0 items-center gap-2 rounded-full border py-1 ps-1 pe-3 text-sm transition-colors',
+                  current === s ? 'border-transparent font-medium text-white' : 'bg-card text-muted-foreground'
                 )}
+                style={current === s ? { background: subjectHue(s).solid } : undefined}
               >
+                <SubjectBadge subject={s} className={cn('size-7 rounded-full', current === s && 'bg-white/90!')} />
                 {s}
               </button>
             ))}
@@ -83,7 +89,10 @@ function ChapterRow({ c, n }: { c: PracticeChapter; n: number }) {
   const s = standingOf(c.mastery, c.answers)
   const inner = (
     <div className={cn('flex items-center gap-3 rounded-xl border bg-card p-3', c.questions === 0 && 'opacity-60')}>
-      <div className='flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-sm font-semibold tabular-nums'>
+      <div
+        className='flex size-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold tabular-nums'
+        style={{ background: subjectHue(c.subjectName).soft, color: subjectHue(c.subjectName).solid }}
+      >
         {n}
       </div>
       <div className='min-w-0 flex-1'>

@@ -1,12 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { format, formatDistanceToNowStrict } from 'date-fns'
-import { CalendarDays, Camera, ChevronRight, ClipboardCheck, ListChecks, NotebookPen, Sparkles } from 'lucide-react'
+import { CalendarDays, Camera, CheckCircle2, ChevronRight, ClipboardCheck, ClipboardList, ListChecks, NotebookPen, Sparkles, TrendingUp } from 'lucide-react'
 import type { MyAssignment, UpcomingEvent } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { useAuthStore } from '@/stores/auth-store'
+import { PersonAvatar } from '@/components/person-avatar'
+import { subjectHue } from '@/lib/palette'
+import { usePhoto } from '@/lib/photos'
 import { chapterTitle } from './progress'
 
 export function kindLabel(a: Pick<MyAssignment, 'kind'>): string {
@@ -58,25 +61,31 @@ export function Home() {
   const hour = new Date().getHours()
   const hello = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
   const first = me?.displayName.split(' ')[0] ?? ''
+  const left = todo.length + overdue.length
 
   return (
     <div className='space-y-6'>
-      <section>
-        <p className='text-sm text-muted-foreground'>{format(new Date(), 'EEEE, d MMMM')}</p>
-        <h1 className='text-2xl font-bold'>
-          {hello}, {first}
-        </h1>
-        <p className='text-sm text-muted-foreground'>
-          {todo.length + overdue.length === 0
-            ? 'You are all caught up.'
-            : `You have ${todo.length + overdue.length} ${todo.length + overdue.length === 1 ? 'thing' : 'things'} to do.`}
-        </p>
+      <section className='relative overflow-hidden rounded-3xl bg-primary p-5 text-primary-foreground shadow-sm'>
+        <span className='pointer-events-none absolute -top-16 -right-14 size-32 rounded-full bg-brand-accent opacity-70' aria-hidden />
+        <span className='pointer-events-none absolute -bottom-16 -left-10 size-32 rounded-full bg-brand-accent opacity-20' aria-hidden />
+        <div className='relative flex items-center gap-4'>
+          {me && <MyFace userId={me.userId} name={me.displayName} />}
+          <div className='min-w-0'>
+            <p className='text-xs opacity-85'>{format(new Date(), 'EEEE, d MMMM')}</p>
+            <h1 className='text-xl leading-tight font-bold'>
+              {hello}, {first}
+            </h1>
+            <p className='text-sm opacity-90'>
+              {left === 0 ? 'You are all caught up. Well done!' : `You have ${left} ${left === 1 ? 'thing' : 'things'} to do.`}
+            </p>
+          </div>
+        </div>
       </section>
 
       <div className='grid grid-cols-3 gap-2'>
-        <Stat label='To do' value={todo.length + overdue.length} tone={overdue.length > 0 ? 'late' : undefined} to='/work' />
-        <Stat label='Done this week' value={doneThisWeek} to='/work' />
-        <Stat label='Handed in' value={due ? `${Math.round((handed / due) * 100)}%` : '—'} to='/progress' />
+        <Stat label='To do' value={left} colour={overdue.length > 0 ? '#ea580c' : '#2563eb'} icon={ClipboardList} to='/work' />
+        <Stat label='Done this week' value={doneThisWeek} colour='#059669' icon={CheckCircle2} to='/work' />
+        <Stat label='Handed in' value={due ? `${Math.round((handed / due) * 100)}%` : '—'} colour='#7c3aed' icon={TrendingUp} to='/progress' />
       </div>
 
       <section>
@@ -107,11 +116,33 @@ export function Home() {
   )
 }
 
-function Stat({ label, value, tone, to }: { label: string; value: React.ReactNode; tone?: 'late'; to: '/work' | '/progress' }) {
+function MyFace({ userId, name }: { userId: string; name: string }) {
+  const photo = usePhoto(userId)
+  return <PersonAvatar userId={userId} name={name} photo={photo} className='size-16 border-4 border-white/70 shadow' />
+}
+
+function Stat({
+  label,
+  value,
+  colour,
+  icon: Icon,
+  to,
+}: {
+  label: string
+  value: React.ReactNode
+  colour: string
+  icon: React.ElementType
+  to: '/work' | '/progress'
+}) {
   return (
-    <Link to={to} className='rounded-xl border bg-card p-3 text-center active:bg-accent'>
-      <p className={cn('text-2xl font-bold tabular-nums', tone === 'late' && 'text-orange-600')}>{value}</p>
-      <p className='text-xs text-muted-foreground'>{label}</p>
+    <Link to={to} className='rounded-2xl p-3 text-center active:scale-[0.98]' style={{ background: `${colour}17` }}>
+      <span className='mx-auto mb-1 flex size-8 items-center justify-center rounded-full' style={{ background: `${colour}26`, color: colour }}>
+        <Icon className='size-4' />
+      </span>
+      <p className='text-2xl font-bold tabular-nums' style={{ color: colour }}>
+        {value}
+      </p>
+      <p className='text-[11px] text-muted-foreground'>{label}</p>
     </Link>
   )
 }
@@ -126,9 +157,9 @@ function PractiseNow() {
     <Link
       to='/learn/practice'
       search={{ subject: pick.subjectName, chapter: pick.chapter }}
-      className='flex items-center gap-3 rounded-2xl bg-primary p-4 text-primary-foreground active:opacity-90'
+      className='flex items-center gap-3 rounded-2xl bg-brand-accent p-4 text-brand-accent-foreground shadow-sm active:opacity-90'
     >
-      <div className='flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/15'>
+      <div className='flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/40'>
         <Sparkles className='size-6' />
       </div>
       <div className='min-w-0 flex-1'>
@@ -250,9 +281,13 @@ export function WorkCard({ a }: { a: MyAssignment }) {
     <Link
       to='/homework/$assignmentId'
       params={{ assignmentId: a.id }}
-      className='flex items-center gap-3 rounded-xl border bg-card p-3 active:bg-accent'
+      className='flex items-center gap-3 rounded-2xl border border-s-4 bg-card p-3 active:bg-accent'
+      style={{ borderInlineStartColor: subjectHue(a.subjectName).solid }}
     >
-      <div className='flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary'>
+      <div
+        className='flex size-10 shrink-0 items-center justify-center rounded-xl'
+        style={{ background: subjectHue(a.subjectName).soft, color: subjectHue(a.subjectName).solid }}
+      >
         <Icon a={a} />
       </div>
       <div className='min-w-0 flex-1'>

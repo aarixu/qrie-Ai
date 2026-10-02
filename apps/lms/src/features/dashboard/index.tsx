@@ -18,6 +18,9 @@ import { Loading, Page, Problem } from '@/components/layout/page'
 import { EventDialog } from '@/features/events/event-dialog'
 import { UpcomingList } from '@/features/events/upcoming'
 import { HomeCharts } from './home-charts'
+import { BrandHero, greeting } from '@/components/brand-hero'
+import { SubjectBadge } from '@/components/subject-icon'
+import { subjectHue } from '@/lib/palette'
 import { NeedsYou } from './needs-you'
 
 export const className = (c: Pick<TaughtClass, 'grade' | 'sectionName'>) =>
@@ -41,13 +44,22 @@ export function Dashboard() {
   return (
     <Page
       title='Home'
-      description={me ? `Signed in as ${me.displayName}, ${me.schoolName}.` : undefined}
-      actions={
-        audiences.length > 0 && (
-          <Button variant='outline' onClick={() => setEventOpen(true)}>
-            <CalendarPlus /> New event
-          </Button>
-        )
+      hero={
+        <BrandHero
+          title={greeting(me?.displayName)}
+          subtitle={
+            classes.data
+              ? `${classes.data.length} ${classes.data.length === 1 ? 'class' : 'classes'} · ` +
+                `${[...new Map(classes.data.map((c) => [c.sectionId, c.students])).values()].reduce((a, b) => a + b, 0)} students`
+              : undefined
+          }
+        >
+          {audiences.length > 0 && (
+            <Button variant='secondary' onClick={() => setEventOpen(true)}>
+              <CalendarPlus /> New event
+            </Button>
+          )}
+        </BrandHero>
       }
     >
       <NeedsYou />
@@ -98,14 +110,18 @@ function ClassCard({ c }: { c: TaughtClass }) {
       params={{ sectionId: c.sectionId, subjectId: c.subjectId }}
       className='rounded-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none'
     >
-      <Card className='h-full transition-colors hover:bg-accent/50'>
-        <CardHeader>
-          <CardTitle>
-            {className(c)} · {c.subjectName}
-          </CardTitle>
-          <CardDescription className='flex items-center gap-1'>
-            <Users className='size-4' /> {c.students} students
-          </CardDescription>
+      <Card className='relative h-full overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md'>
+        <span className='absolute inset-x-0 top-0 h-1.5' style={{ background: subjectHue(c.subjectName).solid }} aria-hidden />
+        <CardHeader className='flex flex-row items-start gap-3 space-y-0'>
+          <SubjectBadge subject={c.subjectName} className='size-11' />
+          <div className='min-w-0'>
+            <CardTitle>
+              {className(c)} · {c.subjectName}
+            </CardTitle>
+            <CardDescription className='mt-1 flex items-center gap-1'>
+              <Users className='size-4' /> {c.students} students
+            </CardDescription>
+          </div>
         </CardHeader>
         <CardContent className='space-y-1 text-sm'>
           {work.isPending ? (

@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Logo } from '@/assets/logo'
 
 export function SignIn() {
   const navigate = useNavigate()
@@ -47,6 +48,7 @@ export function SignIn() {
 
   return (
     <div className='mx-auto flex min-h-svh max-w-md flex-col justify-center px-6 py-10'>
+      <Logo className='mb-4 size-14' />
       <h1 className='mb-1 text-3xl font-bold tracking-tight'>Qrie</h1>
       <p className='mb-8 text-muted-foreground'>Sign in with the ID and PIN your school gave you.</p>
       <form onSubmit={submit} className='space-y-4' noValidate>

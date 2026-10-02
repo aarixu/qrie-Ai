@@ -14,23 +14,30 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Loading, Page, Problem } from '@/components/layout/page'
-import { ChartCard } from '@/features/analytics/charts'
+import { ChartCard, MEASURE } from '@/features/analytics/charts'
+import { PersonAvatar } from '@/components/person-avatar'
+import { usePhotos } from '@/lib/photos'
+import { PhotoUploadButton } from './photo-upload'
 import { ResetPinButton } from './reset-pin'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 /** The school's teachers and what each has set and has waiting (lms.school_teachers). */
 export function SchoolTeachersPage() {
   const teachers = useQuery({ queryKey: ['school', 'teachers'], queryFn: api.schoolTeachers })
+  const photos = usePhotos((teachers.data ?? []).map((t) => t.userId))
   return (
     <Page
       title='Teachers'
       description='Who teaches what, what they have set, and what is waiting on them.'
       actions={
-        <Button asChild variant='outline'>
-          <Link to='/school/people'>
-            <UserPlus /> Add teachers
-          </Link>
-        </Button>
+        <>
+          <PhotoUploadButton />
+          <Button asChild variant='outline'>
+            <Link to='/school/people'>
+              <UserPlus /> Add teachers
+            </Link>
+          </Button>
+        </>
       }
     >
       {teachers.isPending ? (
@@ -49,7 +56,7 @@ export function SchoolTeachersPage() {
                 <XAxis dataKey='name' tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }} tickLine={false} axisLine={false} />
                 <YAxis allowDecimals={false} width={32} tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ background: 'var(--popover)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }} cursor={{ fill: 'var(--muted)' }} />
-                <Bar dataKey='Work' fill='var(--chart-1)' radius={[4, 4, 0, 0]} />
+                <Bar dataKey='Work' fill={MEASURE.work} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
@@ -71,7 +78,12 @@ export function SchoolTeachersPage() {
                 {teachers.data.map((t) => (
                   <TableRow key={t.userId}>
                     <TableCell className='font-medium'>
-                      {t.displayName} {t.kind === 'admin' && <Badge variant='secondary'>Admin</Badge>}
+                      <span className='flex items-center gap-3'>
+                        <PersonAvatar userId={t.userId} name={t.displayName} photo={photos.get(t.userId)} className='size-9' />
+                        <span>
+                          {t.displayName} {t.kind === 'admin' && <Badge variant='secondary'>Admin</Badge>}
+                        </span>
+                      </span>
                     </TableCell>
                     <TableCell className='font-mono text-sm'>{t.loginId}</TableCell>
                     <TableCell className='text-center tabular-nums'>{t.classes}</TableCell>
