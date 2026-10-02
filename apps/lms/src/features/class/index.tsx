@@ -32,6 +32,7 @@ import { EventDialog } from '@/features/events/event-dialog'
 import { UpcomingList } from '@/features/events/upcoming'
 import { WORK_KINDS, kindLabel } from '@/features/homework/kinds'
 import { ClassAnalytics } from './analytics'
+import { Attendance } from './attendance'
 import { Insights } from './insights'
 import { PersonAvatar } from '@/components/person-avatar'
 import { usePhotos } from '@/lib/photos'
@@ -93,6 +94,7 @@ export function ClassPage({ sectionId, subjectId }: ClassPageProps) {
         <Tabs defaultValue='homework' className='space-y-4'>
           <TabsList>
             <TabsTrigger value='homework'>Classwork</TabsTrigger>
+            <TabsTrigger value='attendance'>Attendance</TabsTrigger>
             <TabsTrigger value='upcoming'>Coming up</TabsTrigger>
             <TabsTrigger value='analytics'>Analytics</TabsTrigger>
             <TabsTrigger value='insights'>Insights</TabsTrigger>
@@ -101,6 +103,9 @@ export function ClassPage({ sectionId, subjectId }: ClassPageProps) {
           </TabsList>
           <TabsContent value='homework'>
             <HomeworkList sectionId={sectionId} subjectId={subjectId} />
+          </TabsContent>
+          <TabsContent value='attendance'>
+            <Attendance sectionId={sectionId} />
           </TabsContent>
           <TabsContent value='upcoming'>
             <UpcomingList sectionId={sectionId} empty='Nothing coming up for this class. Use Create → Event to add one.' />

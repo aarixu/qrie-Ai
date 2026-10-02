@@ -35,6 +35,7 @@ export function ProgressPage() {
     queryFn: () => api.studentSubjects(me!.userId),
     enabled: !!me,
   })
+  const attendance = useQuery({ queryKey: ['my-attendance'], queryFn: () => api.myAttendance(30) })
   const timeline = useQuery({
     queryKey: ['my-timeline'],
     queryFn: () => api.studentTimeline(me!.userId),
@@ -53,9 +54,15 @@ export function ProgressPage() {
     <div className='space-y-6'>
       <h1 className='text-2xl font-bold'>Your progress</h1>
       <MyReportCard />
-      <div className='grid grid-cols-2 gap-2'>
-        <Ring label='Work handed in' value={due ? handed / due : null} hint={`${handed} of ${due}`} colour='#059669' />
+      <div className='grid grid-cols-3 gap-2'>
+        <Ring label='Handed in' value={due ? handed / due : null} hint={`${handed} of ${due}`} colour='#059669' />
         <Ring label='Average mark' value={average} hint='Marked work' colour='#2563eb' />
+        <Ring
+          label='Attendance'
+          value={attendance.data?.rate ?? null}
+          hint={attendance.data?.days.length ? 'Last 30 days' : 'Not marked yet'}
+          colour='#0284c7'
+        />
       </div>
 
       {timeline.data && <Marks rows={timeline.data} />}
@@ -79,16 +86,16 @@ export function ProgressPage() {
 function Ring({ label, value, hint, colour }: { label: string; value: number | null; hint: string; colour: string }) {
   const deg = (value ?? 0) * 360
   return (
-    <div className='flex flex-col items-center rounded-2xl border bg-card p-4'>
+    <div className='flex flex-col items-center rounded-2xl border bg-card px-2 py-3'>
       <div
-        className='flex size-20 items-center justify-center rounded-full'
+        className='flex size-[72px] items-center justify-center rounded-full'
         style={{ background: `conic-gradient(${colour} ${deg}deg, var(--muted) 0deg)` }}
       >
-        <div className='flex size-16 items-center justify-center rounded-full bg-card text-lg font-bold tabular-nums'>
+        <div className='flex size-[58px] items-center justify-center rounded-full bg-card text-base font-bold tabular-nums'>
           {pct(value)}
         </div>
       </div>
-      <p className='mt-2 text-sm font-medium'>{label}</p>
+      <p className='mt-2 text-center text-xs font-medium'>{label}</p>
       <p className='text-xs text-muted-foreground'>{hint}</p>
     </div>
   )

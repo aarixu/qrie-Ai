@@ -495,6 +495,42 @@ export interface AccountPhoto {
   updatedAt: string;
 }
 
+/** A day's mark (0036). Late counts as present; leave is left out of the rate. */
+export type AttendanceStatus = 'present' | 'absent' | 'late' | 'leave';
+
+/** Present or late over the days not on leave; null when there are none. */
+export function attendanceRate(statuses: AttendanceStatus[]): number | null {
+  const counted = statuses.filter((s) => s !== 'leave');
+  return counted.length ? counted.filter((s) => s === 'present' || s === 'late').length / counted.length : null;
+}
+
+export interface AttendanceRow {
+  studentUserId: string;
+  displayName: string;
+  rollNumber: string | null;
+  status: AttendanceStatus | null;
+  markedByName: string | null;
+}
+
+export interface AttendanceTotals {
+  studentUserId: string;
+  displayName: string;
+  rollNumber: string | null;
+  present: number;
+  late: number;
+  absent: number;
+  leave: number;
+  rate: number | null;
+}
+
+export interface ClassAttendanceToday {
+  sectionId: string;
+  className: string;
+  students: number;
+  marked: number;
+  present: number;
+}
+
 /** Someone marked as having left the school (0034). */
 export interface LeftAccount {
   userId: string;
@@ -740,6 +776,23 @@ export function createLmsClient(t: Transport) {
         p_teaches: teaches,
       });
     },
+    /** A class's list for one day (YYYY-MM-DD), each child's mark or null. Its teachers and the admin. */
+    attendanceSheet: (sectionId: string, onDate: string) =>
+      rows<AttendanceRow>('attendance_sheet', { p_section: sectionId, p_on: onDate }),
+    /** Marks for one day, by student user id; marking again changes them. */
+    async markAttendance(sectionId: string, onDate: string, marks: Record<string, AttendanceStatus>): Promise<void> {
+      await t.value('mark_attendance', { p_section: sectionId, p_on: onDate, p_marks: marks });
+    },
+    /** Each child's days in a span (YYYY-MM-DD, both ends kept). */
+    attendanceSummary: (sectionId: string, from: string, to: string) =>
+      rows<AttendanceTotals>('attendance_summary', { p_section: sectionId, p_from: from, p_to: to }),
+    /** One student's whole year: how many days are marked, and the rate. */
+    async studentAttendance(studentUserId: string): Promise<{ marked: number; rate: number | null }> {
+      const [r] = await rows<{ marked: number; rate: number | null }>('student_attendance', { p_student: studentUserId });
+      return r ?? { marked: 0, rate: null };
+    },
+    /** Every class today: how many children, how many marked, how many came. The admin only. */
+    schoolAttendanceToday: () => rows<ClassAttendanceToday>('school_attendance_today'),
     /** What the school's admins have done, newest first (lms.audit_log). */
     auditLog: (limit?: number) => rows<AuditEvent>('audit_log', { p_limit: limit }),
     /** A PNG or JPEG as base64, or (null, null) to remove the logo. */
@@ -752,6 +805,11 @@ export function createLmsClient(t: Transport) {
     },
 
     // --- a student -----------------------------------------------------------
+    /** The child's own marked days in the last `days` (newest first), and their rate. */
+    async myAttendance(days = 30): Promise<{ days: { onDate: string; status: AttendanceStatus }[]; rate: number | null }> {
+      const list = await rows<{ onDate: string; status: AttendanceStatus }>('my_attendance', { p_days: days });
+      return { days: list, rate: attendanceRate(list.map((d) => d.status)) };
+    },
     myProgress: () => rows<MyChapter>('my_progress'),
     practiceChapters: () => rows<PracticeChapter>('practice_chapters'),
     practiceQuestions: (subject: string, chapter: string, count?: number) =>

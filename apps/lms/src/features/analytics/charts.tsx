@@ -63,6 +63,8 @@ const KPI_HUE: Record<string, string> = {
   'Need attention': '#e11d48',
   'Handed in late': '#ea580c',
   'Chapters practised': '#0d9488',
+  'Attendance today': '#0284c7',
+  Attendance: '#0284c7',
 }
 
 export function Kpi({

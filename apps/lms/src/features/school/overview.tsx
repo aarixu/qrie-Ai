@@ -44,6 +44,13 @@ export function SchoolOverviewPage() {
   const [eventOpen, setEventOpen] = useState(false)
   const me = useAuthStore((s) => s.me)
   const logo = useSchoolLogo(!!me)
+  const attendance = useQuery({ queryKey: ['school', 'attendance-today'], queryFn: api.schoolAttendanceToday })
+  const today = {
+    sections: attendance.data?.length ?? 0,
+    markedSections: (attendance.data ?? []).filter((c) => c.marked > 0).length,
+    marked: (attendance.data ?? []).reduce((n, c) => n + c.marked, 0),
+    present: (attendance.data ?? []).reduce((n, c) => n + c.present, 0),
+  }
   const o = overview.data
 
   return (
@@ -91,7 +98,17 @@ export function SchoolOverviewPage() {
             />
             <Kpi label='Average score' icon={Target} value={pct(o.averageScore30d)} hint='Marked work, last 30 days' />
             <Kpi label='Mastery' icon={Brain} value={pct(o.mastery)} hint={`${band(o.mastery).label} — from every answer`} />
-            <Kpi label='Classes' icon={School} value={classes.data?.length ?? '—'} hint='Section and subject pairs taught' />
+            <Kpi
+              label='Attendance today'
+              icon={School}
+              value={pct(today.present / Math.max(today.marked, 1))}
+              hint={
+                today.sections
+                  ? `${today.markedSections} of ${today.sections} classes marked · ${today.present} of ${today.marked} came`
+                  : 'No classes yet'
+              }
+              tone={today.marked > 0 && today.present / today.marked < 0.75 ? 'bad' : undefined}
+            />
             <Kpi
               label='Need attention'
               icon={Activity}

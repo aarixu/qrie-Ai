@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { format } from 'date-fns'
-import { AlertTriangle, BookCheck, Brain, ClipboardList, Target } from 'lucide-react'
+import { AlertTriangle, BookCheck, Brain, ClipboardList, Target, CalendarCheck } from 'lucide-react'
 import {
   CartesianGrid,
   Line,
@@ -66,6 +66,10 @@ export function StudentReport({ studentId }: { studentId: string }) {
   const subjects = useQuery({ queryKey: ['student', studentId, 'subjects'], queryFn: () => api.studentSubjects(studentId) })
   const chapters = useQuery({ queryKey: ['student', studentId, 'chapters'], queryFn: () => api.studentChapters(studentId) })
   const timeline = useQuery({ queryKey: ['student', studentId, 'timeline'], queryFn: () => api.studentTimeline(studentId) })
+  const attendance = useQuery({
+    queryKey: ['student', studentId, 'attendance'],
+    queryFn: () => api.studentAttendance(studentId),
+  })
   const mistakes = useQuery({ queryKey: ['student', studentId, 'mistakes'], queryFn: () => api.studentMistakes(studentId) })
 
   const back =
@@ -116,7 +120,7 @@ export function StudentReport({ studentId }: { studentId: string }) {
             <Loading what='their subjects' />
           ) : (
             <>
-              <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-5'>
                 <Kpi
                   label='Hand-in rate'
                   icon={ClipboardList}
@@ -135,6 +139,13 @@ export function StudentReport({ studentId }: { studentId: string }) {
                   icon={Brain}
                   value={pct(mean(subjects.data.map((x) => x.mastery)))}
                   hint={band(mean(subjects.data.map((x) => x.mastery))).label}
+                />
+                <Kpi
+                  label='Attendance'
+                  icon={CalendarCheck}
+                  value={pct(attendance.data?.rate ?? null)}
+                  hint={attendance.data?.marked ? `${attendance.data.marked} days marked this year` : 'No days marked yet'}
+                  tone={(attendance.data?.rate ?? 1) < 0.75 ? 'bad' : undefined}
                 />
                 <Kpi
                   label='Chapters practised'

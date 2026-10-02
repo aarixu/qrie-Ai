@@ -326,6 +326,10 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   // round of practice from some of its students.
   await seedPractice(db, { rand, at, ability, items, orgId }, classes);
 
+  // 9. Attendance (0036): four weeks of school days, marked by a teacher of
+  // each class; today marked in one class only, as on a real morning.
+  await seedAttendance(db, rand, classes);
+
   // 6. The brain. It is given the ledger and nothing else — not `planted`.
   await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
 
@@ -593,5 +597,36 @@ async function seedPractice(db: PGlite, w: WorkSeed, classes: TaughtRow[]): Prom
         await kid.checkPracticeAnswer(session, q.itemId, w.rand() < p ? it.correctIndex : distractor(it, w.rand, false));
       }
     }
+  }
+}
+
+/**
+ * Four weeks of attendance, Monday to Saturday, through the teacher's own
+ * call: most children present, some late, a few absent, now and then one on
+ * leave — and a weaker child absent a little more often.
+ */
+async function seedAttendance(db: PGlite, rand: () => number, classes: TaughtRow[]): Promise<void> {
+  const bySection = new Map<string, string>();
+  for (const c of classes) if (!bySection.has(c.section_id)) bySection.set(c.section_id, c.teacher);
+  const day = (n: number) => {
+    const d = new Date(Date.now() - n * DAY);
+    return { ymd: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`, sunday: d.getDay() === 0 };
+  };
+  let first = true;
+  for (const [sectionId, teacherId] of bySection) {
+    const teacher = createLmsClient(pgliteTransport(db, teacherId));
+    const roster = await teacher.classRoster(sectionId);
+    for (let n = 27; n >= 0; n--) {
+      const d = day(n);
+      if (d.sunday || (n === 0 && !first)) continue;
+      const marks: Record<string, 'present' | 'absent' | 'late' | 'leave'> = {};
+      roster.forEach((r, i) => {
+        const x = rand();
+        const shaky = i % 7 === 0;
+        marks[r.studentUserId] = x < (shaky ? 0.16 : 0.05) ? 'absent' : x < (shaky ? 0.22 : 0.1) ? 'late' : x > 0.985 ? 'leave' : 'present';
+      });
+      await teacher.markAttendance(sectionId, d.ymd, marks);
+    }
+    first = false;
   }
 }
