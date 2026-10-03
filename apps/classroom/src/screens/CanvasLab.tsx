@@ -4,6 +4,7 @@ import { Scene, computeVisible } from '@ai-tutor/stage';
 import { usePlayer, createBrowserTts } from '@ai-tutor/player';
 import type { PrepProgress, PrepReport } from '@ai-tutor/class-prep';
 import { prepareLiveClass } from '../lib/liveClass';
+import { toolkitDemoLesson } from '../lib/toolkitDemo';
 
 export function CanvasLab() {
   const [topic, setTopic] = useState('Speed: distance divided by time');
@@ -17,10 +18,13 @@ export function CanvasLab() {
     assets: Record<string, string>;
     report: PrepReport;
   } | null>(null);
+  /** The toolkit on one board, assembled here with no model call. */
+  const [demo, setDemo] = useState<ReturnType<typeof toolkitDemoLesson> | null>(null);
 
   const run = useCallback(async () => {
     setError(null);
     setPrepared(null);
+    setDemo(null);
     setProgress({ phase: 'planning', message: 'Starting…', done: 0 });
     try {
       setPrepared(await prepareLiveClass({ topic, klass, minutes }, setProgress));
@@ -72,6 +76,15 @@ export function CanvasLab() {
         <button onClick={run} disabled={progress !== null && progress.phase !== 'done'} style={S.primary}>
           {progress && progress.phase !== 'done' ? 'Preparing…' : 'Prepare the class'}
         </button>
+        <button
+          onClick={() => {
+            setPrepared(null);
+            setDemo(toolkitDemoLesson());
+          }}
+          style={S.button}
+        >
+          Toolkit demo (₹0)
+        </button>
       </div>
 
       {progress && progress.phase !== 'done' && <Preparing progress={progress} />}
@@ -81,6 +94,14 @@ export function CanvasLab() {
         <>
           <Board lesson={prepared.lesson} assets={prepared.assets} />
           <Report report={prepared.report} lesson={prepared.lesson} />
+        </>
+      )}
+      {demo && (
+        <>
+          <Board lesson={demo.lesson} assets={{}} />
+          <p style={S.muted}>
+            Gate: {demo.problems.length === 0 ? 'no problems' : demo.problems.map((p) => `${p.rule}@${p.where}`).join(', ')}
+          </p>
         </>
       )}
     </main>
