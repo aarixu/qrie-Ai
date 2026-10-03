@@ -65,6 +65,9 @@ describe('the lms schema', () => {
       'require_admin()',
       'teaches(p_teacher uuid, p_student uuid, p_subject uuid)',
       'may_remark(p_student uuid)',
+      'may_see_notice(p_notice uuid)',
+      'may_manage_notice(p_notice uuid)',
+      'notice_audience(p_notice uuid)',
     ];
     const { rows } = await db.query<{ name: string }>(
       `select p.proname || '(' || pg_get_function_identity_arguments(p.oid) || ')' as name

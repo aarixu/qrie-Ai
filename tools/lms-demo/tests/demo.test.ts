@@ -93,6 +93,25 @@ describe('the demo school', () => {
     expect(await child.api.reportRemark(me!.userId)).toMatchObject({ text: remarks[0].text, canEdit: false });
   });
 
+  it("has notices — the school's with a PDF circular, and teachers' to their classes — some already read", async () => {
+    const kid = await signedIn('DEMO-8A-1');
+    const notices = await kid.api.myNotices();
+    expect(notices.map((n) => n.title).sort()).toEqual([
+      'Bring your geometry box on Monday',
+      'Science lab visit on Thursday',
+      'Winter uniform from 1 November',
+    ]);
+    const circular = notices.find((n) => n.wholeSchool)!;
+    const file = await kid.api.noticeAttachment(circular.noticeId);
+    expect(file).toMatchObject({ fileName: 'winter-uniform-circular.pdf', mime: 'application/pdf' });
+    expect(Buffer.from(file!.base64, 'base64').toString('latin1')).toMatch(/^%PDF-1\.4[\s\S]*%%EOF\n$/);
+
+    const neha = await signedIn('DEMO-T01');
+    const sent = (await neha.api.myNotices()).filter((n) => n.mine);
+    expect(sent.map((n) => [n.title, n.readers, n.audience])).toEqual([['Bring your geometry box on Monday', 25, 46]]);
+    expect((await neha.api.noticeReaders(sent[0].noticeId)).filter((r) => !r.readAt)).toHaveLength(21);
+  });
+
   it('plants known misconceptions, so the brain can later be checked against the truth', async () => {
     expect(seeded.planted.length).toBeGreaterThanOrEqual(3);
     for (const p of seeded.planted) {

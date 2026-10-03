@@ -18,6 +18,7 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedBankRouteImport } from './routes/_authenticated/bank'
+import { Route as AuthenticatedNoticesRouteImport } from './routes/_authenticated/notices'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedSchoolIndexRouteImport } from './routes/_authenticated/school/index'
@@ -77,6 +78,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
 const AuthenticatedBankRoute = AuthenticatedBankRouteImport.update({
   id: '/bank',
   path: '/bank',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNoticesRoute = AuthenticatedNoticesRouteImport.update({
+  id: '/notices',
+  path: '/notices',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSettingsRouteRoute =
@@ -186,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/bank': typeof AuthenticatedBankRoute
+  '/notices': typeof AuthenticatedNoticesRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/school/activity': typeof AuthenticatedSchoolActivityRoute
   '/school/classes': typeof AuthenticatedSchoolClassesRoute
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/bank': typeof AuthenticatedBankRoute
+  '/notices': typeof AuthenticatedNoticesRoute
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/school/activity': typeof AuthenticatedSchoolActivityRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/bank': typeof AuthenticatedBankRoute
+  '/_authenticated/notices': typeof AuthenticatedNoticesRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/school/activity': typeof AuthenticatedSchoolActivityRoute
@@ -267,6 +276,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/bank'
+    | '/notices'
     | '/errors/$error'
     | '/school/activity'
     | '/school/classes'
@@ -291,6 +301,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/bank'
+    | '/notices'
     | '/'
     | '/errors/$error'
     | '/school/activity'
@@ -318,6 +329,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/bank'
+    | '/_authenticated/notices'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
     | '/_authenticated/school/activity'
@@ -409,6 +421,13 @@ declare module '@tanstack/react-router' {
       path: '/bank'
       fullPath: '/bank'
       preLoaderRoute: typeof AuthenticatedBankRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notices': {
+      id: '/_authenticated/notices'
+      path: '/notices'
+      fullPath: '/notices'
+      preLoaderRoute: typeof AuthenticatedNoticesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings': {
@@ -545,6 +564,7 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedBankRoute: typeof AuthenticatedBankRoute
+  AuthenticatedNoticesRoute: typeof AuthenticatedNoticesRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedSchoolActivityRoute: typeof AuthenticatedSchoolActivityRoute
@@ -564,6 +584,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedBankRoute: AuthenticatedBankRoute,
+  AuthenticatedNoticesRoute: AuthenticatedNoticesRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedSchoolActivityRoute: AuthenticatedSchoolActivityRoute,

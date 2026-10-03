@@ -561,6 +561,62 @@ export interface ReportRemark {
   canEdit: boolean;
 }
 
+/** The kinds of file a notice may carry (0039), each checked by its first and last bytes. */
+export type NoticeAttachmentMime = 'application/pdf' | 'image/jpeg' | 'image/png';
+
+export interface NewNotice {
+  /** 1 to 120 characters. */
+  title: string;
+  /** 1 to 2000 characters. */
+  body: string;
+  /** Sections of this year; null or empty: the whole school (the admin only). */
+  sectionIds: string[] | null;
+  /** One file of 512 KB at most, as base64; a blank name becomes 'attachment.pdf' and the like. */
+  attachment?: { name?: string; mime: NoticeAttachmentMime; base64: string };
+}
+
+/** A notice the caller may read (0039), newest first: this school year's only. */
+export interface Notice {
+  noticeId: string;
+  title: string;
+  body: string;
+  wholeSchool: boolean;
+  /** The classes it was sent to, e.g. '8A, 8B'; null for the whole school. */
+  classNames: string | null;
+  sentByName: string | null;
+  sentAt: string;
+  attachmentName: string | null;
+  attachmentMime: NoticeAttachmentMime | null;
+  attachmentBytes: number | null;
+  /** When the caller first opened it; null while unread. */
+  readAt: string | null;
+  /** Sent by the caller. */
+  mine: boolean;
+  /** Its writer, while at the school, and the admin may delete it and see who has read it. */
+  canDelete: boolean;
+  /** How many of its audience have read it, and how many it is for now; null for anyone but its writer and the admin. */
+  readers: number | null;
+  audience: number | null;
+}
+
+/** One person a notice is for now, and when they first opened it (null: not yet). */
+export interface NoticeReader {
+  userId: string;
+  displayName: string;
+  loginId: string;
+  kind: 'student' | 'teacher';
+  /** A child's class, e.g. '8A'; null for a teacher. */
+  className: string | null;
+  rollNumber: string | null;
+  readAt: string | null;
+}
+
+export interface NoticeAttachment {
+  fileName: string;
+  mime: NoticeAttachmentMime;
+  base64: string;
+}
+
 /** Someone marked as having left the school (0034). */
 export interface LeftAccount {
   userId: string;
@@ -867,6 +923,35 @@ export function createLmsClient(t: Transport) {
     async schoolLogo(): Promise<SchoolLogo | null> {
       return (await rows<SchoolLogo>('school_logo'))[0] ?? null;
     },
+
+    // --- notices (0039): a teacher or the admin sends; whoever it is for reads -
+    /** Sends a notice to sections the caller teaches (the admin: any, or the whole school); returns its id. */
+    async sendNotice(n: NewNotice): Promise<string> {
+      return (await t.value('send_notice', {
+        p_title: n.title,
+        p_body: n.body,
+        p_sections: n.sectionIds,
+        p_attachment_name: n.attachment?.name,
+        p_attachment_mime: n.attachment?.mime,
+        p_attachment: n.attachment?.base64,
+      })) as string;
+    },
+    /** Its writer, while at the school, or the admin. */
+    async deleteNotice(noticeId: string): Promise<void> {
+      await t.value('delete_notice', { p_notice: noticeId });
+    },
+    /** This year's notices the caller may read, newest first, with their own read time. */
+    myNotices: () => rows<Notice>('my_notices'),
+    /** Records that the caller opened it; the first time is kept. */
+    async readNotice(noticeId: string): Promise<void> {
+      await t.value('read_notice', { p_notice: noticeId });
+    },
+    /** The notice's file, or null when it has none. */
+    async noticeAttachment(noticeId: string): Promise<NoticeAttachment | null> {
+      return (await rows<NoticeAttachment>('notice_attachment', { p_notice: noticeId }))[0] ?? null;
+    },
+    /** Everyone the notice is for now, and when each first opened it. Its writer and the admin only. */
+    noticeReaders: (noticeId: string) => rows<NoticeReader>('notice_readers', { p_notice: noticeId }),
 
     // --- a student -----------------------------------------------------------
     /** The child's own marked days in the last `days` (newest first), and their rate. */

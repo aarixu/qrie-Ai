@@ -4,6 +4,7 @@ import {
   History,
   LayoutDashboard,
   Library,
+  Megaphone,
   Palette,
   PieChart,
   School,
@@ -35,6 +36,7 @@ export function sidebarFor(kind: AccountKind | undefined): SidebarData {
             { title: 'Students', url: '/school/students', icon: GraduationCap },
             { title: 'Teachers', url: '/school/teachers', icon: Users },
             { title: 'Add people', url: '/school/people', icon: UserPlus },
+            { title: 'Notices', url: '/notices', icon: Megaphone },
             { title: 'Activity log', url: '/school/activity', icon: History },
             { title: 'School settings', url: '/school/settings', icon: BookOpenCheck },
           ],
@@ -53,6 +55,7 @@ export function sidebarFor(kind: AccountKind | undefined): SidebarData {
         title: 'Teaching',
         items: [
           { title: 'Home', url: '/', icon: LayoutDashboard },
+          { title: 'Notices', url: '/notices', icon: Megaphone },
           { title: 'Question bank', url: '/bank', icon: Library },
         ],
       },

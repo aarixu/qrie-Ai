@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { PersonAvatar } from '@/components/person-avatar'
 import { subjectHue } from '@/lib/palette'
 import { usePhoto } from '@/lib/photos'
+import { NoticesOnHome } from './notices'
 import { chapterTitle } from './progress'
 
 export function kindLabel(a: Pick<MyAssignment, 'kind'>): string {
@@ -110,6 +111,7 @@ export function Home() {
         )}
       </section>
 
+      <NoticesOnHome />
       <PractiseNow />
       <ComingUp />
     </div>

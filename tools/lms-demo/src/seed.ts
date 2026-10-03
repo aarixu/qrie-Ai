@@ -334,6 +334,10 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   // year's remark on the report cards of some of 8A.
   await seedComments(db, orgId);
 
+  // 11. Notices (0039): the admin's to the whole school with a PDF circular,
+  // and two teachers' to their classes; some children have opened them.
+  await seedNotices(db, orgId);
+
   // 6. The brain. It is given the ledger and nothing else — not `planted`.
   await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
 
@@ -709,4 +713,89 @@ async function seedComments(db: PGlite, orgId: string): Promise<void> {
     if (i < REMARKS.length) await neha.setReportRemark(r.studentUserId, REMARKS[i]);
     else await office.setReportRemark(r.studentUserId, ADMIN_REMARKS[i - REMARKS.length]);
   }
+}
+
+/** A one-page PDF of a few lines of plain ASCII text, for a demo circular. */
+function onePagePdf(lines: string[]): Buffer {
+  const esc = (s: string) => s.replace(/[\\()]/g, (c) => `\\${c}`);
+  const text = lines.map((l, i) => `BT /F1 ${i === 0 ? 18 : 12} Tf 72 ${770 - i * 26} Td (${esc(l)}) Tj ET`).join('\n');
+  const objects = [
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>',
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+    `<< /Length ${text.length} >>\nstream\n${text}\nendstream`,
+  ];
+  let out = '%PDF-1.4\n';
+  const offsets: number[] = [];
+  for (const [i, o] of objects.entries()) {
+    offsets.push(out.length);
+    out += `${i + 1} 0 obj\n${o}\nendobj\n`;
+  }
+  const xref = out.length;
+  out += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  out += offsets.map((o) => `${String(o).padStart(10, '0')} 00000 n \n`).join('');
+  out += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return Buffer.from(out, 'latin1');
+}
+
+/**
+ * The admin's notice to the whole school, with its circular as a PDF; Neha
+ * Sharma's (DEMO-T01) to 8A and 8B; Imran Khan's (DEMO-T02) to 8A. Opened by
+ * the first fifteen of 8A and ten of 8B by roll (Neha's), every third child of
+ * the school by school ID and two teachers (the admin's), and the first five
+ * of 8A (Imran's). All through the API, and with none of the seed's random
+ * numbers.
+ */
+async function seedNotices(db: PGlite, orgId: string): Promise<void> {
+  const { rows: people } = await db.query<{ user_id: string; login_id: string; kind: string }>(
+    `select user_id, login_id, kind from lms.account where org_id = $1 order by login_id`,
+    [orgId],
+  );
+  const as = (loginId: string) => createLmsClient(pgliteTransport(db, people.find((p) => p.login_id === loginId)!.user_id));
+  const office = createLmsClient(pgliteTransport(db, people.find((p) => p.kind === 'admin')!.user_id));
+  const neha = as('DEMO-T01');
+  const imran = as('DEMO-T02');
+  const nehaClasses = await neha.myClasses();
+  const sectionOf = (grade: number, name: string) => nehaClasses.find((c) => c.grade === grade && c.sectionName === name)!.sectionId;
+  const s8a = sectionOf(8, 'A');
+  const s8b = sectionOf(8, 'B');
+
+  const uniform = await office.sendNotice({
+    title: 'Winter uniform from 1 November',
+    body:
+      'From 1 November every student comes to school in the winter uniform: the navy blazer or sweater, ' +
+      'grey trousers or skirt, and the school tie. The circular with the full list is attached.',
+    sectionIds: null,
+    attachment: {
+      name: 'winter-uniform-circular.pdf',
+      mime: 'application/pdf',
+      base64: onePagePdf([
+        'Qrie Demo School - Circular',
+        'Winter uniform from 1 November',
+        'Navy blazer or navy sweater with the school crest.',
+        'Grey trousers or grey skirt; black shoes, grey socks.',
+        'The school tie, every day.',
+        'Contact the school office with any questions.',
+      ]).toString('base64'),
+    },
+  });
+  const geometry = await neha.sendNotice({
+    title: 'Bring your geometry box on Monday',
+    body: 'We start constructions on Monday. Bring a compass, a protractor, a ruler and a sharp pencil.',
+    sectionIds: [s8a, s8b],
+  });
+  const lab = await imran.sendNotice({
+    title: 'Science lab visit on Thursday',
+    body: 'We go to the science lab in the third period on Thursday. Wear your lab coat; bags stay in the classroom.',
+    sectionIds: [s8a],
+  });
+
+  const r8a = await neha.classRoster(s8a);
+  const r8b = await neha.classRoster(s8b);
+  const read = (userId: string, noticeId: string) => createLmsClient(pgliteTransport(db, userId)).readNotice(noticeId);
+  for (const r of [...r8a.slice(0, 15), ...r8b.slice(0, 10)]) await read(r.studentUserId, geometry);
+  for (const r of r8a.slice(0, 5)) await read(r.studentUserId, lab);
+  for (const [i, p] of people.filter((x) => x.kind === 'student').entries()) if (i % 3 === 0) await read(p.user_id, uniform);
+  for (const login of ['DEMO-T02', 'DEMO-T03']) await as(login).readNotice(uniform);
 }
