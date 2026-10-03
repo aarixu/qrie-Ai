@@ -15,7 +15,7 @@ design system `assets/307b8cb966e540a4aa38cb4a29c90ff5`).
 |---|---|
 | Student dashboard | `src/screens/Home.tsx` |
 | Lesson player | `src/screens/ClassRoom.tsx` |
-| Live voice doubt | `src/ui/DoubtPanel.tsx` (the side rail inside `ClassRoom.tsx`) |
+| Live voice doubt | `src/screens/ClassRoom.tsx` (no panel since 2026-10-03: the doubt is spoken, or typed in a row the keyboard button brings up) |
 | Chapter topics | `src/screens/Chapter.tsx` |
 | Search | `src/screens/Search.tsx` |
 | Progress | `src/screens/Progress.tsx` |

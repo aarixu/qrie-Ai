@@ -16,8 +16,7 @@ behaviour, that `if` belongs in a package (see ARCHITECTURE.md conventions).
 ## UI pieces (`ui/`)
 
 `Avatar` (idle/teaching/listening — swappable for a real viseme avatar later),
-`Controls` (auto-hide bar; ✋ is the primary target), `DoubtPanel` (live overlay:
-transcript, text input, "clear ho gaya"), `theme` (all chrome colors — content and
+`Controls` (auto-hide bar; ✋ is the primary target), `theme` (all chrome colors — content and
 canvas colors live in `@ai-tutor/stage`, not here).
 
 ## Run

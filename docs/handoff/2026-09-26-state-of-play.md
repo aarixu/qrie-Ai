@@ -419,6 +419,13 @@ Smart-board design research covered what the board can do today and how speech c
   - The mic card copy now says the mic stays on for the class and that only what they say is sent.
   - Verified with the fake-mic Chrome on the local build: interruption → heard → quiet doubt → heard again in the doubt → resumed.
 
+**THE BOARD TAKES THE SCREEN (2026-10-03).** Aarav: "remove avatar and its box, remove that doubt session box and expand the canvas to full screen, and use bloub to make it look more interactive, because the avatar looks weird for now."
+- **Gone from the class:** the 3D Meera tile (all three variants) and the doubt panel (`ui/DoubtPanel.tsx` deleted). The `clone` prop on ClassRoom went with the tile; no route passed it.
+- **Two rooms now:** any screen wider than it is tall (laptop, phone sideways) gets the 16:9 board as large as the screen allows, with the top bar, toolbar, captions and typing rows floating over it. A phone held upright keeps the board across the top and shows her shape large under it.
+- **She is a shape:** `src/bloub/` is bloub's engine (MIT, Jérémy Perret, github.com/jeremy-prt/bloub at b4bb3c1; the notice is a kept `/*!` comment in `engine.ts` and `src/bloub/LICENSE`). bloub recreates another company's bot avatar, so it is drawn in Qrie amber on the dark stage, never in the original's black on white. Poses: teaching, listening (eyes wide), thinking (judging an answer, or a doubt waiting on her reply). While her voice plays it wears its resting face and breathes with her voice's loudness.
+- **The doubt without a panel:** spoken through the open ear, or typed in the row the keyboard button brings up (now on every screen). One status line sits beside her shape. Captions, when on, carry the doubt's latest line.
+- **Not changed:** the trial and enrol pages still show the 3D Meera tile.
+
 **Order:**
 - C0 and C1 together, now: neither needs model spend to build.
 - Then C2.

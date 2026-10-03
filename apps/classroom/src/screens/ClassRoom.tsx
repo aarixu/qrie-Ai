@@ -67,9 +67,7 @@ import type { AssistanceRung } from '@ai-tutor/ledger';
 import { track } from '../lib/telemetry';
 import { ReportSheet } from '../ui/ReportSheet';
 import { MicRationale } from '../ui/MicRationale';
-import { TutorTile, type TutorMode } from '../ui/TutorTile';
-import type { ClipManifest } from '@ai-tutor/teacher-clone';
-import { DoubtPanel } from '../ui/DoubtPanel';
+import { Bloub, type BloubMode } from '../bloub/Bloub';
 import { SupportScreen } from '../ui/SupportScreen';
 import { withoutAskInk } from '../lib/askInk';
 import { useMediaQuery } from '../lib/useMediaQuery';
@@ -259,11 +257,10 @@ const STAGE_FIT = { width: 'min(100cqw, calc(100cqh * 16 / 9))', aspectRatio: '1
 /**
  * The classroom — laid out the way Meet lays out a call with a presentation,
  * because "a Google Meet where an AI teacher is taking a live class" is the
- * product. The board is the shared screen and takes everything; Meera is a
- * participant tile (side rail on wide screens, a small window beside the board
- * on a phone held sideways, the room under it on one held upright); the top
- * bar says which class this is; the toolbar holds the controls and fades away
- * like Meet's.
+ * product. The board is the shared screen and takes the whole screen; Meera
+ * is a living shape (bloub/Bloub.tsx) in its corner, or under it on a phone
+ * held upright; the top bar says which class this is; the toolbar holds the
+ * controls and fades away like Meet's.
  *
  * Wiring only — every decision this screen appears to make is actually made
  * inside a package:
@@ -276,18 +273,11 @@ export function ClassRoom({
   lesson: given,
   tts,
   diagrams,
-  clone,
   onExit,
   warm = false,
   remember = true,
 }: {
   lesson: Lesson;
-  /**
-   * A real teacher, lip-dubbed, instead of Qrie own penguin. Absent for
-   * every ordinary class - this is the client-clone path, and the room is
-   * otherwise identical either way.
-   */
-  clone?: { manifest: ClipManifest; baseUrl: string; name: string };
   /** Resolved by the route: the recorded take, her live voice, or the browser's. */
   tts: TtsAdapter;
   /** SVG markup for the lesson's `diagram` elements, keyed by element id. */
@@ -1490,19 +1480,6 @@ export function ClassRoom({
   // question — framed on whatever she is writing now (lib/boardSession.ts).
   const canvas = board.canvas(player.beatIndex);
 
-  // Her ear open counts as listening too: while the mic waits on a spoken
-  // answer she turns to her listening pose instead of gesturing through it.
-  /** The clone, told which beat is playing, or nothing at all. */
-  const tile = clone ? { ...clone, beatId: player.beat?.id ?? null } : undefined;
-
-  const tutorMode: TutorMode = inDoubt
-    ? 'listening'
-    : ear === 'listening'
-      ? 'listening'
-      : player.state === 'playing'
-        ? 'teaching'
-        : 'idle';
-
   // Progress + the data spine: save position per beat; completion routes to
   // the celebration screen; every raised hand is logged with its beat.
   useEffect(() => {
@@ -2083,10 +2060,11 @@ export function ClassRoom({
   const joining = !inDoubt && player.state === 'idle' && entryPhase !== 'inClass';
 
   /**
-   * CAPTIONS ARE A SETTING, OFF BY DEFAULT, AND NEVER ON THE BOARD (Aarav,
-   * 2026-10-01): the board is hers to write on. On, they run in a strip
-   * under it — and they are on whenever her voice is off, because then they
-   * are the only way to hear her (`showCaptions`).
+   * CAPTIONS ARE A SETTING, OFF BY DEFAULT (Aarav, 2026-10-01): the board is
+   * hers to write on. On, they run in a strip — over the board's foot once the
+   * board has the whole screen (2026-10-03), the way a video's subtitles do —
+   * and they are on whenever her voice is off, because then they are the only
+   * way to hear her (`showCaptions`).
    */
   const captionsOn = showCaptions(preferences);
   // During a doubt the caption carries the conversation's latest line — on a
@@ -2104,23 +2082,38 @@ export function ClassRoom({
   const answerBoxShown = answerBy === 'text' && !inDoubt;
 
   /**
-   * THE BOARD IS 16:9 ON EVERY SCREEN (Aarav, 2026-10-01: "like long-form
-   * YouTube"; canvas C2). Three rooms around it:
-   *   wide     a laptop: the stage as large as the room allows, Meera and the
-   *            doubt in the rail beside it;
-   *   sideways a phone held sideways: the stage fills the screen, and only the
-   *            two controls, her small picture and the report flag float on it;
-   *   upright  everything else: the stage across the top like a video, and
-   *            Meera's tile in the room under it.
-   * The camera frames whatever box the stage is (Scene measures it), so every
-   * frame comes out 16:9 with no change to the camera.
+   * THE BOARD TAKES THE SCREEN (Aarav, 2026-10-03: "remove avatar and its
+   * box, remove that doubt session box and expand the canvas to full
+   * screen"). It is 16:9 on every screen (canvas C2), and there is no tile
+   * and no doubt panel beside it any more. Two rooms:
+   *   sideways  any screen wider than it is tall — a laptop, a phone turned
+   *             sideways: the board as large as the screen allows, and the
+   *             top bar, the toolbar and her shape float over it;
+   *   upright   a phone held upright: the board across the top like a video,
+   *             and her shape large in the room under it.
+   * She is the shape (bloub/Bloub.tsx) in both. The camera frames whatever
+   * box the board is (Scene measures it), so every frame comes out 16:9 with
+   * no change to the camera.
    */
-  const wide = useMediaQuery('(min-width: 1024px)');
-  const sideways = useMediaQuery('(orientation: landscape) and (max-height: 500px)') && !wide;
-  const fitted = wide || sideways;
+  const sideways = useMediaQuery('(orientation: landscape)');
 
   const barsShown = controlsShown || !canHideControls;
   const barClasses = barsShown ? 'opacity-100' : 'opacity-0 pointer-events-none';
+
+  /**
+   * What her shape shows. Thinking while a spoken answer is judged or a doubt
+   * waits on her reply; listening while a question or a doubt waits on the
+   * student; teaching while the class plays. Whenever her voice is actually
+   * playing, the shape itself shows her talking (Bloub `talking`).
+   */
+  const bloubMode: BloubMode =
+    ear === 'thinking' || (inDoubt && lastDoubtLine?.role === 'student')
+      ? 'thinking'
+      : inDoubt || ear === 'listening'
+        ? 'listening'
+        : player.state === 'playing'
+          ? 'teaching'
+          : 'idle';
 
   // The class has halted. The room is replaced rather than covered, so no
   // control under it — play, raise hand, the answer chips — can be reached by
@@ -2130,10 +2123,8 @@ export function ClassRoom({
   // The board. Its box is 16:9 in every room; Scene frames whatever box it is.
   const stage = (
     <section
-      style={fitted ? STAGE_FIT : undefined}
-      className={`relative bg-white overflow-hidden ${
-        fitted ? 'rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.5)]' : 'w-full aspect-video flex-shrink-0'
-      }`}
+      style={sideways ? STAGE_FIT : undefined}
+      className={`relative bg-white overflow-hidden ${sideways ? '' : 'w-full aspect-video flex-shrink-0'}`}
     >
       <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
 
@@ -2176,29 +2167,21 @@ export function ClassRoom({
     </section>
   );
 
-  /** The stage in a box that is not 16:9: as large as fits, centred. */
-  const fittedStage = (
-    <div className="flex-1 min-h-0 min-w-0 grid place-items-center" style={STAGE_BOX}>
-      {stage}
-    </div>
-  );
-
-  // Captions, when they are on: a strip under the board, never on it. Up to
-  // two lines. During a doubt on a wide screen the rail already shows the
-  // conversation, so the strip steps aside there.
-  const captionStrip = caption && !(inDoubt && wide) && (
+  // Captions, when they are on: up to two lines, over the foot of the board
+  // on a sideways screen, under it on an upright one. During a doubt they
+  // carry the conversation's latest line.
+  const captionStrip = caption && (
     <p
       data-caption
       className={`flex-shrink-0 rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white ${
-        inDoubt ? 'bg-stage-green-container/95' : 'bg-stage-surface'
+        inDoubt ? 'bg-stage-green-container/95' : 'bg-stage-surface/95'
       }`}
     >
       <span className="line-clamp-2">{caption}</span>
     </p>
   );
 
-  // A held question, and no mic to hear the answer: the one box she reads
-  // from. Under the board, never on it.
+  // A held question, and no mic to hear the answer: the one box she reads from.
   const answerBox = answerBoxShown && (
     <div className="flex gap-2 flex-shrink-0">
       <input
@@ -2222,9 +2205,8 @@ export function ClassRoom({
     </div>
   );
 
-  // A typed doubt where there is no rail: a slim input row the keyboard
-  // button summons.
-  const doubtRow = !wide && inDoubt && typing && (
+  // A typed doubt: a slim input row the keyboard button summons.
+  const doubtRow = inDoubt && typing && (
     <div className="flex gap-2 flex-shrink-0">
       <input
         autoFocus
@@ -2269,17 +2251,40 @@ export function ClassRoom({
     <span className="font-label-md text-[13px] font-semibold tabular-nums flex-shrink-0">{formatClock(elapsed)}</span>
   );
 
+  // Top bar: whose class, the class clock, and the way to report something.
+  // Nothing here says "recording" (Aarav, 2026-10-01).
+  const header = (
+    <header
+      className={`flex items-center gap-2.5 px-3 py-2 transition-opacity duration-300 ${barClasses} ${
+        sideways
+          ? 'absolute top-0 inset-x-0 z-10 pt-[calc(8px+env(safe-area-inset-top))] pb-6 bg-gradient-to-b from-black/60 to-transparent text-white'
+          : 'flex-shrink-0'
+      }`}
+    >
+      <div className="min-w-0">
+        <h1
+          className={`font-headline-md text-[15px] leading-5 font-semibold truncate ${sideways ? 'text-white' : 'text-stage-ink'}`}
+        >
+          {lesson.title}
+        </h1>
+        {lesson.subtitle && (
+          <p className={`font-label-sm text-[11.5px] leading-4 truncate ${sideways ? 'text-white/75' : 'text-stage-ink-dim'}`}>
+            {lesson.subtitle}
+          </p>
+        )}
+      </div>
+      <div className="flex-1" />
+      {clock}
+      {reportButton}
+    </header>
+  );
+
   // The toolbar: raise a hand, or end the class — nothing else (Aarav,
-  // 2026-10-01). It fades like Meet's; the board stays exactly where it is,
-  // because no room puts the toolbar on it.
+  // 2026-10-01). It fades like Meet's.
   const toolbar = (
     <nav
       aria-hidden={!barsShown}
-      className={`transition-opacity duration-300 ${barClasses} ${
-        sideways
-          ? 'w-full flex flex-wrap justify-center items-center gap-2'
-          : 'flex justify-center items-center gap-3.5 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-1 flex-shrink-0'
-      }`}
+      className={`flex justify-center items-center gap-3.5 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-1 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
     >
       {!inDoubt ? (
         <>
@@ -2304,15 +2309,12 @@ export function ClassRoom({
               disabled={handoffState !== 'LIVE'}
             />
           )}
-          {/* Where there is no rail to type in, the keyboard brings up the doubt row. */}
-          {!wide && (
-            <ToolButton
-              icon="keyboard"
-              label="Type your doubt"
-              tone={typing ? 'lit' : 'plain'}
-              onClick={() => setTyping((t) => !t)}
-            />
-          )}
+          <ToolButton
+            icon="keyboard"
+            label="Type your doubt"
+            tone={typing ? 'lit' : 'plain'}
+            onClick={() => setTyping((t) => !t)}
+          />
           <ToolButton icon="check" label="Got it — back to the class" tone="green" big onClick={endDoubt} />
           <ToolButton icon="call_end" label="End the class" tone="red" onClick={onExit} disabled />
         </>
@@ -2320,97 +2322,66 @@ export function ClassRoom({
     </nav>
   );
 
+  // During a doubt, one short line of what the room is doing, beside her shape.
+  const status = inDoubt && (
+    <p
+      aria-live="polite"
+      className="rounded-full bg-stage/85 px-3 py-1 font-label-sm text-[12px] leading-4 text-white text-center"
+    >
+      {doubtStatus}
+    </p>
+  );
+
   return (
     <div
       onPointerDown={revealControls}
       onPointerMove={revealControls}
       onKeyDown={revealControls}
-      className={`fixed inset-0 bg-stage text-stage-ink flex overflow-hidden font-body-md antialiased select-none ${
-        sideways ? 'flex-row' : 'flex-col'
-      }`}
+      className="fixed inset-0 bg-stage text-stage-ink flex flex-col overflow-hidden font-body-md antialiased select-none"
     >
       {sideways ? (
         <>
-          {/* A phone held sideways: the stage takes the screen's full height,
-              and everything else stands in a slim column beside it — Meera
-              small at the top, the controls under her. Nothing is on the board. */}
-          <main className="flex-1 min-w-0 flex flex-col gap-2 p-1">
-            {fittedStage}
-            {captionStrip}
-            {answerBox}
-            {doubtRow}
+          {/* The board, as large as the screen allows. */}
+          <main className="absolute inset-0 grid place-items-center" style={STAGE_BOX}>
+            {stage}
           </main>
-          <aside className="w-[128px] flex-shrink-0 flex flex-col items-center gap-2 py-2 pr-2">
-            {/* She steps out while a typing row is up, so the row has the
-                height it needs on a short screen. */}
-            {!((inDoubt && typing) || answerBoxShown) && (
-              <TutorTile mode={tutorMode} variant="pip" clone={tile} />
-            )}
-            <header className={`flex items-center justify-between w-full transition-opacity duration-300 ${barClasses}`}>
-              {clock}
-              {reportButton}
-            </header>
-            <div className="flex-1" />
-            {toolbar}
-          </aside>
+          {header}
+          {/* The rows and the toolbar float over the board's foot. */}
+          <div className="absolute bottom-0 inset-x-0 z-10 flex flex-col items-center gap-2 pointer-events-none">
+            <div className="w-full max-w-[640px] px-3 flex flex-col gap-2 pointer-events-auto">
+              {captionStrip}
+              {answerBox}
+              {doubtRow}
+            </div>
+            <div className="pointer-events-auto">{toolbar}</div>
+          </div>
+          {/* Her, in the corner, over the board or in the margin beside it.
+              Her status line steps aside while the typing row is up, so the
+              two never sit on each other on a short screen. */}
+          <div className="absolute z-10 bottom-[calc(12px+env(safe-area-inset-bottom))] right-[calc(12px+env(safe-area-inset-right))] flex flex-col items-end gap-2 max-w-[200px] pointer-events-none">
+            {!typing && status}
+            <div className="drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
+              <Bloub mode={bloubMode} size={72} talking={voice.speaking} />
+            </div>
+          </div>
         </>
       ) : (
         <>
-          {/* Top bar: whose class, the class clock, and the way to report
-              something. Nothing here says "recording" (Aarav, 2026-10-01). */}
-          <header
-            className={`flex items-center gap-2.5 px-3 py-2 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
-          >
-            <div className="min-w-0">
-              <h1 className="font-headline-md text-[15px] leading-5 font-semibold text-stage-ink truncate">
-                {lesson.title}
-              </h1>
-              {lesson.subtitle && (
-                <p className="font-label-sm text-[11.5px] leading-4 text-stage-ink-dim truncate">{lesson.subtitle}</p>
-              )}
+          {header}
+          {/* A phone held upright: the board across the top like a video,
+              and her under it. */}
+          <main className="flex-1 min-h-0 flex flex-col gap-2 pb-2">
+            {stage}
+            <div className="flex-1 min-h-0 flex flex-col gap-2 px-3">
+              {captionStrip}
+              {answerBox}
+              {doubtRow}
+              <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-2">
+                <Bloub mode={bloubMode} size={132} talking={voice.speaking} />
+                {status}
+              </div>
             </div>
-            <div className="flex-1" />
-            {clock}
-            {reportButton}
-          </header>
-
-          {wide ? (
-            /* A wide screen: the stage as large as the room allows, and the
-               rail beside it with Meera over the doubt conversation. */
-            <main className="flex-1 min-h-0 flex gap-3 px-3 pb-3">
-              <div className="flex-1 min-w-0 flex flex-col gap-2">
-                {fittedStage}
-                {captionStrip}
-                {answerBox}
-              </div>
-              <aside className="w-[300px] flex-shrink-0 flex flex-col gap-3">
-                <TutorTile mode={tutorMode} variant="rail" clone={tile} />
-                {/* The conversation's lines are captions too: shown only with them on. */}
-                <DoubtPanel
-                  active={inDoubt}
-                  lines={captionsOn ? doubtLines : []}
-                  status={doubtStatus}
-                  onSend={inDoubt ? sendText : undefined}
-                  onDone={inDoubt ? endDoubt : undefined}
-                />
-              </aside>
-            </main>
-          ) : (
-            /* A phone held upright: the stage across the top like a video,
-               and Meera in the room under it. */
-            <main className="flex-1 min-h-0 flex flex-col gap-2 pb-2">
-              {stage}
-              <div className="flex-1 min-h-0 flex flex-col gap-2 px-3">
-                {captionStrip}
-                {answerBox}
-                {doubtRow}
-                <div className="flex-1 min-h-0">
-                  <TutorTile mode={tutorMode} variant="fill" clone={tile} />
-                </div>
-              </div>
-            </main>
-          )}
-
+          </main>
           {toolbar}
         </>
       )}

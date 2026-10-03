@@ -273,3 +273,24 @@ describe('the review’s cases (2026-10-02)', () => {
     expect(ear.listens).toBe(listens);
   });
 });
+
+describe('the board has the room (Aarav, 2026-10-03)', () => {
+  it('shows no tile and no doubt panel, and her shape says what she is doing', async () => {
+    const host = await openClass(teaching);
+    const shape = (): string | null => host.querySelector('[data-bloub]')?.getAttribute('data-bloub') ?? null;
+    // Nothing stands beside the board: no rail, no picture-in-picture, no panel.
+    expect(host.querySelector('aside')).toBeNull();
+    expect(host.querySelector('textarea')).toBeNull();
+    expect(shape()).toBe('teaching');
+
+    ear.queued = ['wait, why is blood red?'];
+    await talk();
+    await tick(12);
+    expect(inDoubt(host)).toBe(true);
+    // Her answer is said; the doubt waits on the student again.
+    expect(shape()).toBe('listening');
+    expect(host.querySelector('aside')).toBeNull();
+    // The typed doubt is still a tap away.
+    expect(host.querySelector('[aria-label="Type your doubt"]')).not.toBeNull();
+  });
+});
