@@ -59,7 +59,7 @@ describe('the lms schema', () => {
   it('keeps the jobs and internal pieces away from signed-in browsers', async () => {
     const internal = [
       'finalize_tests(p_assignment uuid)',
-      'work_facts(p_org uuid)',
+      'work_facts(p_org uuid, p_section uuid, p_subject uuid, p_students uuid[], p_due_after timestamp with time zone, p_due_by timestamp with time zone)',
       'practice_pool(p_student uuid)',
       'may_see_student(p_student uuid)',
       'require_admin()',
