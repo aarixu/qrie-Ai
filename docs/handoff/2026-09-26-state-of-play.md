@@ -435,6 +435,13 @@ Smart-board design research covered what the board can do today and how speech c
 - **Her speech detector never stops her teaching now.** While the mic is on, it still stops her nudge or her doubt reply.
 - **The first tap ever shows the mic card.** Its copy now says the mic turns on only when tapped. If the mic will not open, a note beside her shape says so, and the typed boxes carry the student.
 - **Checked** with the fake-mic Chrome on the local build: a tap during teaching led to heard → quiet doubt → answered → back to the class → mic off by itself.
+- **Same day, after his next test** ("type box baar baar open ho raha hai", "meri voice samajh nahi aa rahi"):
+  - **A trial's doubts were answered by the scripted floor** (no class on file → stub tutor), which understands nothing said to it. The tutor is now pitched at the lesson's own class (`klassOfLesson`, from topicRef).
+  - **The endpointer** waits 1.5 s of quiet (was 0.9 s) and takes up to 15 s, so a child pausing mid-sentence is no longer cut off.
+  - **The mic's transcript is shown** beside her shape (`Heard: "..."`). A tap that caught nothing says so.
+  - **The answer box** opens only on a keyboard button ("Type an answer").
+  - His own transcripts could not be read: doubts are never stored, and the ledger had no spoken answers from his phone.
+  - **Checked on production** with a fake-mic phone Chrome: tap → heard → `Heard:` shown → `/api/llm` answered → back to class, mic off.
 
 **Order:**
 - C0 and C1 together, now: neither needs model spend to build.
