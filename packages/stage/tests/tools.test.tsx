@@ -59,6 +59,37 @@ describe('pieChart on the board', () => {
   });
 });
 
+const day = {
+  labels: ['6 am', '9 am', '12 pm', '3 pm', '6 pm'],
+  series: [{ name: 'Delhi', values: [24, 29, 35, 36, 31] }],
+  yLabel: 'temperature',
+  unit: '°C',
+  caption: 'One summer day',
+};
+
+describe('lineChart on the board', () => {
+  it('draws the line on after its axes, then its points, then its last value', () => {
+    const out = html(<>{renderTool(tool('lineChart', day), { isNew: true, theme: THEME })}</>);
+    expect(out).toMatch(/class="stage-draw"[^>]*style="animation-delay:600ms"/);
+    expect(out.match(/<circle/g)).toHaveLength(5);
+    expect(out).toContain('31 °C');
+    for (const label of day.labels) expect(out).toContain(label);
+  });
+
+  it('draws two series in two colours', () => {
+    const two = { ...day, series: [day.series[0], { name: 'Shimla', values: [12, 16, 20, 21, 17] }] };
+    const out = html(<>{renderTool(tool('lineChart', two), { isNew: false, theme: THEME })}</>);
+    expect(out).toContain('stroke="#1cb0f6"');
+    expect(out).toContain('stroke="#ff9600"');
+    expect(out).toContain('Shimla');
+  });
+
+  it('never divides by a flat line', () => {
+    const flat = { ...day, series: [{ name: 'Same', values: [5, 5, 5, 5, 5] }] };
+    expect(html(<>{renderTool(tool('lineChart', flat), { isNew: false, theme: THEME })}</>)).not.toContain('NaN');
+  });
+});
+
 describe('reduced motion', () => {
   it('covers every class the toolkit animates with', () => {
     const page = renderToString(<Scene lesson={lessonOf(tool('pieChart', air))} visible={['t1']} focus={[]} />);
