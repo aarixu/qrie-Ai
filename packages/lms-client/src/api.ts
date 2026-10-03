@@ -135,6 +135,8 @@ export interface AssignmentSummary {
   resultsReleasedAt: string | null;
   /** Written tasks on the checklist. */
   tasks: number;
+  /** Set for some children of the class only (0040); `students` and `submitted` then count only them. */
+  targeted: boolean;
 }
 
 /** One row per student on the class's current roster. */
@@ -358,6 +360,45 @@ export interface ShownMisconception {
   label: string;
   times: number;
   lastAt: string;
+}
+
+/** A child of a class, as a list of children names them. */
+export interface ClassChild {
+  studentUserId: string;
+  displayName: string;
+  rollNumber: string | null;
+}
+
+/**
+ * A misconception children of a class show now (0040): the last time each
+ * answered a question of the class's work that can catch it, they chose it.
+ */
+export interface LikelyMisconception {
+  /** The knowledge graph's chapter slug, e.g. 'rational-numbers'. */
+  chapter: string;
+  label: string;
+  /** How many children of the class show it. */
+  students: number;
+  /** Who they are, by roll number. */
+  children: ClassChild[];
+  /** Approved questions on the chapter that practice can be set from now. */
+  questions: number;
+}
+
+/** Practice on one chapter for some children of a class (0040). */
+export interface NewPractice {
+  sectionId: string;
+  subjectId: string;
+  chapter: string;
+  /** Children of the class, as they are now. */
+  studentUserIds: string[];
+  dueAt: string;
+  /** Questions that can catch this misconception are chosen first. */
+  misconception?: string;
+  /** Blank: 'Practice: ' and the chapter's name. */
+  title?: string;
+  /** 1 to 20; 5 when left out. Fewer are set when fewer are free. */
+  questions?: number;
 }
 
 export interface MyChapter {
@@ -815,6 +856,22 @@ export function createLmsClient(t: Transport) {
       rows<ChapterStanding>('class_insights', { p_section: sectionId, p_subject: subjectId }),
     classMisconceptions: (sectionId: string, subjectId: string) =>
       rows<ShownMisconception>('class_misconceptions', { p_section: sectionId, p_subject: subjectId }),
+    /** The misconceptions children of the class show now, most children first. Its teachers and the admin. */
+    classLikelyMisconceptions: (sectionId: string, subjectId: string) =>
+      rows<LikelyMisconception>('class_likely_misconceptions', { p_section: sectionId, p_subject: subjectId }),
+    /** Sets and publishes practice that only the children named see and hand in; returns its id. */
+    async sendPractice(p: NewPractice): Promise<string> {
+      return (await t.value('send_practice', {
+        p_section: p.sectionId,
+        p_subject: p.subjectId,
+        p_chapter: p.chapter,
+        p_students: p.studentUserIds,
+        p_due_at: p.dueAt,
+        p_misconception: p.misconception,
+        p_title: p.title,
+        p_questions: p.questions,
+      })) as string;
+    },
 
     classTrend: (sectionId: string, subjectId: string) =>
       rows<TrendPoint>('class_trend', { p_section: sectionId, p_subject: subjectId }),

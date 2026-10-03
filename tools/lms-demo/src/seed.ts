@@ -338,6 +338,10 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   // and two teachers' to their classes; some children have opened them.
   await seedNotices(db, orgId);
 
+  // 12. Practice for some children (0040): Neha's, in 8A Mathematics, for the
+  // children who show the class's most-shown misconception.
+  await seedPracticeForSome(db);
+
   // 6. The brain. It is given the ledger and nothing else — not `planted`.
   await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
 
@@ -713,6 +717,35 @@ async function seedComments(db: PGlite, orgId: string): Promise<void> {
     if (i < REMARKS.length) await neha.setReportRemark(r.studentUserId, REMARKS[i]);
     else await office.setReportRemark(r.studentUserId, ADMIN_REMARKS[i - REMARKS.length]);
   }
+}
+
+/**
+ * Neha Sharma (DEMO-T01) sends practice, due in three days, to the children
+ * of 8A Mathematics who show its most-shown likely misconception that has
+ * approved questions free to set — the first of the class's list that has
+ * any. Through the API, and with none of the seed's random numbers.
+ */
+async function seedPracticeForSome(db: PGlite): Promise<void> {
+  const { rows } = await db.query<{ teacher: string; section_id: string; subject_id: string }>(
+    `select ta.teacher_user_id as teacher, ta.section_id, ta.subject_id
+       from lms.teaching_assignment ta
+       join lms.account acc on acc.user_id = ta.teacher_user_id
+       join lms.section sec on sec.id = ta.section_id
+       join lms.subject sub on sub.id = ta.subject_id
+      where acc.login_id = 'DEMO-T01' and sec.grade = 8 and sec.name = 'A' and sub.name = 'Mathematics'`,
+  );
+  const c = rows[0];
+  const neha = createLmsClient(pgliteTransport(db, c.teacher));
+  const top = (await neha.classLikelyMisconceptions(c.section_id, c.subject_id)).find((m) => m.questions > 0);
+  if (!top) throw new Error('8A Mathematics shows no misconception that practice can be set for');
+  await neha.sendPractice({
+    sectionId: c.section_id,
+    subjectId: c.subject_id,
+    chapter: top.chapter,
+    misconception: top.label,
+    studentUserIds: top.children.map((x) => x.studentUserId),
+    dueAt: new Date(Date.now() + 3 * DAY).toISOString(),
+  });
 }
 
 /** A one-page PDF of a few lines of plain ASCII text, for a demo circular. */

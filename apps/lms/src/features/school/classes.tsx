@@ -27,6 +27,7 @@ import {
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { TrendChart, band, pct } from '@/features/analytics/charts'
 import { SubjectBadge } from '@/components/subject-icon'
+import { LikelyMisconceptions } from '@/features/class/misconceptions'
 import { useSchoolClasses } from './overview'
 
 /** Every class and subject in the school, with how it is going (lms.school_classes). */
@@ -34,7 +35,7 @@ export function SchoolClassesPage() {
   const classes = useSchoolClasses()
   const [open, setOpen] = useState<SchoolClass | null>(null)
   return (
-    <Page title='Classes' description='Every section and subject, all work due so far. Open one for its trend.'>
+    <Page title='Classes' description='Every section and subject, all work due so far. Open one for its trend and likely misconceptions.'>
       {classes.isPending ? (
         <Loading what='the classes' />
       ) : classes.isError ? (
@@ -139,6 +140,7 @@ function ClassTrendSheet({ c }: { c: SchoolClass }) {
             </ul>
           </>
         )}
+        <LikelyMisconceptions sectionId={c.sectionId} subjectId={c.subjectId} />
         <Button asChild variant='outline' className='w-full'>
           <Link to='/school/students' search={{ section: c.sectionId }}>
             See Class {c.className}’s students

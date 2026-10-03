@@ -42,7 +42,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Loading, Page, Problem } from '@/components/layout/page'
-import { StatusBadge as WorkStateBadge, scoreOf } from '@/features/class'
+import { ForSome, StatusBadge as WorkStateBadge, scoreOf } from '@/features/class'
 import { className } from '@/features/dashboard'
 import { QuestionView, letter } from '@/features/questions/question-view'
 import { kindLabel } from './kinds'
@@ -87,6 +87,7 @@ export function HomeworkDetail({ assignmentId }: { assignmentId: string }) {
       description={
         <span className='flex flex-wrap items-center gap-2'>
           <WorkStateBadge a={a} />
+          {a.targeted && <ForSome a={a} />}
           <span>{kindLabel(a.kind)}</span>
           <span aria-hidden>·</span>
           {className(a)} · {a.subjectName} ·{' '}

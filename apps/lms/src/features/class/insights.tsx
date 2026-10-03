@@ -4,7 +4,6 @@ import type { ChapterStanding, ShownMisconception } from '@ai-tutor/lms-client'
 import { api } from '@/lib/backend'
 import { chapterTitle } from '@/lib/curriculum'
 import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
@@ -15,6 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Loading, Problem } from '@/components/layout/page'
+import { LikelyMisconceptions } from './misconceptions'
 
 /** Below this belief, after enough answers, a student is listed as needing help. */
 const NEEDS_HELP = 0.4
@@ -34,9 +34,11 @@ function tone(m: number) {
 /**
  * What Qrie's learning model believes about this class, chapter by chapter
  * (lms.class_insights), and the misconceptions the students' own wrong
- * answers point to (lms.class_misconceptions). Belief is per outcome, from
- * every answer handed in, with prerequisites taken into account — so it is
- * not the same as the average mark.
+ * answers point to (lms.class_misconceptions per student; the class's
+ * likely ones, with practice for those children, from
+ * lms.class_likely_misconceptions). Belief is per outcome, from every answer
+ * handed in, with prerequisites taken into account — so it is not the same
+ * as the average mark.
  */
 export function Insights({ sectionId, subjectId }: { sectionId: string; subjectId: string }) {
   const standing = useQuery({
@@ -65,7 +67,7 @@ export function Insights({ sectionId, subjectId }: { sectionId: string; subjectI
         {ENOUGH_ANSWERS} answers in that chapter.
       </p>
       <NeedsHelp rows={standing.data} shown={shown.data} />
-      <ClassMisconceptions shown={shown.data} />
+      <LikelyMisconceptions sectionId={sectionId} subjectId={subjectId} />
       <Heatmap rows={standing.data} />
     </div>
   )
@@ -132,45 +134,6 @@ function NeedsHelp({ rows, shown }: { rows: ChapterStanding[]; shown: ShownMisco
           ))}
         </CardContent>
       )}
-    </Card>
-  )
-}
-
-function ClassMisconceptions({ shown }: { shown: ShownMisconception[] }) {
-  const byLabel = new Map<string, { chapter: string | null; students: Set<string>; times: number }>()
-  for (const m of shown) {
-    const e = byLabel.get(m.label) ?? { chapter: m.chapter, students: new Set<string>(), times: 0 }
-    e.students.add(m.displayName)
-    e.times += m.times
-    byLabel.set(m.label, e)
-  }
-  const top = [...byLabel.entries()].sort((a, b) => b[1].students.size - a[1].students.size).slice(0, 8)
-  if (top.length === 0) return null
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Misconceptions to reteach</CardTitle>
-        <CardDescription>
-          Each wrong option in Qrie’s questions was written to catch one mistake. These are the ones your
-          students chose most.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ul className='space-y-2'>
-          {top.map(([label, e]) => (
-            <li key={label} className='text-sm'>
-              <div className='flex flex-wrap items-baseline gap-2'>
-                <Badge variant='secondary' className='tabular-nums'>
-                  {e.students.size} {e.students.size === 1 ? 'student' : 'students'}
-                </Badge>
-                <span className='font-medium'>{label.charAt(0).toUpperCase() + label.slice(1)}</span>
-                {e.chapter && <span className='text-muted-foreground'>· {chapterTitle(e.chapter)}</span>}
-              </div>
-              <p className='mt-0.5 text-xs text-muted-foreground'>{[...e.students].join(', ')}</p>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
     </Card>
   )
 }

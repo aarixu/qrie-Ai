@@ -112,6 +112,23 @@ describe('the demo school', () => {
     expect((await neha.api.noticeReaders(sent[0].noticeId)).filter((r) => !r.readAt)).toHaveLength(21);
   });
 
+  it('has practice sent to just the children who show a misconception, which only they see', async () => {
+    const t = await signedIn('DEMO-T01');
+    const [a8] = await t.api.myClasses();
+    const practice = (await t.api.classAssignments(a8.sectionId, a8.subjectId)).filter((a) => a.targeted);
+    expect(practice).toHaveLength(1);
+    const forThem = await t.api.assignmentResults(practice[0].id);
+    expect(forThem.length).toBe(practice[0].students);
+    expect(forThem.length).toBeLessThan(a8.students);
+    const child = await signedIn(forThem[0].loginId);
+    expect((await child.api.myAssignments()).map((a) => a.id)).toContain(practice[0].id);
+    const outsider = (await t.api.classRoster(a8.sectionId)).find(
+      (r) => !forThem.some((x) => x.studentUserId === r.studentUserId),
+    )!;
+    const other = await signedIn(outsider.loginId);
+    expect((await other.api.myAssignments()).map((a) => a.id)).not.toContain(practice[0].id);
+  });
+
   it('plants known misconceptions, so the brain can later be checked against the truth', async () => {
     expect(seeded.planted.length).toBeGreaterThanOrEqual(3);
     for (const p of seeded.planted) {

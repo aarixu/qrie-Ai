@@ -29,6 +29,7 @@ const WORDS: Record<string, string> = {
   'year-started': 'New school year started',
   'notice-sent': 'Notice sent',
   'notice-deleted': 'Notice deleted',
+  'practice-sent': 'Practice sent to some children',
 }
 
 /** What the school's admins have done, newest first (lms.audit_log). */
@@ -37,7 +38,7 @@ export function SchoolActivityPage() {
   return (
     <Page
       title='Activity log'
-      description='Every change to who is in the school, who teaches what, and how it looks, and every notice sent or deleted. Newest first.'
+      description='Every change to who is in the school, who teaches what, and how it looks, every notice sent or deleted, and every practice sent to some children of a class. Newest first.'
     >
       {log.isPending ? (
         <Loading what='the activity log' />

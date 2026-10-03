@@ -34,6 +34,7 @@ import { WORK_KINDS, kindLabel } from '@/features/homework/kinds'
 import { ClassAnalytics } from './analytics'
 import { Attendance } from './attendance'
 import { Insights } from './insights'
+import { LikelyMisconceptions } from './misconceptions'
 import { PersonAvatar } from '@/components/person-avatar'
 import { usePhotos } from '@/lib/photos'
 
@@ -101,7 +102,8 @@ export function ClassPage({ sectionId, subjectId }: ClassPageProps) {
             <TabsTrigger value='grades'>Gradebook</TabsTrigger>
             <TabsTrigger value='students'>Students</TabsTrigger>
           </TabsList>
-          <TabsContent value='homework'>
+          <TabsContent value='homework' className='space-y-4'>
+            <LikelyMisconceptions sectionId={sectionId} subjectId={subjectId} />
             <HomeworkList sectionId={sectionId} subjectId={subjectId} />
           </TabsContent>
           <TabsContent value='attendance'>
@@ -202,7 +204,10 @@ function HomeworkList({ sectionId, subjectId }: ClassPageProps) {
               onClick={() => open(a)}
               onKeyDown={(e) => e.key === 'Enter' && open(a)}
             >
-              <TableCell className='font-medium'>{a.title}</TableCell>
+              <TableCell className='font-medium'>
+                {a.title}
+                {a.targeted && <ForSome a={a} className='ms-2' />}
+              </TableCell>
               <TableCell>{kindLabel(a.kind)}</TableCell>
               <TableCell>
                 <StatusBadge a={a} />
@@ -217,6 +222,15 @@ function HomeworkList({ sectionId, subjectId }: ClassPageProps) {
         </TableBody>
       </Table>
     </div>
+  )
+}
+
+/** Work set for some children of the class only: how many it is for. */
+export function ForSome({ a, className }: { a: AssignmentSummary; className?: string }) {
+  return (
+    <Badge variant='outline' className={className}>
+      For {a.students} {a.students === 1 ? 'child' : 'children'}
+    </Badge>
   )
 }
 
