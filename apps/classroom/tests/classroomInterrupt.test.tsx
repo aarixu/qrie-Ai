@@ -138,6 +138,24 @@ function voice(holds: (text: string) => boolean = () => false): TtsAdapter {
   };
 }
 
+/**
+ * Says every line at once except any `holds` names: the class reaches its
+ * held question, which is where a student taps to answer out loud.
+ */
+function sayAll(holds: (text: string) => boolean = () => false): TtsAdapter {
+  const waiting: Array<() => void> = [];
+  return {
+    speak(text) {
+      spoken.push(text);
+      if (holds(text)) return new Promise<void>((resolve) => waiting.push(resolve));
+      return Promise.resolve();
+    },
+    cancel() {
+      for (const resolve of waiting.splice(0)) resolve();
+    },
+  };
+}
+
 async function tick(times = 8): Promise<void> {
   for (let i = 0; i < times; i += 1) {
     await act(async () => {
@@ -187,6 +205,9 @@ async function speakOver(): Promise<void> {
   });
   await tick(12);
 }
+
+/** The question is held: she has put it, and with the mic off the box waits. */
+const questionHeld = (host: HTMLElement): boolean => host.querySelector('input[aria-label="Type your answer"]') !== null;
 
 const inDoubt = (host: HTMLElement): boolean => host.querySelector('[aria-label="Got it — back to the class"]') !== null;
 /** The answers filed so far: the verdict, and how it came (said, or typed). */
@@ -323,9 +344,10 @@ describe('stopping her while she teaches: a tap on the mic', () => {
   });
 });
 
-describe('talking over her question', () => {
-  it('a tap stops her line, and what they say then is taken as the answer', async () => {
-    const host = await openClass(asking);
+describe('her question, and the mic', () => {
+  it('a tap at her held question: what they say is taken as the answer', async () => {
+    const host = await openClass(asking, sayAll());
+    expect(questionHeld(host), 'she has put the question').toBe(true);
     ear.queued = ['Four'];
     await tapMic(host);
     await tick(12);
@@ -334,8 +356,22 @@ describe('talking over her question', () => {
     expect(ear.deaf).toBe(0);
   });
 
-  it('does not judge her own question, back through the speaker, as their answer', async () => {
+  it('a tap while she is still teaching the beat that asks is a stop, not an answer: their words open a doubt', async () => {
+    // Her narration, the question at its end, is held: she is mid-way through it.
     const host = await openClass(asking);
+    expect(questionHeld(host)).toBe(false);
+    ear.queued = ['wait, why is blood red?'];
+    await tapMic(host);
+    await tick(12);
+    expect(inDoubt(host)).toBe(true);
+    expect(llmBodies.some((b) => b.includes('why is blood red?'))).toBe(true);
+    // Nothing was judged as an answer to a question she had not finished putting.
+    expect(answers()).toEqual([]);
+  });
+
+  it('does not judge her own question, back through the speaker, as their answer', async () => {
+    const host = await openClass(asking, sayAll());
+    expect(questionHeld(host)).toBe(true);
     // The ear first hears her question leaking through; then the student.
     ear.queued = [asking.beats[0].narration, 'Four'];
     await tapMic(host);
@@ -348,12 +384,13 @@ describe('talking over her question', () => {
     // Her first line after the tap — her reply to their wrong answer — is held: she is mid-way through it.
     const host = await openClass(
       asking,
-      voice(() => {
+      sayAll(() => {
         if (!holdNext) return false;
         holdNext = false;
         return true;
       }),
     );
+    expect(questionHeld(host)).toBe(true);
     ear.queued = ['Just plasma'];
     holdNext = true;
     await tapMic(host);
@@ -369,7 +406,8 @@ describe('talking over her question', () => {
   });
 
   it('a second tap turns the mic off: the listen ends, and the typed box takes the answer', async () => {
-    const host = await openClass(asking);
+    const host = await openClass(asking, sayAll());
+    expect(questionHeld(host)).toBe(true);
     const box = (): Element | null => host.querySelector('input[aria-label="Type your answer"]');
     await tapMic(host); // nothing queued: the question's ear is listening
     expect(micLabel(host)).toBe('Turn the mic off');
@@ -404,7 +442,8 @@ describe('talking over her question', () => {
 
 describe('the mic goes off by itself', () => {
   it('once the question it was turned on for is answered and she teaches again', async () => {
-    const host = await openClass(asking);
+    const host = await openClass(asking, sayAll((t) => t === asking.beats[1].narration));
+    expect(questionHeld(host)).toBe(true);
     ear.queued = ['Four'];
     await tapMic(host);
     await tick(16);

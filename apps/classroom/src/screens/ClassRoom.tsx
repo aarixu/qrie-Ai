@@ -23,7 +23,7 @@ import {
   requestMic,
   type MicStatus,
 } from '../lib/mic';
-import { closeEar, isEarOpen, listenOnce, onStudentSpeech, openEar, type Heard } from '../lib/ear';
+import { closeEar, listenOnce, onStudentSpeech, openEar, type Heard } from '../lib/ear';
 import { isDoneSaying, isEchoOf, watchVoice } from '../lib/spokenDoubt';
 import { resolveCrossQuestion, resolveSpokenAnswer } from '../lib/judge';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
@@ -614,6 +614,12 @@ export function ClassRoom({
   /** A tap's mic still opening: another tap now turns it off. */
   const micOpening = useRef(false);
   /**
+   * The beat whose held question the mic was turned on for, or null for any
+   * other exchange. Her teaching of any other beat closes the mic (the effect
+   * after `talk`).
+   */
+  const micBeat = useRef<string | null>(null);
+  /**
    * Open it — never for a class that has halted or that the student has left:
    * a permission prompt can be answered after they pressed End, and a mic
    * opened then is one nothing would close.
@@ -1059,6 +1065,7 @@ export function ClassRoom({
           ledger.reflected({
             beatId: heldAskBeat,
             prompt: probe.question,
+            surface: heard.by,
             /**
              * THE EAR'S REASON, not `heard.text !== null`.
              *
@@ -1961,8 +1968,9 @@ export function ClassRoom({
    * taps it; a second tap turns it off. A tap:
    *   - while she teaches: she stops at once, the class pauses, and what they
    *     say is heard (`hearThem`);
-   *   - at a question, or while she asks one: her line stops, and the
-   *     question's ear takes their answer out loud (`answerOnce`);
+   *   - at a question she has put (held): her nudge or hint stops if she is
+   *     saying one, and the question's ear takes their answer out loud
+   *     (`answerOnce`);
    *   - in a doubt: her reply stops if she is mid-way (`studentHasFloor`), and
    *     the doubt's ear (below) hears them.
    * The first tap ever explains the mic first, and its "Turn on the mic" is the
@@ -1982,8 +1990,10 @@ export function ClassRoom({
       const tap = ++micTap.current;
       micOpening.current = true;
       const p = playerRef.current;
-      const teaching =
-        handoffRef.current.state === 'PLAYING' && p.state === 'playing' && !p.beat?.ask && !p.pendingAsk;
+      // Her narration is teaching even on a beat that ends in a question: the
+      // question is only put once it is held (`pendingAsk`).
+      const teaching = handoffRef.current.state === 'PLAYING' && p.state === 'playing' && !p.pendingAsk;
+      micBeat.current = handoffRef.current.state === 'PLAYING' && p.pendingAsk ? (p.beat?.id ?? null) : null;
       // She stops at once, before the mic has even opened.
       if (teaching) p.pause();
       else if (ttsRef.current.speaking()) {
@@ -2018,21 +2028,26 @@ export function ClassRoom({
 
   /**
    * THE MIC GOES OFF WITH THE EXCHANGE IT WAS TURNED ON FOR: once the class is
-   * back to her teaching — no question held or being asked, no doubt open — it
-   * closes, so a noisy room never stops her.
+   * back to her teaching — no question held, no doubt open, and a beat other
+   * than the one whose question it was turned on for (`micBeat`) — it closes,
+   * so a noisy room never stops her. A next beat that asks too is her teaching
+   * first: the mic does not carry into it, nor from the warm-up into the
+   * first beat.
    */
   useEffect(() => {
-    if (earReady && player.state === 'playing' && !inDoubt && !heldAskBeat && !player.beat?.ask) closeClassEar();
+    if (earReady && player.state === 'playing' && !inDoubt && !heldAskBeat && (player.beat?.id ?? null) !== micBeat.current) {
+      closeClassEar();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [earReady, player.state, inDoubt, heldAskBeat, player.beat?.ask]);
+  }, [earReady, player.state, inDoubt, heldAskBeat, player.beat?.id]);
 
   /**
    * TALKING OVER HER WITH THE MIC ON (Aarav, 2026-10-02: "tutor interrupt nahi
    * ho rahi"). The ear says when they start; what happens depends on where she
    * is:
-   *   - asking a question, or saying a nudge or a hint at one: her line stops,
-   *     the question surfaces, and its ear takes the answer they are already
-   *     giving (the open ear keeps what was said before the listen began);
+   *   - saying a nudge or a hint at a held question: her line stops, and its
+   *     ear takes the answer they are already giving (the open ear keeps what
+   *     was said before the listen began);
    *   - in a doubt: the floor is theirs — her line stops, the rest of her reply
    *     is not said (`studentHasFloor`), and the doubt's ear (below) hears them.
    * Never while she teaches: the mic is off then (the effect above), and only
@@ -2051,7 +2066,8 @@ export function ClassRoom({
         }
         return;
       }
-      if ((p.beat?.ask || p.pendingAsk) && herVoice.speaking()) herVoice.cancel();
+      // At a held question only: her narration before it is her teaching.
+      if (p.pendingAsk && herVoice.speaking()) herVoice.cancel();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [earReady]);
@@ -2087,11 +2103,11 @@ export function ClassRoom({
         // Whatever came of it, the floor goes back to her.
         studentHasFloor.current = false;
         if (heard.reason === 'error') {
-          // A mic that stopped: the typed box and "Got it" are still there.
-          if (!isEarOpen()) {
-            earReadyRef.current = false;
-            setEarReady(false);
-          }
+          // A mic that stopped, or words that could not be written down: the
+          // mic goes off (a lit button must mean something is listening), and
+          // the typing row and "Got it" carry the doubt; a tap tries again.
+          closeClassEar();
+          setTyping(true);
           return;
         }
         if (heard.reason !== 'heard' || !heard.text) continue;

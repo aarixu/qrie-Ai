@@ -1216,3 +1216,80 @@ describe('how she helped, on the record', () => {
     expect(spoken.some((l) => l.includes('Think of blood as a delivery team'))).toBe(true);
   });
 });
+
+/**
+ * THE MIC DOES NOT CARRY INTO HER NEXT TEACHING (found by the test rewrite,
+ * 2026-10-03). It was turned on for one exchange; a next beat that also asks
+ * is her teaching first, and noise there must not stop her.
+ */
+describe('the mic, from one exchange into the next beat', () => {
+  /** A voice that holds `line` until cancelled, and counts the cancels. */
+  const holding = (line: () => string) => {
+    const waiting: Array<() => void> = [];
+    const state = { cancels: 0, waiting };
+    const tts: TtsAdapter = {
+      speak(text) {
+        spoken.push(text);
+        if (text === line()) return new Promise<void>((res) => waiting.push(res));
+        return Promise.resolve();
+      },
+      cancel() {
+        state.cancels += 1;
+        for (const res of waiting.splice(0)) res();
+      },
+    };
+    return { tts, state };
+  };
+
+  it('goes off after a question when the next beat asks too, so noise does not stop her teaching it', async () => {
+    const two = askingLesson(RIGHT_WHY);
+    two.beats[1].ask = { ...two.beats[0].ask! } as never;
+    const { tts, state } = holding(() => two.beats[1].narration);
+    ear.queued = ['Four'];
+    const host = await openClass({ lesson: two, tts });
+    await tick();
+    await turnMicOn(host);
+    await tick(10);
+    // She is teaching beat 1, its line held: the mic went off with the exchange.
+    expect(spoken).toContain(two.beats[1].narration);
+    expect(state.waiting).toHaveLength(1);
+    expect(micIsOn(host)).toBe(false);
+    expect(ear.on).toBe(false);
+    expect(ear.speech).toBeNull();
+    const before = state.cancels;
+    act(() => ear.speech?.());
+    await tick(5);
+    expect(state.cancels - before).toBe(0);
+    expect(state.waiting).toHaveLength(1);
+  });
+
+  it('goes off after the warm-up when the first beat asks, so noise does not stop her teaching it', async () => {
+    warm.items = [
+      {
+        id: 'carry-7',
+        nodeId: 'x',
+        title: 'T',
+        topicRef: 'class8-maths/linear/solve',
+        question: 'If 2x = 8, what is x?',
+        options: ['2', '4', '6', '16'],
+        correctIndex: 1,
+        misconceptions: ['', '', '', ''],
+      },
+    ];
+    const asking = askingLesson(RIGHT_WHY);
+    const { tts, state } = holding(() => asking.beats[0].narration);
+    ear.queued = ['4'];
+    const host = await openClass({ lesson: asking, tts });
+    await tick(10);
+    await turnMicOn(host);
+    await tick(10);
+    expect(spoken).toContain(asking.beats[0].narration);
+    expect(state.waiting).toHaveLength(1);
+    expect(micIsOn(host)).toBe(false);
+    expect(ear.speech).toBeNull();
+    const before = state.cancels;
+    act(() => ear.speech?.());
+    await tick(5);
+    expect(state.cancels - before).toBe(0);
+  });
+});

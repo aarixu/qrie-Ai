@@ -88,6 +88,8 @@ export type Reasoning =
  */
 export interface ReflectedInput {
   beatId: string;
+  /** How the reasoning came: said with the mic on, or typed. Spoken when absent. */
+  surface?: 'voice' | 'text';
   /** Her cross-question, verbatim. Composed at runtime, so it exists nowhere else. */
   prompt: string;
   /** The SCREENED reasoning — `close.heard`, never the raw transcript. */
@@ -559,7 +561,7 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
         // here mutates the map — a reflection is not another try.
         const state = asks.current.get(input.beatId);
         logReflection({
-          surface: 'voice',
+          surface: input.surface ?? 'voice',
           outcomeIds: answeredOutcomesAtBeat(lesson, input.beatId),
           topicRef: lesson.topicRef,
           beatId: input.beatId,
