@@ -1,0 +1,131 @@
+import { describe, expect, it } from 'vitest';
+import { boxOf, CANVAS_H, CANVAS_W, PAGE_STRIDE, type Element } from '@ai-tutor/lesson-format';
+import { layoutBeat } from '../src/layout';
+import { ARRANGEMENTS, PAGE } from '../src/compose';
+import type { Instruction } from '../src/types';
+
+const beat = (board: Instruction[]) => ({ id: 'b1', topic: 't', narration: '', board });
+const composed = (board: Instruction[], shapes = new Map<string, number>()) =>
+  layoutBeat(beat(board), new Map(), shapes, { composed: true });
+const inRegion = (el: Element, r: { x: number; y: number; w: number; h: number }): boolean => {
+  const b = boxOf(el);
+  return b.x >= r.x - 3 && b.y >= r.y - 3 && b.x + b.w <= r.x + r.w + 3 && b.y + b.h <= r.y + r.h + 3;
+};
+
+const FLOW_PAGE: Instruction[] = [
+  { do: 'title', text: 'Digestion', path: ['Life processes', 'Digestion'] },
+  { do: 'say', text: 'Food moves through four places.' },
+  { do: 'flow', steps: [{ label: 'Mouth' }, { label: 'Stomach' }, { label: 'Small intestine' }, { label: 'Large intestine' }] },
+  { do: 'say', text: 'Each place does one job.' },
+  {
+    do: 'list',
+    heading: 'What each does',
+    items: [
+      { term: 'Mouth', meaning: 'chews and wets the food' },
+      { term: 'Stomach', meaning: 'churns it with acid' },
+    ],
+  },
+  { do: 'say', text: 'Most of it happens in the small intestine.' },
+  { do: 'write', text: 'Most digestion: small intestine' },
+  { do: 'say', text: 'So food is broken down, then taken in.' },
+  { do: 'summary', text: 'Break it down, then absorb it' },
+];
+
+describe('a composed page', () => {
+  it('writes the title in the header, with its path small above it', () => {
+    const made = composed(FLOW_PAGE);
+    const title = made.elements.find((e) => e.kind === 'title')!;
+    const crumb = made.elements.find((e) => e.kind === 'text' && e.text.includes('›'))!;
+    expect(crumb).toMatchObject({ text: 'Life processes › Digestion', muted: true });
+    expect(boxOf(crumb).y + boxOf(crumb).h).toBeLessThanOrEqual(boxOf(title).y);
+    expect(boxOf(title).y + boxOf(title).h).toBeLessThanOrEqual(PAGE.top);
+    expect(made.regions[title.id]).toBe('0/header');
+    expect(made.regions[crumb.id]).toBe('0/header');
+  });
+
+  it('puts the flow on top, the notes left, the key point right and the summary in its place', () => {
+    const made = composed(FLOW_PAGE);
+    const regionOf = (kind: string) => made.elements.filter((e) => e.kind === kind).map((e) => made.regions[e.id]);
+    expect(regionOf('flow')).toEqual(['0/main']);
+    expect(regionOf('list')).toEqual(['0/left']);
+    expect(regionOf('handwrite')).toEqual(['0/right']);
+    expect(regionOf('box')).toEqual(['0/summary']);
+    const process = ARRANGEMENTS.process;
+    expect(inRegion(made.elements.find((e) => e.kind === 'list')!, process.regions[0])).toBe(true);
+    expect(made.pages).toBe(1);
+  });
+
+  it('keeps everything on the board, and gives every element a region', () => {
+    const made = composed(FLOW_PAGE);
+    for (const el of made.elements) {
+      const b = boxOf(el);
+      expect(b.x, el.id).toBeGreaterThanOrEqual(0);
+      expect(b.x + b.w, el.id).toBeLessThanOrEqual(CANVAS_W);
+      expect(b.y, el.id).toBeGreaterThanOrEqual(0);
+      expect(b.y + b.h, el.id).toBeLessThanOrEqual(CANVAS_H);
+      expect(made.regions[el.id], el.id).toBeDefined();
+    }
+  });
+
+  it('reports how full the page is and what is on it', () => {
+    const made = composed(FLOW_PAGE);
+    expect(made.sheets).toEqual([expect.objectContaining({ sheet: 0, main: true, notes: true, points: 1, summary: true })]);
+    expect(made.sheets[0].coverage).toBeGreaterThan(0.2);
+    expect(made.sheets[0].coverage).toBeLessThanOrEqual(1);
+  });
+
+  it('writes key points smaller than a stacked board, because the camera comes close', () => {
+    const made = composed([{ do: 'say', text: 'One.' }, { do: 'write', text: 'Villi are tiny fingers' }]);
+    expect(made.elements.filter((e) => e.kind === 'handwrite').map((e) => (e as { size?: number }).size)).toEqual([22]);
+  });
+
+  it('puts a picture with no names in the hero region, and its notes beside it', () => {
+    const made = composed(
+      [
+        { do: 'say', text: 'This is the heart.' },
+        { do: 'picture', ref: 'heart' },
+        { do: 'say', text: 'It has four rooms.' },
+        { do: 'list', heading: 'Chambers', items: [{ term: 'Atria', meaning: 'receive blood' }, { term: 'Ventricles', meaning: 'pump it out' }] },
+        { do: 'say', text: 'The left side is thicker.' },
+        { do: 'write', text: 'Left wall is thickest' },
+      ],
+      new Map([['heart', 1]]),
+    );
+    const image = made.elements.find((e) => e.kind === 'image')!;
+    expect(made.regions[image.id]).toBe('0/hero');
+    expect(inRegion(image, ARRANGEMENTS.figure.main!)).toBe(true);
+    expect(made.regions[made.elements.find((e) => e.kind === 'list')!.id]).toBe('0/side');
+    expect(made.regions[made.elements.find((e) => e.kind === 'handwrite')!.id]).toBe('0/bottom');
+  });
+
+  it('turns to a notes page when the regions are full, and says so', () => {
+    const board: Instruction[] = [{ do: 'say', text: 'Look.' }, { do: 'picture', ref: 'heart' }];
+    for (let n = 0; n < 16; n += 1) board.push({ do: 'say', text: `Point ${n}.` }, { do: 'write', text: `Key point number ${n} about the heart` });
+    const made = composed(board, new Map([['heart', 1]]));
+    expect(made.pages).toBe(2);
+    expect(made.elements.some((e) => e.kind === 'handwrite' && boxOf(e).x >= PAGE_STRIDE)).toBe(true);
+    expect(made.sheets.map((s) => [s.sheet, s.main])).toEqual([
+      [0, true],
+      [1, false],
+    ]);
+  });
+
+  it('lays a beat with two main demonstrations out as a stack, as before', () => {
+    const board: Instruction[] = [
+      { do: 'say', text: 'Two things.' },
+      { do: 'flow', steps: [{ label: 'A' }, { label: 'B' }] },
+      { do: 'chart', data: [{ label: 'x', value: 1 }, { label: 'y', value: 2 }] },
+    ];
+    const fallback = composed(board);
+    expect(fallback.elements).toEqual(layoutBeat(beat(board)).elements);
+    expect(fallback.regions).toEqual({});
+    expect(fallback.sheets).toEqual([]);
+  });
+
+  it('leaves a stacked page exactly as it was', () => {
+    const made = layoutBeat(beat(FLOW_PAGE));
+    expect(made.regions).toEqual({});
+    expect(made.sheets).toEqual([]);
+    expect(made.elements.find((e) => e.kind === 'title')).toMatchObject({ y: 86 });
+  });
+});

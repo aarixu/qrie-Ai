@@ -32,6 +32,17 @@ import {
   layoutScene,
 } from './scene';
 import { resolveOverlaps, type Bond, type Leash } from './collide';
+import {
+  ARRANGEMENTS,
+  arrangementOf,
+  coverage,
+  fillRegions,
+  FILL_GAP,
+  isMainKind,
+  PAGE,
+  type Fillable,
+  type SheetReport,
+} from './compose';
 
 /**
  * The board's three bands. Nothing is ever placed outside them, and nothing
@@ -130,6 +141,12 @@ const POINT_GAP = 10;
 const MIN_FIGURE_H = 190;
 /** The sizes a band is written at, largest first. All its points share one. */
 const BAND_SIZES = [30, 26, 23, 20];
+/**
+ * A key point on a composed page: smaller than a stacked board's 27, because
+ * the camera comes close to the region being taught (assemble frames it), and
+ * the page has more to hold.
+ */
+const POINT_SIZE = 22;
 
 /**
  * From one handwritten line to the next.
@@ -416,6 +433,12 @@ export function layoutBeat(
    * picture in a box of the wrong shape and then marks parts of the box.
    */
   shapes: ReadonlyMap<string, number> = new Map(),
+  /**
+   * `composed`: lay the page out in regions (compose.ts) rather than as one
+   * stack. Off unless the plan asks for it, so every plan made before the
+   * composer, and every fixture, is laid out exactly as it was.
+   */
+  opts: { composed?: boolean } = {},
 ): {
   elements: Element[];
   laid: LaidOutBeat;
@@ -450,11 +473,19 @@ export function layoutBeat(
    * reads it.
    */
   undrawn: { index: number; do: Instruction['do']; text: string }[];
+  /** Each element's region on a composed page, "<sheet>/<region>" (compose.ts). Empty on a stacked page. */
+  regions: Record<string, string>;
+  /** How full each page of a composed beat is, and what is on it. Empty on a stacked page. */
+  sheets: SheetReport[];
 } {
   const elements: Element[] = [];
   const show: string[] = [];
   const focus: string[] = [];
   const blocks: Block[] = [];
+  /** Each element's region on a composed page; nothing on a stacked one. */
+  const regions: Record<string, string> = {};
+  /** The region what is emitted now goes in, or null on a stacked page. */
+  let regionNow: string | null = null;
 
   /**
    * Which element ids each ITEM produced, keyed by the item's index in the
@@ -465,6 +496,7 @@ export function layoutBeat(
   const byInstruction = new Map<number, string[]>();
   let current = -1;
   const emit = (el: Element, focused = false): void => {
+    if (regionNow !== null) regions[el.id] = regionNow;
     elements.push(el);
     show.push(el.id);
     if (focused) focus.push(el.id);
@@ -514,6 +546,15 @@ export function layoutBeat(
       },
     });
   });
+
+  /**
+   * THE COMPOSED PAGE (compose.ts), decided before anything is drawn, because
+   * a composed page writes its title, its captions and its key points
+   * differently. A page with two main demonstrations stays a stack, exactly as
+   * before.
+   */
+  const arrangement = opts.composed ? arrangementOf(items.map((it) => it.do)) : 'fallback';
+  const composition = arrangement === 'fallback' ? null : ARRANGEMENTS[arrangement];
 
   // The scene is laid out as ONE block, because a connector cannot be drawn
   // until both of its ends have somewhere to be. Collecting the places first is
@@ -567,6 +608,27 @@ export function layoutBeat(
 
     switch (item.do) {
       case 'title': {
+        if (composition) {
+          // The header: where this sits in the chapter, small, over the
+          // title, both above PAGE.top so nothing is filled over them. A
+          // sub-title has no room here and is not written.
+          regionNow = '0/header';
+          emit({ kind: 'title', id: idFor(beat.id, index), x: CANVAS_W / 2, y: PAGE.titleY, text: item.text });
+          if (item.path && item.path.length > 0) {
+            emit({
+              kind: 'text',
+              id: idFor(beat.id, index, '_path'),
+              x: CANVAS_W / 2,
+              y: PAGE.crumbY,
+              text: item.path.join(' › '),
+              size: 14,
+              muted: true,
+            });
+          }
+          regionNow = null;
+          i += 1;
+          break;
+        }
         emit({
           kind: 'title',
           id: idFor(beat.id, index),
@@ -580,6 +642,19 @@ export function layoutBeat(
       }
 
       case 'caption': {
+        if (composition) {
+          // Written where a key point would be, at a size its region holds.
+          blocks.push({
+            kind: item.do,
+            at: index,
+            height: 34,
+            place: (r) => [
+              { kind: 'text', id: idFor(beat.id, index), x: r.x + r.w / 2, y: r.y + 24, text: item.text, size: fitText(item.text, r.w - 8, 20) },
+            ],
+          });
+          i += 1;
+          break;
+        }
         emit({
           kind: 'text',
           id: idFor(beat.id, index),
@@ -813,7 +888,7 @@ export function layoutBeat(
           // of a narrow column came out too small to read from a desk, which
           // is the one thing a key point may not be.
           place: (r) => {
-            const narrow = r.w < WIDTH * 0.75;
+            const narrow = composition !== null || r.w < WIDTH * 0.75;
             if (!narrow && wideLines) {
               const lead = handLead(30);
               const top = r.y + 30 * 0.9;
@@ -828,7 +903,7 @@ export function layoutBeat(
                 ...(item.tone ? { tone: item.tone } : {}),
               }));
             }
-            const size = narrow ? 27 : 36;
+            const size = narrow ? (composition ? POINT_SIZE : 27) : 36;
             const lines = narrow ? wrapText(item.text, r.w, size) : [item.text];
             // Wide enough that the overlap solver does not read two
             // consecutive lines as a collision and shrink the point until it
@@ -1367,6 +1442,8 @@ export function layoutBeat(
    * room for its own caption.
    */
   const beside = blocks.filter((b) => b.kind === 'write' || b.kind === 'list');
+  /** How far down each region of a composed page's first sheet is already used (compose.ts, fillRegions). */
+  const reserved = new Map<string, number>();
 
   /**
    * A LABELLED PICTURE: the figure centred, its names written in the margins.
@@ -1380,7 +1457,7 @@ export function layoutBeat(
    * making on purpose: a smaller picture whose parts are all named beats a
    * bigger one the student has to be told about in a sentence somewhere else.
    */
-  if (labelledHost) {
+  if (labelledHost && composition === null) {
     const MARGIN_GAP = 18;
     const leastMargin = Math.round((WIDTH - MARGIN_GAP * 2) * 0.26);
     const columnW = WIDTH - MARGIN_GAP * 2 - leastMargin * 2;
@@ -1862,6 +1939,7 @@ export function layoutBeat(
   }
 
   if (
+    composition === null &&
     !figurePlaced &&
     figures.length === 1 &&
     figures[0].narrow !== false &&
@@ -1941,6 +2019,50 @@ export function layoutBeat(
     }
     columnSheets = sheet + 1;
 
+    blocks.length = 0;
+  }
+
+  /**
+   * --- a composed page: the main demonstration in its region, the writing in the others ---
+   *
+   * Everything here is placed by region (compose.ts, fillRegions), so the
+   * stacker below is left nothing to stack.
+   */
+  let composedSheets = 0;
+  if (composition) {
+    const mainBlock = blocks.find((b) => isMainKind(b.kind));
+    if (composition.main && mainBlock) {
+      current = mainBlock.at ?? -1;
+      regionNow = `0/${composition.main.id}`;
+      let bottom = composition.main.y;
+      for (const el of mainBlock.place({ ...composition.main, h: mainBlock.height ?? composition.main.h })) {
+        emit(el);
+        const b = boxOf(el);
+        bottom = Math.max(bottom, b.y + b.h);
+      }
+      reserved.set(composition.main.id, bottom - composition.main.y + FILL_GAP);
+    }
+    const rest = blocks.filter((b) => b !== mainBlock);
+    const fillables: Fillable[] = rest.map((b) => ({
+      line: b.at === null ? -1 : (lineOf[b.at] ?? -1),
+      role:
+        b.kind === 'summary'
+          ? 'summary'
+          : b.kind === 'newPage'
+            ? 'newPage'
+            : b.kind === 'write' || b.kind === 'caption'
+              ? 'points'
+              : 'notes',
+      heightAt: b.heightAt ?? ((w: number) => measured(b, w)),
+    }));
+    for (const p of fillRegions(fillables, composition, reserved)) {
+      const b = rest[p.index];
+      current = b.at ?? -1;
+      regionNow = `${p.sheet}/${p.region}`;
+      for (const el of b.place({ ...p.rect, x: p.rect.x + p.sheet * PAGE_STRIDE })) emit(el);
+      composedSheets = Math.max(composedSheets, p.sheet + 1);
+    }
+    regionNow = null;
     blocks.length = 0;
   }
 
@@ -2036,6 +2158,7 @@ export function layoutBeat(
     stackedSheets > 0 ? firstSheet + stackedSheets : 0,
     bandSheets,
     columnSheets,
+    composedSheets,
   );
 
   // --- mark the things the scene does not own ---
@@ -2054,6 +2177,7 @@ export function layoutBeat(
       if (!box) continue;
       const grow = pending.step.mark === 'underline' || pending.step.mark === 'highlight' ? 2 : 10;
       current = pending.at;
+      regionNow = composition ? (regions[lines[0]?.id ?? ''] ?? null) : null;
       emit({
         kind: 'mark',
         id: pending.id,
@@ -2076,6 +2200,7 @@ export function layoutBeat(
 
     const grow = pending.step.mark === 'underline' ? 0 : 10;
     current = pending.at;
+    regionNow = composition ? (regions[host.id] ?? null) : null;
     emit({
       kind: 'mark',
       id: pending.id,
@@ -2088,6 +2213,7 @@ export function layoutBeat(
     });
     bonds.push({ a: pending.id, b: host.id });
   }
+  regionNow = null;
 
   // INK TIMED TO A WORD (canvas C3). A write, an equation or a toolkit tool with `at` waits
   // until she reaches that word of the line it is written under — every line
@@ -2113,16 +2239,28 @@ export function layoutBeat(
   // BETWEEN and OVER them — a connector's label, a mark — which follow whatever
   // they refer to and so can land anywhere. Fixing those case by case fixes one
   // lesson at a time; this fixes every lesson.
-  const settled = resolveOverlaps(elements, bonds, [
-    // A label's first room is MAIN, where its scene lives. The whole canvas
-    // was once its playground, and a stuck label got parked above the lesson
-    // title — clear space, wrong room.
-    { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: MAIN.h + 20 },
-    // When MAIN is genuinely full, everything below the title is fair — a
-    // label near the caption reads as a footnote; one over the heading reads
-    // as a mistake.
-    { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: CANVAS_H - MAIN.y },
-  ], leashes);
+  const settled = resolveOverlaps(
+    elements,
+    bonds,
+    composition
+      ? [
+          // A composed page's writing lives under its header. A label the
+          // solver must move may use any of that, and never the header.
+          { x: 8, y: PAGE.top - 6, w: CANVAS_W - 16, h: PAGE.bottom - PAGE.top + 12 },
+          { x: 8, y: 8, w: CANVAS_W - 16, h: CANVAS_H - 16 },
+        ]
+      : [
+          // A label's first room is MAIN, where its scene lives. The whole canvas
+          // was once its playground, and a stuck label got parked above the lesson
+          // title — clear space, wrong room.
+          { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: MAIN.h + 20 },
+          // When MAIN is genuinely full, everything below the title is fair — a
+          // label near the caption reads as a footnote; one over the heading reads
+          // as a mistake.
+          { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: CANVAS_H - MAIN.y },
+        ],
+    leashes,
+  );
 
   // A part can only be pointed at if its picture is on the board this beat.
   const shown = new Set(show);
@@ -2148,6 +2286,31 @@ export function layoutBeat(
       : [],
   );
 
+  /** What each composed page holds, for the keep gate's page-full rule (class-prep). */
+  const sheetReports: SheetReport[] = [];
+  if (composition) {
+    const itemOf = new Map<string, number>();
+    for (const [item, ids] of byInstruction) for (const id of ids) itemOf.set(id, item);
+    const kindOf = (id: string): string => {
+      const item = itemOf.get(id);
+      return item === undefined ? '' : items[item].do;
+    };
+    for (let s = 0; s < sheetsUsed; s += 1) {
+      const here = settled.filter((el) => regions[el.id]?.startsWith(`${s}/`));
+      const kinds = new Set(here.map((el) => kindOf(el.id)));
+      sheetReports.push({
+        sheet: s,
+        coverage: coverage(here.map(boxOf), s * PAGE_STRIDE),
+        main: here.some(
+          (el) => regions[el.id] === `${s}/hero` || (regions[el.id] === `${s}/main` && isMainKind(kindOf(el.id))),
+        ),
+        notes: ['list', 'note', 'card', 'compare', 'label'].some((k) => kinds.has(k)),
+        points: new Set(here.filter((el) => kindOf(el.id) === 'write').map((el) => itemOf.get(el.id))).size,
+        summary: kinds.has('summary'),
+      });
+    }
+  }
+
   return {
     elements: settled,
     laid: { show, focus: keptFocus },
@@ -2157,7 +2320,22 @@ export function layoutBeat(
     pages: sheetsUsed,
     asks,
     undrawn,
+    regions,
+    sheets: sheetReports,
   };
+}
+
+/**
+ * A block's height when drawn `w` wide: drawn into a throwaway rectangle and
+ * measured, the way the column beside a figure measures its points. Only for
+ * blocks whose `place` records nothing; the others say their own height
+ * (Block.heightAt).
+ */
+function measured(block: Block, w: number): number {
+  const drawn = block.place({ x: 0, y: 0, w, h: block.height ?? WRITE_H });
+  if (drawn.length === 0) return 0;
+  const boxes = drawn.map(boxOf);
+  return Math.max(...boxes.map((b) => b.y + b.h)) - Math.min(0, ...boxes.map((b) => b.y));
 }
 
 /** The instructions whose ink is words of their own, with no picture behind them. */
