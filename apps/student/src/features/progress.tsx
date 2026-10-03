@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
+import { MessageSquareQuote } from 'lucide-react'
 import type { StudentSubject, TimelineRow } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
@@ -23,16 +24,21 @@ export function standingOf(mastery: number | null, answers: number): { word: str
 const pct = (x: number | null) => (x === null ? '—' : `${Math.round(x * 100)}%`)
 
 /**
- * The child's own progress: how much work they hand in, their marks over
- * time (a test's only once released), and, chapter by chapter, what the
- * learning model believes from every answer (lms.student_* for themselves,
- * lms.my_progress).
+ * The child's own progress: how much work they hand in, their teacher's
+ * remark for the year, their marks over time (a test's only once released),
+ * and, chapter by chapter, what the learning model believes from every
+ * answer (lms.student_* and lms.report_remark for themselves, lms.my_progress).
  */
 export function ProgressPage() {
   const me = useAuthStore((s) => s.me)
   const subjects = useQuery({
     queryKey: ['my-subjects'],
     queryFn: () => api.studentSubjects(me!.userId),
+    enabled: !!me,
+  })
+  const remark = useQuery({
+    queryKey: ['my-remark'],
+    queryFn: () => api.reportRemark(me!.userId),
     enabled: !!me,
   })
   const attendance = useQuery({ queryKey: ['my-attendance'], queryFn: () => api.myAttendance(30) })
@@ -64,6 +70,16 @@ export function ProgressPage() {
           colour='#0284c7'
         />
       </div>
+
+      {remark.data?.text && (
+        <section className='space-y-1 rounded-2xl border border-primary/40 bg-primary/5 p-4'>
+          <h2 className='flex items-center gap-2 text-sm font-semibold'>
+            <MessageSquareQuote className='size-4' /> Your teacher’s remark
+          </h2>
+          <p className='text-sm whitespace-pre-wrap'>{remark.data.text}</p>
+          {remark.data.writtenByName && <p className='text-xs text-muted-foreground'>{remark.data.writtenByName}</p>}
+        </section>
+      )}
 
       {timeline.data && <Marks rows={timeline.data} />}
 

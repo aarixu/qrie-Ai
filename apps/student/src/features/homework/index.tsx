@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { format, formatDistanceToNowStrict } from 'date-fns'
-import { ArrowLeft, CheckCircle2, Clock } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Clock, MessageSquareText } from 'lucide-react'
 import { toast } from 'sonner'
-import type { MyAssignment } from '@ai-tutor/lms-client'
+import type { MyAssignment, MyWorkComment } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import {
@@ -25,6 +25,7 @@ import { Review } from './review'
 
 export function HomeworkPage({ assignmentId }: { assignmentId: string }) {
   const mine = useQuery({ queryKey: ['my-assignments'], queryFn: api.myAssignments })
+  const comment = useQuery({ queryKey: ['my-comment', assignmentId], queryFn: () => api.myWorkComment(assignmentId) })
   const [mode, setMode] = useState<'overview' | 'quiz' | 'review'>('overview')
 
   if (mine.isPending) return <p className='text-muted-foreground'>Loading…</p>
@@ -84,6 +85,8 @@ export function HomeworkPage({ assignmentId }: { assignmentId: string }) {
       )}
 
       {a.teacherStatus && <TeacherWord status={a.teacherStatus} />}
+
+      {comment.data && <TeacherComment c={comment.data} />}
 
       {a.answerTypes.includes('checklist') && <Checklist a={a} />}
 
@@ -345,4 +348,19 @@ function TeacherWord({ status }: { status: 'checked' | 'not_done' | 'absent' }) 
     absent: { text: 'You were marked absent for this.', tone: 'border-muted bg-muted text-muted-foreground' },
   }[status]
   return <p className={cn('rounded-xl border p-3 text-sm font-medium', words.tone)}>{words.text}</p>
+}
+
+/** The teacher's comment on this work (lms.my_work_comment); on a test, it comes with the results. */
+function TeacherComment({ c }: { c: MyWorkComment }) {
+  return (
+    <section className='space-y-1 rounded-xl border border-primary/40 bg-primary/5 p-4'>
+      <h2 className='flex items-center gap-2 text-sm font-semibold'>
+        <MessageSquareText className='size-4' /> From your teacher
+      </h2>
+      <p className='whitespace-pre-wrap'>{c.text}</p>
+      <p className='text-xs text-muted-foreground'>
+        {[c.writtenByName, format(new Date(c.writtenAt), 'd MMM')].filter(Boolean).join(', ')}
+      </p>
+    </section>
+  )
 }

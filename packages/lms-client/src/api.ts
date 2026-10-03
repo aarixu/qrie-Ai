@@ -539,6 +539,28 @@ export interface ClassAttendanceToday {
   present: number;
 }
 
+/** A teacher's comment on one child's work for one assignment (0038). */
+export interface WorkComment {
+  studentUserId: string;
+  text: string;
+  /** Whoever wrote it last; null if their account is gone. */
+  writtenByName: string | null;
+  writtenAt: string;
+}
+
+/** The comment on the child's own work, as the child reads it. */
+export type MyWorkComment = Omit<WorkComment, 'studentUserId'>;
+
+/** This year's remark on a child's report card (0038). */
+export interface ReportRemark {
+  /** Null while nobody has written one this year. */
+  text: string | null;
+  writtenByName: string | null;
+  writtenAt: string | null;
+  /** Whether the caller may write it: a teacher of the child's class this year, or the admin. */
+  canEdit: boolean;
+}
+
 /** Someone marked as having left the school (0034). */
 export interface LeftAccount {
   userId: string;
@@ -725,6 +747,12 @@ export function createLmsClient(t: Transport) {
     async setTeacherMark(submissionId: string, score: number, max: number): Promise<void> {
       await t.value('set_teacher_mark', { p_submission: submissionId, p_score: score, p_max: max });
     },
+    /** One comment on a child's work for published work; writing again replaces it, null or blank removes it. */
+    async setWorkComment(assignmentId: string, studentUserId: string, text: string | null): Promise<void> {
+      await t.value('set_work_comment', { p_assignment: assignmentId, p_student: studentUserId, p_text: text });
+    },
+    /** The comments on a piece of work, one per child on the class's roster. Its teachers and the admin. */
+    workComments: (assignmentId: string) => rows<WorkComment>('work_comments', { p_assignment: assignmentId }),
 
     needsAttention: () => rows<NeedsAttention>('needs_attention'),
     classInsights: (sectionId: string, subjectId: string) =>
@@ -748,6 +776,15 @@ export function createLmsClient(t: Transport) {
     studentChapters: (studentUserId: string) => rows<StudentChapter>('student_chapters', { p_student: studentUserId }),
     studentMistakes: (studentUserId: string) =>
       rows<StudentMistake>('student_misconceptions', { p_student: studentUserId }),
+    /** This year's remark on the child's report card, and whether the caller may write it. */
+    async reportRemark(studentUserId: string): Promise<ReportRemark> {
+      const [r] = await rows<ReportRemark>('report_remark', { p_student: studentUserId });
+      return r ?? { text: null, writtenByName: null, writtenAt: null, canEdit: false };
+    },
+    /** Writes this year's remark (the latest write wins); null or blank removes it. */
+    async setReportRemark(studentUserId: string, text: string | null): Promise<void> {
+      await t.value('set_report_remark', { p_student: studentUserId, p_text: text });
+    },
 
     // --- the school portal: the admin ----------------------------------------
     async schoolOverview(): Promise<SchoolOverview | null> {
@@ -869,6 +906,10 @@ export function createLmsClient(t: Transport) {
     assignmentQuestions: (assignmentId: string) =>
       rows<Question>('assignment_questions', { p_assignment: assignmentId }),
     myReview: (assignmentId: string) => rows<ReviewRow>('my_review', { p_assignment: assignmentId }),
+    /** The teacher's comment on the child's own work; on a test, only once its results are released. */
+    async myWorkComment(assignmentId: string): Promise<MyWorkComment | null> {
+      return (await rows<MyWorkComment>('my_work_comment', { p_assignment: assignmentId }))[0] ?? null;
+    },
     async submitMcq(assignmentId: string, answers: Record<string, number>): Promise<McqResult> {
       const [r] = await rows<McqResult>('submit_mcq', {
         p_assignment: assignmentId,

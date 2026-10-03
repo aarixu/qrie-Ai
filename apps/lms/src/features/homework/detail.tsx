@@ -2,9 +2,16 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { format } from 'date-fns'
-import { Image as ImageIcon, Pencil } from 'lucide-react'
+import { Image as ImageIcon, MessageSquareText, Pencil } from 'lucide-react'
 import { toast } from 'sonner'
-import type { AssignmentOverview, ItemStats, ResultRow, WorkStatus } from '@ai-tutor/lms-client'
+import {
+  friendlyError,
+  type AssignmentOverview,
+  type ItemStats,
+  type ResultRow,
+  type WorkComment,
+  type WorkStatus,
+} from '@ai-tutor/lms-client'
 import { api, backend } from '@/lib/backend'
 import { usePhotos } from '@/lib/photos'
 import { cn } from '@/lib/utils'
@@ -195,6 +202,7 @@ function Students({
   checklist: boolean
 }) {
   const photos = usePhotos(rows.map((r) => r.studentUserId))
+  const comments = useComments(a.id)
   const [marking, setMarking] = useState<{ row: ResultRow; kind: 'mcq' | 'photo' } | null>(null)
   const [picked, setPicked] = useState<Set<string>>(new Set())
   const toggle = (id: string, on: boolean) => {
@@ -226,6 +234,7 @@ function Students({
             {mcq && <TableHead className='text-end'>Auto score</TableHead>}
             {mcq && <TableHead className='text-end'>Your mark</TableHead>}
             {photo && <TableHead>Photos</TableHead>}
+            <TableHead>Comment</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -299,6 +308,9 @@ function Students({
                   )}
                 </TableCell>
               )}
+              <TableCell>
+                <CommentButton a={a} row={r} comment={comments.get(r.studentUserId)} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -587,6 +599,7 @@ function ReleaseResults({ a }: { a: AssignmentOverview }) {
 /** Marks for a test on paper: one box per student, saved as the teacher moves on (lms.record_paper_mark). */
 function PaperMarks({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
   const photos = usePhotos(rows.map((r) => r.studentUserId))
+  const comments = useComments(a.id)
   const entered = rows.filter((r) => r.paperScore !== null || r.teacherStatus === 'absent').length
   return (
     <div className='space-y-2'>
@@ -601,6 +614,7 @@ function PaperMarks({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
               <TableHead>Student</TableHead>
               <TableHead className='w-48'>Marks (out of {a.maxMarks})</TableHead>
               <TableHead className='w-24'>Absent</TableHead>
+              <TableHead>Comment</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -618,6 +632,9 @@ function PaperMarks({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
                 </TableCell>
                 <TableCell>
                   <AbsentBox a={a} row={r} />
+                </TableCell>
+                <TableCell>
+                  <CommentButton a={a} row={r} comment={comments.get(r.studentUserId)} />
                 </TableCell>
               </TableRow>
             ))}
@@ -724,5 +741,109 @@ function AbsentBox({ a, row }: { a: AssignmentOverview; row: ResultRow }) {
       disabled={set.isPending}
       onCheckedChange={(on) => set.mutate(on === true)}
     />
+  )
+}
+
+const COMMENT_LIMIT = 1000
+
+/** The comment on each child's work for this assignment, by child (lms.work_comments). */
+function useComments(assignmentId: string): Map<string, WorkComment> {
+  const comments = useQuery({
+    queryKey: ['work-comments', assignmentId],
+    queryFn: () => api.workComments(assignmentId),
+  })
+  return new Map((comments.data ?? []).map((c) => [c.studentUserId, c]))
+}
+
+/** A child's comment, cut to fit the table; opens it to write, change or remove. */
+function CommentButton({ a, row, comment }: { a: AssignmentOverview; row: ResultRow; comment: WorkComment | undefined }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <Button
+        variant='ghost'
+        size='sm'
+        className='max-w-56 justify-start'
+        aria-label={comment ? `Comment for ${row.displayName}: ${comment.text}` : `Add a comment for ${row.displayName}`}
+        onClick={() => setOpen(true)}
+      >
+        <MessageSquareText className={cn(!comment && 'text-muted-foreground')} />
+        <span className={cn('min-w-0 truncate', !comment && 'text-muted-foreground')}>{comment ? comment.text : 'Add'}</span>
+      </Button>
+      {open && <CommentDialog a={a} row={row} comment={comment} onClose={() => setOpen(false)} />}
+    </>
+  )
+}
+
+/**
+ * One comment on a child's work (lms.set_work_comment): what to fix, in
+ * words a mark cannot say. Saving replaces it; removing takes it away.
+ */
+function CommentDialog({
+  a,
+  row,
+  comment,
+  onClose,
+}: {
+  a: AssignmentOverview
+  row: ResultRow
+  comment: WorkComment | undefined
+  onClose: () => void
+}) {
+  const queryClient = useQueryClient()
+  const saved = comment?.text ?? ''
+  const [value, setValue] = useState(saved)
+  const save = useMutation({
+    mutationFn: (text: string | null) => api.setWorkComment(a.id, row.studentUserId, text),
+    onSuccess: (_, text) => {
+      toast.success(text ? `Comment saved for ${row.displayName}.` : `Comment removed for ${row.displayName}.`)
+      void queryClient.invalidateQueries({ queryKey: ['work-comments', a.id] })
+      onClose()
+    },
+    onError: (e) => toast.error(friendlyError(e)),
+  })
+  const trimmed = value.trim()
+  const waits = a.kind === 'test' && !a.resultsReleasedAt
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Comment for {row.displayName}</DialogTitle>
+          <DialogDescription>
+            {waits
+              ? 'They see it on this test in their app once you release the results.'
+              : 'They see it on this work in their app.'}
+            {comment?.writtenByName && ` Last written by ${comment.writtenByName}, ${format(new Date(comment.writtenAt), 'd MMM, h:mm a')}.`}
+          </DialogDescription>
+        </DialogHeader>
+        <div className='space-y-1.5'>
+          <Label htmlFor='comment-text'>Comment</Label>
+          <Textarea
+            id='comment-text'
+            rows={4}
+            maxLength={COMMENT_LIMIT}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder='What to fix, or what to keep doing.'
+          />
+          <p className='text-end text-xs text-muted-foreground tabular-nums'>
+            {value.length} / {COMMENT_LIMIT}
+          </p>
+        </div>
+        <DialogFooter>
+          {comment && (
+            <Button variant='ghost' className='me-auto' disabled={save.isPending} onClick={() => save.mutate(null)}>
+              Remove
+            </Button>
+          )}
+          <Button variant='outline' onClick={onClose}>
+            Cancel
+          </Button>
+          <Button disabled={!trimmed || trimmed === saved || save.isPending} onClick={() => save.mutate(trimmed)}>
+            {save.isPending ? 'Saving…' : 'Save comment'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

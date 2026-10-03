@@ -39,6 +39,8 @@ export interface ReportData {
   photo?: string | null;
   /** This year's attendance (lms.student_attendance); no tile when absent. */
   attendance?: { marked: number; rate: number | null } | null;
+  /** This year's teacher's remark (lms.report_remark) and who wrote it; no section when absent or blank. */
+  remark?: { text: string; by: string } | null;
 }
 
 export interface ReportOptions {
@@ -579,6 +581,37 @@ function subjectsTable(s: Sheet, subjects: StudentSubject[]): void {
   });
 }
 
+/** The teacher's words for the year in a tinted box, a paragraph per line break, signed by the writer when named. */
+function remarkBox(s: Sheet, remark: ReportData['remark']): void {
+  if (!remark || !remark.text.trim()) return;
+  const { doc, palette } = s;
+  const style: TextStyle = { size: 9.5 };
+  const width = CONTENT_W - 10;
+  font(doc, style);
+  const lines = remark.text
+    .split(/\r?\n/)
+    .map((p) => pdfSafe(p).trim())
+    .filter((p) => p !== '')
+    .flatMap((p) => doc.splitTextToSize(p, width) as string[]);
+  const by = remark.by.trim();
+  const lineH = 4.6;
+  const h = 4 + lines.length * lineH + (by ? 5 : 0) + 2;
+  heading(s, "Teacher's remark", undefined, h);
+  doc.setFillColor(palette.tint);
+  doc.roundedRect(MARGIN, s.y, CONTENT_W, h, 2.5, 2.5, 'F');
+  lines.forEach((line, i) => put(doc, line, MARGIN + 5, s.y + 6.5 + i * lineH, { ...style, maxWidth: width }));
+  if (by) {
+    put(doc, `— ${by}`, PAGE_W - MARGIN - 5, s.y + 4 + lines.length * lineH + 4, {
+      size: 8.5,
+      italic: true,
+      colour: MUTED,
+      align: 'right',
+      maxWidth: width,
+    });
+  }
+  s.y += h + 8;
+}
+
 function marksChart(s: Sheet, timeline: TimelineRow[]): void {
   const marked = timeline.filter((r) => r.score !== null).sort(oldestFirst);
   const shown = marked.slice(-MAX_MARKS);
@@ -753,6 +786,7 @@ function drawStudent(doc: jsPDF, palette: Palette, opts: ReportOptions, r: Repor
   studentBlock(s);
   kpis(s, r.subjects, r.attendance);
   subjectsTable(s, r.subjects);
+  remarkBox(s, r.remark);
   marksChart(s, r.timeline);
   chaptersChart(s, r.chapters);
   misconceptions(s, r.mistakes);

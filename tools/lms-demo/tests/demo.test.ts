@@ -68,6 +68,31 @@ describe('the demo school', () => {
     expect(handedIn.some((r) => r.late)).toBe(true);
   });
 
+  it("has teachers' comments on work and remarks on report cards, which the children read", async () => {
+    const { rows: comments } = await db.query<{ login_id: string; assignment_id: string; text: string; kind: string }>(
+      `select a.login_id, c.assignment_id, c.text, w.kind
+         from lms.work_comment c
+         join lms.account a on a.user_id = c.student_user_id
+         join lms.assignment w on w.id = c.assignment_id
+        order by w.kind, a.login_id`,
+    );
+    expect(comments.filter((c) => c.kind === 'homework')).toHaveLength(4);
+    expect(comments.filter((c) => c.kind === 'test')).toHaveLength(2);
+    const kid = await signedIn(comments[0].login_id);
+    expect(await kid.api.myWorkComment(comments[0].assignment_id)).toMatchObject({
+      text: comments[0].text,
+      writtenByName: 'Neha Sharma',
+    });
+
+    const { rows: remarks } = await db.query<{ login_id: string; text: string }>(
+      `select a.login_id, r.text from lms.report_remark r join lms.account a on a.user_id = r.student_user_id order by a.login_id`,
+    );
+    expect(remarks).toHaveLength(6);
+    const child = await signedIn(remarks[0].login_id);
+    const me = await child.api.me();
+    expect(await child.api.reportRemark(me!.userId)).toMatchObject({ text: remarks[0].text, canEdit: false });
+  });
+
   it('plants known misconceptions, so the brain can later be checked against the truth', async () => {
     expect(seeded.planted.length).toBeGreaterThanOrEqual(3);
     for (const p of seeded.planted) {

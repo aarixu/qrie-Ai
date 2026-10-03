@@ -272,6 +272,42 @@ describe('reportCardPdf', () => {
     expect(after(none.pages[0], 'Attendance', 2)).toEqual(['—', 'Not marked yet']);
   });
 
+  it("writes the teacher's remark for the year, and who wrote it", async () => {
+    const remark = { text: 'Riya asks good questions. She should show her working in long division.', by: 'Neha Sharma' };
+    const { pages } = await readPdf(bytesOf([{ ...riya, remark }]));
+    expect(after(pages[0], "Teacher's remark", 2)).toEqual([remark.text, '— Neha Sharma']);
+  });
+
+  it('leaves the remark out when there is none, or it is blank', async () => {
+    for (const remark of [undefined, null, { text: '  ', by: 'Neha Sharma' }]) {
+      const { pages } = await readPdf(bytesOf([{ ...riya, remark }]));
+      expect(pages.flat()).not.toContain("Teacher's remark");
+    }
+  });
+
+  it('draws no by-line when the writer is not known', async () => {
+    const { pages } = await readPdf(bytesOf([{ ...riya, remark: { text: 'Well done.', by: '' } }]));
+    expect(after(pages[0], "Teacher's remark", 2)).toEqual(['Well done.', 'Marks over time']);
+  });
+
+  it('wraps a long remark onto lines within the page, every word kept, its paragraphs apart', async () => {
+    const words = 'Riya has worked steadily this term and her notebook is always neat and complete. '.repeat(7).trim();
+    const text = `${words}\nNext term: fractions.`;
+    expect(text.length).toBeLessThanOrEqual(600);
+    const { runs, pages } = await readPdf(bytesOf([{ ...riya, remark: { text, by: 'Neha Sharma' } }]));
+    const at = pages[0].indexOf("Teacher's remark");
+    const end = pages[0].indexOf('— Neha Sharma');
+    const lines = pages[0].slice(at + 1, end);
+    expect(lines.length).toBeGreaterThan(2);
+    expect(lines.at(-1)).toBe('Next term: fractions.');
+    expect(lines.join(' ')).toBe(text.replace('\n', ' '));
+    // Inside the 12 mm margins of an A4 page, 595.28 points wide.
+    for (const r of runs[0].slice(at + 1, end)) {
+      expect(r.x, r.str).toBeGreaterThanOrEqual(12 * 2.83);
+      expect(r.x + r.width, r.str).toBeLessThanOrEqual(595.28 - 12 * 2.83);
+    }
+  });
+
   it("draws a stripe of the school's second colour under the header, and none without one", () => {
     const fills = (doc: jsPDF) => {
       const ops = (doc.internal.pages as unknown as string[][])[1].join('\n').split('\n');

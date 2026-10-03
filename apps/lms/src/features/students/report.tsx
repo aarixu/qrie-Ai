@@ -33,6 +33,7 @@ import { ResetPinButton } from '@/features/school/reset-pin'
 import { LeaveButton } from '@/features/school/leavers'
 import { MoveStudentButton } from '@/features/school/new-year'
 import { ProfileHeader } from './profile-header'
+import { RemarkCard } from './remark'
 import { ReportCardButtons } from './report-buttons'
 
 export const initials = (name: string) =>
@@ -56,9 +57,10 @@ const mean = (xs: (number | null)[]) => {
 
 /**
  * One student's report (lms.student_*): who they are, how each subject is
- * going, what the learning model believes chapter by chapter, and every piece
- * of work. A teacher sees only the subjects they teach the child; the
- * school's admin sees all of them. The server decides; this only shows.
+ * going, this year's teacher's remark, what the learning model believes
+ * chapter by chapter, and every piece of work. A teacher sees only the
+ * subjects they teach the child; the school's admin sees all of them. The
+ * server decides; this only shows.
  */
 export function StudentReport({ studentId }: { studentId: string }) {
   const me = useAuthStore((s) => s.me)
@@ -161,6 +163,8 @@ export function StudentReport({ studentId }: { studentId: string }) {
               <SubjectTable subjects={subjects.data} />
             </>
           )}
+
+          <RemarkCard studentId={studentId} name={s.displayName} />
 
           <div className='grid gap-4 lg:grid-cols-2'>
             <ChartCard title='Scores over time' description='Each marked piece of work, oldest first.'>

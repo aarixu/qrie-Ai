@@ -30,7 +30,7 @@ export function MyReportCard() {
     try {
       const id = me.userId
       const { deliverPdf, reportCardBytes, reportFileName } = await import('@ai-tutor/lms-report')
-      const [card, subjects, chapters, timeline, mistakes, logo, photos, attendance] = await Promise.all([
+      const [card, subjects, chapters, timeline, mistakes, logo, photos, attendance, written] = await Promise.all([
         api.studentCard(id),
         api.studentSubjects(id),
         api.studentChapters(id),
@@ -39,10 +39,12 @@ export function MyReportCard() {
         api.schoolLogo().catch(() => null),
         api.accountPhotos([id]).catch(() => []),
         api.studentAttendance(id).catch(() => null),
+        api.reportRemark(id).catch(() => null),
       ])
       if (!card) throw new Error('Your report could not be found.')
       const photo = photos[0]?.base64 ?? null
-      const bytes = reportCardBytes([{ card, subjects, chapters, timeline, mistakes, photo, attendance }], {
+      const remark = written?.text ? { text: written.text, by: written.writtenByName ?? '' } : null
+      const bytes = reportCardBytes([{ card, subjects, chapters, timeline, mistakes, photo, attendance, remark }], {
         brand: {
           schoolName: me.schoolName,
           ...brandColours(me),

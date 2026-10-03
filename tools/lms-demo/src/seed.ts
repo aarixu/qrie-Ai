@@ -330,6 +330,10 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   // each class; today marked in one class only, as on a real morning.
   await seedAttendance(db, rand, classes);
 
+  // 10. Teachers' words (0038): comments on work in 8A Mathematics, and this
+  // year's remark on the report cards of some of 8A.
+  await seedComments(db, orgId);
+
   // 6. The brain. It is given the ledger and nothing else — not `planted`.
   await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
 
@@ -628,5 +632,81 @@ async function seedAttendance(db: PGlite, rand: () => number, classes: TaughtRow
       await teacher.markAttendance(sectionId, d.ymd, marks);
     }
     first = false;
+  }
+}
+
+const WORK_COMMENTS = [
+  'Show your working, even for the short ones: it is how we find where it went wrong.',
+  'Read each question twice before choosing. Redo the ones you got wrong in your notebook.',
+  'Slow down, and check each answer once more before you hand it in.',
+  'Come and see me after class and we will go over this chapter together.',
+];
+const PAPER_COMMENTS = {
+  top: 'Excellent: neat, complete and every step shown. Try the extra questions at the end of the chapter.',
+  low: 'Practise moving a term across the equals sign, then redo the questions you lost marks on.',
+};
+const REMARKS = [
+  'A careful worker who asks good questions in class. Next step: show every line of working in Mathematics.',
+  'Hands in work on time and is always willing to help others. Should read each question fully before answering.',
+  'Has improved steadily this term. More practice with fractions and decimals will help.',
+  'Quick and keen, but rushes. Checking answers before handing in will lift the marks.',
+];
+const ADMIN_REMARKS = [
+  'Punctual, polite and a good member of the class. Keep it up.',
+  'Good progress this term. Keep reading every day.',
+];
+
+/**
+ * Neha Sharma (DEMO-T01) comments on the four lowest-scoring hand-ins of
+ * 8A Mathematics' first past homework, and on the highest and lowest marks
+ * of its paper test; this year's remark is written for the first six of 8A
+ * by roll, four by her and two by the admin. All through the API, and with
+ * none of the seed's random numbers, so everything seeded earlier keeps its
+ * values.
+ */
+async function seedComments(db: PGlite, orgId: string): Promise<void> {
+  const { rows } = await db.query<{ teacher: string; section_id: string; subject_id: string }>(
+    `select ta.teacher_user_id as teacher, ta.section_id, ta.subject_id
+       from lms.teaching_assignment ta
+       join lms.account acc on acc.user_id = ta.teacher_user_id
+       join lms.section sec on sec.id = ta.section_id
+       join lms.subject sub on sub.id = ta.subject_id
+      where acc.login_id = 'DEMO-T01' and sec.grade = 8 and sec.name = 'A' and sub.name = 'Mathematics'`,
+  );
+  const c = rows[0];
+  const neha = createLmsClient(pgliteTransport(db, c.teacher));
+  const work = await neha.classAssignments(c.section_id, c.subject_id);
+
+  const homework = work
+    .filter((a) => a.published && a.kind === 'homework' && a.answerTypes.includes('mcq') && Date.parse(a.dueAt) < Date.now())
+    .sort((a, b) => a.dueAt.localeCompare(b.dueAt))[0];
+  const share = (r: { machineCorrect: number | null; machineTotal: number | null }) =>
+    (r.machineCorrect ?? 0) / (r.machineTotal || 1);
+  const weakest = (await neha.assignmentResults(homework.id))
+    .filter((r) => r.submissionId && r.machineTotal)
+    .sort((a, b) => share(a) - share(b) || a.studentUserId.localeCompare(b.studentUserId))
+    .slice(0, WORK_COMMENTS.length);
+  for (const [i, r] of weakest.entries()) await neha.setWorkComment(homework.id, r.studentUserId, WORK_COMMENTS[i]);
+
+  const paper = work.find((a) => a.answerTypes.includes('paper'));
+  if (paper) {
+    const marked = (await neha.assignmentResults(paper.id))
+      .filter((r) => r.paperScore !== null)
+      .sort((a, b) => b.paperScore! - a.paperScore! || a.studentUserId.localeCompare(b.studentUserId));
+    if (marked.length >= 2) {
+      await neha.setWorkComment(paper.id, marked[0].studentUserId, PAPER_COMMENTS.top);
+      await neha.setWorkComment(paper.id, marked[marked.length - 1].studentUserId, PAPER_COMMENTS.low);
+    }
+  }
+
+  const { rows: admins } = await db.query<{ user_id: string }>(
+    `select user_id from lms.account where org_id = $1 and kind = 'admin' limit 1`,
+    [orgId],
+  );
+  const office = createLmsClient(pgliteTransport(db, admins[0].user_id));
+  const roster = await neha.classRoster(c.section_id);
+  for (const [i, r] of roster.slice(0, REMARKS.length + ADMIN_REMARKS.length).entries()) {
+    if (i < REMARKS.length) await neha.setReportRemark(r.studentUserId, REMARKS[i]);
+    else await office.setReportRemark(r.studentUserId, ADMIN_REMARKS[i - REMARKS.length]);
   }
 }

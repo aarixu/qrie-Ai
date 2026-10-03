@@ -5,7 +5,7 @@ import { brandColours } from '@/lib/brand'
 
 /** Everything one student's report card shows, as the caller may see it (lms.student_*). */
 export async function reportFor(studentId: string): Promise<ReportData> {
-  const [card, subjects, chapters, timeline, mistakes, photos, attendance] = await Promise.all([
+  const [card, subjects, chapters, timeline, mistakes, photos, attendance, remark] = await Promise.all([
     api.studentCard(studentId),
     api.studentSubjects(studentId),
     api.studentChapters(studentId),
@@ -13,9 +13,19 @@ export async function reportFor(studentId: string): Promise<ReportData> {
     api.studentMistakes(studentId),
     api.accountPhotos([studentId]).catch(() => []),
     api.studentAttendance(studentId).catch(() => null),
+    api.reportRemark(studentId).catch(() => null),
   ])
   if (!card) throw new Error('No such student.')
-  return { card, subjects, chapters, timeline, mistakes, photo: photos[0]?.base64 ?? null, attendance }
+  return {
+    card,
+    subjects,
+    chapters,
+    timeline,
+    mistakes,
+    photo: photos[0]?.base64 ?? null,
+    attendance,
+    remark: remark?.text ? { text: remark.text, by: remark.writtenByName ?? '' } : null,
+  }
 }
 
 /** The school's name, colours and logo, for the top of the card. */
