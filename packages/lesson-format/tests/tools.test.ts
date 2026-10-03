@@ -87,3 +87,50 @@ describe('a tool element in a lesson', () => {
     expect(boxOf(el)).toEqual({ x: 100, y: 120, w: 480, h: 300 });
   });
 });
+
+const day = {
+  labels: ['6 am', '9 am', '12 pm', '3 pm', '6 pm'],
+  series: [{ name: 'Delhi', values: [24, 29, 35, 36, 31] }],
+  yLabel: 'temperature',
+  unit: '°C',
+  caption: 'One summer day',
+};
+
+describe('lineChart params', () => {
+  it('accepts measured values, one per label', () => {
+    expect(toolProblems('lineChart', day)).toEqual([]);
+    expect(toolDurationMs('lineChart', day)).toBe(1500 + 400);
+    expect(toolStrings('lineChart', day)).toEqual([
+      'One summer day',
+      'temperature',
+      '°C',
+      '6 am',
+      '9 am',
+      '12 pm',
+      '3 pm',
+      '6 pm',
+      'Delhi',
+    ]);
+  });
+
+  it('names a series whose values do not match the labels', () => {
+    const short = { ...day, series: [{ name: 'Delhi', values: [24, 29] }] };
+    expect(toolProblems('lineChart', short)).toEqual(['series[0] needs 5 values, one per label, and has 2']);
+  });
+
+  it('refuses a value that is not a number', () => {
+    const odd = { ...day, series: [{ name: 'Delhi', values: [24, 29, 'hot', 36, 31] }] };
+    expect(toolProblems('lineChart', odd)).toEqual(['series[0] value 3 is not a number']);
+  });
+
+  it('keeps labels short and counts them', () => {
+    expect(toolProblems('lineChart', { ...day, labels: ['a', 'b'] })[0]).toBe('labels needs 3 to 12 entries');
+    const long = { ...day, labels: ['the first long morning', 'b', 'c', 'd', 'e'] };
+    expect(toolProblems('lineChart', long)).toEqual(['labels[0] "the first long morning" is over 18 characters']);
+  });
+
+  it('allows two series and no more', () => {
+    const three = { ...day, series: [day.series[0], day.series[0], day.series[0]] };
+    expect(toolProblems('lineChart', three)).toEqual(['series needs 1 or 2 entries, each { name, values }']);
+  });
+});

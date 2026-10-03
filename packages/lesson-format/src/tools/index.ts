@@ -1,3 +1,4 @@
+import { lineChart } from './lineChart.ts';
 import { pieChart } from './pieChart.ts';
 import type { ToolSpec } from './types.ts';
 
@@ -5,7 +6,7 @@ import type { ToolSpec } from './types.ts';
  * THE TOOLKIT. One entry per tool; the planner prompt, the validator, the
  * layout, the gate and the renderer all read this one table.
  */
-export const TOOLS = { pieChart } as const;
+export const TOOLS = { lineChart, pieChart } as const;
 
 export type ToolName = keyof typeof TOOLS;
 export const TOOL_NAMES = Object.keys(TOOLS) as ToolName[];
@@ -47,3 +48,4 @@ export const toolMinSize = (tool: ToolName): { w: number; h: number } => TOOLS[t
 
 export { RESERVED_KEYS, SPOKEN_MS_PER_CHAR, openParams, type RecipeTag, type ToolCheck, type ToolSpec } from './types.ts';
 export type { PieChartParams } from './pieChart.ts';
+export type { LineChartParams } from './lineChart.ts';

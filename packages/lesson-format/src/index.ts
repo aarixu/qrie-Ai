@@ -71,4 +71,5 @@ export {
   type ToolCheck,
   type RecipeTag,
   type PieChartParams,
+  type LineChartParams,
 } from './tools/index.ts';
