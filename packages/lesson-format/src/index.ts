@@ -72,4 +72,13 @@ export {
   type RecipeTag,
   type PieChartParams,
   type LineChartParams,
+  EQUATION_LINE_H,
+  EQUATION_MOVE_MS,
+  EQUATION_STEP_MS,
+  matchTerms,
+  termsOf,
+  type EquationMoveParams,
+  type MoveKind,
+  type Term,
+  type TermMove,
 } from './tools/index.ts';

@@ -134,3 +134,23 @@ describe('lineChart params', () => {
     expect(toolProblems('lineChart', three)).toEqual(['series needs 1 or 2 entries, each { name, values }']);
   });
 });
+
+describe('equationMove params', () => {
+  const steps = ['2x + 3 = 11', '2x = 11 - 3', '2x = 8', 'x = 8/2', 'x = 4'];
+
+  it('accepts two to six lines, each one equation', () => {
+    expect(toolProblems('equationMove', { steps })).toEqual([]);
+    expect(toolDurationMs('equationMove', { steps })).toBe(5 * 1400);
+    expect(toolStrings('equationMove', { steps })).toEqual(steps);
+  });
+
+  it('names a line that is not one equation', () => {
+    expect(toolProblems('equationMove', { steps: ['2x + 3 = 11', 'so x is 4'] })).toEqual([
+      'steps[1] "so x is 4" needs exactly one "="',
+    ]);
+  });
+
+  it('counts its lines', () => {
+    expect(toolProblems('equationMove', { steps: ['x = 1'] })).toEqual(['steps needs 2 to 6 lines']);
+  });
+});
