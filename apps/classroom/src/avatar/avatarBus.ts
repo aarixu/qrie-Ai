@@ -3,6 +3,10 @@ import { createWebAudioOutput, type PcmOutput, type SpeechElement } from '@ai-tu
 /**
  * THE BUS BETWEEN HER VOICE AND HER FACE.
  *
+ * The faces are switched off for now (README.md here), but this is not: her
+ * voice plays through its context (`unlockAudio`, `avatarPcmOutput`), and
+ * her shape (bloub/Bloub.tsx) reads `level`.
+ *
  * The voice pipeline and the avatar must not know each other, so they meet
  * here: the streaming TTS builds its audio elements through `avatarAudio`,
  * the lesson adapter announces each line through `announceLine`, and the

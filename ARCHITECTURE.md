@@ -108,8 +108,10 @@ verified by trying to break it, not by reading the policy.
   phone**, and the relay is the fallback.
 - **Canvas** — `packages/stage` renders, `packages/board-layout` decides where
   things go, `packages/lesson-format` is the closed vocabulary both agree on.
-- **Avatar** — a code-drawn penguin with a lipsync that rides the audio element's
-  own clock. Rive is the planned swap.
+- **Avatar** — switched off since 2026-10-03. Her picture is the Bloub
+  (`apps/classroom/src/bloub`, the MIT bloub engine), an animated shape that
+  breathes with her voice. The faces (a code-drawn penguin, Meera in 3D) are
+  kept in `apps/classroom/src/avatar` for later (its README.md).
 
 ### 4. Syllabus & LAM
 

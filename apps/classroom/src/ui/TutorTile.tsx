@@ -8,6 +8,10 @@ import type { ClipManifest } from '@ai-tutor/teacher-clone';
 export type TutorMode = 'idle' | 'teaching' | 'listening';
 
 /**
+ * SWITCHED OFF (2026-10-03): no screen renders this tile; the Bloub stands in
+ * for her where it was shown, and the tile is kept for later
+ * (src/avatar/README.md).
+ *
  * The tutor's window — a participant tile, the way Meet draws one, because a
  * teacher in a live class is a person in a call, not an icon on a card.
  *

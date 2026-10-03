@@ -95,7 +95,7 @@ const DROPPED_LINE =
 // Public types (the UI builds against these names)
 // ---------------------------------------------------------------------------
 
-/** What the room is doing, for the avatar and the mic indicator. */
+/** What the room is doing, for the class's doubt status line. */
 export type LiveState = 'connecting' | 'listening' | 'speaking' | 'error';
 
 /**
@@ -125,7 +125,7 @@ export interface LiveAgentOptions {
   models?: readonly string[];
   /** Captions for both sides of the conversation. */
   onTranscript?: (line: TranscriptLine) => void;
-  /** Room state for the avatar / mic indicator. */
+  /** Room state for the doubt status line. */
   onState?: (s: LiveState) => void;
   /** 0..1 microphone energy, for the waveform. Display only. */
   onMicLevel?: (level: number) => void;
@@ -485,7 +485,7 @@ export function createLiveAgent(opts: LiveAgentOptions): AgentAdapter {
 
       /**
        * turnComplete arrives while her voice is still queued ahead of the
-       * clock, so the avatar keeps speaking until the speaker is actually idle.
+       * clock, so the room reads as speaking until the speaker is actually idle.
        */
       const settleToListening = (): void => {
         stateTimer = clearTimer(stateTimer);

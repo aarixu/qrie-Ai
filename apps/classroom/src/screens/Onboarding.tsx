@@ -136,8 +136,7 @@ export const SCHOOL_STUB_BACK = 'Go back';
  *
  * One question per screen — a single form asking everything at once looks
  * shorter and feels longer, and a student who abandons a stepped flow has
- * already banked their name and class. Her tile above the first question is
- * the whole introduction: who is asking, without a screen spent on it.
+ * already banked their name and class.
  *
  * The subjects offered come from the syllabi that actually exist for that
  * class — never from a wishlist. A subject chip with nothing behind it is a

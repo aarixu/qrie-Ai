@@ -7,8 +7,12 @@ import { TutorTile } from '../src/ui/TutorTile';
 /**
  * WHICH FACE THE TILE SHOWS.
  *
- * Qrie's own students see the penguin — he is her tutor, and a client
- * engagement must not quietly replace him. A cloned teacher is a SECOND
+ * The tile is switched off since 2026-10-03: no screen renders it
+ * (src/avatar/README.md). These tests keep it working for later.
+ *
+ * Without a clone the tile shows Qrie's own tutor: the penguin, or Meera in 3D
+ * where the browser can draw her (on a server, as here, the penguin). A client
+ * engagement must not quietly replace her: a cloned teacher is a SECOND
  * renderer, mounted only when a class carries one.
  */
 

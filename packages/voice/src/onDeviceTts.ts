@@ -33,7 +33,7 @@ export interface Synthesiser {
 
 export interface OnDeviceTtsOptions {
   synth: Synthesiser;
-  /** Builds the player. The avatar's own factory, so the mouth still syncs. */
+  /** Builds the player; a plain Audio element when absent. */
   audio?: (src: string) => SpeechElement;
   /**
    * Who speaks while the model is still arriving.

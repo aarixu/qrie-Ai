@@ -297,8 +297,9 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
 }
 
 /**
- * The real speaker: Web Audio, routed through `destination` so the avatar's
- * analyser hears exactly what the student does.
+ * The real speaker: Web Audio, routed through `destination` so whatever
+ * listens there (in the app, the analyser her shape reads its loudness from)
+ * hears exactly what the student does.
  */
 export function createWebAudioOutput(context: AudioContext, destination: AudioNode): PcmOutput {
   return {

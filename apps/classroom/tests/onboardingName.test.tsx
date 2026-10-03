@@ -119,7 +119,8 @@ describe('the onboarding wizard', () => {
         </MemoryRouter>,
       );
     });
-    const tile = () => host.querySelector('[aria-label$=" teaching"]');
+    // Neither the old tile nor her shape (bloub/Bloub.tsx).
+    const tile = () => host.querySelector('[aria-label$=" teaching"], [data-bloub]');
     expect(tile()).toBeNull();
     const own = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes("I'm here on my own"))!;
     await act(async () => {

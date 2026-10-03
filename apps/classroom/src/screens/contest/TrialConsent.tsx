@@ -1,6 +1,6 @@
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Icon } from '../../ui/Icon';
-import { TutorTile } from '../../ui/TutorTile';
+import { Bloub } from '../../bloub/Bloub';
 import { isOnboarded, settingsStore } from '../../stores/settings';
 import {
   beginTrial,
@@ -143,8 +143,9 @@ export function TrialConsent() {
     <div className="bg-background text-on-background min-h-screen font-body-md flex flex-col">
       <main className="flex-1 grid place-items-center px-margin-mobile py-10">
         <div className="w-full max-w-[520px]">
-          <div className="grid place-items-center mb-5">
-            <TutorTile mode="teaching" variant="pip" />
+          {/* Her shape, not the avatar: it is switched off (src/avatar/README.md). */}
+          <div className="grid place-items-center mb-5" aria-hidden>
+            <Bloub mode="idle" size={104} />
           </div>
 
           {blockedWords !== null && (

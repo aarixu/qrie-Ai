@@ -8,7 +8,8 @@ import { announceLine, avatarAudio } from '../avatar/avatarBus';
 /**
  * THE AVATAR LAB — /avatar-lab, dev-facing, like /canvas-lab.
  *
- * One big instance of the exact component the classroom tile uses, with
+ * One big instance of the exact component the classroom tile used (the tile
+ * and the faces are switched off for now: src/avatar/README.md), with
  * pose buttons and a real spoken line through the real streaming voice, so
  * lipsync, blinks and gestures are judged at full size before a class is.
  */

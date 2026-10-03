@@ -2038,7 +2038,7 @@ export function ClassRoom({
   // The doubt conversation: the live session's transcript, or the typed one.
   const doubtLines = voiceMode ? transcript : textLines;
 
-  // What the room is doing right now, for the panel's status line. Derived
+  // What the room is doing right now, for the status line beside her shape. Derived
   // from the handoff first: the bridge line is spoken during AGENT_ENTERING,
   // and calling that moment "connecting" would contradict the student's ears.
   const doubtStatus =

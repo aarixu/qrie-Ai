@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Icon } from '../../ui/Icon';
-import { TutorTile } from '../../ui/TutorTile';
+import { Bloub } from '../../bloub/Bloub';
 import { subjectsAvailable } from '../../lib/content';
 import { MAX_NAME_CHARS } from '../../lib/student';
 import { profileStore } from '../../stores/profile';
@@ -295,8 +295,9 @@ export function Enrol({ initialStep = 'student' }: { initialStep?: EnrolStep }) 
         <div className="w-full max-w-[440px]">
           {step === 'student' && (
             <div className="text-center">
-              <div className="grid place-items-center mb-5">
-                <TutorTile mode="teaching" variant="pip" />
+              {/* Her shape, not the avatar: it is switched off (src/avatar/README.md). */}
+              <div className="grid place-items-center mb-5" aria-hidden>
+                <Bloub mode="idle" size={104} />
               </div>
               <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
                 What is the student's name?

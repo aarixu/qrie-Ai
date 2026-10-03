@@ -4,19 +4,22 @@ import { NOTIF_BLUE } from './engine/decor';
 import { DEMI_VIEWBOX, RAYON } from './engine/repere';
 import { mixHex } from './engine/skins';
 import type { StateId } from './engine/states';
+import { TUTOR } from '@ai-tutor/persona';
 import { level } from '../avatar/avatarBus';
 
 /**
- * HER PRESENCE IN THE CLASS, AS A LIVING SHAPE (Aarav, 2026-10-03: "avatar
- * looks weird for now" — the 3D figure and her tile go, the board takes the
- * screen, and this stands in for her).
+ * HER PRESENCE, AS A LIVING SHAPE (Aarav, 2026-10-03: "avatar looks weird for
+ * now" — the board takes the class's screen, and this stands in for her; the
+ * same day, "sirf bloub ka use karo": it is her picture on the trial, enrol
+ * and sign-in screens too, and the avatar is switched off, not deleted —
+ * src/avatar/README.md).
  *
  * The shape and its motion are bloub's engine (src/bloub/engine, MIT, Jérémy
  * Perret, github.com/jeremy-prt/bloub at b4bb3c1 — see src/bloub/LICENSE): one
  * filled shape that morphs between poses, with eyes cut into it. bloub
- * recreates another company's bot avatar, so it is NOT drawn as that one: it
- * is Qrie's amber on the class's dark stage, never the original's black on
- * white.
+ * recreates another company's bot avatar, so it is NOT drawn as that one: its
+ * body is Qrie's amber, never the original's black on white. In the class it
+ * stands on the dark stage; on the other screens, on the page's own colour.
  *
  * What she is doing picks the pose:
  *   teaching   her resting face;
@@ -37,7 +40,11 @@ const POSE: Record<BloubMode, StateId> = {
   thinking: 'thinking',
 };
 
-/** Qrie's amber, and the stage it stands on (tailwind `stage-primary`, `stage`). */
+/**
+ * Qrie's amber (tailwind `stage-primary`), and the class stage's colour
+ * (tailwind `stage`), which fills her eyes wherever she is drawn: holes in the
+ * class, dark eyes on a light page.
+ */
 export const BLOUB_INK = '#f3b84d';
 export const BLOUB_PAPER = '#1c1a17';
 
@@ -48,7 +55,7 @@ export function Bloub({
   size = 96,
   ink = BLOUB_INK,
   paper = BLOUB_PAPER,
-  label = 'Meera',
+  label = TUTOR.name,
   talking,
 }: {
   mode: BloubMode;

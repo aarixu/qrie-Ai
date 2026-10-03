@@ -64,3 +64,11 @@ describe('the wait, spent inside the room', () => {
     expect(at('/class?topic=How%20a%20rainbow%20forms')).toContain('How a rainbow forms');
   });
 });
+
+describe('a topic she declines', () => {
+  it('is her answering, so it shows her shape (Aarav, 2026-10-03: only the Bloub), not an error icon', () => {
+    const html = at('/class?topic=' + encodeURIComponent('how to make a bomb at home'));
+    expect(html).toContain('Pick a subject');
+    expect(html).toContain('data-bloub="idle"');
+  });
+});

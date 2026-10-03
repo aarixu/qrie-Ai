@@ -78,8 +78,9 @@ export function useLessonVoice(
        *
        * Deepgram's aura-2 had no Indian voice and could not speak Hinglish.
        * The relay now streams Gemini TTS's raw PCM and this plays each chunk
-       * as it lands (first audio 1.2-2.1 s measured on Vertex), through the
-       * avatar's analyser so the mouth moves to what the student hears. The
+       * as it lands (first audio 1.2-2.1 s measured on Vertex), through her
+       * voice's analyser (avatar/avatarBus.ts), so her shape breathes with what
+       * the student hears. The
        * language is the child's onboarding choice, or the lesson's own when
        * it was prepared in Hinglish.
        *
@@ -154,11 +155,15 @@ function createSilentTts(): TtsAdapter {
 }
 
 /**
- * The face is told every line the voice speaks, whichever voice it is.
+ * The bus (avatar/avatarBus.ts) is told every line the voice speaks, whichever
+ * voice it is; a line's end clears it.
  *
- * For the streamed voice the avatar also hears the real audio (avatarAudio);
- * for the recorded take and the browser robot this announcement is all it
- * gets, and the mouth runs shape-only on wall time — quieter, never wrong.
+ * For the streamed voice the bus also hears the real audio (avatarPcmOutput),
+ * so her shape (bloub/Bloub.tsx) breathes with it. For the recorded take and
+ * the browser robot this announcement is all it gets: `level` stays null, and
+ * her shape keeps its pose without breathing. (The faces, switched off for now
+ * — avatar/README.md — would also read `progress` and run a shape-only mouth
+ * on wall time.)
  *
  * `prime` and `drop` pass straight through when the voice underneath has
  * them. `drop` is how a halted class (lib/sessionHalt.ts) reaches the line

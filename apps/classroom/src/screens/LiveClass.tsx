@@ -60,6 +60,7 @@ import { track } from '../lib/telemetry';
 import { readRefusal } from '../lib/refusal';
 import { RefusalNotice } from '../ui/RefusalNotice';
 import { Icon } from '../ui/Icon';
+import { Bloub } from '../bloub/Bloub';
 import { ClassRoom } from './ClassRoom';
 
 /**
@@ -811,10 +812,10 @@ export function LiveClassRoute() {
     return (
       <div className="bg-background min-h-screen grid place-items-center px-margin-mobile font-body-md">
         <div className="text-center flex flex-col items-center gap-4 max-w-[46ch]">
-          {/* Her face, not an error icon: this is the tutor answering, and
+          {/* Her shape, not an error icon: this is the tutor answering, and
               dressing it as a fault would tell a student they broke something. */}
-          <div className="w-16 h-16 rounded-full bg-primary-container grid place-items-center">
-            <Icon name="school" className="text-3xl text-on-primary-container" />
+          <div className="grid place-items-center" aria-hidden>
+            <Bloub mode="idle" size={72} />
           </div>
           <p className="font-body-md text-body-md text-on-surface leading-7">{refused}</p>
           <button

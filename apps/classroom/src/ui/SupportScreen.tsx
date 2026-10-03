@@ -46,7 +46,7 @@ export function SupportScreen({ line, onLeave }: { line: string; onLeave(): void
       className="fixed inset-0 z-[80] bg-background overflow-y-auto grid place-items-center px-margin-mobile font-body-md outline-none"
     >
       <div className="text-center flex flex-col items-center gap-4 max-w-[46ch] py-10">
-        {/* Her face, not an alarm: this is the tutor speaking, gently. */}
+        {/* Her mark, not an alarm: this is the tutor speaking, gently. */}
         <div className="w-16 h-16 rounded-full bg-primary-container grid place-items-center">
           <Icon name="school" className="text-3xl text-on-primary-container" />
         </div>

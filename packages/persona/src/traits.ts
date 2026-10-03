@@ -13,7 +13,7 @@
  */
 
 export interface TutorTraits {
-  /** What the student calls her. Used in greetings and in the avatar badge. */
+  /** What the student calls her. Used in greetings and as her shape's label (the app's Bloub). */
   name: string;
   /** One line: what she is and who she teaches. */
   role: string;

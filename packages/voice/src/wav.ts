@@ -2,11 +2,11 @@
  * SAMPLES TO A FILE AN <audio> ELEMENT WILL PLAY.
  *
  * On-device synthesis hands back a Float32Array. Everything downstream of the
- * voice — the streaming adapter, the recorded take, and the avatar's lipsync —
- * speaks in terms of a URL handed to an audio element, because sync rides on
- * that element's own clock rather than on ours. So the samples become a WAV,
- * the WAV becomes a blob URL, and the mouth keeps moving to the same clock the
- * student hears.
+ * voice — the streaming adapter, the recorded take, and the avatar's lipsync
+ * (switched off in the app for now) — speaks in terms of a URL handed to an
+ * audio element, because sync rides on that element's own clock rather than on
+ * ours. So the samples become a WAV, the WAV becomes a blob URL, and anything
+ * synced to it keeps the same clock the student hears.
  *
  * WAV rather than anything smaller, because there is nothing to encode with: a
  * browser can DECODE mp3 and opus but ships no encoder, and pulling one in as

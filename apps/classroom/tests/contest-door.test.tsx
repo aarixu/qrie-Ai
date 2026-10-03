@@ -10,6 +10,7 @@ import { gateTo } from '../src/App';
 import { endTrial, mayPersist, TRIAL_HOME, TRIAL_KEY } from '../src/lib/workspace';
 import { Enrol, ENROL_STEPS, subjectsFor } from '../src/screens/contest/Enrol';
 import { TrialConsent } from '../src/screens/contest/TrialConsent';
+import { SignIn } from '../src/screens/SignIn';
 import {
   LANGUAGE_ANSWER_NOTE,
   LANGUAGE_QUESTION,
@@ -113,6 +114,27 @@ describe('the enrolment flow', () => {
     const html = words(render(<Enrol initialStep="otp" />));
     expect(html).toMatch(/code/i);
     expect(html).toMatch(/SMS|message|phone/i);
+  });
+});
+
+describe('her picture on the doors (Aarav, 2026-10-03: the avatar is switched off)', () => {
+  /** The penguin's own drawing (avatar/CartoonAvatar.tsx), and nothing else's. */
+  const PENGUIN = 'viewBox="0 0 320 380"';
+
+  it('is her shape on the trial and the enrol screens, never the avatar tile', () => {
+    for (const html of [render(<TrialConsent />, '/try'), render(<Enrol />)]) {
+      expect(html).toContain('data-bloub="idle"');
+      // The tile labelled itself with her name and what she was doing...
+      expect(html).not.toContain('aria-label="Meera teaching"');
+      // ...and, rendered on a server with no WebGL, drew the penguin.
+      expect(html).not.toContain(PENGUIN);
+    }
+  });
+
+  it('is her shape on the sign-in screen, never the penguin', () => {
+    const html = render(<SignIn />, '/signin');
+    expect(html).toContain('data-bloub="idle"');
+    expect(html).not.toContain(PENGUIN);
   });
 });
 

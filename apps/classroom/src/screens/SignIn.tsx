@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CartoonAvatar } from '../avatar/CartoonAvatar';
+import { Bloub } from '../bloub/Bloub';
 import { Icon } from '../ui/Icon';
 import { createAccount, isAnonymous, sendPasswordReset, signInWithPassword } from '../lib/supabase';
 
@@ -121,8 +121,10 @@ export function SignIn() {
       </button>
 
       <div className="max-w-[380px] mx-auto flex flex-col items-center text-center mt-2">
-        <div className="w-[130px] h-[150px]" aria-hidden>
-          <CartoonAvatar pose={awaiting ? 'point' : 'greet'} className="w-full h-full" />
+        {/* Her shape, not the avatar: it is switched off (src/avatar/README.md).
+            Waiting on the email, she waits with them. */}
+        <div className="w-[130px] h-[150px] grid place-items-center" aria-hidden>
+          <Bloub mode={awaiting ? 'listening' : 'idle'} size={120} />
         </div>
 
         {awaiting ? (
