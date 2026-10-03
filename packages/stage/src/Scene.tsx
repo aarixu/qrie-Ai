@@ -3,11 +3,13 @@ import {
   CANVAS_H,
   CANVAS_W,
   EQUATION_MOVE_MS,
+  INK_NAMES,
   compileFunction,
   mathPlain,
   samplePoints,
   splitPartRef,
   type Element,
+  type InkName,
   type Lesson,
   type Point,
   type Tone,
@@ -156,6 +158,24 @@ const jitterDeg = (id: string): number => ((hash(id) % 1400) / 1400) * 1.4 - 0.7
 const frac = (id: string, salt: number): number => (hash(`${id}:${salt}`) % 1000) / 1000;
 
 const toneOf = (el: Element): Tone => ('tone' in el && el.tone ? el.tone : 'neutral');
+
+/**
+ * The colours of a composed page's named parts (lesson-format INK_NAMES).
+ *
+ * Darker than the tones, because they are read as text on white, and far
+ * enough apart that six on one page are still six.
+ */
+const INK_COLORS: Readonly<Record<InkName, string>> = {
+  red: '#e03131',
+  blue: '#1971c2',
+  green: '#2f9e44',
+  orange: '#e8590c',
+  purple: '#9c36b5',
+  teal: '#0c8599',
+};
+
+/** An element's colour: its part's ink when it has one, its tone's otherwise. */
+const colorOf = (el: Element): string => ('ink' in el && el.ink ? INK_COLORS[el.ink] : TONE_COLORS[toneOf(el)]);
 
 /** Rotation pivot: each element jitters around its own visual center, not the canvas origin. */
 function centerOf(el: Element): Point {
@@ -337,10 +357,13 @@ const SCENE_CSS = `
 `;
 
 /** One arrowhead per tone: markers cannot inherit stroke color, so each tone gets its own. */
-const ARROW_MARKERS = (Object.keys(TONE_COLORS) as Tone[]).map((tone) => (
+const ARROW_MARKERS = [
+  ...(Object.keys(TONE_COLORS) as Tone[]).map((tone) => [tone, TONE_COLORS[tone]] as const),
+  ...INK_NAMES.map((ink) => [`ink-${ink}`, INK_COLORS[ink]] as const),
+].map(([key, fill]) => (
   <marker
-    key={tone}
-    id={`stage-arrow-${tone}`}
+    key={key}
+    id={`stage-arrow-${key}`}
     viewBox="0 0 10 10"
     refX={8}
     refY={5}
@@ -348,7 +371,7 @@ const ARROW_MARKERS = (Object.keys(TONE_COLORS) as Tone[]).map((tone) => (
     markerHeight={7}
     orient="auto-start-reverse"
   >
-    <path d="M0 0 L10 5 L0 10 z" fill={TONE_COLORS[tone]} />
+    <path d="M0 0 L10 5 L0 10 z" fill={fill} />
   </marker>
 ));
 
@@ -512,6 +535,7 @@ function renderList(el: Extract<Element, { kind: 'list' }>, isNew = false): Reac
   }
 
   el.items.forEach((item, n) => {
+    const itemInk = item.ink ? INK_COLORS[item.ink] : undefined;
     const prefix = `${n + 1}. `;
     const lines = wrapLines(`${prefix}${listItemText(item)}`, el.w - LIST_INDENT, size);
     const drawn: ReactElement[] = [];
@@ -534,10 +558,12 @@ function renderList(el: Extract<Element, { kind: 'list' }>, isNew = false): Reac
       const after = dash >= 0 ? rest.slice(dash) : '';
       drawn.push(
         <text key={`${n}-0`} x={el.x} y={baseline} fontFamily={FONT_HAND} fontSize={size} fill={INK}>
-          <tspan fill={color} fontWeight={700}>
+          <tspan fill={itemInk ?? color} fontWeight={700}>
             {prefix}
           </tspan>
-          <tspan fontWeight={700}>{term}</tspan>
+          <tspan fontWeight={700} fill={itemInk}>
+            {term}
+          </tspan>
           {after && <tspan fillOpacity={0.85}>{after}</tspan>}
         </text>,
       );
@@ -578,8 +604,8 @@ function renderDoc(el: Extract<Element, { kind: 'doc' }>): ReactElement {
 }
 
 function renderArrow(el: Extract<Element, { kind: 'arrow' }>): ReactElement {
-  const tone = toneOf(el);
-  const color = TONE_COLORS[tone];
+  const color = colorOf(el);
+  const marker = el.ink ? `ink-${el.ink}` : toneOf(el);
   return (
     <>
       <line
@@ -591,7 +617,7 @@ function renderArrow(el: Extract<Element, { kind: 'arrow' }>): ReactElement {
         strokeWidth={2.5}
         strokeLinecap="round"
         strokeDasharray={el.dashed ? '8 7' : undefined}
-        markerEnd={`url(#stage-arrow-${tone})`}
+        markerEnd={`url(#stage-arrow-${marker})`}
       />
       {el.label && (
         <text x={(el.from.x + el.to.x) / 2} y={(el.from.y + el.to.y) / 2 - 9} textAnchor="middle" fontFamily={FONT_HAND} fontSize={14.5} fill={color} {...HALO}>
@@ -1033,7 +1059,7 @@ function renderFlow(el: Extract<Element, { kind: 'flow' }>, isNew = false): Reac
  * it — which this gives for a fraction of the machinery.
  */
 function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElement {
-  const color = TONE_COLORS[toneOf(el)];
+  const color = colorOf(el);
   const size = el.size ?? 26;
   // The same ruler the layout and the camera use. A local guess of half an em
   // per character ran short of the real thing, and the mask — which hides
@@ -1194,7 +1220,7 @@ function renderGraphic(
  * one does — a line travelling, not a shape appearing.
  */
 function renderMark(el: Extract<Element, { kind: 'mark' }>): ReactElement {
-  const color = TONE_COLORS[toneOf(el)];
+  const color = colorOf(el);
   const cx = el.x + el.w / 2;
   const cy = el.y + el.h / 2;
   const common = {
