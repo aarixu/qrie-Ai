@@ -25,7 +25,7 @@ vi.mock('@ai-tutor/voice', async (real) => ({
       setTimeout(() => {
         for (let i = 0; i < 5; i++) onChunk(quiet());
         for (let i = 0; i < 10; i++) onChunk(speech());
-        for (let i = 0; i < 12; i++) onChunk(quiet());
+        for (let i = 0; i < 16; i++) onChunk(quiet());
       }, 0);
     },
     stop: () => undefined,
@@ -72,7 +72,7 @@ describe('the ear upload', () => {
   it('sends a WAV without the trailing quiet when there is no recording', async () => {
     const heard = await listenOnce();
     expect(heard.reason).toBe('heard');
-    // 3 chunks of lead-in, 10 of speech, 2 of the 9 quiet ones that ended it.
+    // 3 chunks of lead-in, 10 of speech, 2 of the 15 quiet ones that ended it.
     expect(state.posts).toEqual([{ type: 'audio/wav', bytes: 44 + (3 + 10 + 2) * CHUNK * 2 }]);
   });
 });

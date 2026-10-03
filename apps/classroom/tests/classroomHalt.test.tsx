@@ -262,7 +262,19 @@ async function typeDoubt(host: HTMLElement, text: string): Promise<void> {
   }
   await typeInto(host, 'Type your doubt', 'Send doubt', text);
 }
-const typeAnswer = (host: HTMLElement, text: string) => typeInto(host, 'Type your answer', 'Send answer', text);
+/**
+ * The box opens only on the keyboard button (Aarav, 2026-10-03: a box that
+ * opened by itself at every question kept getting in the way), as a student
+ * would tap it.
+ */
+async function typeAnswer(host: HTMLElement, text: string): Promise<void> {
+  if (!host.querySelector('input[aria-label="Type your answer"]')) {
+    await act(async () => {
+      host.querySelector<HTMLButtonElement>('button[aria-label="Type an answer"]')!.click();
+    });
+  }
+  await typeInto(host, 'Type your answer', 'Send answer', text);
+}
 
 /**
  * THE MIC BUTTON, BESIDE THE RAISED HAND (Aarav, 2026-10-03). The mic is off
@@ -283,7 +295,9 @@ async function tapMic(host: HTMLElement, label: 'Turn the mic on' | 'Turn the mi
 }
 const turnMicOn = (host: HTMLElement) => tapMic(host, 'Turn the mic on');
 const micIsOn = (host: HTMLElement): boolean => host.querySelector('[aria-label="Turn the mic off"]') !== null;
-const answerBox = (host: HTMLElement) => host.querySelector('[aria-label="Type your answer"]');
+/** A way to type the answer is offered: the keyboard button, or the box it opened. */
+const answerBox = (host: HTMLElement) =>
+  host.querySelector('button[aria-label="Type an answer"], input[aria-label="Type your answer"]');
 
 const buttonWith = (host: HTMLElement, text: string): boolean =>
   [...host.querySelectorAll('button')].some((b) => b.textContent?.includes(text));

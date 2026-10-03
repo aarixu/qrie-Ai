@@ -2,15 +2,14 @@ import { createMicCapture, micLevelOf, MIC_SAMPLE_RATE, type Recorded } from '@a
 import { relayFetch } from './relay';
 
 /**
- * THE EAR - the mic that turns itself on when she asks.
+ * THE EAR - the mic that hears the student.
  *
- * Aarav's spec, verbatim: when the tutor asks a question the mic opens on its
- * own, waits for the student's spoken answer, and closes when it has one. The
- * raise-hand button stays for the doubts the STUDENT starts.
- *
- * Since 2026-10-02 a class keeps ONE mic open instead (`openEar`, below), so
- * a student can talk over her; `listenOnce` then takes its answer from that
- * mic. The per-answer mic here is what a class without it still uses.
+ * Aarav's first spec (2026-10-01) opened it on its own at every question. On
+ * 2026-10-02 the class kept ONE mic open instead (`openEar`, below), so a
+ * student could talk over her. Since 2026-10-03 that one mic is opened only
+ * when the student taps the mic button, and closed when the exchange is over
+ * (ClassRoom `talk`). `listenOnce` takes its answer from it while it is open,
+ * and opens a mic of its own for one answer when it is not.
  *
  * Split the same way voice/audio.ts is: the decisions (when has the student
  * started speaking, when have they finished) are a pure endpointer that is
@@ -41,11 +40,17 @@ export interface EndpointConfig {
   graceMs: number;
 }
 
+/**
+ * silenceMs 1.5 s and maxSpeechMs 15 s since 2026-10-03 (Aarav: what he said
+ * was not understood). A child thinking mid-sentence pauses for a second; at
+ * 0.9 s the rest of the sentence was cut off and lost. The mic is on only when
+ * they tap it now, so a longer wait costs nothing in a noisy room.
+ */
 export const EAR_DEFAULTS: EndpointConfig = {
   startLevel: 0.1,
   stopLevel: 0.06,
-  silenceMs: 900,
-  maxSpeechMs: 10_000,
+  silenceMs: 1_500,
+  maxSpeechMs: 15_000,
   graceMs: 7_000,
 };
 

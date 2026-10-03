@@ -265,6 +265,17 @@ type Answer = Heard & {
 const TAP_GRACE_MS = 6_000;
 
 /**
+ * The class a lesson is for, read off its topic (`class10-science/...`), for a
+ * student with no class on file — a trial. It is not a guess about the child:
+ * it is the class she is teaching (Aarav, 2026-10-03: in a trial her doubt
+ * answers were the scripted floor, which understood nothing he said).
+ */
+const klassOfLesson = (lesson: Lesson): number | null => {
+  const found = /^class(\d{1,2})-/.exec(lesson.topicRef ?? lesson.id);
+  return found ? Number(found[1]) : null;
+};
+
+/**
  * The classroom — laid out the way Meet lays out a call with a presentation,
  * because "a Google Meet where an AI teacher is taking a live class" is the
  * product. The board is the shared screen and takes the whole screen; Meera
@@ -524,7 +535,11 @@ export function ClassRoom({
     if (!earReadyRef.current) return typedOnce(isCancelled);
     const heard = await listenOnce({ isCancelled: () => isCancelled() || !earReadyRef.current });
     if (heard.reason === 'cancelled' && !isCancelled()) return { text: null, reason: 'silence', by: 'voice', micSwitched: true };
-    if (heard.reason === 'error') closeClassEar();
+    if (heard.reason === 'error') {
+      closeClassEar();
+      setTyping(true);
+    }
+    if (heard.text) showHeard(heard.text);
     return { ...heard, by: 'voice' };
   };
 
@@ -649,8 +664,14 @@ export function ClassRoom({
   const pendingSpokenDoubt = useRef<string | null>(null);
   /** They talked over her reply in a doubt: the rest of it waits until they have been heard. */
   const studentHasFloor = useRef(false);
-  /** A line for the student when the mic would not turn on, shown beside her shape for a moment. */
+  /**
+   * A line beside her shape for a moment: the mic would not turn on, nothing
+   * was caught, or WHAT WAS HEARD (Aarav, 2026-10-03: "meri voice use samajh
+   * hi nahi aa rahi" — a student who can see what the mic wrote down can tell
+   * a mishearing from a misunderstanding, and say it again).
+   */
   const [micNote, setMicNote] = useState<string | null>(null);
+  const showHeard = (text: string): void => setMicNote(`Heard: "${text}"`);
   useEffect(() => {
     if (micNote === null) return;
     const timer = setTimeout(() => setMicNote(null), 5_000);
@@ -662,7 +683,7 @@ export function ClassRoom({
     },
     [],
   );
-  // Typed-doubt input on a phone, where there is no side panel to type into.
+  // The typing row, for a doubt or a held question: only the keyboard button opens it.
   const [typing, setTyping] = useState(false);
   const [draft, setDraft] = useState('');
   // The live session polls this per audio chunk, so it must read the latest
@@ -707,7 +728,8 @@ export function ClassRoom({
     () =>
       buildStudentContext({
         profile,
-        klass: settings.klass,
+        // On file first; a trial has none, and is taught the lesson's own class.
+        klass: settings.klass ?? profile.klass ?? klassOfLesson(lesson),
         progress: progressStore.get(),
         doubts,
         lessonId: lesson.id,
@@ -742,8 +764,9 @@ export function ClassRoom({
   );
 
   const agent = useMemo(() => {
-    // No class on file means nothing true to tell her about the student, and a
-    // guessed class is a tutor pitching a lesson at a child who is not there.
+    // No class on file and none on the lesson means nothing true to tell her
+    // about the student, and a guessed class is a tutor pitching a lesson at a
+    // child who is not there.
     if (student === null) return createStubAgent();
     if (voiceMode && liveVoiceKey) {
       return createLiveAgent({
@@ -1952,9 +1975,11 @@ export function ClassRoom({
         if (handoffRef.current.state !== 'PLAYING' || playerRef.current.state !== 'paused') return;
         const text = heard.reason === 'heard' ? (heard.text ?? '').trim() : '';
         if (!text) {
+          if (heard.reason === 'silence') setMicNote("Didn't catch that. Tap the mic and try again.");
           playerRef.current.play();
           return;
         }
+        showHeard(text);
         pendingSpokenDoubt.current = text;
         void raiseHandRef.current({ quiet: true });
       } finally {
@@ -2008,7 +2033,7 @@ export function ClassRoom({
         if (ok && !overtaken) noteMicGranted();
         if (!ok && !overtaken && !halt.halted && !left.current) {
           setMicNote("The mic didn't turn on. You can type instead.");
-          if (handoffRef.current.state === 'LIVE') setTyping(true);
+          setTyping(true);
         }
         if (!teaching || halt.halted || left.current) return;
         if (ok && !overtaken) hearThem();
@@ -2040,6 +2065,11 @@ export function ClassRoom({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [earReady, player.state, inDoubt, heldAskBeat, player.beat?.id]);
+
+  /** The typing row belongs to the question or the doubt it was opened at, and closes with it. */
+  useEffect(() => {
+    if (!answerOpen && !inDoubt) setTyping(false);
+  }, [answerOpen, inDoubt]);
 
   /**
    * TALKING OVER HER WITH THE MIC ON (Aarav, 2026-10-02: "tutor interrupt nahi
@@ -2112,6 +2142,7 @@ export function ClassRoom({
         }
         if (heard.reason !== 'heard' || !heard.text) continue;
         const text = heard.text.trim();
+        showHeard(text);
         if (isEchoOf(text, ttsRef.current.lastLine())) continue;
         if (isDoneSaying(text)) {
           endDoubtRef.current();
@@ -2172,8 +2203,9 @@ export function ClassRoom({
       ? (lastDoubtLine?.text ?? '')
       : (tutorLine ?? (warmingUp ? '' : player.caption));
   // The box under the board, while a question waits on a student with no mic.
-  // With the mic off; with it on they are answering out loud.
-  const answerBoxShown = answerOpen && !earReady && !inDoubt;
+  // With the mic off, and only once they tap the keyboard (Aarav, 2026-10-03:
+  // a box that opened by itself at every question kept getting in the way).
+  const answerBoxShown = answerOpen && typing && !earReady && !inDoubt;
 
   /**
    * THE BOARD TAKES THE SCREEN (Aarav, 2026-10-03: "remove avatar and its
@@ -2401,6 +2433,15 @@ export function ClassRoom({
       {!inDoubt ? (
         <>
           {micButton}
+          {/* A question waits and the mic is off: the box comes only on this tap. */}
+          {answerOpen && !earReady && (
+            <ToolButton
+              icon="keyboard"
+              label="Type an answer"
+              tone={typing ? 'lit' : 'plain'}
+              onClick={() => setTyping((t) => !t)}
+            />
+          )}
           <ToolButton
             icon="front_hand"
             label="Raise hand and ask a doubt"

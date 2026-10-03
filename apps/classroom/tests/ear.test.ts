@@ -16,9 +16,10 @@ describe('hearing one answer end', () => {
     for (let i = 0; i < 5; i += 1) expect(ear.feed(QUIET, MS)).toBe('waiting');
     expect(ear.feed(SPEECH, MS)).toBe('listening');
     for (let i = 0; i < 9; i += 1) expect(ear.feed(SPEECH, MS)).toBe('listening');
-    // 800 ms of silence is a breath, not the end...
-    for (let i = 0; i < 8; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
-    // ...900 ms is the end.
+    // 1.4 s of silence is a child thinking mid-sentence, not the end (Aarav,
+    // 2026-10-03: his sentences were cut where he paused)...
+    for (let i = 0; i < 14; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
+    // ...1.5 s is the end.
     expect(ear.feed(QUIET, MS)).toBe('heard');
   });
 
@@ -27,7 +28,7 @@ describe('hearing one answer end', () => {
     ear.feed(SPEECH, MS);
     for (let i = 0; i < 8; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
     expect(ear.feed(SPEECH, MS)).toBe('listening'); // they carried on
-    for (let i = 0; i < 8; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
+    for (let i = 0; i < 14; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
     expect(ear.feed(QUIET, MS)).toBe('heard');
   });
 

@@ -207,7 +207,8 @@ async function speakOver(): Promise<void> {
 }
 
 /** The question is held: she has put it, and with the mic off the box waits. */
-const questionHeld = (host: HTMLElement): boolean => host.querySelector('input[aria-label="Type your answer"]') !== null;
+const questionHeld = (host: HTMLElement): boolean =>
+  host.querySelector('button[aria-label="Type an answer"]') !== null;
 
 const inDoubt = (host: HTMLElement): boolean => host.querySelector('[aria-label="Got it — back to the class"]') !== null;
 /** The answers filed so far: the verdict, and how it came (said, or typed). */
@@ -344,6 +345,29 @@ describe('stopping her while she teaches: a tap on the mic', () => {
   });
 });
 
+describe('a trial, with no class on file (Aarav, 2026-10-03: "meri voice use samajh hi nahi aa rahi")', () => {
+  it('answers a spoken doubt with the real tutor, pitched at the lesson’s own class, not the scripted floor', async () => {
+    settingsStore.update((s) => ({ ...s, klass: null }));
+    const host = await openClass(teaching);
+    ear.queued = ['wait, why is blood red?'];
+    await tapMic(host);
+    await tick(12);
+    expect(inDoubt(host)).toBe(true);
+    // The model was asked, with their words, about a Class 10 student.
+    const body = llmBodies.find((b) => b.includes('why is blood red?'));
+    expect(body, 'the doubt reached the real tutor').toBeDefined();
+    expect(body).toMatch(/class 10/i);
+    expect(spoken).toContain('Blood carries oxygen in red blood cells.');
+  });
+
+  it('shows what was heard beside her, so a mishearing can be seen', async () => {
+    const host = await openClass(teaching);
+    ear.queued = ['wait, why is blood red?'];
+    await tapMic(host);
+    expect(host.textContent).toContain('Heard: "wait, why is blood red?"');
+  });
+});
+
 describe('her question, and the mic', () => {
   it('a tap at her held question: what they say is taken as the answer', async () => {
     const host = await openClass(asking, sayAll());
@@ -409,17 +433,23 @@ describe('her question, and the mic', () => {
     const host = await openClass(asking, sayAll());
     expect(questionHeld(host)).toBe(true);
     const box = (): Element | null => host.querySelector('input[aria-label="Type your answer"]');
+    const keyboard = (): Element | null => host.querySelector('button[aria-label="Type an answer"]');
     await tapMic(host); // nothing queued: the question's ear is listening
     expect(micLabel(host)).toBe('Turn the mic off');
     expect(box(), 'no typing box while they answer out loud').toBeNull();
+    expect(keyboard(), 'nor a keyboard button').toBeNull();
 
     await tapMic(host, 'Turn the mic off');
     await tick(20);
     expect(ear.open).toBe(false);
     expect(micLabel(host)).toBe('Turn the mic on');
     expect(ear.speech).toBeNull();
-    // The question still stands, and waits on the box now.
+    // The question still stands; the keyboard is offered, and the box opens on its tap.
     expect(answers()).toEqual([]);
+    expect(box(), 'the box does not open by itself').toBeNull();
+    await act(async () => {
+      (keyboard() as HTMLElement).click();
+    });
     expect(box()).not.toBeNull();
 
     const listens = ear.listens;

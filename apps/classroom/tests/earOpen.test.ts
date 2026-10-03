@@ -58,6 +58,8 @@ const push = (make: () => Int16Array, n: number): void => {
   for (let i = 0; i < n; i += 1) mic.onChunk?.(make());
 };
 const tick = () => new Promise((r) => setTimeout(r, 0));
+/** Enough trailing quiet to end an answer (the endpointer's silenceMs, in 100 ms chunks, and one spare). */
+const ENDS = 16;
 
 beforeEach(() => {
   mic.started = 0;
@@ -100,7 +102,7 @@ describe('the open ear', () => {
     const listening = listenOnce();
     await tick();
     push(loud, 4);
-    push(quiet, 12);
+    push(quiet, ENDS);
     const heard = await listening;
     expect(heard).toMatchObject({ text: 'lactic acid', reason: 'heard' });
     expect(mic.started).toBe(1); // the open ear's mic, not a second one
@@ -117,7 +119,7 @@ describe('the open ear', () => {
     await tick();
     push(quiet, 5);
     push(loud, 8);
-    push(quiet, 12);
+    push(quiet, ENDS);
     const heard = await listening;
     expect(heard.reason).toBe('heard');
     // 3 chunks of lead-in, the 8 of speech, 2 of the quiet that ended it.
@@ -131,7 +133,7 @@ describe('the open ear', () => {
     const listening = listenOnce();
     await tick();
     push(loud, 8);
-    push(quiet, 12);
+    push(quiet, ENDS);
     await listening;
     expect(heard).not.toHaveBeenCalled();
     off();
@@ -155,7 +157,7 @@ describe('the open ear', () => {
     await opening;
     await tick();
     push(loud, 8);
-    push(quiet, 12);
+    push(quiet, ENDS);
     expect((await listening).reason).toBe('heard');
     expect(mic.started).toBe(1);
   });
@@ -179,11 +181,11 @@ describe('the open ear', () => {
     const first = listenOnce();
     await tick();
     push(loud, 8);
-    push(quiet, 12);
+    push(quiet, ENDS);
     await first;
     const second = listenOnce({ graceMs: 1_000 });
     await tick();
-    push(quiet, 12);
+    push(quiet, ENDS);
     expect((await second).reason).toBe('silence');
     expect(posts).toHaveLength(1);
   });
