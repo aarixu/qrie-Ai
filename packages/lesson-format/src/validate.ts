@@ -1,6 +1,6 @@
 // With its extension: the relay's keep route (packages/relay/src/classStore.ts)
 // runs this file in Deno, which resolves no extensionless specifier.
-import { ALTERNATE_MODES, type AlternateMode, type Beat, type Element, type Lesson, type Point } from './types.ts';
+import { ALTERNATE_MODES, INK_NAMES, type AlternateMode, type Beat, type Element, type Lesson, type Point } from './types.ts';
 import { compileFunction } from './safeExpr.ts';
 import { toolProblems } from './tools/index.ts';
 
@@ -28,6 +28,9 @@ const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFin
 
 const isPoint = (v: unknown): v is Point => isObj(v) && isNum(v.x) && isNum(v.y);
 
+/** An ink, when there is one, is a colour the board has (types.ts, INK_NAMES). */
+const isInk = (v: unknown): boolean => v === undefined || (INK_NAMES as readonly unknown[]).includes(v);
+
 /** Fields required per element kind, beyond `kind` and `id`. */
 function elementErrors(el: Record<string, unknown>, path: string): string[] {
   const errs: string[] = [];
@@ -47,6 +50,10 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
       errs.push(`${path}: ${String(el.kind)} ${key} must be a number, got ${JSON.stringify(el[key])}`);
     }
   };
+
+  if (!isInk(el.ink)) {
+    errs.push(`${path}: ${String(el.kind)} ink must be one of ${INK_NAMES.join(', ')}, got ${JSON.stringify(el.ink)}`);
+  }
 
   switch (el.kind) {
     case 'title':
@@ -159,6 +166,10 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
       need(
         Array.isArray(el.items) && el.items.every((it) => isObj(it) && isStr(it.term)),
         'every list item needs a term — the term is the thing being defined',
+      );
+      need(
+        !Array.isArray(el.items) || el.items.every((it) => !isObj(it) || isInk(it.ink)),
+        `a list item's ink must be one of ${INK_NAMES.join(', ')}`,
       );
       optionalNumber('size');
       break;

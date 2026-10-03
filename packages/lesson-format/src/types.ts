@@ -23,6 +23,18 @@ export interface Point {
 export type Tone = 'neutral' | 'good' | 'bad' | 'accent';
 
 /**
+ * The colours a composed page gives its named parts (board composer, 2026-10-03).
+ *
+ * Set by the layout engine only, never by the planner. On a composed page each
+ * part a label names gets one of these, and the label, its leader line, the
+ * marks on that part and its term in the notes all carry the same one — so a
+ * colour means the same thing everywhere on that page. The renderer owns the
+ * actual colours (stage, INK_COLORS).
+ */
+export const INK_NAMES = ['red', 'blue', 'green', 'orange', 'purple', 'teal'] as const;
+export type InkName = (typeof INK_NAMES)[number];
+
+/**
  * A named region inside a picture, as fractions of it (0..1).
  *
  * Fractions rather than units because a picture is placed by the layout and
@@ -179,12 +191,12 @@ export type Element =
       y: number;
       w: number;
       heading?: string;
-      items: { term: string; meaning?: string }[];
+      items: { term: string; meaning?: string; ink?: InkName }[];
       /** Item text size; the heading scales with it. */
       size?: number;
       tone?: Tone;
     }
-  | { kind: 'arrow'; id: string; from: Point; to: Point; label?: string; dashed?: boolean; tone?: Tone }
+  | { kind: 'arrow'; id: string; from: Point; to: Point; label?: string; dashed?: boolean; tone?: Tone; ink?: InkName }
   | { kind: 'pen'; id: string; points: Point[]; tone?: Tone }
   /**
    * A line of maths. `after` holds it back that many milliseconds: a line of
@@ -325,6 +337,7 @@ export type Element =
       text: string;
       size?: number;
       tone?: Tone;
+      ink?: InkName;
       after?: number;
     }
   /**
@@ -382,6 +395,7 @@ export type Element =
       /** `box` and `highlight` are for her own writing (canvas C3): a frame round a line, a marker stroke over part of one. */
       shape: 'circle' | 'underline' | 'tick' | 'cross' | 'box' | 'highlight';
       tone?: Tone;
+      ink?: InkName;
     }
   | { kind: 'model3d'; id: string; x: number; y: number; w: number; h: number; asset?: string; label?: string }
   /**
