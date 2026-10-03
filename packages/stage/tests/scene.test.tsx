@@ -206,3 +206,39 @@ describe('Scene: every element kind renders', () => {
     expect(html).toContain('Heart in 3D');
   });
 });
+
+/**
+ * A PICTURE WHOSE ARTWORK IS AN SVG DRAWING (Aarav, 2026-10-03: "ye koi image
+ * nahi dikha raha"). class10-respiration's mitochondrion is a drawing kept in
+ * assets.json under the image's id; its src file was never written. The
+ * drawing was handed to <image href>, which cannot take markup, so the board
+ * showed a broken-image icon where the mitochondrion should have been.
+ */
+describe('an image whose artwork is an SVG drawing', () => {
+  const lesson: Lesson = {
+    formatVersion: 1,
+    id: 'pic',
+    title: 'Pic',
+    language: 'en',
+    canvas: { w: 1000, h: 620 },
+    elements: [{ kind: 'image', id: 'pic_cell', x: 100, y: 100, w: 400, h: 248, src: 'generated/pic_cell.png', alt: 'a cell' }],
+    beats: [{ id: 'b', topic: 'b', narration: 'b', show: ['pic_cell'] }],
+  } as unknown as Lesson;
+  const drawing = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620"><g id="membrane"><path d="M0 0 L10 10"/></g></svg>';
+
+  it('draws the drawing on the board, never as a broken link', () => {
+    const html = renderToString(<Scene lesson={lesson} visible={['pic_cell']} focus={[]} assets={{ pic_cell: drawing }} />);
+    // As an image of the drawing: an SVG shown as an image runs nothing and fetches nothing.
+    expect(html).toContain('href="data:image/svg+xml;charset=utf-8,' + encodeURIComponent(drawing));
+    expect(html).not.toMatch(/href="&lt;svg/);
+  });
+
+  it('still shows a picture file, or a picture handed over as a data URL, as an image', () => {
+    const file = renderToString(<Scene lesson={lesson} visible={['pic_cell']} focus={[]} />);
+    expect(file).toContain('href="generated/pic_cell.png"');
+    const data = renderToString(
+      <Scene lesson={lesson} visible={['pic_cell']} focus={[]} assets={{ pic_cell: 'data:image/png;base64,AAAA' }} />,
+    );
+    expect(data).toContain('href="data:image/png;base64,AAAA"');
+  });
+});

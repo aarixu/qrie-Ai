@@ -261,6 +261,18 @@ type Answer = Heard & {
   micSwitched?: boolean;
 };
 
+/**
+ * Full screen, and a phone turned sideways by the app itself where the browser
+ * allows it (Android Chrome: `screen.orientation.lock`, inside full screen).
+ * iPhone Safari has neither for a page, so there the hint just asks.
+ */
+const canFullScreen = (): boolean =>
+  typeof document !== 'undefined' && typeof document.documentElement.requestFullscreen === 'function';
+const canTurnSideways = (): boolean =>
+  canFullScreen() &&
+  typeof window !== 'undefined' &&
+  typeof (window.screen.orientation as { lock?: unknown } | undefined)?.lock === 'function';
+
 /** How long a tap on the mic waits for the student to start talking. */
 const TAP_GRACE_MS = 6_000;
 
@@ -672,6 +684,36 @@ export function ClassRoom({
    */
   const [micNote, setMicNote] = useState<string | null>(null);
   const showHeard = (text: string): void => setMicNote(`Heard: "${text}"`);
+  /**
+   * THE BOARD AS BIG AS THE PHONE ALLOWS (Aarav, 2026-10-03: "ajeeb lag raha
+   * hai"). Held upright, a 16:9 board is a strip across the top with its words
+   * too small to read. Full screen hides the browser's bars; turned sideways,
+   * the board takes the screen. Both on the student's tap — a browser allows
+   * neither without one — and full screen ends when they leave the class.
+   */
+  const [fullScreen, setFullScreen] = useState(false);
+  useEffect(() => {
+    const changed = (): void => setFullScreen(document.fullscreenElement !== null);
+    document.addEventListener('fullscreenchange', changed);
+    return () => {
+      document.removeEventListener('fullscreenchange', changed);
+      if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
+    };
+  }, []);
+  const toggleFullScreen = async (sideways: boolean): Promise<void> => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+        return;
+      }
+      await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
+      if (sideways && canTurnSideways()) {
+        await (window.screen.orientation as unknown as { lock(o: string): Promise<void> }).lock('landscape');
+      }
+    } catch {
+      // Refused, or not on this device: the class carries on as it is.
+    }
+  };
   /**
    * A MOMENT FOR HER SHAPE TO MARK (Bloub `cue`, Aarav, 2026-10-03: "bloub
    * ko animation do alag alag"): the class starting, a right answer, a wrong
@@ -2420,6 +2462,15 @@ export function ClassRoom({
       </div>
       <div className="flex-1" />
       {clock}
+      {canFullScreen() && (
+        <button
+          onClick={() => void toggleFullScreen(false)}
+          aria-label={fullScreen ? 'Leave full screen' : 'Full screen'}
+          className="w-9 h-9 rounded-full grid place-items-center hover:bg-white/10 transition-colors flex-shrink-0"
+        >
+          <Icon name={fullScreen ? 'fullscreen_exit' : 'fullscreen'} className="text-[22px]" />
+        </button>
+      )}
       {reportButton}
     </header>
   );
@@ -2552,9 +2603,25 @@ export function ClassRoom({
               {captionStrip}
               {answerBox}
               {doubtRow}
-              <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-2">
-                <Bloub mode={bloubMode} size={132} talking={voice.speaking} cue={bloubCue} />
+              <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-3">
+                <Bloub mode={bloubMode} size={112} talking={voice.speaking} cue={bloubCue} />
                 {status}
+                {/* Upright, the board is too small to read: turn it sideways —
+                    for the student, where the browser lets the app. */}
+                {canTurnSideways() ? (
+                  <button
+                    onClick={() => void toggleFullScreen(true)}
+                    className="mt-2 flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 font-label-md text-[13px] text-white active:bg-white/20"
+                  >
+                    <Icon name="screen_rotation" className="text-[18px]" />
+                    Turn sideways for a bigger board
+                  </button>
+                ) : (
+                  <p className="mt-2 flex items-center gap-2 font-label-md text-[13px] text-white/70">
+                    <Icon name="screen_rotation" className="text-[18px]" />
+                    Turn your phone sideways for a bigger board
+                  </p>
+                )}
               </div>
             </div>
           </main>

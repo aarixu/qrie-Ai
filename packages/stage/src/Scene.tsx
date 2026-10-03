@@ -548,15 +548,27 @@ function renderArrow(el: Extract<Element, { kind: 'arrow' }>): ReactElement {
  * prepared just now and has not been written anywhere. A class prepared live
  * has only the second, and rendering the first showed a broken-image icon
  * where the kidney should have been.
+ *
+ * The artwork can also be an SVG DRAWING rather than a picture file — a saved
+ * class keeps it in assets.json under the image's id (class10-respiration's
+ * mitochondrion). Markup is not a URL, so handing it to <image href> drew a
+ * broken-image icon (Aarav, 2026-10-03: "koi image nahi dikha raha"). It is
+ * handed over as a data: URL of the drawing instead. An SVG shown as an image
+ * runs no script and fetches nothing, so this needs none of the trust that
+ * inlining a diagram's markup does (`renderDiagram`).
  */
 function renderImage(el: Extract<Element, { kind: 'image' }>, asset?: string): ReactElement {
   const color = TONE_COLORS.neutral;
+  const href =
+    asset !== undefined && asset.trimStart().startsWith('<svg')
+      ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(asset.trim())}`
+      : (asset ?? el.src);
   return (
     <>
       {/* No frame. A picture is generated on white so it sits ON the board,
           the way a chart pinned up there does — a border would make it a
           panel dropped onto the lesson instead of part of it. */}
-      <image href={asset ?? el.src} x={el.x} y={el.y} width={el.w} height={el.h} preserveAspectRatio="xMidYMid meet" aria-label={el.alt} />
+      <image href={href} x={el.x} y={el.y} width={el.w} height={el.h} preserveAspectRatio="xMidYMid meet" aria-label={el.alt} />
       {el.label && (
         <text x={el.x + el.w / 2} y={el.y + el.h + 20} textAnchor="middle" fontFamily={FONT_HAND} fontSize={14.5} fill={color} fillOpacity={0.7}>
           {el.label}

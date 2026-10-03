@@ -65,6 +65,14 @@ import {
   Waves,
   WifiOff,
   X,
+  Flag,
+  Keyboard,
+  Maximize,
+  Minimize,
+  RotateCw,
+  Lock,
+  History,
+  Layers,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -163,7 +171,16 @@ const GLYPHS: Record<string, LucideIcon> = {
   wifi_off: WifiOff,
   workspace_premium: Award,
   call_end: Phone,
-  keyboard: Notebook,
+  keyboard: Keyboard,
+  // These were dots until 2026-10-03: the class's report flag, its full-screen
+  // and turn-sideways controls, the locked badge, the review and foundation marks.
+  flag: Flag,
+  fullscreen: Maximize,
+  fullscreen_exit: Minimize,
+  screen_rotation: RotateCw,
+  lock: Lock,
+  history: History,
+  foundation: Layers,
 };
 
 export function Icon({
