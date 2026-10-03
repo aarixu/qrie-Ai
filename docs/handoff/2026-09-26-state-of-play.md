@@ -442,6 +442,13 @@ Smart-board design research covered what the board can do today and how speech c
   - **The answer box** opens only on a keyboard button ("Type an answer").
   - His own transcripts could not be read: doubts are never stored, and the ledger had no spoken answers from his phone.
   - **Checked on production** with a fake-mic phone Chrome: tap → heard → `Heard:` shown → `/api/llm` answered → back to class, mic off.
+- **"Koi image nahi dikha raha, ajeeb lag raha hai" (same evening):**
+  - **Live site drew no lesson artwork at all.** The folder was built from the origin root (`/class10-respiration/assets.json`, a 404 under `/app/`). Fixed with `lessonFolder` / `pictureUrls` in `lib/diagrams.ts`.
+  - **An image whose artwork is an SVG drawing** went to `<image href>` as markup, which drew a broken-image icon. It is now passed as a data: URL (`packages/stage` `renderImage`).
+  - **Seven icon names drew as dots:** the report flag, full screen, turn sideways, lock, history and foundation.
+  - **Portrait:** a "Turn sideways" button (Android: full screen plus a landscape lock) and a full-screen button in the header.
+  - **Bloub cues and ambient flourishes** (see the bloub commit).
+  - **Still content, not code:** class10-blood and class10-excretion are text boxes only. class9 particle-size has two missing PNGs. Several respiration beats show one line of handwriting. Graphics are 45 units, about 30 px in the overview beat. These need the classes re-prepared, which is Aarav's call because it costs money.
 
 **Order:**
 - C0 and C1 together, now: neither needs model spend to build.
