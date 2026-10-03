@@ -20,12 +20,42 @@ import type { CatalogEntry } from './content';
  *   - The hand-authored lessons predate that and keep one SVG file per
  *     diagram, named by the element's `src`.
  *
- * A picture is neither: it is a real image file the renderer loads by URL, and
- * a saved class already points at it absolutely. Nothing to do here.
+ * A picture is neither: it is a real image file the renderer loads by URL.
+ * One named relative to its lesson (`generated/cell.png`, as a class written
+ * into content/ names it) is handed over here as a URL under the lesson's
+ * folder (`pictureUrls`): left to itself it resolved against the page's own
+ * address (/app/lesson/...) and 404'd. A drawing in assets.json under the
+ * same id wins over the file.
  *
  * Artwork that fails to load is reported and skipped rather than thrown: a
  * missing picture should cost the class one picture, not the whole class.
  */
+/**
+ * The folder a lesson's artwork sits in, beside its lesson.json.
+ *
+ * An authored lesson's path is relative to the static root, which is the
+ * app's own root — '/' standalone, '/app/' under the marketing site (Vite's
+ * BASE_URL). It used to be built from the ORIGIN root, so on the live site
+ * every lesson asked for /class10-respiration/assets.json, got a 404, and drew
+ * no graphic, diagram or drawing at all (Aarav, 2026-10-03: "koi image nahi
+ * dikha raha"). A class kept in Storage carries a whole URL; prefixing that
+ * would ask this origin for "/https://…", which 404s into the SPA fallback.
+ */
+export function lessonFolder(entry: CatalogEntry, root: string = import.meta.env.BASE_URL): string {
+  const base = entry.path.replace(/\/[^/]+$/, '');
+  return /^https?:\/\//.test(base) ? base : `${root}${base}`;
+}
+
+/** Picture files named relative to their lesson, as URLs under its folder. */
+export function pictureUrls(lesson: Lesson, folder: string): Record<string, string> {
+  const urls: Record<string, string> = {};
+  for (const el of lesson.elements) {
+    if (el.kind !== 'image' || !el.src || /^(https?:|data:|blob:|\/)/.test(el.src)) continue;
+    urls[el.id] = `${folder}/${el.src}`;
+  }
+  return urls;
+}
+
 export function useLessonAssets(
   entry: CatalogEntry | null,
   lesson: Lesson | null,
@@ -35,22 +65,13 @@ export function useLessonAssets(
   useEffect(() => {
     if (!entry || !lesson) return;
     const diagrams = lesson.elements.filter((el) => el.kind === 'diagram');
+    const folder = lessonFolder(entry);
+    const pictures = pictureUrls(lesson, folder);
     const inlined = lesson.elements.some((el) => el.kind === 'graphic') || diagrams.length > 0;
     if (!inlined) {
-      setAssets({});
+      setAssets(pictures);
       return;
     }
-
-    /**
-     * The folder the lesson's artwork sits in, beside its lesson.json.
-     *
-     * An authored lesson's path is relative to the static root; a class kept
-     * in Storage carries a whole URL. Prefixing the second with a slash would
-     * ask this origin for "/https://…", which 404s into the SPA fallback and
-     * arrives as index.html.
-     */
-    const base = entry.path.replace(/\/[^/]+$/, '');
-    const folder = /^https?:\/\//.test(base) ? base : `/${base}`;
     let cancelled = false;
 
     const svgOrThrow = async (url: string): Promise<string> => {
@@ -68,7 +89,7 @@ export function useLessonAssets(
         .then((res) => (res.ok ? (res.json() as Promise<Record<string, string>>) : null))
         .catch(() => null);
       if (bundled) {
-        if (!cancelled) setAssets(bundled);
+        if (!cancelled) setAssets({ ...pictures, ...bundled });
         return;
       }
 
@@ -83,7 +104,7 @@ export function useLessonAssets(
           }
         }),
       );
-      if (!cancelled) setAssets(loaded);
+      if (!cancelled) setAssets({ ...pictures, ...loaded });
     })();
 
     return () => {
