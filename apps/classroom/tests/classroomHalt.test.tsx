@@ -19,54 +19,91 @@ vi.mock('../src/lib/telemetry', () => ({ track: () => undefined }));
 /**
  * THE MICROPHONE, AND ONLY THE MICROPHONE.
  *
- * jsdom has no getUserMedia, so the mic is reported as `ear.mic` says and
+ * jsdom has no getUserMedia, so the class's mic (lib/ear.ts `openEar`) is a
+ * fake: it is OFF until the student taps the mic button (Aarav, 2026-10-03),
+ * and a tap turns it on when `ear.mic` says the browser gives it ('denied' is
+ * a mic that will not turn on; 'unknown' is a browser that will ask, and here
+ * the student says yes). `ear.on` is whether it is on now, `ear.speech` the
+ * room's "they are talking over her" listener while it has one, and
  * `listenOnce` hands back whatever a test queued. Everything past that is
  * real: `resolveSpokenAnswer`'s screen, the halt, the room. The `isCancelled`
  * the room passes in is KEPT, because polling it is how ClassRoom closes a mic
  * in flight — so a test can ask it afterwards whether the mic would now close.
  *
  * A queued `null` is a quiet listen that ends a long silence: the clock is
- * moved past the room's wait before a nudge. A queued `ERROR` is a mic that
- * will not open. With nothing queued, the mic stays open and hears nothing.
+ * moved past the room's wait before a nudge. A queued `SHORT_QUIET` is the
+ * endpointer giving up after a few seconds, with the clock left alone. A
+ * queued `ERROR` is a mic that stopped (a call took it). With nothing queued,
+ * the listen stays open, and takes what a test queues next or ends when the
+ * room ends it.
  */
-const ERROR = Symbol('a mic that will not open');
+const { ERROR, SHORT_QUIET } = vi.hoisted(() => ({
+  ERROR: Symbol('a mic that stopped'),
+  SHORT_QUIET: Symbol('a short quiet'),
+}));
 const ear = vi.hoisted(() => ({
   queued: [] as (string | null | symbol)[],
   polls: [] as (() => boolean)[],
   listens: 0,
   /** Holds a heard answer back, like the transcription round trip does. */
   hold: null as Promise<void> | null,
-  mic: 'granted' as 'granted' | 'denied',
+  mic: 'granted' as 'granted' | 'denied' | 'unknown',
+  /** The mic card has been seen before. */
+  explained: true,
+  /** The class's mic is on. */
+  on: false,
+  /** Taps that tried to turn it on, and times it was turned off. */
+  opens: 0,
+  closes: 0,
+  /** The room's listener for the student talking over her, while it has one. */
+  speech: null as (() => void) | null,
   /** How far the room's clock has been moved on by quiet listens. */
   skew: 0,
 }));
 vi.mock('../src/lib/mic', async (real) => ({
   ...(await real<typeof import('../src/lib/mic')>()),
   micStatus: () => ear.mic,
-  micExplained: () => true,
+  micExplained: () => ear.explained,
+  rememberMicExplained: () => {
+    ear.explained = true;
+  },
   requestMic: async () => ear.mic,
 }));
 vi.mock('../src/lib/ear', async (real) => ({
   ...(await real<typeof import('../src/lib/ear')>()),
+  openEar: async () => {
+    ear.opens += 1;
+    ear.on = ear.mic !== 'denied';
+    return ear.on;
+  },
+  closeEar: () => {
+    if (ear.on) ear.closes += 1;
+    ear.on = false;
+  },
+  isEarOpen: () => ear.on,
+  onStudentSpeech: (listen: () => void) => {
+    ear.speech = listen;
+    return () => {
+      if (ear.speech === listen) ear.speech = null;
+    };
+  },
   listenOnce: async (opts: { isCancelled?: () => boolean } = {}) => {
     ear.listens += 1;
     if (opts.isCancelled) ear.polls.push(opts.isCancelled);
-    if (ear.queued.length === 0)
-      // Nothing to say yet: the mic stays open until the room closes it, the
-      // way the real one closes on its next chunk.
-      return new Promise((resolve) => {
-        const poll = setInterval(() => {
-          if (opts.isCancelled?.()) {
-            clearInterval(poll);
-            resolve({ text: null, reason: 'cancelled' as const });
-          }
-        }, 10);
-      });
+    // Nothing to say yet: the listen stays open until they say something (a
+    // test queues it later) or the room ends it, the way the real one ends on
+    // its next chunk.
+    while (ear.queued.length === 0) {
+      await new Promise((r) => setTimeout(r, 10));
+      if (opts.isCancelled?.()) return { text: null, reason: 'cancelled' as const };
+    }
     const next = ear.queued.shift();
-    if (typeof next === 'symbol') return { text: null, reason: 'error' as const };
     if (next === null) {
       ear.skew += 25_000;
       return { text: null, reason: 'silence' as const };
+    }
+    if (typeof next === 'symbol') {
+      return next === ERROR ? { text: null, reason: 'error' as const } : { text: null, reason: 'silence' as const };
     }
     if (ear.hold) await ear.hold;
     return { text: next, reason: 'heard' as const };
@@ -227,11 +264,39 @@ async function typeDoubt(host: HTMLElement, text: string): Promise<void> {
 }
 const typeAnswer = (host: HTMLElement, text: string) => typeInto(host, 'Type your answer', 'Send answer', text);
 
+/**
+ * THE MIC BUTTON, BESIDE THE RAISED HAND (Aarav, 2026-10-03). The mic is off
+ * until the student taps it, so a student who answers OUT LOUD taps it first —
+ * once per question or exchange, where a real one would: after she has put the
+ * question. A typed wait looks at the mic every 100 ms, so the tap is given
+ * that long to land before the room is looked at. `tapMic` presses whichever
+ * the button says now.
+ */
+async function tapMic(host: HTMLElement, label: 'Turn the mic on' | 'Turn the mic off'): Promise<void> {
+  await act(async () => {
+    byLabel(host, label).click();
+  });
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 150));
+  });
+  await tick();
+}
+const turnMicOn = (host: HTMLElement) => tapMic(host, 'Turn the mic on');
+const micIsOn = (host: HTMLElement): boolean => host.querySelector('[aria-label="Turn the mic off"]') !== null;
+const answerBox = (host: HTMLElement) => host.querySelector('[aria-label="Type your answer"]');
+
 const buttonWith = (host: HTMLElement, text: string): boolean =>
   [...host.querySelectorAll('button')].some((b) => b.textContent?.includes(text));
 
 const pending = (kind: string) =>
   ledgerOutbox.get().pending.filter((e) => e.kind === kind).map((e) => e.payload as Record<string, unknown>);
+
+/** How each answer on record came: 'voice' with the mic on, 'text' from the box. */
+const answeredBy = () =>
+  ledgerOutbox
+    .get()
+    .pending.filter((e) => e.kind === 'answered')
+    .map((e) => (e as { surface?: string }).surface);
 
 const realNow = Date.now;
 
@@ -262,6 +327,11 @@ beforeEach(() => {
   ear.listens = 0;
   ear.hold = null;
   ear.mic = 'granted';
+  ear.explained = true;
+  ear.on = false;
+  ear.opens = 0;
+  ear.closes = 0;
+  ear.speech = null;
   ear.skew = 0;
   vi.spyOn(Date, 'now').mockImplementation(() => realNow() + ear.skew);
   warm.items = [];
@@ -363,8 +433,8 @@ const nextBeat = () => spoken.includes(lesson.beats[1].narration);
  * THE EAR, THROUGH THE REAL ROOM.
  *
  * lib/sessionHalt's own tests call `heard` directly and close a fake mic. This
- * is the wiring they cannot see: the room holds a question, opens the ear,
- * the student SAYS distress, and the answer runs through the room's own ear
+ * is the wiring they cannot see: the room holds a question, the student turns
+ * the mic on and SAYS distress, and the answer runs through the room's own ear
  * loop — `resolveSpokenAnswer`'s screen, then the halt.
  */
 describe('a spoken answer that is distress, in the real room', () => {
@@ -372,15 +442,21 @@ describe('a spoken answer that is distress, in the real room', () => {
     ear.queued = ['i want to kill myself'];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
+    // The question is held and the mic is off: nothing has listened yet.
+    expect(ear.listens).toBe(0);
+    await turnMicOn(host);
+    await tick(10);
 
-    // The ear really was opened, by the room, for this question.
+    // The ear really was opened for this question, by the student's tap.
+    expect(ear.opens).toBe(1);
     expect(ear.listens).toBe(1);
     const dialog = host.querySelector('[role="alertdialog"]');
     expect(dialog).not.toBeNull();
     expect(host.querySelector('#support-line')?.textContent).toBe(SUPPORT_REPLY);
-    // The same poll ClassRoom's listen checks on every chunk now says stop:
-    // the mic closes on its next one.
+    // The same poll ClassRoom's listen checks on every chunk now says stop,
+    // and the class's mic has been turned off.
     expect(ear.polls[0]()).toBe(true);
+    expect(ear.on).toBe(false);
     // Neither the judge nor anything else went to a model.
     expect(llmCalls).toBe(0);
     expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
@@ -403,6 +479,8 @@ describe('a right answer whose why trips the distress screen', () => {
     ear.queued = ['Four'];
     const host = await openClass({ lesson: askingLesson(why), tts: quickVoice() });
     await tick(10);
+    await turnMicOn(host);
+    await tick(10);
 
     expect(spoken.join(' ')).not.toContain('kill myself');
     expect(host.querySelector('[role="alertdialog"]')).toBeNull();
@@ -416,7 +494,9 @@ describe('a right answer whose why trips the distress screen', () => {
 
   it('an ordinary why is said, then the class moves on', async () => {
     ear.queued = ['Four'];
-    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    await turnMicOn(host);
     await tick(10);
     expect(spoken.some((line) => line.includes(RIGHT_WHY))).toBe(true);
     expect(nextBeat()).toBe(true);
@@ -427,25 +507,37 @@ describe('a right answer whose why trips the distress screen', () => {
  * THE HELD QUESTION, IN THE REAL ROOM (2026-10-01).
  *
  * Nothing on screen asks or answers: no question, no options, no chips. She
- * asks out loud and the ear takes it from there — and every way of not
- * answering has to end, because nothing on screen can end it now.
+ * asks out loud; a student here answers out loud, having turned the mic on
+ * once, after she asked (the typed box is the next describe's) — and every
+ * way of not answering has to end, because nothing on screen can end it now.
  */
 describe('the held question, in the real room', () => {
   it('puts nothing on screen to answer with: no question, no options, no chips', async () => {
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick();
+    const nothingToAnswerWith = (): void => {
+      expect(host.textContent).not.toContain('How many components');
+      for (const text of ['Four', 'Just plasma', 'hint', 'not sure', 'another way', 'Work it out', 'Say your answer']) {
+        expect(buttonWith(host, text), text).toBe(false);
+      }
+    };
+    // The mic is off: the one box under the board waits, and nothing listens.
+    nothingToAnswerWith();
+    expect(answerBox(host)).not.toBeNull();
+    expect(ear.listens).toBe(0);
+    // With the mic on the ear hears them, so there is no box either.
+    await turnMicOn(host);
+    nothingToAnswerWith();
     expect(ear.listens).toBeGreaterThan(0);
-    expect(host.textContent).not.toContain('How many components');
-    for (const text of ['Four', 'Just plasma', 'hint', 'not sure', 'another way', 'Work it out', 'Say your answer']) {
-      expect(buttonWith(host, text), text).toBe(false);
-    }
-    // The ear can hear them, so there is no box either.
-    expect(host.querySelector('[aria-label="Type your answer"]')).toBeNull();
+    expect(answerBox(host)).toBeNull();
   });
 
   it('gives the answer and its why, and goes on, when the answers keep missing', async () => {
     ear.queued = ['Just plasma', 'Just plasma', 'Just plasma'];
-    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    // One tap: the mic stays on until the question is over.
+    await turnMicOn(host);
     await tick(20);
     // Look again, the hint, then the answer and why — and the class goes on.
     expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
@@ -458,7 +550,9 @@ describe('the held question, in the real room', () => {
     const quiet = askingLesson(RIGHT_WHY);
     quiet.beats[0].ask!.hint = 'Count the workers on the board.';
     ear.queued = [null, null, null];
-    await openClass({ lesson: quiet, tts: quickVoice() });
+    const host = await openClass({ lesson: quiet, tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(20);
     expect(spoken.some((l) => LINES.nudge.en.includes(l))).toBe(true);
     expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
@@ -475,11 +569,15 @@ describe('the held question, in the real room', () => {
 
   it('waits out a short quiet without a word', async () => {
     // The endpointer gives up after a few seconds; that is not a stuck student.
-    ear.queued = ['Four'];
-    ear.skew = 0;
-    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    ear.queued = [SHORT_QUIET, 'Four'];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(10);
+    // Both listens ran: the quiet one re-armed the ear, and the answer came.
+    expect(ear.listens).toBeGreaterThanOrEqual(2);
     expect(spoken.some((l) => LINES.nudge.en.includes(l))).toBe(false);
+    expect(nextBeat()).toBe(true);
   });
 
   it('never says a hint decide() refused for giving the answer away', async () => {
@@ -487,7 +585,11 @@ describe('the held question, in the real room', () => {
     leaky.beats[0].ask!.hint = 'It is Four, so say Four.';
     ear.queued = ['hint do'];
     const host = await openClass({ lesson: leaky, tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(10);
+    // They really did ask for the hint.
+    expect(ear.queued).toHaveLength(0);
     expect(host.textContent).not.toContain('It is Four');
     expect(spoken.join(' ')).not.toContain('It is Four');
   });
@@ -496,7 +598,9 @@ describe('the held question, in the real room', () => {
     const fine = askingLesson(RIGHT_WHY);
     fine.beats[0].ask!.hint = 'Count the workers on the board.';
     ear.queued = ['hint do'];
-    await openClass({ lesson: fine, tts: quickVoice() });
+    const host = await openClass({ lesson: fine, tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(10);
     expect(llmCalls).toBe(0);
     expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
@@ -510,6 +614,8 @@ describe('the held question, in the real room', () => {
     written.beats[0].workArea = { id: 'wa', x: 40, y: 380, w: 900, h: 220 };
     ear.queued = ['Just plasma', 'Just plasma'];
     const host = await openClass({ lesson: written, tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(20);
     expect(pending('answered')).toHaveLength(2);
     const board = host.querySelector('section')?.textContent ?? '';
@@ -523,7 +629,9 @@ describe('the held question, in the real room', () => {
     open.beats[0].ask = { question: 'What does plasma carry?', expect: 'dissolved food, salts and wastes' } as never;
     llmReply = 'no json here';
     ear.queued = ['salt water', 'salt water', 'salt water'];
-    await openClass({ lesson: open, tts: quickVoice() });
+    const host = await openClass({ lesson: open, tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(20);
     expect(spoken.filter((l) => LINES.sayAgain.en.includes(l))).toHaveLength(2);
     expect(spoken.some((l) => LINES.carryOn.en.includes(l))).toBe(true);
@@ -565,7 +673,9 @@ describe('the held question, in the real room', () => {
 
   it('hears the reply to a follow-up question as reasoning, not as a second answer (C7)', async () => {
     ear.queued = ['Just plasma', 'I counted the red cells and the plasma'];
-    await openClass({ lesson: probed(), tts: quickVoice() });
+    const host = await openClass({ lesson: probed(), tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(20);
     expect(spoken).toContain('Which two did you count?');
     expect(llmCalls).toBe(0);
@@ -576,7 +686,9 @@ describe('the held question, in the real room', () => {
 
   it('judges a reply to a follow-up that says the answer, and moves on (fifth review)', async () => {
     ear.queued = ['Just plasma', 'oh wait, it is Four'];
-    await openClass({ lesson: probed(), tts: quickVoice() });
+    const host = await openClass({ lesson: probed(), tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(20);
     expect(spoken).toContain('Which two did you count?');
     expect(spoken.some((l) => /another go|once more/i.test(l))).toBe(false);
@@ -593,7 +705,9 @@ describe('the held question, in the real room', () => {
       ],
     } as never;
     ear.queued = ['phir se samjhao', 'phir se samjhao'];
-    await openClass({ lesson: alt, tts: quickVoice() });
+    const host = await openClass({ lesson: alt, tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(20);
     const explained = spoken.filter((l) => /delivery team|school with teachers/.test(l));
     expect(explained.length).toBe(2);
@@ -624,27 +738,31 @@ describe('the held question, in the real room', () => {
 });
 
 /**
- * NO MIC, ONE BOX (2026-10-01). A student the ear cannot hear types their
- * answer into one box under the board, and it goes down the spoken answer's
- * road: the same screen, the same judge, the same ladder.
+ * THE MIC OFF, ONE BOX (2026-10-01; the mic off by default since 2026-10-03).
+ * While the mic is off — every student until they tap it, and one whose mic
+ * will not turn on or has stopped — the answer is typed into one box under
+ * the board, and it goes down the spoken answer's road: the same screen, the
+ * same judge, the same ladder.
  */
-describe('a held question without a mic', () => {
+describe('a held question with the mic off', () => {
   it('gets one box under the board, and what they type is judged like speech', async () => {
-    ear.mic = 'denied';
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
-    expect(host.querySelector('[aria-label="Type your answer"]')).not.toBeNull();
+    expect(answerBox(host)).not.toBeNull();
     expect(host.querySelector('section [aria-label="Type your answer"]')).toBeNull();
     await typeAnswer(host, 'Four');
     await tick(10);
     expect(spoken.some((l) => l.includes(RIGHT_WHY))).toBe(true);
     expect(nextBeat()).toBe(true);
     expect(pending('answered')[0]).toMatchObject({ correct: true });
-    expect(host.querySelector('[aria-label="Type your answer"]')).toBeNull();
+    expect(answeredBy()).toEqual(['text']);
+    expect(answerBox(host)).toBeNull();
+    // Nothing was ever listened to: the mic was never turned on.
+    expect(ear.opens).toBe(0);
+    expect(ear.listens).toBe(0);
   });
 
   it('screens what they type: distress halts the class', async () => {
-    ear.mic = 'denied';
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
     await typeAnswer(host, 'i want to kill myself');
@@ -654,22 +772,184 @@ describe('a held question without a mic', () => {
     expect(llmCalls).toBe(0);
   });
 
-  it('hands the question to the box when the mic will not open', async () => {
+  it('keeps the box, and says so beside her, when the mic will not turn on', async () => {
+    ear.mic = 'denied';
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    await turnMicOn(host);
+    expect(ear.opens).toBe(1);
+    expect(micIsOn(host)).toBe(false);
+    expect(host.textContent).toContain("The mic didn't turn on. You can type instead.");
+    expect(answerBox(host)).not.toBeNull();
+    expect(ear.listens).toBe(0);
+    // The box still takes the answer.
+    await typeAnswer(host, 'Four');
+    await tick(10);
+    expect(nextBeat()).toBe(true);
+  });
+
+  it('hands the question back to the box when the mic stops', async () => {
     ear.queued = [ERROR];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
-    expect(host.querySelector('[aria-label="Type your answer"]')).not.toBeNull();
+    await turnMicOn(host);
+    await tick(10);
+    expect(ear.listens).toBe(1);
+    // The mic that stopped is turned off, and the box is back.
+    expect(micIsOn(host)).toBe(false);
+    expect(answerBox(host)).not.toBeNull();
     // A mic that failed is not a quiet student: no nudge for it.
     expect(spoken.some((l) => LINES.nudge.en.includes(l))).toBe(false);
   });
 });
 
+/**
+ * THE MIC BUTTON (Aarav, 2026-10-03: "agar mic hamesha on rahta hai to bg
+ * noise se ye baar baar interrupt hota hai, to mic ka button bana do raise
+ * hand ke saath jise click karne par hi mic on ho"). Off until it is tapped;
+ * a second tap turns it off; and it goes off by itself once the exchange it
+ * was turned on for is over and she is teaching again.
+ */
+describe('the mic button, beside the raised hand', () => {
+  it('starts off: while she teaches nothing listens, not even for the room talking over her', async () => {
+    // voice() holds her first line: she is teaching it.
+    const host = await openClass();
+    await tick(10);
+    expect(spoken).toContain(lesson.beats[0].narration);
+    expect(micIsOn(host)).toBe(false);
+    expect(ear.opens).toBe(0);
+    expect(ear.listens).toBe(0);
+    // No speech detector is listened to, so a noisy room has nothing to set
+    // off: she is still on her first line.
+    expect(ear.speech).toBeNull();
+    expect(nextBeat()).toBe(false);
+  });
+
+  it('turns off on a second tap: the listen ends, the box is back, and the wait is not counted as quiet', async () => {
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
+    expect(micIsOn(host)).toBe(true);
+    expect(ear.on).toBe(true);
+    expect(ear.listens).toBe(1);
+    expect(answerBox(host)).toBeNull();
+
+    await tapMic(host, 'Turn the mic off');
+    expect(micIsOn(host)).toBe(false);
+    expect(ear.on).toBe(false);
+    expect(ear.closes).toBe(1);
+    // The listen in flight is told to stop on its next chunk.
+    expect(ear.polls[0]()).toBe(true);
+    // The question still stands, in the box now, and nobody was nudged for it.
+    expect(answerBox(host)).not.toBeNull();
+    expect(spoken.some((l) => LINES.nudge.en.includes(l))).toBe(false);
+    await typeAnswer(host, 'Four');
+    await tick(10);
+    expect(nextBeat()).toBe(true);
+    expect(pending('answered')[0]).toMatchObject({ correct: true });
+    expect(answeredBy()).toEqual(['text']);
+    expect(ear.listens).toBe(1);
+  });
+
+  it('goes off by itself when the question it was turned on for is over', async () => {
+    ear.queued = ['Four'];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
+    await tick(10);
+    // Answered out loud, and she is teaching the next beat…
+    expect(pending('answered')[0]).toMatchObject({ correct: true });
+    expect(answeredBy()).toEqual(['voice']);
+    expect(nextBeat()).toBe(true);
+    // …with the mic off, and nothing listening for the room.
+    expect(micIsOn(host)).toBe(false);
+    expect(ear.on).toBe(false);
+    expect(ear.closes).toBe(1);
+    expect(ear.speech).toBeNull();
+    const listens = ear.listens;
+    await tick(10);
+    expect(ear.listens).toBe(listens);
+  });
+
+  it('hears a doubt out loud, and goes off by itself when the doubt is over', async () => {
+    ear.queued = ['why is blood red?'];
+    const host = await openClass();
+    await raiseHand(host);
+    // In the doubt the mic is off, and nothing listens until it is tapped.
+    expect(ear.listens).toBe(0);
+    await turnMicOn(host);
+    await tick(10);
+    // Their words went to the tutor, and she answered.
+    expect(llmCalls).toBe(1);
+    expect(spoken).toContain('Blood carries oxygen in red blood cells.');
+    // The mic is still on, and the next thing they say is heard too.
+    expect(micIsOn(host)).toBe(true);
+    ear.queued.push('got it');
+    await tick(10);
+    // "got it" ended the doubt; the class is back, and the mic went off with it.
+    expect(host.querySelector('[aria-label="Raise hand and ask a doubt"]')).not.toBeNull();
+    expect(micIsOn(host)).toBe(false);
+    expect(ear.on).toBe(false);
+    expect(ear.speech).toBeNull();
+  });
+
+  it('explains itself on the first tap ever, and turns on from the card', async () => {
+    ear.mic = 'unknown';
+    ear.explained = false;
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await act(async () => {
+      byLabel(host, 'Turn the mic on').click();
+    });
+    await tick();
+    expect(host.querySelector('[aria-label="Let Meera hear you"]')).not.toBeNull();
+    expect(ear.opens).toBe(0);
+    await act(async () => {
+      [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Turn on the mic'))!.click();
+    });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 150));
+    });
+    await tick();
+    expect(host.querySelector('[aria-label="Let Meera hear you"]')).toBeNull();
+    expect(ear.explained).toBe(true);
+    expect(ear.opens).toBe(1);
+    expect(micIsOn(host)).toBe(true);
+    expect(answerBox(host)).toBeNull();
+  });
+
+  it('stays off after "Not now" on the card, and the next tap does not ask again', async () => {
+    ear.mic = 'unknown';
+    ear.explained = false;
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await act(async () => {
+      byLabel(host, 'Turn the mic on').click();
+    });
+    await tick();
+    await act(async () => {
+      [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Not now'))!.click();
+    });
+    await tick();
+    expect(host.querySelector('[aria-label="Let Meera hear you"]')).toBeNull();
+    expect(ear.opens).toBe(0);
+    expect(micIsOn(host)).toBe(false);
+    expect(answerBox(host)).not.toBeNull();
+    // Explained once is explained: the next tap goes straight to the mic.
+    await turnMicOn(host);
+    expect(host.querySelector('[aria-label="Let Meera hear you"]')).toBeNull();
+    expect(ear.opens).toBe(1);
+    expect(micIsOn(host)).toBe(true);
+  });
+});
+
 /** Aarav, 2026-10-01: nothing that says "recording", and no subtitles on the board. */
 describe('the room around the board', () => {
-  it('keeps only raise hand and end class on the toolbar', async () => {
+  it('keeps only the mic, raise hand and end class on the toolbar', async () => {
     const host = await openClass({ tts: quickVoice() });
     const toolbar = [...host.querySelectorAll('nav [aria-label]')].map((b) => b.getAttribute('aria-label'));
-    expect(toolbar).toEqual(['Raise hand and ask a doubt', 'End the class']);
+    // The mic sits before the raised hand, and starts off (2026-10-03).
+    expect(toolbar).toEqual(['Turn the mic on', 'Raise hand and ask a doubt', 'End the class']);
     expect(host.textContent).not.toContain('REC');
     expect(host.querySelector('header')?.textContent ?? '').not.toMatch(/\d+\/\d+/);
     await act(async () => {
@@ -704,8 +984,9 @@ describe('the room around the board', () => {
  *
  * One authored probe per due outcome, asked after her greeting and before the
  * first beat. Nothing is shown: she reads the question and its choices, the
- * spoken answer is filed cold under the probe's own outcome, she says whether
- * it was right, and the class begins.
+ * answer — spoken once the student has turned the mic on, or typed while it is
+ * off — is filed cold under the probe's own outcome, she says whether it was
+ * right, and the class begins. Nothing turns the mic on for the warm-up.
  */
 describe('the class-start warm-up', () => {
   const question = {
@@ -725,6 +1006,11 @@ describe('the class-start warm-up', () => {
     ear.queued = ['4'];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
+    // Asked, and waiting: the mic is still off until they tap it.
+    expect(ear.opens).toBe(0);
+    expect(answered()).toHaveLength(0);
+    await turnMicOn(host);
+    await tick(10);
 
     const asked = spoken.find((l) => l.includes('If 2x = 8, what is x?')) ?? '';
     expect(asked).toContain('Is it 2, 4, 6 or 16?');
@@ -740,7 +1026,9 @@ describe('the class-start warm-up', () => {
   it('says the right answer after a wrong one', async () => {
     warm.items = [question];
     ear.queued = ['16'];
-    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    await turnMicOn(host);
     await tick(10);
     expect(answered()[0].payload).toMatchObject({ chosenIndex: 3, correct: false, assistanceRung: 0 });
     expect(spoken.some((l) => l.includes('The answer is 4'))).toBe(true);
@@ -752,6 +1040,10 @@ describe('the class-start warm-up', () => {
     ear.queued = ['4'];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
+    await turnMicOn(host);
+    await tick(10);
+    // Answered and replied to: every line of the warm-up has been said.
+    expect(answered()).toHaveLength(1);
     expect(spoken.join(' ')).not.toContain(question.title);
     expect(host.textContent).not.toContain(question.title);
   });
@@ -761,7 +1053,9 @@ describe('the class-start warm-up', () => {
     setLastSession({ lessonId: 'an-older-class', title: 'Solving linear equations', beatsDone: 20, total: 20 });
     warm.items = [question];
     ear.queued = ['4'];
-    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    await turnMicOn(host);
     await tick(10);
     const ask = spoken.findIndex((l) => l.includes('If 2x = 8'));
     const recap = spoken.findIndex((l) => /Last time we did Solving linear equations/.test(l));
@@ -781,8 +1075,12 @@ describe('the class-start warm-up', () => {
   it('asks each due question in turn', async () => {
     warm.items = [question, { ...question, id: 'probe-8', question: 'If x + 1 = 3, what is x?', options: ['1', '2', '3', '4'] }];
     ear.queued = ['4', '2'];
-    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    // One tap: she is not teaching between the two questions, so the mic stays on.
+    await turnMicOn(host);
     await tick(20);
+    expect(ear.opens).toBe(1);
     expect(spoken.some((l) => l.includes('If 2x = 8, what is x?'))).toBe(true);
     expect(spoken.some((l) => l.includes('If x + 1 = 3, what is x?'))).toBe(true);
     expect(answered()).toHaveLength(2);
@@ -814,7 +1112,6 @@ describe('the class-start warm-up', () => {
   // student heard "Welcome back … from an earlier class" and never "I'm Meera".
   it('introduces her on a first class, and does not call the placement an earlier class', async () => {
     warm.items = [question];
-    ear.queued = ['4'];
     await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
     const lead = spoken.find((l) => /warm-up/i.test(l)) ?? '';
@@ -825,7 +1122,9 @@ describe('the class-start warm-up', () => {
   it('files nothing when they stay quiet, says the answer, and the class begins', async () => {
     warm.items = [question];
     ear.queued = [null];
-    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    await turnMicOn(host);
     await tick(10);
     expect(answered()).toHaveLength(0);
     expect(spoken.some((l) => l.includes('the answer is 4'))).toBe(true);
@@ -835,21 +1134,23 @@ describe('the class-start warm-up', () => {
   it('asks once more when the words name no choice, then says the answer', async () => {
     warm.items = [question];
     ear.queued = ['banana', 'banana'];
-    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    await turnMicOn(host);
     await tick(10);
     expect(spoken.filter((l) => LINES.sayAgain.en.includes(l))).toHaveLength(1);
     expect(answered()).toHaveLength(0);
     expect(spoken.some((l) => l.includes('the answer is 4'))).toBe(true);
   });
 
-  it('takes a typed answer when there is no mic', async () => {
-    ear.mic = 'denied';
+  it('takes a typed answer while the mic is off', async () => {
     warm.items = [question];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
     await tick(10);
     await typeAnswer(host, '4');
     await tick(10);
     expect(answered()[0].payload).toMatchObject({ chosenIndex: 1, correct: true });
+    expect(ear.listens).toBe(0);
   });
 });
 
@@ -892,7 +1193,9 @@ describe('her greeting when the last class was this one', () => {
 describe('how she helped, on the record', () => {
   it('files the strategy with the help a wrong answer gets (H5)', async () => {
     ear.queued = ['Just plasma'];
-    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(10);
     expect(pending('helped')[0]).toMatchObject({ rung: 1, requested: false });
     expect(typeof pending('helped')[0].strategy).toBe('string');
@@ -905,7 +1208,9 @@ describe('how she helped, on the record', () => {
       alternates: [{ mode: 'analogy', say: 'Think of blood as a delivery team with different workers.' }],
     } as never;
     ear.queued = ['phir se samjhao'];
-    await openClass({ lesson: alt, tts: quickVoice() });
+    const host = await openClass({ lesson: alt, tts: quickVoice() });
+    await tick();
+    await turnMicOn(host);
     await tick(10);
     expect(pending('helped')[0]).toMatchObject({ rung: 7, requested: true, strategy: 'analogy' });
     expect(spoken.some((l) => l.includes('Think of blood as a delivery team'))).toBe(true);

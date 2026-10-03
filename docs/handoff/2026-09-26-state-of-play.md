@@ -426,6 +426,16 @@ Smart-board design research covered what the board can do today and how speech c
 - **The doubt without a panel:** spoken through the open ear, or typed in the row the keyboard button brings up (now on every screen). One status line sits beside her shape. Captions, when on, carry the doubt's latest line.
 - **The avatar is switched off, not deleted** (Aarav, the same day: "avatar side ko delete mat karna, ise baad me use kar sakte hain; bas abhi disable karke sirf bloub ka use karo"). The trial, enrol and sign-in pages show the Bloub too. Every face, `ui/TutorTile.tsx`, the avatar tests and `content/avatars/` stay as they were; `/avatar-lab` (dev builds only) still renders the penguin and Meera in 3D. `src/avatar/README.md` says what is kept, what stays live (`avatarBus.ts` is her voice's audio context), and where each face was shown.
 
+**THE MIC ON A TAP (2026-10-03).** Aarav, after trying it: "agar mic hamesha on rahta hai to bg noise se ye baar baar interrupt hota hai — mic ka button bana do raise hand ke saath, jise click karne par hi mic on ho."
+- **The mic is off by default.** Nothing opens it at class start, at a question or at the warm-up. A mic button sits before Raise hand (and before the keyboard in a doubt): crossed out while off, lit while on.
+- **A tap turns it on for one exchange, and it turns itself off when the class is back to teaching** (no question held or being asked, no doubt open). A second tap turns it off sooner.
+  - Tapped while she teaches: she stops at once, and what they say opens a quiet doubt. If nothing is heard, the class carries on.
+  - Tapped at a question: they answer out loud. While the mic is off, the "Type your answer" box waits instead.
+  - Tapped in a doubt: her reply stops, and the doubt listens after each of her replies until it ends.
+- **Her speech detector never stops her teaching now.** While the mic is on, it still stops her nudge or her doubt reply.
+- **The first tap ever shows the mic card.** Its copy now says the mic turns on only when tapped. If the mic will not open, a note beside her shape says so, and the typed boxes carry the student.
+- **Checked** with the fake-mic Chrome on the local build: a tap during teaching led to heard → quiet doubt → answered → back to the class → mic off by itself.
+
 **Order:**
 - C0 and C1 together, now: neither needs model spend to build.
 - Then C2.

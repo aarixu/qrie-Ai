@@ -7,17 +7,30 @@ import { validateLesson, type Lesson } from '@ai-tutor/lesson-format';
 import type { TtsAdapter } from '@ai-tutor/player';
 
 /**
- * A STUDENT TALKING OVER HER, IN THE REAL ROOM (Aarav, 2026-10-02: "STT kaam
- * nahi kar raha, tutor interrupt nahi ho rahi").
+ * A STUDENT STOPPING HER, IN THE REAL ROOM (Aarav, 2026-10-02: "STT kaam nahi
+ * kar raha, tutor interrupt nahi ho rahi"; 2026-10-03: "agar mic hamesha on
+ * rahta hai to bg noise se ye baar baar interrupt hota hai — mic ka button
+ * bana do raise hand ke saath, jise click karne par hi mic on ho").
  *
- * The class's mic is open (lib/ear.ts `openEar`, faked here as granted and
- * open), and the open ear says when the student starts talking. Everything
- * past the microphone is real: the player, the handoff, the typed tutor, the
- * judge's local read. What the ear "hears" is queued by each test.
+ * The class's mic is OFF until the student taps "Turn the mic on" beside the
+ * raised hand. The tap opens it (lib/ear.ts `openEar`, faked here: it opens
+ * when `ear.mic` is 'granted'); while it is on, the ear says when the student
+ * starts talking (`onStudentSpeech`, captured here). Everything past the
+ * microphone is real: the player, the handoff, the typed tutor, the judge's
+ * local read. What the ear "hears" is queued by each test.
  */
 const ear = vi.hoisted(() => ({
+  /** What turning the mic on gets: 'granted' opens it, 'denied' does not. */
+  mic: 'granted' as 'granted' | 'denied',
+  /** The mic is on right now. */
+  open: false,
+  /** Times the class turned the mic on, and off. */
+  opens: 0,
+  closes: 0,
   queued: [] as (string | null)[],
   listens: 0,
+  /** Listens begun while the mic was off: a class that heard the room without a tap. */
+  deaf: 0,
   speech: null as (() => void) | null,
 }));
 vi.mock('../src/lib/mic', async (real) => ({
@@ -28,8 +41,16 @@ vi.mock('../src/lib/mic', async (real) => ({
 }));
 vi.mock('../src/lib/ear', async (real) => ({
   ...(await real<typeof import('../src/lib/ear')>()),
-  openEar: async () => true,
-  closeEar: () => undefined,
+  openEar: async () => {
+    ear.opens += 1;
+    ear.open = ear.mic === 'granted';
+    return ear.open;
+  },
+  closeEar: () => {
+    ear.closes += 1;
+    ear.open = false;
+  },
+  isEarOpen: () => ear.open,
   onStudentSpeech: (listen: () => void) => {
     ear.speech = listen;
     return () => {
@@ -38,6 +59,7 @@ vi.mock('../src/lib/ear', async (real) => ({
   },
   listenOnce: async (opts: { isCancelled?: () => boolean } = {}) => {
     ear.listens += 1;
+    if (!ear.open) ear.deaf += 1;
     if (ear.queued.length === 0)
       return new Promise((resolve) => {
         const poll = setInterval(() => {
@@ -139,9 +161,27 @@ async function openClass(lesson: Lesson, tts: TtsAdapter = voice()): Promise<HTM
   return host;
 }
 
-/** The student starts talking. */
-async function talk(): Promise<void> {
-  expect(ear.speech, 'the room listens for the student talking').not.toBeNull();
+/** The mic button's label right now: what a tap on it would do. */
+const micLabel = (host: HTMLElement): string | null =>
+  host.querySelector('button[aria-label^="Turn the mic"]')?.getAttribute('aria-label') ?? null;
+
+/**
+ * The student taps the mic button beside the raised hand — on, or (with
+ * 'Turn the mic off') off again. The only way the class ever hears them.
+ */
+async function tapMic(host: HTMLElement, label: 'Turn the mic on' | 'Turn the mic off' = 'Turn the mic on'): Promise<void> {
+  const button = host.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`);
+  expect(button, `the toolbar offers "${label}"`).not.toBeNull();
+  expect(button!.disabled, `"${label}" can be tapped`).toBe(false);
+  await act(async () => {
+    button!.click();
+  });
+  await tick(12);
+}
+
+/** With the mic on, the student starts talking: the ear's speech detector fires. */
+async function speakOver(): Promise<void> {
+  expect(ear.speech, 'with the mic on, the room listens for the student talking').not.toBeNull();
   await act(async () => {
     ear.speech!();
   });
@@ -149,6 +189,12 @@ async function talk(): Promise<void> {
 }
 
 const inDoubt = (host: HTMLElement): boolean => host.querySelector('[aria-label="Got it — back to the class"]') !== null;
+/** The answers filed so far: the verdict, and how it came (said, or typed). */
+const answers = (): { verdict?: string; surface: string }[] =>
+  ledgerOutbox
+    .get()
+    .pending.filter((e) => e.kind === 'answered')
+    .map((e) => ({ verdict: (e.payload as { verdict?: string }).verdict, surface: e.surface }));
 
 beforeEach(() => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -158,8 +204,13 @@ beforeEach(() => {
   progressStore.set({ lessons: {}, lastLessonId: null });
   settingsStore.update((s) => ({ ...s, klass: 10 }));
   vi.stubEnv('VITE_GEMINI_API_KEY', '');
+  ear.mic = 'granted';
+  ear.open = false;
+  ear.opens = 0;
+  ear.closes = 0;
   ear.queued = [];
   ear.listens = 0;
+  ear.deaf = 0;
   ear.speech = null;
   llmBodies = [];
   spoken = [];
@@ -179,14 +230,32 @@ afterEach(() => {
   settingsStore.update((s) => ({ ...s, klass: null }));
 });
 
-describe('talking over her while she teaches', () => {
+describe('noise while she teaches (Aarav, 2026-10-03)', () => {
+  it('never stops her: the mic is off, nothing listens, and the ear has no listener', async () => {
+    const host = await openClass(teaching);
+    await tick(12);
+    // The class began without turning the mic on: nothing the room says reaches it.
+    expect(ear.opens).toBe(0);
+    expect(ear.listens).toBe(0);
+    expect(ear.speech, 'no speech detector while the mic is off').toBeNull();
+    expect(micLabel(host)).toBe('Turn the mic on');
+    // She is still on her first line, uninterrupted.
+    expect(spoken).toContain(teaching.beats[0].narration);
+    expect(spoken.filter((s) => s === teaching.beats[0].narration)).toHaveLength(1);
+    expect(host.querySelector('[data-bloub]')?.getAttribute('data-bloub')).toBe('teaching');
+    expect(inDoubt(host)).toBe(false);
+  });
+});
+
+describe('stopping her while she teaches: a tap on the mic', () => {
   it('stops her, and their words open a doubt — no entry line said over them — that she answers', async () => {
     const host = await openClass(teaching);
     const before = spoken.length;
     ear.queued = ['wait, why is blood red?'];
-    await talk();
+    await tapMic(host);
     await tick(12);
 
+    expect(ear.opens).toBe(1);
     expect(inDoubt(host)).toBe(true);
     // Their words went to the tutor as the doubt's first message...
     expect(llmBodies.some((b) => b.includes('why is blood red?'))).toBe(true);
@@ -194,45 +263,175 @@ describe('talking over her while she teaches', () => {
     expect(spoken.slice(before)).toEqual(['Blood carries oxygen in red blood cells.']);
   });
 
-  it('carries on teaching when nothing was heard, or only her own voice', async () => {
+  it('carries on teaching when nothing was heard, and the mic goes off with it', async () => {
     const host = await openClass(teaching);
     const first = teaching.beats[0].narration;
-    ear.queued = [first.split(' ').slice(0, 8).join(' ')]; // her sentence, back through the speaker
-    await talk();
+    ear.queued = [null]; // the tap's listen hears nobody
+    await tapMic(host);
     expect(inDoubt(host)).toBe(false);
     expect(llmBodies).toHaveLength(0);
     // The beat is said again from its start: the class carries on.
     expect(spoken.filter((s) => s === first).length).toBe(2);
+    // And the mic is off again, so the room cannot stop her a second time.
+    expect(micLabel(host)).toBe('Turn the mic on');
+    expect(ear.open).toBe(false);
+    expect(ear.speech).toBeNull();
   });
 
   it('ends the spoken doubt when they say they have got it', async () => {
     const host = await openClass(teaching);
     ear.queued = ['wait, why is blood red?', 'haan samajh aa gaya'];
-    await talk();
+    await tapMic(host);
     await tick(20);
     expect(inDoubt(host)).toBe(false);
     expect(llmBodies).toHaveLength(1);
   });
+
+  it('a second tap while it waits to hear them turns the mic off, and the class carries on', async () => {
+    const host = await openClass(teaching);
+    const first = teaching.beats[0].narration;
+    await tapMic(host); // nothing queued: the tap's listen is still open
+    expect(micLabel(host)).toBe('Turn the mic off');
+    expect(ear.open).toBe(true);
+    // The class waits on them: the beat has not been picked up again yet.
+    expect(spoken.filter((s) => s === first)).toHaveLength(1);
+
+    const closes = ear.closes;
+    await tapMic(host, 'Turn the mic off');
+    await tick(12);
+    expect(ear.closes).toBeGreaterThan(closes);
+    expect(ear.open).toBe(false);
+    expect(micLabel(host)).toBe('Turn the mic on');
+    expect(inDoubt(host)).toBe(false);
+    expect(llmBodies).toHaveLength(0);
+    // She picks the beat up from its start.
+    expect(spoken.filter((s) => s === first)).toHaveLength(2);
+  });
+
+  it('a mic that will not turn on says so, and the class carries on', async () => {
+    ear.mic = 'denied';
+    const host = await openClass(teaching);
+    const first = teaching.beats[0].narration;
+    await tapMic(host);
+    expect(ear.opens).toBe(1);
+    expect(host.textContent).toContain("The mic didn't turn on. You can type instead.");
+    expect(micLabel(host)).toBe('Turn the mic on');
+    // Nothing listened on a mic that is not there, and she goes on teaching.
+    expect(ear.listens).toBe(0);
+    expect(inDoubt(host)).toBe(false);
+    expect(spoken.filter((s) => s === first)).toHaveLength(2);
+  });
 });
 
 describe('talking over her question', () => {
-  it('stops her line and takes what they are already saying as the answer', async () => {
-    await openClass(asking);
+  it('a tap stops her line, and what they say then is taken as the answer', async () => {
+    const host = await openClass(asking);
     ear.queued = ['Four'];
-    await talk();
+    await tapMic(host);
     await tick(12);
-    const answered = ledgerOutbox.get().pending.filter((e) => e.kind === 'answered');
-    expect(answered.map((e) => (e.payload as { verdict?: string }).verdict)).toEqual(['right']);
+    expect(answers().map((a) => a.verdict)).toEqual(['right']);
+    expect(answers()[0].surface).toBe('voice');
+    expect(ear.deaf).toBe(0);
   });
 
   it('does not judge her own question, back through the speaker, as their answer', async () => {
-    await openClass(asking);
+    const host = await openClass(asking);
     // The ear first hears her question leaking through; then the student.
     ear.queued = [asking.beats[0].narration, 'Four'];
-    await talk();
+    await tapMic(host);
     await tick(16);
-    const answered = ledgerOutbox.get().pending.filter((e) => e.kind === 'answered');
-    expect(answered.map((e) => (e.payload as { verdict?: string }).verdict)).toEqual(['right']);
+    expect(answers().map((a) => a.verdict)).toEqual(['right']);
+  });
+
+  it('with the mic on, talking over her line after a wrong answer stops it, and what they say next is the answer', async () => {
+    let holdNext = false;
+    // Her first line after the tap — her reply to their wrong answer — is held: she is mid-way through it.
+    const host = await openClass(
+      asking,
+      voice(() => {
+        if (!holdNext) return false;
+        holdNext = false;
+        return true;
+      }),
+    );
+    ear.queued = ['Just plasma'];
+    holdNext = true;
+    await tapMic(host);
+    await tick(12);
+    // Her reply to it is being said, and until it ends the question's ear waits on it.
+    expect(answers().map((a) => a.verdict)).toEqual(['wrong']);
+    expect(spoken.at(-1)).not.toBe(asking.beats[0].narration);
+    ear.queued = ['Four'];
+    await speakOver(); // over her reply
+    await tick(16);
+    // Stopped: the ear took its next answer, which it could not have under her held line.
+    expect(answers().map((a) => a.verdict)).toEqual(['wrong', 'right']);
+  });
+
+  it('a second tap turns the mic off: the listen ends, and the typed box takes the answer', async () => {
+    const host = await openClass(asking);
+    const box = (): Element | null => host.querySelector('input[aria-label="Type your answer"]');
+    await tapMic(host); // nothing queued: the question's ear is listening
+    expect(micLabel(host)).toBe('Turn the mic off');
+    expect(box(), 'no typing box while they answer out loud').toBeNull();
+
+    await tapMic(host, 'Turn the mic off');
+    await tick(20);
+    expect(ear.open).toBe(false);
+    expect(micLabel(host)).toBe('Turn the mic on');
+    expect(ear.speech).toBeNull();
+    // The question still stands, and waits on the box now.
+    expect(answers()).toEqual([]);
+    expect(box()).not.toBeNull();
+
+    const listens = ear.listens;
+    const input = box() as HTMLInputElement;
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    await act(async () => {
+      setter.call(input, 'Four');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await act(async () => {
+      host.querySelector<HTMLElement>('[aria-label="Send answer"]')!.click();
+    });
+    await tick(12);
+    expect(answers().map((a) => [a.verdict, a.surface])).toEqual([['right', 'text']]);
+    // Typed, not heard: no listen ran on a mic they had turned off.
+    expect(ear.listens).toBe(listens);
+    expect(ear.deaf).toBe(0);
+  });
+});
+
+describe('the mic goes off by itself', () => {
+  it('once the question it was turned on for is answered and she teaches again', async () => {
+    const host = await openClass(asking);
+    ear.queued = ['Four'];
+    await tapMic(host);
+    await tick(16);
+    expect(answers().map((a) => a.verdict)).toEqual(['right']);
+    // The gate opened and the class is on its next beat, with the mic off.
+    expect(spoken).toContain(asking.beats[1].narration);
+    expect(ear.open).toBe(false);
+    expect(micLabel(host)).toBe('Turn the mic on');
+    expect(ear.speech, 'no speech detector while she teaches').toBeNull();
+    // And nothing listens while she does.
+    const listens = ear.listens;
+    await tick(12);
+    expect(ear.listens).toBe(listens);
+  });
+
+  it('once the doubt it was turned on for is over and the class is back', async () => {
+    const host = await openClass(teaching);
+    ear.queued = ['wait, why is blood red?', 'haan samajh aa gaya'];
+    await tapMic(host);
+    await tick(20);
+    expect(inDoubt(host)).toBe(false);
+    expect(ear.open).toBe(false);
+    expect(micLabel(host)).toBe('Turn the mic on');
+    expect(ear.speech).toBeNull();
+    const listens = ear.listens;
+    await tick(12);
+    expect(ear.listens).toBe(listens);
   });
 });
 
@@ -241,18 +440,20 @@ describe('the review’s cases (2026-10-02)', () => {
     const reply = 'Blood carries oxygen in red blood cells.';
     const host = await openClass(teaching, voice((t) => t === reply));
     ear.queued = ['wait, why is blood red?'];
-    await talk(); // opens the doubt; her reply is now being said (held)
+    await tapMic(host); // opens the doubt; her reply is now being said (held)
     expect(inDoubt(host)).toBe(true);
     expect(spoken).toContain(reply);
+    // The mic stays on through the doubt it opened.
+    expect(micLabel(host)).toBe('Turn the mic off');
     ear.queued = ['but why not blue?'];
-    await talk(); // over her reply
+    await speakOver(); // over her reply
     await tick(16);
     expect(llmBodies.some((b) => b.includes('but why not blue?'))).toBe(true);
   });
 
   it('a hand raised while she is hearing an interruption opens one doubt, and the class is not restarted under it', async () => {
     const host = await openClass(teaching);
-    await talk(); // nothing queued: the interruption's listen is still open
+    await tapMic(host); // nothing queued: the tap's listen is still open
     const said = spoken.length;
     await act(async () => {
       host.querySelector<HTMLElement>('[aria-label="Raise hand and ask a doubt"]')!.click();
@@ -263,34 +464,32 @@ describe('the review’s cases (2026-10-02)', () => {
     // The beat was not said again under the doubt.
     expect(spoken.slice(said)).not.toContain(teaching.beats[0].narration);
   });
-
-  it('a beat whose own line set the ear off is not interrupted again', async () => {
-    await openClass(teaching);
-    ear.queued = [teaching.beats[0].narration.split(' ').slice(0, 8).join(' ')]; // her echo
-    await talk();
-    const listens = ear.listens;
-    await talk(); // the same leak, the same beat
-    expect(ear.listens).toBe(listens);
-  });
 });
 
 describe('the board has the room (Aarav, 2026-10-03)', () => {
   it('shows no tile and no doubt panel, and her shape says what she is doing', async () => {
     const host = await openClass(teaching);
     const shape = (): string | null => host.querySelector('[data-bloub]')?.getAttribute('data-bloub') ?? null;
+    const toolbar = (): string[] =>
+      [...host.querySelectorAll('nav button')].map((b) => b.getAttribute('aria-label') ?? '');
     // Nothing stands beside the board: no rail, no picture-in-picture, no panel.
     expect(host.querySelector('aside')).toBeNull();
     expect(host.querySelector('textarea')).toBeNull();
     expect(shape()).toBe('teaching');
+    // The mic sits just before the raised hand.
+    expect(toolbar().slice(0, 2)).toEqual(['Turn the mic on', 'Raise hand and ask a doubt']);
 
     ear.queued = ['wait, why is blood red?'];
-    await talk();
+    await tapMic(host);
     await tick(12);
     expect(inDoubt(host)).toBe(true);
     // Her answer is said; the doubt waits on the student again.
     expect(shape()).toBe('listening');
     expect(host.querySelector('aside')).toBeNull();
-    // The typed doubt is still a tap away.
-    expect(host.querySelector('[aria-label="Type your doubt"]')).not.toBeNull();
+    // The typed doubt is still a tap away, just after the mic.
+    const buttons = toolbar();
+    const mic = buttons.indexOf('Turn the mic off');
+    expect(mic).toBeGreaterThanOrEqual(0);
+    expect(buttons.slice(mic, mic + 2)).toEqual(['Turn the mic off', 'Type your doubt']);
   });
 });

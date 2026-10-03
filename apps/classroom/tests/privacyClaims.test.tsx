@@ -181,14 +181,13 @@ describe('the mic screen', () => {
     expect(text).toMatch(/not now/i);
   });
 
-  it('says the mic stays on for the class, and that only what they say is sent (2026-10-02)', () => {
-    // The class's mic is open from its start so a student can stop her any
-    // time (lib/ear.ts openEar); it no longer opens per question and closes
-    // when the answer ends. On-device it only listens for speech; a listen
-    // uploads what was said, nothing else.
+  it('says the mic turns on only when they tap it, and that only what they say is sent (2026-10-03)', () => {
+    // The class's mic is off until the student taps it (ClassRoom `talk`)
+    // and goes off when that exchange is over or they tap it again; it is no
+    // longer on for the whole class. A listen uploads what was said, nothing else.
     const text = micScreenText();
-    expect(text).not.toMatch(/closes the moment you finish/i);
-    expect(text).toMatch(/stays on while the class is on/i);
+    expect(text).not.toMatch(/stays on while the class is on/i);
+    expect(text).toMatch(/turns on only when you tap it/i);
     expect(text).toMatch(/only what you say/i);
   });
 });

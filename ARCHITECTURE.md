@@ -103,9 +103,11 @@ verified by trying to break it, not by reading the policy.
 - **Voice** — `packages/voice`. Four layers, best first: a recorded take, the
   **on-device** Supertonic, the cloud stream, the browser's robot. Each layer
   falls through rather than failing.
-- **Ear** — `apps/classroom/src/lib/ear.ts`: the mic opens by itself when she asks
-  a question, an endpointer decides when the answer is over, **Whisper runs on the
-  phone**, and the relay is the fallback.
+- **Ear** — `apps/classroom/src/lib/ear.ts`: the mic is off until the student taps
+  it (since 2026-10-03; a mic always on let a noisy room stop her) and goes off
+  again when that exchange is over. An endpointer decides when they have finished,
+  and the relay writes it down (`/api/hear`, Gemini on Vertex). Nothing is
+  transcribed on the phone.
 - **Canvas** — `packages/stage` renders, `packages/board-layout` decides where
   things go, `packages/lesson-format` is the closed vocabulary both agree on.
 - **Avatar** — switched off since 2026-10-03. Her picture is the Bloub

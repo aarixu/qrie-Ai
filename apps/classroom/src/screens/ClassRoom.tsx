@@ -254,6 +254,16 @@ function ToolButton({
 const STAGE_BOX = { containerType: 'size' } as const;
 const STAGE_FIT = { width: 'min(100cqw, calc(100cqh * 16 / 9))', aspectRatio: '16 / 9' } as const;
 
+/** An answer to a held question, and how it came: said with the mic on, or typed. */
+type Answer = Heard & {
+  by: 'voice' | 'text';
+  /** The mic was turned on or off during the wait: a new wait, not a quiet student. */
+  micSwitched?: boolean;
+};
+
+/** How long a tap on the mic waits for the student to start talking. */
+const TAP_GRACE_MS = 6_000;
+
 /**
  * The classroom — laid out the way Meet lays out a call with a presentation,
  * because "a Google Meet where an AI teacher is taking a live class" is the
@@ -403,11 +413,14 @@ export function ClassRoom({
       player: { pause: () => playerRef.current.pause() },
       // The listen in flight polls `halt.halted` on every chunk (see the ear
       // below) and closes the mic on the next one; this clears its status.
-      // The class's open mic closes too: a halted class listens to nobody.
+      // The class's mic goes off too, if it was on: a halted class listens to nobody.
       ear: {
         close: () => {
           setEar('off');
+          micTap.current += 1;
           closeEar();
+          earReadyRef.current = false;
+          setEarReady(false);
         },
       },
       doubt: { halt: () => handoffRef.current.halt() },
@@ -452,15 +465,16 @@ export function ClassRoom({
     (ask.options ?? []).findIndex((o) => o.correct === true);
 
   /**
-   * WHAT THE STUDENT SAYS TO A HELD QUESTION: OUT LOUD, OR TYPED WITHOUT A MIC.
+   * WHAT THE STUDENT SAYS TO A HELD QUESTION: OUT LOUD WITH THE MIC ON, OR TYPED.
    *
    * The class shows no question and nothing to tap (Aarav, 2026-10-01). She
-   * asks out loud and they answer out loud. A student whose mic is refused or
-   * will not open gets one box under the board, "Type your answer", and what
-   * they type goes down the same road as a spoken answer: the same screen,
-   * judge, ladder and silence policy (the held-question effect below).
+   * asks out loud. The mic is off until the student taps it (`talk`, Aarav,
+   * 2026-10-03: a mic that was always on let a noisy room stop her), so while
+   * it is off one box under the board, "Type your answer", waits for them; with
+   * it on they answer out loud. Either goes down the same road: the same
+   * screen, judge, ladder and silence policy (the held-question effect below).
    */
-  const [answerBy, setAnswerBy] = useState<'voice' | 'text' | null>(null);
+  const [answerOpen, setAnswerOpen] = useState(false);
   const [answerDraft, setAnswerDraft] = useState('');
   /** The room is waiting on a typed answer: hand it the words. */
   const typedWaiting = useRef<((text: string) => void) | null>(null);
@@ -476,31 +490,43 @@ export function ClassRoom({
   /**
    * One typed answer, returned the way `listenOnce` returns a spoken one: the
    * words; 'silence' once QUIET_BEFORE_NUDGE_MS has passed with none; or
-   * 'cancelled'.
+   * 'cancelled'. The mic coming on ends the wait at once (`micSwitched`), so
+   * the next one listens.
    */
-  const typedOnce = (isCancelled: () => boolean): Promise<Heard> =>
+  const typedOnce = (isCancelled: () => boolean): Promise<Answer> =>
     new Promise((resolve) => {
       const early = typedEarly.current;
       typedEarly.current = null;
       if (early !== null) {
-        resolve({ text: early, reason: 'heard' });
+        resolve({ text: early, reason: 'heard', by: 'text' });
         return;
       }
       const started = Date.now();
-      const done = (heard: Heard): void => {
+      const done = (heard: Answer): void => {
         clearInterval(poll);
         typedWaiting.current = null;
         resolve(heard);
       };
       const poll = setInterval(() => {
-        if (isCancelled()) done({ text: null, reason: 'cancelled' });
-        else if (Date.now() - started >= QUIET_BEFORE_NUDGE_MS) done({ text: null, reason: 'silence' });
+        if (isCancelled()) done({ text: null, reason: 'cancelled', by: 'text' });
+        else if (earReadyRef.current) done({ text: null, reason: 'silence', by: 'text', micSwitched: true });
+        else if (Date.now() - started >= QUIET_BEFORE_NUDGE_MS) done({ text: null, reason: 'silence', by: 'text' });
       }, 100);
-      typedWaiting.current = (text) => done({ text, reason: 'heard' });
+      typedWaiting.current = (text) => done({ text, reason: 'heard', by: 'text' });
     });
-  /** One answer, by whichever way this student can give one. */
-  const answerOnce = (by: 'voice' | 'text', isCancelled: () => boolean): Promise<Heard> =>
-    by === 'voice' ? listenOnce({ isCancelled }) : typedOnce(isCancelled);
+  /**
+   * One answer: out loud while the mic is on, typed while it is off. A listen
+   * ended by the student turning the mic off is not a cancel — the question
+   * still stands, and the box takes it from there (`micSwitched`). A mic that
+   * died is turned off here, so the box takes the next turn.
+   */
+  const answerOnce = async (isCancelled: () => boolean): Promise<Answer> => {
+    if (!earReadyRef.current) return typedOnce(isCancelled);
+    const heard = await listenOnce({ isCancelled: () => isCancelled() || !earReadyRef.current });
+    if (heard.reason === 'cancelled' && !isCancelled()) return { text: null, reason: 'silence', by: 'voice', micSwitched: true };
+    if (heard.reason === 'error') closeClassEar();
+    return { ...heard, by: 'voice' };
+  };
 
   /** Per held question: answers judged so far, and the highest ladder rung delivered (decide()). */
   const triesAt = useRef(new Map<string, number>());
@@ -548,32 +574,20 @@ export function ClassRoom({
    * costs nothing — the chips under her question still work.
    */
   /**
-   * One ask at a time: the class asks at its start (for the open ear) and
-   * again at a held question, and a second card must not replace the first —
-   * the first ask's answer would never come.
+   * One ask at a time: a second card must not replace the first — the first
+   * ask's answer would never come. Only the live voice doubt asks this way
+   * now; the class's own mic asks on the student's first tap (`talk`).
    */
   const micAskInFlight = useRef<Promise<MicStatus> | null>(null);
   const askForMic = (): Promise<MicStatus> => {
     if (micStatus() === 'granted') return Promise.resolve('granted');
     if (micAskInFlight.current) return micAskInFlight.current;
-    /**
-     * The class's own mic IS the request: opening it asks the browser, and a
-     * second capture beside it (the old `requestMic`) is one a phone may mute
-     * the first for. `requestMic` is left for when it cannot open.
-     */
-    const grant = async (): Promise<MicStatus> => {
-      if (await openClassEar()) {
-        noteMicGranted();
-        return 'granted';
-      }
-      return requestMic();
-    };
     const asking = (async (): Promise<MicStatus> => {
-      if (micExplained()) return grant();
+      if (micExplained()) return requestMic();
       const allowed = await new Promise<boolean>((resolve) => setMicAsk(() => resolve));
       rememberMicExplained();
       setMicAsk(null);
-      return allowed ? grant() : 'denied';
+      return allowed ? requestMic() : 'denied';
     })();
     micAskInFlight.current = asking;
     void asking.finally(() => {
@@ -583,16 +597,22 @@ export function ClassRoom({
   };
 
   /**
-   * THE CLASS'S OPEN EAR (Aarav, 2026-10-02: "STT kaam nahi kar raha, tutor
-   * interrupt nahi ho rahi"). One mic, opened on a tap and kept for the class
-   * (lib/ear.ts `openEar`): a student can talk over her — she stops and hears
-   * them — and an answer begun while she is still finishing her question is
-   * heard from its first word. Without it (no mic, or "not now") the class is
-   * exactly what it was: the mic opens per question, and the typed box covers
-   * a student with none.
+   * THE CLASS'S MIC, ON ONLY WHEN THE STUDENT TURNS IT ON (Aarav, 2026-10-03:
+   * "agar mic hamesha on rahta hai to bg noise se ye baar baar interrupt hota
+   * hai — mic ka button bana do raise hand ke saath, jise click karne par hi
+   * mic on ho"). One mic (lib/ear.ts `openEar`), opened by a tap on the mic
+   * button (`talk`) and closed again when the exchange it was turned on for is
+   * over, or by a second tap. While it is on, a student who talks over her
+   * reply or her nudge stops her, and an answer begun while she is still
+   * finishing is heard from its first word. While it is off, nothing they or
+   * the room say reaches the class, and the typed boxes carry them.
    */
   const [earReady, setEarReady] = useState(false);
   const earReadyRef = useRef(false);
+  /** Bumped by every tap on the mic: an opening that a later tap overtook is let go. */
+  const micTap = useRef(0);
+  /** A tap's mic still opening: another tap now turns it off. */
+  const micOpening = useRef(false);
   /**
    * Open it — never for a class that has halted or that the student has left:
    * a permission prompt can be answered after they pressed End, and a mic
@@ -610,17 +630,26 @@ export function ClassRoom({
     setEarReady(true);
     return true;
   };
-  const bringEar = (): void => {
-    void openClassEar();
+  /** Turn the class's mic off: any listen on it ends, and nothing is heard until the next tap. */
+  const closeClassEar = (): void => {
+    micTap.current += 1;
+    closeEar();
+    earReadyRef.current = false;
+    setEarReady(false);
   };
-  /** Talking over her, in progress: one at a time. */
+  /** Stopping her to ask, in progress: one at a time. */
   const interrupting = useRef(false);
-  /** What a student interrupted her with, waiting for the doubt it opens. */
+  /** What a student stopped her with, waiting for the doubt it opens. */
   const pendingSpokenDoubt = useRef<string | null>(null);
   /** They talked over her reply in a doubt: the rest of it waits until they have been heard. */
   const studentHasFloor = useRef(false);
-  /** The beat whose own line, back through the speaker, set the ear off. */
-  const echoBeat = useRef<string | null>(null);
+  /** A line for the student when the mic would not turn on, shown beside her shape for a moment. */
+  const [micNote, setMicNote] = useState<string | null>(null);
+  useEffect(() => {
+    if (micNote === null) return;
+    const timer = setTimeout(() => setMicNote(null), 5_000);
+    return () => clearTimeout(timer);
+  }, [micNote]);
   useEffect(
     () => () => {
       closeEar();
@@ -821,14 +850,13 @@ export function ClassRoom({
 
 
   /**
-   * THE EAR. When she asks, the mic opens on its own, waits for the spoken
-   * answer, and closes when it lands — the raise-hand button stays for the
-   * doubts the STUDENT starts. Nothing on screen answers for them (Aarav,
-   * 2026-10-01): no options, no chips. A student with no working mic types
-   * into the one box under the board, and this same loop takes what they type
-   * — "the ear" below means either. With the class's open ear (`bringEar`) the
-   * mic is already on, and a listen here takes the answer from it — including
-   * what they began saying while she was still asking.
+   * THE EAR. When she asks, the class waits for the answer: out loud once the
+   * student has turned the mic on (`talk`), typed into the one box under the
+   * board while it is off — "the ear" below means either, and the mic can come
+   * on or go off in the middle of the wait (`answerOnce`). Nothing on screen
+   * answers for them (Aarav, 2026-10-01): no options, no chips. With the mic
+   * on, a listen here takes the answer from it — including what they began
+   * saying while she was still asking.
    *
    * EVERY HELD QUESTION ENDS HERE, because nothing on screen can end one now:
    * a right answer; the ladder run to its reveal; quiet through the nudge and
@@ -921,11 +949,7 @@ export function ClassRoom({
       if (standing) playerRef.current.answer(correctIndex(standing));
     };
     (async () => {
-      let by: 'voice' | 'text' = (await askForMic()) === 'granted' ? 'voice' : 'text';
-      if (over()) return;
-      // A student who first allowed the mic here gets the open ear from now on.
-      if (by === 'voice') bringEar();
-      setAnswerBy(by);
+      setAnswerOpen(true);
       /**
        * The exchange, Aarav's shape: a wrong answer gets a hint and another
        * try; a RIGHT answer is not the exit either — she asks one why/how/
@@ -973,25 +997,19 @@ export function ClassRoom({
         setEar('listening');
         // Polled on every chunk (or every 100 ms of a typed wait): a halt
         // closes the mic on the next one.
-        const heard = await answerOnce(by, over);
+        const heard = await answerOnce(over);
         if (over()) return;
-        // A mic that will not open is not a quiet student — the OS gave it to
-        // a call, or the page lost it. The box under the board takes over for
-        // the rest of this question. (Their reasoning, below, files it as
-        // unheard instead.)
-        if (heard.reason === 'error' && by === 'voice' && !probe) {
-          // The class's open mic stopped (the app went to the background, a
-          // call took it) and has closed itself: ask again on a fresh mic
-          // before giving up on the voice.
-          if (earReadyRef.current && !isEarOpen()) {
-            earReadyRef.current = false;
-            setEarReady(false);
-            continue;
-          }
-          by = 'text';
-          setAnswerBy('text');
+        // The mic came on or went off: a fresh wait, and no time charged to
+        // the student for it.
+        if (heard.micSwitched) {
+          quietSince = Date.now();
           continue;
         }
+        // A mic that stopped is not a quiet student — the OS gave it to a
+        // call, or the page lost it. `answerOnce` turned it off, so the box
+        // under the board takes the next turn. (Their reasoning, below, files
+        // it as unheard instead.)
+        if (heard.reason === 'error' && !probe) continue;
         // Her own question (or nudge), back through the speaker: not an answer.
         if (heard.text && isEchoOf(heard.text, ttsRef.current.lastLine())) continue;
         /**
@@ -1282,7 +1300,7 @@ export function ClassRoom({
           ledger.answered({
             beatId: heldAskBeat,
             correct: judged.verdict === 'right',
-            surface: by,
+            surface: heard.by,
             verdict: judged.verdict,
             // THE SCREENED WORDS, never `heard.text`. The screen had already
             // found and removed whatever a child should not have had to put in
@@ -1436,20 +1454,21 @@ export function ClassRoom({
     })().finally(() => {
       if (!cancelled) {
         setEar('off');
-        setAnswerBy(null);
+        setAnswerOpen(false);
       }
     });
     return () => {
       cancelled = true;
       setEar('off');
-      setAnswerBy(null);
+      setAnswerOpen(false);
     };
   }, [heldAskBeat, lesson, tts]);
 
   // Only a class that is actually playing hides its controls. Paused, finished,
   // not yet started or mid-doubt, they stay: in every one of those states the
   // student is looking for a button, not at a diagram.
-  const canHideControls = player.state === 'playing' && !inDoubt;
+  // Nor while the mic is on or a question waits: its button stays in reach.
+  const canHideControls = player.state === 'playing' && !inDoubt && !earReady && !answerOpen;
 
   useEffect(() => {
     if (!canHideControls || !controlsShown) return;
@@ -1684,7 +1703,7 @@ export function ClassRoom({
    *
    * Nothing is shown (Aarav, 2026-10-01). She reads the question and its
    * choices, and they answer the way they answer anything in the class: out
-   * loud, or in the box under the board without a mic. Words that name one
+   * loud with the mic turned on, or in the box under the board. Words that name one
    * choice are filed cold (`ledger.warmedUp`) and she says whether it was
    * right. Silence, or words that name no choice twice over, file nothing:
    * she says the answer and goes on. A question with maths in it is not
@@ -1711,7 +1730,6 @@ export function ClassRoom({
     track('warm_up_started', { lessonId: lesson.id, items: items.length });
     setWarmingUp(true);
     try {
-      let by: 'voice' | 'text' = (await askForMic()) === 'granted' ? 'voice' : 'text';
       for (const [step, question] of items.entries()) {
         if (done()) break;
         // Never the outcome's title: in 63 of the bank's probes the title
@@ -1742,17 +1760,18 @@ export function ClassRoom({
         // The endpointer gives up on one listen after a few seconds; the
         // question is not over until QUIET_BEFORE_NUDGE_MS of quiet.
         let quietSince = clockFrom;
-        setAnswerBy(by);
+        setAnswerOpen(true);
         let chosen: number | null = null;
         for (let tries = 0; tries < 2 && chosen === null && !done(); ) {
-          const heard = await answerOnce(by, done);
+          const heard = await answerOnce(done);
           if (done()) break;
-          // A mic that will not open: the box takes this answer instead.
-          if (heard.reason === 'error' && by === 'voice') {
-            by = 'text';
-            setAnswerBy('text');
+          // The mic came on or went off: a fresh wait, its time not charged.
+          if (heard.micSwitched) {
+            quietSince = Date.now();
             continue;
           }
+          // A mic that stopped: `answerOnce` turned it off, and the box takes this answer instead.
+          if (heard.reason === 'error') continue;
           if (heard.text === null) {
             if (Date.now() - quietSince < QUIET_BEFORE_NUDGE_MS) continue;
             break;
@@ -1767,13 +1786,13 @@ export function ClassRoom({
           if (tries >= 2 || (screened.text !== null && dontKnowIn(screened.text) === 'only')) break;
           // Off limits: her redirect. Otherwise, once: say it again.
           const again = screened.say !== null ? inLanguage(screened.say, tutorLanguage()) : LINES.sayAgain[tutorLanguage()][0];
-          setAnswerBy(null);
+          setAnswerOpen(false);
           const said = await sayLine(again);
           if (said.halted || done()) break;
           quietSince = Date.now();
-          setAnswerBy(by);
+          setAnswerOpen(true);
         }
-        setAnswerBy(null);
+        setAnswerOpen(false);
         if (done()) break;
         const answer = options[question.correctIndex];
         if (chosen !== null) ledger.warmedUp(question, chosen, Date.now() - clockFrom);
@@ -1793,7 +1812,7 @@ export function ClassRoom({
         if (said.halted || done()) break;
       }
     } finally {
-      setAnswerBy(null);
+      setAnswerOpen(false);
       setWarmingUp(false);
     }
     return true;
@@ -1801,13 +1820,7 @@ export function ClassRoom({
 
   const startClass = async () => {
     if (halt.halted) return;
-    // The open ear from the class's first minute, so a student can talk to her
-    // from the start. A first-time student meets the mic card now rather than
-    // at the first question; the class does not wait on it.
-    // (Already granted, the ask returns at once: the ear is opened here then.)
-    void askForMic().then((status) => {
-      if (status === 'granted') bringEar();
-    });
+    // No mic here: it stays off until the student taps it (`talk`).
     track('lesson_started', { lessonId: lesson.id, resumed: canResume, beats: lesson.beats.length });
     if (!greeted.current) {
       greeted.current = true;
@@ -1864,9 +1877,6 @@ export function ClassRoom({
   }, []);
 
   const joinClass = () => {
-    // Inside the tap, for a student who has allowed the mic before: a phone
-    // lets the class's mic start only inside one.
-    if (micStatus() === 'granted' || micExplained()) bringEar();
     startClassRef.current();
     setEntryPhase('inClass');
   };
@@ -1903,7 +1913,7 @@ export function ClassRoom({
     if (!halt.halted) handoff.endDoubt();
   };
 
-  // The open ear's listeners are made once and must reach the latest of these.
+  // The mic's listeners are made once and must reach the latest of these.
   const raiseHandRef = useRef(raiseHand);
   raiseHandRef.current = raiseHand;
   const sendTextRef = useRef(sendText);
@@ -1912,26 +1922,126 @@ export function ClassRoom({
   endDoubtRef.current = endDoubt;
 
   /**
-   * A STUDENT TALKING OVER HER (Aarav, 2026-10-02: "tutor interrupt nahi ho
-   * rahi"). The open ear says when they start; what happens depends on where
-   * she is:
+   * STOPPING HER TO ASK: the mic tapped while she teaches. She has already
+   * stopped and the class is paused (`talk`); what they say now is heard. Their
+   * words open a doubt QUIETLY — her entry line would be said over them — and
+   * arrive as its first message. Nothing heard, or the mic turned off again,
+   * and the class carries on and the mic goes off with it.
+   */
+  const hearThem = (): void => {
+    if (interrupting.current) return;
+    interrupting.current = true;
+    void (async () => {
+      try {
+        const heard = await listenOnce({
+          // A hand raised, or the mic turned off, while we listen takes the moment over.
+          isCancelled: () =>
+            halt.halted || left.current || !earReadyRef.current || handoffRef.current.state !== 'PLAYING',
+          graceMs: TAP_GRACE_MS,
+        });
+        if (halt.halted || left.current) return;
+        if (heard.reason === 'error') closeClassEar();
+        // A hand went up, or something else moved the class on: theirs, not ours.
+        if (handoffRef.current.state !== 'PLAYING' || playerRef.current.state !== 'paused') return;
+        const text = heard.reason === 'heard' ? (heard.text ?? '').trim() : '';
+        if (!text) {
+          playerRef.current.play();
+          return;
+        }
+        pendingSpokenDoubt.current = text;
+        void raiseHandRef.current({ quiet: true });
+      } finally {
+        interrupting.current = false;
+      }
+    })();
+  };
+
+  /**
+   * THE MIC BUTTON, beside the raised hand. The mic is off until the student
+   * taps it; a second tap turns it off. A tap:
+   *   - while she teaches: she stops at once, the class pauses, and what they
+   *     say is heard (`hearThem`);
+   *   - at a question, or while she asks one: her line stops, and the
+   *     question's ear takes their answer out loud (`answerOnce`);
+   *   - in a doubt: her reply stops if she is mid-way (`studentHasFloor`), and
+   *     the doubt's ear (below) hears them.
+   * The first tap ever explains the mic first, and its "Turn on the mic" is the
+   * tap the mic opens in: a phone lets capture start only inside one. A mic
+   * that will not turn on says so beside her shape, and the typed boxes carry
+   * the student.
+   */
+  const talk = (): void => {
+    if (halt.halted || left.current) return;
+    // On, or still opening: this tap turns it off.
+    if (earReadyRef.current || micOpening.current) {
+      micOpening.current = false;
+      closeClassEar();
+      return;
+    }
+    const begin = (): void => {
+      const tap = ++micTap.current;
+      micOpening.current = true;
+      const p = playerRef.current;
+      const teaching =
+        handoffRef.current.state === 'PLAYING' && p.state === 'playing' && !p.beat?.ask && !p.pendingAsk;
+      // She stops at once, before the mic has even opened.
+      if (teaching) p.pause();
+      else if (ttsRef.current.speaking()) {
+        if (handoffRef.current.state === 'LIVE') studentHasFloor.current = true;
+        ttsRef.current.cancel();
+      }
+      void openClassEar().then((ok) => {
+        // A second tap while it opened turned it off again: that is their answer.
+        const overtaken = tap !== micTap.current;
+        if (!overtaken) micOpening.current = false;
+        if (ok && overtaken) closeClassEar();
+        if (ok && !overtaken) noteMicGranted();
+        if (!ok && !overtaken && !halt.halted && !left.current) {
+          setMicNote("The mic didn't turn on. You can type instead.");
+          if (handoffRef.current.state === 'LIVE') setTyping(true);
+        }
+        if (!teaching || halt.halted || left.current) return;
+        if (ok && !overtaken) hearThem();
+        else if (handoffRef.current.state === 'PLAYING' && playerRef.current.state === 'paused') playerRef.current.play();
+      });
+    };
+    if (micStatus() === 'granted' || micExplained()) {
+      begin();
+      return;
+    }
+    setMicAsk(() => (allowed: boolean) => {
+      rememberMicExplained();
+      setMicAsk(null);
+      if (allowed) begin();
+    });
+  };
+
+  /**
+   * THE MIC GOES OFF WITH THE EXCHANGE IT WAS TURNED ON FOR: once the class is
+   * back to her teaching — no question held or being asked, no doubt open — it
+   * closes, so a noisy room never stops her.
+   */
+  useEffect(() => {
+    if (earReady && player.state === 'playing' && !inDoubt && !heldAskBeat && !player.beat?.ask) closeClassEar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [earReady, player.state, inDoubt, heldAskBeat, player.beat?.ask]);
+
+  /**
+   * TALKING OVER HER WITH THE MIC ON (Aarav, 2026-10-02: "tutor interrupt nahi
+   * ho rahi"). The ear says when they start; what happens depends on where she
+   * is:
    *   - asking a question, or saying a nudge or a hint at one: her line stops,
    *     the question surfaces, and its ear takes the answer they are already
    *     giving (the open ear keeps what was said before the listen began);
    *   - in a doubt: the floor is theirs — her line stops, the rest of her reply
-   *     is not said (`studentHasFloor`), and the doubt's ear (below) hears them;
-   *   - teaching: she stops, the class pauses, and what they said is heard.
-   *     Their words open a doubt QUIETLY — her entry line would be said over
-   *     them — and arrive as its first message. Nothing heard, or her own
-   *     sentence back through the speaker, and the class carries on; a beat
-   *     whose own line set the ear off is not interrupted again, or it would
-   *     loop on the same echo.
-   * The greeting and the warm-up are left alone: they have their own ear.
+   *     is not said (`studentHasFloor`), and the doubt's ear (below) hears them.
+   * Never while she teaches: the mic is off then (the effect above), and only
+   * a tap stops her there (`talk`).
    */
   useEffect(() => {
     if (!earReady) return;
     return onStudentSpeech(() => {
-      if (halt.halted || interrupting.current) return;
+      if (halt.halted) return;
       const herVoice = ttsRef.current;
       const p = playerRef.current;
       if (handoffRef.current.state !== 'PLAYING') {
@@ -1941,48 +2051,13 @@ export function ClassRoom({
         }
         return;
       }
-      if (p.beat?.ask || p.pendingAsk) {
-        if (herVoice.speaking()) herVoice.cancel();
-        return;
-      }
-      if (p.state !== 'playing' || !herVoice.speaking()) return;
-      const beatId = p.beat?.id ?? null;
-      if (beatId !== null && echoBeat.current === beatId) return;
-      interrupting.current = true;
-      const herLine = herVoice.lastLine();
-      p.pause();
-      void (async () => {
-        try {
-          const heard = await listenOnce({
-            // A hand raised while we listen takes the moment over.
-            isCancelled: () => halt.halted || left.current || handoffRef.current.state !== 'PLAYING',
-            graceMs: 3_000,
-          });
-          if (halt.halted || left.current) return;
-          // A hand went up, or something else moved the class on: theirs, not ours.
-          if (handoffRef.current.state !== 'PLAYING' || playerRef.current.state !== 'paused') return;
-          if (heard.reason === 'error' && !isEarOpen()) {
-            earReadyRef.current = false;
-            setEarReady(false);
-          }
-          const text = heard.reason === 'heard' ? (heard.text ?? '').trim() : '';
-          if (!text || isEchoOf(text, herLine)) {
-            if (text) echoBeat.current = beatId;
-            playerRef.current.play();
-            return;
-          }
-          pendingSpokenDoubt.current = text;
-          void raiseHandRef.current({ quiet: true });
-        } finally {
-          interrupting.current = false;
-        }
-      })();
+      if ((p.beat?.ask || p.pendingAsk) && herVoice.speaking()) herVoice.cancel();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [earReady]);
 
   /**
-   * THE DOUBT, SPOKEN. With the open ear a doubt is a conversation: the ear
+   * THE DOUBT, SPOKEN. With the mic on, a doubt is a conversation: the ear
    * listens whenever she is not talking, and what they say goes to the tutor
    * as their next message; "got it" or "samajh aa gaya" ends it. A listen is
    * dropped the moment she starts a reply — it must never run under her voice,
@@ -2047,7 +2122,9 @@ export function ClassRoom({
       : handoffState === 'AGENT_LEAVING' || handoffState === 'RESUMING' || handoffState === 'PAUSING'
         ? 'Back to the class…'
         : !voiceMode
-          ? 'Type your doubt — she reads it right away'
+          ? earReady
+            ? 'Mic on — she is listening'
+            : 'Tap the mic to talk, or type your doubt'
           : liveState === 'connecting'
             ? 'Connecting…'
             : liveState === 'listening'
@@ -2079,7 +2156,8 @@ export function ClassRoom({
       ? (lastDoubtLine?.text ?? '')
       : (tutorLine ?? (warmingUp ? '' : player.caption));
   // The box under the board, while a question waits on a student with no mic.
-  const answerBoxShown = answerBy === 'text' && !inDoubt;
+  // With the mic off; with it on they are answering out loud.
+  const answerBoxShown = answerOpen && !earReady && !inDoubt;
 
   /**
    * THE BOARD TAKES THE SCREEN (Aarav, 2026-10-03: "remove avatar and its
@@ -2109,7 +2187,7 @@ export function ClassRoom({
   const bloubMode: BloubMode =
     ear === 'thinking' || (inDoubt && lastDoubtLine?.role === 'student')
       ? 'thinking'
-      : inDoubt || ear === 'listening'
+      : inDoubt || ear === 'listening' || earReady
         ? 'listening'
         : player.state === 'playing'
           ? 'teaching'
@@ -2279,8 +2357,26 @@ export function ClassRoom({
     </header>
   );
 
-  // The toolbar: raise a hand, or end the class — nothing else (Aarav,
-  // 2026-10-01). It fades like Meet's.
+  /**
+   * The mic, beside the raised hand (`talk`): crossed out while it is off,
+   * lit while it is on. It can always be turned off; it turns on whenever
+   * there is something to say to her — her teaching, a question, a doubt.
+   */
+  const micButton = !voiceMode && (
+    <ToolButton
+      icon={earReady ? 'mic' : 'mic_off'}
+      label={earReady ? 'Turn the mic off' : 'Turn the mic on'}
+      tone={earReady ? 'lit' : 'plain'}
+      onClick={talk}
+      disabled={
+        !earReady &&
+        (inDoubt ? handoffState !== 'LIVE' : !answerOpen && player.state !== 'playing' && player.state !== 'paused')
+      }
+    />
+  );
+
+  // The toolbar: the mic, a raised hand, or the end of the class — nothing
+  // else (Aarav, 2026-10-01; the mic, 2026-10-03). It fades like Meet's.
   const toolbar = (
     <nav
       aria-hidden={!barsShown}
@@ -2288,6 +2384,7 @@ export function ClassRoom({
     >
       {!inDoubt ? (
         <>
+          {micButton}
           <ToolButton
             icon="front_hand"
             label="Raise hand and ask a doubt"
@@ -2309,6 +2406,7 @@ export function ClassRoom({
               disabled={handoffState !== 'LIVE'}
             />
           )}
+          {micButton}
           <ToolButton
             icon="keyboard"
             label="Type your doubt"
@@ -2322,13 +2420,15 @@ export function ClassRoom({
     </nav>
   );
 
-  // During a doubt, one short line of what the room is doing, beside her shape.
-  const status = inDoubt && (
+  // One short line beside her shape: a mic that would not turn on, or, during
+  // a doubt, what the room is doing.
+  const statusLine = micNote ?? (inDoubt ? doubtStatus : null);
+  const status = statusLine !== null && (
     <p
       aria-live="polite"
       className="rounded-full bg-stage/85 px-3 py-1 font-label-sm text-[12px] leading-4 text-white text-center"
     >
-      {doubtStatus}
+      {statusLine}
     </p>
   );
 
@@ -2389,10 +2489,7 @@ export function ClassRoom({
       {micAsk && (
         <MicRationale
           // The class's mic opens IN this tap: a phone lets capture start only inside one.
-          onAllow={() => {
-            bringEar();
-            micAsk(true);
-          }}
+          onAllow={() => micAsk(true)}
           onSkip={() => micAsk(false)}
         />
       )}

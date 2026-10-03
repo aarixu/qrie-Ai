@@ -13,8 +13,8 @@ import { Icon } from './Icon';
  * So the app asks first, in its own words, and the system prompt only appears
  * to somebody who has already said yes to a sentence they understood.
  *
- * "Not now" is a real answer and costs nothing: the chips under her question
- * still work, and the class carries on typed. That is why this can be honest
+ * "Not now" is a real answer and costs nothing: the typed boxes still work,
+ * and the class carries on typed. That is why this can be honest
  * about it rather than pleading — a permission screen that makes refusing feel
  * like breaking the app is a dark pattern with a friendly face.
  *
@@ -36,11 +36,12 @@ import { Icon } from './Icon';
  *     recording" is a sentence about Qrie. What Google keeps of a request under
  *     its own terms is not something this code controls, so the screen does not
  *     speak for Google.
- *   - Since 2026-10-02 the mic stays on for the whole class (lib/ear.ts
- *     `openEar`), so a student can stop her any time; it closes when the room
- *     does, or the class halts. On the device it only listens for someone
- *     speaking; what is sent is what a listen took down — an answer, a doubt,
- *     the words that interrupted her. Hence "only what you say to her is sent".
+ *   - Since 2026-10-03 the mic is off until the student taps it (ClassRoom
+ *     `talk`, lib/ear.ts `openEar`), and it goes off again when the
+ *     question, the doubt or the stop it was turned on for is over, when they
+ *     tap it again, or when the class halts or they leave. What is sent is what
+ *     a listen took down — an answer, a doubt, the words they stopped her
+ *     with. Hence "only what you say to her is sent".
  *
  * tests/privacyClaims.test.tsx reads the 90 out of this checkout's
  * migrations. If the window changes, or the purge stops deleting by age alone,
@@ -57,7 +58,7 @@ export function MicRationale({
 }: {
   /** Opens the real system prompt. */
   onAllow: () => void;
-  /** Carry on without it. The chips and the keyboard still work. */
+  /** Carry on without it. The typed boxes still work. */
   onSkip: () => void;
 }) {
   return (
@@ -74,9 +75,9 @@ export function MicRationale({
           </div>
           <h2 className="font-headline-md text-[20px] leading-7 text-on-surface">Let Meera hear you</h2>
           <p className="font-body-md text-body-md text-on-surface-variant">
-            The mic stays on while the class is on, so you can answer out loud, or stop her any
-            time to ask something — in English, Hindi, or both. It turns off when you leave the
-            class.
+            The mic turns on only when you tap it — to answer her out loud, or to stop her and
+            ask something, in English, Hindi, or both. It turns off by itself when you are done,
+            or when you tap it again.
           </p>
           <p className="font-label-md text-label-md text-on-surface-variant">
             Only what you say to her is sent to a speech service from Google, which turns it into
