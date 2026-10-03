@@ -34,6 +34,7 @@ import {
 import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
 import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck, type Undrawn } from './gate.ts';
+import type { ComposerReport, PageReport } from './composerChecks.ts';
 import { askAgainLater, type RepairRetry } from './notNow.ts';
 export { REPAIR_WAITS_MS, type RepairRetry } from './notNow.ts';
 import { checkLines } from '../../maths-check/src/index.ts';
@@ -496,6 +497,8 @@ export function assemble(
    * board-layout's `undrawn`, for the keep gate's `drawn` rule.
    */
   undrawn: Undrawn[];
+  /** For a composed plan: every page it leaves and every pull-out, for the keep gate. */
+  composer?: ComposerReport;
 } {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
   const bonds: Bond[] = [];
@@ -504,6 +507,9 @@ export function assemble(
   const opening: string[] = [];
   /** The planner's first beat — the opening, by the prompt's own contract. */
   const openingBeat = blueprint.beats[0];
+  const composed = blueprint.layout === 'composed';
+  const pages: PageReport[] = [];
+  const overview: string[] = [];
   const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
   /** A copy of a picture is described by the same brief the original was. */
   const briefFor = (id: string) => briefs.get(aliases.get(id) ?? id);
@@ -581,7 +587,9 @@ export function assemble(
       asks,
       bonds: meant,
       undrawn: missing,
-    } = layoutBeat({ ...beat, board }, partsByRef, shapesByRef);
+      regions,
+      sheets: sheetReports,
+    } = layoutBeat({ ...beat, board }, partsByRef, shapesByRef, { composed });
     bonds.push(...meant);
     for (const m of missing) undrawn.push({ beat: beat.id, do: m.do, text: m.text });
 
@@ -683,11 +691,48 @@ export function assemble(
      */
     const asksHere = asks.some((a) => usable.some(({ stepIndex }) => stepIndex === a.step));
 
+    /**
+     * WHERE THE CAMERA LOOKS ON A COMPOSED PAGE (board composer).
+     *
+     * On the regions the line's new ink is in, so a phone can read it. On the
+     * whole page on the page's last line: the moment a student sees the full
+     * board before it is turned. A line with nothing new keeps the frame it
+     * had. A beat the composer laid out as a stack has no regions, and is
+     * framed as before.
+     */
+    const composedHere = composed && Object.keys(regions).length > 0;
+    const inkAt = (n: number): string[] => {
+      const before = new Set(n > 0 ? usable[n - 1].step.show : []);
+      return usable[n].step.show.filter(
+        (id) => !before.has(id) && regions[id] !== undefined && !regions[id].endsWith('/header'),
+      );
+    };
+    const sheetOf = (id: string): string => regions[id].split('/')[0];
+    let sheetNow = '0';
+    /** The lesson beat on which the class leaves each sheet. */
+    const leftAt = new Map<string, string>();
+    const cameraFor = (n: number): { frame: string[] | null; whole: boolean } => {
+      const ink = inkAt(n);
+      if (ink.length > 0) sheetNow = sheetOf(ink[ink.length - 1]);
+      const later = usable
+        .slice(n + 1)
+        .map((_, k) => inkAt(n + 1 + k))
+        .find((x) => x.length > 0);
+      const whole = later === undefined || sheetOf(later[0]) !== sheetNow;
+      const onSheet = usable[n].step.show.filter((id) => regions[id]?.startsWith(`${sheetNow}/`));
+      if (whole) return { frame: onSheet, whole };
+      if (ink.length === 0) return { frame: null, whole };
+      const hot = new Set(ink.map((id) => regions[id]));
+      return { frame: onSheet.filter((id) => hot.has(regions[id])), whole };
+    };
+
     usable.forEach(({ step, stepIndex }, n) => {
       const last = n === usable.length - 1;
       // A line spoken over a board that has nothing new on it keeps the camera
       // where it was, rather than letting an empty frame widen to the plane.
-      const frame = step.show.length > 0 ? [...step.show] : lastFrame;
+      // On a composed page, see cameraFor.
+      const view = composedHere ? cameraFor(n) : { frame: step.show.length > 0 ? [...step.show] : lastFrame, whole: false };
+      const frame = view.frame && view.frame.length > 0 ? view.frame : lastFrame;
       if (frame) lastFrame = frame;
       // The question lands on the very moment that asks it — the beat the
       // player will hold until the student answers.
@@ -695,6 +740,10 @@ export function assemble(
       const ask = held?.ask;
       const checksHere = asksHere ? ask !== undefined : last;
       const id = usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`;
+      if (view.whole) {
+        overview.push(id);
+        leftAt.set(sheetNow, id);
+      }
       if (ask && beat === openingBeat && opening.length === 0) opening.push(id);
       beats.push({
         id,
@@ -715,6 +764,16 @@ export function assemble(
         ...(last && beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
       });
     });
+    if (composedHere) {
+      for (const report of sheetReports) {
+        pages.push({
+          ...report,
+          beat: leftAt.get(String(report.sheet)) ?? beat.id,
+          plannerBeat: beat.id,
+          opening: beat === openingBeat,
+        });
+      }
+    }
     /**
      * INK HELD BACK FOR AFTER THE ANSWER, WITH NO LINE TO ARRIVE UNDER.
      *
@@ -781,6 +840,7 @@ export function assemble(
     unspoken,
     opening,
     undrawn,
+    ...(composed ? { composer: { pages, overview } } : {}),
   };
 }
 

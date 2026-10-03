@@ -74,6 +74,13 @@ export interface Blueprint {
   /** Personal lines, if the planner was given anything about a student. */
   fill?: PlannedFill[];
   visuals: VisualBrief[];
+  /**
+   * 'composed': laid out in regions (board-layout compose.ts), framed region by
+   * region, and held to the keep gate's page-full and phone-readable rules.
+   * Set by prepareClass when it is asked to compose, never by the planner. Absent
+   * on every plan made before the composer, which keeps its stacked board.
+   */
+  layout?: 'composed';
 }
 
 /** What happened to one picture on the way to the board. */
