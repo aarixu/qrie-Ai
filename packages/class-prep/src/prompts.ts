@@ -1,5 +1,6 @@
 import { TUTOR } from '@ai-tutor/persona';
 import type { VisualBrief } from './types.ts';
+import { recipeLines, toolkitPrompt } from './toolPrompt.ts';
 
 /**
  * WHICH LANGUAGE THE TUTOR SPEAKS IN — never which language the app is in.
@@ -249,6 +250,7 @@ demonstration that kind wants. Never mix two kinds on one board.
 - A definition or a law: write it by hand, once, large, then box it. Maybe one card.
 - A quantity that varies: a chart of amounts, or a plot when it follows a
   formula (a straight line, a parabola, a wave).
+${recipeLines()}
 - A thing with internal structure (a cell, a cross-section): one
   \`diagram\` with named parts, then point at the parts one at a time.
 
@@ -296,6 +298,8 @@ concrete word — place a "leaf", not "photosynthesis".
 - {"do":"diagram","ref"}                A generated picture, by the id of its brief below. Only for things with internal structure worth pointing inside — a cell, a cross-section, a graph.
 - {"do":"point","ref","part"}           Light one named part of that picture, dim the rest.
 - {"do":"sketch","ref","from":"<picture>#<part>"}   A SMALL DRAWING beside the picture, with a long arrow from the part it explains. The textbook zoom-in: the photo shows the glass; what is inside the water — tiny particles — is a sketch next to it. ref is a diagram brief; keep it simple, a few shapes, and give its moving parts motion.
+
+${toolkitPrompt()}
 
 ### Last resorts, for ideas with no physical shape
 
