@@ -27,18 +27,21 @@ import { fuzzPlan } from './fixtures/fuzzPlans';
 const SEEDS = 300;
 
 /** Every seeded class through assemble and the keep gate: how many broke each rule. */
-function run(opts: { smartBoard?: boolean } = {}): {
+function run(opts: { smartBoard?: boolean; tools?: boolean } = {}): {
   invalid: number;
   count: (rule: GateRule) => number;
   /** Classes whose board drew a frame, a highlight, a graph. */
   framed: number;
   highlighted: number;
   plotted: number;
+  /** Classes whose board drew at least one toolkit tool. */
+  toolClasses: number;
 } {
   const classesWith = new Map<GateRule, number>();
   let framed = 0;
   let highlighted = 0;
   let plotted = 0;
+  let toolClasses = 0;
   let invalid = 0;
   for (let seed = 1; seed <= SEEDS; seed += 1) {
     const { plan, drawn, parts, shapes } = fuzzPlan(seed, opts);
@@ -54,6 +57,7 @@ function run(opts: { smartBoard?: boolean } = {}): {
     if (marked.has('box')) framed += 1;
     if (marked.has('highlight')) highlighted += 1;
     if ((checked.lesson as Lesson).elements.some((el) => el.kind === 'plot')) plotted += 1;
+    if ((checked.lesson as Lesson).elements.some((el) => el.kind === 'tool')) toolClasses += 1;
     const problems = gateLesson(checked.lesson as Lesson, {
       bonds: made.bonds,
       unspoken: made.unspoken,
@@ -62,7 +66,7 @@ function run(opts: { smartBoard?: boolean } = {}): {
     });
     for (const rule of new Set(problems.map((p) => p.rule))) classesWith.set(rule, (classesWith.get(rule) ?? 0) + 1);
   }
-  return { invalid, count: (rule) => classesWith.get(rule) ?? 0, framed, highlighted, plotted };
+  return { invalid, count: (rule) => classesWith.get(rule) ?? 0, framed, highlighted, plotted, toolClasses };
 }
 
 describe('300 seeded classes through assemble and the keep gate', () => {
@@ -120,5 +124,24 @@ describe('300 seeded classes with marks on her writing, a clean page, a graph an
     expect(count('drawn')).toBe(0);
     expect(count('echo')).toBe(0);
     expect(count('tex')).toBe(0);
+  });
+});
+
+describe('300 seeded classes with a pie, a line chart and moving working', () => {
+  const plain = run();
+  const withTools = run({ tools: true });
+
+  it('draws all three in every class, and every class validates', () => {
+    expect(withTools.invalid).toBe(0);
+    expect(withTools.toolClasses).toBe(SEEDS);
+  });
+
+  it('breaks no toolkit rule, and no board rule the classes did not already break', () => {
+    for (const rule of ['tool-valid', 'tool-maths', 'tool-one-motion', 'tool-fits-line'] as const) {
+      expect(withTools.count(rule)).toBe(0);
+    }
+    for (const rule of ['on-board', 'one-page', 'on-camera', 'overlap'] as const) {
+      expect(withTools.count(rule)).toBeLessThanOrEqual(plain.count(rule));
+    }
   });
 });
