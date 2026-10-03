@@ -2,6 +2,7 @@ import {
   boxOf,
   flowHeight,
   noteBoxHeight,
+  splitPartRef,
   union,
   CANVAS_H,
   CANVAS_W,
@@ -95,13 +96,35 @@ function clampInto(rect: Rect, board: Rect): Rect {
 }
 
 /**
+ * The box of the picture part she is pointing at — but only when that
+ * picture is the newest thing in the frame. Then nothing she has written
+ * is newer, and zooming cannot cut a note in half (the reason the camera
+ * otherwise ignores focus). Only an `image` part has a box in the lesson
+ * (fractions of the picture); a diagram's parts are ids inside its SVG, so
+ * they light and dim as before and never zoom.
+ */
+function pointedPart(lesson: Lesson, visible: readonly string[], focus: readonly string[]): Rect | null {
+  const byId = new Map(lesson.elements.map((el) => [el.id, el]));
+  const newest = [...visible].reverse().map((id) => byId.get(id)).find((el) => el !== undefined);
+  if (!newest || newest.kind !== 'image' || !newest.parts) return null;
+  for (const ref of focus) {
+    const { elementId, part } = splitPartRef(ref);
+    if (elementId !== newest.id || part === null) continue;
+    const p = newest.parts.find((q) => q.name === part);
+    if (p) return { x: newest.x + p.x * newest.w, y: newest.y + p.y * newest.h, w: p.w * newest.w, h: p.h * newest.h };
+  }
+  return null;
+}
+
+/**
  * The viewBox for this moment.
  *
  * @param visible the beat's full element set — this is what gets framed
- * @param _focus  kept so every caller keeps passing the beat's focus, for when
- *                a beat gains an explicit zoom. Emphasis is not a camera
- *                decision: framing the focus alone once cut a note in half
- *                while the tutor was talking about it.
+ * @param focus   the beat's focus: a picture part named here is zoomed to when
+ *                that picture is the newest ink (see pointedPart); everything
+ *                else in focus is emphasis, not a camera decision — framing the
+ *                focus alone once cut a note in half while the tutor was
+ *                talking about it.
  * @param aspect  the renderer's w/h, so the frame comes back pre-shaped to the
  *                screen. Omitted (in a test, or before the first measure) it
  *                stays at the content's own shape.
@@ -113,7 +136,7 @@ function clampInto(rect: Rect, board: Rect): Rect {
 export function computeFrame(
   lesson: Lesson,
   visible: readonly string[],
-  _focus: readonly string[],
+  focus: readonly string[],
   aspect?: number,
   minW?: number,
 ): Rect {
@@ -133,6 +156,21 @@ export function computeFrame(
     .filter((el): el is NonNullable<typeof el> => el !== undefined)
     .map(boxOf);
   if (boxes.length === 0) return shape(board);
+
+  const part = pointedPart(lesson, visible, focus);
+  if (part) {
+    const pad = Math.max(part.w, part.h) * 0.25;
+    let zoom: Rect = { x: part.x - pad, y: part.y - pad, w: part.w + pad * 2, h: part.h + pad * 2 };
+    const least = { w: CANVAS_W / MAX_ZOOM, h: CANVAS_H / MAX_ZOOM };
+    if (zoom.w < least.w) zoom = { ...zoom, x: zoom.x - (least.w - zoom.w) / 2, w: least.w };
+    if (zoom.h < least.h) zoom = { ...zoom, y: zoom.y - (least.h - zoom.h) / 2, h: least.h };
+    if (minW && zoom.w < minW) {
+      const scale = minW / zoom.w;
+      zoom = { x: zoom.x - (zoom.w * (scale - 1)) / 2, y: zoom.y - (zoom.h * (scale - 1)) / 2, w: zoom.w * scale, h: zoom.h * scale };
+    }
+    const page = Math.floor((part.x + part.w / 2) / PAGE_STRIDE);
+    return shape(zoom, { x: page * PAGE_STRIDE, y: 0, w: Math.min(CANVAS_W, board.w), h: board.h });
+  }
 
   /**
    * THE CAMERA SCROLLS; IT DOES NOT ZOOM OUT.
