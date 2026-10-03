@@ -89,6 +89,15 @@ const WRITE_H = 62;
 const CARD_H = 128;
 /** The sizes a card's body may wrap at, largest first; see the card block. */
 const CARD_BODY_SIZES = [16, 15, 14, 13];
+/** A summary's words: size, line pitch, and the room the banner's notches take at each end. */
+const SUMMARY_SIZE = 17;
+const SUMMARY_LEAD = 24;
+const SUMMARY_NOTCH = 28;
+/** A comparison: its inner padding, headings, points and their line pitch. */
+const COMPARE_PAD = 16;
+const COMPARE_HEAD = 19;
+const COMPARE_SIZE = 16;
+const COMPARE_LEAD = 22;
 
 /**
  * A connector's words lifted above their row (the scene block): written no
@@ -187,6 +196,13 @@ interface Block {
   at: number | null;
   /** Turn an allotted rectangle into elements. */
   place: (rect: { x: number; y: number; w: number; h: number }) => Element[];
+  /**
+   * Its height when drawn `w` wide, for a block that cannot be drawn just to
+   * be measured: a card, a summary and a comparison record bonds as they are
+   * placed, so drawing one to measure it would record them twice. A block
+   * without one is measured by drawing it (the composed page, compose.ts).
+   */
+  heightAt?: (w: number) => number;
 }
 
 const idFor = (beatId: string, index: number, suffix = ''): string =>
@@ -898,14 +914,21 @@ export function layoutBeat(
           run.push(items[i] as Extract<Instruction, { do: 'card' }>);
           i += 1;
         }
-        const perRow = Math.max(1, Math.min(run.length, Math.floor(WIDTH / MIN_CARD_W)));
-        const rows = Math.ceil(run.length / perRow);
+        // As many to a row as the rectangle holds at MIN_CARD_W each. On the
+        // full width that is the same three it always was.
+        const perRowAt = (w: number): number => Math.max(1, Math.min(run.length, Math.floor(w / MIN_CARD_W)));
+        const heightAt = (w: number): number => {
+          const rows = Math.ceil(run.length / perRowAt(w));
+          return rows * CARD_H + (rows - 1) * GUTTER;
+        };
         blocks.push({
           kind: item.do,
           at: index,
-          height: rows * CARD_H + (rows - 1) * GUTTER,
+          height: heightAt(WIDTH),
+          heightAt,
           place: (r) => {
             const out: Element[] = [];
+            const perRow = perRowAt(r.w);
             const cardW = (r.w - (perRow - 1) * GUTTER) / perRow;
             run.forEach((card, n) => {
               const row = Math.floor(n / perRow);
@@ -981,6 +1004,92 @@ export function layoutBeat(
             return out;
           },
         });
+        break;
+      }
+
+      case 'summary': {
+        const text = item.text;
+        // No wider than a note: a one-line takeaway stretched across the
+        // whole board reads as a banner ad, not a note.
+        const widthAt = (w: number): number => Math.min(w, WIDTH * 0.7);
+        const linesAt = (w: number): string[] => wrapLines(text, widthAt(w) - SUMMARY_NOTCH * 2, SUMMARY_SIZE);
+        const heightAt = (w: number): number => linesAt(w).length * SUMMARY_LEAD + 22;
+        blocks.push({
+          kind: item.do,
+          at: index,
+          height: heightAt(WIDTH),
+          heightAt,
+          place: (r) => {
+            const w = widthAt(r.w);
+            const x = r.x + (r.w - w) / 2;
+            const lines = linesAt(r.w);
+            const frameId = idFor(beat.id, index);
+            const out: Element[] = [
+              { kind: 'box', id: frameId, x, y: r.y, w, h: heightAt(r.w), label: '', as: 'banner', tone: 'accent' },
+            ];
+            lines.forEach((line, k) => {
+              const id = idFor(beat.id, index, `_s${k}`);
+              // The words are meant to sit inside their banner.
+              bonds.push({ a: frameId, b: id });
+              out.push({ kind: 'text', id, x: x + w / 2, y: r.y + 11 + SUMMARY_SIZE + k * SUMMARY_LEAD, text: line, size: SUMMARY_SIZE });
+            });
+            return out;
+          },
+        });
+        i += 1;
+        break;
+      }
+
+      case 'compare': {
+        const { left, right } = item;
+        const fair = (side: unknown): side is { heading: string; points: string[] } =>
+          typeof side === 'object' &&
+          side !== null &&
+          typeof (side as { heading?: unknown }).heading === 'string' &&
+          Array.isArray((side as { points?: unknown }).points) &&
+          (side as { points: unknown[] }).points.length >= 2 &&
+          (side as { points: unknown[] }).points.length <= 6;
+        // Two to six points a side, or nothing at all: `undrawn` names it.
+        if (!fair(left) || !fair(right)) {
+          i += 1;
+          break;
+        }
+        const columnAt = (w: number): number => (w - COMPARE_PAD * 3) / 2;
+        const rowsAt = (w: number): { left: string[]; right: string[]; h: number }[] =>
+          Array.from({ length: Math.max(left.points.length, right.points.length) }, (_, n) => {
+            const l = left.points[n] ? wrapLines(left.points[n], columnAt(w), COMPARE_SIZE) : [];
+            const rr = right.points[n] ? wrapLines(right.points[n], columnAt(w), COMPARE_SIZE) : [];
+            return { left: l, right: rr, h: Math.max(l.length, rr.length, 1) * COMPARE_LEAD + 8 };
+          });
+        const heightAt = (w: number): number =>
+          COMPARE_PAD * 2 + COMPARE_HEAD * 1.6 + rowsAt(w).reduce((sum, row) => sum + row.h, 0);
+        blocks.push({
+          kind: item.do,
+          at: index,
+          height: heightAt(WIDTH),
+          heightAt,
+          place: (r) => {
+            const frameId = idFor(beat.id, index);
+            const col = columnAt(r.w);
+            const centres = [r.x + COMPARE_PAD + col / 2, r.x + COMPARE_PAD * 2 + col + col / 2];
+            const out: Element[] = [{ kind: 'box', id: frameId, x: r.x, y: r.y, w: r.w, h: heightAt(r.w), label: '' }];
+            const write = (id: string, x: number, y: number, text: string, size: number): void => {
+              bonds.push({ a: frameId, b: id });
+              out.push({ kind: 'text', id, x, y, text, size });
+            };
+            const headY = r.y + COMPARE_PAD + COMPARE_HEAD;
+            write(idFor(beat.id, index, '_lh'), centres[0], headY, left.heading, COMPARE_HEAD);
+            write(idFor(beat.id, index, '_rh'), centres[1], headY, right.heading, COMPARE_HEAD);
+            let y = r.y + COMPARE_PAD + COMPARE_HEAD * 1.6;
+            rowsAt(r.w).forEach((row, n) => {
+              row.left.forEach((line, k) => write(idFor(beat.id, index, `_l${n}_${k}`), centres[0], y + COMPARE_SIZE + k * COMPARE_LEAD, line, COMPARE_SIZE));
+              row.right.forEach((line, k) => write(idFor(beat.id, index, `_r${n}_${k}`), centres[1], y + COMPARE_SIZE + k * COMPARE_LEAD, line, COMPARE_SIZE));
+              y += row.h;
+            });
+            return out;
+          },
+        });
+        i += 1;
         break;
       }
 
@@ -2064,6 +2173,8 @@ const WRITES_WORDS: ReadonlySet<Instruction['do']> = new Set([
   'chart',
   'plot',
   'derive',
+  'summary',
+  'compare',
 ]);
 
 /** A few of an instruction's own words, for a message that names it. */
@@ -2074,9 +2185,12 @@ function wordsOf(step: Instruction): string {
     case 'note':
     case 'caption':
     case 'equation':
+    case 'summary':
       return step.text;
     case 'card':
       return step.heading;
+    case 'compare':
+      return typeof step.left?.heading === 'string' ? step.left.heading : '';
     case 'list':
       return step.heading ?? step.items[0]?.term ?? '';
     case 'flow':
