@@ -43,6 +43,7 @@ import {
   type Fillable,
   type SheetReport,
 } from './compose';
+import { inksFor, paintInks } from './ink';
 
 /**
  * The board's three bands. Nothing is ever placed outside them, and nothing
@@ -1444,6 +1445,18 @@ export function layoutBeat(
   const beside = blocks.filter((b) => b.kind === 'write' || b.kind === 'list');
   /** How far down each region of a composed page's first sheet is already used (compose.ts, fillRegions). */
   const reserved = new Map<string, number>();
+  /**
+   * A COMPOSED FIGURE: the labelled arrangement below draws the figure and its
+   * names inside the page's hero region, and leaves every key point and list
+   * to the regions beside and under it. On a stacked page its room is the band
+   * it always had, so nothing there moves.
+   */
+  const composedFigure = composition !== null && composition.name === 'figure' && labelledHost !== undefined;
+  const area: Rect =
+    composedFigure && composition?.main ? composition.main : { x: SIDE, y: MAIN.y, w: WIDTH, h: MAIN.h };
+  /** On a composed page: the part each name, line and mark belongs to, and the names in drawing order (ink.ts). */
+  const partOf = new Map<string, string>();
+  const namedParts: { part: string; text: string }[] = [];
 
   /**
    * A LABELLED PICTURE: the figure centred, its names written in the margins.
@@ -1457,11 +1470,12 @@ export function layoutBeat(
    * making on purpose: a smaller picture whose parts are all named beats a
    * bigger one the student has to be told about in a sentence somewhere else.
    */
-  if (labelledHost && composition === null) {
+  if (labelledHost && (composition === null || composedFigure)) {
+    if (composedFigure) regionNow = '0/hero';
     const MARGIN_GAP = 18;
-    const leastMargin = Math.round((WIDTH - MARGIN_GAP * 2) * 0.26);
-    const columnW = WIDTH - MARGIN_GAP * 2 - leastMargin * 2;
-    const columnX = SIDE + leastMargin + MARGIN_GAP;
+    const leastMargin = Math.round((area.w - MARGIN_GAP * 2) * 0.26);
+    const columnW = area.w - MARGIN_GAP * 2 - leastMargin * 2;
+    const columnX = area.x + leastMargin + MARGIN_GAP;
 
     // What she says out loud gets written under what she is saying it about.
     // The band is measured first, because the picture's height is whatever is
@@ -1470,21 +1484,25 @@ export function layoutBeat(
     // Lists are written under the figure too, and they are measured before the
     // key points because they are the taller thing: a four-item list is most of
     // a band on its own, and the figure has to know that before it takes a size.
-    const listsH = written.reduce((sum, b) => sum + (b.height ?? 0) + BAND_GAP, 0);
+    const listsH = composedFigure ? 0 : written.reduce((sum, b) => sum + (b.height ?? 0) + BAND_GAP, 0);
     // Wrapped to the room the band actually has: it starts at the figure's
     // edge, not the board's, so a line wrapped to the full width would walk
     // off the right side.
-    const bandWidth = WIDTH - leastMargin - MARGIN_GAP;
+    const bandWidth = area.w - leastMargin - MARGIN_GAP;
     const band = planBand(
-      pendingWrites.map((point) => point.step.text),
+      composedFigure ? [] : pendingWrites.map((point) => point.step.text),
       bandWidth,
       Math.max(0, bandRoom - MIN_FIGURE_H - BAND_GAP - listsH),
     );
     const under = band.height + listsH;
-    const figureH = under > 0 ? Math.max(MIN_FIGURE_H, bandRoom - under - BAND_GAP) : MAIN.h;
+    const figureH = composedFigure
+      ? area.h
+      : under > 0
+        ? Math.max(MIN_FIGURE_H, bandRoom - under - BAND_GAP)
+        : MAIN.h;
 
     current = labelledHost.at ?? -1;
-    for (const el of labelledHost.place({ x: columnX, y: MAIN.y, w: columnW, h: figureH })) {
+    for (const el of labelledHost.place({ x: columnX, y: area.y, w: columnW, h: figureH })) {
       emit(el);
     }
 
@@ -1514,9 +1532,9 @@ export function layoutBeat(
       // and placed in the middle of another.
       const w = Math.max(
         60,
-        side === 'left' ? near - MARGIN_GAP - SIDE : SIDE + WIDTH - (near + MARGIN_GAP),
+        side === 'left' ? near - MARGIN_GAP - area.x : area.x + area.w - (near + MARGIN_GAP),
       );
-      return { w, cx: side === 'left' ? SIDE + w / 2 : SIDE + WIDTH - w / 2 };
+      return { w, cx: side === 'left' ? area.x + w / 2 : area.x + area.w - w / 2 };
     };
     const margins = { left: marginOf('left'), right: marginOf('right') };
 
@@ -1636,23 +1654,23 @@ export function layoutBeat(
         .filter(({ pending }) => sideOf.get(pending) === side)
         .map(({ pending, box }) => {
           const height = wrapText(pending.step.text, margins[side].w, sizes[side]).length * lead;
-          return { pending, height, wanted: box ? box.y + box.h / 2 - height / 2 : MAIN.y, top: 0 };
+          return { pending, height, wanted: box ? box.y + box.h / 2 - height / 2 : area.y, top: 0 };
         })
         .sort((a, b) => a.wanted - b.wanted);
-      let cursor = MAIN.y;
+      let cursor = area.y;
       for (const name of column) {
         name.top = Math.max(name.wanted, cursor);
         cursor = name.top + name.height + NAME_GAP;
       }
-      let ceiling = MAIN.y + figureH;
+      let ceiling = area.y + figureH;
       for (let k = column.length - 1; k >= 0; k -= 1) {
         column[k].top = Math.min(column[k].top, ceiling - column[k].height);
         ceiling = column[k].top - NAME_GAP;
       }
       // Taller than the figure even so: written down from the top, past the
       // foot, rather than over one another.
-      if (column.length > 0 && column[0].top < MAIN.y) {
-        cursor = MAIN.y;
+      if (column.length > 0 && column[0].top < area.y) {
+        cursor = area.y;
         for (const name of column) {
           name.top = cursor;
           cursor += name.height + NAME_GAP;
@@ -1667,6 +1685,13 @@ export function layoutBeat(
       const size = sizes[side];
       const lines = wrapText(pending.step.text, margins[side].w, size);
       const lead = handLead(size);
+      // Its colour on a composed page: the part it names, when the picture has it.
+      const named = composition && box ? splitPartRef(pending.step.target).part : null;
+      if (named) {
+        namedParts.push({ part: named, text: pending.step.text });
+        lines.forEach((_, n) => partOf.set(n === 0 ? pending.id : `${pending.id}_l${n}`, named));
+        partOf.set(`${pending.id}_line`, named);
+      }
       /**
        * Written AGAINST the picture, not centred in the margin.
        *
@@ -1683,11 +1708,11 @@ export function layoutBeat(
           ? hostBox.x - MARGIN_GAP
           : hostBox.x + hostBox.w + MARGIN_GAP
         : onLeft
-          ? SIDE + margins.left.w
-          : SIDE + WIDTH - margins.right.w;
+          ? area.x + margins.left.w
+          : area.x + area.w - margins.right.w;
       const cx = onLeft
-        ? Math.max(SIDE + widest / 2, edge - widest / 2)
-        : Math.min(SIDE + WIDTH - widest / 2, edge + widest / 2);
+        ? Math.max(area.x + widest / 2, edge - widest / 2)
+        : Math.min(area.x + area.w - widest / 2, edge + widest / 2);
 
       // Where the side's column put it (above), as the first line's baseline.
       const top = standing.get(pending)! + size;
@@ -1747,12 +1772,21 @@ export function layoutBeat(
      * rather than through it.
      */
     if (pendingSketch && hostBox) {
-      const x = hostBox.x + hostBox.w + MARGIN_GAP;
-      const w = Math.max(150, SIDE + WIDTH - x);
-      const h = Math.max(120, Math.min(figureH, Math.round(w * 0.8)));
+      // On a composed page the inset heads the notes column, and the notes
+      // start under it. On a stacked page it sits beside the picture, level
+      // with its part, as before.
+      const column = composedFigure ? composition!.regions.find((r) => r.id === 'side') : undefined;
+      const x = column ? column.x : hostBox.x + hostBox.w + MARGIN_GAP;
+      const w = column ? column.w : Math.max(150, SIDE + WIDTH - x);
+      // 0.55 of the column's width tall: a three-item notes list still fits under it.
+      const h = column ? Math.round(column.w * 0.55) : Math.max(120, Math.min(figureH, Math.round(w * 0.8)));
       const part = partBox(pendingSketch.step.from, elements);
       const wanted = part ? part.y + part.h / 2 - h / 2 : MAIN.y;
-      const y = Math.min(Math.max(wanted, MAIN.y), MAIN.y + figureH - h);
+      const y = column ? column.y : Math.min(Math.max(wanted, MAIN.y), MAIN.y + figureH - h);
+      if (column) {
+        regionNow = '0/side';
+        reserved.set(column.id, h + FILL_GAP);
+      }
       const ref = pendingSketch.step.ref;
       current = pendingSketch.at;
       emit({
@@ -1766,7 +1800,31 @@ export function layoutBeat(
         alt: ref.replace(/_/g, ' '),
         parts: [],
       });
-      if (part) {
+      if (part && column) {
+        // The textbook zoom: a box round the part, and dashed lines from its
+        // corners to the inset. In the inset's region, so the camera frames
+        // the part and the inset together when it arrives.
+        const zoomId = `${pendingSketch.id}_zoom`;
+        emit({ kind: 'mark', id: zoomId, x: part.x - 6, y: part.y - 6, w: part.w + 12, h: part.h + 12, shape: 'box', tone: 'accent' });
+        bonds.push({ a: zoomId, b: labelledHost.ref ?? '' });
+        const corners: [number, number][] = [
+          [part.y - 6, y],
+          [part.y + part.h + 6, y + h],
+        ];
+        corners.forEach(([fromY, toY], k) => {
+          const lineId = `${pendingSketch!.id}_zoom${k}`;
+          emit({
+            kind: 'arrow',
+            id: lineId,
+            from: { x: part.x + part.w + 6, y: fromY },
+            to: { x: x - 4, y: toY },
+            dashed: true,
+            tone: 'accent',
+          });
+          bonds.push({ a: lineId, b: ref }, { a: lineId, b: labelledHost.ref ?? '' }, { a: lineId, b: zoomId });
+        });
+        regionNow = '0/hero';
+      } else if (part) {
         const arrowId = `${pendingSketch.id}_arrow`;
         emit({
           kind: 'arrow',
@@ -1893,12 +1951,14 @@ export function layoutBeat(
         .map((b) => lineOf[b.at as number]),
     );
     const leavesBand = (at: number): boolean => offBandLines.has(lineOf[at]);
-    const bandItems: BandItem[] = [
-      ...pendingWrites.map((p, n): BandItem => ({ at: p.at, point: n })),
-      ...written.map((block): BandItem => ({ at: block.at ?? -1, list: block })),
-    ]
-      .filter((item) => !leavesBand(item.at))
-      .sort((a, b) => a.at - b.at);
+    const bandItems: BandItem[] = composedFigure
+      ? []
+      : [
+          ...pendingWrites.map((p, n): BandItem => ({ at: p.at, point: n })),
+          ...written.map((block): BandItem => ({ at: block.at ?? -1, list: block })),
+        ]
+          .filter((item) => !leavesBand(item.at))
+          .sort((a, b) => a.at - b.at);
     const tallness = (item: BandItem): number =>
       item.point !== undefined
         ? band.lines[item.point].length * bandLead + POINT_GAP
@@ -1927,15 +1987,18 @@ export function layoutBeat(
      * 6). It now goes to the stacker, which starts on the page after this
      * figure's last one, so nothing is drawn over the picture or its band.
      */
-    const leftover = blocks.filter(
-      (b) =>
-        b !== labelledHost &&
-        ((b.kind !== 'write' && b.kind !== 'list') || (b.at !== null && leavesBand(b.at))),
-    );
+    const leftover = composedFigure
+      ? blocks.filter((b) => b !== labelledHost)
+      : blocks.filter(
+          (b) =>
+            b !== labelledHost &&
+            ((b.kind !== 'write' && b.kind !== 'list') || (b.at !== null && leavesBand(b.at))),
+        );
     blocks.length = 0;
     blocks.push(...leftover);
     firstSheet = bandSheets;
     figurePlaced = true;
+    regionNow = null;
   }
 
   if (
@@ -2195,6 +2258,10 @@ export function layoutBeat(
     const box = partBox(pending.step.target, elements);
     if (!box) continue;
     const { elementId } = splitPartRef(pending.step.target);
+    if (composition) {
+      const marked = splitPartRef(pending.step.target).part;
+      if (marked) partOf.set(pending.id, marked);
+    }
     const host = elements.find((el) => el.id === elementId);
     if (!host) continue;
 
@@ -2214,6 +2281,10 @@ export function layoutBeat(
     bonds.push({ a: pending.id, b: host.id });
   }
   regionNow = null;
+  // One colour per named part, on its name, its line, its marks and its notes item (ink.ts).
+  if (composition && namedParts.length > 0) {
+    elements.splice(0, elements.length, ...paintInks(elements, inksFor(namedParts), partOf));
+  }
 
   // INK TIMED TO A WORD (canvas C3). A write, an equation or a toolkit tool with `at` waits
   // until she reaches that word of the line it is written under — every line
