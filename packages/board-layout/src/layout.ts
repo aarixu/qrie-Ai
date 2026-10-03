@@ -17,10 +17,13 @@ import {
   wrapLines,
   listBoxHeight,
   compileFunction,
+  isToolName,
+  toolAspect,
+  toolMinSize,
   type Element,
   type Beat,
 } from '@ai-tutor/lesson-format';
-import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
+import type { Instruction, LaidOutBeat, ScriptBeat, ToolInstruction } from './types';
 import {
   annotateElement,
   connectElements,
@@ -188,6 +191,12 @@ interface Block {
 
 const idFor = (beatId: string, index: number, suffix = ''): string =>
   `${beatId}_${index}${suffix}`;
+
+/** A tool instruction's params: every key but the ones the board itself reads. */
+export function toolParamsOf(item: ToolInstruction): Record<string, unknown> {
+  const { do: _do, id: _id, at: _at, ...params } = item;
+  return params;
+}
 
 /**
  * How long into a spoken line she reaches `word`: its place in the line at
@@ -1151,6 +1160,24 @@ export function layoutBeat(
       }
 
       default: {
+        // A toolkit tool is drawn like a figure: its own shape, never under
+        // its floor. Bad params are still placed — validateLesson names them
+        // to the repair round, which an instruction dropped here never would.
+        if (isToolName(item.do)) {
+          const tool = item.do;
+          const params = toolParamsOf(item as ToolInstruction);
+          blocks.push({
+            kind: tool,
+            at: index,
+            height: null,
+            place: (r) => {
+              const aspect = toolAspect(tool, params);
+              const min = toolMinSize(tool);
+              const w = Math.max(Math.min(r.w, r.h * aspect), min.w, min.h * aspect);
+              return [{ kind: 'tool', id: idFor(beat.id, index), x: r.x + (r.w - w) / 2, y: r.y, w, h: w / aspect, tool, params }];
+            },
+          });
+        }
         // An instruction this engine does not know is SKIPPED, never spun on.
         // The switch used to have no default, and an unknown `do` left `i`
         // untouched — the loop hung for two minutes until a test timed out.
@@ -1201,7 +1228,7 @@ export function layoutBeat(
   let figurePlaced = false;
 
   const FIGURE: ReadonlySet<Block['kind']> = new Set(['picture', 'diagram', 'chart', 'plot', 'flow']);
-  const figures = blocks.filter((b) => FIGURE.has(b.kind));
+  const figures = blocks.filter((b) => FIGURE.has(b.kind) || isToolName(b.kind));
   /**
    * THE FIGURE THE NAMES ARE WRITTEN ROUND.
    *
@@ -1953,18 +1980,20 @@ export function layoutBeat(
     bonds.push({ a: pending.id, b: host.id });
   }
 
-  // INK TIMED TO A WORD (canvas C3). A write or an equation with `at` waits
+  // INK TIMED TO A WORD (canvas C3). A write, an equation or a toolkit tool with `at` waits
   // until she reaches that word of the line it is written under — every line
   // it drew, in whichever arrangement placed it. A word her line does not
   // hold leaves the ink where it was, with the start of the line.
   items.forEach((item, index) => {
-    if ((item.do !== 'write' && item.do !== 'equation') || !item.at) return;
+    const timed = item.do === 'write' || item.do === 'equation' || isToolName(item.do);
+    const at = timed && 'at' in item && typeof item.at === 'string' ? item.at : '';
+    if (!at) return;
     const said = saidLines[lineOf[index] - 1] ?? '';
-    const wait = anchorMs(said, item.at);
+    const wait = anchorMs(said, at);
     if (wait <= 0) return;
     const ids = new Set(byInstruction.get(index) ?? []);
     elements.forEach((el, k) => {
-      if (!ids.has(el.id) || (el.kind !== 'handwrite' && el.kind !== 'formula')) return;
+      if (!ids.has(el.id) || (el.kind !== 'handwrite' && el.kind !== 'formula' && el.kind !== 'tool')) return;
       elements[k] = { ...el, after: (el.after ?? 0) + wait };
     });
   });
@@ -2059,7 +2088,7 @@ function wordsOf(step: Instruction): string {
     case 'derive':
       return step.steps[0] ?? '';
     default:
-      return '';
+      return isToolName(step.do) ? step.do : '';
   }
 }
 

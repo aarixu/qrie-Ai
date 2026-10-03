@@ -513,7 +513,9 @@ export function assemble(
   const shapesByRef = new Map<string, number>(pictureShapes);
   const aliases = new Map<string, string>();
   const reuse = (step: Instruction, beatId: string): Instruction => {
-    if ('ref' in step) {
+    // `typeof`, not only `in`: a toolkit instruction carries its params as
+    // arbitrary keys, so `in` alone cannot promise `ref` is a picture's name.
+    if ('ref' in step && typeof step.ref === 'string') {
       if (!shownArt.has(step.ref)) return step;
       const id = reuseId(step.ref, beatId);
       aliases.set(id, step.ref);
@@ -558,7 +560,7 @@ export function assemble(
 
   for (const beat of blueprint.beats) {
     const board = (beat.board ?? []).filter((step) =>
-      'ref' in step ? drawn.has(step.ref) : true,
+      'ref' in step && typeof step.ref === 'string' ? drawn.has(step.ref) : true,
     ).map((step) => reuse(step, beat.id));
     const {
       elements: laidOut,
@@ -730,7 +732,7 @@ export function assemble(
     // Everything this beat drew stays on the board for later beats, the ink
     // held back for after an answer included.
     shownSoFar.push(...steps[steps.length - 1].show);
-    for (const step of board) if ('ref' in step) shownArt.add(aliases.get(step.ref) ?? step.ref);
+    for (const step of board) if ('ref' in step && typeof step.ref === 'string') shownArt.add(aliases.get(step.ref) ?? step.ref);
   }
 
   return {

@@ -1,4 +1,16 @@
-import type { Tone } from '@ai-tutor/lesson-format';
+import type { Tone, ToolName } from '@ai-tutor/lesson-format';
+
+/**
+ * A toolkit tool by its own name: {"do":"pieChart","slices":[…]}. Its params
+ * are every key but `do`, `id` and `at`; lesson-format's tools/<name>.ts says
+ * which they are.
+ */
+export interface ToolInstruction {
+  do: ToolName;
+  id?: string;
+  at?: string;
+  [param: string]: unknown;
+}
 
 /**
  * What the tutor wants on the board — never where it goes.
@@ -217,7 +229,8 @@ export type Instruction =
    * finished: "imagine you and your friend" and two figures appear, then
    * "walking to school" and the school does.
    */
-  | { do: 'say'; text: string };
+  | { do: 'say'; text: string }
+  | ToolInstruction;
 
 export type InstructionKind = Instruction['do'];
 
