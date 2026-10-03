@@ -79,6 +79,81 @@ describe('readStudents', () => {
   });
 });
 
+describe("a school's own headings", () => {
+  it('reads the headings schools write for each student column, whatever their case, spaces and punctuation', () => {
+    const { students, errors } = readStudents('Class,Sec,Roll No.,Student Name,Adm. No.\n8,a,12,Riya Sharma,sr/2019/044\n');
+    expect(errors).toEqual([]);
+    expect(students).toEqual([{ row: 2, grade: 8, section: 'A', roll: '12', name: 'Riya Sharma', admissionNo: 'SR2019044' }]);
+    for (const [header, row] of [
+      ['STD.,DIV.,ROLL_NUMBER,NAME OF THE STUDENT', '8,A,12,Riya Sharma'],
+      ['Grade,Division,roll-no,Full Name', '8,A,12,Riya Sharma'],
+      ['Standard,Section,Roll,Name of Student', '8,A,12,Riya Sharma'],
+      ["class , sec , roll number , student's name", '8,A,12,Riya Sharma'],
+    ]) {
+      expect(readStudents(`${header}\n${row}\n`)).toMatchObject({
+        errors: [],
+        students: [{ grade: 8, section: 'A', roll: '12', name: 'Riya Sharma' }],
+      });
+    }
+  });
+
+  it('says how each heading was read, and which it did not read', () => {
+    const { columns } = readStudents('S.No.,Std,Div,Roll Number,Name of Student,Mobile,\n1,8,A,12,Riya Sharma,9800000000,\n');
+    expect(columns).toEqual([
+      { heading: 'S.No.', column: null },
+      { heading: 'Std', column: 'grade' },
+      { heading: 'Div', column: 'section' },
+      { heading: 'Roll Number', column: 'roll' },
+      { heading: 'Name of Student', column: 'name' },
+      { heading: 'Mobile', column: null },
+    ]);
+  });
+
+  it('never takes a heading that could mean another column: a serial number is not an admission number', () => {
+    const { students, errors, columns } = readStudents('Sr. No.,ID,Class,Section,Roll,Name\n1,X9,8,A,12,Riya\n');
+    expect(errors).toEqual([]);
+    expect(students[0].admissionNo).toBeUndefined();
+    expect(columns.filter((c) => c.column === null).map((c) => c.heading)).toEqual(['Sr. No.', 'ID']);
+  });
+
+  it('refuses two headings that read as the same column, rather than pick one', () => {
+    const r = readStudents('Class,Section,Roll,Name,Student Name\n8,A,12,Riya,Riya Sharma\n');
+    expect(r.errors).toEqual([
+      'students.csv has more than one column read as name: "Name" and "Student Name". Keep one of them.',
+    ]);
+    expect(r.students).toEqual([]);
+    const t = readTeachers('Teacher Name,Full Name,Teaches\nA,B,8A Maths\n');
+    expect(t.errors).toEqual([
+      'teachers.csv has more than one column read as name: "Teacher Name" and "Full Name". Keep one of them.',
+    ]);
+  });
+
+  it('reads the headings schools write for each teacher column', () => {
+    const { teachers, errors, columns } = readTeachers(
+      'Name of Teacher,Classes and Subjects,Role,Employee Code\nMrs Gupta,8A Mathematics; 8B Mathematics,admin,e-01\n',
+    );
+    expect(errors).toEqual([]);
+    expect(teachers[0]).toMatchObject({ name: 'Mrs Gupta', role: 'admin', staffId: 'E01', teaches: [{ grade: 8, section: 'A' }, { grade: 8, section: 'B' }] });
+    expect(columns.map((c) => c.column)).toEqual(['name', 'teaches', 'role', 'staff_id']);
+    for (const header of ['Teacher Name,Class & Subject,Staff No.', 'Staff Name,Subjects and Classes,Emp ID', 'Full Name,Teaches,Staff ID']) {
+      expect(readTeachers(`${header}\nMrs Gupta,8A Mathematics,T7\n`)).toMatchObject({
+        errors: [],
+        teachers: [{ name: 'Mrs Gupta', staffId: 'T7', teaches: [{ grade: 8, section: 'A', subject: 'Mathematics' }] }],
+      });
+    }
+  });
+
+  it('does not take a class column or a subject column for "teaches", which needs both', () => {
+    const { errors, columns } = readTeachers('Teacher Name,Class,Subject\nMrs Gupta,8A,Mathematics\n');
+    expect(errors).toEqual(['teachers.csv is missing the columns: teaches']);
+    expect(columns).toEqual([
+      { heading: 'Teacher Name', column: 'name' },
+      { heading: 'Class', column: null },
+      { heading: 'Subject', column: null },
+    ]);
+  });
+});
+
 describe('readTeachers', () => {
   it('reads who teaches which subject in which section', () => {
     const { teachers, errors } = readTeachers('name,teaches\nMrs Gupta,8A Mathematics; 8B Mathematics\n');

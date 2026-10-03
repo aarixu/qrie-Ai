@@ -14,8 +14,10 @@ import { demoLogoPng } from './logo.ts';
  * The demo school, built the way a real one will be and given a month of
  * made-up but plausible history.
  *
- *   1. People: data/students.csv and data/teachers.csv, fictional names, run
- *      through the real import (sheet → plan → applyPlan). 82 students in
+ *   1. People: data/students.csv and data/teachers.csv, fictional names,
+ *      headed as a school's own sheets often are ("Roll No.", "Student
+ *      Name", "Classes and Subjects"), run through the real import
+ *      (sheet → plan → applyPlan). 82 students in
  *      6A, 7A, 8A and 8B; four teachers; one admin. Then the school's look,
  *      and a pilot licence of 90 seats (0041).
  *   2. Questions: Qrie's library, all of it unless `libraryPerClass` cuts it

@@ -6,6 +6,7 @@ import type { PracticeChapter } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { subjectHue } from '@/lib/palette'
+import { MasteryInfo } from '@/components/mastery-info'
 import { SubjectBadge } from '@/components/subject-icon'
 import { chapterTitle, standingOf } from '../progress'
 
@@ -67,10 +68,14 @@ export function Learn() {
               </button>
             ))}
           </div>
-          {ready === 0 && (
+          {ready === 0 ? (
             <p className='rounded-xl bg-muted p-3 text-sm text-muted-foreground'>
               No chapter is open for practice yet. Your teacher opens chapters by approving their questions.
             </p>
+          ) : (
+            <div className='flex justify-end'>
+              <MasteryInfo />
+            </div>
           )}
           <ul className='space-y-2'>
             {rows.map((c, i) => (

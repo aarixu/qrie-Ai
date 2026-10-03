@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/select'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { MEASURE, band, pct } from '@/features/analytics/charts'
+import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { PersonAvatar } from '@/components/person-avatar'
 import { hueFor } from '@/lib/palette'
 import { usePhotos } from '@/lib/photos'
@@ -121,6 +122,7 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
             <SelectItem value='none'>No answers yet</SelectItem>
           </SelectContent>
         </Select>
+        <MasteryInfo className='self-center' />
         {students.data && (
           <span className='self-center text-sm text-muted-foreground'>
             {shown.length} of {students.data.length}

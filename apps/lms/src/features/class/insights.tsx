@@ -14,6 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Loading, Problem } from '@/components/layout/page'
+import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { LikelyMisconceptions } from './misconceptions'
 
 /** Below this belief, after enough answers, a student is listed as needing help. */
@@ -151,7 +152,9 @@ function Heatmap({ rows }: { rows: ChapterStanding[] }) {
   )
   return (
     <div>
-      <h2 className='mb-2 font-semibold'>Every student, every chapter</h2>
+      <h2 className='mb-2 flex items-center gap-1.5 font-semibold'>
+        Every student, every chapter <MasteryInfo />
+      </h2>
       <div className='overflow-x-auto rounded-md border'>
         <Table>
           <TableHeader>

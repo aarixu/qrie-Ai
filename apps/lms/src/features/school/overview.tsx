@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { ChartCard, ClassBars, Kpi, band, pct, shortClass } from '@/features/analytics/charts'
+import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { BrandHero, greeting } from '@/components/brand-hero'
 import { PersonAvatar } from '@/components/person-avatar'
 import { usePhotos } from '@/lib/photos'
@@ -99,7 +100,13 @@ export function SchoolOverviewPage() {
               tone={(o.handinRate30d ?? 1) < 0.6 ? 'bad' : undefined}
             />
             <Kpi label='Average score' icon={Target} value={pct(o.averageScore30d)} hint='Marked work, last 30 days' />
-            <Kpi label='Mastery' icon={Brain} value={pct(o.mastery)} hint={`${band(o.mastery).label} — from every answer`} />
+            <Kpi
+              label='Mastery'
+              icon={Brain}
+              value={pct(o.mastery)}
+              hint={`${band(o.mastery).label} — from every answer`}
+              info={<MasteryInfo />}
+            />
             <Kpi
               label='Attendance today'
               icon={School}
@@ -137,6 +144,7 @@ export function SchoolOverviewPage() {
             <ChartCard
               title='Where students stand'
               description='Mastery is Qrie’s estimate, from every answer a student gives, of how well they know each chapter — not a mark. Secure is 70% or more, Getting there 40–70%, Needs help under 40%.'
+              info={<MasteryInfo />}
             >
               {students.isPending ? <Loading what='the students' /> : students.isError ? <Problem error={students.error} /> : <Bands rows={students.data} />}
             </ChartCard>

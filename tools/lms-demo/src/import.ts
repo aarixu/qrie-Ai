@@ -74,6 +74,7 @@ export async function importForAdmin(db: PGlite, caller: string, request: Import
       created: [],
       conflicts: [],
       seats: preview.seats,
+      columns: preview.columns,
     };
     if (request.commit !== true || !preview.plan) return checked;
     if (preview.warnings.length > 0 && request.acceptWarnings !== true) {

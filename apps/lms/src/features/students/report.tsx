@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/table'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { ChartCard, Kpi, MEASURE, MasteryBars, band, pct } from '@/features/analytics/charts'
+import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { kindLabel } from '@/features/homework/kinds'
 import { ResetPinButton } from '@/features/school/reset-pin'
 import { LeaveButton } from '@/features/school/leavers'
@@ -116,6 +117,14 @@ export function StudentReport({ studentId }: { studentId: string }) {
           <ProfileHeader
             card={s}
             ring={band(mean((subjects.data ?? []).map((x) => x.mastery))).colour}
+            ringNote={
+              subjects.data && (
+                <>
+                  Ring colour: mastery, {band(mean(subjects.data.map((x) => x.mastery))).label}
+                  <MasteryInfo />
+                </>
+              )
+            }
             canEditPhoto={me?.kind === 'admin'}
             note={me?.kind !== 'admin' ? 'Showing the subjects you teach them.' : undefined}
           />
@@ -145,6 +154,7 @@ export function StudentReport({ studentId }: { studentId: string }) {
                   icon={Brain}
                   value={pct(mean(subjects.data.map((x) => x.mastery)))}
                   hint={band(mean(subjects.data.map((x) => x.mastery))).label}
+                  info={<MasteryInfo />}
                 />
                 <Kpi
                   label='Attendance'
@@ -173,6 +183,7 @@ export function StudentReport({ studentId }: { studentId: string }) {
             <ChartCard
               title='Chapter by chapter'
               description='What Qrie’s learning model believes, from every answer — not the marks.'
+              info={<MasteryInfo />}
             >
               {chapters.isPending ? (
                 <Loading what='the chapters' />
@@ -243,7 +254,11 @@ function SubjectTable({ subjects }: { subjects: StudentSubject[] }) {
             <TableHead>Teacher</TableHead>
             <TableHead className='w-56'>Handed in</TableHead>
             <TableHead className='text-center'>Average</TableHead>
-            <TableHead>Mastery</TableHead>
+            <TableHead>
+              <span className='inline-flex items-center gap-1'>
+                Mastery <MasteryInfo />
+              </span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

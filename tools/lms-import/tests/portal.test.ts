@@ -32,8 +32,51 @@ describe('the templates', () => {
   it('are the columns the reader asks for, and read back with no errors and nobody in them', () => {
     expect(STUDENTS_TEMPLATE.split(/\r?\n/)[0]).toBe('grade,section,roll,name,admission_no');
     expect(TEACHERS_TEMPLATE.split(/\r?\n/)[0]).toBe('name,teaches,role,staff_id');
-    expect(readStudents(STUDENTS_TEMPLATE)).toEqual({ students: [], errors: [] });
-    expect(readTeachers(TEACHERS_TEMPLATE)).toEqual({ teachers: [], errors: [] });
+    const itself = (cols: string[]) => cols.map((c) => ({ heading: c, column: c }));
+    expect(readStudents(STUDENTS_TEMPLATE)).toEqual({
+      students: [],
+      errors: [],
+      columns: itself(['grade', 'section', 'roll', 'name', 'admission_no']),
+    });
+    expect(readTeachers(TEACHERS_TEMPLATE)).toEqual({ teachers: [], errors: [], columns: itself(['name', 'teaches', 'role', 'staff_id']) });
+  });
+});
+
+describe("a school's own headings", () => {
+  it('shows which heading was read as which column, and which were not read', () => {
+    const p = previewImport(school, { students: 'S.No.,Class,Sec,Roll No.,Student Name,Phone\n1,8,A,2,Kavya Iyer,9800000000\n' });
+    expect(p.errors).toEqual([]);
+    expect(p.people).toEqual([expect.objectContaining({ loginId: 'DEMO-8A-2', displayName: 'Kavya Iyer', status: 'new' })]);
+    expect(p.columns).toEqual({
+      students: [
+        { heading: 'S.No.', column: null },
+        { heading: 'Class', column: 'grade' },
+        { heading: 'Sec', column: 'section' },
+        { heading: 'Roll No.', column: 'roll' },
+        { heading: 'Student Name', column: 'name' },
+        { heading: 'Phone', column: null },
+      ],
+    });
+  });
+
+  it('shows them for a sheet with mistakes too, so the admin can see why a column is missing', () => {
+    const p = previewImport(school, {
+      students: 'grade,section,roll,name\n8,A,2,Kavya Iyer\n',
+      teachers: 'Teacher Name,Class,Subject\nSunita Rao,8A,English\n',
+    });
+    expect(p.errors).toEqual(['teachers.csv is missing the columns: teaches']);
+    expect(p.plan).toBeNull();
+    expect(p.columns.students?.map((c) => c.column)).toEqual(['grade', 'section', 'roll', 'name']);
+    expect(p.columns.teachers).toEqual([
+      { heading: 'Teacher Name', column: 'name' },
+      { heading: 'Class', column: null },
+      { heading: 'Subject', column: null },
+    ]);
+  });
+
+  it('shows none before a sheet is read', () => {
+    expect(previewImport(school, {}).columns).toEqual({});
+    expect(previewImport(school, { students: `grade\n${'x'.repeat(1_000_001)}` }).columns).toEqual({});
   });
 });
 

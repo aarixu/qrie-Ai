@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useQueries, useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { format } from 'date-fns'
@@ -6,6 +6,7 @@ import { CalendarPlus, ChevronDown, Download, Plus } from 'lucide-react'
 import { toCsv } from '@ai-tutor/lms-client'
 import { downloadText } from '@/lib/download'
 import type { AssignmentSummary, ResultRow } from '@ai-tutor/lms-client'
+import { useIsNarrow } from '@/hooks/use-mobile'
 import { api } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -93,7 +94,8 @@ export function ClassPage({ sectionId, subjectId }: ClassPageProps) {
         </p>
       ) : (
         <Tabs defaultValue='homework' className='space-y-4'>
-          <TabsList>
+          {/* Seven tabs wrap onto a second row on a phone rather than push the page sideways. */}
+          <TabsList className='max-sm:h-auto max-sm:flex-wrap max-sm:justify-start'>
             <TabsTrigger value='homework'>Classwork</TabsTrigger>
             <TabsTrigger value='attendance'>Attendance</TabsTrigger>
             <TabsTrigger value='upcoming'>Coming up</TabsTrigger>
@@ -264,9 +266,11 @@ export function Progress({ done, of }: { done: number; of: number }) {
  * Every student against every published homework: the score of their latest
  * attempt (the teacher's mark where one is given), late work flagged, and
  * missing work shown as missing — the view a teacher uses to spot who is
- * falling behind.
+ * falling behind. A table from sm up; on a phone, a card per student listing
+ * each piece of work and its mark.
  */
-function Gradebook({ sectionId, subjectId }: ClassPageProps) {
+export function Gradebook({ sectionId, subjectId }: ClassPageProps) {
+  const narrow = useIsNarrow()
   const work = useClassWork(sectionId, subjectId)
   const published = (work.data ?? [])
     .filter((a) => a.published)
@@ -297,8 +301,7 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
   const download = () => {
     const header = ['Roll', 'Name', 'School ID', ...published.map((a) => a.title), 'Average']
     const lines = [...byStudent.values()].map(({ row, cells }) => {
-      const scores = cells.map(scoreOf).filter((x): x is number => x !== null)
-      const avg = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : null
+      const avg = averageOf(cells)
       return [
         row.rollNumber ?? '',
         row.displayName,
@@ -309,6 +312,7 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
     })
     downloadText(`gradebook-${sectionId.slice(0, 8)}.csv`, toCsv([header, ...lines]))
   }
+  const averageText = (avg: number | null) => (avg === null ? '—' : `${Math.round(avg * 100)}%`)
 
   return (
     <div className='space-y-2'>
@@ -317,6 +321,41 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
         <Download /> Download (CSV)
       </Button>
     </div>
+    {narrow ? (
+      <ul className='divide-y rounded-md border'>
+        {[...byStudent.values()].map(({ row, cells }) => {
+          const avg = averageOf(cells)
+          return (
+            <li key={row.studentUserId} data-student className='space-y-2 px-3 py-3'>
+              <div className='flex items-center gap-2'>
+                <span className='w-5 shrink-0 text-end text-sm text-muted-foreground tabular-nums'>{row.rollNumber}</span>
+                <PersonAvatar userId={row.studentUserId} name={row.displayName} photo={photos.get(row.studentUserId)} className='size-7' />
+                <span className='min-w-0 flex-1 truncate font-medium'>
+                  <StudentLink id={row.studentUserId} name={row.displayName} />
+                </span>
+                <span className={cn('shrink-0 text-sm font-medium tabular-nums', avg !== null && avg < 0.5 && 'text-destructive')}>
+                  Average {averageText(avg)}
+                </span>
+              </div>
+              <dl className='grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 ps-7 text-sm'>
+                {published.map((a, i) => (
+                  <Fragment key={a.id}>
+                    <dt className='truncate text-muted-foreground'>
+                      <Link to='/homework/$assignmentId' params={{ assignmentId: a.id }} className='hover:underline'>
+                        {a.title}
+                      </Link>
+                    </dt>
+                    <dd className='text-end'>
+                      <GradeCell r={cells[i]} past={new Date(a.dueAt) < new Date()} />
+                    </dd>
+                  </Fragment>
+                ))}
+              </dl>
+            </li>
+          )
+        })}
+      </ul>
+    ) : (
     <div className='overflow-x-auto rounded-md border'>
       <Table>
         <TableHeader>
@@ -338,8 +377,7 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
         </TableHeader>
         <TableBody>
           {[...byStudent.values()].map(({ row, cells }) => {
-            const scores = cells.map(scoreOf).filter((s): s is number => s !== null)
-            const avg = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : null
+            const avg = averageOf(cells)
             return (
               <TableRow key={row.studentUserId}>
                 <TableCell className='sticky left-0 bg-background font-medium'>
@@ -357,7 +395,7 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
                 <TableCell
                   className={cn('text-center font-medium tabular-nums', avg !== null && avg < 0.5 && 'text-destructive')}
                 >
-                  {avg === null ? '—' : `${Math.round(avg * 100)}%`}
+                  {averageText(avg)}
                 </TableCell>
               </TableRow>
             )
@@ -365,8 +403,15 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
         </TableBody>
       </Table>
     </div>
+    )}
     </div>
   )
+}
+
+/** A student's average over the work that has a score; null when none has. */
+function averageOf(cells: (ResultRow | undefined)[]): number | null {
+  const scores = cells.map(scoreOf).filter((s): s is number => s !== null)
+  return scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : null
 }
 
 /** The teacher's mark where given, else the machine's; a fraction of 1. */

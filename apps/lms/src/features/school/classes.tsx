@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/table'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { TrendChart, band, pct } from '@/features/analytics/charts'
+import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { SubjectBadge } from '@/components/subject-icon'
 import { LikelyMisconceptions } from '@/features/class/misconceptions'
 import { useSchoolClasses } from './overview'
@@ -52,7 +53,11 @@ export function SchoolClassesPage() {
                 <TableHead className='text-center'>Work set</TableHead>
                 <TableHead className='w-48'>Handed in</TableHead>
                 <TableHead className='text-center'>Average</TableHead>
-                <TableHead>Mastery</TableHead>
+                <TableHead>
+                  <span className='inline-flex items-center gap-1'>
+                    Mastery <MasteryInfo />
+                  </span>
+                </TableHead>
                 <TableHead />
               </TableRow>
             </TableHeader>

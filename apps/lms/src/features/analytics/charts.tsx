@@ -31,14 +31,18 @@ export function shortClass(className: string, subject: string): string {
 
 const toPct = (x: number | null | undefined) => (x === null || x === undefined ? null : Math.round(x * 100))
 
+/** Where the bands below begin: Secure from here up, Needs help under GETTING_THERE. */
+export const SECURE = 0.7
+export const GETTING_THERE = 0.4
+
 /**
  * The three words a teacher reads a mastery by. The brain's belief is a
  * probability; these bands are only how it is shown.
  */
 export function band(m: number | null | undefined): { label: string; colour: string; text: string } {
   if (m === null || m === undefined) return { label: 'No answers yet', colour: 'var(--muted-foreground)', text: 'text-muted-foreground' }
-  if (m < 0.4) return { label: 'Needs help', colour: '#dc2626', text: 'text-red-600' }
-  if (m < 0.7) return { label: 'Getting there', colour: '#d97706', text: 'text-amber-600' }
+  if (m < GETTING_THERE) return { label: 'Needs help', colour: '#dc2626', text: 'text-red-600' }
+  if (m < SECURE) return { label: 'Getting there', colour: '#d97706', text: 'text-amber-600' }
   return { label: 'Secure', colour: '#16a34a', text: 'text-green-600' }
 }
 
@@ -73,19 +77,25 @@ export function Kpi({
   hint,
   icon: Icon,
   tone,
+  info,
 }: {
   label: string
   value: React.ReactNode
   hint?: React.ReactNode
   icon?: React.ElementType
   tone?: 'bad' | 'good'
+  /** Beside the label, e.g. MasteryInfo. */
+  info?: React.ReactNode
 }) {
   const colour = KPI_HUE[label] ?? hueFor(label).solid
   return (
     <Card className='relative gap-2 overflow-hidden py-4'>
       <span className='absolute inset-x-0 top-0 h-1' style={{ background: colour }} aria-hidden />
       <CardHeader className='flex flex-row items-center justify-between space-y-0 px-4'>
-        <CardTitle className='text-sm font-medium text-muted-foreground'>{label}</CardTitle>
+        <CardTitle className='flex items-center gap-1 text-sm font-medium text-muted-foreground'>
+          {label}
+          {info}
+        </CardTitle>
         {Icon && (
           <span
             className='flex size-9 items-center justify-center rounded-xl'
@@ -117,16 +127,22 @@ export function ChartCard({
   description,
   children,
   className,
+  info,
 }: {
   title: string
   description?: string
   children: React.ReactNode
   className?: string
+  /** Beside the title, e.g. MasteryInfo. */
+  info?: React.ReactNode
 }) {
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className={info ? 'flex items-center gap-1.5' : undefined}>
+          {title}
+          {info}
+        </CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent className='ps-2'>{children}</CardContent>

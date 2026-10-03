@@ -6,6 +6,8 @@ import {
   credentialsCsv,
   STUDENTS_TEMPLATE,
   TEACHERS_TEMPLATE,
+  type HeadingRead,
+  type ImportColumns,
   type ImportResponse,
   type ImportSeats,
 } from '@ai-tutor/lms-client'
@@ -131,7 +133,9 @@ export function SchoolImportPage() {
             <CardHeader>
               <CardTitle>1. Download the templates</CardTitle>
               <CardDescription>
-                Open them in Excel or Google Sheets, add one row per person, and save as CSV. Leave the first row as it is.
+                Open them in Excel or Google Sheets, add one row per person, and save as CSV. Your school’s own sheet
+                works too: headings like Student Name, Roll No. or Class are understood, and the check shows how each
+                one was read.
               </CardDescription>
             </CardHeader>
             <CardContent className='grid gap-6 xl:grid-cols-2'>
@@ -288,6 +292,7 @@ function Checked({
         </CardDescription>
       </CardHeader>
       <CardContent className='space-y-4'>
+        <HeadingsRead columns={result.columns} />
         {result.seats && <Seats seats={result.seats} checked={result.errors.length === 0} />}
         {result.errors.length > 0 && (
           <ul className='space-y-1 rounded-md bg-destructive/10 p-3 text-sm text-destructive'>
@@ -354,6 +359,38 @@ function Checked({
         )}
       </CardContent>
     </Card>
+  )
+}
+
+/**
+ * How the server read each sheet's first row: every heading, and the column
+ * it was taken as, or that it was not read — so a school's own headings can
+ * be checked before anyone is added.
+ */
+function HeadingsRead({ columns }: { columns: ImportColumns | undefined }) {
+  const sheets: [string, HeadingRead[]][] = []
+  if (columns?.students?.length) sheets.push(['Students sheet', columns.students])
+  if (columns?.teachers?.length) sheets.push(['Teachers sheet', columns.teachers])
+  if (sheets.length === 0) return null
+  return (
+    <div className='space-y-2'>
+      {sheets.map(([label, list]) => (
+        <div key={label} className='text-sm'>
+          <p className='font-medium'>{label}: how each heading was read</p>
+          <ul className='mt-1 flex flex-wrap gap-1.5'>
+            {list.map((c, i) => (
+              <li key={i}>
+                <Badge variant={c.column ? 'secondary' : 'outline'} className='font-normal'>
+                  {c.heading}
+                  <span aria-hidden>→</span>
+                  <span className={cn('font-mono', !c.column && 'text-muted-foreground')}>{c.column ?? 'not read'}</span>
+                </Badge>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
   )
 }
 

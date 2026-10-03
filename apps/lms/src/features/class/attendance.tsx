@@ -4,6 +4,7 @@ import { format, startOfMonth } from 'date-fns'
 import { CheckCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import { friendlyError, type AttendanceStatus } from '@ai-tutor/lms-client'
+import { useIsNarrow } from '@/hooks/use-mobile'
 import { api } from '@/lib/backend'
 import { usePhotos } from '@/lib/photos'
 import { cn } from '@/lib/utils'
@@ -99,7 +100,8 @@ export function Attendance({ sectionId }: { sectionId: string }) {
                   <span className='w-6 text-end text-sm text-muted-foreground tabular-nums'>{r.rollNumber}</span>
                   <PersonAvatar userId={r.studentUserId} name={r.displayName} photo={photos.get(r.studentUserId)} className='size-8' />
                   <span className='min-w-32 flex-1 font-medium'>{r.displayName}</span>
-                  <span className='flex gap-1' role='radiogroup' aria-label={`${r.displayName}'s attendance`}>
+                  {/* On a phone the four marks take a full row of their own, big enough for a thumb. */}
+                  <span className='flex gap-1 max-sm:w-full' role='radiogroup' aria-label={`${r.displayName}'s attendance`}>
                     {MARKS.map((m) => {
                       const on = marks[r.studentUserId] === m.status
                       return (
@@ -111,7 +113,7 @@ export function Attendance({ sectionId }: { sectionId: string }) {
                           title={m.label}
                           onClick={() => setMarks((x) => ({ ...x, [r.studentUserId]: m.status }))}
                           className={cn(
-                            'h-8 min-w-9 rounded-md border px-2 text-sm font-semibold transition-colors',
+                            'h-8 min-w-9 rounded-md border px-2 text-sm font-semibold transition-colors max-sm:h-10 max-sm:flex-1',
                             on ? 'border-transparent text-white' : 'text-muted-foreground hover:bg-accent'
                           )}
                           style={on ? { background: m.colour } : undefined}
@@ -132,7 +134,9 @@ export function Attendance({ sectionId }: { sectionId: string }) {
   )
 }
 
+/** The month child by child: a table from sm up, a line per child on a phone. */
 function MonthSoFar({ sectionId, today }: { sectionId: string; today: string }) {
+  const narrow = useIsNarrow()
   const from = ymd(startOfMonth(new Date()))
   const sum = useQuery({
     queryKey: ['attendance', sectionId, 'month', from],
@@ -149,6 +153,23 @@ function MonthSoFar({ sectionId, today }: { sectionId: string; today: string }) 
           <Loading what='the month' />
         ) : sum.isError ? (
           <Problem error={sum.error} />
+        ) : narrow ? (
+          <ul className='divide-y rounded-md border text-sm'>
+            {sum.data.map((r) => (
+              <li key={r.studentUserId} className='flex items-center gap-3 px-3 py-2'>
+                <span className='w-5 shrink-0 text-end text-muted-foreground tabular-nums'>{r.rollNumber}</span>
+                <span className='min-w-0 flex-1'>
+                  <span className='block truncate font-medium'>{r.displayName}</span>
+                  <span className='block text-xs text-muted-foreground tabular-nums'>
+                    {MARKS.map((m) => `${r[m.status]} ${m.label.toLowerCase()}`).join(' · ')}
+                  </span>
+                </span>
+                <span className={cn('shrink-0 font-medium tabular-nums', (r.rate ?? 1) < 0.75 && 'text-destructive')}>
+                  {pct(r.rate)}
+                </span>
+              </li>
+            ))}
+          </ul>
         ) : (
           <div className='overflow-x-auto rounded-md border'>
             <Table>

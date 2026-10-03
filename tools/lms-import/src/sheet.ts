@@ -7,10 +7,21 @@
  *   students.csv — grade, section, roll, name [, admission_no]
  *   teachers.csv — name, teaches [, role] [, staff_id]
  *
+ * A school's own headings are read too ("Student Name", "Roll No.",
+ * "Class"), by the list in packages/lms-client/src/sheets.ts; each reader
+ * says how it read every heading, so the portal can show it.
+ *
  * Everything a person could get wrong is reported with the row number they
  * will see in their spreadsheet, all at once, rather than one at a time.
  * Nothing here touches a database.
  */
+
+import {
+  headingKey,
+  STUDENT_HEADINGS,
+  TEACHER_HEADINGS,
+  type HeadingRead,
+} from '../../../packages/lms-client/src/sheets.ts';
 
 export interface Student {
   row: number;
@@ -87,15 +98,37 @@ export function parseCsv(text: string): string[][] {
   return records(text).map((r) => r.cells);
 }
 
-const key = (header: string): string => header.trim().toLowerCase().replace(/\s+/g, '_');
 const tidy = (s: string | undefined): string => (s ?? '').trim().replace(/\s+/g, ' ');
 const idPart = (s: string): string => s.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
-function table(text: string, file: string, required: string[]) {
+/**
+ * The sheet's first row read as columns: a heading is read as a column when,
+ * compared by headingKey, it is the template's name for that column or one
+ * of its `headings` (packages/lms-client/src/sheets.ts). Any other heading
+ * is not read, and `columns` says so; two headings read as one column is a
+ * mistake to report, not a choice to make.
+ */
+function table(text: string, file: string, required: string[], headings: Record<string, readonly string[]>) {
   const recs = records(text);
-  const header = (recs[0]?.cells ?? []).map(key);
+  const known = new Map<string, string>();
+  for (const [column, others] of Object.entries(headings)) {
+    for (const h of [column, ...others]) known.set(headingKey(h), column);
+  }
+  const header = (recs[0]?.cells ?? []).map((h) => known.get(headingKey(h)) ?? null);
+  const columns: HeadingRead[] = (recs[0]?.cells ?? [])
+    .map((h, i) => ({ heading: tidy(h), column: header[i] }))
+    .filter((c) => c.heading !== '');
+  const errors: string[] = [];
+  for (const column of Object.keys(headings)) {
+    const same = columns.filter((c) => c.column === column).map((c) => `"${c.heading}"`);
+    if (same.length > 1) {
+      errors.push(
+        `${file} has more than one column read as ${column}: ${same.slice(0, -1).join(', ')} and ${same[same.length - 1]}. Keep one of them.`,
+      );
+    }
+  }
   const missing = required.filter((c) => !header.includes(c));
-  const errors = missing.length ? [`${file} is missing the columns: ${missing.join(', ')}`] : [];
+  if (missing.length) errors.push(`${file} is missing the columns: ${missing.join(', ')}`);
   const rows = recs.slice(1).map((r) => ({
     row: r.row,
     get: (col: string): string | undefined => {
@@ -103,7 +136,7 @@ function table(text: string, file: string, required: string[]) {
       return i < 0 ? undefined : r.cells[i];
     },
   }));
-  return { errors, rows, has: (col: string) => header.includes(col) };
+  return { errors, rows, columns, has: (col: string) => header.includes(col) };
 }
 
 const GRADE = /^\d{1,2}$/;
@@ -116,10 +149,11 @@ function readGrade(raw: string | undefined): number | null {
   return n >= 1 && n <= 12 ? n : null;
 }
 
-export function readStudents(text: string): { students: Student[]; errors: string[] } {
+export function readStudents(text: string): { students: Student[]; errors: string[]; columns: HeadingRead[] } {
   const file = 'students.csv';
-  const t = table(text, file, ['grade', 'section', 'roll', 'name']);
-  if (t.errors.length) return { students: [], errors: t.errors };
+  const t = table(text, file, ['grade', 'section', 'roll', 'name'], STUDENT_HEADINGS);
+  const columns = t.columns;
+  if (t.errors.length) return { students: [], errors: t.errors, columns };
   const students: Student[] = [];
   const errors: string[] = [];
   const seenRoll = new Map<string, number>();
@@ -153,17 +187,18 @@ export function readStudents(text: string): { students: Student[]; errors: strin
     }
     students.push({ row: r.row, grade: grade!, section, roll, name, ...(admissionNo ? { admissionNo } : {}) });
   }
-  return { students, errors };
+  return { students, errors, columns };
 }
 
 // The section starts with a letter, as in the students sheet, so "12 Physics"
 // cannot be read as class 1, section 2.
 const TEACHES = /^(\d{1,2})\s*([A-Za-z][A-Za-z0-9]{0,19})\s+(.{1,60})$/;
 
-export function readTeachers(text: string): { teachers: Teacher[]; errors: string[] } {
+export function readTeachers(text: string): { teachers: Teacher[]; errors: string[]; columns: HeadingRead[] } {
   const file = 'teachers.csv';
-  const t = table(text, file, ['name', 'teaches']);
-  if (t.errors.length) return { teachers: [], errors: t.errors };
+  const t = table(text, file, ['name', 'teaches'], TEACHER_HEADINGS);
+  const columns = t.columns;
+  if (t.errors.length) return { teachers: [], errors: t.errors, columns };
   const teachers: Teacher[] = [];
   const errors: string[] = [];
   for (const r of t.rows) {
@@ -194,5 +229,5 @@ export function readTeachers(text: string): { teachers: Teacher[]; errors: strin
     }
     teachers.push({ row: r.row, name, role: roleRaw as Teacher['role'], teaches, ...(staffId ? { staffId } : {}) });
   }
-  return { teachers, errors };
+  return { teachers, errors, columns };
 }

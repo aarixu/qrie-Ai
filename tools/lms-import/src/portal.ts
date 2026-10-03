@@ -1,4 +1,4 @@
-import type { ImportSeats } from '../../../packages/lms-client/src/backend.ts';
+import type { ImportColumns, ImportSeats } from '../../../packages/lms-client/src/backend.ts';
 import { planImport, type ImportPlan, type SchoolConfig } from './plan.ts';
 import { readStudents, readTeachers, type Student, type Teacher } from './sheet.ts';
 
@@ -74,6 +74,8 @@ export interface ImportPreview {
   plan: ImportPlan | null;
   /** The licence's seats; null when no licence is set, and nothing is limited. */
   seats: ImportSeats | null;
+  /** How each sheet's headings were read, for every sheet that was read — with mistakes or without. */
+  columns: ImportColumns;
 }
 
 const norm = (name: string) => name.trim().replace(/\s+/g, ' ').toLowerCase();
@@ -83,6 +85,7 @@ const teachLine = (e: { grade: number; section: string; subject: string }) => `$
 export function previewImport(school: SchoolSnapshot, sheets: { students?: string; teachers?: string }): ImportPreview {
   const seatsFor = (adding: number): ImportSeats | null =>
     school.licence ? { total: school.licence.seats, used: school.licence.used, adding } : null;
+  const columns: ImportColumns = {};
   const fail = (errors: string[], adding = 0): ImportPreview => ({
     errors,
     warnings: [],
@@ -90,6 +93,7 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
     changes: 0,
     plan: null,
     seats: seatsFor(adding),
+    columns,
   });
   const code = school.config.code;
   const given = (s: string | undefined) => s !== undefined && s.trim() !== '';
@@ -105,11 +109,13 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
     const r = readStudents(sheets.students!);
     students = r.students;
     errors.push(...r.errors);
+    columns.students = r.columns;
   }
   if (given(sheets.teachers)) {
     const r = readTeachers(sheets.teachers!);
     teachers = r.teachers;
     errors.push(...r.errors);
+    columns.teachers = r.columns;
   }
   if (students.length > MAX_ROWS || teachers.length > MAX_ROWS) errors.push(`A sheet may have at most ${MAX_ROWS} rows.`);
   if (errors.length) return fail(errors);
@@ -300,5 +306,5 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
     }
   }
   warnings.push(...perPerson);
-  return { errors: [], warnings, people, changes, plan, seats: seatsFor(seated) };
+  return { errors: [], warnings, people, changes, plan, seats: seatsFor(seated), columns };
 }

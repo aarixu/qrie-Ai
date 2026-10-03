@@ -4,6 +4,7 @@ import { api } from '@/lib/backend'
 import { chapterTitle } from '@/lib/curriculum'
 import { Loading, Problem } from '@/components/layout/page'
 import { ChartCard, Kpi, MasteryBars, TrendChart, pct } from '@/features/analytics/charts'
+import { MasteryInfo } from '@/features/analytics/mastery-info'
 
 /**
  * One class in graphs: work by work (lms.class_trend) and, chapter by
@@ -44,7 +45,7 @@ export function ClassAnalytics({ sectionId, subjectId }: { sectionId: string; su
         <ChartCard title='Work by work' description='Average score and share handed in, oldest first.'>
           <TrendChart points={trend.data} />
         </ChartCard>
-        <ChartCard title='Chapter by chapter' description='The class’s mean belief from the learning model.'>
+        <ChartCard title='Chapter by chapter' description='The class’s mean belief from the learning model.' info={<MasteryInfo />}>
           {standing.isError ? (
             <Problem error={standing.error} />
           ) : (

@@ -5,6 +5,7 @@ import type { StudentSubject, TimelineRow } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth-store'
+import { FEW_ANSWERS, GETTING_THERE, MasteryInfo, STRONG } from '@/components/mastery-info'
 import { SubjectBadge } from '@/components/subject-icon'
 import { MyReportCard } from './report-card'
 
@@ -13,11 +14,11 @@ export const chapterTitle = (slug: string) => {
   return words.charAt(0).toUpperCase() + words.slice(1)
 }
 
-/** Words for a child, not a number: the model's belief is a guide, not a grade. */
+/** Words for a child, not a number: the model's belief is a guide, not a grade. MasteryInfo says what they mean. */
 export function standingOf(mastery: number | null, answers: number): { word: string; tone: string; bar: string } {
-  if (mastery === null || answers < 3) return { word: 'Just started', tone: 'bg-muted text-muted-foreground', bar: 'bg-slate-400' }
-  if (mastery >= 0.7) return { word: 'Strong', tone: 'bg-green-600/15 text-green-700', bar: 'bg-green-600' }
-  if (mastery >= 0.4) return { word: 'Getting there', tone: 'bg-amber-500/15 text-amber-700', bar: 'bg-amber-500' }
+  if (mastery === null || answers < FEW_ANSWERS) return { word: 'Just started', tone: 'bg-muted text-muted-foreground', bar: 'bg-slate-400' }
+  if (mastery >= STRONG) return { word: 'Strong', tone: 'bg-green-600/15 text-green-700', bar: 'bg-green-600' }
+  if (mastery >= GETTING_THERE) return { word: 'Getting there', tone: 'bg-amber-500/15 text-amber-700', bar: 'bg-amber-500' }
   return { word: 'Needs practice', tone: 'bg-red-500/15 text-red-700', bar: 'bg-red-500' }
 }
 
@@ -155,7 +156,7 @@ function Marks({ rows }: { rows: TimelineRow[] }) {
 }
 
 function SubjectCard({ s }: { s: StudentSubject }) {
-  const st = standingOf(s.mastery, s.chaptersSeen > 0 ? 3 : 0)
+  const st = standingOf(s.mastery, s.chaptersSeen > 0 ? FEW_ANSWERS : 0)
   return (
     <div className='rounded-2xl border bg-card p-3'>
       <div className='flex items-center gap-3'>
@@ -208,7 +209,10 @@ function Chapters() {
   const subjects = [...new Set(mine.data.map((c) => c.subject))]
   return (
     <section>
-      <h2 className='mb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase'>Chapter by chapter</h2>
+      <div className='mb-2 flex items-center justify-between gap-2'>
+        <h2 className='text-sm font-semibold tracking-wide text-muted-foreground uppercase'>Chapter by chapter</h2>
+        <MasteryInfo />
+      </div>
       <div className='space-y-4'>
         {subjects.map((subject) => (
           <div key={subject} className='rounded-xl border bg-card p-3'>

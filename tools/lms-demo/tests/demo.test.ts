@@ -290,7 +290,25 @@ describe('adding people from the school portal', () => {
       ['DEMO-T06', 'new'],
     ]);
     expect(check.warnings.join('\n')).toMatch(/Subject "English" is new/);
+    expect(check.columns.students?.map((c) => c.column)).toEqual(['grade', 'section', 'roll', 'name']);
+    expect(check.columns.teachers?.map((c) => c.column)).toEqual(['name', 'teaches']);
     expect(await count()).toBe(before);
+  });
+
+  it("reads a school's own headings, and says how it read each one", async () => {
+    const admin = await signedIn('DEMO-T05');
+    const check = await admin.importPeople({ students: 'Class,Div,Roll No.,Student Name,Phone\n8,A,32,Meher Bains,9800000000\n' });
+    expect(check.errors).toEqual([]);
+    expect(check.people).toEqual([expect.objectContaining({ loginId: 'DEMO-8A-32', displayName: 'Meher Bains', status: 'new' })]);
+    expect(check.columns).toEqual({
+      students: [
+        { heading: 'Class', column: 'grade' },
+        { heading: 'Div', column: 'section' },
+        { heading: 'Roll No.', column: 'roll' },
+        { heading: 'Student Name', column: 'name' },
+        { heading: 'Phone', column: null },
+      ],
+    });
   });
 
   it('refuses a sheet that would land on somebody else, even when told to go ahead', async () => {

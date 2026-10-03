@@ -1,5 +1,6 @@
 import { createLmsClient, type LmsClient } from './api.ts';
 import { loginEmail } from './login.ts';
+import type { HeadingRead } from './sheets.ts';
 import { supabaseTransport, type RpcClient, type Transport } from './transport.ts';
 
 /**
@@ -110,6 +111,14 @@ export interface ImportResponse {
   conflicts: string[];
   /** The licence's seats (0041); null when no licence is set, and nothing is limited. */
   seats: ImportSeats | null;
+  /** How each uploaded sheet's headings were read, even when the sheet has mistakes. */
+  columns: ImportColumns;
+}
+
+/** Per sheet, each heading in order and the column it was read as; a sheet not read is absent. */
+export interface ImportColumns {
+  students?: HeadingRead[];
+  teachers?: HeadingRead[];
 }
 
 export interface ImportSeats {

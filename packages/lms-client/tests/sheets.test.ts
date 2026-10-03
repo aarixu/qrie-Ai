@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { credentialsCsv, STUDENTS_TEMPLATE, TEACHERS_TEMPLATE, toCsv } from '../src/sheets.ts';
+import {
+  credentialsCsv,
+  headingKey,
+  STUDENT_HEADINGS,
+  STUDENTS_TEMPLATE,
+  TEACHER_HEADINGS,
+  TEACHERS_TEMPLATE,
+  toCsv,
+} from '../src/sheets.ts';
 
 describe('the sheets a school downloads', () => {
   it('templates are just the columns', () => {
@@ -22,6 +30,26 @@ describe('the sheets a school downloads', () => {
       'Sunita Rao,teacher,,,DEMO-T06,48213957,DEMO',
       '',
     ]);
+  });
+
+  it('gives no heading to two columns of one sheet, and none that is another column’s own name', () => {
+    for (const [template, headings] of [
+      [STUDENTS_TEMPLATE, STUDENT_HEADINGS],
+      [TEACHERS_TEMPLATE, TEACHER_HEADINGS],
+    ] as const) {
+      expect(Object.keys(headings)).toEqual(template.trim().split(','));
+      const owner = new Map<string, string>();
+      for (const column of template.trim().split(',')) owner.set(headingKey(column), column);
+      for (const [column, others] of Object.entries(headings) as [string, readonly string[]][]) {
+        for (const heading of others) {
+          const k = headingKey(heading);
+          expect(owner.get(k) ?? column, `"${heading}"`).toBe(column);
+          owner.set(k, column);
+        }
+      }
+    }
+    expect(headingKey(' Roll No. ')).toBe('rollno');
+    expect(headingKey('Student’s Name')).toBe(headingKey("student's name"));
   });
 
   it('writes any table the same safe way', () => {

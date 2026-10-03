@@ -18,11 +18,14 @@ import { PersonAvatar } from '@/components/person-avatar'
 export function ProfileHeader({
   card,
   ring,
+  ringNote,
   canEditPhoto,
   note,
 }: {
   card: StudentCard
   ring: string
+  /** What the ring's colour says, beside a dot of it. */
+  ringNote?: React.ReactNode
   canEditPhoto: boolean
   note?: string
 }) {
@@ -82,6 +85,12 @@ export function ProfileHeader({
             {card.schoolName} · Class {card.className ?? '—'} · Roll {card.rollNumber ?? '—'} ·{' '}
             <span className='font-mono'>{card.loginId}</span>
           </p>
+          {ringNote && (
+            <p className='flex items-center gap-1.5 text-xs text-muted-foreground'>
+              <span className='size-2 shrink-0 rounded-full' style={{ background: ring }} aria-hidden />
+              {ringNote}
+            </p>
+          )}
           {note && <p className='text-xs text-muted-foreground'>{note}</p>}
         </div>
         {canEditPhoto && photo && (

@@ -12,6 +12,7 @@ import {
   type WorkComment,
   type WorkStatus,
 } from '@ai-tutor/lms-client'
+import { useIsNarrow } from '@/hooks/use-mobile'
 import { api, backend } from '@/lib/backend'
 import { usePhotos } from '@/lib/photos'
 import { cn } from '@/lib/utils'
@@ -189,7 +190,11 @@ function Summary({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
   return <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>{cards}</div>
 }
 
-function Students({
+/**
+ * Each child's work, to mark: a table from sm up, and on a phone a card per
+ * child with the same controls, so nothing needs scrolling sideways.
+ */
+export function Students({
   a,
   rows,
   mcq,
@@ -202,6 +207,7 @@ function Students({
   photo: boolean
   checklist: boolean
 }) {
+  const narrow = useIsNarrow()
   const photos = usePhotos(rows.map((r) => r.studentUserId))
   const comments = useComments(a.id)
   const [marking, setMarking] = useState<{ row: ResultRow; kind: 'mcq' | 'photo' } | null>(null)
@@ -213,6 +219,69 @@ function Students({
     setPicked(next)
   }
   const allPicked = rows.length > 0 && picked.size === rows.length
+  const pickAll = (
+    <Checkbox
+      aria-label='Select every student'
+      checked={allPicked}
+      onCheckedChange={(on) => setPicked(on === true ? new Set(rows.map((r) => r.studentUserId)) : new Set())}
+    />
+  )
+  const dialog = marking && (
+    <MarkDialog assignmentId={a.id} row={marking.row} kind={marking.kind} onClose={() => setMarking(null)} />
+  )
+
+  if (narrow) {
+    return (
+      <div className='space-y-2'>
+        <StatusBar a={a} picked={[...picked]} onDone={() => setPicked(new Set())} />
+        <ul className='divide-y rounded-md border'>
+          <li className='flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground'>
+            {pickAll} Select everyone
+          </li>
+          {rows.map((r) => (
+            <li
+              key={r.studentUserId}
+              data-student
+              data-state={picked.has(r.studentUserId) ? 'selected' : undefined}
+              className='space-y-2 px-3 py-3 data-[state=selected]:bg-muted'
+            >
+              <div className='flex items-center gap-3'>
+                <Checkbox
+                  aria-label={`Select ${r.displayName}`}
+                  checked={picked.has(r.studentUserId)}
+                  onCheckedChange={(on) => toggle(r.studentUserId, on === true)}
+                />
+                <span className='w-5 shrink-0 text-end text-sm text-muted-foreground tabular-nums'>{r.rollNumber}</span>
+                <PersonAvatar userId={r.studentUserId} name={r.displayName} photo={photos.get(r.studentUserId)} className='size-8' />
+                <span className='min-w-0 flex-1 truncate font-medium'>{r.displayName}</span>
+                {r.teacherStatus && <StatusBadge status={r.teacherStatus} />}
+              </div>
+              <div className='space-y-1.5 ps-7 text-sm'>
+                <HandIn a={a} r={r} />
+                {(checklist || mcq) && (
+                  <p className='flex flex-wrap gap-x-3 text-muted-foreground tabular-nums'>
+                    {checklist && (
+                      <span className={cn(r.tasksDone === r.tasksTotal && 'text-green-700')}>
+                        {r.tasksDone} / {r.tasksTotal} ticked
+                      </span>
+                    )}
+                    {mcq && <span>Auto score {r.machineTotal !== null ? `${r.machineCorrect} / ${r.machineTotal}` : '—'}</span>}
+                  </p>
+                )}
+                <div className='flex flex-wrap items-center gap-2'>
+                  {mcq && r.submissionId && <McqMark r={r} variant='outline' onMark={() => setMarking({ row: r, kind: 'mcq' })} />}
+                  {photo && r.photoSubmissionId && <PhotoMark r={r} onMark={() => setMarking({ row: r, kind: 'photo' })} />}
+                  <CommentButton a={a} row={r} comment={comments.get(r.studentUserId)} />
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+        {dialog}
+      </div>
+    )
+  }
+
   return (
     <div className='space-y-2'>
     <StatusBar a={a} picked={[...picked]} onDone={() => setPicked(new Set())} />
@@ -220,13 +289,7 @@ function Students({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className='w-10'>
-              <Checkbox
-                aria-label='Select every student'
-                checked={allPicked}
-                onCheckedChange={(on) => setPicked(on === true ? new Set(rows.map((r) => r.studentUserId)) : new Set())}
-              />
-            </TableHead>
+            <TableHead className='w-10'>{pickAll}</TableHead>
             <TableHead className='w-14'>Roll</TableHead>
             <TableHead>Student</TableHead>
             <TableHead>Status</TableHead>
@@ -256,23 +319,7 @@ function Students({
                 </span>
               </TableCell>
               <TableCell>
-                {r.submitted ? (
-                  <span className={cn(r.late && 'text-orange-600')}>
-                    {r.late ? 'Late' : 'Handed in'}
-                    {r.submittedAt && (
-                      <span className='ms-1 text-xs text-muted-foreground'>
-                        {format(new Date(r.submittedAt), 'd MMM, h:mm a')}
-                      </span>
-                    )}
-                    {r.attempts > 1 && <span className='ms-1 text-xs text-muted-foreground'>(attempt {r.attempts})</span>}
-                  </span>
-                ) : r.startedAt ? (
-                  <span className='text-muted-foreground'>Started {format(new Date(r.startedAt), 'h:mm a')}</span>
-                ) : (
-                  <span className={cn(new Date(a.dueAt) <= new Date() ? 'text-destructive' : 'text-muted-foreground')}>
-                    {new Date(a.dueAt) <= new Date() ? 'Missing' : 'Not yet'}
-                  </span>
-                )}
+                <HandIn a={a} r={r} />
               </TableCell>
               <TableCell>
                 <StatusBadge status={r.teacherStatus} />
@@ -289,24 +336,12 @@ function Students({
               )}
               {mcq && (
                 <TableCell className='text-end'>
-                  {r.submissionId ? (
-                    <Button variant='ghost' size='sm' onClick={() => setMarking({ row: r, kind: 'mcq' })}>
-                      {r.teacherScore !== null ? `${r.teacherScore} / ${r.teacherMax}` : 'Add mark'}
-                    </Button>
-                  ) : (
-                    '—'
-                  )}
+                  {r.submissionId ? <McqMark r={r} variant='ghost' onMark={() => setMarking({ row: r, kind: 'mcq' })} /> : '—'}
                 </TableCell>
               )}
               {photo && (
                 <TableCell>
-                  {r.photoSubmissionId ? (
-                    <Button variant='outline' size='sm' onClick={() => setMarking({ row: r, kind: 'photo' })}>
-                      <ImageIcon /> {r.photoCount} · {r.photoTeacherScore !== null ? `${r.photoTeacherScore} / ${r.photoTeacherMax}` : 'mark'}
-                    </Button>
-                  ) : (
-                    '—'
-                  )}
+                  {r.photoSubmissionId ? <PhotoMark r={r} onMark={() => setMarking({ row: r, kind: 'photo' })} /> : '—'}
                 </TableCell>
               )}
               <TableCell>
@@ -316,11 +351,45 @@ function Students({
           ))}
         </TableBody>
       </Table>
-      {marking && (
-        <MarkDialog assignmentId={a.id} row={marking.row} kind={marking.kind} onClose={() => setMarking(null)} />
-      )}
+      {dialog}
     </div>
     </div>
+  )
+}
+
+/** Where a child's work stands: handed in (when, and which attempt), a test started, missing, or not yet due. */
+function HandIn({ a, r }: { a: AssignmentOverview; r: ResultRow }) {
+  if (r.submitted) {
+    return (
+      <span className={cn(r.late && 'text-orange-600')}>
+        {r.late ? 'Late' : 'Handed in'}
+        {r.submittedAt && (
+          <span className='ms-1 text-xs text-muted-foreground'>{format(new Date(r.submittedAt), 'd MMM, h:mm a')}</span>
+        )}
+        {r.attempts > 1 && <span className='ms-1 text-xs text-muted-foreground'>(attempt {r.attempts})</span>}
+      </span>
+    )
+  }
+  if (r.startedAt) return <span className='text-muted-foreground'>Started {format(new Date(r.startedAt), 'h:mm a')}</span>
+  const past = new Date(a.dueAt) <= new Date()
+  return <span className={cn(past ? 'text-destructive' : 'text-muted-foreground')}>{past ? 'Missing' : 'Not yet'}</span>
+}
+
+/** The teacher's mark on the latest MCQ attempt, or "Add mark"; opens MarkDialog. */
+function McqMark({ r, variant, onMark }: { r: ResultRow; variant: 'ghost' | 'outline'; onMark: () => void }) {
+  return (
+    <Button variant={variant} size='sm' onClick={onMark}>
+      {r.teacherScore !== null ? `${r.teacherScore} / ${r.teacherMax}` : 'Add mark'}
+    </Button>
+  )
+}
+
+/** How many photos, and their mark or "mark"; opens MarkDialog with the photos. */
+function PhotoMark({ r, onMark }: { r: ResultRow; onMark: () => void }) {
+  return (
+    <Button variant='outline' size='sm' onClick={onMark}>
+      <ImageIcon /> {r.photoCount} · {r.photoTeacherScore !== null ? `${r.photoTeacherScore} / ${r.photoTeacherMax}` : 'mark'}
+    </Button>
   )
 }
 
@@ -597,16 +666,42 @@ function ReleaseResults({ a }: { a: AssignmentOverview }) {
   )
 }
 
-/** Marks for a test on paper: one box per student, saved as the teacher moves on (lms.record_paper_mark). */
-function PaperMarks({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
+/**
+ * Marks for a test on paper: one box per student, saved as the teacher moves
+ * on (lms.record_paper_mark) — in a table from sm up, on a card per child on
+ * a phone.
+ */
+export function PaperMarks({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
+  const narrow = useIsNarrow()
   const photos = usePhotos(rows.map((r) => r.studentUserId))
   const comments = useComments(a.id)
   const entered = rows.filter((r) => r.paperScore !== null || r.teacherStatus === 'absent').length
   return (
     <div className='space-y-2'>
       <p className='text-sm text-muted-foreground'>
+        {narrow && `Marks are out of ${a.maxMarks}. `}
         {entered} of {rows.length} marked. Type a mark and press Enter or move to the next box; it saves by itself.
       </p>
+      {narrow ? (
+        <ul className='divide-y rounded-md border'>
+          {rows.map((r) => (
+            <li key={r.studentUserId} data-student data-mark-row className='space-y-2 px-3 py-3'>
+              <div className='flex items-center gap-3'>
+                <span className='w-5 shrink-0 text-end text-sm text-muted-foreground tabular-nums'>{r.rollNumber}</span>
+                <PersonAvatar userId={r.studentUserId} name={r.displayName} photo={photos.get(r.studentUserId)} className='size-8' />
+                <span className='min-w-0 flex-1 truncate font-medium'>{r.displayName}</span>
+              </div>
+              <div className='flex flex-wrap items-center gap-x-4 gap-y-2 ps-8'>
+                <MarkBox a={a} row={r} />
+                <label className='flex items-center gap-2 text-sm'>
+                  <AbsentBox a={a} row={r} /> Absent
+                </label>
+                <CommentButton a={a} row={r} comment={comments.get(r.studentUserId)} />
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
       <div className='overflow-x-auto rounded-md border'>
         <Table>
           <TableHeader>
@@ -620,7 +715,7 @@ function PaperMarks({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
           </TableHeader>
           <TableBody>
             {rows.map((r) => (
-              <TableRow key={r.studentUserId}>
+              <TableRow key={r.studentUserId} data-mark-row>
                 <TableCell className='tabular-nums'>{r.rollNumber}</TableCell>
                 <TableCell className='font-medium'>
                 <span className='flex items-center gap-2'>
@@ -642,6 +737,7 @@ function PaperMarks({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
           </TableBody>
         </Table>
       </div>
+      )}
     </div>
   )
 }
@@ -672,7 +768,8 @@ function MarkBox({ a, row }: { a: AssignmentOverview; row: ResultRow }) {
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             commit()
-            ;(e.currentTarget.closest('tr')?.nextElementSibling?.querySelector('input') as HTMLInputElement | null)?.focus()
+            // The next child's box: the next table row, or the next card on a phone.
+            ;(e.currentTarget.closest('[data-mark-row]')?.nextElementSibling?.querySelector('input') as HTMLInputElement | null)?.focus()
           }
         }}
       />
