@@ -306,7 +306,7 @@ export function Gradebook({ sectionId, subjectId }: ClassPageProps) {
         row.rollNumber ?? '',
         row.displayName,
         row.loginId,
-        ...published.map((a, i) => gradeText(cells[i], new Date(a.dueAt) < new Date())),
+        ...published.map((a, i) => gradeText(cells[i], new Date(a.dueAt) < new Date(), notSetFor(a, cells[i]))),
         avg === null ? '' : `${Math.round(avg * 100)}%`,
       ]
     })
@@ -346,7 +346,7 @@ export function Gradebook({ sectionId, subjectId }: ClassPageProps) {
                       </Link>
                     </dt>
                     <dd className='text-end'>
-                      <GradeCell r={cells[i]} past={new Date(a.dueAt) < new Date()} />
+                      <GradeCell r={cells[i]} past={new Date(a.dueAt) < new Date()} notSet={notSetFor(a, cells[i])} />
                     </dd>
                   </Fragment>
                 ))}
@@ -389,7 +389,7 @@ export function Gradebook({ sectionId, subjectId }: ClassPageProps) {
                 </TableCell>
                 {published.map((a, i) => (
                   <TableCell key={a.id} className='text-center'>
-                    <GradeCell r={cells[i]} past={new Date(a.dueAt) < new Date()} />
+                    <GradeCell r={cells[i]} past={new Date(a.dueAt) < new Date()} notSet={notSetFor(a, cells[i])} />
                   </TableCell>
                 ))}
                 <TableCell
@@ -424,8 +424,18 @@ export function scoreOf(r: ResultRow | undefined): number | null {
   return null
 }
 
+/**
+ * Work set for only some children of the class (practice sent from "Likely
+ * misconceptions") has a result row for those children only: for anyone
+ * else it was never set, so it is not missing.
+ */
+function notSetFor(a: { targeted: boolean }, r: ResultRow | undefined): boolean {
+  return a.targeted && !r
+}
+
 /** A gradebook cell as words, for the CSV: the same reading as GradeCell. */
-function gradeText(r: ResultRow | undefined, past: boolean): string {
+function gradeText(r: ResultRow | undefined, past: boolean, notSet: boolean): string {
+  if (notSet) return 'Not set'
   if (r?.teacherStatus === 'absent') return 'Absent'
   if (r?.teacherStatus === 'not_done') return 'Not done'
   if (!r || !r.submitted) return past ? 'Missing' : ''
@@ -434,7 +444,8 @@ function gradeText(r: ResultRow | undefined, past: boolean): string {
   return r.late ? `${text} (late)` : text
 }
 
-function GradeCell({ r, past }: { r: ResultRow | undefined; past: boolean }) {
+function GradeCell({ r, past, notSet }: { r: ResultRow | undefined; past: boolean; notSet: boolean }) {
+  if (notSet) return <span className='text-muted-foreground'>Not set</span>
   if (r?.teacherStatus === 'absent') return <span className='text-muted-foreground'>Absent</span>
   if (r?.teacherStatus === 'not_done') return <span className='text-destructive'>Not done</span>
   if (!r || !r.submitted) {

@@ -7,7 +7,8 @@
 --    child's work for one published assignment. It is kept per child and
 --    assignment, as the teacher's word of 0030 is: one comment on the
 --    child's work for it, whatever kind of work that is. Writing again
---    replaces it; writing nothing removes it. The child reads their own,
+--    replaces it; writing nothing — or only spaces, line breaks and tabs
+--    (trim_space below) — removes it. The child reads their own,
 --    on a test only once its results are released (as its marks, 0029); the
 --    class's teachers and the admin read the class's.
 -- 2. A REMARK ON THE REPORT CARD. One per child per school year, 1 to 600
@@ -49,6 +50,17 @@ grant all on lms.work_comment, lms.report_remark to service_role;
 alter table lms.work_comment enable row level security;
 alter table lms.report_remark enable row level security;
 
+-- Text without the blank characters a phone's keyboard can put round it:
+-- spaces, tabs, line breaks, and the no-break, zero-width and ideographic
+-- spaces. Internal.
+create or replace function lms.trim_space(p_text text)
+returns text
+language sql immutable
+set search_path = public, lms
+as $$
+  select btrim(coalesce(p_text, ''), E' \t\n\r\f\x0b\u00a0\u200b\u2028\u2029\u3000\ufeff');
+$$;
+
 -- ---------------------------------------------------------------------------
 -- 1. Comments.
 -- ---------------------------------------------------------------------------
@@ -60,7 +72,7 @@ set search_path = public, lms
 as $$
 declare
   a lms.assignment;
-  words text := nullif(btrim(coalesce(p_text, '')), '');
+  words text := nullif(lms.trim_space(p_text), '');
 begin
   select * into a from lms.assignment where id = p_assignment;
   if a.id is null or not lms.teaches_class(a.section_id, a.subject_id) then
@@ -154,7 +166,7 @@ set search_path = public, lms
 as $$
 declare
   who lms.account;
-  words text := nullif(btrim(coalesce(p_text, '')), '');
+  words text := nullif(lms.trim_space(p_text), '');
   y uuid;
 begin
   select * into who from lms.account where user_id = p_student;
@@ -200,6 +212,7 @@ begin
 end;
 $$;
 
+revoke all on function lms.trim_space(text) from public, anon, authenticated;
 revoke all on function lms.set_work_comment(uuid, uuid, text) from public, anon;
 revoke all on function lms.work_comments(uuid) from public, anon;
 revoke all on function lms.my_work_comment(uuid) from public, anon;
@@ -207,6 +220,7 @@ revoke all on function lms.may_remark(uuid) from public, anon, authenticated;
 revoke all on function lms.set_report_remark(uuid, text) from public, anon;
 revoke all on function lms.report_remark(uuid) from public, anon;
 
+grant execute on function lms.trim_space(text) to service_role;
 grant execute on function lms.set_work_comment(uuid, uuid, text) to authenticated, service_role;
 grant execute on function lms.work_comments(uuid) to authenticated, service_role;
 grant execute on function lms.my_work_comment(uuid) to authenticated, service_role;

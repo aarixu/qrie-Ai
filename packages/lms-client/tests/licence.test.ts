@@ -301,3 +301,38 @@ describe("the founder's list", () => {
     expect((await founderList())[1]).toMatchObject({ last_active: today, days_since_active: 0 });
   });
 });
+
+describe('the seats of the licence', () => {
+  it('are never gone past by bringing a child back, or by moving one in who has no class this year', async () => {
+    const used = async () => (await admin.schoolLicence()).seatsUsed;
+    // Every seat in use: Riya, Arjun and Neel, of 3. Kavya is in no class this year.
+    const neel = await seat(db, one.org, 'student', 'LIC-104', 'Neel');
+    await db.query(
+      `insert into lms.enrolment (org_id, academic_year_id, section_id, student_user_id, roll_number) values ($1, $2, $3, $4, '4')`,
+      [one.org, one.year, one.s8a, neel],
+    );
+    expect(await used()).toBe(3);
+    await expect(admin.moveStudent('LIC-103', one.s8b, '7')).rejects.toThrow(/all 3 seats of your licence are in use/);
+    // A child already in a class of this year moves however full the school is.
+    await admin.moveStudent('LIC-104', one.s8b, '4');
+    expect(await used()).toBe(3);
+
+    // Riya leaves and Kavya takes her seat: Riya cannot then be brought back.
+    await admin.markLeft('LIC-101');
+    await admin.moveStudent('LIC-103', one.s8b, '7');
+    expect(await used()).toBe(3);
+    await expect(admin.restoreAccount('LIC-101')).rejects.toThrow(/all 3 seats of your licence are in use/);
+    expect((await admin.schoolLeft()).map((p) => p.loginId)).toContain('LIC-101');
+
+    // With a seat more, she comes back.
+    await setLicence('LIC', 'pilot', 4, addDays(today, 150));
+    await admin.restoreAccount('LIC-101');
+    expect(await used()).toBe(4);
+  });
+
+  it('are not limited for a school with no licence', async () => {
+    await seat(db, two.org, 'student', 'OTH-109', 'Free');
+    await otherAdmin.moveStudent('OTH-109', two.s8a, '9');
+    expect((await otherAdmin.schoolLicence()).seatsUsed).toBe(3);
+  });
+});

@@ -18,6 +18,11 @@
 -- 3. SEATS IN USE, the count above, is seats_used: internal, for
 --    school_licence, the founder's list, and the demo's bulk import, which
 --    refuses students beyond the seats left (tools/lms-import's preview).
+--    The admin's other two ways of putting a child into a class of this
+--    year are refused too when every seat is in use (require_seat): bringing
+--    back a child who left (0034's restore_account), and moving in a child
+--    who is in no class this year (0037's move_student). A child already in
+--    a class of this year moves however full the school is.
 -- 4. THE FOUNDER'S LIST. founder_schools, of the API's roles the service
 --    role's only, like set_licence: every
 --    school with its licence, seats in use, students and teachers who have
@@ -149,15 +154,125 @@ as $$
 $$;
 
 -- ---------------------------------------------------------------------------
+-- 5. No more students than seats (see 3 above).
+-- ---------------------------------------------------------------------------
+
+-- Nothing when the school has a seat free or no licence; else a plain
+-- refusal. Internal.
+create or replace function lms.require_seat(p_org uuid)
+returns void
+language plpgsql stable security definer
+set search_path = public, lms
+as $$
+declare
+  seats_allowed integer;
+begin
+  select l.seats into seats_allowed from lms.licence l where l.org_id = p_org;
+  if seats_allowed is not null and lms.seats_used(p_org) >= seats_allowed then
+    raise exception 'all % seats of your licence are in use', seats_allowed;
+  end if;
+end;
+$$;
+
+-- 0034's, and a seat for a child brought back into a class of this year.
+create or replace function lms.restore_account(p_login_id text)
+returns void
+language plpgsql volatile security definer
+set search_path = public, lms
+as $$
+declare
+  org uuid := lms.require_admin();
+  who lms.account := lms.account_in_school(org, p_login_id);
+begin
+  if who.left_at is null then
+    return;
+  end if;
+  if who.kind = 'student' and exists (
+    select 1 from lms.enrolment e join lms.section sec on sec.id = e.section_id
+     where e.student_user_id = who.user_id
+       and e.left_on = who.left_at::date
+       and sec.academic_year_id = lms.current_year(org)
+  ) then
+    perform lms.require_seat(org);
+  end if;
+  insert into public.membership (org_id, user_id, role) values (org, who.user_id, who.kind)
+  on conflict do nothing;
+  if who.kind = 'student' then
+    -- Back into the class they left this year, if it is still this year's.
+    update lms.enrolment e set left_on = null
+      from lms.section sec
+     where e.section_id = sec.id and e.student_user_id = who.user_id
+       and e.left_on = who.left_at::date
+       and sec.academic_year_id = lms.current_year(org);
+  end if;
+  update lms.account set left_at = null where user_id = who.user_id;
+  perform lms.audit(org, 'restored', who.login_id);
+end;
+$$;
+
+-- 0037's, and a seat for a child moved in from no class this year.
+create or replace function lms.move_student(p_login_id text, p_section uuid, p_roll text)
+returns void
+language plpgsql volatile security definer
+set search_path = public, lms
+as $$
+declare
+  org uuid := lms.require_admin();
+  who lms.account := lms.account_in_school(org, p_login_id);
+  target lms.section;
+  now_in lms.enrolment;
+  roll text;
+begin
+  if who.kind <> 'student' then
+    raise exception '% is not a student', who.login_id;
+  end if;
+  select * into target from lms.section
+   where id = p_section and org_id = org and academic_year_id = lms.current_year(org);
+  if target.id is null then
+    raise exception 'that is not a class of this year in your school';
+  end if;
+  select * into now_in from lms.enrolment
+   where student_user_id = who.user_id and academic_year_id = target.academic_year_id and left_on is null;
+  roll := btrim(coalesce(p_roll, now_in.roll_number, ''));
+  if roll !~ '^[A-Za-z0-9]{1,20}$' then
+    raise exception 'a roll number is letters or digits, up to 20';
+  end if;
+  if exists (
+    select 1 from lms.enrolment e
+     where e.section_id = target.id and e.left_on is null and e.roll_number = roll and e.student_user_id <> who.user_id
+  ) then
+    raise exception 'roll % in % is taken', roll, target.grade || target.name;
+  end if;
+  if now_in.id is not null then
+    if now_in.section_id = target.id and now_in.roll_number = roll then
+      return;
+    end if;
+    update lms.enrolment set left_on = greatest(lms.india_today(), now_in.joined_on) where id = now_in.id;
+  else
+    perform lms.require_seat(org);
+  end if;
+  insert into lms.enrolment (org_id, academic_year_id, section_id, student_user_id, roll_number)
+  values (org, target.academic_year_id, target.id, who.user_id, roll);
+  perform lms.audit(org, 'moved', who.login_id || ' ' || target.grade || target.name);
+end;
+$$;
+
+-- ---------------------------------------------------------------------------
 -- Grants.
 -- ---------------------------------------------------------------------------
 
 revoke all on function lms.seats_used(uuid) from public, anon, authenticated;
+revoke all on function lms.require_seat(uuid) from public, anon, authenticated;
+revoke all on function lms.restore_account(text) from public, anon;
+revoke all on function lms.move_student(text, uuid, text) from public, anon;
 revoke all on function lms.set_licence(text, text, integer, date) from public, anon, authenticated;
 revoke all on function lms.school_licence() from public, anon;
 revoke all on function lms.founder_schools() from public, anon, authenticated;
 
 grant execute on function lms.seats_used(uuid) to service_role;
+grant execute on function lms.require_seat(uuid) to service_role;
+grant execute on function lms.restore_account(text) to authenticated, service_role;
+grant execute on function lms.move_student(text, uuid, text) to authenticated, service_role;
 grant execute on function lms.set_licence(text, text, integer, date) to service_role;
 grant execute on function lms.school_licence() to authenticated, service_role;
 grant execute on function lms.founder_schools() to service_role;

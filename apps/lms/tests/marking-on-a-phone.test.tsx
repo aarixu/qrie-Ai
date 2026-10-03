@@ -15,7 +15,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
  * table, and no overflow-x container, on the phone.
  */
 
-const fake = vi.hoisted(() => ({ narrow: false }))
+const fake = vi.hoisted(() => ({ narrow: false, targeted: false }))
 
 vi.mock('@tanstack/react-router', async (real) => ({
   ...(await real<typeof import('@tanstack/react-router')>()),
@@ -107,8 +107,13 @@ vi.mock('@/lib/backend', () => {
   const api = {
     workComments: async () => [{ studentUserId: 'u1', text: 'Show your working.', writtenByName: 'Neha Sharma', writtenAt: PAST }],
     accountPhotos: async () => [],
-    classAssignments: async () => [summary({}), summary({ id: 'w2', title: 'Unit test on paper', answerTypes: ['paper'], maxMarks: 20 })],
-    assignmentResults: async (id: string) => (id === 'w1' ? QUIZ_ROWS : PAPER_ROWS),
+    classAssignments: async () => [
+      summary({}),
+      summary({ id: 'w2', title: 'Unit test on paper', answerTypes: ['paper'], maxMarks: 20 }),
+      ...(fake.targeted ? [summary({ id: 'w3', title: 'Practice for some', targeted: true, students: 1, submitted: 0 })] : []),
+    ],
+    // The practice is set for Riya only, so only her row comes back for it.
+    assignmentResults: async (id: string) => (id === 'w1' ? QUIZ_ROWS : id === 'w3' ? [row({})] : PAPER_ROWS),
     attendanceSheet: async () => SHEET,
     attendanceSummary: async () => TOTALS,
     recordPaperMark: async () => undefined,
@@ -135,6 +140,7 @@ beforeAll(() => {
 })
 
 afterEach(() => {
+  fake.targeted = false
   for (const root of roots.splice(0)) act(() => root.unmount())
   document.body.innerHTML = ''
 })
@@ -226,6 +232,21 @@ describe('the gradebook, on a phone', () => {
     expect(riya.textContent).toContain('Average 78%')
     expect(arjun.textContent).toContain('Missing')
     expect(arjun.textContent).toContain('Average —')
+  })
+
+  it('says "Not set", not "Missing", for practice set for other children only — on a phone and from sm up', async () => {
+    fake.targeted = true
+    for (const narrow of [true, false]) {
+      const host = await show(<Gradebook sectionId='s8a' subjectId='maths' />, narrow, 'Practice for some')
+      const cell = (name: string) =>
+        narrow
+          ? cards(host).find((c) => c.textContent?.includes(name))!.querySelectorAll('dd')[2].textContent
+          : [...host.querySelectorAll('tr')].find((r) => r.textContent?.includes(name))!.querySelectorAll('td')[3].textContent
+      expect(cell('Riya Sharma')).toBe('Missing')
+      expect(cell('Arjun Mehta')).toBe('Not set')
+      for (const root of roots.splice(0)) act(() => root.unmount())
+      document.body.innerHTML = ''
+    }
   })
 
   it('is the table it always was from sm up', async () => {

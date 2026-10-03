@@ -112,6 +112,12 @@ describe('a comment on a piece of work', () => {
     expect(await teacherA.workComments(hw)).toHaveLength(1);
     await teacherA.setWorkComment(hw, one.kid8a, '   ');
     expect(await riya.myWorkComment(hw)).toBeNull();
+    // Blank is blank however it is typed: line breaks, tabs, no-break and zero-width spaces.
+    await teacherA.setWorkComment(hw, one.kid8a, 'Label both ends.');
+    await teacherA.setWorkComment(hw, one.kid8a, '\n\t\r\n \u00a0\u200b\u3000\n');
+    expect(await riya.myWorkComment(hw)).toBeNull();
+    await teacherA.setWorkComment(hw, one.kid8a, '\n\tLabel both ends.\u00a0\n');
+    expect(await riya.myWorkComment(hw)).toMatchObject({ text: 'Label both ends.' });
     await teacherA.setWorkComment(hw, one.kid8a, 'Label both ends.');
     await teacherA.setWorkComment(hw, one.kid8a, null);
     expect(await teacherA.workComments(hw)).toEqual([]);
@@ -203,6 +209,9 @@ describe('a remark on the report card', () => {
     await expect(teacherA.setReportRemark(one.kid8a, 'x'.repeat(601))).rejects.toThrow(/1 to 600 characters/);
     await teacherA.setReportRemark(one.kid8a, 'x'.repeat(600));
     await teacherA.setReportRemark(one.kid8a, '');
+    expect(await riya.reportRemark(one.kid8a)).toMatchObject({ text: null });
+    await teacherA.setReportRemark(one.kid8a, 'x');
+    await teacherA.setReportRemark(one.kid8a, '\n\n\t\u00a0\n');
     expect(await riya.reportRemark(one.kid8a)).toMatchObject({ text: null });
     await teacherA.setReportRemark(one.kid8a, 'A steady term. Keep practising fractions.');
   });

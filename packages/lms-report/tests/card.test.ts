@@ -290,6 +290,18 @@ describe('reportCardPdf', () => {
     expect(after(pages[0], "Teacher's remark", 2)).toEqual(['Well done.', 'Marks over time']);
   });
 
+  it('carries a remark of many short lines over to the next page, never past the footer', async () => {
+    // 60 lines in 540 characters: within the 600 the database allows, too tall for one page.
+    const text = Array.from({ length: 60 }, (_, i) => `Point ${String(i + 1).padStart(2, '0')}`).join('\n');
+    const { runs, pages } = await readPdf(bytesOf([{ ...riya, remark: { text, by: 'Neha Sharma' } }]));
+    const points = runs.flatMap((page, p) => page.filter((r) => r.str.startsWith('Point ')).map((r) => ({ ...r, p })));
+    expect(points.map((r) => r.str)).toEqual(text.split('\n'));
+    // Above the footer's rule, 14 mm (about 40 pt) from the bottom of the page.
+    for (const r of points) expect(r.y, r.str).toBeGreaterThan(40);
+    expect(new Set(points.map((r) => r.p)).size).toBeGreaterThan(1);
+    expect(pages.flat()).toContain('— Neha Sharma');
+  });
+
   it('wraps a long remark onto lines within the page, every word kept, its paragraphs apart', async () => {
     const words = 'Riya has worked steadily this term and her notebook is always neat and complete. '.repeat(7).trim();
     const text = `${words}\nNext term: fractions.`;

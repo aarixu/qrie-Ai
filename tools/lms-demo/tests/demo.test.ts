@@ -466,4 +466,24 @@ describe("the school's licence", () => {
     expect(fits.errors).toEqual([]);
     expect(fits.seats).toEqual({ total: 90, used: l.seatsUsed, adding: 1 });
   });
+
+  // Last in this file: it starts a new school year in the demo school.
+  it("puts new students in the new year's classes, and counts their seats, when the year was started a few days early", async () => {
+    const admin = await signedIn('DEMO-T05');
+    const day = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString().slice(0, 10);
+    await admin.api.startNewYear('Next year', day(3), day(367));
+    const before = (await admin.api.schoolLicence()).seatsUsed;
+    const check = await admin.importPeople({ students: 'grade,section,roll,name\n7,A,99,Early Child\n' });
+    expect(check.seats).toEqual({ total: 90, used: before, adding: 1 });
+    const r = await admin.importPeople({ students: 'grade,section,roll,name\n7,A,99,Early Child\n', commit: true, acceptWarnings: true });
+    expect(r.errors).toEqual([]);
+    expect(r.committed).toBe(true);
+    expect((await admin.api.schoolLicence()).seatsUsed).toBe(before + 1);
+    const placed = await db.query<{ label: string }>(
+      `select y.label from lms.enrolment e join lms.academic_year y on y.id = e.academic_year_id
+         join lms.account a on a.user_id = e.student_user_id
+        where a.display_name = 'Early Child' and e.left_on is null`,
+    );
+    expect(placed.rows.map((p) => p.label)).toEqual(['Next year']);
+  });
 });

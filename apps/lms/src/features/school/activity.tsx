@@ -27,19 +27,21 @@ const WORDS: Record<string, string> = {
   'people-added': 'People added',
   moved: 'Moved to a class',
   'year-started': 'New school year started',
+  'remark-set': 'Report card remark written',
+  'remark-removed': 'Report card remark removed',
   'notice-sent': 'Notice sent',
   'notice-deleted': 'Notice deleted',
   'practice-sent': 'Practice sent to some children',
   'licence-set': 'Licence set by Qrie',
 }
 
-/** What the school's admins have done, newest first (lms.audit_log). */
+/** What the admin and the teachers have done that the school logs, newest first (lms.audit_log). */
 export function SchoolActivityPage() {
   const log = useQuery({ queryKey: ['school', 'audit'], queryFn: () => api.auditLog(200) })
   return (
     <Page
       title='Activity log'
-      description='Every change to who is in the school, who teaches what, and how it looks, every notice sent or deleted, every practice sent to some children of a class, and every change to the school’s licence. Newest first.'
+      description='Every change to who is in the school, who teaches what, and how it looks, every report card remark written or removed, every notice sent or deleted, every practice sent to some children of a class, and every change to the school’s licence. Newest first.'
     >
       {log.isPending ? (
         <Loading what='the activity log' />

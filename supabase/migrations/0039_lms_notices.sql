@@ -18,11 +18,15 @@
 -- as the logo is (0032) and checked the same way: it must begin and end as
 -- its kind of file does. A PDF must start with %PDF- and have %%EOF in its
 -- last kilobyte. The bytes in between are not decoded. Anything else is
--- refused, not converted.
+-- refused, not converted. It is kept under the name it was sent with, less
+-- any marks that change the direction of text, and with its last extension
+-- replaced by its kind's own (.pdf, .jpg, .png), so it is never saved on a
+-- phone as anything else.
 --
 -- READ RECEIPTS. Opening a notice records, once, that the caller read it.
 -- Its writer and the admin see how many of its audience have read it, and
--- who has not. THE AUDIENCE IS WHOEVER THE NOTICE IS FOR NOW, not whoever it
+-- who has not: the admin all of it, its writer only the children of the
+-- classes they still teach. THE AUDIENCE IS WHOEVER THE NOTICE IS FOR NOW, not whoever it
 -- was for when it was sent: the children enrolled today in its sections (for
 -- the whole school, in any section of its year) and, for the whole school,
 -- every teacher who has not left. A child who joins the class later is
@@ -121,7 +125,9 @@ as $$
 $$;
 
 -- Whom the notice is for now (see READ RECEIPTS above): its children, each
--- with their section and roll, and for the whole school its teachers too.
+-- with their section and roll, and for the whole school its teachers too —
+-- as far as the caller may see them: the admin all of them, anyone else only
+-- the children of the sections they teach this year.
 create or replace function lms.notice_audience(p_notice uuid)
 returns table (user_id uuid, kind text, section_id uuid, roll_number text)
 language sql stable security definer
@@ -135,11 +141,12 @@ as $$
    where n.id = p_notice
      and (n.whole_school
           or exists (select 1 from lms.notice_section ns where ns.notice_id = n.id and ns.section_id = sec.id))
+     and (lms.is_admin(n.org_id) or lms.teaches_section(sec.id))
   union all
   select a.user_id, 'teacher'::text, null::uuid, null::text
     from lms.notice n
     join lms.account a on a.org_id = n.org_id and a.kind = 'teacher' and a.left_at is null
-   where n.id = p_notice and n.whole_school;
+   where n.id = p_notice and n.whole_school and lms.is_admin(n.org_id);
 $$;
 
 -- ---------------------------------------------------------------------------
@@ -162,8 +169,8 @@ as $$
 declare
   org uuid := public.current_org_id();
   y uuid;
-  words_title text := btrim(coalesce(p_title, ''));
-  words_body text := btrim(coalesce(p_body, ''));
+  words_title text := lms.trim_space(p_title);
+  words_body text := lms.trim_space(p_body);
   sections uuid[];
   s uuid;
   bytes bytea;
@@ -239,10 +246,12 @@ begin
     ) then
       raise exception 'that file is not a JPEG';
     end if;
-    file_name := coalesce(
-      nullif(btrim(coalesce(p_attachment_name, '')), ''),
-      'attachment.' || case p_attachment_mime when 'application/pdf' then 'pdf' when 'image/png' then 'png' else 'jpg' end
-    );
+    -- Without direction marks, which can make "fees.pdf" of "fees" + U+202E +
+    -- "fdp.exe", and ending in its own kind's extension, whatever it was sent as.
+    file_name := regexp_replace(lms.trim_space(p_attachment_name),
+                                E'[\u200e\u200f\u202a-\u202e\u2066-\u2069]', '', 'g');
+    file_name := coalesce(nullif(lms.trim_space(regexp_replace(file_name, '\.[^.]*$', '')), ''), 'attachment')
+                 || case p_attachment_mime when 'application/pdf' then '.pdf' when 'image/png' then '.png' else '.jpg' end;
     if char_length(file_name) > 100 or file_name ~ '[/\\[:cntrl:]]' then
       raise exception 'a file name is up to 100 characters, with no slashes';
     end if;

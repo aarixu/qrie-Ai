@@ -595,21 +595,36 @@ function remarkBox(s: Sheet, remark: ReportData['remark']): void {
     .flatMap((p) => doc.splitTextToSize(p, width) as string[]);
   const by = remark.by.trim();
   const lineH = 4.6;
-  const h = 4 + lines.length * lineH + (by ? 5 : 0) + 2;
-  heading(s, "Teacher's remark", undefined, h);
-  doc.setFillColor(palette.tint);
-  doc.roundedRect(MARGIN, s.y, CONTENT_W, h, 2.5, 2.5, 'F');
-  lines.forEach((line, i) => put(doc, line, MARGIN + 5, s.y + 6.5 + i * lineH, { ...style, maxWidth: width }));
-  if (by) {
-    put(doc, `— ${by}`, PAGE_W - MARGIN - 5, s.y + 4 + lines.length * lineH + 4, {
-      size: 8.5,
-      italic: true,
-      colour: MUTED,
-      align: 'right',
-      maxWidth: width,
-    });
+  const byH = by ? 5 : 0;
+  const title = "Teacher's remark";
+  heading(s, title, undefined, Math.min(4 + lines.length * lineH + byH + 2, 40));
+  // A remark too tall for the page goes on in a box on the next, under its title again.
+  let from = 0;
+  while (from < lines.length) {
+    if (from > 0) {
+      newPage(s);
+      heading(s, `${title} (continued)`, undefined, 12);
+    }
+    const fit = Math.max(1, Math.floor((BODY_BOTTOM - s.y - 6 - byH) / lineH));
+    const chunk = lines.slice(from, from + fit);
+    from += chunk.length;
+    const last = from >= lines.length;
+    const h = 4 + chunk.length * lineH + (last ? byH : 0) + 2;
+    doc.setFillColor(palette.tint);
+    doc.roundedRect(MARGIN, s.y, CONTENT_W, h, 2.5, 2.5, 'F');
+    chunk.forEach((line, i) => put(doc, line, MARGIN + 5, s.y + 6.5 + i * lineH, { ...style, maxWidth: width }));
+    if (last && by) {
+      put(doc, `— ${by}`, PAGE_W - MARGIN - 5, s.y + 4 + chunk.length * lineH + 4, {
+        size: 8.5,
+        italic: true,
+        colour: MUTED,
+        align: 'right',
+        maxWidth: width,
+      });
+    }
+    s.y += h;
   }
-  s.y += h + 8;
+  s.y += 8;
 }
 
 function marksChart(s: Sheet, timeline: TimelineRow[]): void {

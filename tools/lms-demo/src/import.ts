@@ -143,11 +143,11 @@ async function schoolSnapshot(db: PGlite, org: string): Promise<SchoolSnapshot> 
       [org],
     )
   ).rows[0];
-  // This year: the one today falls in, else the latest.
+  // This year as every other part of the school reads it (lms.current_year): the
+  // latest that has begun, or begins within the week.
   const year = (
     await db.query<{ id: string; label: string; starts_on: string; ends_on: string }>(
-      `select id, label, starts_on::text, ends_on::text from lms.academic_year where org_id = $1
-        order by (current_date between starts_on and ends_on) desc, starts_on desc limit 1`,
+      `select id, label, starts_on::text, ends_on::text from lms.academic_year where id = lms.current_year($1)`,
       [org],
     )
   ).rows[0];

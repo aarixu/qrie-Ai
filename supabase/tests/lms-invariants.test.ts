@@ -64,6 +64,7 @@ describe('the lms schema', () => {
       'may_see_student(p_student uuid)',
       'require_admin()',
       'teaches(p_teacher uuid, p_student uuid, p_subject uuid)',
+      'trim_space(p_text text)',
       'may_remark(p_student uuid)',
       'may_see_notice(p_notice uuid)',
       'may_manage_notice(p_notice uuid)',
@@ -72,6 +73,7 @@ describe('the lms schema', () => {
       'practice_items(p_section uuid, p_subject uuid, p_chapter text, p_misconception text)',
       'guard_set_for()',
       'seats_used(p_org uuid)',
+      'require_seat(p_org uuid)',
       'set_licence(p_code text, p_plan text, p_seats integer, p_until date)',
       'founder_schools()',
     ];

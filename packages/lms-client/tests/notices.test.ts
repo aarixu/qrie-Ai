@@ -180,6 +180,8 @@ describe('sending a notice', () => {
 
   it('has a title of 1 to 120 characters and a message of 1 to 2000', async () => {
     await expect(teacherA.sendNotice(notice([one.s8a], { title: '   ' }))).rejects.toThrow(/title of 1 to 120 characters/);
+    await expect(teacherA.sendNotice(notice([one.s8a], { title: '\n\t\u00a0\u200b\n' }))).rejects.toThrow(/title of 1 to 120 characters/);
+    await expect(teacherA.sendNotice(notice([one.s8a], { body: '\n\r\n\t' }))).rejects.toThrow(/message of 1 to 2000 characters/);
     await expect(teacherA.sendNotice(notice([one.s8a], { title: 'x'.repeat(121) }))).rejects.toThrow(/title of 1 to 120 characters/);
     await expect(teacherA.sendNotice(notice([one.s8a], { body: '' }))).rejects.toThrow(/message of 1 to 2000 characters/);
     await expect(teacherA.sendNotice(notice([one.s8a], { body: 'y'.repeat(2001) }))).rejects.toThrow(/message of 1 to 2000 characters/);
@@ -270,6 +272,24 @@ describe('an attachment', () => {
     await expect(send('application/pdf', PDF.toString('base64'), `${'x'.repeat(97)}.pdf`)).rejects.toThrow(/file name/);
     expect((await arjun.myNotices()).map((n) => n.noticeId)).toEqual([circular, holiday, ptm]);
   });
+
+  it('is saved under a name that ends as its own kind of file, with no hidden direction marks', async () => {
+    const named = async (mime: string, base64: string, name: string) => {
+      const id = await send(mime, base64, name);
+      const fileName = (await arjun.noticeAttachment(id))?.fileName;
+      await admin.deleteNotice(id);
+      return fileName;
+    };
+    const pdf = PDF.toString('base64');
+    expect(await named('application/pdf', pdf, 'fees.html')).toBe('fees.pdf');
+    expect(await named('application/pdf', pdf, 'circular')).toBe('circular.pdf');
+    expect(await named('application/pdf', pdf, 'term.1.notice.PDF')).toBe('term.1.notice.pdf');
+    expect(await named('image/png', PNG, 'timetable.apk')).toBe('timetable.png');
+    expect(await named('image/jpeg', JPEG, 'photo.jpeg')).toBe('photo.jpg');
+    // "fees" + RIGHT-TO-LEFT OVERRIDE + "fdp.exe" shows on a phone as "feesexe.pdf".
+    expect(await named('application/pdf', pdf, 'fees\u202efdp.exe')).toBe('feesfdp.pdf');
+    expect(await named('application/pdf', pdf, '\u2066\u200f.pdf')).toBe('attachment.pdf');
+  });
 });
 
 describe('read receipts', () => {
@@ -290,6 +310,16 @@ describe('read receipts', () => {
       { userId: kabirId, displayName: 'Kabir', loginId: 'NOT-103', kind: 'student', className: '8A', rollNumber: '3', readAt: null },
     ]);
     expect(await admin.noticeReaders(geometry)).toEqual(readers);
+  });
+
+  it("show a writer taken off a class none of that class's children any more; the admin still sees them all", async () => {
+    await admin.setTeaching(one.s8a, one.maths, 'NOT-T1', false);
+    expect(await find(teacherA, geometry)).toMatchObject({ mine: true, readers: 0, audience: 0 });
+    expect(await teacherA.noticeReaders(geometry)).toEqual([]);
+    expect(await find(admin, geometry)).toMatchObject({ readers: 1, audience: 2 });
+    expect(await admin.noticeReaders(geometry)).toHaveLength(2);
+    await admin.setTeaching(one.s8a, one.maths, 'NOT-T1', true);
+    expect(await find(teacherA, geometry)).toMatchObject({ readers: 1, audience: 2 });
   });
 
   it('count the teachers too on a notice to the whole school', async () => {
