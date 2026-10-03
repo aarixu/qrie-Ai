@@ -1,11 +1,16 @@
 import type { ReactElement } from 'react';
 import { isToolName, toolProblems, type ToolName } from '@ai-tutor/lesson-format';
 import type { ToolContext, ToolElement, ToolRenderer } from './context';
+import { renderEquationMove } from './equationMove';
 import { renderLineChart } from './lineChart';
 import { renderPieChart } from './pieChart';
 
 /** One renderer per tool. A tool without one draws its placeholder. */
-const RENDERERS: Partial<Record<ToolName, ToolRenderer>> = { lineChart: renderLineChart, pieChart: renderPieChart };
+const RENDERERS: Partial<Record<ToolName, ToolRenderer>> = {
+  equationMove: renderEquationMove,
+  lineChart: renderLineChart,
+  pieChart: renderPieChart,
+};
 
 /**
  * A tool this build cannot draw — an unknown name, params that fail its spec,

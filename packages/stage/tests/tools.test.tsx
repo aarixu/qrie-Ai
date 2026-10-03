@@ -90,6 +90,33 @@ describe('lineChart on the board', () => {
   });
 });
 
+describe('equationMove on the board', () => {
+  const steps = ['2x + 3 = 11', '2x = 11 - 3', '2x = 8'];
+
+  it('slides a term across "=" from where it was, a step later', () => {
+    const out = html(<>{renderTool(tool('equationMove', { steps }), { isNew: true, theme: THEME })}</>);
+    // The "3" of line 1 crosses to line 2 as "− 3": a move that starts at 1400 ms.
+    expect(out).toMatch(/class="stage-move"[^>]*style="--dx:[-\d.]+px;--dy:-56\.0px;animation-delay:1400ms"[^>]*>[^<]*− 3/);
+    expect(out.match(/stage-move/g)!.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('writes every line plainly when it was already there', () => {
+    const out = html(<>{renderTool(tool('equationMove', { steps }), { isNew: false, theme: THEME })}</>);
+    expect(out).not.toMatch(/stage-move|stage-pop/);
+    // Each term is its own <text>: "11" and " − 3" sit side by side.
+    expect(out).toContain('>11<');
+    expect(out).toContain('> − 3<');
+  });
+
+  it('writes a line it cannot split in place, and goes on', () => {
+    // An unclosed bracket: one "=", so the spec accepts it, but termsOf cannot split it.
+    const odd = { steps: ['(x + 1 = 2', 'x = 1'] };
+    const out = html(<>{renderTool(tool('equationMove', odd), { isNew: true, theme: THEME })}</>);
+    expect(out).toContain('(x + 1 = 2');
+    expect(out).not.toContain('NaN');
+  });
+});
+
 describe('reduced motion', () => {
   it('covers every class the toolkit animates with', () => {
     const page = renderToString(<Scene lesson={lessonOf(tool('pieChart', air))} visible={['t1']} focus={[]} />);
