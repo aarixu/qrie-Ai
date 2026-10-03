@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactElement } fr
 import {
   CANVAS_H,
   CANVAS_W,
+  EQUATION_MOVE_MS,
   compileFunction,
   mathPlain,
   samplePoints,
@@ -121,6 +122,9 @@ const WRITE_MS = 1600;
 const DRAW_MS = 400;
 /** How long a circle, a tick or an underline takes to draw. */
 const MARK_MS = 620;
+/** A bar growing to its value; a term sliding to its new place (lesson-format's EQUATION_MOVE_MS). */
+const GROW_MS = 500;
+const MOVE_MS = EQUATION_MOVE_MS;
 
 /**
  * FNV-1a. Renders must be byte-identical across frames and test runs, so all
@@ -245,6 +249,21 @@ const SCENE_CSS = `
   stroke-dashoffset: 1;
   animation: stage-draw ${MARK_MS}ms ease-out forwards;
 }
+@keyframes stage-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* A bar grows from its axis, the way a teacher draws it out. */
+.stage-grow {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: stage-grow ${GROW_MS}ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes stage-move {
+  0%   { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)); }
+  12%  { opacity: 1; }
+  100% { opacity: 1; transform: translate(0, 0); }
+}
+/* A term of working slides from where it was in the line above. Hidden until
+   its step: \`both\` holds the first frame, which is transparent. */
+.stage-move { animation: stage-move ${MOVE_MS}ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 @keyframes stage-nib-out { to { opacity: 0; } }
 
 /* THE PAINTER'S FOUR MOTIONS.
@@ -288,7 +307,7 @@ const SCENE_CSS = `
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stage-pop, .stage-sweep, .stage-write, .stage-nib, .stage-draw {
+  .stage-pop, .stage-sweep, .stage-write, .stage-nib, .stage-draw, .stage-grow, .stage-move {
     animation-duration: 0.01ms;
     animation-delay: 0ms;
   }
