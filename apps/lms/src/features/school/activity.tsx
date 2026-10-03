@@ -25,6 +25,8 @@ const WORDS: Record<string, string> = {
   'colours-set': 'Colours changed',
   'pin-reset': 'New PIN given',
   'people-added': 'People added',
+  moved: 'Moved to a class',
+  'year-started': 'New school year started',
 }
 
 /** What the school's admins have done, newest first (lms.audit_log). */

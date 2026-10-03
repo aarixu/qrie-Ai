@@ -495,6 +495,14 @@ export interface AccountPhoto {
   updatedAt: string;
 }
 
+/** One of this year's sections (0037). */
+export interface SchoolSection {
+  sectionId: string;
+  className: string;
+  grade: number;
+  students: number;
+}
+
 /** A day's mark (0036). Late counts as present; leave is left out of the rate. */
 export type AttendanceStatus = 'present' | 'absent' | 'late' | 'leave';
 
@@ -776,6 +784,25 @@ export function createLmsClient(t: Transport) {
         p_teaches: teaches,
       });
     },
+    /**
+     * Starts the new school year (dates YYYY-MM-DD): every child up a class in
+     * the same section, Class 12 out of the school, each teacher on the same
+     * classes. The admin only, in the week the year begins.
+     */
+    async startNewYear(label: string, startsOn: string, endsOn: string): Promise<{ promoted: number; graduated: number; sections: number }> {
+      const [r] = await rows<{ promoted: number; graduated: number; sections: number }>('start_new_year', {
+        p_label: label,
+        p_starts_on: startsOn,
+        p_ends_on: endsOn,
+      });
+      return r ?? { promoted: 0, graduated: 0, sections: 0 };
+    },
+    /** Moves a child to another section of this year; a null roll keeps theirs. */
+    async moveStudent(loginId: string, sectionId: string, roll: string | null): Promise<void> {
+      await t.value('move_student', { p_login_id: loginId, p_section: sectionId, p_roll: roll });
+    },
+    /** This year's sections and how many children each has. The admin only. */
+    schoolSections: () => rows<SchoolSection>('school_sections'),
     /** A class's list for one day (YYYY-MM-DD), each child's mark or null. Its teachers and the admin. */
     attendanceSheet: (sectionId: string, onDate: string) =>
       rows<AttendanceRow>('attendance_sheet', { p_section: sectionId, p_on: onDate }),

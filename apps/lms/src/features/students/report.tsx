@@ -31,6 +31,7 @@ import { ChartCard, Kpi, MEASURE, MasteryBars, band, pct } from '@/features/anal
 import { kindLabel } from '@/features/homework/kinds'
 import { ResetPinButton } from '@/features/school/reset-pin'
 import { LeaveButton } from '@/features/school/leavers'
+import { MoveStudentButton } from '@/features/school/new-year'
 import { ProfileHeader } from './profile-header'
 import { ReportCardButtons } from './report-buttons'
 
@@ -87,6 +88,9 @@ export function StudentReport({ studentId }: { studentId: string }) {
           <>
             <ReportCardButtons studentId={studentId} />
             {me?.kind === 'admin' && <ResetPinButton loginId={card.data.loginId} name={card.data.displayName} />}
+            {me?.kind === 'admin' && (
+              <MoveStudentButton loginId={card.data.loginId} name={card.data.displayName} roll={card.data.rollNumber} />
+            )}
             {me?.kind === 'admin' && (
               <LeaveButton
                 loginId={card.data.loginId}

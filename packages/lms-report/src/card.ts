@@ -24,6 +24,8 @@ export interface ReportBrand {
   schoolName: string;
   /** '#rrggbb'; anything else is ignored and the default is used. */
   primary?: string | null;
+  /** The school's second colour, a stripe under the header; '#rrggbb', anything else draws none. */
+  accent?: string | null;
   logo?: { mime: 'image/png' | 'image/jpeg'; base64: string } | null;
 }
 
@@ -35,6 +37,8 @@ export interface ReportData {
   mistakes: StudentMistake[];
   /** The student's photo, a JPEG as base64 (lms.account_photos); none drawn when absent or not an image. */
   photo?: string | null;
+  /** This year's attendance (lms.student_attendance); no tile when absent. */
+  attendance?: { marked: number; rate: number | null } | null;
 }
 
 export interface ReportOptions {
@@ -64,6 +68,9 @@ const TILE = '#f9fafb';
 const RED = '#dc2626';
 const AMBER = '#d97706';
 const GREEN = '#16a34a';
+
+/** The share of school days a board exam asks a student to have attended. */
+const ATTENDANCE_NEEDED = 0.75;
 
 const MAX_MARKS = 12;
 /** The chapter chart's longest; the rest are counted in a note, not drawn. */
@@ -228,14 +235,24 @@ interface Palette {
   /** Lines, bars and rings on white paper. */
   accent: string;
   tint: string;
+  /** The school's second colour, under the header; null when it has none. */
+  stripe: string | null;
 }
 
-function paletteOf(primary: string | null | undefined): Palette {
-  const base = brandColour(primary);
+function paletteOf(brand: ReportBrand): Palette {
+  const base = brandColour(brand.primary);
   const onPrimary = readableOn(base);
   // A colour light enough to take black text is too faint to draw with on white.
   const accent = onPrimary === '#000000' ? mix(base, '#000000', 0.45) : base;
-  return { primary: base, onPrimary, accent, tint: mix(accent, '#ffffff', 0.88) };
+  const stripe = typeof brand.accent === 'string' && HEX.test(brand.accent) ? brand.accent.toLowerCase() : null;
+  return { primary: base, onPrimary, accent, tint: mix(accent, '#ffffff', 0.88), stripe };
+}
+
+/** A thin band of the school's second colour from `y` down. */
+function stripe(doc: jsPDF, palette: Palette, y: number): void {
+  if (!palette.stripe) return;
+  doc.setFillColor(palette.stripe);
+  doc.rect(0, y, PAGE_W, 1.6, 'F');
 }
 
 // --- Shapes -----------------------------------------------------------------
@@ -344,6 +361,7 @@ function header(doc: jsPDF, palette: Palette, opts: ReportOptions): number {
   const height = 30;
   doc.setFillColor(palette.primary);
   doc.rect(0, 0, PAGE_W, height, 'F');
+  stripe(doc, palette, height);
   const x = logo(doc, opts.brand.logo, MARGIN, 6, 18) ? MARGIN + 23 : MARGIN;
   const on = palette.onPrimary;
   const dateW = put(doc, dayMonthYear(opts.generatedAt), PAGE_W - MARGIN, 13, {
@@ -366,6 +384,7 @@ function smallHeader(s: Sheet): void {
   const { doc, palette } = s;
   doc.setFillColor(palette.primary);
   doc.rect(0, 0, PAGE_W, 14, 'F');
+  stripe(doc, palette, 14);
   put(doc, s.card.displayName, MARGIN, 9, {
     size: 10,
     bold: true,
@@ -433,7 +452,20 @@ function kpiTile(s: Sheet, x: number, w: number, h: number, k: Kpi): void {
   put(doc, k.detail, cx, y + 32.5, { size: 7.5, colour: k.detailColour, ...inner });
 }
 
-function kpis(s: Sheet, subjects: StudentSubject[]): void {
+function attendanceTile(s: Sheet, a: { marked: number; rate: number | null }): Kpi {
+  const low = a.marked > 0 && a.rate !== null && a.rate < ATTENDANCE_NEEDED;
+  return {
+    label: 'Attendance',
+    value: pct(a.marked > 0 ? a.rate : null),
+    fraction: a.marked > 0 ? a.rate : null,
+    colour: low ? RED : s.palette.accent,
+    detail:
+      a.marked === 0 ? 'Not marked yet' : low ? `Below 75% · ${plural(a.marked, 'day')}` : `${plural(a.marked, 'day')} marked`,
+    detailColour: low ? RED : MUTED,
+  };
+}
+
+function kpis(s: Sheet, subjects: StudentSubject[], attendance: ReportData['attendance']): void {
   const due = sum(subjects.map((x) => x.workDue));
   const handed = sum(subjects.map((x) => x.handedIn));
   const handin = due > 0 ? handed / due : null;
@@ -478,8 +510,9 @@ function kpis(s: Sheet, subjects: StudentSubject[]): void {
       detailColour: MUTED,
     },
   ];
+  if (attendance) tiles.push(attendanceTile(s, attendance));
   const [gap, h] = [4, 36];
-  const w = (CONTENT_W - 3 * gap) / 4;
+  const w = (CONTENT_W - (tiles.length - 1) * gap) / tiles.length;
   room(s, h);
   tiles.forEach((k, i) => kpiTile(s, MARGIN + i * (w + gap), w, h, k));
   s.y += h + 8;
@@ -718,7 +751,7 @@ function footer(doc: jsPDF, page: number, n: number, of: number, name: string, g
 function drawStudent(doc: jsPDF, palette: Palette, opts: ReportOptions, r: ReportData): void {
   const s: Sheet = { doc, palette, opts, card: r.card, photo: r.photo, y: header(doc, palette, opts) };
   studentBlock(s);
-  kpis(s, r.subjects);
+  kpis(s, r.subjects, r.attendance);
   subjectsTable(s, r.subjects);
   marksChart(s, r.timeline);
   chaptersChart(s, r.chapters);
@@ -729,7 +762,7 @@ function drawStudent(doc: jsPDF, palette: Palette, opts: ReportOptions, r: Repor
 /** The cards of `reports`, in order; each student starts on a new page. */
 export function reportCardPdf(reports: ReportData[], opts: ReportOptions): jsPDF {
   const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
-  const palette = paletteOf(opts.brand.primary);
+  const palette = paletteOf(opts.brand);
   const title =
     reports.length === 1
       ? `Student progress report: ${reports[0].card.displayName}`

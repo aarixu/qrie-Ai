@@ -259,6 +259,39 @@ describe('reportCardPdf', () => {
     expect(after(pages[0], 'Chapters practised')).toEqual(['3']);
   });
 
+  it("puts the year's attendance in a fifth tile, when the school marks it", async () => {
+    const { pages } = await readPdf(bytesOf([{ ...riya, attendance: { marked: 20, rate: 0.9 } }]));
+    expect(after(pages[0], 'Attendance', 2)).toEqual(['90%', '20 days marked']);
+    expect((await readPdf(bytesOf([riya]))).pages[0]).not.toContain('Attendance');
+  });
+
+  it('says when attendance is under the 75% a board exam asks for, and when none is marked', async () => {
+    const low = await readPdf(bytesOf([{ ...riya, attendance: { marked: 20, rate: 0.6 } }]));
+    expect(after(low.pages[0], 'Attendance', 2)).toEqual(['60%', 'Below 75% · 20 days']);
+    const none = await readPdf(bytesOf([{ ...riya, attendance: { marked: 0, rate: null } }]));
+    expect(after(none.pages[0], 'Attendance', 2)).toEqual(['—', 'Not marked yet']);
+  });
+
+  it("draws a stripe of the school's second colour under the header, and none without one", () => {
+    const fills = (doc: jsPDF) => {
+      const ops = (doc.internal.pages as unknown as string[][])[1].join('\n').split('\n');
+      let fill = '';
+      const out: string[] = [];
+      for (const op of ops) {
+        const colour = /^([\d. ]+) (rg|g)$/.exec(op);
+        if (colour) fill = colour[1];
+        else if (op === 'f') out.push(fill);
+      }
+      return out;
+    };
+    // '#fb923c' as jsPDF writes it.
+    const accent = { ...opts.brand, accent: '#fb923c' };
+    expect(fills(reportCardPdf([riya], { ...opts, brand: accent }))).toContain('0.98 0.57 0.24');
+    expect(fills(reportCardPdf([riya], opts))).not.toContain('0.98 0.57 0.24');
+    const bad = { ...opts.brand, accent: 'orange' };
+    expect(() => reportCardPdf([riya], { ...opts, brand: bad })).not.toThrow();
+  });
+
   it('writes a dash, not 0%, when nothing is due, marked or answered', async () => {
     const empty = subjects.map((s) => ({
       ...s,

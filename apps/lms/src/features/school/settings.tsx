@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Page } from '@/components/layout/page'
+import { NewYearCard } from './new-year'
 
 const HEX = /^#[0-9a-fA-F]{6}$/
 const LOGO_TYPES = ['image/png', 'image/jpeg'] as const
@@ -191,6 +192,7 @@ export function SchoolSettingsPage() {
               </div>
             </CardContent>
           </Card>
+          <NewYearCard />
         </div>
 
         <Card className='xl:col-span-2'>
