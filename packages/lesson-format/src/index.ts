@@ -54,3 +54,21 @@ export {
   type Rect,
 } from './geometry';
 export { compileFunction, samplePoints } from './safeExpr';
+export {
+  TOOLS,
+  TOOL_NAMES,
+  isToolName,
+  toolProblems,
+  toolDurationMs,
+  toolStrings,
+  toolAspect,
+  toolMinSize,
+  openParams,
+  RESERVED_KEYS,
+  SPOKEN_MS_PER_CHAR,
+  type ToolName,
+  type ToolSpec,
+  type ToolCheck,
+  type RecipeTag,
+  type PieChartParams,
+} from './tools/index.ts';

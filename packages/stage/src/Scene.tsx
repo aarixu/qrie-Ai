@@ -13,6 +13,8 @@ import {
 } from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
 import { formulaTex, hasMath, lineToHtml, plainFormula, texToHtml, typesetsAsMaths } from './math';
+import { renderTool } from './tools';
+import type { ToolTheme } from './tools/context';
 import {
   graphicLabelSize,
   textWidth,
@@ -97,6 +99,15 @@ const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
 // font the child never saw (seventh review, 2026-09-29).
 const FONT_WRITE = "'Caveat Variable', 'Caveat', 'Segoe Script', 'Bradley Hand', cursive";
 
+/** The ink and faces every toolkit tool draws with. */
+const THEME: ToolTheme = { ink: INK, tones: TONE_COLORS, fontHand: FONT_HAND, fontMono: FONT_MONO };
+
+/**
+ * Kinds that animate their own pieces in sequence, so the element as a whole
+ * must not also pop in.
+ */
+const SELF_ANIMATED: ReadonlySet<Element['kind']> = new Set(['tool']);
+
 /**
  * How long a handwritten line takes to appear.
  *
@@ -151,6 +162,7 @@ function centerOf(el: Element): Point {
     case 'graphic':
     case 'mark':
     case 'model3d':
+    case 'tool':
       return { x: el.x + el.w / 2, y: el.y + el.h / 2 };
     case 'flow':
       return { x: el.x + el.w / 2, y: el.y + flowHeight(el.steps.length, el.direction) / 2 };
@@ -1155,7 +1167,7 @@ function renderMark(el: Extract<Element, { kind: 'mark' }>): ReactElement {
   }
 }
 
-function renderElement(el: Element, svg?: string, litParts: readonly string[] = []): ReactElement {
+function renderElement(el: Element, svg?: string, litParts: readonly string[] = [], isNew = false): ReactElement {
   switch (el.kind) {
     case 'title':
       return renderTitle(el);
@@ -1235,6 +1247,8 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
       return renderHandwrite(el);
     case 'model3d':
       return renderModel3d(el);
+    case 'tool':
+      return renderTool(el, { isNew, theme: THEME });
   }
 }
 
@@ -1325,12 +1339,12 @@ function SceneElement({
         style={glow}
       >
         <g
-          className={isNew && !isStroke ? 'stage-pop' : undefined}
+          className={isNew && !isStroke && !SELF_ANIMATED.has(el.kind) ? 'stage-pop' : undefined}
           // A line of working arrives after the one above it; the pop's
           // `both` fill keeps it hidden until then.
           style={isNew && el.kind === 'formula' && el.after ? { animationDelay: `${el.after}ms` } : undefined}
         >
-          {renderElement(el, svg, litParts)}
+          {renderElement(el, svg, litParts, isNew)}
         </g>
       </g>
     </>

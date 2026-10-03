@@ -439,6 +439,7 @@ export function boxOf(el: Element): Rect {
     case 'plot':
     case 'mark':
     case 'model3d':
+    case 'tool':
       return { x: el.x, y: el.y, w: el.w, h: el.h };
     // A graphic's label hangs below its box and is part of the element: the
     // camera has to know about it, and so does anything trying not to sit on

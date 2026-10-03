@@ -383,7 +383,24 @@ export type Element =
       shape: 'circle' | 'underline' | 'tick' | 'cross' | 'box' | 'highlight';
       tone?: Tone;
     }
-  | { kind: 'model3d'; id: string; x: number; y: number; w: number; h: number; asset?: string; label?: string };
+  | { kind: 'model3d'; id: string; x: number; y: number; w: number; h: number; asset?: string; label?: string }
+  /**
+   * A toolkit tool (canvas toolkit part 1): the board draws and animates it
+   * from `params`, which `tools/<tool>.ts` validates. `tool` stays a plain
+   * string so a lesson naming a tool this build lacks still parses and is
+   * reported, not crashed on. `after` holds it back like a written line.
+   */
+  | {
+      kind: 'tool';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      tool: string;
+      params: Record<string, unknown>;
+      after?: number;
+    };
 
 export type ElementKind = Element['kind'];
 

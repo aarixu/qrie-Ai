@@ -2,6 +2,7 @@
 // runs this file in Deno, which resolves no extensionless specifier.
 import { ALTERNATE_MODES, type AlternateMode, type Beat, type Element, type Lesson, type Point } from './types.ts';
 import { compileFunction } from './safeExpr.ts';
+import { toolProblems } from './tools/index.ts';
 
 /**
  * Runtime validation of a lesson document.
@@ -130,6 +131,11 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
       for (const key of ['caption', 'xLabel', 'yLabel'] as const) {
         if (el[key] !== undefined) need(isStr(el[key]), `plot ${key} must be a string`);
       }
+      break;
+    case 'tool':
+      need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'tool needs numeric x,y,w,h');
+      optionalNumber('after');
+      for (const problem of toolProblems(el.tool, el.params)) errs.push(`${path}: tool ${String(el.tool)}: ${problem}`);
       break;
     case 'flow':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w), 'flow needs numeric x,y,w');
