@@ -1,0 +1,903 @@
+{
+  "formatVersion": 1,
+  "id": "class10-reflex-actions",
+  "title": "Reflex Actions and the Reflex Arc",
+  "subtitle": "How your nervous system saves you from danger before you even think",
+  "language": "en",
+  "canvas": {
+    "w": 8560,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "b1_hook_0",
+      "x": 500,
+      "y": 86,
+      "text": "Reflex Actions",
+      "sub": "Control and Coordination"
+    },
+    {
+      "kind": "graphic",
+      "id": "b1_hook__pan",
+      "x": 204.63272727272727,
+      "y": 192,
+      "w": 112,
+      "h": 112,
+      "noun": "pan",
+      "label": "hot pan",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "graphic",
+      "id": "b1_hook__hand",
+      "x": 525.6472727272727,
+      "y": 192,
+      "w": 112,
+      "h": 112,
+      "noun": "hand",
+      "label": "fingertip",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "arrow",
+      "id": "b1_hook_4",
+      "from": {
+        "x": 511.6472727272727,
+        "y": 248
+      },
+      "to": {
+        "x": 330.63272727272727,
+        "y": 248
+      },
+      "tone": "bad"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b1_hook_4_label",
+      "x": 421.14,
+      "y": 178.05,
+      "text": "touches hot surface",
+      "size": 17,
+      "tone": "bad"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b1_hook_6",
+      "x": 500,
+      "y": 373.4,
+      "text": "Stimulus: intense heat from hot pan",
+      "size": 36,
+      "tone": "bad"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b1_hook_8",
+      "x": 500,
+      "y": 461.4,
+      "text": "Immediate automatic withdrawal before pain is felt",
+      "size": 36
+    },
+    {
+      "kind": "title",
+      "id": "b2_definition_1",
+      "x": 1760,
+      "y": 86,
+      "text": "What is a Reflex Action?",
+      "sub": "Automatic survival responses"
+    },
+    {
+      "kind": "box",
+      "id": "b2_definition_3_c0",
+      "x": 1330,
+      "y": 251,
+      "w": 860,
+      "h": 128,
+      "label": "",
+      "tone": "accent",
+      "as": "banner"
+    },
+    {
+      "kind": "text",
+      "id": "b2_definition_3_h0",
+      "x": 1760,
+      "y": 289,
+      "text": "Reflex Action",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "b2_definition_3_b0",
+      "x": 1760,
+      "y": 329,
+      "text": "An automatic, rapid, and involuntary response of the body to an environmental stimulus.",
+      "size": 16
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_definition_5",
+      "x": 3020,
+      "y": 239.4,
+      "text": "Automatic: triggers without deliberate planning",
+      "size": 36
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_definition_6",
+      "x": 3020,
+      "y": 327.4,
+      "text": "Rapid: occurs in a fraction of a second",
+      "size": 36
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_definition_7",
+      "x": 3020,
+      "y": 415.4,
+      "text": "Involuntary: not under our conscious will",
+      "size": 36
+    },
+    {
+      "kind": "mark",
+      "id": "b2_definition_8",
+      "x": 3100.26,
+      "y": 377.4,
+      "w": 203.43999999999997,
+      "h": 52.6,
+      "shape": "highlight"
+    },
+    {
+      "kind": "title",
+      "id": "b3_reflex_arc_1",
+      "x": 4280,
+      "y": 86,
+      "text": "The Reflex Arc",
+      "sub": "The pathway of nerve impulses"
+    },
+    {
+      "kind": "diagram",
+      "id": "reflex_arc_diagram",
+      "x": 3850,
+      "y": 150,
+      "w": 860,
+      "h": 242,
+      "src": "generated/reflex_arc_diagram.svg",
+      "alt": "Diagram of a reflex arc showing receptor, sensory neuron, spinal cord with relay neuron, motor neuron, and effector muscle.",
+      "parts": [
+        "receptor_skin",
+        "sensory_neuron",
+        "spinal_cord",
+        "relay_neuron",
+        "motor_neuron",
+        "effector_muscle"
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "b3_reflex_arc_12",
+      "x": 4280,
+      "y": 461.4,
+      "text": "Motor neuron conveys command to muscle",
+      "size": 36
+    },
+    {
+      "kind": "handwrite",
+      "id": "b3_reflex_arc_15",
+      "x": 5540,
+      "y": 198.81,
+      "text": "Effector muscle contracts to pull hand away",
+      "size": 36
+    },
+    {
+      "kind": "list",
+      "id": "b3_reflex_arc_16",
+      "x": 5187.4,
+      "y": 243.41,
+      "w": 705.1999999999999,
+      "heading": "Sequence of the Reflex Arc",
+      "items": [
+        {
+          "term": "Receptor",
+          "meaning": "detects the stimulus (heat receptors in skin)"
+        },
+        {
+          "term": "Sensory neuron",
+          "meaning": "conducts impulse to spinal cord"
+        },
+        {
+          "term": "Relay neuron / Spinal cord",
+          "meaning": "links sensory and motor neurons directly"
+        },
+        {
+          "term": "Motor neuron",
+          "meaning": "carries command impulse to effector"
+        },
+        {
+          "term": "Effector",
+          "meaning": "muscle or gland that executes the action"
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "id": "b4_evolutionary_role_1",
+      "x": 6800,
+      "y": 86,
+      "text": "Why Bypass the Brain?",
+      "sub": "Evolutionary advantage of reflex arcs"
+    },
+    {
+      "kind": "list",
+      "id": "b4_evolutionary_role_3",
+      "x": 6447.4,
+      "y": 194.47,
+      "w": 705.1999999999999,
+      "heading": "Brain Processing vs Reflex Arc",
+      "items": [
+        {
+          "term": "Brain processing",
+          "meaning": "complex network analyzing memories and choices — takes valuable time"
+        },
+        {
+          "term": "Spinal reflex arc",
+          "meaning": "short direct shortcut firing in milliseconds to prevent severe injury"
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "b4_evolutionary_role_5",
+      "x": 6800,
+      "y": 416.92999999999995,
+      "text": "Brain thinking process = too slow in life-threatening emergencies",
+      "size": 32.63625353249897
+    },
+    {
+      "kind": "handwrite",
+      "id": "b4_evolutionary_role_7",
+      "x": 8060,
+      "y": 286.05,
+      "text": "Spinal reflex = efficient bypass for rapid survival response",
+      "size": 35.9928762243989
+    },
+    {
+      "kind": "note",
+      "id": "b4_evolutionary_role_8",
+      "x": 7767.6,
+      "y": 330.65,
+      "w": 584.8000000000001,
+      "text": "Note: Information still travels to the brain so you register pain afterwards, but the protective action has already happened!"
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1_hook_1",
+      "topic": "Touching something hot",
+      "narration": "Hello! What is up — ready?",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label"
+      ],
+      "frame": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label"
+      ]
+    },
+    {
+      "id": "b1_hook_2",
+      "topic": "Touching something hot",
+      "narration": "Imagine you accidentally touch a scorching hot pan on the stove.",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6"
+      ],
+      "frame": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6"
+      ]
+    },
+    {
+      "id": "b1_hook_3",
+      "topic": "Touching something hot",
+      "narration": "Before you even register the pain or say ouch, your hand has already pulled itself away. Did you sit and consciously decide to pull your hand away, or did it just happen instantly on its own?",
+      "ask": {
+        "question": "Did you sit and consciously decide to pull your hand away, or did it just happen instantly on its own?",
+        "expect": "It happened instantly on its own without conscious thinking.",
+        "hint": "Think about whether you had time to think, 'Oh, this is hot, let me contract my biceps now.'",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "It happened instantly on its own without conscious decision.",
+              "correct": true,
+              "why": "Exactly. You moved before your brain even had time to form a conscious thought."
+            },
+            {
+              "text": "My brain thought about it and decided to pull away.",
+              "correct": false,
+              "why": "Thinking takes time because thousands of neurons must process the information first, and waiting for that would leave you badly burned.",
+              "followUp": "If you had to consciously think about it, what would happen to your skin during those seconds?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "Consider blinking when a speck of dust flies towards your eye.",
+              "line": "Stimulus: dust approaching eye"
+            },
+            {
+              "say": "Your eyelid snaps shut automatically in milliseconds without any deliberate decision.",
+              "line": "Response: immediate involuntary blink"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "everyday",
+            "say": "It is like stepping on a sharp thorn — your foot lifts in a fraction of a second before you even look down."
+          },
+          {
+            "mode": "analogy",
+            "say": "Think of an emergency fire alarm: it triggers the sprinkler immediately without waiting for a committee meeting."
+          }
+        ]
+      },
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8"
+      ],
+      "frame": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8"
+      ]
+    },
+    {
+      "id": "b2_definition_1",
+      "topic": "Defining Reflex Action",
+      "narration": "That sudden, lightning-fast reaction is what we call a reflex action.",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0"
+      ],
+      "frame": [
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0"
+      ]
+    },
+    {
+      "id": "b2_definition_2",
+      "topic": "Defining Reflex Action",
+      "narration": "Notice three key words here: automatic, rapid, and involuntary.",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8"
+      ],
+      "frame": [
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8"
+      ]
+    },
+    {
+      "id": "b2_definition_3",
+      "topic": "Defining Reflex Action",
+      "narration": "When we say involuntary, we mean you do not have to deliberate or intend to do it. It protects your body from immediate damage. If an action requires you to carefully consider options and make a choice, could that ever be called a reflex action?",
+      "ask": {
+        "question": "If an action requires you to carefully consider options and make a choice, could that ever be called a reflex action?",
+        "expect": "No, because reflex actions are involuntary and automatic, not consciously chosen.",
+        "hint": "Remember the key property of reflexes: they bypass conscious thinking.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "No, because conscious choice is voluntary, while a reflex must be automatic and involuntary.",
+              "correct": true,
+              "why": "Spot on. Any response involving conscious deliberation is a voluntary action, not a reflex."
+            },
+            {
+              "text": "Yes, if you do it very fast.",
+              "correct": false,
+              "why": "Speed alone does not make an action a reflex; it must also happen without conscious decision-making.",
+              "followUp": "When a batsman decides which shot to play in cricket, is that an involuntary reflex or a trained voluntary choice?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "Writing an answer in an exam requires deliberate choice of words.",
+              "line": "Decision-based action = Voluntary"
+            },
+            {
+              "say": "Withdrawing a hand from a flame happens without any decision.",
+              "line": "Unconscious protective reaction = Reflex (Involuntary)"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "everyday",
+            "say": "Catching a ball you saw coming is a skilled voluntary action, but coughing when food enters your windpipe is an involuntary reflex."
+          },
+          {
+            "mode": "steps",
+            "say": "Step one: stimulus arrives. Step two: involuntary motor response fires immediately, with no intermediate thinking stage."
+          }
+        ]
+      },
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8"
+      ],
+      "frame": [
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8"
+      ],
+      "teaches": [
+        "class10-science-control-and-coordination-reflex-action-definition"
+      ]
+    },
+    {
+      "id": "b3_reflex_arc_1",
+      "topic": "The Reflex Arc Pathway",
+      "narration": "The entire neural pathway that carries out a reflex action is called a reflex arc. Let us trace how the message travels.",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8",
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram"
+      ],
+      "frame": [
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram"
+      ]
+    },
+    {
+      "id": "b3_reflex_arc_2",
+      "topic": "The Reflex Arc Pathway",
+      "narration": "First, heat receptors in the skin detect the dangerous heat stimulus.",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8",
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram"
+      ],
+      "frame": [
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram"
+      ]
+    },
+    {
+      "id": "b3_reflex_arc_3",
+      "topic": "The Reflex Arc Pathway",
+      "narration": "This triggers an electrical impulse along the sensory neuron straight towards the spinal cord.",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8",
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram"
+      ],
+      "frame": [
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram"
+      ]
+    },
+    {
+      "id": "b3_reflex_arc_4",
+      "topic": "The Reflex Arc Pathway",
+      "narration": "Inside the spinal cord, a relay neuron receives the message and immediately connects it to a motor neuron.",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8",
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram"
+      ],
+      "frame": [
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram"
+      ]
+    },
+    {
+      "id": "b3_reflex_arc_5",
+      "topic": "The Reflex Arc Pathway",
+      "narration": "The motor neuron carries the command back out to the arm muscles.",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8",
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram",
+        "b3_reflex_arc_12"
+      ],
+      "frame": [
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram",
+        "b3_reflex_arc_12"
+      ]
+    },
+    {
+      "id": "b3_reflex_arc_6",
+      "topic": "The Reflex Arc Pathway",
+      "narration": "The muscle contracts, pulling your arm away. The muscle is our effector. Which specific neuron carries the signal from the receptor towards the spinal cord, and which one carries the instruction away to the muscle?",
+      "ask": {
+        "question": "Which specific neuron carries the signal from the receptor towards the spinal cord, and which one carries the instruction away to the muscle?",
+        "expect": "Sensory neuron carries it towards the spinal cord, and motor neuron carries it to the muscle.",
+        "hint": "Think about what 'senses' the input versus what causes the 'motion'.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Sensory neuron carries signal inward to spinal cord; motor neuron carries signal outward to muscle.",
+              "correct": true,
+              "why": "That is right: sensory goes in with information, motor comes out with the action command."
+            },
+            {
+              "text": "Motor neuron goes to the spinal cord, and sensory neuron goes to the muscle.",
+              "correct": false,
+              "why": "Sensory neurons carry sensation inward, while motor neurons drive movement by exciting the effector muscle.",
+              "followUp": "What word is in 'motor neuron' that reminds you of movement?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "Imagine stepping on a sharp pin.",
+              "line": "Pin prick -> Pain receptor in foot"
+            },
+            {
+              "say": "Sensory neuron sends signal in, spinal cord relays it, motor neuron commands leg muscle to pull up.",
+              "line": "Sensory neuron -> Spinal cord -> Motor neuron -> Leg muscle"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "analogy",
+            "say": "Sensory neurons are reporters sending breaking news inward; motor neurons are emergency responders driving outward."
+          },
+          {
+            "mode": "steps",
+            "say": "Remember the loop: Stimulus -> Receptor -> Sensory -> Relay -> Motor -> Effector -> Response."
+          }
+        ]
+      },
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8",
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram",
+        "b3_reflex_arc_12",
+        "b3_reflex_arc_15",
+        "b3_reflex_arc_16"
+      ],
+      "frame": [
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram",
+        "b3_reflex_arc_12",
+        "b3_reflex_arc_15",
+        "b3_reflex_arc_16"
+      ],
+      "focus": [
+        "reflex_arc_diagram#receptor_skin",
+        "reflex_arc_diagram#sensory_neuron",
+        "reflex_arc_diagram#relay_neuron",
+        "reflex_arc_diagram#motor_neuron",
+        "reflex_arc_diagram#effector_muscle"
+      ],
+      "teaches": [
+        "class10-science-control-and-coordination-reflex-arc-components"
+      ],
+      "checks": [
+        "class10-science-control-and-coordination-reflex-action-definition"
+      ]
+    },
+    {
+      "id": "b4_evolutionary_role_1",
+      "topic": "Why Spinal Cord and Not Brain First?",
+      "narration": "You might wonder: why does the spinal cord complete this circuit instead of sending the signal all the way to the brain first?",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8",
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram",
+        "b3_reflex_arc_12",
+        "b3_reflex_arc_15",
+        "b3_reflex_arc_16",
+        "b4_evolutionary_role_1",
+        "b4_evolutionary_role_3"
+      ],
+      "frame": [
+        "b4_evolutionary_role_1",
+        "b4_evolutionary_role_3"
+      ]
+    },
+    {
+      "id": "b4_evolutionary_role_2",
+      "topic": "Why Spinal Cord and Not Brain First?",
+      "narration": "Thinking is complex. The brain contains intricate neural meshes that weigh choices and integrate past experiences.",
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8",
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram",
+        "b3_reflex_arc_12",
+        "b3_reflex_arc_15",
+        "b3_reflex_arc_16",
+        "b4_evolutionary_role_1",
+        "b4_evolutionary_role_3",
+        "b4_evolutionary_role_5"
+      ],
+      "frame": [
+        "b4_evolutionary_role_1",
+        "b4_evolutionary_role_3",
+        "b4_evolutionary_role_5"
+      ]
+    },
+    {
+      "id": "b4_evolutionary_role_3",
+      "topic": "Why Spinal Cord and Not Brain First?",
+      "narration": "If you waited for your brain to think about how hot the pan is, your skin would suffer severe burns. The reflex arc evolved as an emergency bypass. Why did animals evolve reflex arcs centered in the spinal cord rather than relying solely on brain thinking for every response?",
+      "ask": {
+        "question": "Why did animals evolve reflex arcs centered in the spinal cord rather than relying solely on brain thinking for every response?",
+        "expect": "Because thinking in the brain is too slow, and reflex arcs provide a rapid shortcut to prevent injury and ensure survival.",
+        "hint": "Think about the extra time a signal takes to travel to the brain and be processed during danger.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Because brain thinking is too slow, so spinal reflex arcs evolved as a fast bypass mechanism to prevent severe harm.",
+              "correct": true,
+              "why": "Exactly. Speed is essential for survival; the shortcut saves tissue from damage before the brain even realizes."
+            },
+            {
+              "text": "Because the brain cannot control muscles in our hands or legs.",
+              "correct": false,
+              "why": "The brain controls all voluntary movements of our hands and legs every day, but it takes more time to process commands than the direct spinal arc.",
+              "followUp": "When you pick up a pencil to write, is your brain controlling your hand muscles?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "Many lower animals evolved before complex thinking parts of the brain fully developed.",
+              "line": "Primitive survival need: Immediate escape from danger"
+            },
+            {
+              "say": "Reflex arcs functioned as the primary rapid response mechanism and were preserved through evolution.",
+              "line": "Reflex arc = high-speed survival adaptation"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "analogy",
+            "say": "A local circuit breaker trips instantly when there is a short circuit, rather than sending a report to the main power headquarters first."
+          },
+          {
+            "mode": "everyday",
+            "say": "You feel the sting of pain a moment after your hand snaps back — that delay shows the brain received the news after the spinal cord had already saved your skin."
+          }
+        ]
+      },
+      "show": [
+        "b1_hook_0",
+        "b1_hook__pan",
+        "b1_hook__hand",
+        "b1_hook_4",
+        "b1_hook_4_label",
+        "b1_hook_6",
+        "b1_hook_8",
+        "b2_definition_1",
+        "b2_definition_3_c0",
+        "b2_definition_3_h0",
+        "b2_definition_3_b0",
+        "b2_definition_5",
+        "b2_definition_6",
+        "b2_definition_7",
+        "b2_definition_8",
+        "b3_reflex_arc_1",
+        "reflex_arc_diagram",
+        "b3_reflex_arc_12",
+        "b3_reflex_arc_15",
+        "b3_reflex_arc_16",
+        "b4_evolutionary_role_1",
+        "b4_evolutionary_role_3",
+        "b4_evolutionary_role_5",
+        "b4_evolutionary_role_7",
+        "b4_evolutionary_role_8"
+      ],
+      "frame": [
+        "b4_evolutionary_role_1",
+        "b4_evolutionary_role_3",
+        "b4_evolutionary_role_5",
+        "b4_evolutionary_role_7",
+        "b4_evolutionary_role_8"
+      ],
+      "teaches": [
+        "class10-science-control-and-coordination-reflex-arc-evolutionary-role"
+      ],
+      "checks": [
+        "class10-science-control-and-coordination-reflex-arc-components"
+      ]
+    }
+  ],
+  "topicRef": "class10-science/control-and-coordination/reflex-actions"
+}

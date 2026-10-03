@@ -134,6 +134,15 @@
       "subject": "Science",
       "path": "class10-science-life-processes-transportation-in-human-beings/lesson.json",
       "topicRef": "class10-science/life-processes/transportation-in-human-beings"
+    },
+    {
+      "id": "class10-reflex-actions",
+      "title": "Reflex Actions and the Reflex Arc",
+      "subtitle": "Class 10 · Control and Coordination",
+      "class": 10,
+      "subject": "Science",
+      "path": "class10-reflex-actions/lesson.json",
+      "topicRef": "class10-science/control-and-coordination/reflex-actions"
     }
   ]
 }

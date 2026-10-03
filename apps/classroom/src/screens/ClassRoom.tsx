@@ -2283,6 +2283,13 @@ export function ClassRoom({
    * no change to the camera.
    */
   const sideways = useMediaQuery('(orientation: landscape)');
+  /**
+   * A phone turned sideways is wider than the board (about 19.5:9 against
+   * 16:9), so a dark strip stands either side of it. The toolbar stands in the
+   * left one there, so it never covers the foot of the board — a question
+   * keeps the controls up, and they used to sit on her last line (2026-10-03).
+   */
+  const sideRail = useMediaQuery('(orientation: landscape) and (min-aspect-ratio: 2/1)');
 
   const barsShown = controlsShown || !canHideControls;
   const barClasses = barsShown ? 'opacity-100' : 'opacity-0 pointer-events-none';
@@ -2498,7 +2505,9 @@ export function ClassRoom({
   const toolbar = (
     <nav
       aria-hidden={!barsShown}
-      className={`flex justify-center items-center gap-3.5 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-1 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
+      className={`flex justify-center items-center transition-opacity duration-300 ${barClasses} ${
+        sideways && sideRail ? 'flex-col gap-2.5' : 'gap-3.5 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-1 flex-shrink-0'
+      }`}
     >
       {!inDoubt ? (
         <>
@@ -2580,8 +2589,13 @@ export function ClassRoom({
               {answerBox}
               {doubtRow}
             </div>
-            <div className="pointer-events-auto">{toolbar}</div>
+            {!sideRail && <div className="pointer-events-auto">{toolbar}</div>}
           </div>
+          {sideRail && (
+            <div className="absolute z-10 left-[calc(10px+env(safe-area-inset-left))] top-1/2 -translate-y-1/2">
+              {toolbar}
+            </div>
+          )}
           {/* Her, in the corner, over the board or in the margin beside it.
               Her status line steps aside while the typing row is up, so the
               two never sit on each other on a short screen. */}
