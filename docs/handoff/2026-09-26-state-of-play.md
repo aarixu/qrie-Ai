@@ -449,6 +449,7 @@ Smart-board design research covered what the board can do today and how speech c
   - **Portrait:** a "Turn sideways" button (Android: full screen plus a landscape lock) and a full-screen button in the header.
   - **Bloub cues and ambient flourishes** (see the bloub commit).
   - **Still content, not code:** class10-blood and class10-excretion are text boxes only. class9 particle-size has two missing PNGs. Several respiration beats show one line of handwriting. Graphics are 45 units, about 30 px in the overview beat. These need the classes re-prepared, which is Aarav's call because it costs money.
+- **A new class to show the current pipeline (2026-10-03):** `content/class10-reflex-actions`, prepared through the live relay (Rs 8.74, kept): 15 beats, 4 questions, a hot-pan hook drawn as graphics, and a reflex-arc diagram. Aarav said to hold off re-preparing all 15 classes until he has seen this one. On a phone held sideways (wider than 2:1), the toolbar now stands in the strip left of the board.
 
 **Order:**
 - C0 and C1 together, now: neither needs model spend to build.
