@@ -16,6 +16,7 @@ import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Re
 import { formulaTex, hasMath, lineToHtml, plainFormula, texToHtml, typesetsAsMaths } from './math';
 import { renderTool } from './tools';
 import type { ToolTheme } from './tools/context';
+import { animAt, staggerDelays, SEQUENCE_CAP_MS } from './stagger';
 import {
   graphicLabelSize,
   textWidth,
@@ -107,7 +108,7 @@ const THEME: ToolTheme = { ink: INK, tones: TONE_COLORS, fontHand: FONT_HAND, fo
  * Kinds that animate their own pieces in sequence, so the element as a whole
  * must not also pop in.
  */
-const SELF_ANIMATED: ReadonlySet<Element['kind']> = new Set(['tool']);
+const SELF_ANIMATED: ReadonlySet<Element['kind']> = new Set(['tool', 'flow', 'chart', 'list']);
 
 /**
  * How long a handwritten line takes to appear.
@@ -125,6 +126,12 @@ const MARK_MS = 620;
 /** A bar growing to its value; a term sliding to its new place (lesson-format's EQUATION_MOVE_MS). */
 const GROW_MS = 500;
 const MOVE_MS = EQUATION_MOVE_MS;
+/** How far apart the pieces of one element arrive, before SEQUENCE_CAP_MS squeezes them. */
+const FLOW_GAP_MS = 450;
+const BAR_GAP_MS = 150;
+const LIST_GAP_MS = 350;
+/** A flow's arrow leaves after its box has landed. */
+const ARROW_AFTER_MS = 250;
 
 /**
  * FNV-1a. Renders must be byte-identical across frames and test runs, so all
@@ -459,29 +466,34 @@ function renderBox(el: Extract<Element, { kind: 'box' }>): ReactElement {
  * In the tutor's printed hand rather than her written one. Her handwriting is
  * for the two or three sentences she wants remembered; four definitions in
  * cursive on a phone screen is a paragraph nobody reads.
+ *
+ * New on the board, its items arrive one after another, all within
+ * SEQUENCE_CAP_MS; already there, it is drawn complete.
  */
-function renderList(el: Extract<Element, { kind: 'list' }>): ReactElement {
+function renderList(el: Extract<Element, { kind: 'list' }>, isNew = false): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const size = el.size ?? LIST_ITEM_SIZE;
   const lead = size * LIST_LINE_H;
   const headSize = LIST_HEADING_SIZE * (size / LIST_ITEM_SIZE);
+  const delays = staggerDelays(el.items.length, LIST_GAP_MS, SEQUENCE_CAP_MS);
   const out: ReactElement[] = [];
   let y = el.y;
 
   if (el.heading) {
     const baseline = y + headSize;
     out.push(
-      <text key="heading" x={el.x} y={baseline} fontFamily={FONT_HAND} fontSize={headSize} fontWeight={800} letterSpacing={0.4} fill={color}>
-        {el.heading}
-      </text>,
-      <path
-        key="rule"
-        d={`M ${el.x} ${baseline + 5} L ${el.x + Math.min(el.w, textWidth(el.heading, headSize) + 8)} ${baseline + 5}`}
-        stroke={color}
-        strokeOpacity={0.45}
-        strokeWidth={1.6}
-        strokeLinecap="round"
-      />,
+      <g key="heading" {...animAt(isNew, 'stage-pop', 0)}>
+        <text x={el.x} y={baseline} fontFamily={FONT_HAND} fontSize={headSize} fontWeight={800} letterSpacing={0.4} fill={color}>
+          {el.heading}
+        </text>
+        <path
+          d={`M ${el.x} ${baseline + 5} L ${el.x + Math.min(el.w, textWidth(el.heading, headSize) + 8)} ${baseline + 5}`}
+          stroke={color}
+          strokeOpacity={0.45}
+          strokeWidth={1.6}
+          strokeLinecap="round"
+        />
+      </g>,
     );
     y += headSize * LIST_LINE_H + LIST_HEADING_GAP;
   }
@@ -489,11 +501,12 @@ function renderList(el: Extract<Element, { kind: 'list' }>): ReactElement {
   el.items.forEach((item, n) => {
     const prefix = `${n + 1}. `;
     const lines = wrapLines(`${prefix}${listItemText(item)}`, el.w - LIST_INDENT, size);
+    const drawn: ReactElement[] = [];
     lines.forEach((line, k) => {
       const baseline = y + size + k * lead;
       if (k > 0) {
         // Hanging indent: a continued line starts under the words, not the digit.
-        out.push(
+        drawn.push(
           <text key={`${n}-${k}`} x={el.x + LIST_INDENT} y={baseline} fontFamily={FONT_HAND} fontSize={size} fill={INK}>
             {line}
           </text>,
@@ -506,7 +519,7 @@ function renderList(el: Extract<Element, { kind: 'list' }>): ReactElement {
       const dash = rest.indexOf(' — ');
       const term = dash >= 0 ? rest.slice(0, dash) : rest;
       const after = dash >= 0 ? rest.slice(dash) : '';
-      out.push(
+      drawn.push(
         <text key={`${n}-0`} x={el.x} y={baseline} fontFamily={FONT_HAND} fontSize={size} fill={INK}>
           <tspan fill={color} fontWeight={700}>
             {prefix}
@@ -516,6 +529,11 @@ function renderList(el: Extract<Element, { kind: 'list' }>): ReactElement {
         </text>,
       );
     });
+    out.push(
+      <g key={`item${n}`} {...animAt(isNew, 'stage-pop', delays[n])}>
+        {drawn}
+      </g>,
+    );
     y += lines.length * lead + LIST_ITEM_GAP;
   });
 
@@ -702,8 +720,12 @@ function renderDiagram(
  * vertical bars would force them sideways or into abbreviations. Values are
  * printed at the end of each bar, so a student reads the number without
  * measuring against an axis.
+ *
+ * New on the board, its bars grow out one after another, all within
+ * SEQUENCE_CAP_MS, each value written when its bar is full; already there, it
+ * is drawn complete.
  */
-function renderChart(el: Extract<Element, { kind: 'chart' }>): ReactElement {
+function renderChart(el: Extract<Element, { kind: 'chart' }>, isNew = false): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const rows = el.data;
   const max = Math.max(1, ...rows.map((d) => d.value));
@@ -713,11 +735,12 @@ function renderChart(el: Extract<Element, { kind: 'chart' }>): ReactElement {
   const capH = el.caption ? 34 : 0;
   const rowH = Math.min(46, (el.h - capH) / Math.max(1, rows.length));
   const barH = rowH * 0.56;
+  const delays = staggerDelays(rows.length, BAR_GAP_MS, SEQUENCE_CAP_MS);
 
   return (
     <>
       {el.caption && (
-        <text x={el.x} y={el.y + 20} fontFamily={FONT_HAND} fontSize={19} fontWeight={800} fill={INK}>
+        <text x={el.x} y={el.y + 20} fontFamily={FONT_HAND} fontSize={19} fontWeight={800} fill={INK} {...animAt(isNew, 'stage-pop', 0)}>
           {el.caption}
         </text>
       )}
@@ -726,19 +749,21 @@ function renderChart(el: Extract<Element, { kind: 'chart' }>): ReactElement {
         const w = Math.max(2, (d.value / max) * trackW);
         return (
           <g key={d.label}>
-            <text x={el.x + labelW} y={cy} textAnchor="end" dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={700} fill={TONE_COLORS.neutral}>
-              {d.label}
-            </text>
-            <rect x={trackX} y={cy - barH / 2} width={trackW} height={barH} rx={barH / 2} fill={color} fillOpacity={0.1} />
-            <rect x={trackX} y={cy - barH / 2} width={w} height={barH} rx={barH / 2} fill={color} fillOpacity={0.85} />
-            <text x={trackX + w + 10} y={cy} dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={800} fill={color}>
+            <g {...animAt(isNew, 'stage-pop', delays[i])}>
+              <text x={el.x + labelW} y={cy} textAnchor="end" dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={700} fill={TONE_COLORS.neutral}>
+                {d.label}
+              </text>
+              <rect x={trackX} y={cy - barH / 2} width={trackW} height={barH} rx={barH / 2} fill={color} fillOpacity={0.1} />
+            </g>
+            <rect x={trackX} y={cy - barH / 2} width={w} height={barH} rx={barH / 2} fill={color} fillOpacity={0.85} {...animAt(isNew, 'stage-grow', delays[i])} />
+            <text x={trackX + w + 10} y={cy} dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={800} fill={color} {...animAt(isNew, 'stage-pop', delays[i] + GROW_MS)}>
               {d.value.toLocaleString('en-IN')}
             </text>
           </g>
         );
       })}
       {el.unit && (
-        <text x={trackX} y={el.y + capH + rows.length * rowH + 18} fontFamily={FONT_HAND} fontSize={13} fill={TONE_COLORS.neutral} fillOpacity={0.7}>
+        <text x={trackX} y={el.y + capH + rows.length * rowH + 18} fontFamily={FONT_HAND} fontSize={13} fill={TONE_COLORS.neutral} fillOpacity={0.7} {...animAt(isNew, 'stage-pop', 0)}>
           {el.unit}
         </text>
       )}
@@ -882,14 +907,19 @@ function renderPlot(el: Extract<Element, { kind: 'plot' }>): ReactElement | null
  * Five notes became one unreadable stripe.
  *
  * A step is as wide as it is; the writing is what gives way.
+ *
+ * New on the board, its steps arrive one after another, all within
+ * SEQUENCE_CAP_MS, and each arrow draws on after the box it leaves; already
+ * there, it is drawn complete.
  */
-function renderFlow(el: Extract<Element, { kind: 'flow' }>): ReactElement {
+function renderFlow(el: Extract<Element, { kind: 'flow' }>, isNew = false): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const n = el.steps.length;
   const row = (el.direction ?? 'row') === 'row';
   const stepW = row ? (el.w - (n - 1) * FLOW_GAP) / Math.max(1, n) : el.w;
   /** Kept clear of the rounded corners on both sides. */
   const inner = Math.max(12, stepW - 14);
+  const delays = staggerDelays(n, FLOW_GAP_MS, SEQUENCE_CAP_MS);
 
   return (
     <>
@@ -934,22 +964,36 @@ function renderFlow(el: Extract<Element, { kind: 'flow' }>): ReactElement {
           ty += noteLead;
         });
 
+        const x1 = row ? x + stepW + 8 : cx;
+        const y1 = row ? cy : y + FLOW_STEP_H + 8;
+        const x2 = row ? x + stepW + FLOW_GAP - 8 : cx;
+        const y2 = row ? cy : y + FLOW_STEP_H + FLOW_GAP - 8;
+        // Drawn on, the arrow's head is its own stroke: a marker would sit at
+        // the end of the line before the line had reached it.
+        const arrow = !isNew ? (
+          <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={2.5} strokeLinecap="round" markerEnd={`url(#stage-arrow-${toneOf(el)})`} />
+        ) : (
+          <>
+            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={2.5} strokeLinecap="round" pathLength={1} {...animAt(true, 'stage-draw', delays[i] + ARROW_AFTER_MS)} />
+            <path
+              d={row ? `M ${x2 - 9} ${y2 - 6} L ${x2} ${y2} L ${x2 - 9} ${y2 + 6}` : `M ${x2 - 6} ${y2 - 9} L ${x2} ${y2} L ${x2 + 6} ${y2 - 9}`}
+              fill="none"
+              stroke={color}
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              {...animAt(true, 'stage-pop', delays[i] + ARROW_AFTER_MS + MARK_MS)}
+            />
+          </>
+        );
+
         return (
           <g key={i}>
-            <rect x={x} y={y} width={stepW} height={FLOW_STEP_H} rx={14} fill={color} fillOpacity={0.12} stroke={color} strokeWidth={2} />
-            {drawn}
-            {!last && (
-              <line
-                x1={row ? x + stepW + 8 : cx}
-                y1={row ? cy : y + FLOW_STEP_H + 8}
-                x2={row ? x + stepW + FLOW_GAP - 8 : cx}
-                y2={row ? cy : y + FLOW_STEP_H + FLOW_GAP - 8}
-                stroke={color}
-                strokeWidth={2.5}
-                strokeLinecap="round"
-                markerEnd={`url(#stage-arrow-${toneOf(el)})`}
-              />
-            )}
+            <g {...animAt(isNew, 'stage-pop', delays[i])}>
+              <rect x={x} y={y} width={stepW} height={FLOW_STEP_H} rx={14} fill={color} fillOpacity={0.12} stroke={color} strokeWidth={2} />
+              {drawn}
+            </g>
+            {!last && arrow}
           </g>
         );
       })}
@@ -1209,7 +1253,7 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
     case 'box':
       return renderBox(el);
     case 'list':
-      return renderList(el);
+      return renderList(el, isNew);
     case 'doc':
       return renderDoc(el);
     case 'arrow':
@@ -1257,11 +1301,11 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
     case 'mark':
       return renderMark(el);
     case 'chart':
-      return renderChart(el);
+      return renderChart(el, isNew);
     case 'plot':
       return renderPlot(el) ?? <></>;
     case 'flow':
-      return renderFlow(el);
+      return renderFlow(el, isNew);
     case 'handwrite':
       return renderHandwrite(el);
     case 'model3d':
