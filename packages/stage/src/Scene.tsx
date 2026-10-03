@@ -17,6 +17,7 @@ import { formulaTex, hasMath, lineToHtml, plainFormula, texToHtml, typesetsAsMat
 import { renderTool } from './tools';
 import type { ToolTheme } from './tools/context';
 import { animAt, staggerDelays, SEQUENCE_CAP_MS } from './stagger';
+import { drawOnMarkup } from './drawOn';
 import {
   graphicLabelSize,
   textWidth,
@@ -108,7 +109,7 @@ const THEME: ToolTheme = { ink: INK, tones: TONE_COLORS, fontHand: FONT_HAND, fo
  * Kinds that animate their own pieces in sequence, so the element as a whole
  * must not also pop in.
  */
-const SELF_ANIMATED: ReadonlySet<Element['kind']> = new Set(['tool', 'flow', 'chart', 'list']);
+const SELF_ANIMATED: ReadonlySet<Element['kind']> = new Set(['tool', 'flow', 'chart', 'list', 'diagram', 'graphic']);
 
 /**
  * How long a handwritten line takes to appear.
@@ -132,6 +133,8 @@ const BAR_GAP_MS = 150;
 const LIST_GAP_MS = 350;
 /** A flow's arrow leaves after its box has landed. */
 const ARROW_AFTER_MS = 250;
+/** How long a diagram's or an icon's strokes take to draw on. */
+const INK_MS = 900;
 
 /**
  * FNV-1a. Renders must be byte-identical across frames and test runs, so all
@@ -313,11 +316,21 @@ const SCENE_CSS = `
   to   { transform: rotate(2.5deg); }
 }
 
+@keyframes stage-fill { to { fill-opacity: 1; } }
+/* A drawing is drawn: its strokes travel on together, then its colour comes in. */
+.stage-ink { stroke-dasharray: 1; stroke-dashoffset: 1; animation: stage-draw ${INK_MS}ms ease-out forwards; }
+.stage-ink-fill {
+  fill-opacity: 0;
+  animation: stage-draw ${INK_MS}ms ease-out forwards, stage-fill 400ms ease-out ${INK_MS - 200}ms forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .stage-pop, .stage-sweep, .stage-write, .stage-nib, .stage-draw, .stage-grow, .stage-move {
     animation-duration: 0.01ms;
     animation-delay: 0ms;
   }
+  .stage-ink, .stage-ink-fill { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
+  .stage-ink-fill { fill-opacity: 1; }
   /* The painter's motions LOOP, so they stop outright rather than speeding up. */
   .curie-drift, .curie-flow, .curie-pulse, .curie-sway { animation: none; }
 }
@@ -669,23 +682,28 @@ function innerMarkup(svg: string): string {
  * Dimming is done in CSS rather than by rewriting the markup, because the
  * artwork must stay byte-identical to what was authored and reviewed — and a
  * CSS transition gives the light a moment to move, the way a real pointer does.
+ *
+ * New on the board, it is drawn on: `drawOnMarkup` marks its shapes at render
+ * time (the stored artwork is untouched), strokes first, then colour. A
+ * drawing too busy for that pops in as before.
  */
 function renderDiagram(
   el: Extract<Element, { kind: 'diagram' }>,
   svg: string | undefined,
   litParts: readonly string[],
+  isNew = false,
 ): ReactElement {
   const color = TONE_COLORS.neutral;
   if (svg === undefined) {
     // The app has not handed the markup in yet. Draw the frame so the board
     // keeps its layout instead of collapsing, and say what is missing.
     return (
-      <>
+      <g {...animAt(isNew, 'stage-pop', 0)}>
         <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={12} fill="none" stroke={color} strokeOpacity={0.35} strokeWidth={2} strokeDasharray="7 6" />
         <text x={el.x + el.w / 2} y={el.y + el.h / 2} textAnchor="middle" fontFamily={FONT_HAND} fontSize={15} fill={color} fillOpacity={0.7}>
           {el.alt}
         </text>
-      </>
+      </g>
     );
   }
 
@@ -705,10 +723,15 @@ function renderDiagram(
           ...litParts.map((part) => `.${cls} > g[id="${part}"] { opacity: 1; }`),
         ].join(' ');
 
+  // New on the board: drawn on. Too busy to draw on a phone: it pops in as before.
+  const inked = isNew ? drawOnMarkup(innerMarkup(svg)) : null;
+
   return (
-    <g transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}>
-      {spotlight && <style>{spotlight}</style>}
-      <g className={cls} dangerouslySetInnerHTML={{ __html: innerMarkup(svg) }} />
+    <g {...animAt(isNew && inked === null, 'stage-pop', 0)}>
+      <g transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}>
+        {spotlight && <style>{spotlight}</style>}
+        <g className={cls} dangerouslySetInnerHTML={{ __html: inked ?? innerMarkup(svg) }} />
+      </g>
     </g>
   );
 }
@@ -1104,10 +1127,14 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
  * box and centred. Inlined rather than dropped in an <img> for the same reason
  * a diagram is: it has to take the board's colour, and it has to be able to be
  * dimmed and lit with everything else.
+ *
+ * New on the board, it is drawn on like a diagram (`drawOnMarkup`), and its
+ * name is written once the drawing is done; a glyph too busy for that pops in.
  */
 function renderGraphic(
   el: Extract<Element, { kind: 'graphic' }>,
   svg: string | undefined,
+  isNew = false,
 ): ReactElement {
   const color = TONE_COLORS.neutral;
   const beside = el.labelSide === 'beside';
@@ -1116,12 +1143,12 @@ function renderGraphic(
 
   if (svg === undefined) {
     return (
-      <>
+      <g {...animAt(isNew, 'stage-pop', 0)}>
         <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={10} fill="none" stroke={color} strokeOpacity={0.3} strokeWidth={2} strokeDasharray="6 6" />
         <text x={el.x + el.w / 2} y={el.y + el.h / 2} textAnchor="middle" dominantBaseline="middle" fontFamily={FONT_WRITE} fontSize={18} fill={color}>
           {el.noun}
         </text>
-      </>
+      </g>
     );
   }
 
@@ -1129,13 +1156,16 @@ function renderGraphic(
   const scale = Math.min(el.w / view.w, el.h / view.h);
   const dx = el.x + (el.w - view.w * scale) / 2;
   const dy = el.y + (el.h - view.h * scale) / 2;
+  const inked = isNew ? drawOnMarkup(innerMarkup(svg)) : null;
 
   return (
     <>
-      <g
-        transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}
-        dangerouslySetInnerHTML={{ __html: innerMarkup(svg) }}
-      />
+      <g {...animAt(isNew && inked === null, 'stage-pop', 0)}>
+        <g
+          transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}
+          dangerouslySetInnerHTML={{ __html: inked ?? innerMarkup(svg) }}
+        />
+      </g>
       {el.label && (
         <text
           x={beside ? el.x + el.w + BESIDE_GAP : el.x + el.w / 2}
@@ -1148,6 +1178,7 @@ function renderGraphic(
           fontSize={labelSize}
           fill={color}
           {...HALO}
+          {...animAt(isNew, 'stage-pop', INK_MS)}
         >
           {el.label}
         </text>
@@ -1295,9 +1326,9 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
     case 'image':
       return renderImage(el, svg);
     case 'diagram':
-      return renderDiagram(el, svg, litParts);
+      return renderDiagram(el, svg, litParts, isNew);
     case 'graphic':
-      return renderGraphic(el, svg);
+      return renderGraphic(el, svg, isNew);
     case 'mark':
       return renderMark(el);
     case 'chart':
