@@ -3,7 +3,7 @@ import { BotEngine, type BotFrame } from './engine/engine';
 import { NOTIF_BLUE } from './engine/decor';
 import { DEMI_VIEWBOX, RAYON } from './engine/repere';
 import { mixHex } from './engine/skins';
-import type { StateId } from './engine/states';
+import { STATE_BY_ID, type StateId } from './engine/states';
 import { TUTOR } from '@ai-tutor/persona';
 import { level } from '../avatar/avatarBus';
 
@@ -28,10 +28,32 @@ import { level } from '../avatar/avatarBus';
  *   idle       her resting face.
  * And while her voice is actually playing (`talking`, or, without it, while
  * the mode is teaching) she wears the resting face whatever the mode — unless
- * she is thinking — and the whole shape breathes with the loudness of that
- * voice (avatarBus `level`), so it reads as her talking.
+ * she is thinking — and the shape stretches and bobs with the loudness of that
+ * voice (avatarBus `level`), so it reads as her talking. Quiet, she breathes.
+ *
+ * MOMENTS, NOT ONE LOOP (Aarav, 2026-10-03: "bloub ko animation do alag
+ * alag"). A `cue` plays one of the engine's own animations once, over
+ * whatever the mode shows, then she returns to it — the class asks for one at
+ * its moments (ClassRoom `cueBloub`): a right answer bursts, a hand raised
+ * gets the "!", a doubt over swirls. And while she teaches or waits, every
+ * AMBIENT_MS or so she winks or tilts on her own, so she is never a still dot.
  */
 export type BloubMode = 'idle' | 'teaching' | 'listening' | 'thinking';
+
+/** The engine's animations a moment of the class may ask for. */
+export type BloubCue = 'play' | 'burst' | 'orbit' | 'alert' | 'exclaim' | 'swirl' | 'egg' | 'wink' | 'comet';
+
+/** How long a cue holds: the engine's own length for it, never cut before it lands. */
+const cueSeconds = (cue: StateId): number => {
+  const def = STATE_BY_ID.get(cue);
+  return def ? Math.max(def.duration, def.minDuration ?? 0) : 1.5;
+};
+
+/** Seconds between her small flourishes while she teaches or waits, give or take. */
+const AMBIENT_MIN = 8;
+const AMBIENT_SPREAD = 6;
+/** What she does on her own: mostly a wink, sometimes a curious tilt. */
+const AMBIENT: readonly StateId[] = ['wink', 'wink', 'egg'];
 
 const POSE: Record<BloubMode, StateId> = {
   idle: 'idle',
@@ -57,6 +79,8 @@ export function Bloub({
   paper = BLOUB_PAPER,
   label = TUTOR.name,
   talking,
+  cue = null,
+  ambient = true,
 }: {
   mode: BloubMode;
   size?: number;
@@ -65,6 +89,10 @@ export function Bloub({
   label?: string;
   /** Whether her voice is playing right now; read every frame. */
   talking?: () => boolean;
+  /** One animation to play now; a new `at` plays it again. */
+  cue?: { state: BloubCue; at: number } | null;
+  /** Her own small flourishes while she teaches or waits (off on a page that should stay still). */
+  ambient?: boolean;
 }): ReactElement {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const maskId = `bloub-mask-${uid}`;
@@ -72,12 +100,16 @@ export function Bloub({
   if (engine.current === null) engine.current = new BotEngine(RAYON, POSE[mode]);
   const clock = useRef(0);
   const [frame, setFrame] = useState<BotFrame>(() => engine.current!.sample(0));
-  /** How much she is breathing out right now, smoothed. */
-  const [pulse, setPulse] = useState(1);
+  /** Her body's stretch and lift right now: the voice's loudness, or her breathing. */
+  const [body, setBody] = useState({ sx: 1, sy: 1, lift: 0 });
   const modeRef = useRef(mode);
   modeRef.current = mode;
   const talkingRef = useRef(talking);
   talkingRef.current = talking;
+  const cueRef = useRef(cue);
+  cueRef.current = cue;
+  const ambientRef = useRef(ambient);
+  ambientRef.current = ambient;
   /** The pose the engine was last told, so it is only told again on a change. */
   const shown = useRef<StateId>(POSE[mode]);
   const show = (pose: StateId): void => {
@@ -96,20 +128,48 @@ export function Bloub({
     if (typeof requestAnimationFrame !== 'function') return;
     let raf = 0;
     let last = 0;
-    let breath = 1;
+    let loudness = 0;
+    /** The cue being played, and until when; the last cue's `at`, so each plays once. */
+    let playing: StateId | null = null;
+    let playingUntil = 0;
+    let playedAt: number | null = null;
+    let nextFlourish = AMBIENT_MIN + Math.random() * AMBIENT_SPREAD;
     const tick = (ms: number): void => {
       raf = requestAnimationFrame(tick);
       // A delta held short, so a tab hidden and shown again does not jump.
       const dt = last ? Math.min((ms - last) / 1000, 0.064) : 0;
       last = ms;
-      clock.current += dt;
+      const t = (clock.current += dt);
       const now = modeRef.current;
       const voiced = talkingRef.current ? talkingRef.current() : now === 'teaching';
-      show(voiced && now !== 'thinking' ? 'idle' : POSE[now]);
-      setFrame(engine.current!.sample(clock.current));
-      const loud = voiced ? (level() ?? 0) : 0;
-      breath += (1 + loud * 0.12 - breath) * 0.25;
-      setPulse(breath);
+
+      // A moment the class asked for, once.
+      const asked = cueRef.current;
+      if (asked && asked.at !== playedAt) {
+        playedAt = asked.at;
+        playing = asked.state;
+        playingUntil = t + cueSeconds(asked.state);
+      }
+      // Her own flourish, now and then, while she teaches or waits — never
+      // over a cue, a listen or a think.
+      if (!playing && ambientRef.current && (now === 'teaching' || now === 'idle') && t >= nextFlourish) {
+        playing = AMBIENT[Math.floor(Math.random() * AMBIENT.length)];
+        playingUntil = t + cueSeconds(playing);
+        nextFlourish = playingUntil + AMBIENT_MIN + Math.random() * AMBIENT_SPREAD;
+      }
+      if (playing && t >= playingUntil) playing = null;
+
+      show(playing ?? (voiced && now !== 'thinking' ? 'idle' : POSE[now]));
+      setFrame(engine.current!.sample(t));
+
+      // Talking, she stretches up and lifts with her voice; quiet, she breathes.
+      loudness += ((voiced ? (level() ?? 0) : 0) - loudness) * 0.3;
+      const breathe = Math.sin(t * ((2 * Math.PI) / 3.2));
+      setBody({
+        sx: 1 + loudness * 0.05 - breathe * 0.008,
+        sy: 1 + loudness * 0.16 + breathe * 0.015,
+        lift: -loudness * 10 - breathe * 1.5,
+      });
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
@@ -133,6 +193,7 @@ export function Bloub({
       role="img"
       aria-label={`${label} ${mode}`}
       data-bloub={mode}
+      data-bloub-cue={cue?.state}
     >
       <defs>
         {/* The eyes are holes cut in the body, so they are trimmed by its edge. */}
@@ -159,7 +220,7 @@ export function Bloub({
           </linearGradient>
         ))}
       </defs>
-      <g transform={`scale(${pulse})`}>
+      <g transform={`translate(0 ${body.lift}) scale(${body.sx} ${body.sy})`}>
         <g fill="none" strokeLinecap="round">
           {frame.arcs.map((arc) => (
             <path key={`b${arc.id}`} d={arc.back} stroke={`url(#${uid}-${arc.id})`} strokeWidth={arc.width} opacity={arc.opacity} />

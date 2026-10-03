@@ -368,6 +368,45 @@ describe('a trial, with no class on file (Aarav, 2026-10-03: "meri voice use sam
   });
 });
 
+describe('her shape marks the moments (Aarav, 2026-10-03: "bloub ko animation do alag alag")', () => {
+  const cue = (host: HTMLElement): string | null => host.querySelector('[data-bloub]')?.getAttribute('data-bloub-cue') ?? null;
+
+  it('plays as the class begins, and bursts at a right answer', async () => {
+    const host = await openClass(asking, sayAll());
+    expect(cue(host)).toBe('play');
+    ear.queued = ['Four'];
+    await tapMic(host);
+    await tick(12);
+    expect(answers().map((a) => a.verdict)).toEqual(['right']);
+    expect(cue(host)).toBe('burst');
+  });
+
+  it('tilts at a wrong answer', async () => {
+    const host = await openClass(asking, sayAll((t) => t !== asking.beats[0].narration && !/^(Hi|Welcome back)\b/.test(t)));
+    ear.queued = ['Just plasma'];
+    await tapMic(host);
+    await tick(12);
+    expect(answers().map((a) => a.verdict)).toEqual(['wrong']);
+    expect(cue(host)).toBe('egg');
+  });
+
+  it('gives the "!" when a hand goes up, and swirls back when the doubt is over', async () => {
+    const host = await openClass(teaching);
+    await act(async () => {
+      host.querySelector<HTMLElement>('[aria-label="Raise hand and ask a doubt"]')!.click();
+    });
+    await tick(12);
+    expect(inDoubt(host)).toBe(true);
+    expect(cue(host)).toBe('alert');
+    await act(async () => {
+      host.querySelector<HTMLElement>('[aria-label="Got it — back to the class"]')!.click();
+    });
+    await tick(16);
+    expect(inDoubt(host)).toBe(false);
+    expect(cue(host)).toBe('swirl');
+  });
+});
+
 describe('her question, and the mic', () => {
   it('a tap at her held question: what they say is taken as the answer', async () => {
     const host = await openClass(asking, sayAll());

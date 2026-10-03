@@ -67,7 +67,7 @@ import type { AssistanceRung } from '@ai-tutor/ledger';
 import { track } from '../lib/telemetry';
 import { ReportSheet } from '../ui/ReportSheet';
 import { MicRationale } from '../ui/MicRationale';
-import { Bloub, type BloubMode } from '../bloub/Bloub';
+import { Bloub, type BloubCue, type BloubMode } from '../bloub/Bloub';
 import { SupportScreen } from '../ui/SupportScreen';
 import { withoutAskInk } from '../lib/askInk';
 import { useMediaQuery } from '../lib/useMediaQuery';
@@ -672,6 +672,17 @@ export function ClassRoom({
    */
   const [micNote, setMicNote] = useState<string | null>(null);
   const showHeard = (text: string): void => setMicNote(`Heard: "${text}"`);
+  /**
+   * A MOMENT FOR HER SHAPE TO MARK (Bloub `cue`, Aarav, 2026-10-03: "bloub
+   * ko animation do alag alag"): the class starting, a right answer, a wrong
+   * one, a hand raised, a doubt over, a tap that caught nothing.
+   */
+  const [bloubCue, setBloubCue] = useState<{ state: BloubCue; at: number } | null>(null);
+  const cueCount = useRef(0);
+  const cueBloub = (state: BloubCue): void => {
+    cueCount.current += 1;
+    setBloubCue({ state, at: cueCount.current });
+  };
   useEffect(() => {
     if (micNote === null) return;
     const timer = setTimeout(() => setMicNote(null), 5_000);
@@ -854,6 +865,8 @@ export function ClassRoom({
   useEffect(() => {
     const offState = handoff.on('statechange', () => {
       setHandoffState(handoff.state);
+      if (handoff.state === 'AGENT_ENTERING') cueBloub('alert');
+      if (handoff.state === 'PLAYING') cueBloub('swirl');
       if (handoff.state === 'PLAYING') {
         // Doubt over — clear the room so the next one starts fresh. Nothing a
         // spoken doubt left behind may reach the next one.
@@ -1324,6 +1337,7 @@ export function ClassRoom({
         if (judged.verdict !== 'unclear') {
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
           if (judged.verdict === 'right') answeredRight.current = heldAskBeat;
+          cueBloub(judged.verdict === 'right' ? 'burst' : 'egg');
           // The ledger keeps what the counter cannot: their actual words, the
           // verdict the judge reached, and how long the thinking took. A turn
           // the safety screen stopped is dropped entirely rather than trimmed.
@@ -1826,6 +1840,7 @@ export function ClassRoom({
         if (done()) break;
         const answer = options[question.correctIndex];
         if (chosen !== null) ledger.warmedUp(question, chosen, Date.now() - clockFrom);
+        if (chosen !== null) cueBloub(chosen === question.correctIndex ? 'burst' : 'egg');
         const said = await sayLine(
           chosen === question.correctIndex
             ? hi
@@ -1859,6 +1874,7 @@ export function ClassRoom({
       const warmed = canResume ? false : await runWarmUp();
       if (left.current || halt.halted) return;
       const greeting = greetingLine(warmed);
+      cueBloub('play');
       const spoken = await sayLine(greeting.line);
       // They left while she was greeting them: unmounting stopped her voice,
       // which ends this await — and play() here would start the class in a
@@ -1975,7 +1991,10 @@ export function ClassRoom({
         if (handoffRef.current.state !== 'PLAYING' || playerRef.current.state !== 'paused') return;
         const text = heard.reason === 'heard' ? (heard.text ?? '').trim() : '';
         if (!text) {
-          if (heard.reason === 'silence') setMicNote("Didn't catch that. Tap the mic and try again.");
+          if (heard.reason === 'silence') {
+            setMicNote("Didn't catch that. Tap the mic and try again.");
+            cueBloub('egg');
+          }
           playerRef.current.play();
           return;
         }
@@ -2518,7 +2537,7 @@ export function ClassRoom({
           <div className="absolute z-10 bottom-[calc(12px+env(safe-area-inset-bottom))] right-[calc(12px+env(safe-area-inset-right))] flex flex-col items-end gap-2 max-w-[200px] pointer-events-none">
             {!typing && status}
             <div className="drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
-              <Bloub mode={bloubMode} size={72} talking={voice.speaking} />
+              <Bloub mode={bloubMode} size={72} talking={voice.speaking} cue={bloubCue} />
             </div>
           </div>
         </>
@@ -2534,7 +2553,7 @@ export function ClassRoom({
               {answerBox}
               {doubtRow}
               <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-2">
-                <Bloub mode={bloubMode} size={132} talking={voice.speaking} />
+                <Bloub mode={bloubMode} size={132} talking={voice.speaking} cue={bloubCue} />
                 {status}
               </div>
             </div>
