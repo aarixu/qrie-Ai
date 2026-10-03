@@ -170,3 +170,47 @@ describe('checking a teachers sheet', () => {
     expect(p.warnings).toEqual(['Principal Mehta (row 2) will be a school admin, able to see every class and student.']);
   });
 });
+
+describe("the licence's seats", () => {
+  const licensed = (seats: number, used: number): SchoolSnapshot => ({ ...school, licence: { seats, used } });
+
+  it('shows how many seats are in use, and how many the sheet would take', () => {
+    const p = previewImport(licensed(10, 4), { students: 'grade,section,roll,name\n8,A,1,Mohit Sharma\n8,A,2,Kavya Iyer\n' });
+    expect(p.errors).toEqual([]);
+    expect(p.seats).toEqual({ total: 10, used: 4, adding: 1 });
+  });
+
+  it('counts a seat for a child already in the school who is given a class this year', () => {
+    const p = previewImport(licensed(10, 4), { students: 'grade,section,roll,name\n7,A,2,Old Pupil\n' });
+    expect(p.seats).toEqual({ total: 10, used: 4, adding: 1 });
+  });
+
+  it('refuses students beyond the seats left, in plain words, and plans nothing', () => {
+    const p = previewImport(licensed(5, 4), { students: 'grade,section,roll,name\n8,A,2,Kavya Iyer\n8,B,4,Dev Khanna\n' });
+    expect(p.errors).toEqual([
+      "This sheet adds 2 students, but your school's licence has 1 seat left (4 of 5 in use). Add fewer students, or ask Qrie for more seats.",
+    ]);
+    expect(p.plan).toBeNull();
+    expect(p.people).toEqual([]);
+    expect(p.seats).toEqual({ total: 5, used: 4, adding: 2 });
+    expect(previewImport(licensed(5, 4), { students: 'grade,section,roll,name\n8,A,2,Kavya Iyer\n' }).errors).toEqual([]);
+  });
+
+  it('refuses any new student once every seat is in use, but not teachers or children already in a class', () => {
+    const full = licensed(4, 5);
+    expect(previewImport(full, { students: 'grade,section,roll,name\n8,A,2,Kavya Iyer\n' }).errors).toEqual([
+      "This sheet adds 1 student, but your school's licence has no seats left (5 of 4 in use). Add fewer students, or ask Qrie for more seats.",
+    ]);
+    const staff = previewImport(full, { teachers: 'name,teaches\nSunita Rao,8A English\n' });
+    expect(staff.errors).toEqual([]);
+    expect(staff.seats).toEqual({ total: 4, used: 5, adding: 0 });
+    expect(previewImport(full, { students: 'grade,section,roll,name\n8,A,1,Mohit Sharma\n' }).errors).toEqual([]);
+  });
+
+  it('limits nothing when no licence is set', () => {
+    const p = previewImport(school, { students: 'grade,section,roll,name\n8,A,2,Kavya Iyer\n8,B,4,Dev Khanna\n' });
+    expect(p.errors).toEqual([]);
+    expect(p.seats).toBeNull();
+    expect(previewImport({ ...school, licence: null }, { students: 'grade,section,roll,name\n8,A,2,Kavya Iyer\n' }).seats).toBeNull();
+  });
+});

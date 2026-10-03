@@ -544,6 +544,32 @@ export interface SchoolSection {
   students: number;
 }
 
+/** The school's licence (0041), as its admin reads it. Set by Qrie only. */
+export interface SchoolLicence {
+  /** e.g. 'pilot'; null when no licence is set — then nothing is limited. */
+  plan: string | null;
+  seats: number | null;
+  /** Students in a class of this year who have not left. */
+  seatsUsed: number;
+  /** The last day it runs, YYYY-MM-DD. */
+  validUntil: string | null;
+  /** Days from today (India's) to its last day: 0 on that day, below 0 once it has ended. */
+  daysLeft: number | null;
+}
+
+export type LicenceWarning = 'ended' | 'ending' | 'full';
+
+/** What the portal warns of: the licence has ended or ends within 30 days, or every seat is in use. */
+export function licenceWarnings(l: SchoolLicence): LicenceWarning[] {
+  const out: LicenceWarning[] = [];
+  if (l.daysLeft !== null) {
+    if (l.daysLeft < 0) out.push('ended');
+    else if (l.daysLeft <= 30) out.push('ending');
+  }
+  if (l.seats !== null && l.seatsUsed >= l.seats) out.push('full');
+  return out;
+}
+
 /** A day's mark (0036). Late counts as present; leave is left out of the rate. */
 export type AttendanceStatus = 'present' | 'absent' | 'late' | 'leave';
 
@@ -953,6 +979,11 @@ export function createLmsClient(t: Transport) {
     },
     /** This year's sections and how many children each has. The admin only. */
     schoolSections: () => rows<SchoolSection>('school_sections'),
+    /** The school's licence and its seats in use; every field but seatsUsed is null when none is set. The admin only. */
+    async schoolLicence(): Promise<SchoolLicence> {
+      const [r] = await rows<SchoolLicence>('school_licence');
+      return r ?? { plan: null, seats: null, seatsUsed: 0, validUntil: null, daysLeft: null };
+    },
     /** A class's list for one day (YYYY-MM-DD), each child's mark or null. Its teachers and the admin. */
     attendanceSheet: (sectionId: string, onDate: string) =>
       rows<AttendanceRow>('attendance_sheet', { p_section: sectionId, p_on: onDate }),

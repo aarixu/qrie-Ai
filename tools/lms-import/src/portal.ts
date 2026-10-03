@@ -1,3 +1,4 @@
+import type { ImportSeats } from '../../../packages/lms-client/src/backend.ts';
 import { planImport, type ImportPlan, type SchoolConfig } from './plan.ts';
 import { readStudents, readTeachers, type Student, type Teacher } from './sheet.ts';
 
@@ -18,6 +19,10 @@ import { readStudents, readTeachers, type Student, type Teacher } from './sheet.
  *     row number would give (plan.ts numbers teachers by sheet order, which
  *     is right only for a school's first import), and not one the sheet
  *     itself gives somebody further down.
+ *
+ * And, when the school has a licence (0041), against more students than it
+ * has seats left: each new student, and each one already in the school who
+ * is given a class this year, takes a seat.
  */
 
 // The blank templates the portal hands out: the columns sheet.ts reads.
@@ -41,6 +46,8 @@ export interface SchoolSnapshot {
   /** This year's classes, e.g. '8A'. */
   sections: string[];
   subjects: string[];
+  /** The licence's seats and how many are in use (lms.seats_used); absent or null when no licence is set. */
+  licence?: { seats: number; used: number } | null;
 }
 
 export interface PreviewPerson {
@@ -65,6 +72,8 @@ export interface ImportPreview {
   changes: number;
   /** Null while there are errors. */
   plan: ImportPlan | null;
+  /** The licence's seats; null when no licence is set, and nothing is limited. */
+  seats: ImportSeats | null;
 }
 
 const norm = (name: string) => name.trim().replace(/\s+/g, ' ').toLowerCase();
@@ -72,7 +81,16 @@ const an = (name: string) => (/^[aeiou]/i.test(name) ? 'an' : 'a');
 const teachLine = (e: { grade: number; section: string; subject: string }) => `${e.grade}${e.section} ${e.subject}`;
 
 export function previewImport(school: SchoolSnapshot, sheets: { students?: string; teachers?: string }): ImportPreview {
-  const fail = (errors: string[]): ImportPreview => ({ errors, warnings: [], people: [], changes: 0, plan: null });
+  const seatsFor = (adding: number): ImportSeats | null =>
+    school.licence ? { total: school.licence.seats, used: school.licence.used, adding } : null;
+  const fail = (errors: string[], adding = 0): ImportPreview => ({
+    errors,
+    warnings: [],
+    people: [],
+    changes: 0,
+    plan: null,
+    seats: seatsFor(adding),
+  });
   const code = school.config.code;
   const given = (s: string | undefined) => s !== undefined && s.trim() !== '';
   if (!given(sheets.students) && !given(sheets.teachers)) return fail(['Add a students sheet, a teachers sheet, or both.']);
@@ -151,6 +169,8 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
   const people: PreviewPerson[] = [];
   const perPerson: string[] = [];
   let changes = 0;
+  // Students the commit would put in a class this year: each takes a seat.
+  let seated = 0;
   plan.people.forEach((p, i) => {
     const isStudent = i < students.length;
     const src = isStudent ? students[i] : withIds[i - students.length];
@@ -193,7 +213,10 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
         if (found.className && found.className !== className) {
           perPerson.push(`${p.displayName} is in ${found.className}, not ${className} as row ${src.row} says. They will not be moved.`);
         }
-        if (!found.className) changes += 1;
+        if (!found.className) {
+          changes += 1;
+          seated += 1;
+        }
       } else {
         const holder = school.accounts.find((a) => a.kind === 'student' && a.className === className && a.roll === p.roll);
         if (holder) {
@@ -214,6 +237,7 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
           );
         }
         changes += 1;
+        seated += 1;
       }
     } else {
       const teaches = (src as Teacher).teaches.map(teachLine);
@@ -249,6 +273,21 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
   });
   if (errors.length) return fail(errors);
 
+  if (school.licence && seated > 0) {
+    const { seats, used } = school.licence;
+    const left = Math.max(0, seats - used);
+    if (seated > left) {
+      return fail(
+        [
+          `This sheet adds ${seated} ${seated === 1 ? 'student' : 'students'}, but your school's licence has ` +
+            `${left === 0 ? 'no seats' : left === 1 ? '1 seat' : `${left} seats`} left (${used} of ${seats} in use). ` +
+            'Add fewer students, or ask Qrie for more seats.',
+        ],
+        seated,
+      );
+    }
+  }
+
   const warnings: string[] = [];
   const known = new Set(school.sections);
   for (const s of plan.sections) {
@@ -261,5 +300,5 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
     }
   }
   warnings.push(...perPerson);
-  return { errors: [], warnings, people, changes, plan };
+  return { errors: [], warnings, people, changes, plan, seats: seatsFor(seated) };
 }

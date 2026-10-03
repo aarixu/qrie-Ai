@@ -71,6 +71,9 @@ describe('the lms schema', () => {
       'set_for(p_assignment uuid, p_student uuid)',
       'practice_items(p_section uuid, p_subject uuid, p_chapter text, p_misconception text)',
       'guard_set_for()',
+      'seats_used(p_org uuid)',
+      'set_licence(p_code text, p_plan text, p_seats integer, p_until date)',
+      'founder_schools()',
     ];
     const { rows } = await db.query<{ name: string }>(
       `select p.proname || '(' || pg_get_function_identity_arguments(p.oid) || ')' as name

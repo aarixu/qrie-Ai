@@ -73,6 +73,7 @@ export async function importForAdmin(db: PGlite, caller: string, request: Import
       committed: false,
       created: [],
       conflicts: [],
+      seats: preview.seats,
     };
     if (request.commit !== true || !preview.plan) return checked;
     if (preview.warnings.length > 0 && request.acceptWarnings !== true) {
@@ -133,7 +134,7 @@ export async function resetPinForAdmin(
   return { loginId: id, displayName: who.display_name, pin };
 }
 
-/** What the school has now: this year's classes, its subjects, everybody's ID, rolls and classes taught. */
+/** What the school has now: this year's classes, its subjects, everybody's ID, rolls and classes taught, and its licence's seats. */
 async function schoolSnapshot(db: PGlite, org: string): Promise<SchoolSnapshot> {
   const school = (
     await db.query<{ code: string; display_name: string; short_name: string | null; board: SchoolSnapshot['config']['board'] }>(
@@ -180,6 +181,13 @@ async function schoolSnapshot(db: PGlite, org: string): Promise<SchoolSnapshot> 
     await db.query<{ name: string }>(`select grade || name as name from lms.section where academic_year_id = $1`, [year.id])
   ).rows;
   const subjects = (await db.query<{ name: string }>(`select name from lms.subject where org_id = $1 order by name`, [org])).rows;
+  // The licence's seats and those in use (0041); no row when no licence is set.
+  const licence = (
+    await db.query<{ seats: number; used: number }>(
+      `select l.seats, lms.seats_used(l.org_id) as used from lms.licence l where l.org_id = $1`,
+      [org],
+    )
+  ).rows[0];
   return {
     config: {
       code: school.code,
@@ -198,5 +206,6 @@ async function schoolSnapshot(db: PGlite, org: string): Promise<SchoolSnapshot> 
     })),
     sections: sections.map((s) => s.name),
     subjects: subjects.map((s) => s.name),
+    licence: licence ? { seats: licence.seats, used: licence.used } : null,
   };
 }

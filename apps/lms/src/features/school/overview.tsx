@@ -27,6 +27,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { useSchoolLogo } from '@/lib/brand'
 import { EventDialog } from '@/features/events/event-dialog'
 import { UpcomingList } from '@/features/events/upcoming'
+import { LicenceBanner, LicenceCard } from './licence'
 
 export const useSchoolClasses = () => useQuery({ queryKey: ['school', 'classes'], queryFn: api.schoolClasses })
 export const useSchoolStudents = (section?: string) =>
@@ -35,7 +36,7 @@ export const useSchoolStudents = (section?: string) =>
 
 /**
  * The school portal's home, for the admin (lms.school_*): the whole school
- * at a glance, class by class, and who needs attention.
+ * at a glance, class by class, who needs attention, and the licence.
  */
 export function SchoolOverviewPage() {
   const overview = useQuery({ queryKey: ['school', 'overview'], queryFn: api.schoolOverview })
@@ -72,6 +73,7 @@ export function SchoolOverviewPage() {
         </BrandHero>
       }
     >
+      <LicenceBanner className='mb-6' />
       {overview.isPending ? (
         <Loading what='the school' />
       ) : overview.isError ? (
@@ -140,7 +142,7 @@ export function SchoolOverviewPage() {
             </ChartCard>
           </div>
 
-          <div className='grid gap-4 lg:grid-cols-2'>
+          <div className='grid gap-4 lg:grid-cols-2 xl:grid-cols-3'>
             <Card>
               <CardHeader>
                 <CardTitle>Students who need attention</CardTitle>
@@ -159,6 +161,7 @@ export function SchoolOverviewPage() {
                 <UpcomingList empty='Nothing coming up. Post a school event above.' />
               </CardContent>
             </Card>
+            <LicenceCard />
           </div>
         </div>
       )}

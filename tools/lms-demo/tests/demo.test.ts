@@ -415,3 +415,37 @@ describe('adding people from the school portal', () => {
     await expect(admin.resetPin('NOPE-1')).rejects.toThrow(/no one in your school/i);
   });
 });
+
+describe("the school's licence", () => {
+  it('is a pilot with a few seats more than the school had students, running about five months from today', async () => {
+    const admin = await signedIn('DEMO-T05');
+    const l = await admin.api.schoolLicence();
+    expect(l).toMatchObject({ plan: 'pilot', seats: 90 });
+    expect(l.seatsUsed).toBeGreaterThanOrEqual(82);
+    expect(l.seatsUsed).toBeLessThan(90);
+    expect(l.daysLeft).toBeGreaterThanOrEqual(150);
+    expect(l.daysLeft).toBeLessThanOrEqual(153);
+    const log = (await admin.api.auditLog(500)).filter((e) => e.action === 'licence-set');
+    expect(log.map((e) => [e.actorName, e.target])).toEqual([[null, 'pilot']]);
+  });
+
+  it('turns away more new students than the seats left before anyone is added, and shows the seats in the check', async () => {
+    const admin = await signedIn('DEMO-T05');
+    const l = await admin.api.schoolLicence();
+    const left = l.seats! - l.seatsUsed;
+    const rows = Array.from({ length: left + 1 }, (_, i) => `6,A,${60 + i},Child ${String.fromCharCode(65 + i)}`);
+    const count = async () => (await db.query<{ n: number }>(`select count(*)::int as n from lms.account`)).rows[0].n;
+    const before = await count();
+    const r = await admin.importPeople({ students: `grade,section,roll,name\n${rows.join('\n')}\n`, commit: true, acceptWarnings: true });
+    expect(r.committed).toBe(false);
+    expect(r.errors).toEqual([
+      `This sheet adds ${left + 1} students, but your school's licence has ${left} ${left === 1 ? 'seat' : 'seats'} left ` +
+        `(${l.seatsUsed} of 90 in use). Add fewer students, or ask Qrie for more seats.`,
+    ]);
+    expect(await count()).toBe(before);
+
+    const fits = await admin.importPeople({ students: `grade,section,roll,name\n${rows[0]}\n` });
+    expect(fits.errors).toEqual([]);
+    expect(fits.seats).toEqual({ total: 90, used: l.seatsUsed, adding: 1 });
+  });
+});

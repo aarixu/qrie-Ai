@@ -16,6 +16,7 @@
     "style-card": "node tools/teacher-clone/src/style-card.ts",
     "demo": "node tools/lms-demo/src/cli.ts",
     "demo:all": "node tools/lms-demo/src/all.ts",
+    "founder": "node tools/lms-demo/src/founder-cli.ts",
     "lms": "npm run dev --workspace @ai-tutor/lms",
     "student": "npm run dev --workspace @ai-tutor/student",
     "app:sync": "npm run build && npm run --workspace @ai-tutor/classroom cap:sync",

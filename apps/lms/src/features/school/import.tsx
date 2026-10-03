@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { friendlyError } from '@ai-tutor/lms-client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { AlertTriangle, CheckCircle2, Download, Eye, EyeOff, FileSpreadsheet, Upload, XCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Download, Eye, EyeOff, FileSpreadsheet, Upload, Users, XCircle } from 'lucide-react'
 import {
   credentialsCsv,
   STUDENTS_TEMPLATE,
   TEACHERS_TEMPLATE,
   type ImportResponse,
+  type ImportSeats,
 } from '@ai-tutor/lms-client'
 import { backend } from '@/lib/backend'
 import { downloadText } from '@/lib/download'
@@ -25,6 +26,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Page } from '@/components/layout/page'
+import { LicenceBanner } from './licence'
 
 type Sheet = { name: string; text: string }
 const MAX_BYTES = 1_000_000
@@ -115,6 +117,7 @@ export function SchoolImportPage() {
       title='Add students and teachers'
       description='Fill in the templates, upload them, check, and add. Everyone gets an ID and a PIN.'
     >
+      <LicenceBanner className='mb-6' />
       {done ? (
         <Done
           result={done}
@@ -285,6 +288,7 @@ function Checked({
         </CardDescription>
       </CardHeader>
       <CardContent className='space-y-4'>
+        {result.seats && <Seats seats={result.seats} checked={result.errors.length === 0} />}
         {result.errors.length > 0 && (
           <ul className='space-y-1 rounded-md bg-destructive/10 p-3 text-sm text-destructive'>
             {result.errors.map((e) => (
@@ -350,6 +354,20 @@ function Checked({
         )}
       </CardContent>
     </Card>
+  )
+}
+
+/** The licence's seats: how many remain, and — once the sheets check out — how many they take. */
+function Seats({ seats, checked }: { seats: ImportSeats; checked: boolean }) {
+  const left = Math.max(0, seats.total - seats.used)
+  return (
+    <p className='flex items-center gap-2 text-sm text-muted-foreground'>
+      <Users className='size-4 shrink-0' />
+      <span>
+        {seats.used} of {seats.total} seats in use, {left === 0 ? 'none' : left} left.
+        {checked && seats.adding > 0 && ` These sheets take ${seats.adding}, leaving ${left - seats.adding}.`}
+      </span>
+    </p>
   )
 }
 

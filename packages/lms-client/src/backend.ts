@@ -108,6 +108,16 @@ export interface ImportResponse {
   created: ImportedAccount[];
   /** Students already in another class this year, left where they are. */
   conflicts: string[];
+  /** The licence's seats (0041); null when no licence is set, and nothing is limited. */
+  seats: ImportSeats | null;
+}
+
+export interface ImportSeats {
+  total: number;
+  /** In use before this import. */
+  used: number;
+  /** Seats the sheets would take; 0 when they have a mistake other than taking too many. */
+  adding: number;
 }
 
 export const WRONG_PIN = "That ID and PIN don't match.";

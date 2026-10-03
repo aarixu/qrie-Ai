@@ -16,7 +16,8 @@ import { demoLogoPng } from './logo.ts';
  *
  *   1. People: data/students.csv and data/teachers.csv, fictional names, run
  *      through the real import (sheet → plan → applyPlan). 82 students in
- *      6A, 7A, 8A and 8B; four teachers; one admin.
+ *      6A, 7A, 8A and 8B; four teachers; one admin. Then the school's look,
+ *      and a pilot licence of 90 seats (0041).
  *   2. Questions: Qrie's library, all of it unless `libraryPerClass` cuts it
  *      (the tests do, for speed).
  *   3. Homework: each teacher, through the same API the teacher app calls,
@@ -130,6 +131,14 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   const office = createLmsClient(pgliteTransport(db, imported.created.find((a) => a.kind === 'admin')!.userId));
   await office.setSchoolBrand({ primary: DEMO_COLOUR, accent: DEMO_ACCENT });
   await office.setSchoolLogo('image/png', demoLogoPng(DEMO_COLOUR).toString('base64'));
+
+  // The licence (0041), set as Qrie's founder sets it: a pilot with 5 to 14
+  // seats more than the school has students, its last day five months from
+  // today (India's).
+  await db.query(`select lms.set_licence($1, 'pilot', $2, (lms.india_today() + interval '5 months')::date)`, [
+    DEMO_SCHOOL.code,
+    Math.ceil((students.students.length + 5) / 10) * 10,
+  ]);
 
   // 2. Questions -----------------------------------------------------------------
   const banks = loadBanks();
