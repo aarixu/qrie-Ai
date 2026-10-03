@@ -4,6 +4,7 @@ import { findOnTheWeb, type WebImageAdapter } from './fromWeb.ts';
 import {
   ALTERNATE_MODES,
   PART_SEPARATOR,
+  isToolName,
   latexToPlain,
   mathPlain,
   validateLesson,
@@ -310,6 +311,16 @@ function wellFormedStep(step: unknown): Instruction | null {
       : [];
     if (data.length === 0) return null;
     s.data = data;
+    return s as unknown as Instruction;
+  }
+  if (isToolName(kind)) {
+    // A planner used to nesting fields may write {"do":"pieChart","params":{…}};
+    // the board reads a tool's params flat, beside its "do".
+    if (typeof s.params === 'object' && s.params !== null && !Array.isArray(s.params)) {
+      const nested = s.params as Record<string, unknown>;
+      delete s.params;
+      Object.assign(s, nested);
+    }
     return s as unknown as Instruction;
   }
   const needs = REQUIRED[kind];

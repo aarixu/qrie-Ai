@@ -11,6 +11,7 @@ import { computeFrame } from '../../stage/src/frame.ts';
 import { checkLesson } from '../../maths-check/src/index.ts';
 import type { TopicOutcome } from './prompts.ts';
 import { boardChecks } from './boardChecks.ts';
+import { toolChecks } from './toolChecks.ts';
 
 /**
  * THE KEEP GATE — what a prepared class must pass before it is kept.
@@ -86,6 +87,12 @@ import { boardChecks } from './boardChecks.ts';
  *   chem             every `\ce{…}` reaction balances, unless the board says
  *                    it is the skeletal equation.
  *
+ * And four about the toolkit (canvas toolkit part 1, toolChecks.ts):
+ *   tool-valid       the tool exists and its params pass its spec.
+ *   tool-maths       every equationMove step is true and follows the last.
+ *   tool-one-motion  one tool starts per spoken line.
+ *   tool-fits-line   the line lasts as long as its tool draws.
+ *
  * NOT IN `validateLesson`, ON PURPOSE. The classroom validates every lesson
  * it loads and shows one that fails as "not available"
  * (apps/classroom/src/lib/content.ts, fetchLesson), so a rule added there
@@ -113,7 +120,11 @@ export type GateRule =
   | 'drawn'
   | 'echo'
   | 'tex'
-  | 'chem';
+  | 'chem'
+  | 'tool-valid'
+  | 'tool-maths'
+  | 'tool-one-motion'
+  | 'tool-fits-line';
 
 /** A board instruction that writes words and drew nothing — assemble's `undrawn`. */
 export interface Undrawn {
@@ -484,6 +495,7 @@ export function gateLesson(lesson: Lesson, opts: GateOptions = {}): GateProblem[
     ...unspokenProblems(lesson, opts.unspoken ?? []),
     ...boardProblems(lesson),
     ...boardChecks(lesson),
+    ...toolChecks(lesson),
     ...(opts.undrawn ?? []).map((u) => ({
       rule: 'drawn' as const,
       where: u.beat,
