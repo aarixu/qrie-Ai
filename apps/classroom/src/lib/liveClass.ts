@@ -398,6 +398,8 @@ export async function prepareLiveClass(
     minutes: ask.minutes,
     studentLines: ask.studentLines,
     outcomes: ask.outcomes,
+    // A full, well-annotated page per subtopic (board composer).
+    composed: true,
     planner: createBrowserLlm(PLANNER_MODEL, { json: true }),
     artist: createBrowserLlm(ARTIST_MODEL),
     // THE FACTUAL GATE, ON (C10). Without it the class a live student

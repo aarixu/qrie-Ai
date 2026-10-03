@@ -16,7 +16,7 @@ export {
 } from './review.ts';
 export { screenSpine, type ScreenedLine } from './screenSpine.ts';
 export { verifySvg } from './verify.ts';
-export { PLANNER_SYSTEM, ARTIST_SYSTEM, plannerUser, artistUser, repairUser } from './prompts.ts';
+export { PLANNER_SYSTEM, ARTIST_SYSTEM, plannerSystemFor, plannerUser, artistUser, repairUser } from './prompts.ts';
 export type {
   Blueprint,
   VisualBrief,

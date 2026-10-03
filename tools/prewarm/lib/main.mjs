@@ -386,6 +386,8 @@ async function warmOne(row, opts, client, keepRefused, writeOut) {
     klass: row.klass,
     minutes,
     outcomes,
+    // A full, well-annotated page per subtopic (board composer), as the live classroom prepares.
+    composed: true,
     planner: patient(client.llm(PLANNER_MODEL, { json: true })),
     artist: patient(client.llm(ARTIST_MODEL)),
     ...(opts.review ? { reviewer: patient(client.llm(REVIEWER_MODEL, { json: true })) } : {}),

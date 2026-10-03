@@ -588,6 +588,70 @@ words per minute.
 Every "ref" in a beat must match a visual's id, and every "part" must be one of
 that visual's parts.`;
 
+/**
+ * THE PLANNER, FOR A COMPOSED BOARD (board composer, 2026-10-03).
+ *
+ * The same prompt with the rules that kept a board thin rewritten (one kind
+ * of demonstration, five things at most, a new page for every idea), and the
+ * page contract added. Each sentence replaced must still be in PLANNER_SYSTEM;
+ * if one has been reworded, this throws on its first call rather than asking
+ * for a full page and a thin one at once.
+ */
+const COMPOSED_SWAPS: readonly (readonly [string, string])[] = [
+  ['A good beat is 4 to 8 says over one board:', 'A good beat is 6 to 10 says over one board, each one adding to it:'],
+  [
+    'demonstration that kind wants. Never mix two kinds on one board.',
+    'MAIN demonstration that kind wants. One main demonstration a board; everything else on it is writing about that one.',
+  ],
+  [
+    'If a board would need more than one scene, more than five placed things, or a\nscene AND a chart, it is two beats pretending to be one — split it, or cut.',
+    'If a board would need two MAIN demonstrations — a scene and a chart, two pictures — it\nis two beats pretending to be one: split it. Writing never splits a board; the board\nhas room for it.',
+  ],
+  [
+    'Use it before a new idea rather than squeezing the idea in under the last one.',
+    'One beat is one subtopic on one page: use it only when a beat truly needs a second page.',
+  ],
+  ['Write generously — two to four key points in a beat.', 'Write generously — three to five key points in a beat.'],
+];
+
+const PAGE_CONTRACT = `
+
+## Every board ends FULL — the page contract
+
+This class is drawn on a composed board. The page is divided into places: the
+main demonstration in one, the notes beside it, the key points under it, a
+summary in its own corner. What you write fills them, and a class that leaves
+a page half empty is not kept. So every board with a picture, a diagram, a
+chart, a flow, a scene or working on it carries ALL of this, built up line by
+line as she speaks:
+
+1. A title, with where it sits in the chapter:
+   {"do":"title","text":"Villi","path":["Digestive system","Small intestine","Villi"]}
+2. The main demonstration, with every part she names labelled on it.
+3. The notes: a "list" of each part's term and what it does, and why it is
+   built that way.
+4. Three to five key points, written as she says them ("write").
+5. A summary, last: {"do":"summary","text":"Villi absorb digested food fast"}.
+   One sentence a student would copy down, under 70 characters.
+
+For "the difference between X and Y" there is a comparison:
+{"do":"compare","left":{"heading":"Aerobic","points":["uses oxygen","much energy"]},"right":{"heading":"Anaerobic","points":["no oxygen","little energy"]}}
+Two to six points a side; point n on the left answers point n on the right. It
+is a main demonstration of its own.
+
+The board colours each part you label, and that part's name in the notes, in
+the same colour. You never name a colour.`;
+
+export function plannerSystemFor(composed: boolean): string {
+  if (!composed) return PLANNER_SYSTEM;
+  let text = PLANNER_SYSTEM;
+  for (const [from, to] of COMPOSED_SWAPS) {
+    if (!text.includes(from)) throw new Error(`plannerSystemFor: the planner prompt no longer says "${from.slice(0, 50)}…"`);
+    text = text.replace(from, to);
+  }
+  return text + PAGE_CONTRACT;
+}
+
 /** What the map says this topic is FOR — the ids a beat may claim to teach. */
 export interface TopicOutcome {
   id: string;

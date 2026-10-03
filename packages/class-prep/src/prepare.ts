@@ -23,7 +23,7 @@ import { readDistress } from './distressReading.ts';
 
 import {
   ARTIST_SYSTEM,
-  PLANNER_SYSTEM,
+  plannerSystemFor,
   artistUser,
   plannerUser,
   repairPlanUser,
@@ -211,6 +211,14 @@ export interface PrepOptions {
    * kept" posture at refuseWrongMaths). Wrong maths is refused either way.
    */
   stopWhenUnkeepable?: boolean;
+  /**
+   * Plan and lay the class out for a composed board (board composer): the
+   * planner gets the page contract (plannerSystemFor), every plan it returns
+   * is laid out in regions, and the keep gate holds it to page-full and
+   * phone-readable. Off by default; the live classroom and the prewarm runner
+   * turn it on.
+   */
+  composed?: boolean;
 }
 
 /**
@@ -264,6 +272,7 @@ const REQUIRED: Record<string, readonly string[]> = {
   connect: ['from', 'to'],
   annotate: ['target', 'mark'],
   say: ['text'],
+  summary: ['text'],
 };
 
 const isWords = (v: unknown): v is string => typeof v === 'string' && v.trim() !== '';
@@ -324,6 +333,25 @@ function wellFormedStep(step: unknown): Instruction | null {
     }
     return s as unknown as Instruction;
   }
+  if (kind === 'compare') {
+    // A side is a heading and its points; a point without words is dropped.
+    // How many points a side has, the layout judges (two to six, or nothing
+    // drawn, which the keep gate's drawn rule names).
+    const side = (v: unknown): { heading: string; points: string[] } | null => {
+      if (typeof v !== 'object' || v === null) return null;
+      const o = v as { heading?: unknown; points?: unknown };
+      if (!isWords(o.heading) || !Array.isArray(o.points)) return null;
+      return { heading: o.heading, points: o.points.filter(isWords) };
+    };
+    const left = side(s.left);
+    const right = side(s.right);
+    if (!left || !right) return null;
+    s.left = left;
+    s.right = right;
+    return s as unknown as Instruction;
+  }
+  // A title's path is words, every one of them, or no path at all.
+  if (kind === 'title' && s.path !== undefined && !(Array.isArray(s.path) && s.path.every(isWords))) delete s.path;
   const needs = REQUIRED[kind];
   // A kind this list does not know goes on as it came: the layout decides.
   if (needs && !needs.every((field) => isWords(s[field]))) return null;
@@ -1163,7 +1191,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    */
   const repairCall = (user: string, done: number): Promise<string> =>
     askAgainLater(
-      () => planner.complete(PLANNER_SYSTEM, user),
+      () => planner.complete(plannerSystemFor(opts.composed === true), user),
       opts.repairRetry,
       (ms) => {
         const seconds = Math.round(ms / 1000);
@@ -1174,7 +1202,10 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
   say('planning', 'Working out how to teach this…', 0.05);
   const brief = plannerUser(topic, klass, minutes, opts.studentLines, opts.teacherStyle, opts.outcomes, language);
-  const raw = await planner.complete(PLANNER_SYSTEM, brief);
+  /** Every plan the planner returns is laid out composed, when this class is. */
+  const stamp = (plan: Blueprint | null): Blueprint | null =>
+    plan && opts.composed ? { ...plan, layout: 'composed' } : plan;
+  const raw = await planner.complete(plannerSystemFor(opts.composed === true), brief);
 
   // Unreadable JSON gets the same second chance a bad plan does. A model that
   // drops a brace has still done the thinking; failing the whole class over
@@ -1185,7 +1216,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   // first 4,000 characters and nothing else; a plan rewritten from that knew no
   // outcomes, tagged no `checks`, and the keep gate refused every ask it held
   // (Respiration, 2026-10-02).
-  let blueprint = parsePlan(raw);
+  let blueprint = stamp(parsePlan(raw));
   if (!blueprint) {
     issues.push('The first plan was not readable JSON.');
     say('planning', 'That came back garbled — asking again…', 0.2);
@@ -1193,7 +1224,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       `${brief}\n\nYour last reply to this was not valid JSON. Return the whole plan again, as one JSON object.`,
       0.2,
     );
-    blueprint = parsePlan(retry);
+    blueprint = stamp(parsePlan(retry));
   }
   if (!blueprint) {
     throw new Error('The planner did not return readable JSON, twice.');
@@ -1419,7 +1450,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       const reply = await repairCall(repairPlanUser(JSON.stringify(blueprint), toFix.slice(0, 10), language), 0.2);
       // parsePlan, not bare JSON.parse: a repair reply is a model reply, and
       // recovering JSON from prose is the whole reason parsePlan exists.
-      const fixed = parsePlan(reply);
+      const fixed = stamp(parsePlan(reply));
       if (!fixed) throw new Error('the repaired plan was unreadable');
       fixed.beats ??= [];
       // The briefs are pinned: the draft's element ids come from them, and a
@@ -1612,7 +1643,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
               `The claim "${p.claim}" is factually wrong — ${p.why}. Look for it in or around beat "${p.beatId.replace(/_\d+$/, '')}". Correct the teaching itself; do not delete the beat.`,
           );
         const reply = await repairCall(repairPlanUser(JSON.stringify(blueprint), named, language), 0.27);
-        const fixed = parsePlan(reply);
+        const fixed = stamp(parsePlan(reply));
         if (!fixed) throw new Error('the corrected plan was unreadable');
         fixed.beats ??= [];
         // Pinned for the same reason the structural repair pins them: the
