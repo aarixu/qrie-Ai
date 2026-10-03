@@ -14,7 +14,7 @@ import {
   type Point,
   type Tone,
 } from '@ai-tutor/lesson-format';
-import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
+import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, MAX_UNIT_PX, type Rect } from './frame';
 import { formulaTex, hasMath, lineToHtml, plainFormula, texToHtml, typesetsAsMaths } from './math';
 import { renderTool } from './tools';
 import type { ToolTheme } from './tools/context';
@@ -1543,12 +1543,6 @@ function useCamera(target: Rect, measured: boolean): Rect {
   return shown;
 }
 
-/**
- * One canvas unit never renders wider than this many CSS pixels. The zoom that
- * makes a note readable on a phone would set banner text on a desktop — past
- * this density the camera simply stops coming closer.
- */
-const MAX_UNIT_PX = 1.6;
 
 /** The rendered size of the SVG, so the frame can be shaped to the screen. */
 function useMeasure(

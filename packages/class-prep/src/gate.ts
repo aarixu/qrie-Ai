@@ -12,6 +12,7 @@ import { checkLesson } from '../../maths-check/src/index.ts';
 import type { TopicOutcome } from './prompts.ts';
 import { boardChecks } from './boardChecks.ts';
 import { toolChecks } from './toolChecks.ts';
+import { composerChecks, type ComposerReport } from './composerChecks.ts';
 
 /**
  * THE KEEP GATE — what a prepared class must pass before it is kept.
@@ -93,6 +94,13 @@ import { toolChecks } from './toolChecks.ts';
  *   tool-one-motion  one tool starts per spoken line.
  *   tool-fits-line   the line lasts as long as its tool draws.
  *
+ * And two about a composed board (board composer, composerChecks.ts):
+ *   page-full        no page is left under 60% written on, and a subtopic
+ *                    with a picture, flow, chart or working has its notes,
+ *                    key points and summary.
+ *   phone-readable   every line's frame keeps its writing 12px or more on a
+ *                    phone held sideways.
+ *
  * NOT IN `validateLesson`, ON PURPOSE. The classroom validates every lesson
  * it loads and shows one that fails as "not available"
  * (apps/classroom/src/lib/content.ts, fetchLesson), so a rule added there
@@ -124,7 +132,9 @@ export type GateRule =
   | 'tool-valid'
   | 'tool-maths'
   | 'tool-one-motion'
-  | 'tool-fits-line';
+  | 'tool-fits-line'
+  | 'page-full'
+  | 'phone-readable';
 
 /** A board instruction that writes words and drew nothing — assemble's `undrawn`. */
 export interface Undrawn {
@@ -204,6 +214,11 @@ export interface GateOptions {
    * Absent: rule `drawn` has nothing to read and finds nothing.
    */
   undrawn?: readonly Undrawn[];
+  /**
+   * A composed class's pages and pull-outs — `assemble(...).composer`. Absent
+   * on a class that is not composed: rules page-full and phone-readable are off.
+   */
+  composer?: ComposerReport;
 }
 
 /** The planner beat a lesson beat or element id came from: `b3_4` -> `b3`, `b3__pen` -> `b3`. */
@@ -496,6 +511,7 @@ export function gateLesson(lesson: Lesson, opts: GateOptions = {}): GateProblem[
     ...boardProblems(lesson),
     ...boardChecks(lesson),
     ...toolChecks(lesson),
+    ...composerChecks(lesson, opts.composer),
     ...(opts.undrawn ?? []).map((u) => ({
       rule: 'drawn' as const,
       where: u.beat,

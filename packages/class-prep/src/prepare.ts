@@ -1294,7 +1294,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
   say('checking', 'Checking the class holds together…', 0.15);
   const first = assemble(blueprint, promised, pictureParts, pictureShapes, language);
-  let { aliases, bonds, unspoken, opening, undrawn } = first;
+  let { aliases, bonds, unspoken, opening, undrawn, composer } = first;
 
   let validated = validateLesson(first.lesson);
 
@@ -1315,9 +1315,22 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const gateOf = (
     candidate: unknown,
     checked: ReturnType<typeof validateLesson>,
-    made: { bonds: readonly Bond[]; unspoken: readonly string[]; opening: readonly string[]; undrawn: readonly Undrawn[] },
+    made: {
+      bonds: readonly Bond[];
+      unspoken: readonly string[];
+      opening: readonly string[];
+      undrawn: readonly Undrawn[];
+      composer?: ComposerReport;
+    },
   ): GateProblem[] | null => {
-    const read = { bonds: made.bonds, unspoken: made.unspoken, opening: made.opening, undrawn: made.undrawn, outcomes: opts.outcomes };
+    const read = {
+      bonds: made.bonds,
+      unspoken: made.unspoken,
+      opening: made.opening,
+      undrawn: made.undrawn,
+      composer: made.composer,
+      outcomes: opts.outcomes,
+    };
     if (checked.ok) return gateLesson(checked.lesson as Lesson, { ...read, mathsCheck: opts.mathsCheck });
     const maths = opts.mathsCheck ?? checkLessonMaths;
     try {
@@ -1448,6 +1461,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         bonds = rebuilt.bonds;
         unspoken = rebuilt.unspoken;
         undrawn = rebuilt.undrawn;
+        composer = rebuilt.composer;
         opening = rebuilt.opening;
         blueprint = fixed;
         gate = regate;
@@ -1658,6 +1672,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           bonds = rebuilt.bonds;
           unspoken = rebuilt.unspoken;
           undrawn = rebuilt.undrawn;
+          composer = rebuilt.composer;
           opening = rebuilt.opening;
           lesson = revalidated.lesson as Lesson;
           repaired = true;
@@ -1870,6 +1885,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   let finalBonds = bonds;
   let finalUnspoken = unspoken;
   let finalUndrawn = undrawn;
+  let finalComposer = composer;
   let finalOpening = opening;
   if (pictureShapes.size > 0 || pictureParts.size > 0) {
     const refitted = assemble({ ...blueprint, beats }, promised, pictureParts, pictureShapes, language);
@@ -1879,6 +1895,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       finalBonds = refitted.bonds;
       finalUnspoken = refitted.unspoken;
       finalUndrawn = refitted.undrawn;
+      finalComposer = refitted.composer;
       finalOpening = refitted.opening;
       // A copy of a picture needs the markup under its own id, and the copy
       // ids are decided by this second layout rather than the first.
@@ -1907,6 +1924,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       bonds: finalBonds,
       unspoken: finalUnspoken,
       undrawn: finalUndrawn,
+      composer: finalComposer,
       opening: finalOpening,
       outcomes: opts.outcomes,
       mathsCheck: opts.mathsCheck,
@@ -1936,6 +1954,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       finalBonds = bonds;
       finalUnspoken = unspoken;
       finalUndrawn = undrawn;
+      finalComposer = composer;
       finalOpening = opening;
       keepGate = gateFinal();
     }
@@ -1994,6 +2013,7 @@ export function rekeep(
     unspoken: laid.unspoken,
     opening: laid.opening,
     undrawn: laid.undrawn,
+    composer: laid.composer,
     outcomes: opts.outcomes,
     mathsCheck: opts.mathsCheck,
   });

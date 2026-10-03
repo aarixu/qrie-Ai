@@ -40,6 +40,14 @@ export { FLOW_STEP_H, FLOW_GAP } from '@ai-tutor/lesson-format';
  */
 const MAX_ZOOM = 3;
 
+/**
+ * One canvas unit never renders wider than this many CSS pixels. The zoom that
+ * makes a note readable on a phone would set banner text on a desktop — past
+ * this density the camera simply stops coming closer. (The keep gate's
+ * phone-readable rule reads it too.)
+ */
+export const MAX_UNIT_PX = 1.6;
+
 /** Breathing room around the framed content, as a fraction of the frame's larger side. */
 const PAD = 0.09;
 
