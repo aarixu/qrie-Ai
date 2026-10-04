@@ -12,7 +12,8 @@ Decided while planning:
    renderer is unchanged, so old classes keep today's camera and get no pull-out (they need none: their camera already
    grows back to one page, which holds a third-written page whole).
 2. **Composed only on request.** `prepareClass({ composed: true })` sets `Blueprint.layout = 'composed'`; the live
-   classroom and the prewarm runner pass it. Plans, fixtures and kept classes without it keep today's layout.
+   classroom passes it through `COMPOSE_LIVE_CLASSES` and the prewarm runner on `--composed` (see item 22). Plans,
+   fixtures and kept classes without it keep today's layout.
 3. **The breadcrumb is one muted `text` element**, the path joined with ` › `.
 4. **No `compare-valid` rule.** A `compare` with fewer than 2 or more than 6 points a side draws nothing, and the
    existing `drawn` rule names it.
@@ -39,6 +40,24 @@ Found by the 300-class fuzz and the lab demo, each fixed test-first:
     the notes and key points beside it (a full-width table had left most of its band empty). It is never wider than
     680, so its points read on a phone.
 15. **A composed figure's name margins are 18% of the hero, not 26%**, so a wide picture fills most of its region.
+
+From the final review (2026-10-04), each fixed test-first:
+16. **The summary and the breadcrumb are 20 units**, and every summary place is 80 tall: both are often seen only
+    in the pull-out, framed 1102 wide, where 20 units is 12px on a phone. `phone-readable` holds a pull-out to what
+    that line itself writes (the summary), not to the rest of the page. The prompt's summary is under 45 characters,
+    two lines of its place.
+17. **The camera frames what a line writes and what is near it** in every region (24 units across, 160 up and down),
+    not only in a scene: a key point low in the 508-tall notes column had framed the whole column.
+18. **A `newPage` at or before the main demonstration is no turn**: every beat already starts on its own page.
+19. **A page with names on something that is not a picture is laid out as a stack**, as before, so no name is
+    dropped; and a new rule, `one-main`, names any beat of a composed class laid out as a stack (two main
+    demonstrations, or such names).
+20. **A beat's overflow page is told to give that beat less**, not to write more.
+21. **The composed prompt no longer keeps two stacked-board rules** ("nothing else on the board" for a scene;
+    "two to four" key points).
+22. **The live classroom asks for composed classes through one switch, `COMPOSE_LIVE_CLASSES`, off** until real
+    composed classes are measured; the prewarm runner asks with `--composed`. A class the gate refuses is not kept,
+    so switching on before measuring could make every student on a cold topic pay to prepare it again.
 
 Open (Aarav, 2026-10-04): the fuzz writes the contract's least (three notes, three key points), and its pages read
 about half written (median 0.51), so `page-full` fails most fuzz classes. If the fuzz's thin plans skew a result, the
@@ -238,8 +257,9 @@ repair round. Every existing rule stays (`on-board`, `one-page`, `on-camera`, ov
 - Built on a new branch `board-composer`, cut from `canvas` (in the canvas worktree; this session could not make
   another). Never in the main checkout, where another session works.
 - Nothing is pushed, deployed or published until Aarav says merge. Then, in order: relay (the validator learns `ink`;
-  `summary`, `compare` and `title.path` are plan instructions the relay never sees), then the site (the live classroom
-  asks for composed classes from that deploy on), then publish classes prepared with the composer.
+  `summary`, `compare` and `title.path` are plan instructions the relay never sees), then the site, then publish
+  classes prepared with the composer. The live classroom asks for composed classes only once `COMPOSE_LIVE_CLASSES`
+  is turned on, after real composed classes (Testing, item 5) pass the gate.
 - The canvas that is live today is not affected before that merge.
 
 ## Out of scope (later)
