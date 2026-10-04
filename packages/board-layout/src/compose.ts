@@ -13,7 +13,7 @@ import { CANVAS_H, CANVAS_W, type Rect } from '@ai-tutor/lesson-format';
  * Pure geometry: which arrangement a page gets, where its regions are, and
  * which region each piece of writing goes to. layout.ts draws.
  */
-export const PAGE = { left: 40, right: 960, top: 96, bottom: 604, crumbY: 22, titleY: 72 } as const;
+export const PAGE = { left: 40, right: 960, top: 96, bottom: 604, crumbY: 20, crumbSize: 18, titleY: 72 } as const;
 
 /** The gap between two things written one under the other in a region. */
 export const FILL_GAP = 14;
@@ -52,11 +52,13 @@ export const ARRANGEMENTS: Readonly<Record<ArrangementName, Arrangement>> = {
     summary: region('summary', 650, 532, 310, 72),
   },
   // A scene keeps the full width: it does not shrink beside a column
-  // (layout.ts, "a SCENE is not one").
+  // (layout.ts, "a SCENE is not one"). It is no taller than a row or two of
+  // pictures needs, so a three-item notes list and three key points fit under
+  // it on the same page.
   scene: {
     name: 'scene',
-    main: region('main', 40, 96, 920, 288),
-    regions: [region('left', 40, 400, 450, 204), region('right', 510, 400, 450, 120)],
+    main: region('main', 40, 96, 920, 224),
+    regions: [region('left', 40, 336, 450, 268), region('right', 510, 336, 450, 184)],
     notesOrder: ['left', 'right'],
     pointsOrder: ['right', 'left'],
     summary: region('summary', 510, 532, 450, 72),
@@ -154,7 +156,7 @@ export interface Placement {
 /** How full a page of a composed beat is, and what is on it. */
 export interface SheetReport {
   sheet: number;
-  /** The share of the 1000 x 620 page under any element's box, 0 to 1. */
+  /** The share of the 1000 x 620 page that is written on (writtenArea), 0 to 1. */
   coverage: number;
   /** A main demonstration is on it. */
   main: boolean;
@@ -272,6 +274,29 @@ export function fillRegions(
     }
   }
   return out.sort((a, b) => a.index - b.index);
+}
+
+/**
+ * WHAT OF A PAGE IS WRITTEN ON: each region from its first writing to its
+ * last, inside the region.
+ *
+ * Measured box by box, a page of notes counted only the ink of each line, so
+ * a page whose every region was written down to the bottom read as 40% full:
+ * the space between two lines of writing was counted as empty board. It is
+ * not — it is how writing looks. A region counts as written over the extent
+ * of what is in it; a region with nothing in it counts nothing.
+ */
+export function writtenArea(groups: readonly { region: Rect; boxes: readonly Rect[] }[]): Rect[] {
+  const out: Rect[] = [];
+  for (const { region: r, boxes } of groups) {
+    if (boxes.length === 0) continue;
+    const x0 = Math.max(r.x, Math.min(...boxes.map((b) => b.x)));
+    const y0 = Math.max(r.y, Math.min(...boxes.map((b) => b.y)));
+    const x1 = Math.min(r.x + r.w, Math.max(...boxes.map((b) => b.x + b.w)));
+    const y1 = Math.min(r.y + r.h, Math.max(...boxes.map((b) => b.y + b.h)));
+    if (x1 > x0 && y1 > y0) out.push({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 });
+  }
+  return out;
 }
 
 /**

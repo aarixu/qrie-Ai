@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { boxOf, CANVAS_H, CANVAS_W, PAGE_STRIDE, type Element } from '@ai-tutor/lesson-format';
 import { layoutBeat } from '../src/layout';
-import { ARRANGEMENTS, PAGE } from '../src/compose';
+import { ARRANGEMENTS, coverage, PAGE } from '../src/compose';
 import type { Instruction } from '../src/types';
 
 const beat = (board: Instruction[]) => ({ id: 'b1', topic: 't', narration: '', board });
@@ -37,6 +37,8 @@ describe('a composed page', () => {
     const title = made.elements.find((e) => e.kind === 'title')!;
     const crumb = made.elements.find((e) => e.kind === 'text' && e.text.includes('›'))!;
     expect(crumb).toMatchObject({ text: 'Life processes › Digestion', muted: true });
+    // Readable on a phone (12px on a 667px stage) even with the whole page width in the frame.
+    expect(((crumb as { size?: number }).size ?? 20) * (667 / 1000)).toBeGreaterThanOrEqual(12);
     expect(boxOf(crumb).y + boxOf(crumb).h).toBeLessThanOrEqual(boxOf(title).y);
     expect(boxOf(title).y + boxOf(title).h).toBeLessThanOrEqual(PAGE.top);
     expect(made.regions[title.id]).toBe('0/header');
@@ -72,6 +74,14 @@ describe('a composed page', () => {
     expect(made.sheets).toEqual([expect.objectContaining({ sheet: 0, main: true, notes: true, points: 1, summary: true })]);
     expect(made.sheets[0].coverage).toBeGreaterThan(0.2);
     expect(made.sheets[0].coverage).toBeLessThanOrEqual(1);
+  });
+
+  it('counts a column of key points as written from its first line to its last, not line by line', () => {
+    const board: Instruction[] = [];
+    for (let n = 0; n < 5; n += 1) board.push({ do: 'say', text: `Point ${n}.` }, { do: 'write', text: `Key point number ${n}` });
+    const made = composed(board);
+    const inkOnly = coverage(made.elements.map(boxOf), 0);
+    expect(made.sheets[0].coverage).toBeGreaterThan(inkOnly);
   });
 
   it('writes key points smaller than a stacked board, because the camera comes close', () => {

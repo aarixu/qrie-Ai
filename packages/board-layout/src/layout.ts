@@ -40,6 +40,7 @@ import {
   FILL_GAP,
   isMainKind,
   PAGE,
+  writtenArea,
   type Fillable,
   type SheetReport,
 } from './compose';
@@ -622,7 +623,9 @@ export function layoutBeat(
               x: CANVAS_W / 2,
               y: PAGE.crumbY,
               text: item.path.join(' › '),
-              size: 14,
+              // 18, not smaller: the header is framed at the page's full
+              // width, and on a phone that is 12px (gate, phone-readable).
+              size: PAGE.crumbSize,
               muted: true,
             });
           }
@@ -2369,9 +2372,28 @@ export function layoutBeat(
     for (let s = 0; s < sheetsUsed; s += 1) {
       const here = settled.filter((el) => regions[el.id]?.startsWith(`${s}/`));
       const kinds = new Set(here.map((el) => kindOf(el.id)));
+      // Each region counted from its first writing to its last (compose.ts,
+      // writtenArea), in the page's own coordinates. Pages after the first
+      // are notes pages; the header is the strip above PAGE.top.
+      const sheetPage = s === 0 ? composition : ARRANGEMENTS.notes;
+      const rectOf = (id: string): Rect =>
+        id === 'header'
+          ? { x: 0, y: 0, w: CANVAS_W, h: PAGE.top }
+          : id === sheetPage.summary.id
+            ? sheetPage.summary
+            : sheetPage.main?.id === id
+              ? sheetPage.main
+              : (sheetPage.regions.find((r) => r.id === id) ?? { x: 0, y: 0, w: CANVAS_W, h: CANVAS_H });
+      const byRegion = new Map<string, Rect[]>();
+      for (const el of here) {
+        const id = regions[el.id].split('/')[1];
+        const b = boxOf(el);
+        byRegion.set(id, [...(byRegion.get(id) ?? []), { ...b, x: b.x - s * PAGE_STRIDE }]);
+      }
+      const written = writtenArea([...byRegion].map(([id, boxes]) => ({ region: rectOf(id), boxes })));
       sheetReports.push({
         sheet: s,
-        coverage: coverage(here.map(boxOf), s * PAGE_STRIDE),
+        coverage: coverage(written, 0),
         main: here.some(
           (el) => regions[el.id] === `${s}/hero` || (regions[el.id] === `${s}/main` && isMainKind(kindOf(el.id))),
         ),

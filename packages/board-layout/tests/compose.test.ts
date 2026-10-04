@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TOOL_NAMES } from '@ai-tutor/lesson-format';
-import { ARRANGEMENTS, arrangementOf, coverage, fillRegions, PAGE, type Fillable } from '../src/compose';
+import { ARRANGEMENTS, arrangementOf, coverage, fillRegions, PAGE, writtenArea, type Fillable } from '../src/compose';
 
 const block = (line: number, role: Fillable['role'], h: number): Fillable => ({ line, role, heightAt: () => h });
 const where = (placed: ReturnType<typeof fillRegions>) => placed.map((p) => `${p.sheet}/${p.region}`);
@@ -79,6 +79,12 @@ describe('filling a page', () => {
     expect(where(placed)).toEqual(['0/side', '1/left', '1/left']);
   });
 
+  it('gives a scene page room for its notes, three key points and its summary, on one page', () => {
+    // A three-item list with its heading, one key point that wraps to two lines and two that do not.
+    const page = [block(1, 'notes', 210), block(2, 'points', 69), block(3, 'points', 30), block(4, 'points', 30), block(5, 'summary', 46)];
+    expect(fillRegions(page, ARRANGEMENTS.scene, new Map()).every((p) => p.sheet === 0)).toBe(true);
+  });
+
   it('puts the summary in its own place, or with the key points when it is too long for it', () => {
     expect(fillRegions([block(1, 'summary', 46)], ARRANGEMENTS.figure, new Map())[0].region).toBe('summary');
     expect(fillRegions([block(1, 'summary', 94)], ARRANGEMENTS.figure, new Map())[0].region).toBe('bottom');
@@ -105,6 +111,27 @@ describe('filling a page', () => {
     const placed = fillRegions([block(1, 'points', 20), block(2, 'notes', 900)], ARRANGEMENTS.notes, new Map());
     expect(placed[1]).toMatchObject({ sheet: 1, region: 'left' });
     expect(placed[1].rect.y).toBe(PAGE.top);
+  });
+});
+
+describe('the written area of a page', () => {
+  it('counts a region from its first writing to its last, gaps between lines included, inside the region', () => {
+    const side = ARRANGEMENTS.figure.regions.find((r) => r.id === 'side')!;
+    const lines = [
+      { x: 660, y: 100, w: 200, h: 30 },
+      { x: 660, y: 140, w: 280, h: 30 },
+      { x: 660, y: 180, w: 150, h: 30 },
+    ];
+    expect(writtenArea([{ region: side, boxes: lines }])).toEqual([{ x: 660, y: 100, w: 280, h: 110 }]);
+  });
+
+  it('keeps a box that runs past its region to the region', () => {
+    const bottom = ARRANGEMENTS.figure.regions.find((r) => r.id === 'bottom')!;
+    expect(writtenArea([{ region: bottom, boxes: [{ x: 20, y: 590, w: 100, h: 40 }] }])).toEqual([{ x: 40, y: 590, w: 80, h: 14 }]);
+  });
+
+  it('counts nothing for a region with nothing in it', () => {
+    expect(writtenArea([{ region: ARRANGEMENTS.figure.summary, boxes: [] }])).toEqual([]);
   });
 });
 

@@ -5,8 +5,11 @@ import {
   ALTERNATE_MODES,
   PART_SEPARATOR,
   isToolName,
+  boxOf,
   latexToPlain,
   mathPlain,
+  overlaps,
+  union,
   validateLesson,
   type AlternateMode,
   type AskAlternate,
@@ -602,6 +605,8 @@ export function assemble(
   // blank page of its own beside it.
   let lastDx = 0;
   let lastFrame: string[] | null = null;
+  /** Whether `lastFrame` is a composed page's whole-page frame (a pull-out). */
+  let lastWhole = false;
 
   for (const beat of blueprint.beats) {
     const board = (beat.board ?? []).filter((step) =>
@@ -724,16 +729,15 @@ export function assemble(
      *
      * On the regions the line's new ink is in, so a phone can read it. On the
      * whole page on the page's last line: the moment a student sees the full
-     * board before it is turned. A line with nothing new keeps the frame it
-     * had. A beat the composer laid out as a stack has no regions, and is
-     * framed as before.
+     * board before it is turned. A line that writes only the title is framed
+     * on the header, never on the page before. A line with nothing new keeps
+     * the frame it had, and a whole-page frame kept is still a pull-out. A beat
+     * the composer laid out as a stack has no regions, and is framed as before.
      */
     const composedHere = composed && Object.keys(regions).length > 0;
     const inkAt = (n: number): string[] => {
       const before = new Set(n > 0 ? usable[n - 1].step.show : []);
-      return usable[n].step.show.filter(
-        (id) => !before.has(id) && regions[id] !== undefined && !regions[id].endsWith('/header'),
-      );
+      return usable[n].step.show.filter((id) => !before.has(id) && regions[id] !== undefined);
     };
     const sheetOf = (id: string): string => regions[id].split('/')[0];
     let sheetNow = '0';
@@ -750,8 +754,24 @@ export function assemble(
       const onSheet = usable[n].step.show.filter((id) => regions[id]?.startsWith(`${sheetNow}/`));
       if (whole) return { frame: onSheet, whole };
       if (ink.length === 0) return { frame: null, whole };
-      const hot = new Set(ink.map((id) => regions[id]));
-      return { frame: onSheet.filter((id) => hot.has(regions[id])), whole };
+      const body = ink.filter((id) => !regions[id].endsWith('/header'));
+      const hot = new Set((body.length > 0 ? body : ink).map((id) => regions[id]));
+      const inHot = onSheet.filter((id) => hot.has(regions[id]));
+      // A scene spans the page's full width, and framed whole its connector
+      // labels are too small to read on a phone. So a line that draws in a
+      // scene is framed on what it drew and on what that touches — reaching
+      // 24 units, because a connector stops a small gap (14) short of the
+      // pictures it joins.
+      const boxes = new Map(laidOut.map((el) => [el.id, el]));
+      if (!inHot.some((id) => boxes.get(id)?.kind === 'graphic')) return { frame: inHot, whole };
+      const drawn = ink.map((id) => boxes.get(id)).filter((el) => el !== undefined).map(boxOf);
+      if (drawn.length === 0) return { frame: inHot, whole };
+      const reach = drawn.reduce(union);
+      const near = { x: reach.x - 24, y: reach.y - 24, w: reach.w + 48, h: reach.h + 48 };
+      return {
+        frame: inHot.filter((id) => ink.includes(id) || (boxes.has(id) && overlaps(boxOf(boxes.get(id)!), near))),
+        whole,
+      };
     };
 
     usable.forEach(({ step, stepIndex }, n) => {
@@ -760,17 +780,20 @@ export function assemble(
       // where it was, rather than letting an empty frame widen to the plane.
       // On a composed page, see cameraFor.
       const view = composedHere ? cameraFor(n) : { frame: step.show.length > 0 ? [...step.show] : lastFrame, whole: false };
-      const frame = view.frame && view.frame.length > 0 ? view.frame : lastFrame;
+      const kept = !(view.frame && view.frame.length > 0);
+      const frame = kept ? lastFrame : view.frame;
       if (frame) lastFrame = frame;
+      const whole = composedHere && (view.whole || (kept && lastWhole));
+      lastWhole = whole;
       // The question lands on the very moment that asks it — the beat the
       // player will hold until the student answers.
       const held = asks.find((a) => a.step === stepIndex);
       const ask = held?.ask;
       const checksHere = asksHere ? ask !== undefined : last;
       const id = usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`;
-      if (view.whole) {
+      if (whole) {
         overview.push(id);
-        leftAt.set(sheetNow, id);
+        if (view.whole) leftAt.set(sheetNow, id);
       }
       if (ask && beat === openingBeat && opening.length === 0) opening.push(id);
       beats.push({
