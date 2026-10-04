@@ -120,6 +120,20 @@ describe('a composed page', () => {
     ]);
   });
 
+  it('keeps a comparison narrow enough to read on a phone, on a page of its own', () => {
+    const made = composed([
+      { do: 'say', text: 'Compare the two.' },
+      {
+        do: 'compare',
+        left: { heading: 'Without villi', points: ['a smooth inner wall', 'a small surface', 'slow absorption'] },
+        right: { heading: 'With villi', points: ['millions of tiny fingers', 'a huge surface', 'fast absorption'] },
+      },
+    ]);
+    const frame = made.elements.find((e) => e.kind === 'box')!;
+    expect(made.regions[frame.id]).toBe('0/main');
+    expect(boxOf(frame).w).toBeLessThanOrEqual(680);
+  });
+
   it('lays a beat with two main demonstrations out as a stack, as before', () => {
     const board: Instruction[] = [
       { do: 'say', text: 'Two things.' },

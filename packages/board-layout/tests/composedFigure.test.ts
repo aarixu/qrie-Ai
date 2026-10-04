@@ -87,6 +87,13 @@ describe('a labelled picture on a composed page', () => {
     expect(written(made, 'Villi increase surface area').ink).toBeUndefined();
   });
 
+  it('lets a wide picture fill most of the hero, with its names beside it', () => {
+    const wide = layoutBeat({ id: 'b2', topic: 'villi', narration: '', board: VILLI }, PARTS, new Map([['villus', 1.25]]), { composed: true });
+    const image = boxOf(wide.elements.find((e) => e.kind === 'image')!);
+    expect(image.w).toBeGreaterThanOrEqual(hero.w * 0.55);
+    for (const name of ['Capillaries', 'Lacteal', 'Epithelium']) expect(inside(written(wide, name), hero), name).toBe(true);
+  });
+
   it('reports the page whole', () => {
     expect(made.sheets).toEqual([expect.objectContaining({ sheet: 0, main: true, notes: true, points: 1, summary: true })]);
   });

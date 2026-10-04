@@ -71,13 +71,17 @@ export const ARRANGEMENTS: Readonly<Record<ArrangementName, Arrangement>> = {
     pointsOrder: ['right', 'left'],
     summary: region('summary', 510, 532, 450, 72),
   },
+  // The comparison down the left, as tall as its rows need; the notes and the
+  // key points beside it, and under it what its column has left. (A table
+  // across the full width left most of its 320-unit band empty and pushed the
+  // notes onto a second page, in the composer demo of 2026-10-04.)
   compare: {
     name: 'compare',
-    main: region('main', 40, 96, 920, 320),
-    regions: [region('left', 40, 432, 450, 172), region('right', 510, 432, 450, 88)],
-    notesOrder: ['left', 'right'],
-    pointsOrder: ['right', 'left', 'main'],
-    summary: region('summary', 510, 532, 450, 72),
+    main: region('main', 40, 96, 560, 508),
+    regions: [region('side', 620, 96, 340, 424)],
+    notesOrder: ['side', 'main'],
+    pointsOrder: ['main', 'side'],
+    summary: region('summary', 620, 532, 340, 72),
   },
   // The working down the left, the rules and the points beside it; what the
   // working leaves of its own column takes writing too.

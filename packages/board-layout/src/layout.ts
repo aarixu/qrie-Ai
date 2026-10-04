@@ -115,6 +115,12 @@ const COMPARE_PAD = 12;
 const COMPARE_HEAD = 19;
 const COMPARE_SIZE = 16;
 const COMPARE_LEAD = 22;
+/**
+ * No wider than this: framed whole on a phone, a comparison across the full
+ * board set its 16-unit points at 10.7px (the composer demo, 2026-10-04); at
+ * 680 they read at 12px or more.
+ */
+const COMPARE_MAX_W = 680;
 
 /**
  * A connector's words lifted above their row (the scene block): written no
@@ -1137,7 +1143,9 @@ export function layoutBeat(
           i += 1;
           break;
         }
-        const columnAt = (w: number): number => (w - COMPARE_PAD * 3) / 2;
+        // As wide as its rectangle, up to COMPARE_MAX_W, and centred in it.
+        const widthOf = (w: number): number => Math.min(w, COMPARE_MAX_W);
+        const columnAt = (w: number): number => (widthOf(w) - COMPARE_PAD * 3) / 2;
         const rowsAt = (w: number): { left: string[]; right: string[]; h: number }[] =>
           Array.from({ length: Math.max(left.points.length, right.points.length) }, (_, n) => {
             const l = left.points[n] ? wrapLines(left.points[n], columnAt(w), COMPARE_SIZE) : [];
@@ -1154,8 +1162,9 @@ export function layoutBeat(
           place: (r) => {
             const frameId = idFor(beat.id, index);
             const col = columnAt(r.w);
-            const centres = [r.x + COMPARE_PAD + col / 2, r.x + COMPARE_PAD * 2 + col + col / 2];
-            const out: Element[] = [{ kind: 'box', id: frameId, x: r.x, y: r.y, w: r.w, h: heightAt(r.w), label: '' }];
+            const x0 = r.x + (r.w - widthOf(r.w)) / 2;
+            const centres = [x0 + COMPARE_PAD + col / 2, x0 + COMPARE_PAD * 2 + col + col / 2];
+            const out: Element[] = [{ kind: 'box', id: frameId, x: x0, y: r.y, w: widthOf(r.w), h: heightAt(r.w), label: '' }];
             const write = (id: string, x: number, y: number, text: string, size: number): void => {
               bonds.push({ a: frameId, b: id });
               out.push({ kind: 'text', id, x, y, text, size });
@@ -1480,7 +1489,10 @@ export function layoutBeat(
   if (labelledHost && (composition === null || composedFigure)) {
     if (composedFigure) regionNow = '0/hero';
     const MARGIN_GAP = 18;
-    const leastMargin = Math.round((area.w - MARGIN_GAP * 2) * 0.26);
+    // A composed hero is 590 wide, not the board's 860: a 26% margin either
+    // side left a wide picture 266 units across, under half its region. 18%
+    // still holds a name at the sizes below, and the picture takes the rest.
+    const leastMargin = Math.round((area.w - MARGIN_GAP * 2) * (composedFigure ? 0.18 : 0.26));
     const columnW = area.w - MARGIN_GAP * 2 - leastMargin * 2;
     const columnX = area.x + leastMargin + MARGIN_GAP;
 

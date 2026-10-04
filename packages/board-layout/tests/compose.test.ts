@@ -92,6 +92,12 @@ describe('filling a page', () => {
     expect(fillRegions(page, ARRANGEMENTS.scene, new Map()).every((p) => p.sheet === 0)).toBe(true);
   });
 
+  it('gives a comparison page room for its notes, three key points and its summary, on one page', () => {
+    // A three-row comparison takes 144 of its column; then a three-item list, three key points, a summary.
+    const page = [block(1, 'notes', 210), block(2, 'points', 69), block(3, 'points', 30), block(4, 'points', 30), block(5, 'summary', 46)];
+    expect(fillRegions(page, ARRANGEMENTS.compare, new Map([['main', 144 + 14]])).every((p) => p.sheet === 0)).toBe(true);
+  });
+
   it('puts the summary in its own place, or with the key points when it is too long for it', () => {
     expect(fillRegions([block(1, 'summary', 46)], ARRANGEMENTS.figure, new Map())[0].region).toBe('summary');
     expect(fillRegions([block(1, 'summary', 94)], ARRANGEMENTS.figure, new Map())[0].region).toBe('bottom');
