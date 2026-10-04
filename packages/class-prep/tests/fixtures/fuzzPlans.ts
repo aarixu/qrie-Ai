@@ -17,7 +17,7 @@ type Part = { name: string; x: number; y: number; w: number; h: number };
 
 export function fuzzPlan(
   seed: number,
-  opts: { smartBoard?: boolean; tools?: boolean } = {},
+  opts: { smartBoard?: boolean; tools?: boolean; composed?: boolean } = {},
 ): {
   plan: Blueprint;
   drawn: Set<string>;
@@ -204,5 +204,29 @@ export function fuzzPlan(
       beats.push({ id: `b${b + k + 1}`, topic: `Part ${b + k + 1}`, narration: '', board: [...board, ...ask()] });
     });
   }
-  return { plan: { id: `fuzz-${seed}`, title: 'Fuzz', visuals, beats }, drawn, parts, shapes };
+  const plan: Blueprint = { id: `fuzz-${seed}`, title: 'Fuzz', visuals, beats };
+  /**
+   * A composed board, written the way the page contract asks (board
+   * composer, prompts.ts PAGE_CONTRACT): every title with its path, and every
+   * beat ending with its notes (a list of three terms and what they do), at
+   * least three key points, and a summary.
+   */
+  if (opts.composed) {
+    plan.layout = 'composed';
+    for (const b of plan.beats) {
+      b.board = b.board.map((step) => (step.do === 'title' ? { ...step, path: ['Chapter', step.text] } : step));
+      const written = b.board.filter((step) => step.do === 'write').length;
+      b.board.push(
+        { do: 'say', text: sentence(20, 50) },
+        {
+          do: 'list',
+          heading: phrase(8, 20),
+          items: [1, 2, 3].map(() => ({ term: phrase(6, 14), meaning: phrase(18, 36) })),
+        },
+      );
+      for (let k = written; k < 3; k += 1) b.board.push({ do: 'say', text: sentence(20, 50) }, { do: 'write', text: sentence(18, 40) });
+      b.board.push({ do: 'say', text: sentence(20, 50) }, { do: 'summary', text: sentence(18, 40) });
+    }
+  }
+  return { plan, drawn, parts, shapes };
 }

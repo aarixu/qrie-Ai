@@ -27,7 +27,7 @@ import { fuzzPlan } from './fixtures/fuzzPlans';
 const SEEDS = 300;
 
 /** Every seeded class through assemble and the keep gate: how many broke each rule. */
-function run(opts: { smartBoard?: boolean; tools?: boolean } = {}): {
+function run(opts: { smartBoard?: boolean; tools?: boolean; composed?: boolean } = {}): {
   invalid: number;
   count: (rule: GateRule) => number;
   /** Classes whose board drew a frame, a highlight, a graph. */
@@ -36,7 +36,11 @@ function run(opts: { smartBoard?: boolean; tools?: boolean } = {}): {
   plotted: number;
   /** Classes whose board drew at least one toolkit tool. */
   toolClasses: number;
+  /** On a composed board: pages reported, and the median of how full they were left. */
+  pages: number;
+  medianCoverage: number;
 } {
+  const coverages: number[] = [];
   const classesWith = new Map<GateRule, number>();
   let framed = 0;
   let highlighted = 0;
@@ -62,11 +66,22 @@ function run(opts: { smartBoard?: boolean; tools?: boolean } = {}): {
       bonds: made.bonds,
       unspoken: made.unspoken,
       undrawn: made.undrawn,
+      composer: made.composer,
       mathsCheck: () => ({ ok: true, failures: [] }),
     });
+    for (const p of made.composer?.pages ?? []) coverages.push(p.coverage);
     for (const rule of new Set(problems.map((p) => p.rule))) classesWith.set(rule, (classesWith.get(rule) ?? 0) + 1);
   }
-  return { invalid, count: (rule) => classesWith.get(rule) ?? 0, framed, highlighted, plotted, toolClasses };
+  return {
+    invalid,
+    count: (rule) => classesWith.get(rule) ?? 0,
+    framed,
+    highlighted,
+    plotted,
+    toolClasses,
+    pages: coverages.length,
+    medianCoverage: coverages.length === 0 ? 0 : [...coverages].sort((a, b) => a - b)[Math.floor(coverages.length / 2)],
+  };
 }
 
 describe('300 seeded classes through assemble and the keep gate', () => {
@@ -143,5 +158,48 @@ describe('300 seeded classes with a pie, a line chart and moving working', () =>
     for (const rule of ['on-board', 'one-page', 'on-camera', 'overlap'] as const) {
       expect(withTools.count(rule)).toBeLessThanOrEqual(plain.count(rule));
     }
+  });
+});
+
+/**
+ * THE COMPOSED BOARD, OVER THE SAME 300 SEEDS (board composer).
+ *
+ * MEASURED 2026-10-04, after the fixes this fuzz found (scene regions, the
+ * breadcrumb's size, the camera on a scene line and on a page's first line,
+ * and pages measured by their written area): 1330 pages, median 0.51 written
+ * on; on-board 0, overlap 0, one-page 0, on-camera 0; page-full in 297
+ * classes, phone-readable in 102.
+ *
+ * The plans here write the page contract's least — three notes, three key
+ * points — and a page of that reads about half written on (figure pages 0.47,
+ * scenes 0.58, working 0.52), under page-full's 60%: the rule is asking for
+ * the contract's fuller end. phone-readable is almost all one line writing
+ * both a notes list and a key point, which the rule tells the planner to
+ * split. The guards below hold those numbers.
+ */
+const PAGE_FULL_CEILING = 297;
+const PHONE_READABLE_CEILING = 102;
+const COVERAGE_FLOOR = 0.48;
+
+describe('300 seeded classes on a composed board', () => {
+  const plain = run();
+  const composed = run({ composed: true });
+
+  it('all validate, and report their pages', () => {
+    expect(composed.invalid).toBe(0);
+    expect(composed.pages).toBeGreaterThan(SEEDS);
+  });
+
+  it('keeps ink on the board and apart, on camera, and a line on one page', () => {
+    expect(composed.count('on-board')).toBeLessThanOrEqual(plain.count('on-board'));
+    expect(composed.count('overlap')).toBeLessThanOrEqual(plain.count('overlap'));
+    expect(composed.count('one-page')).toBe(0);
+    expect(composed.count('on-camera')).toBe(0);
+  });
+
+  it('holds how full its pages are, page-full and phone-readable, to what was measured', () => {
+    expect(composed.medianCoverage).toBeGreaterThanOrEqual(COVERAGE_FLOOR);
+    expect(composed.count('page-full')).toBeLessThanOrEqual(PAGE_FULL_CEILING);
+    expect(composed.count('phone-readable')).toBeLessThanOrEqual(PHONE_READABLE_CEILING);
   });
 });
