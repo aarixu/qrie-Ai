@@ -2,6 +2,9 @@
 
 > **Start here.** The one final plan and the current state of the project
 > are in [`docs/handoff/2026-09-26-state-of-play.md`](docs/handoff/2026-09-26-state-of-play.md). Where anything below disagrees with it, that file wins.
+>
+> **Setting up on a fresh computer, or resuming someone's work?** Follow
+> [`docs/ops/resume-on-a-new-computer.md`](docs/ops/resume-on-a-new-computer.md) step by step.
 
 A pre-recorded class on your phone with a **live AI tutor one button away**. The
 tutor narrates over a canvas that draws itself as she speaks; tap ✋ and a live agent

@@ -1,0 +1,1646 @@
+[
+  {
+    "id": "L01",
+    "title": "Repeat-the-same-mistake loop (anti-illusion test), MAIN and LMS",
+    "brief_expectation": "A student who keeps choosing one wrong idea on 3 items over 2 sessions must (a) keep low unassisted mastery, (b) have that misconception counted and confirmed on 2+ items, (c) get a different next activity than a control after the 2nd or 3rd repeat.",
+    "trees_tested": [
+      "MAIN (phase3-completion): pure fold, nextActivity, chooseAsk, decide, wheelSpinning",
+      "LMS (lms): PGlite with the 42 migrations, real think(), real lms-client RPCs"
+    ],
+    "commands_run": [
+      "MAIN: cd C:/Users/Ashish Sharma/curie && npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L01-main  (26 tests: 16 pass, 10 fail)",
+      "LMS: cd .claude/worktrees/lms && npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L01-lms  (20 tests: 12 pass, 8 fail)",
+      "git status in both trees: no tracked file touched by me (the two modified files were already modified before I started)"
+    ],
+    "files_written": [
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L01-main.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L01-main-results.json",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L01-lms.test.ts",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/shared/L01-lms-results.json"
+    ],
+    "positive_control_ok": true,
+    "negative_control_ok": true,
+    "checks": [
+      {
+        "name": "MAIN (a) unassisted mastery stays low for the repeat-wrong student",
+        "tree": "MAIN",
+        "expected": "S unassisted mastery on X stays under 0.5, never rises, never mastered; C ends high and mastered",
+        "observed": "S 0.02 after 6 cold wrongs (0.118 after the first), masteredAt null. C 0.98, masteredAt set, box 1. Control Sflip 0.98 and mastered, so the controls can fail.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "fold.ts:262-286 moves unassistedMastery only on rung-0 answers, so the signal is sound."
+      },
+      {
+        "name": "MAIN (a) the 2 hinted RIGHT answers do not inflate unassisted mastery (anti-illusion)",
+        "tree": "MAIN",
+        "expected": "Unassisted belief never rises on a hinted right answer; assisted performance is higher than unassisted",
+        "observed": "Unassisted trace 0.5, 0.118, flat, 0.02, flat through both hinted answers. assistedPerformance 0.928 vs unassisted 0.02. Side-measure: those hinted rights lift prerequisite Y blended belief to 0.832 with 0 observations (display-only).",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "fold.ts:228-241 discounts help (defaultCredit) and routes rung>0 answers to assistedPerformance, not unassistedMastery."
+      },
+      {
+        "name": "MAIN (b) fold records the misconception count somewhere",
+        "tree": "MAIN",
+        "expected": "Folded model carries a misconception id/count after 6 events with the same misconceptionId on 3 items",
+        "observed": "Ledger oracle: 6 events with the id on 3 distinct probes. Folded model JSON does not contain the id. ConceptState has 20 keys, none named misconception. The 3 emitters write it (classLedger.ts:638, quizLedger.ts:228, diagnosticLedger.ts:77).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "foldAnswer (fold.ts:206+) never reads payload.misconceptionId. The field is written to the ledger and then dropped. next.ts:16-17 admits no misconception registry exists.",
+        "tree_note": "MAIN"
+      },
+      {
+        "name": "MAIN (b) any function counts or confirms misconceptions from events",
+        "tree": "MAIN",
+        "expected": "Some export in learner-model, tutor-control or ledger counts a misconception across items",
+        "observed": "Zero exports named *misconc* in learner-model, tutor-control or ledger. The conductor only matches a misconception within one question (conductor.ts:406). No cross-item or cross-session count exists.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "No misconception registry (T3 in the plan) exists on MAIN. Only per-turn matching and per-probe persona wording (persona/factors.ts:284) read the name.",
+        "tree_note": "MAIN"
+      },
+      {
+        "name": "MAIN (b) identity of the wrong idea changes the model",
+        "tree": "MAIN",
+        "expected": "6 wrongs on ONE idea differ from 6 wrongs on 6 different ideas",
+        "observed": "The two folded ConceptStates are byte-identical (unassisted 0.02 both). Same for nextActivity: both get prerequisite X.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "Same as above: the fold keys only on correct/rung/time. 'Same wrong idea' and 'scattered guessing' are indistinguishable."
+      },
+      {
+        "name": "MAIN (c) different next activity: Z (resting on X) is next syllabus topic",
+        "tree": "MAIN",
+        "expected": "S is sent back to X; C moves on. POSITIVE CONTROL",
+        "observed": "S: prerequisite -> sci10-lp-why-life-processes ('held cold at 0.02'). C: next. Control Sflip (S flipped to right): next, so the decision flips back.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "next.ts:57-67 prerequisite branch reads unassistedMastery under GAP_THRESHOLD with at least 1 cold observation."
+      },
+      {
+        "name": "MAIN (c) timing: S vs C one day on (S review due, C not)",
+        "tree": "MAIN",
+        "expected": "S gets a different activity than C",
+        "observed": "At +1 day S gets review[X], C gets next. But at +3 days both get review[X] (S 2 days overdue, C 1), the same activity; only the 'because' prose differs.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "next.ts:45-48 puts due-review first. A failed outcome and a mastered one both just come due (box 0 -> 1 day, box 1 -> 2 days). Remedial and maintenance review are the same kind.",
+        "tree_note": "MAIN"
+      },
+      {
+        "name": "MAIN (c) escalation is driven by repetition, not a single slip",
+        "tree": "MAIN",
+        "expected": "After exactly 1 wrong no escalation; escalates by the 2nd or 3rd repeat",
+        "observed": "Escalates by k=3 (pass) but already after k=1: one cold wrong gives X 0.118 and prerequisite[X] fires. k=1, 2, 3 and 6 all give the same activity.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "The trigger is the mastery number (<0.5 after one wrong from prior 0.5), not a repeat count. 'Not never' is met only incidentally."
+      },
+      {
+        "name": "MAIN (c) the prerequisite Y of a repeatedly failed X is reached",
+        "tree": "MAIN",
+        "expected": "When X itself is next, S is sent to its shaky prerequisite Y",
+        "observed": "nextActivity next=[X] gives 'next' for both S and C. S has 0 cold observations on Y, so no gap (next.ts:60). Y blended belief is 0.832 (up from hinted rights).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "unassistedMastery is not propagated to prerequisites. chooseAsk (ask.ts) only ranks a beat's own checks, so nothing ever asks Y cold after X fails. 'No evidence is not a gap' blocks diagnosis."
+      },
+      {
+        "name": "MAIN (c) chooseAsk targets the failing outcome cold",
+        "tree": "MAIN",
+        "expected": "Ask picks X at rung 0 for S",
+        "observed": "S: outcomeId X, rung 0, 'unassisted mastery 0.02 is below the gap line'. Note: ask.ts comment says 'STILL NO CALLER in any app'.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "low",
+        "root_cause": "ask.ts:36-60 is correct but unwired, so no student reaches it."
+      },
+      {
+        "name": "MAIN decide(): wrong answer, S (6 repeats) vs C (never wrong)",
+        "tree": "MAIN",
+        "expected": "Controller acts differently for a student on their 7th hit of the same wrong idea",
+        "observed": "Identical action: rethink, rung 1, followUp true, because 'first miss on a named misconception' (S 0.02 vs C 0.98 appears only in the prose). Mastery is read only on a right answer: S scheduleRetest true, C false (pass).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "decide.ts:172-210 onWrong never reads input.mastery or any history; only onRight (decide.ts:146) uses it."
+      },
+      {
+        "name": "MAIN wheelSpinning (the only repeat-failure projection)",
+        "tree": "MAIN",
+        "expected": "S flagged spinning, C not (positive/negative), and detectable on the class surface",
+        "observed": "Quiz surface: S spinning true (6 cold attempts), C false. Same stream filed as source 'class': {measurable:false, help-saturated-surface}. Only consumer is ModelInspector.tsx:80, a display, not nextActivity or decide.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "root_cause": "wheelSpin.ts:42-44 measures quiz/diagnostic only, by documented design. The class is where misconceptions are tutored, and nothing acts on the reading."
+      },
+      {
+        "name": "LMS (a) unassisted mastery on X from the real server fold (think())",
+        "tree": "LMS",
+        "expected": "S low, C high, hinted rights do not move unassisted, flipped S goes high",
+        "observed": "S unassisted 0.02 (6 cold obs), C 0.98, F (flipped) 0.98. S equals S0 (no help rows) at 0.02; assisted performance 0.928. Controls are live.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "lms-brain/think.ts:20-23 reuses learner-model foldSession, so the same arithmetic holds on the server."
+      },
+      {
+        "name": "LMS (b) misconception counted from homework answers",
+        "tree": "LMS",
+        "expected": "Class view names S with the label counted 2+ times; D (6 different ideas) and C/F are not merged in",
+        "observed": "classMisconceptions: S and S0 label 'thinks the denominator may be zero' times 6 (3 items x 2 homeworks). D gets six separate labels times 1 each. C and F: no rows. Likely view lists Riya, S0 and U, not C/F/D.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "0027:90-130 and 0040:516-579 count the chosen option's label from lms.submission_answer. This works for the one path (MCQ homework)."
+      },
+      {
+        "name": "LMS (b) confirmation: a single slip is not listed as a likely misconception",
+        "tree": "LMS",
+        "expected": "U (one wrong pick of the label, one item) is not listed next to the 3-item repeater",
+        "observed": "class_likely_misconceptions lists students 3: Riya, S0, U under the same label. classMisconceptions shows U times 1 vs S times 6, but the 'likely' list has no repeat threshold.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "0040:561-576 keeps the latest occasion and filters only on 'chose'. No 2+ items or times threshold, so a slip is 'confirmed'."
+      },
+      {
+        "name": "LMS (b) tutor-side misconceptionId in the shared ledger is counted",
+        "tree": "LMS",
+        "expected": "T (6 cold wrongs with misconceptionId, 3 items, 2 sittings, via ledger_event) shows in the class view",
+        "observed": "0 rows for T in classMisconceptions. think() did fold T to X unassisted 0.02 (6 obs). So the mastery is seen but the wrong idea is not.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "0027:106-121 and 0040:530-560 read only lms.submission_answer and lms.item.misconceptions. Ledger payload.misconceptionId (the tutor's) is read by nothing."
+      },
+      {
+        "name": "LMS (b) the student's own practice screen wrong picks are counted",
+        "tree": "LMS",
+        "expected": "P (3 wrong picks of the label on the practice screen, which shows 'Watch out: ...') appears in the class view",
+        "observed": "0 rows for P in classMisconceptions. P folded to X unassisted 0.02 (3 obs). The practice ledger row holds only itemId + chosenIndex.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "0031:605 writes the ledger row with no misconception. The label is shown to the child once and not stored, so repeats in practice are invisible."
+      },
+      {
+        "name": "LMS (b) any misconception state in the brain tables",
+        "tree": "LMS",
+        "expected": "concept_state / learner_model keep a misconception field",
+        "observed": "public.concept_state has 18 columns (mastery, unassisted_mastery, ... retrieval_accuracy): none about misconceptions. think.ts COLUMNS lists no misconception.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "The count is recomputed from homework rows per query; the brain's persisted model has no memory of which idea. Nothing downstream can read it."
+      },
+      {
+        "name": "LMS (c) chapter-level next ('Practise now') differs for S vs C",
+        "tree": "LMS",
+        "expected": "S sent to failing chapter, C and flipped F elsewhere. POSITIVE and NEGATIVE CONTROL",
+        "observed": "S -> rational-numbers (blended mastery 0.209). C and F -> linear-equations-in-one-variable (unseen 0.5 beats 0.98). Replicates home.tsx:157 sort, not imported.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "home.tsx:157 sorts practice_chapters by mastery. Chapter-level only; not misconception- or prerequisite-aware."
+      },
+      {
+        "name": "LMS (c) chapter pick uses unassisted belief",
+        "tree": "LMS",
+        "expected": "Hinted rights do not lift the number that chooses the next chapter (S equals S0)",
+        "observed": "Chapter mastery S 0.209 vs S0 0.02: hinted answers raise the selection number tenfold. The pick did not flip here because 0.209 is under 0.5.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "0031:537 averages concept_state.mastery (blended), not unassisted_mastery. The anti-illusion split is lost at the last step; a student helped enough can be steered away from the chapter."
+      },
+      {
+        "name": "LMS (c) item-level next: practice targets X or the repeated idea",
+        "tree": "LMS",
+        "expected": "Questions dealt to S target X / the label, unlike C",
+        "observed": "lms.practice_pool identical for S, C, D, U (10 items). 30 rounds of 5: X-item share S 0.487 vs C 0.50, i.e. random. No assignment difference (S and C both see Rational numbers 1 and 2).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "0031:480-505 depends on section/org only; practice_questions is order by random() (0031:557). Targeted practice exists only as the teacher's manual send_practice (0040)."
+      },
+      {
+        "name": "LMS (c) teacher gets a remedy offer for S",
+        "tree": "LMS",
+        "expected": "A path exists from the detected idea to targeted work",
+        "observed": "class_likely_misconceptions row has questions 6 for the label, and send_practice sets practice for named children. This is a human action, not an automatic loop.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "low",
+        "root_cause": "0040 send_practice. Counts as a human-in-the-loop version of 'Select Next Best Action', narrower than the brief."
+      }
+    ],
+    "conclusion": "The LAM only half survives the anti-illusion test. The mastery half is real in both trees: 6 cold wrongs on one idea leave unassisted mastery at 0.02 (control 0.98), and 2 hinted rights do not lift it (assisted 0.928 vs unassisted 0.02). On MAIN, nextActivity sends S back to X when X's dependent Z is next (prerequisite[X] vs next for C), and flipping S to right flips it back. The misconception half does not exist as a loop. MAIN: the misconceptionId is written to the ledger by 3 emitters, then foldAnswer drops it. No ConceptState field, no exported function, no registry counts it; same-idea vs scattered-guess students fold byte-identical; decide() ignores history on a wrong answer and replays 'first miss, follow-up' on the 7th identical miss; nextActivity fires after ONE wrong (0.118), so repetition is not what triggers it; once the review is due (3 days) S and C get the identical review[X]; the prerequisite Y is never reached because unassisted belief is not propagated and nothing asks Y cold. LMS: the server fold is correct, and the homework path counts the label (S times 6 vs U times 1, D scattered, C/F none), but the likely list has no threshold (a single slip is listed with the repeater), tutor ledger misconceptionIds and the student's own practice picks are never counted (0 rows each), concept_state has no misconception column, the chapter pick uses blended mastery (hinted answers lift it 0.02 to 0.209), and practice is order by random() from a student-independent pool (X share 0.487 vs control 0.50). The only misconception-targeted next action is the teacher's manual send_practice. Aarav's definition ('different next activity because of the repeated wrong idea') is met by neither tree: both differ by S vs C only through the mastery number. Score for this loop: MAIN about 2/5 (code and mastery signal exist; the misconception link is absent), LMS about 3/5 for the human-in-the-loop homework path only. Not tested: re-take attempts in LMS (the code reads only the latest attempt per assignment, 0040:533) and the real classroom wiring of nextActivity, which I did not trace.",
+    "probe_bugs": "Three probe issues, all fixed. (1) First comparison used JSON of the whole NextActivity, which differs trivially in the 'because' day count; changed to compare the activity itself (kind plus outcome ids). (2) The k-wise test originally used a fixed now and was confounded by a due review; changed to now = 1 hour after the k-th wrong, and split 'fires by k=3' (pass) from the stricter 'only on repetition' (fail). (3) My LMS 'X share > 0.5' assertion passed by chance at 0.52; replaced by an S-vs-C share difference. I also dropped one assertion I invented (prerequisite blended belief should not exceed the prior) and kept it as a note only. LMS PractiseNow logic is a verbatim copy of home.tsx:157 because it is inline in a React component, not an importable function. The hinted answers on LMS were injected as ledger rows (the homework path has no help ladder; the tutor's rows reach the same table). No fault in the probes remains known.",
+    "suggested_fixes": [
+      "MAIN fold: read payload.misconceptionId in foldAnswer and keep per-outcome {misconceptionId: {count, distinctItems, lastAt}} on ConceptState (bump MODEL_VERSION to 4); 'confirmed' = cold wrong on 2+ distinct items. Then 'same idea x6' and 'six different guesses' stop folding identically.",
+      "MAIN nextActivity: add the misconception branch between review and prerequisite (next.ts:16-17 already says where). A confirmed misconception returns {kind:'misconception', outcomeId, misconceptionId, because}; ask it cold on a different item before moving on.",
+      "MAIN next.ts: when X is shaky and cold-failed >= 2 times, probe its prerequisites cold (add a 'probe-prerequisite' kind) instead of requiring prior cold evidence on Y; today Y has 0 observations so no gap, and hinted rights inflate Y blended to 0.832.",
+      "MAIN next.ts: split remedial from maintenance review. If the due outcome has unassistedMastery under GAP_THRESHOLD, return a re-teach activity, not the same review[X] a mastered outcome gets.",
+      "MAIN decide(): onWrong should read a repeat count (the same misconceptionId already seen on this outcome) and skip the first-miss follow-up in favour of a different representation (alternate explanation, L7) rather than replaying 'first miss'.",
+      "MAIN wheelSpinning: make it measurable on the class surface (count rung-0 first attempts) and have nextActivity read it, not only ModelInspector.tsx.",
+      "LMS: write misconceptionId into the practice ledger row (0031:605 is missing it) and have class_misconceptions / class_likely_misconceptions read ledger_event payload too, so tutor and practice picks count, not just homework submission_answer.",
+      "LMS class_likely_misconceptions (0040:561-576): add a threshold (count >= 2 on distinct items, in the latest window) so a single slip is not 'confirmed'; keep the 'times' column for the teacher.",
+      "LMS practice_chapters (0031:537): average unassisted_mastery (where unassisted_observations > 0) instead of blended mastery, so hinted answers cannot steer the child away from the failing chapter.",
+      "LMS practice_questions (0031:557): rank the pool for the student by (their failing outcomes, items that can catch their confirmed misconception) before randomising; add a persisted misconception counter to concept_state or a sibling table and have think() populate it so the student app and teacher read one source."
+    ]
+  },
+  {
+    "id": "L02",
+    "title": "Guessing vs knowing, and hint-dependence (assisted vs unassisted mastery)",
+    "brief_expectation": "One lucky right must not make a skill mastered. Rights given only with heavy help (rungs 5-8) must leave UNASSISTED mastery low and discount blended mastery. credit(rung k) <= credit(rung k-1). Mastered needs unassisted AND spaced AND a different item. Repeats of the same item are not independent evidence. Wheel-spin and hint-abuse detectors must fire on constructed sequences AND something must consume them.",
+    "checks": [
+      {
+        "name": "MAIN: one cold right on default and low-guess (hard) item -> masteredAt stays null",
+        "expected": "One right never stamps mastered",
+        "observed": "a1 unassisted=0.783 (under MASTERY_LINE 0.8), masteredAt=null. a2 low-guess item: unassisted=0.947 (over the line on ONE answer) but masteredAt=null.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "mastered.ts:227-234 needs spacedOnDistinctItems (>=2 distinct items 24h apart), so the stamp holds even when the float passes 0.8."
+      },
+      {
+        "name": "MAIN: 8 rights at rung 6/7 -> unassisted low, not mastered, blended discounted vs cold",
+        "expected": "unassistedObservations=0, unassisted stays prior, masteredAt null, blended below the cold equivalent",
+        "observed": "rung6: unassisted 0.5 (0 obs), blended 0.956, masteredAt null. rung7: unassisted 0.5, blended 0.912. Cold x8 reference: 0.98. Same result when help arrives as helped rows. 4 days x 2 rights at rung 7: still masteredAt null.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:220-244 derives rung from helped rows and the recorded rung, credits by defaultCredit(rung), and counts only rung 0 as unassisted (fold.ts:361)."
+      },
+      {
+        "name": "MAIN: heavy-help-only rights still pile up to a high blended float",
+        "expected": "A student with only rung-7 rights should not read as Strong (>=0.7) on the blended float",
+        "observed": "8 distinct-item rights at rung 7 give blended mastery 0.912 (cold x8 gives 0.98). A rung-8 right still adds +0.057. assistedPerformance is undiscounted at 0.98, by design.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:314 scales each answer's move by credit but credit(7)=0.3 compounds over repeated answers, so the discount shrinks the speed, not the ceiling. Blended is display-only here (project.ts:86); decisions read unassisted. Low severity in MAIN."
+      },
+      {
+        "name": "MAIN: rung sweep 0..8 on identical evidence is monotone",
+        "expected": "Blended delta non-increasing in rung; unassisted delta 0 for every rung over 0",
+        "observed": "Fresh start deltas by rung: 0.283,0.254,0.226,0.198,0.170,0.141,0.113,0.085,0.057. After one cold miss: 0.207 down to 0.041. Identical for rung via recorded field or via helped row. Unassisted delta 0 for rungs 1-8. defaultCredit: 1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2. A WRONG answer at rung 8 and at rung 0 both give 0.118.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "assistance.ts:27 defaultCredit = max(0.1, 1 - rung/10); fold.ts:244 applies it to rights only, so failing with help is not softened. A second attempt is read as at least a nudge (unassisted obs 0)."
+      },
+      {
+        "name": "MAIN: same item repeated is not mastered but still inflates the belief float",
+        "expected": "6 cold rights on ONE item (and a retake on 3 days) must not be independent evidence: masteredAt null AND unassisted belief not inflated",
+        "observed": "masteredAt stays null in all repeats (coldWins keyed only 'probe:p0'). But unassistedMastery goes 0.783 (1 right) -> 0.98 (6 rights, one sitting) and 0.98 after the same probe on 3 days, 6 unassistedObservations. A beat-id replay across 2 days: 0.98, null.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:362 runs a full Bayesian update on every rung-0 answer regardless of itemKey (fold.ts:162). The distinct-item guard sits only in the masteredAt stamp (mastered.ts), not in the belief. Duplicate delivery of the same event is idempotent (d4: 1 obs)."
+      },
+      {
+        "name": "MAIN: decisions act on the float, not on masteredAt (one lucky right passes 'they already hold this')",
+        "expected": "The tutor persona should not be told the child holds an outcome after one cold right or after one item repeated 6 times",
+        "observed": "Via the app's path (unassistedView -> masteryForLesson -> describeFactors): one cold right gives mastery 0.783 and the line 'They already hold this outcome. Move faster, skip the basic re-explanation' fires; same item x6 (0.98) fires it too; masteredAt is null in both. Controls: 3 distinct cold rights fire it (positive control OK); 8 rights at rung 7 do NOT fire it (negative control OK).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "MAIN",
+        "root_cause": "persona/factors.ts:105 MASTERY_SECURE=0.75 is compared with unassistedMastery (apps/classroom/src/lib/learnerModel.ts:54, student.ts:35). Nothing outside learner-model reads masteredAt (only rebuildModel.ts compares it). A single cold right (0.783) is already over 0.75."
+      },
+      {
+        "name": "MAIN positive control: 6 distinct-item cold rights over 3 days -> mastered",
+        "expected": "masteredAt set, unassisted >= 0.8",
+        "observed": "masteredAt=2026-09-15T10:00:00Z, unassisted=0.98, 4 coldWins kept (pruned).",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "mastered.ts spacedOnDistinctItems."
+      },
+      {
+        "name": "MAIN negative controls for mastered",
+        "expected": "No stamp when unspaced, helped, taken away by misses, or when only exposed",
+        "observed": "6 distinct items in ONE sitting: float 0.98 but masteredAt null. 6 items over 3 days at rung 6: unassisted 0.5, null. Mastered then 3 cold misses: unassisted 0.104, null (stamp removed). Taught + answered same sitting on 2 days: coldWins empty, null.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "mastered.ts:227 and the exposedThisSession guard (fold.ts:369, memory.ts:283)."
+      },
+      {
+        "name": "MAIN: node difficulty / hard item has no effect on a lucky right",
+        "expected": "A right on a difficulty-5 node should be weighed differently from difficulty 1",
+        "observed": "Same answer: hard node 0.783, easy node 0.783. Difficulty only seeds initialMastery (knowledge-graph mastery.ts:81-82) and the fold starts from PRIOR. Item hardness reaches the fold only through per-probe guess/slip params.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "fold.ts passes PRIOR-based beliefs; node difficulty is never read by foldAnswer. My assertion was an extrapolation from 'hard item', not a stated brief line."
+      },
+      {
+        "name": "MAIN: wheel-spin and hint-abuse detectors fire correctly on constructed streams",
+        "expected": "3 cold wrong quiz -> spinning; rate 1 for pulled-then-fast; 0 for tutor-offered, slow or no help; class surface not measurable",
+        "observed": "wheelSpin: 3 wrong -> {measurable,spinning:true,coldAttempts:3}; 3 wrong then right -> false; 2 wrong -> false; 3 wrong at rung 4 -> coldAttempts 0, false; 5 wrong class answers -> measurable:false. hintAbuse: 3 pulled+800ms asks -> 1; offered / 20s / no help -> 0. assistanceScore rung-7 + cold = 0.65.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "wheelSpin.ts:74-82, hintAbuse.ts:135-182. Identical in LMS. Existing 95 tests in fold/assistance/wheelSpin/hintAbuse/memory pass."
+      },
+      {
+        "name": "MAIN: something consumes the wheel-spin and hint-abuse detectors",
+        "expected": "A decision (tutor-control decide, nextActivity, a teacher alert) reads them",
+        "observed": "Only reader outside the package is apps/classroom/src/screens/ModelInspector.tsx:78-80 (route /model, App.tsx:709), a display screen. decide(), nextActivity and the persona never read either. The class surface, where the ladder lives, is 'not measurable' for spinning by design (wheelSpin.ts:19-23).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "MAIN",
+        "root_cause": "Detectors were built as 3.7 inspector projections (index.ts comment 'shown only in the inspector') and never wired to a decision."
+      },
+      {
+        "name": "MAIN: help-dependence feeds a retest/revisit",
+        "expected": "After help, a different item is retested later; rung-7-only success returns for review",
+        "observed": "nextActivity: rung-7-only student gets 'next' at +30min but 'review' at +2 days (box 0, 1-day ladder); a cold-record student gets 'next' (control). decide() sets scheduleRetest after help (decide.ts:163), but its only reader is conductor.ts:807 (queueRetest picks a different check, conductor.ts:894) and createConductor is imported by no app, only by its own tests. ClassRoom.tsx uses decide() and never reads scheduleRetest.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "MAIN",
+        "root_cause": "The spaced review reaches the student; the same-lesson retest on a different item exists only in unwired conductor code. The review fires on a generic 1-day box, not on 'the unassisted score is unknown'."
+      },
+      {
+        "name": "LMS: rung discount and mastered rule",
+        "expected": "Rung-k right credits no more than rung k-1; mastered exists",
+        "observed": "Blended delta per rung is flat 0.283 for all rungs 0..8 (0.207 after a miss). 8 rights at rung 7 -> blended 0.98, same as cold x8 (0.98). Server path foldLedger (think.ts:62) gives identical numbers: rung 0 and rung 8 both 0.783. defaultCredit table exists (assistance.ts) but fold.ts never calls it. No masteredAt / coldWins / spacing anywhere in LMS (types.ts MODEL_VERSION=1).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "LMS",
+        "root_cause": "LMS fold.ts:260 applies applyEvidence at full weight for any rung (the 2026-09-25 audit finding still true). Unassisted vs assisted separation does work: rung 7 gives unassistedObservations 0, unassisted 0.5."
+      },
+      {
+        "name": "LMS: positive control and student-facing label",
+        "expected": "6 distinct cold rights over 3 days become mastered; hint-only student not shown 'Strong'",
+        "observed": "POS: unassisted 0.98 but no mastered concept exists (masteredAt undefined). A student with 8 rung-7 rights has blended 0.98 and unassisted 0.5, and the student/teacher apps label from the blended float: Strong >= 0.7 (apps/student/src/components/mastery-info.tsx:5, progress.tsx:20), school overview Secure >= 0.7 (overview.tsx:221), teacher rows avg(cs.mastery) (0027_lms_insights.sql:72). Attempt 2 counted as unassisted (obs 1).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "LMS",
+        "root_cause": "Labels read concept_state.mastery, which is undiscounted; think.ts:75-90 persists no mastery stamp or review columns. An LMS child fed by hints is shown Strong."
+      },
+      {
+        "name": "LMS: what the LMS writes into the ledger",
+        "expected": "Answers carry a usable item key and honest rung/attempt",
+        "observed": "Homework, test and practice SQL write 'assistanceRung',0 hardcoded and 'itemId' (0024:184, 0030:201, 0031:605); no probeId/beatId; no helped rows anywhere in LMS apps/SQL. Folding that exact payload with MAIN's fold: 6 distinct itemIds over 3 days -> masteredAt null, coldWins keys only 'outcomes:b'.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "LMS",
+        "root_cause": "fold.ts:162-166 itemKey reads probeId/beatId, not itemId. When MAIN's fold is merged into LMS, no LMS child can ever reach mastered until itemKey also reads itemId. Homework is rung 0 by assertion (done at home), so 'unassisted' there is unverified; not testable here."
+      },
+      {
+        "name": "LMS: detectors",
+        "expected": "Same detector behaviour as MAIN and some consumer",
+        "observed": "Same outputs as MAIN on every constructed stream. Consumer is again only classroom ModelInspector.tsx:78-80 (inherited tutor app); apps/lms, apps/student and lms-brain/think.ts never compute or read them, and LMS homework emits no helped rows so hintAbuse is always empty for LMS-originated work.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "LMS",
+        "root_cause": "No consumer; no input data."
+      }
+    ],
+    "conclusion": "MAIN has the right arithmetic and the rung and mastered rules hold on every constructed stream. Rungs 1-8 never touch unassisted belief, and credit falls from 0.283 to 0.057 across the sweep. masteredAt needs 2+ distinct items 24h apart, is removed by cold misses, and is blocked by same-sitting exposure. The positive control (6 distinct cold items over 3 days) gets a stamp; every negative control does not. The gap is that nothing decides from the guard. masteredAt has no reader. The persona's 'they already hold this' line fires from the raw unassisted float (0.75 line), so one lucky right (0.783) or one item repeated 6 times (0.98, masteredAt null) makes the tutor skip re-explanation. Repeats of one item also inflate unassistedMastery (0.783 -> 0.98); the distinct-item guard sits only in the stamp. wheelSpinning and hintAbuse fire correctly but are read only by the /model inspector screen. The retest-after-help on a different item exists only in the conductor, which no app imports. Rubric about 3/5: the logic is sound in the fold, but no decision uses it. LMS is the older fold, and the audit claim still holds: the blended mastery moves identically at rung 0 and rung 8 (0.283 for every rung; 8 rights at rung 7 give 0.98, same as cold). It has no mastered concept, no spacing and no distinct-item rule. The student and teacher 'Strong/Secure' labels read that blended float, so a hint-fed child shows Strong while unassisted is 0.5. The LMS SQL files every answer at rung 0 with itemId only, and MAIN's itemKey ignores itemId, so merging MAIN's fold as-is would make mastered unreachable for LMS children. Rubric about 2/5 for LMS.",
+    "positive_control_ok": true,
+    "negative_control_ok": true,
+    "trees_tested": [
+      "MAIN",
+      "LMS"
+    ],
+    "commands_run": [
+      "cd MAIN && npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L02 (L02-guess-vs-know: 31 tests, 27 pass / 4 fail)",
+      "cd MAIN && same for L02-consumers-main (6 tests, 4 pass / 2 fail) and L02-lmsshape-main (1 fail)",
+      "cd LMS && same for L02-guess-vs-know (31 tests, 17 pass / 14 fail) and L02-server-lms (foldLedger via lms-brain; 2 fail)",
+      "cd MAIN && npx vitest run fold/assistance/wheelSpin/hintAbuse/memory tests --environment=node --maxWorkers=1 (95 pass)"
+    ],
+    "files_written": [
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L02-guess-vs-know.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L02-consumers-main.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L02-lmsshape-main.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L02-MAIN.json",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L02-guess-vs-know.test.ts",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L02-server-lms.test.ts",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/shared/L02-LMS.json"
+    ],
+    "probe_bugs": "Two probe bugs fixed. First, the LMS server probe used an undefined outcome id; fixed by reading a real node id from packages/knowledge-graph/data. Second, my nextActivity assertion checked the same moment as the help, when a review is not yet due by design; changed to check +2 days, plus a same-day negative control. The a3 (node difficulty) assertion is my extrapolation from the phrase 'hard item', not a stated brief line, so it is rated low. In the LMS run, some failures (a2, b-spaced, d2, POS) fail first on the HAS_MASTERED precondition, which hides the later numeric assertions; the numbers are still in the observed JSON.",
+    "suggested_fixes": [
+      "MAIN: make decisions use the mastered rule. Feed persona MASTERY_SECURE (factors.ts:105 via learnerModel.ts:54) and createOutcomeLookup 'secure' (outcomeLookup.ts:64) only when masteredAt is set; otherwise at most 'unsettled, check cold'.",
+      "MAIN: stop same-item repeats inflating belief. In fold.ts:361-364, apply the unassisted Bayesian update only when itemKey is new, or apply a repeat of a seen item at a small fixed fraction. coldWins already keys items but is pruned to 4, so keep a small seen-items set in ConceptState.",
+      "MAIN: wire wheelSpinning and hintAbuse into a decision. For example, in nextActivity or decide(), return a 'prerequisite/different-approach' step for a spinning outcome and a 'cold check, no hints' step when hintAbuse is high or the outcome has only help-backed rights. Today only ModelInspector.tsx:78-80 reads them.",
+      "MAIN: wire decide().scheduleRetest in ClassRoom.tsx (or import createConductor), so help is followed by a different-item cold check in the same lesson, not only by the 1-day box review.",
+      "MAIN (optional): cap the compounding of heavily helped rights, for example by limiting rung >= 5 rights to a ceiling (say 0.7) on blended mastery until a cold right exists.",
+      "LMS: port MODEL_VERSION 3 (credit discount, atLeastANudge, masteredAt, coldWins, spaced review), but first make itemKey (fold.ts:162) also read payload.itemId. Otherwise every LMS answer collapses to 'outcomes:<id>' and mastered is unreachable.",
+      "LMS: add mastered_at, box and next_review_at to think.ts COLUMNS and the concept_state migration. Change the student 'Strong' (mastery-info.tsx:5) and school 'Secure' (overview.tsx:221) labels to read mastered_at or unassisted_mastery with an unassisted_observations floor, not avg(cs.mastery).",
+      "LMS: have homework/practice SQL (0024, 0030, 0031) write probeId/itemId consistently. Record 'attempt' honestly, since a resubmission is at least a nudge. Only trust assistanceRung 0 for supervised/in-class work (or label it 'unverified, done at home')."
+    ]
+  },
+  {
+    "id": "L03",
+    "title": "Spaced retrieval timeline with an injected clock",
+    "brief_expectation": "After mastery, reviews are due on a 1/2/5/12/30/60-day ladder. A right answer at the due time climbs a box. A wrong answer drops. An early review does not climb. Exposure is not retrieval. nextActivity returns due reviews before new content. A retention number is computable. Server time, not the device clock, drives it.",
+    "checks": [
+      {
+        "name": "MAIN: ladder constants and on-time climb (positive control)",
+        "expected": "Boxes 0..5; each on-time right answer climbs one box and the next due date is the answer date plus ladder[box]; the top box reschedules +60d",
+        "observed": "Ladder is [1,2,5,12,30,60]. Day0 box0 due d1; right on d1 -> box1 due d3; d3 -> box2 due d8; d8 -> box3 due d20; d20 -> box4 due d50; d50 -> box5 due d110; d110 -> box5 due d170. retrievalCount 6, accuracy 1.0.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "memory.ts:34-100 onAnswer + reviewAt"
+      },
+      {
+        "name": "MAIN: literal absolute days 1,2,5,12,30,60 with a mix of due and early answers",
+        "expected": "d1 climbs (due 3); d2 is early, so it holds with due kept at 3; then each due answer climbs",
+        "observed": "d1 box1 due3; d2 box1 due3 (held); d5 box2 due10; d12 box3 due24; d30 box4 due60; d60 box5 due120.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN"
+      },
+      {
+        "name": "MAIN: a wrong answer drops (due or early)",
+        "expected": "Box goes to 0 with a review one day later, and retrievalAccuracy falls",
+        "observed": "From box3: wrong at d20 -> box0, due d21, accuracy 0.75. Wrong early at d10 -> box0, due d11, accuracy 0.75.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "memory.ts:68 (!correct -> box 0)"
+      },
+      {
+        "name": "MAIN: an early review does not climb (negative control)",
+        "expected": "A right answer before the due date keeps the box and the due date; practising early must not push the review away; the due-day answer still climbs",
+        "observed": "Box1 due d3, right on d2 -> box1 due d3. A keen child answering on d1.5, d2 and d2.5 -> box1 due d3; the d3 answer -> box2 due d8.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "memory.ts:73-74, 85-87"
+      },
+      {
+        "name": "MAIN: early right answers inflate retrieval stats and mastery evidence",
+        "expected": "The brief only says an early review must not climb. Ideally early cramming is not counted as retention evidence.",
+        "observed": "The early right answer at d2 raised retrievalCount 1->2 with the box unchanged, and flipped masteredAt to set. The keen-child run reached retrievalCount 5 while still in box 1 or 2.",
+        "verdict": "pass",
+        "product_defect": true,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "memory.ts:90-96 counts every cold answer 24h or more after exposure as a retrieval whether or not it was due. Retention accuracy then includes early, easier answers."
+      },
+      {
+        "name": "MAIN: exposure is not retrieval",
+        "expected": "A re-teach followed by a right answer, a rung-8 answer, a rung-3 answer, or a cold answer 2h after a re-teach must not climb or count; a cold answer 25h after the lesson climbs (negative control); six right answers in one sitting climb at most one box",
+        "observed": "Re-teach then right on the same day: box0, retr 0. Rung 8 on the due day: box0, retr 0, exposure refreshed to d1. Rung 3: box0, retr 0. Cold 2h after a re-teach: box0, retr 0. Cold 25h after the lesson: box1, retr 1. Six right answers in one sitting: box1 (retrievalCount 6).",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "memory.ts:58-61 isRetrieval; fold.ts:369 and 435"
+      },
+      {
+        "name": "MAIN: late review (37 days overdue)",
+        "expected": "Not specified by the brief. Expect no free jump of several boxes.",
+        "observed": "Box1 due d3, right at d40 -> box2, due d45. A single box up, with no credit for surviving the longer gap.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "memory.ts:71-77 climbs one box regardless of how overdue the review was"
+      },
+      {
+        "name": "MAIN: nextActivity puts due reviews before new content",
+        "expected": "Review first, most overdue first, at most 3, before a shaky prerequisite and before next; justDone excluded; with nothing due it falls to prerequisite, then next; the due boundary is exact",
+        "observed": "With 4 due and one future item the result was kind=review, ids [c,a,e] (due d0, d5, d7, then b d9 cut), 'oldest 10 days overdue'. With justDone=c the ids were [a,b]. With nothing due the kind was prerequisite, then next. One ms before due -> next; at the due ms -> review.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "next.ts:44-66"
+      },
+      {
+        "name": "MAIN: a retention number is computable",
+        "expected": "A retention figure can be read from the model",
+        "observed": "Per outcome, 4 right and 1 wrong retrieval gives retrievalAccuracy 0.8, retrievalCount 5. But no exported retention, forgetting or recall function exists (0 matches), and no aggregate retention-by-interval exists. retrievalAccuracy is a plain running average with no time weighting. Only warmUp.ts and the model inspector read it. No DB column persists box, lastExposedAt or lastRetrievedAt (0013_learner_model.sql has only next_review_at, retrieval_count, retrieval_accuracy).",
+        "verdict": "pass",
+        "product_defect": true,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "The number exists only as a per-outcome counter. There is no cross-outcome retention metric, and it is not reported next to unassistedGain."
+      },
+      {
+        "name": "MAIN: event.at far in the future (2099) with a correct session start",
+        "expected": "The ladder ignores event.at (a phone clock)",
+        "observed": "Day0 box0 due d1: the ladder is unaffected. But lastPracticedAt and lastUnassistedSuccessAt were set to 2099-01-01T00:00:05Z from event.at (fold.ts:358, 366).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:358 and 366 store the untrusted event.at. Only ModelInspector.tsx:267 reads lastPracticedAt today, so this has no effect on scheduling yet."
+      },
+      {
+        "name": "MAIN: server time drives the ladder (phone clock 2099, then fixed)",
+        "expected": "Session start is a server clock. A wrong-clock sitting must not push reviews to 2099 or make later real sittings be dropped",
+        "observed": "Session stamped 2099-01-01: nextReviewAt = day 26390 (year 2099), foldedThrough.at = 2099. The next real session at d1 was SKIPPED by the cursor: observations stayed at 2 and the box stayed 0. In the server rebuild order (started_at ascending), a 2099-stamped sitting folded last still sets the due date to day 26394 (box 2).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:77 and 94 key everything on session.startedAt. That value is the phone's new Date(): outbox.ts:198 (startedAt: input.at), stores/ledger.ts:153, ledgerSync.ts:169 (started_at: e.at, with no DB default). types.ts:99-103 and the comment at memory.ts:26-28 claim it is Postgres's clock. There is no server fold in MAIN, and received_at (0006_ledger.sql:44, 75) is never used."
+      },
+      {
+        "name": "MAIN: phone clock set forward fast-forwards the ladder",
+        "expected": "With under a day of real time elapsed, the box must not reach 5",
+        "observed": "Claimed starts d1,3,8,20,50 (6 real minutes in the probe) gave box 1,2,3,4,5. masteredAt was set at claimed d3. The top-box 60-day review was earned in minutes.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "MAIN",
+        "root_cause": "memory.ts:73-74 and 60 compare session.startedAt values from the device. Nothing bounds a start time against server receipt time, and changing the system date or time zone is enough to trigger it."
+      },
+      {
+        "name": "MAIN: phone clock set back drops real evidence",
+        "expected": "A real wrong answer folded today must count",
+        "observed": "After the model was folded through d0, a session stamped d-30 (answered wrong) was skipped: observations 3 -> 3 and the box was unchanged. The device fold never sees the wrong answer.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:94 and 134-141 skip any session whose startedAt is behind the cursor. The cursor is the device clock, so a backwards clock step permanently loses that sitting on the device. Only a rebuild from the ledger recovers it, and it re-sorts by the same phone-stamped started_at."
+      },
+      {
+        "name": "MAIN: nextActivity clock source",
+        "expected": "The 'now' used to decide what is due should be the server's",
+        "observed": "nextStep.ts:49 uses new Date() and warmUp.ts:128 defaults to new Date(). The caller supplies the device clock. Pairing this with a device-stamped nextReviewAt gives self-consistent but unverifiable timing.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "MAIN",
+        "root_cause": "next.ts takes the clock as an input, and no caller passes a server time."
+      },
+      {
+        "name": "LMS: spaced review exists?",
+        "expected": "Box, nextReviewAt, a ladder and a nextActivity-like function; reviews due on server time",
+        "observed": "learner-model MODEL_VERSION=1. No ladder, box, nextActivity or review-ish export exists in learner-model or lms-brain (0 matches). Folding day0 taught + right on d1,3,8,20 through lms-brain foldLedger gave nextReviewAt=null, retrievalCount=0, retrievalAccuracy=0; the state has no box. think.ts:87 and 130-138 persist next_review_at and retrieval_*, always null/0 (0013_learner_model.sql:51-56 says 'not driven until Phase 6'). LMS homework/practice sessions do stamp server now() (0024:143, 0031:594), so the server clock exists, but nothing uses it for review.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "LMS",
+        "root_cause": "The spaced-review work (memory.ts, next.ts, mastered.ts) lives only on the MAIN branch. The LMS fold is the pre-F1-F3 copy, and no migration has columns for box, last_exposed_at or masteredAt."
+      }
+    ],
+    "conclusion": "MAIN: the pure ladder logic is correct and well tested. All 20 clock-independent assertions passed: the 1/2/5/12/30/60 ladder, climb on a due right answer, drop on a wrong one, early review holds, exposure is not retrieval, one climb per sitting, and nextActivity ordering (review, then prerequisite, then next). Score about 4/5 for the logic and 3/5 overall. Its clock is the hole: the requirement is server time, but the fold reads session.startedAt, which the phone stamps (outbox.ts:198, ledgerSync.ts:169), and no server fold exists. In my probes a forward-set phone clock reached the top box in minutes, a 2099 clock pushed the review to 2099 and made the cursor drop later real sessions, and a backwards step lost a real wrong answer. Persistence is also thin: box and exposure are held only in the device's localStorage, and the DB has no column for them. LMS: scores 1/5 for this behaviour. next_review_at and retrieval_* columns exist and the server fold writes them, but always null/0 (probe: nextReviewAt=null, no box). There is no ladder or nextActivity in the LMS tree, though its homework and practice sessions are stamped with Postgres now(). Overall the brief's 'Revisit Later' is built on MAIN's device path only and is not safe against wrong clocks. It is entirely absent in the LMS.",
+    "positive_control_ok": true,
+    "negative_control_ok": true,
+    "trees_tested": [
+      "MAIN",
+      "LMS"
+    ],
+    "suggested_fixes": [
+      "Stamp the fold clock on the server. Add learning_session.started_at default now() or a trigger that overwrites it, and have foldLedger/rebuildModel order and fold on max(received_at) or a clamped value. A session start more than ~5 min from server receipt should be rejected or clamped to receipt time.",
+      "Never advance the fold cursor to a future-dated session. Clamp startedAt to min(startedAt, receivedAt). Store the clamped value, not the phone's value.",
+      "Pass the server's 'now' into nextActivity and warmUp (a /time endpoint, or the clock offset from the last sync) instead of new Date().",
+      "Stop storing event.at in lastPracticedAt and lastUnassistedSuccessAt (fold.ts:358, 366). Use session.startedAt, or clamp it.",
+      "Port memory.ts, next.ts, mastered.ts and MODEL_VERSION 3 into the LMS tree. Add concept_state columns for box, last_exposed_at, last_retrieved_at, mastered_at and cold_wins, and add them to the think.ts COLUMNS list. Add an LMS review queue fed by nextActivity.",
+      "Count a retrieval in retrievalCount/retrievalAccuracy only when it was due (or report on-time vs early separately). Export one retention metric (for example accuracy of due retrievals, per interval) next to unassistedGain."
+    ],
+    "probe_bugs": "None remaining. The first MAIN run had 20 passed / 5 failed. The 5 failures were product results, not probe bugs, and I did not weaken any assertion. I added the b2 test (server rebuild order) afterwards. It failed as a product result: the 2099-stamped sitting folded last set the due date to day 26394 (year 2099). The python3 patch attempt failed; the node fallback inserted it correctly. The retention-export check is a strict static check (named retention function); the 0.8 retrievalAccuracy assertion passed, so 'computable' is partial rather than absent. Files: C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L03-main.test.ts, C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L03-lms.test.ts, and C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L03-MAIN.json.",
+    "files_written": [
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L03-main.test.ts",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L03-lms.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L03-MAIN.json"
+    ],
+    "commands_run": [
+      "cd MAIN && npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L03-main.test.ts (26 tests: 20 pass, 6 fail, all failures are product results)",
+      "cd LMS && npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L03-lms.test.ts (2 tests: 2 fail, as expected, no spaced review)",
+      "grep/read: memory.ts, next.ts, mastered.ts, fold.ts, types.ts, outbox.ts, ledger.ts, ledgerSync.ts, nextStep.ts, warmUp.ts, 0006/0013 migrations, LMS think.ts and migrations 0013/0024/0031"
+    ]
+  },
+  {
+    "id": "L04",
+    "title": "Fold determinism: replay, duplicates, disorder, batch splits, version migration (MAIN)",
+    "brief_expectation": "The fold must be a pure function of the ledger. Folding twice, with duplicated event ids, in shuffled order, or split into any batches (fold(A+B) == fold(A) then fold(B) with the cursor) must give identical models. An older MODEL_VERSION must migrate without losing evidence. 20k events must fold in reasonable time.",
+    "trees_tested": [
+      "MAIN (C:/Users/Ashish Sharma/curie, branch phase3-completion). Static reads only of LMS think.ts (LMS tree not exercised)."
+    ],
+    "positive_control_ok": true,
+    "negative_control_ok": true,
+    "checks": [
+      {
+        "name": "Controls: purity, non-vacuous model, comparator sensitivity",
+        "expected": "Same ledger folded twice gives an identical, non-trivial model; a flipped answer, a dropped event or a reversed session is detected.",
+        "observed": "Rebuild twice: equal, 221 states, 163 observations. Flipped answer: 10 fields differ (max 0.52). Dropped event: 7 fields. Reversed session: 265 fields. Deep-frozen inputs: no mutation, no throw.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:76-118 builds new objects and has no clock or randomness; grep for Math.random/Date.now in learner-model and knowledge-graph src found none."
+      },
+      {
+        "name": "Idempotence (same batch twice; whole history re-fed onto the finished model)",
+        "expected": "Folding the same events again changes nothing.",
+        "observed": "8 seeds x 5 sessions x 40 events. Per-session fold twice: 8/8 equal (0 fields differ). Whole history re-fed: 8/8 equal.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "The cursor check at fold.ts:94 and behindCursor at fold.ts:134-141 skip anything at or behind foldedThrough."
+      },
+      {
+        "name": "Batch-split equivalence at EVERY boundary, random splits, per-event calls, empty batches",
+        "expected": "fold(A+B) equals fold(A) then fold(B), at any cut including mid-session.",
+        "observed": "442 two-way boundaries over 3 seeds (about 148 events each): 0 mismatches. 200 random multi-way splits: 0 mismatches. 20k one-call-per-event: equal to the batched model. An empty batch before every event: equal.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:70-74 carries help in flight inside the model, so a split no longer hides a helped row from the next answer."
+      },
+      {
+        "name": "Duplicate event suppression (same id, same seq)",
+        "expected": "A duplicate or a redelivered batch is ignored.",
+        "observed": "8 seeds: every event doubled adjacent, then the whole batch redelivered: 8/8 identical to the clean rebuild.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "Suppression is by cursor position (fold.ts:94), not by id."
+      },
+      {
+        "name": "Duplicate event id re-sent under a NEW seq; ledger replayCounters with a duplicated id",
+        "expected": "A repeated event id is counted once.",
+        "observed": "The fold counted an id twice when seq changed: 77 observations became 85, 74 fields differ. replayCounters on a doubled ledger: answered 38 became 76. Neither fold.ts nor replay.ts:83-127 looks at event.id.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "Id idempotence lives only in the DB: ledger_event.id is the primary key (0006_ledger.sql:58) and unique(session_id,seq) (0006:115). Through the DB a duplicate cannot reach the fold, so this is a missing defence in depth, not a reachable bug today.",
+        "suggested_fixes": [
+          "In foldSession, keep a bounded set of recent event ids (or store the last folded event id in the cursor) and skip repeats.",
+          "Dedupe by id in replayCounters."
+        ]
+      },
+      {
+        "name": "Order independence: shuffled events inside a session",
+        "expected": "Shuffled input gives the same model (or at least no silent loss).",
+        "observed": "8 seeds, one batch per session, shuffled: 8/8 differ from the sorted fold. 102-144 of about 105-165 observations silently lost per seed, up to 194 states missing, 224-533 fields differ.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "MAIN",
+        "root_cause": "foldSession neither sorts by seq nor rejects out-of-order input. It documents 'ordered by seq ascending' at fold.ts:49, and an event behind the cursor is dropped with no signal (fold.ts:94). Callers sort (rebuildModel.ts:~229), but nothing enforces it.",
+        "suggested_fixes": [
+          "Sort events by seq inside foldSession, or throw / return a 'dropped N' count when an event is behind the cursor.",
+          "Keep a per-session set of folded seqs so a late lower seq is folded instead of dropped (a rebuild is then needed only for cross-session order)."
+        ]
+      },
+      {
+        "name": "Late arrival: seq chunks out of order, one late event, and older sessions delivered late",
+        "expected": "Every event is counted whatever the delivery order, or the loss is detected.",
+        "observed": "Chunks of 8 delivered in shuffled order: 58-94 of 122-155 observations lost per seed (8/8 seeds). One answer delayed past its successor: lost in 133/133 trials (4 seeds). Sessions shuffled: 60-141 of 147-180 observations lost (8/8 seeds). No error, no counter.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "MAIN",
+        "root_cause": "The cursor is a high-water mark (fold.ts:134-141). Anything at or behind it is lost for good. The ledger's own comment says rows 'arrive out of order from an offline outbox' (rebuildModel.ts, on 0006). The outbox is FIFO (outbox.ts:244), so it is reachable mainly through multi-device use, a held session-started (ledgerSync.ts:~150-176) or a retry. There is no server fold in MAIN to notice any of it.",
+        "suggested_fixes": [
+          "Track folded (sessionId,seq) pairs instead of one high-water mark, or mark the model dirty whenever an event arrives behind the cursor and rebuild from zero.",
+          "Make the fold return the list of skipped events so the caller can log and trigger a rebuild."
+        ]
+      },
+      {
+        "name": "Clock-skewed phone: session started_at taken from the device",
+        "expected": "Session order comes from a server clock, as the cursor docs claim.",
+        "observed": "A sitting stamped 3 days early, folded in arrival order: 27 of 104 observations lost (77 kept).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "MAIN",
+        "root_cause": "types.ts:167-171 and fold.ts:30 say started_at is a server clock and 'phones lie', but ledgerSync.ts:169 writes `started_at: e.at` (the device clock) and 0011_close_session_once.sql:51 admits it. The cursor orders on the clock it says it cannot trust.",
+        "suggested_fixes": [
+          "Stamp learning_session.started_at server-side (default now() on insert), or use a server-assigned monotonic session ordinal as the cursor's first key."
+        ]
+      },
+      {
+        "name": "Recovery: rebuild from zero after disorder damage",
+        "expected": "A rebuild from the sorted ledger gives a full, repeatable model.",
+        "observed": "Model damaged by shuffled sessions: 18 observations. Rebuild from the sorted ledger: 151, and a second rebuild is identical.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "The ledger is the record and the fold is deterministic on sorted input. But no code calls a rebuild automatically on a skipped event."
+      },
+      {
+        "name": "Redelivering an OLDER session while a newer sitting is mid-flight",
+        "expected": "A retry of an already folded session changes nothing, including the help the live sitting has been given.",
+        "observed": "The newer sitting gets help (rung 5), then the old session's batch is redelivered, then the answer arrives. Unbroken: unassistedObs 0, mastery 0.50. With the redelivery: unassistedObs 1, unassistedMastery 0.783 (manufactured mastery).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:71-74 starts `help` empty because helpInFlight.sessionId differs, and fold.ts:120 then overwrites helpInFlight with the old session's empty map even though every event was skipped as behind the cursor. The help for the live sitting is erased, so deriveRung sees rung 0. This is the error rung.ts says nothing downstream corrects.",
+        "suggested_fixes": [
+          "When every event of the batch is behind the cursor, return the model unchanged.",
+          "Only replace helpInFlight when session.id is at or ahead of the cursor session, or keep a map of byAsk per session."
+        ]
+      },
+      {
+        "name": "Same instant in different text forms (Z, +00:00, +05:30) across batches",
+        "expected": "Same model.",
+        "observed": "Semantically identical (every timestamp parsed to epoch ms): true, so ordering and decisions agree. Textually different: 41 fields and the cursor `at` differ.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:77 and the masteredAt/lastExposedAt stamps keep session.startedAt as written. Date.parse in behindCursor (fold.ts:134-141) makes the logic safe. But rebuildModel.ts compares masteredAt as text (its `same()` helper), so a device model and a server model can show false diffs.",
+        "suggested_fixes": [
+          "Normalise startedAt with new Date(Date.parse(x)).toISOString() at the top of foldSession."
+        ]
+      },
+      {
+        "name": "Cursor shape: DB columns versus the 3-part fold key",
+        "expected": "The DB cursor holds all three parts (session start, sessionId, seq), or the fold does not need the third.",
+        "observed": "Audit claim still true. Only 0013_learner_model.sql:78-79 mentions folded_through (folded_through_at, folded_through_seq). Migrations 0014-0020 never add a session id column. A model rebuilt from those two columns (cursor {at, seq}) and fed the same last session again went from 66 to 88 observations (77 fields differ). A full 3-part cursor held at 66.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "MAIN",
+        "root_cause": "types.ts:181-185 requires a 3-part key. With sessionId undefined, behindCursor's `now.sessionId < undefined` is false (fold.ts:139), so nothing at the same instant is treated as folded.",
+        "suggested_fixes": [
+          "Add folded_through_session_id to learner_model, or compare only on (at, seq) with a session ordinal as the tie-break. Reject a cursor with no sessionId."
+        ]
+      },
+      {
+        "name": "Server fold exists and writes the DB cursor (MAIN)",
+        "expected": "Something reads or writes learner_model / concept_state.",
+        "observed": "A scan of apps/classroom/src, supabase/functions and packages found 0 files touching folded_through_*, learner_model or concept_state. No server fold in MAIN. The tables exist (0013) and nothing populates them. LMS tree (static read only): packages/lms-brain/src/think.ts:124-147 deletes concept_state and re-inserts, and writes the 2-part cursor for information.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "tree": "MAIN",
+        "root_cause": "The classroom comment (learnerModel.ts, 'AUTHORITATIVE ONLY UNTIL THERE IS A SERVER FOLD, WHICH THERE IS NOT YET') still holds. The only model is the device's localStorage copy, so disorder on the server cannot be repaired by any running code.",
+        "suggested_fixes": [
+          "Port or share lms-brain's think.ts as the server fold in MAIN, rebuilding from zero when an event arrives behind the cursor."
+        ]
+      },
+      {
+        "name": "Two sessions with the same started_at, folded in id-descending order",
+        "expected": "Same model whichever order the DB returns tied sessions.",
+        "observed": "Id-ascending: 39 observations. Id-descending: 19. The second session was dropped whole (20 events).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "The cursor tie-breaks on sessionId (fold.ts:139), but rebuildModel.ts:159 orders sessions by started_at only. Ties are unlikely with phone clocks to the millisecond, but one multi-row upsert can share a value.",
+        "suggested_fixes": [
+          "Add .order('id') after started_at in rebuildModel.ts:159, and sort by (started_at, id) in every caller."
+        ]
+      },
+      {
+        "name": "Migration: migrateModel keeps every number of a v1 or v2 blob",
+        "expected": "No evidence lost on migration.",
+        "observed": "v2 and v1 blobs (built from a real v3 fold with the version's fields stripped): 0 numeric or date fields lost or changed across 221 states. A newer-version model returns an empty model (not guessed at). A current model returns the same object.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "migrate.ts:29-32 spreads the old state over emptyConceptState."
+      },
+      {
+        "name": "foldSession on an old-version model with only the new batch",
+        "expected": "Prior history survives.",
+        "observed": "v2 model with 221 states and 104 observations, folded with one new session: 146 states and 31 observations remained. The history was wiped and replaced by that one session.",
+        "verdict": "fail",
+        "product_defect": false,
+        "severity": "medium",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:65-68 starts any model of another version from emptyModel() by design. The one caller, learnerModel.ts:192-199, runs migrateModel first, so the wipe is guarded in the app. But the function is a foot-gun for any new caller, such as a server fold.",
+        "suggested_fixes": [
+          "Throw (or return a tagged result) on a version mismatch instead of silently emptying."
+        ]
+      },
+      {
+        "name": "Migrate(v2 or v1) then continue equals a fresh rebuild from the ledger",
+        "expected": "Equal to a rebuild, so no gap in spaced review.",
+        "observed": "3 seeds, 221/221/146 states: 70-94 fields differ. Mastery and unassistedMastery max diff 0 (identical). Only the spaced-review fields differ: box (14 states), nextReviewAt (21), lastExposedAt (12), lastRetrievedAt (17), retrievalCount (17). Outcomes with a review date: migrated 26/35/30 against rebuilt 39/40/38, about a quarter missing. v1 (no masteredAt/coldWins): 93 fields differ. The v1 hint-credit arithmetic difference could not be reproduced without old code (inconclusive).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "tree": "MAIN",
+        "root_cause": "migrate.ts:12-14 documents that a migration cannot undo the old arithmetic or build boxes. migrateModel does not replay the ledger, and the continued fold sets boxes only on the next exposure (memory.ts onExposure). 'Revisit later' is therefore silently missing for those outcomes. The production path rebuilds, but rebuildModel.ts:34 and :159-173 refuse more than 1000 events or sittings, and learnerModel.ts:154-170 then falls back to migrateModel.",
+        "suggested_fixes": [
+          "Page the ledger read instead of refusing past 1000 rows.",
+          "Backfill box and nextReviewAt in migrateModel from lastPracticedAt and lastUnassistedSuccessAt."
+        ]
+      },
+      {
+        "name": "Rebuild path equals a fresh rebuild",
+        "expected": "A rebuild from the full ledger over an old-version model equals a fresh rebuild.",
+        "observed": "v2 model plus the full ledger through foldSession: identical to a fresh rebuild (0 fields differ).",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "tree": "MAIN",
+        "root_cause": "fold.ts:65-68 empties an old-version model first, so the fold has nothing stale to carry."
+      },
+      {
+        "name": "Performance: 20k events",
+        "expected": "Reasonable time (pre-registered: under 10 s, and not quadratic).",
+        "observed": "20,220 events (200 sittings x 100): 5.0 s and 6.1 s on two runs. The 5k subset took 1.2-1.7 s, so 4x events cost 3.5-4x time, linear. Rerun identical. 20k one call per event: 2.9-4.7 s, equal to batched. Worst case, 20k events over all 371 graph nodes: 10.5-11.4 s. Timings are noisy because other sessions share the machine. About 250 microseconds per event, which is roughly 25x the cost on a 371-node map when every node is touched.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "low",
+        "tree": "MAIN",
+        "root_cause": "Each answer copies the states map and rebuilds `before` over all states (fold.ts:246, :276-277), so cost grows with touched states. It is fine at 371 nodes, but a student across all 26 maps would be slower. The wide case was not run on a larger graph."
+      }
+    ],
+    "conclusion": "For sorted input the fold is solid. It is pure and idempotent, a redelivered batch is ignored, and a split at all 442 boundaries (plus 200 random splits and per-event calls) gives identical models. Rebuilding old-version models from the ledger gives the same model, and 20k events take about 5 s and scale linearly. The brief's order and duplicate guarantees do not hold: the cursor is a high-water mark, so any event or sitting that arrives after something later is lost silently (58-141 of about 120-180 observations lost per seed when delivery is shuffled, and a single late answer was lost in 133 of 133 trials). Three more defects: redelivering an old session erases the live sitting's help and manufactures unassisted mastery (0 observations became 1, mastery 0.50 became 0.78); the DB cursor is still 2-part while the fold needs 3, and a 2-part cursor re-counted 22 of 66 observations; and learning_session.started_at is the phone's clock (ledgerSync.ts:169), not the server clock the cursor docs assume. Nothing in MAIN writes learner_model or concept_state, so no server fold exists to repair any of this. migrateModel loses no numbers, but a migrated model has no spaced-review boxes, about a quarter of review dates missing against a rebuild, and the rebuild fallback is refused past 1000 events or sittings. Score for fold determinism: 3/5 (excellent when ordered, no protection when not).",
+    "probe_bugs": "One early probe bug: afterAll overwrote the shared JSON when I re-ran with -t, so I re-ran the whole file and the numbers above come from that full rerun (they match run 1 except timings). The 'late event' and 'shuffled' tests deliberately feed input that violates the documented 'ordered by seq' contract, so they measure what the fold does with it, not a caller bug. Mastery and unassistedMastery diffs were measured by an inline diff() comparing numbers with strict equality. The v1/v2 blobs are the real v3 fold with fields stripped, so the old hint-credit arithmetic was not reproduced and is reported inconclusive. The wide-graph perf test used only the 371-node class10-science map.",
+    "suggested_fixes": [
+      "Fold late data instead of dropping it: track folded (sessionId, seq) or flag the model dirty and rebuild from zero when an event arrives behind the cursor (fold.ts:94, :134-141).",
+      "Return the model unchanged when a whole batch is behind the cursor, and do not overwrite helpInFlight (fold.ts:120).",
+      "Make the DB cursor match the fold: add a session id column to learner_model or drop sessionId from the key (0013_learner_model.sql:78-79, types.ts:181-185).",
+      "Stamp learning_session.started_at server-side (ledgerSync.ts:169).",
+      "Add a server fold to MAIN (lms-brain think.ts is the reference), and give rebuildModel.ts:159 a (started_at, id) order and paging past 1000 rows.",
+      "Make foldSession throw on a version mismatch instead of silently emptying (fold.ts:65-68), and backfill review boxes in migrateModel.",
+      "Normalise startedAt to canonical ISO text inside foldSession."
+    ],
+    "commands_run": [
+      "npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L04 (full file, run 3 times: 30 tests twice then 32; 15 passed and 15-17 failed by design)",
+      "npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L04 -t extras",
+      "node -e read of .scratch/lam-probes/shared/L04-MAIN.json",
+      "static reads: fold.ts, migrate.ts, types.ts, replay.ts, outbox.ts, rebuildModel.ts, learnerModel.ts, ledgerSync.ts, migrations 0006, 0011, 0013 (and grep of 0014-0020), LMS think.ts grep"
+    ],
+    "files_written": [
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L04-fold-determinism.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L04-MAIN.json"
+    ]
+  },
+  {
+    "id": "L05",
+    "title": "Two diverged LAMs: same events through MAIN and LMS folds, and is lms-brain a real server fold?",
+    "brief_expectation": "One idea of what a child knows: the identical event stream through both trees' folds yields the same concept states, or the differences are listed and quantified. The server fold (LMS lms-brain think.ts) equals a replay, is restartable, persists what the model knows, and is run by something on the hosted project.",
+    "trees_tested": [
+      "MAIN (C:/Users/Ashish Sharma/curie, phase3-completion): packages/learner-model MODEL_VERSION 3",
+      "LMS (.claude/worktrees/lms, branch lms): packages/learner-model MODEL_VERSION 1 + packages/lms-brain think.ts + migrations 0021-0042"
+    ],
+    "checks": [
+      {
+        "name": "E1 same stream => same shared concept-state fields in both trees",
+        "expected": "0 differing fields across the 14 shared ConceptState fields",
+        "observed": "7 students, 80 concept pairs in both trees (0 in one only): 31 shared-field diffs. 19 are spaced review (nextReviewAt 7, retrievalCount 6, retrievalAccuracy 6). 12 are mastery family (mastery 6, unassistedMastery 2, assistedPerformance 2, unassistedObservations 2). Largest belief gap 0.283.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "The LMS learner-model is a stale copy of the one the tutor runs. It lacks B4 (help discount, attempt>1 counts as a nudge) and F1-F3 (spaced review). 12 of 14 shared-field names are the same but the arithmetic differs.",
+        "tree": "MAIN vs LMS",
+        "suggested_fixes": [
+          "Make packages/learner-model a single package: bring MAIN's version into the lms branch and delete the stale copy"
+        ]
+      },
+      {
+        "name": "E2 one MODEL_VERSION",
+        "expected": "both trees fold at the same version",
+        "observed": "MAIN MODEL_VERSION=3 (learner-model/src/types.ts:155). LMS =1 (its types.ts:85). All 7 folded models carry version 3 in MAIN and 1 in LMS.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "Two lineages bumped (or did not bump) the version independently. The 3-version gap hides three arithmetic changes.",
+        "tree": "MAIN vs LMS",
+        "suggested_fixes": [
+          "Merge to one learner-model so MODEL_VERSION has one definition"
+        ]
+      },
+      {
+        "name": "E3 every difference attributable to a known mechanism (no unexplained drift)",
+        "expected": "0 unexplained diffs",
+        "observed": "0 unexplained of 31. Hinted student S2: first hinted-correct answer moves MAIN mastery 0.1978 vs LMS 0.2826, ratio 0.7000, exactly defaultCredit(rung 3). S2 CLA after 4 sessions: MAIN mastery 0.726 vs LMS 0.959, unassistedMastery 0.5 in both (0 cold answers).",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "The differences are exactly the three MAIN-only changes: B4 discount (fold.ts:244), atLeastANudge (fold.ts:220), and memory.ts spaced review. The set is closed, so the divergence is quantified.",
+        "tree": "MAIN vs LMS"
+      },
+      {
+        "name": "E3b attempt-2 right answer, client recorded rung 0 (S3, S3b)",
+        "expected": "both trees score the second attempt the same",
+        "observed": "closure-subtraction: MAIN unassistedMastery 0.209 vs LMS 0.453 (delta 0.244); unassistedObservations 4 vs 5; assistedPerformance 0.783 vs 0.500. LMS counts a retry after a wrong answer as an unaided cold answer.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "LMS has no atLeastANudge (MAIN rung.ts:34-48, fold.ts:220). A child who failed then retried reads as having answered cold, which is the over-credit direction the tutor fold names as the dangerous one.",
+        "tree": "LMS",
+        "suggested_fixes": [
+          "Adopt MAIN rung.ts/fold.ts"
+        ]
+      },
+      {
+        "name": "E4 same concept states exist in both trees",
+        "expected": "no concept in one tree only",
+        "observed": "statesOnlyInMain=0, statesOnlyInLms=0 over 80 pairs; knowledge-graph src and data are content-identical (CRLF/LF only).",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "Graph propagation is the same code and data in both trees",
+        "tree": "MAIN vs LMS"
+      },
+      {
+        "name": "E5 LMS fold can represent what MAIN folds (box, masteredAt, review dates)",
+        "expected": "LMS states carry box/masteredAt/coldWins/lastExposedAt/lastRetrievedAt",
+        "observed": "none present in any LMS state. In MAIN 7 of 80 states carry a box; S1 define-rational-number has box 3, masteredAt 2026-09-04, retrievalCount 8, which LMS cannot say.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "The B8 mastery rule, the box ladder and the review schedule exist only in MAIN. LMS cannot say 'mastered' or 'due for review' for any child.",
+        "tree": "LMS",
+        "suggested_fixes": [
+          "Adopt MAIN learner-model, then see E14 for the columns"
+        ]
+      },
+      {
+        "name": "E6 misconception ids move no belief in either tree",
+        "expected": "agreement between trees (both ignore the id), documenting the Diagnose gap",
+        "observed": "twin students S3 (misconceptionId on wrong answers) vs S3b (id removed): state JSON identical in MAIN and identical in LMS. Real LMS SQL (0024:170-186, 0031:605) never writes misconceptionId to the ledger.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "The two trees agree only because both ignore the id. The brief's Diagnose step has no model effect in either: next.ts:16-17 says there is no misconception registry.",
+        "tree": "MAIN vs LMS"
+      },
+      {
+        "name": "E7 real LMS homework payload (itemId, 6 distinct items over 5 days, cold) earns B8 mastery in MAIN's fold",
+        "expected": "masteredAt set",
+        "observed": "S5: unassistedMastery 0.98, 6 unassisted observations, masteredAt=null, coldWins keys = [outcomes:<one outcome>]. All six items collapse to one key.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "MAIN fold.ts:162-165 itemKey reads only probeId and beatId. The LMS payload carries itemId (0024:178), so merging the trees as they stand means school homework can never reach 'mastered'.",
+        "tree": "MAIN",
+        "suggested_fixes": [
+          "Add payload.itemId to itemKey in fold.ts:162"
+        ]
+      },
+      {
+        "name": "POSITIVE CONTROL (diff harness)",
+        "expected": "a cold, no-hint, probe-keyed student (S4) shows 0 mastery-family diffs between trees",
+        "observed": "S4-one-sitting familyFieldsDiffering=0. Also S1/S5/S6 show 0 mastery-family diffs; only memory fields differ. Rebuild == session-by-session == per-event fold inside LMS for all 7 students.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "Harness sees real equality, so the 12 diffs above are not noise.",
+        "tree": "MAIN vs LMS"
+      },
+      {
+        "name": "NEGATIVE CONTROL (diff harness)",
+        "expected": "a perturbed copy is flagged; MAIN does not stamp mastery for a one-sitting grinder",
+        "observed": "perturbed mastery (-0.1) no longer equals the original. S4 (10 distinct cold-right probes in one session): unassistedMastery above 0.8, masteredAt=null (B8 needs a 24h spread). S6 masteredAt stamped then cleared after two cold misses (unassisted 0.98 -> 0.466).",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "Detector fires and MAIN's B8 rule behaves as designed.",
+        "tree": "MAIN"
+      },
+      {
+        "name": "E8 server fold equals a replay (stored concept_state vs ledger replay)",
+        "expected": "stored rows equal a replay, every student and concept",
+        "observed": "PGlite with real migrations, my 119-event stream: 80 concept_state rows, all 7 students, max |stored - replay| 1.9e-8 (Postgres real), 0 missing, row count equals replay state count. Existing lms-brain tests: 11/11 pass.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "think() uses foldSession directly (think.ts:62-74). The server-fold code is real and correct against its own package.",
+        "tree": "LMS"
+      },
+      {
+        "name": "E9 restartable: a second run changes nothing",
+        "expected": "idempotent",
+        "observed": "S1 rows identical before and after a re-run; the re-run read 119 events.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "think() deletes the child's rows and rebuilds from the whole ledger (think.ts:124-148), so a repeat cannot double-count.",
+        "tree": "LMS"
+      },
+      {
+        "name": "E10 rebuild from ledger heals tampering and wipes",
+        "expected": "a damaged or deleted model comes back after one run",
+        "observed": "Tampered S1 row (mastery 0.01) restored exactly. S2 concept_state and learner_model deleted: 56 rows rebuilt, max delta 1.9e-8.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "Rebuild-not-cursor, as the think.ts header says. No cursor is trusted.",
+        "tree": "LMS"
+      },
+      {
+        "name": "E11 late-arriving earlier session (offline sync)",
+        "expected": "folded in time order, equal to the ordered replay",
+        "observed": "Inserted a session dated before S6's first one: stored vs full ordered replay max delta 1.9e-8, 6 rows.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "The rebuild sorts by session started_at (think.ts:106), which an incremental cursor could not do.",
+        "tree": "LMS"
+      },
+      {
+        "name": "E12 cost shape: one new event should not re-read the whole ledger",
+        "expected": "events read < child's ledger",
+        "observed": "S6 has 25 ledger events (one just added); think() read 25. It reads and re-folds the child's whole history on every call and the demo server calls it on every hand-in.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "root_cause": "No incremental path: learner_model.folded_through_* is written (think.ts:143-148) but never read back. Fine at demo scale; O(history) per answer at school scale.",
+        "tree": "LMS",
+        "suggested_fixes": [
+          "Fold from the cursor and fall back to a rebuild only on version bump or out-of-order insert"
+        ]
+      },
+      {
+        "name": "E13 learner_model records the version MAIN folds at",
+        "expected": "version 3, with the right cursor",
+        "observed": "stored version=1 (the stale package's MODEL_VERSION, think.ts:148); cursor seq=3 and at=2026-09-21T08:00:00Z match the true last session.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "The cursor is correct. The version is the old 1 because the package is the old copy.",
+        "tree": "LMS",
+        "suggested_fixes": [
+          "Follows from merging learner-model"
+        ]
+      },
+      {
+        "name": "E14 concept_state holds what MAIN folds",
+        "expected": "columns for box, mastered_at, cold_wins, last_exposed_at, last_retrieved_at",
+        "observed": "concept_state has 18 columns; all 5 missing. think() COLUMNS (think.ts:76-91) writes 14 fields. There is no migration for them in either tree (MAIN stops at 0020, LMS at 0042).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "Even with the v3 package merged, think() could not persist box or masteredAt, so teachers could never see 'mastered' or 'due'.",
+        "tree": "LMS",
+        "suggested_fixes": [
+          "New migration adding the 5 columns, and extend COLUMNS in think.ts"
+        ]
+      },
+      {
+        "name": "E15 something on the hosted project runs the fold",
+        "expected": "a pg_cron job, Edge Function or workflow that calls think/lms-brain",
+        "observed": "cron jobs in migrations: purge-old-ledger (0009), lms-finalize-tests (0030:345), neither folds. Edge functions: [relay]. think() callers: tools/lms-demo/src/server.ts:199,279 and seed.ts:357 only (local PGlite). think.ts:20-22 says 'On the hosted project nothing runs it yet'.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "blocker",
+        "root_cause": "The server fold exists as tested code and is wired only into the local demo server. On hosted Supabase concept_state is never written, so the teacher analytics read an empty table. MAIN has no server fold either (no insert into concept_state anywhere in apps, packages, tools).",
+        "tree": "LMS",
+        "suggested_fixes": [
+          "Run think from an Edge Function triggered after submit, or add a ledger_event insert trigger/queue; schedule a nightly reconcile via pg_cron"
+        ]
+      },
+      {
+        "name": "E16 think() writes learner_model.purge_safe_before",
+        "expected": "non-null after a fold (migration 0021 comment: 'written by the server fold')",
+        "observed": "purge_safe_before=null after think(). The only writer is nobody. 0021:141-144 says the purge deletes no events while it is null.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "Retention is deliberately disarmed until the fold marks what it has read. The fold never marks it, so school ledgers grow without bound, against the 90-day policy.",
+        "tree": "LMS",
+        "suggested_fixes": [
+          "Set purge_safe_before to the last folded session in think()"
+        ]
+      },
+      {
+        "name": "E17 armed purge then think(): does the fold forget purged evidence",
+        "expected": "concept_state unchanged after purge + think",
+        "observed": "With purge_safe_before armed by hand and the oldest 3 sessions aged out: purge removed 9 events and 3 sessions. think() rebuilt from the remaining 16. S6 commutative-multiplication observations 13 -> 8, mastery unchanged only because recent evidence dominates.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "think() deletes and rebuilds from the ledger alone (think.ts:124), so the moment retention is armed (E16) it silently discards counts and older evidence. 'Rebuild' and 'purge' are incompatible without a stored snapshot.",
+        "tree": "LMS",
+        "suggested_fixes": [
+          "Keep the previous model as the fold's start and fold only post-cursor events, or snapshot before purge"
+        ]
+      },
+      {
+        "name": "E18 overlapping think() for one child",
+        "expected": "all runs succeed, rows correct",
+        "observed": "3 concurrent runs for one child: 2 rejected with 'duplicate key value violates unique constraint concept_state_pkey'. Final rows equal the good set.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "think.ts:124 delete and :127 insert are separate query() calls with no transaction or per-user lock, so two hand-ins interleave. In demo server.ts:199 the await sits in the request path, so a student's submit can return an error after the answer was saved.",
+        "tree": "LMS",
+        "suggested_fixes": [
+          "Wrap delete+insert+learner_model upsert in one transaction with pg_advisory_xact_lock(user)"
+        ]
+      },
+      {
+        "name": "imports the older learner-model",
+        "expected": "lms-brain folds with the current tutor model",
+        "observed": "think.ts:1-2 imports from @ai-tutor/learner-model, which in the LMS tree resolves to packages/learner-model with MODEL_VERSION=1 (8 source files differ from MAIN; memory.ts, mastered.ts, migrate.ts, next.ts absent). MAIN also has packages/tutor-control; LMS has none.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "The 'one idea of what a child knows' comment (think.ts:8-12) was true at a695b1d and is false today: 159 commits on MAIN (B4, B6, B8, F1-F3) never reached the lms branch.",
+        "tree": "LMS"
+      }
+    ],
+    "conclusion": "Short answer: the LAM is not one brain today. It is two folds that agree on the base and disagree on everything added since 2026-09-25, and the server fold is real code that nothing hosted runs.\n\nWhat I ran. One deterministic stream of 7 students and 119 events: hinted and cold answers, misconception ids, retries, real LMS homework payloads, 5 to 20 days. I folded it through MAIN's learner-model (v3) and the LMS tree's (v1) and compared them concept by concept. I then ran lms-brain's think() against PGlite with the real migrations.\n\n1. Same stream, different beliefs. Across 80 concept pairs, 31 shared-field differences, 0 unexplained. 19 are spaced-review dates and counts that exist only in v3. 12 are belief differences: the help discount (B4), where a right answer at rung 3 moves mastery 0.7 as far in MAIN (ratio measured 0.7000), and the retry rule, where an attempt-2 answer counts as help in MAIN only. Worst gaps: a hint-only child shows mastery 0.726 in MAIN and 0.959 in LMS, with zero cold answers. A retry child shows unassisted mastery 0.209 vs 0.453. The LMS cannot represent box, masteredAt or review due at all. Control students with no hints or retries match exactly, so the harness is not noise.\n\n2. lms-brain is a correct server fold but not a deployed one. Stored concept_state equals a ledger replay to 2e-8 for all 80 rows, a re-run changes nothing, a tampered or deleted model is healed, and a back-dated session folds in order. Its own 11 tests pass. It rebuilds the whole ledger every call rather than moving a cursor. But nothing hosted calls it. The hosted cron jobs are the purge and the test finalizer, there is one Edge Function (relay), and the only think() callers are the local demo server and the seed script. So concept_state is never written on the hosted project, and MAIN does not write it either.\n\n3. Defects found in the fold itself. It never writes purge_safe_before, so the 90-day ledger retention stays disarmed. If someone arms it, rebuild-from-ledger loses evidence (observations 13 to 8 in my run). Overlapping runs for one child fail with duplicate-key errors (2 of 3 runs).\n\n4. Merge requirement for ONE brain. (a) Make packages/learner-model a single package: take MAIN's, which includes memory.ts, mastered.ts, migrate.ts and next.ts. The knowledge-graph content is already identical and the migrations don't collide (MAIN ends at 0020, LMS adds 0021 to 0042). (b) Add `itemId` to itemKey in fold.ts:162, or LMS homework can never reach B8 mastery (measured: 6 distinct items over 5 days, masteredAt null). (c) New migration for box, mastered_at, cold_wins, last_exposed_at and last_retrieved_at, extend think() COLUMNS, and store version 3. (d) Run think from something hosted: an Edge Function or trigger after a hand-in, plus a nightly reconcile. (e) Make think() transactional with a per-child lock, write purge_safe_before, and fold from a cursor or snapshot so retention does not erase evidence. (f) Decide where tutor-control's decide() lives, since the LMS tree has none.\n\nRubric for this slice. Server fold exists and matches replay: 4 as code, 2 as a product, because no student reaches it on the hosted project. One shared idea of what a child knows: 2.\n\nFiles: probes in MAIN/.scratch/lam-probes/L05-main-fold.test.ts, L05-diff.test.ts; LMS/.scratch/lam-probes/L05-lms-fold.test.ts, L05-lms-think.test.ts; data in MAIN/.scratch/lam-probes/shared/L05-*.json.",
+    "positive_control_ok": true,
+    "negative_control_ok": true,
+    "probe_bugs": "Three probe-side issues, none affecting results. (1) My first E17 aged ALL of S6's events, so think() had no rows and left concept_state alone (a false pass); I rewrote it to age only the oldest 3 sessions, the realistic case. (2) The E15 hosted-caller filter expression was convoluted; I simplified it, and the cron-job and Edge Function lists it reports are unchanged. (3) E6 was first worded as 'expect equality' for a Diagnose-step gap; I reframed it as agreement between trees, because both trees ignore the id. Limits: PGlite is a single connection, so the E18 interleaving is by await order; a real Pool could differ in timing. The late-session case (E11) and the purge case (E17) are my constructions, not observed production behaviour. The B8 'S5 never masters' result applies to MAIN's fold fed the LMS payload, which is the merge scenario, not a current live path.",
+    "commands_run": [
+      "npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L05-main-fold (MAIN, 3 passed)",
+      "npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L05-lms-fold (LMS, 3 passed, 1 expected fail on MODEL_VERSION)",
+      "npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L05-diff (MAIN, 5 passed, 4 failed as pre-registered)",
+      "npx vitest run packages/lms-brain/tests --environment=node --maxWorkers=1 (LMS, 11/11 passed)",
+      "npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L05-lms-think (LMS, 6 passed, 7 failed as pre-registered)",
+      "diff --strip-trailing-cr of packages/knowledge-graph/src and learner-model/src between trees; read-only greps for think( / lms-brain / concept_state / cron.schedule"
+    ],
+    "files_written": [
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L05-main-fold.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L05-diff.test.ts",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L05-lms-fold.test.ts",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L05-lms-think.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L05-stream.json",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L05-MAIN.json",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L05-LMS.json",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L05-LMS-selfconsistency.json",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L05-diff.json",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L05-think.json"
+    ],
+    "suggested_fixes": [
+      "Make packages/learner-model ONE package (bring MAIN's v3 into the lms branch, delete the stale copy). This closes E1, E2, E3b, E5 and E13.",
+      "fold.ts:162 itemKey: add `if (payload.itemId) return 'item:'+payload.itemId` so LMS homework can earn B8 mastery (E7).",
+      "New migration: add box, mastered_at, cold_wins (jsonb), last_exposed_at, last_retrieved_at to public.concept_state; extend COLUMNS in think.ts:76-91; store version 3 (E14).",
+      "Run think() on the hosted project: an Edge Function or trigger after submit_mcq and finalize_tests, plus a nightly pg_cron reconcile (E15).",
+      "think.ts:124-148: do delete+insert+learner_model upsert in one transaction with pg_advisory_xact_lock per child (E18), and write purge_safe_before (E16).",
+      "Fold from learner_model's cursor, or snapshot the model before a ledger purge, so arming retention does not erase evidence (E12, E17).",
+      "Decide where tutor-control's decide() ladder lives after the merge, since the lms branch has no tutor-control package."
+    ]
+  },
+  {
+    "id": "L06",
+    "title": "Prerequisites, root-cause diagnosis and cross-class edges",
+    "brief_expectation": "A wrong answer must be traceable to a shaky prerequisite, and a Class 9 failure to a Class 7 root. Planning must work the shaky prerequisite before moving on. The graph must be acyclic with no dangling edges.",
+    "trees_tested": [
+      "MAIN (phase3-completion)",
+      "LMS (branch lms)"
+    ],
+    "checks": [
+      {
+        "name": "G1 graph integrity (real data)",
+        "tree": "MAIN+LMS (data/ byte-identical, knowledge-graph src identical modulo CRLF)",
+        "expected": "Acyclic, no dangling prerequisite, no duplicate ids, no self loops across all maps merged",
+        "observed": "13 maps, 5079 nodes, 6546 edges. dup=0, dangling=0, selfLoops=0, dupEdges=0. My own Kahn pass visited 5079/5079 (acyclic). Existing tests data.test.ts + graph.test.ts: 122 passed. 240 nodes have zero prerequisites; 196 of those are in Class 7+. LMS libraryIndex() loads the same 5079 nodes.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "loadGraph (graph.ts:63-95) rejects dangling, duplicate and cyclic input."
+      },
+      {
+        "name": "G1n negative control: loader rejects bad graphs",
+        "tree": "MAIN+LMS",
+        "expected": "loadGraph throws on a cycle, a dangling edge and a duplicate id",
+        "observed": "All three threw (cycle / does not exist / duplicate). The integrity check can fail.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "n/a"
+      },
+      {
+        "name": "G2 cross-class edges exist (Class 9 reaches Class 7)",
+        "tree": "MAIN+LMS (identical)",
+        "expected": "Cross-class edges greater than 0, and Class 9 nodes have Class 7 ancestors",
+        "observed": "cross-class edges = 0 of 6546. cross-subject edges = 0. Class 9 nodes with a Class 7 or lower ancestor = 0 of 1095. *.links.json files = 0. No packages/knowledge-graph/data-2026 exists (data-2026 is under packages/syllabus). In LMS, libraryIndex() merges the maps with no links step: crossClassEdges=0, class9WithClass7Ancestor=0.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "blocker",
+        "root_cause": "Each map is a self-contained island. The sidecar mechanism (types.ts ClassLink, apps/classroom diagnosticData.ts:62-70,114 applyLinks) is ready, but no sidecar was ever generated. LMS lms-brain/src/graph.ts:20-26 does not even implement a links step. Same as the 2026-09-25 audit baseline: unchanged."
+      },
+      {
+        "name": "M1 POSITIVE control: wrong answer lowers descendants; correct raises ancestors",
+        "tree": "MAIN+LMS",
+        "expected": "Wrong on T lowers all descendants; correct on T raises all ancestors and leaves descendants alone",
+        "observed": "Wrong on class9-mathematics-name-integers: 137/137 descendants lowered (dependent rational-number node 0.50 -> 0.20). Correct: all ancestors raised, descendants unchanged. Negative control: 0 unrelated nodes moved.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "mastery.ts:127-131 evidenceRegion: correct -> ancestorsOf, wrong -> descendantsOf."
+      },
+      {
+        "name": "M2 wrong answer makes prerequisites suspect (ancestors lowered)",
+        "tree": "MAIN+LMS (identical)",
+        "expected": "After a wrong on T, at least one ancestor's belief is below the prior",
+        "observed": "T has 2 ancestors (P = whole numbers, R = natural numbers). After a wrong on T: P = 0.50, R = 0.50, 0 of 2 lowered. Audit claim confirmed: a wrong answer lowers descendants only.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "mastery.ts:128-130 gives a wrong answer only descendantsOf, so the 'missing prerequisite' error class has no belief signal anywhere in the model."
+      },
+      {
+        "name": "F1 fold (device foldSession / LMS server foldLedger) leaves a suspicion record on a prerequisite",
+        "tree": "MAIN (foldSession) and LMS (lms-brain foldLedger -> concept_state)",
+        "expected": "A cold wrong on T leaves some ancestor with a lowered state",
+        "observed": "MAIN: 138 states written (T + 137 descendants), ancestors with any state = 0 of 2, ancestors lowered = 0. LMS server fold over libraryIndex: concept_state rows = 138, ancestor rows = 0. Positive control (all 137 descendants lowered) passed in both.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "The fold only applies applyEvidence, so an ancestor never gets a row. The server fold stores the same descendants-only picture."
+      },
+      {
+        "name": "N1 POSITIVE control: nextActivity surfaces a DIRECT shaky prerequisite",
+        "tree": "MAIN (no nextActivity in LMS)",
+        "expected": "P cold-wrong, next=[T] -> kind prerequisite, P",
+        "observed": "kind=prerequisite, outcomeId=class9-mathematics-name-whole-numbers, 'held cold at 0.12'.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "next.ts:59-61 handles exactly one hop with cold evidence."
+      },
+      {
+        "name": "N2 nextActivity finds a root two hops below the next topic",
+        "tree": "MAIN",
+        "expected": "R (grand-prerequisite) cold-wrong, next=[T] -> prerequisite R",
+        "observed": "kind=next ('nothing it rests on is shaky: on to the next topic'). The student cold-failed the root and is moved on.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "next.ts:59 loops prerequisitesOf(id), one hop only, never ancestorsOf."
+      },
+      {
+        "name": "N3 after failing T cold, with prerequisites never asked, the planner goes to a prerequisite",
+        "tree": "MAIN",
+        "expected": "justDone=[T], next=[U] (U rests on T) -> an ancestor of T; and next=[T] retry -> an ancestor probe",
+        "observed": "next=[U]: prerequisite = T itself (re-teach the failed node, not a root). next=[T] retry: kind=next, i.e. it just moves on. No ancestor is ever probed or offered.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "next.ts:61 requires unassistedObservations > 0 on the prerequisite, so an unexamined prerequisite is invisible, and nothing proposes a diagnostic probe of it. The audit named this as a build."
+      },
+      {
+        "name": "N4 NEGATIVE controls for nextActivity",
+        "tree": "MAIN",
+        "expected": "Prerequisites held cold -> next; a shaky unrelated Science node -> next",
+        "observed": "Both returned kind=next. No spurious prerequisite.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "n/a"
+      },
+      {
+        "name": "N5 cross-class: Class 7 root R7 cold-wrong, next = a Class 9 node (real graph)",
+        "tree": "MAIN",
+        "expected": "nextActivity returns prerequisite R7",
+        "observed": "kind=next. The real graph has no path R7 -> Class 9 (ancestorsOf(T) contains R7 = false).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "blocker",
+        "root_cause": "Same data cause as G2: no cross-class edges."
+      },
+      {
+        "name": "X cross-class mechanism with ONE injected edge on real nodes (R7 -> class-9 root -> P -> T -> U)",
+        "tree": "MAIN+LMS (propagation, plan); MAIN (nextActivity)",
+        "expected": "With the edge present, a wrong on T lowers R7, R7 enters the plan, and nextActivity surfaces R7",
+        "observed": "POSITIVE control passed: with the edge R7 is an ancestor of T and the loader accepts it. nextActivity with a DIRECT cross-class edge (next=[R9], R7 cold-wrong) returned prerequisite R7. But: wrong on T leaves R7 at 0.50 (not lowered); plan after a wrong on T (12 steps) does not contain R7; nextActivity with next=[T] (R7 three hops away) returned next.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "Even if the sidecars existed, the one-way propagation (mastery.ts:128), the evidence gate (plan.ts:66) and the one-hop planner (next.ts:59) would still not trace a Class 9 failure to a Class 7 root. Only a direct one-hop edge with cold evidence works."
+      },
+      {
+        "name": "P1 plan orders a shaky prerequisite before its dependent (positive controls)",
+        "tree": "MAIN+LMS (diagnostic identical)",
+        "expected": "Wrong on P and on T -> both in plan, P before T. Wrong directly on root R -> plan starts at R.",
+        "observed": "P at plan index 0, T at index 2; plan[0] = R for a direct wrong on R. Negative control: correct on T -> plan length 0.",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "plan.ts stepsFrom pulls gap prerequisites first and sorts topologically. Prerequisite-first ordering works once the prerequisite itself is evidence."
+      },
+      {
+        "name": "P2 plan / learnFromQuiz trace a failure on T back to an ancestor",
+        "tree": "MAIN+LMS (identical)",
+        "expected": "Wrong only on T -> plan (buildPlan) and learnFromQuiz.added contain an ancestor of T",
+        "observed": "buildPlan plan = T + its descendants (12 steps), ancestor steps = 0. learnFromQuiz.added = [T, rational-number, irrational-number], ancestors added = 0.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "plan.ts:66 and adapt.ts:155 admit only evidenceFrom(...) = the answered node plus descendants, so an unprobed ancestor can never be a step. The comment at adapt.ts:189 ('usually on a prerequisite') is a claim the code cannot satisfy for wrong answers; the same holds for plan.ts:56-58 ('Class 7 fractions as step one')."
+      },
+      {
+        "name": "P3 plan on real graph and with injected edge for a Class 9 failure",
+        "tree": "MAIN+LMS",
+        "expected": "Wrong only on a Class 9 node -> a Class 7 step in the plan (real graph) and R7 in the plan (injected edge)",
+        "observed": "Real graph: 12 steps, 0 are Class 7. Injected edge: R7 absent from the plan.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "blocker",
+        "root_cause": "G2 (no data) plus P2 (no ancestor in the evidence gate)."
+      },
+      {
+        "name": "E end-to-end placement: Class 9 Maths student whose true root is a Class 7 node (5 roots, 20 questions, lookBack 2)",
+        "tree": "MAIN+LMS (identical)",
+        "expected": "The plan contains the true Class 7 root in all 5 trials",
+        "observed": "Root in plan: 1/5 on the real graph and 1/5 with an injected cross-class edge. The one hit (integers-mult-pos-neg, 54 dependents) came from the placement probing it directly. In the other trials the plan was 12 steps of descendants or 1 step. No early stop (20 asked each time).",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "Placement finds a root only if it happens to ask it directly (information value picks it); wrong answers elsewhere never implicate it. selectNextProbe's 'drop toward the prerequisites' (select.ts:53) is only difficulty-1, not an ancestor walk."
+      },
+      {
+        "name": "E2 control: same placement, true gap is a PROBED Class 9 maths node with 45-58 dependents (lookBack 0 / 2)",
+        "tree": "MAIN+LMS (identical)",
+        "expected": "At least 4 of 5 found if the engine really does root-cause search",
+        "observed": "lookBack 0: 2/5 found; lookBack 2: 1/5 found. Not a clean positive control: the engine finds a missing foundation only about as often as it samples it. First attempt of this control was a probe bug (6 of 7 Class 9 maths roots have no probe in the bank) and was fixed.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "Same as E. Also 382 of 1095 Class 9 nodes have no probe in the bank (4697 probes for 5079 nodes, Class 9 = 713/1095), so an unprobed foundation can only be inferred, and inference only goes downward."
+      },
+      {
+        "name": "D data defect: placeholder node in the graph",
+        "tree": "MAIN+LMS (identical, committed since 7e98457)",
+        "expected": "No junk nodes in the outcome map",
+        "observed": "class9-mathematics.json:1716 holds id class9-mathamentals-placeholder-ignore, title/outcome 'placeholder', chapter linear-equations-in-two-variables, with a probe asking '6 multiplied by 7'. It is the only Class 9 Maths root that has a probe in the bank, so placement can ask it.",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "root_cause": "A generator artefact committed and never caught by data.test.ts (the 122 existing tests pass)."
+      }
+    ],
+    "conclusion": "Score for this brief item: 2 of 5 on MAIN and 1 to 2 on LMS. What exists is a clean 5079-node, 6546-edge DAG that passes every integrity check, and a planner that orders a prerequisite before its dependent once the prerequisite itself has been answered. What the brief asks for does not exist. Cross-class edges: 0 of 6546, so no Class 9 node has a Class 7 ancestor and a Class 9 failure cannot be traced to a Class 7 root. Even with one injected edge on real nodes the chain still fails to trace, because of three further gaps. 1) mastery.ts:128 lowers only descendants after a wrong answer, so ancestors stay at 0.50 and the fold (device and LMS server concept_state) writes no ancestor row. 2) The plan and learnFromQuiz evidence gate admits only the answered node plus its descendants, so an unprobed ancestor can never become a step. 3) nextActivity (MAIN only) looks one hop from the next topic and only at prerequisites with cold evidence, so a root two hops away or an unasked prerequisite is skipped and the student is moved on. Placement found a hidden Class 7 root in 1 of 5 trials (same with an injected edge) and a Class 9 root in 2 of 5, which is about the rate of asking it by chance. LMS is the same or worse: it runs the same propagation through lms-brain/think.ts, has no nextActivity and no planner reading prerequisites, and libraryIndex() merges the maps with no links step. Controls: positive controls passed (descendants lowered 137/137, correct raises ancestors, direct-prerequisite nextActivity, prerequisite-before-dependent plan order, loader integrity); negative controls passed (loader rejects cycle, dangling and duplicate; no spurious prerequisite; 0 unrelated nodes moved). Probe bugs fixed: E2 first picked roots with no bank probe. Not tested: real probe selection against live students, any model call.",
+    "suggested_fixes": [
+      "Generate and review the cross-class link sidecars (packages/knowledge-graph/data/<id>.links.json) with the existing tools/gen-graph/src/link.ts link pass, Maths first; load them in packages/lms-brain/src/graph.ts too (it merges maps with no applyLinks). Add a data test that fails when the cross-class edge count is 0 or a Class 9 node has no earlier-class ancestor.",
+      "mastery.ts evidenceRegion/applyEvidence: on a wrong answer apply a weak, distance-decayed pull toward 'suspect' on ANCESTORS (not only descendants), scaled by edge trust, and let it count as evidence in plan.ts:66 and adapt.ts:155, so unprobed prerequisites can become gaps and plan steps.",
+      "learner-model/src/next.ts:59: replace the one-hop prerequisitesOf loop with a bounded ancestorsOf walk from the next topic AND from the node just failed; rank candidates by lowest unassistedMastery times blockCount; when a candidate has no cold evidence, return a new kind 'probe' (ask it cold) instead of 'next'.",
+      "selectNextProbe (diagnostic/src/select.ts:53): after a wrong answer, actually choose the highest-information probe among the failed node's ancestors, instead of only difficulty minus 1.",
+      "Run the LMS server fold (lms-brain/think.ts) so a failed node writes ancestor suspicion rows to concept_state, and add a teacher-side 'likely root cause' view reading them; port nextActivity/tutor-control into the LMS lineage or merge the trees.",
+      "Delete class9-mathematics node class9-mathamentals-placeholder-ignore and its probe, and add a data test rejecting titles equal to 'placeholder'.",
+      "Fill the missing probes (382 of 1095 Class 9 nodes, including 6 of 7 Class 9 Maths roots have none) so placement can test foundations directly."
+    ],
+    "positive_control_ok": true,
+    "negative_control_ok": true,
+    "commands_run": [
+      "npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L06-main (MAIN, run 3 times; final: 14 passed, 15 failed of 29)",
+      "npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L06 (LMS: L06-lms + L06-lms-fold; 11 passed, 12 failed, 9 skipped because nextActivity is absent)",
+      "npx vitest run packages/knowledge-graph/tests/data.test.ts packages/knowledge-graph/tests/graph.test.ts --environment=node --maxWorkers=1 (MAIN: 122 passed)",
+      "node one-liners over packages/knowledge-graph/data to count nodes, edges, roots and bank coverage"
+    ],
+    "files_written": [
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L06-main.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L06-MAIN.json",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L06-lms.test.ts",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L06-lms-fold.test.ts",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/shared/L06-LMS.json",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/shared/L06-LMS-fold.json"
+    ],
+    "probe_bugs": "E2 first picked Class 9 Maths roots that have no probe in the bank (invalid control); fixed to pick probed nodes with 20 or more dependents. The 'nextActivity' tests are skipped in LMS (function absent there). The E and E2 oracles, which fail every node truly dependent on the missing one, are my own model of a student, and the 20-question placement is a single deterministic run per trial, not a distribution."
+  },
+  {
+    "id": "L07",
+    "title": "Tutor-control ladder: does the controller choose, escalate and log?",
+    "brief_expectation": "decide() escalates in a fixed order on repeated wrong answers (look again, hint, answer plus why), never leaks the answer in a hint, never loops forever, is deterministic, handles \"not sure\", hint requests and silence, records the rung it chose, and that rung reaches the ledger as an intervened row with the reason and then the fold. A last-resort rung exists.",
+    "trees_tested": [
+      "MAIN",
+      "LMS"
+    ],
+    "checks": [
+      {
+        "name": "POSITIVE control: cold right answer gets praise only",
+        "tree": "MAIN",
+        "expected": "praise, no helped row, no retest, exactly one intervened row",
+        "observed": "kind=praise rung=0 helped=null retest=false records=[intervened] say='Right, nicely done.'",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "decide.ts:142-170 onRight"
+      },
+      {
+        "name": "NEGATIVE control: only a right verdict ever praises",
+        "tree": "MAIN",
+        "expected": "no praise for wrong/unmatched/unclear/silent/stillSilent/hintRequest/explainRequest, any rung/lang/content; contradictory right+wrong-option not praised",
+        "observed": "336 combos, 0 praise on non-right; contradictory 'right' on wrong option -> nudge",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "decide.ts:69-81 disagrees guard"
+      },
+      {
+        "name": "Escalation order on wrong x1..x8 (full content)",
+        "tree": "MAIN",
+        "expected": "look again first, hint before answer, answer at rung 8, rung never decreases, then move on",
+        "observed": "rethink@1 > hint@3 > workedExample@5 > explainAgain@7 > reveal@8 > moveOn@8 > moveOn@8 > moveOn@8; hint-only content: rethink>hint>reveal>moveOn",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "decide.ts:172-250 onWrong; extra rungs L5/L7 only where authored"
+      },
+      {
+        "name": "Cap and last-resort rung (never loops forever on wrong answers)",
+        "tree": "MAIN",
+        "expected": "every content shape and both languages reach a terminal moveOn within 7 steps and stay terminal; rung <= 8; with nothing authored a last resort still exists",
+        "observed": "40 wrong answers: moveOn at step 6 (full), 4 (hint only), 3 (answer only), 2 (nothing: rethink@1 > moveOn@1, retest=true), identical en and hi-en",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "decide.ts:175-184 floor>=8 moveOn; :302-314 revealOrMoveOn"
+      },
+      {
+        "name": "Determinism (call twice, no mutation, no clock)",
+        "tree": "MAIN",
+        "expected": "identical input gives identical Action; input not mutated; now ignored while timing rules are off",
+        "observed": "4320 inputs (8 verdicts x 9 rungs x 3 attempts x 2 langs x 5 asks x 2 recent) 0 differences, 0 mutations; now=1 vs 9999999 identical; fast-wrong rule only with timing.rules",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "decide.ts:60 pure; FNV hash seed decide.ts:559"
+      },
+      {
+        "name": "No leak: authored hint / example / alternate / follow-up containing the literal answer",
+        "tree": "MAIN",
+        "expected": "never said or written before the reveal, any rung, verb, lang; ladder falls back",
+        "observed": "8 adversarial hints x 2 langs x ladder+hint/explain/silence at 5 rungs: 736 actions, 0 leaks (independent 4/four oracle). Leaky example/alternate skipped: rethink>hint>reveal; leaky option hint+follow-up refused",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "leak.ts:135 leaks() applied at decide.ts:223,230,294,201"
+      },
+      {
+        "name": "No leak: Hinglish number words, computed/paraphrased/formula hints",
+        "tree": "MAIN",
+        "expected": "a hint never carries the answer (brief), including in Hinglish, which is the tutor language for hi-en students",
+        "observed": "7 of 7 got through to the child: 'chaar', 'char hai', '8 divided by 2', '2 squared', 'number after three', 'CO2' for carbon dioxide, paraphrase of 'sugar dissolves'",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "leak.ts:29-36 documents the gaps: romanised Hindi numerals not normalised, no arithmetic or paraphrase check. Frequency in authored Hinglish classes UNVERIFIED.",
+        "tree_note": "MAIN"
+      },
+      {
+        "name": "Hint-request phrasing EN/Hinglish and bounds",
+        "tree": "MAIN",
+        "expected": "requests recognised, answers/shrugs not; a request never yields worked example, answer or move-on, from any start rung; filed requested:true at L3",
+        "observed": "15/15 request phrasings caught (hint do, madad karo, koi hint milega, hint batao...), 13 answers/shrugs 0 false positives, bare 'haan' only after offer and not when yes/no is an option. 12 requests from each start rung 0/1/3/5/7: never reveal/workedExample; helped=3 requested=true",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "hintRequest.ts:87-125; decide.ts:328-357"
+      },
+      {
+        "name": "Hint/explain request spam cap (never loops forever)",
+        "tree": "MAIN",
+        "expected": "after 25 consecutive hint requests the controller has moved off 'restate the hint'; repeated explain requests do not recycle the first alternate",
+        "observed": "25 requests: all 25 kind=hint rung 3, no end. Explain x4 with 2 alternates: analogy, steps, analogy, analogy",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "root_cause": "decide.ts:335-345 restates hint at L3 forever; ClassRoom.tsx:1253-1276 keeps no request counter and does not bump tries; decide.ts:297-298 falls back to safe[0] when all alternates used",
+        "tree_note": "MAIN"
+      },
+      {
+        "name": "'pata nahi' / 'I am not sure' handled as a miss, ladder climbs",
+        "tree": "MAIN",
+        "expected": "shrugs classified on device as a wrong answer (not right, not a request); 4 in a row give rethink > hint > reveal > moveOn; answer said only at the reveal",
+        "observed": "pata nahi, I am not sure, not sure, mujhe pata nahi hai, hmm pata nahi yaar, I don't know, no idea, nahi samjha all 'only'; 'plasma pata nahi' hedged; ladder rethink@1>hint@3>reveal@8>moveOn@8, answer only in reveal. 'idk' returns null",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "root_cause": "tutor-judge match.ts:106-118 DONT_KNOW list lacks 'idk'/'dunno'; a typed 'idk' falls to the model (one paid call, fail-safe not wrong). Everything else passes.",
+        "tree_note": "MAIN"
+      },
+      {
+        "name": "Silence ladder and 'unclear'",
+        "tree": "MAIN",
+        "expected": "silent > nudge (L1 help, unrequested, content-free); hintRequest > L3; stillSilent > answer+why L8 + retest; no answer authored or already revealed > moveOn; unclear files no help",
+        "observed": "nudge@0(helped 1,requested false) > hint@3 > reveal@8 retest=true. 10 silents stay nudge (cap lives in caller counter ClassRoom.tsx:1199-1200). stillSilent after reveal and with no answer: moveOn. unclear: helped=null rung unchanged",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "decide.ts:89-122"
+      },
+      {
+        "name": "Right after help: praise, no new help row, retest scheduled",
+        "tree": "MAIN",
+        "expected": "right after hint/reveal/weak record schedules a retest on a different item; right cold on strong record does not; after reveal the praise says read-back not 'worked out'",
+        "observed": "after hint: praise 'Yes, you got there', retest=true, records=[intervened]; after reveal retest=true, no 'worked it out'; unassisted 0.2 -> retest true; 0.95 -> false",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "decide.ts:142-170"
+      },
+      {
+        "name": "Every action files [helped?, intervened] in order with a reason",
+        "tree": "MAIN",
+        "expected": "recordsFor gives helped first (when helping) then intervened with non-empty because and the same rung/action",
+        "observed": "14 actions across ladder/right/silent/request/explain/unclear/stillSilent: 0 problems, 8 helped-first; intervened.because non-empty, rung and action match; existing suite packages/tutor-control/tests 208 pass in 6 files",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "records.ts:24-51"
+      },
+      {
+        "name": "Rung reaches the fold through helped (positive and negative control)",
+        "tree": "MAIN",
+        "expected": "help rows filed -> a later right answer on attempt 1 stamped rung 0 is NOT counted cold; with help rows lost it IS (proves probe can fail)",
+        "observed": "silence nudge + hint request then right: helpFiled unassistedObs=0 (um 0.5); helpLost unassistedObs=1 (um 0.783, manufactured). Ladder ending in right: obs=1 (only the cold first miss), um 0.118 vs cold right 0.783",
+        "verdict": "pass",
+        "product_defect": false,
+        "severity": "none",
+        "root_cause": "learner-model fold.ts:87-92 reads helped rung by ask key"
+      },
+      {
+        "name": "The intervened row (reason) is produced AND filed by the product",
+        "tree": "MAIN",
+        "expected": "ClassRoom files an intervened row with the reason on every controller action; the type, SQL check ('intervened' in 0006_ledger.sql:81) and fold accept it",
+        "observed": "type and SQL accept it; fold ignores it (states identical with/without, fold.ts:104-107). BUT recordsFor() is called by 0 files in apps/ or packages/ outside tests; ClassRoom has 3 decide() sites (1201,1253,1430) and 5 ledger.helped writes, 0 intervened writes",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "classLedger.ts has no intervened writer; ClassRoom.tsx:1213,1264,1452 call ledger.helped(rung,strategy) only. records.ts:16-17 admits 'Today nothing emits it'. The reason (because) is never persisted, so a session cannot be audited or replayed from the ledger.",
+        "tree_note": "MAIN"
+      },
+      {
+        "name": "Revisit later: scheduleRetest and conductor are consumed by a student path",
+        "tree": "MAIN",
+        "expected": "Action.scheduleRetest read by some app/queue; the conductor that queues retests is mounted",
+        "observed": "scheduleRetest read by 0 files outside tutor-control; createConductor called by 0 files outside tutor-control (only conductor.ts:807 queueRetest and tests)",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "medium",
+        "root_cause": "ClassRoom.tsx uses decide() directly and ignores action.scheduleRetest; conductor/conductor.ts:245 is exported but unmounted. Partly mitigated by learner-model nextActivity spaced review, a separate path.",
+        "tree_note": "MAIN"
+      },
+      {
+        "name": "Stateless reliance on caller's rungSoFar",
+        "tree": "MAIN",
+        "expected": "attempt count alone should escalate (attempt=9, rungSoFar=0 should not return a hint)",
+        "observed": "decide(attempt=9, rungSoFar=0) = hint@3 (floor only lifts to L1)",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "low",
+        "root_cause": "decide.ts:455-458 floorRung uses attempt only to lift 0 to 1. ClassRoom keeps rung in a React ref (rungAt) so a remount mid-question restarts the ladder. Pre-registered stricter than the design contract, so low.",
+        "tree_note": "MAIN"
+      },
+      {
+        "name": "LMS has a controller (choose / escalate / log)",
+        "tree": "LMS",
+        "expected": "some controller exists; leak check; escalation; intervened rows",
+        "observed": "no packages/tutor-control; 0 decide( sites; 0 recordsFor; 0 intervened writers; 0 leak check. ClassRoom files fixed helped rungs only: ClassRoom.tsx:315 (rung 3), :762 (3 or 2 per model's 'gave'), :921 (7)",
+        "verdict": "fail",
+        "product_defect": true,
+        "severity": "high",
+        "root_cause": "LMS branch predates tutor-control (159 commits on MAIN not in LMS). A wrong answer gets the model's reply (speakSafely, safety screen only, no leak check, ClassRoom.tsx:763) at a hardcoded rung, with no code-side escalation or cap, no reason logged.",
+        "tree_note": "LMS"
+      }
+    ],
+    "conclusion": "MAIN: the controller is real, deterministic and wired. decide() escalates in the brief's order (rethink@1, hint@3, [example@5, explain@7 where authored], reveal@8, moveOn) with a terminal cap and last resort in 40-wrong runs on every content shape. It handled 4320 grid inputs with no difference. It never leaked the literal answer in 736 adversarial actions. Silence, hint requests, shrugs and right-after-help behave as designed, and the helped rung does reach the fold (obs 0 with the rows, 1 with them lost). Three gaps are real. (1) The controller's reason is never persisted: recordsFor has no production caller and ClassRoom files only helped. (2) scheduleRetest and the conductor are consumed by no app, so the controller's retest decision does not reach a student. (3) The leak check misses Hinglish numerals and paraphrase (7/7 slipped through), and hint or explain requests never terminate. LMS has no controller at all. Scores: MAIN 3.5 of 5 (4 for choose and escalate, 2 for logging the reason and retest; call it 3 if the audit trail counts equally). LMS 0 for a controller; it only writes fixed helped rungs. Fixes, in order: wire recordsFor into ClassRoom at the three decide() sites, then consume scheduleRetest or mount the conductor, then add a request counter plus Hinglish numeral and arithmetic checks, then port tutor-control into LMS.",
+    "positive_control_ok": true,
+    "negative_control_ok": true,
+    "probe_bugs": "Three probe bugs of mine, all fixed within the iteration limit. (1) I first asserted unassistedObservations==0 after a wrong>wrong>right ladder, but the first miss is a genuine cold answer at rung 0, so 1 is correct; the assertion now targets the final right answer. (2) The 'intervened moves the fold' comparison tripped on lastPracticedAt timestamps that my own seq-spaced stream shifted; those two fields are now excluded. (3) My first negative control (help rows dropped, final right at attempt 3) did not discriminate because the fold floors attempt>=2 at rung>=1 (atLeastANudge). I replaced it with a silence nudge plus hint request then a right answer at attempt 1, which does discriminate (obs 0 vs 1). Also fixed one apostrophe syntax error and one stray property. No product assertion was weakened. Existing tests: packages/tutor-control/tests 6 files, 208 tests pass. LMS probe: tutorControlDir=false (the failing assertion is the finding).",
+    "suggested_fixes": [
+      "Persist the reason: in ClassRoom.tsx after each decide() at 1201, 1253 and 1430, loop recordsFor(action,{beatId}) and add a ledger.intervened(beatId, payload) writer to classLedger.ts (next to helped, classLedger.ts:588). That makes helped->intervened in order, adds the because/rung/errorClass audit row, and matches records.ts:12-22. No SQL change needed ('intervened' is already in 0006_ledger.sql:81).",
+      "Make 'revisit later' real: have ClassRoom read action.scheduleRetest and enqueue the ask id for the next session, or mount createConductor. Until then right-after-help and cold-on-weak-record retests are computed and dropped.",
+      "Close the leak gaps: normalise romanised Hindi numerals (ek, do, teen, chaar, paanch...) in leak.ts only when a hi-en ask has a numeric secret; add a tiny arithmetic evaluator that flags 'a op b' equal to a numeric secret; add a prep-time (offline, once per ask) lint in class-prep that rejects hints containing the answer by paraphrase, so runtime stays at zero model calls.",
+      "Cap request loops: count hint/explain requests per ask in ClassRoom (rungAt-style ref). After 2 repeats of the same hint, treat the next request as a wrong step (offer L5 example or L8 reveal), and persist rungAt/triesAt so a remount does not reset the ladder.",
+      "Add 'idk', 'dunno' and 'no clue' to tutor-judge DONT_KNOW (match.ts:106) so typed shrugs resolve on device instead of costing a model call.",
+      "LMS: port packages/tutor-control plus the ClassRoom wiring from MAIN (merge or cherry-pick the tutor-control commits) so LMS wrong answers use decide(); replace the hardcoded ledger.helped(...,3|2,false) at LMS ClassRoom.tsx:315 and :762 with decide().helped/strategy; run the model's say through leaks() first."
+    ],
+    "commands_run": [
+      "Read MAIN packages/tutor-control/src (decide.ts, types.ts, records.ts, hintRequest.ts, leak.ts, lines.ts, index.ts), README, conductor header; grep decide( / recordsFor / intervened / scheduleRetest / createConductor across apps and packages in MAIN and LMS",
+      "cd MAIN && npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L07-main-controller (3 iterations; final 33 tests: 26 pass, 7 fail; the 7 are the product findings above)",
+      "cd MAIN && npx vitest run packages/tutor-control/tests --environment=node --maxWorkers=1 (6 files, 208 tests pass)",
+      "cd LMS && npx vitest run --config .scratch/lam-probes/vitest.config.ts .scratch/lam-probes/L07-lms (1 test fails as the finding: no tutor-control)"
+    ],
+    "files_written": [
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/L07-main-controller.test.ts",
+      "C:/Users/Ashish Sharma/curie/.scratch/lam-probes/shared/L07-MAIN.json",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/L07-lms.test.ts",
+      "C:/Users/Ashish Sharma/curie/.claude/worktrees/lms/.scratch/lam-probes/shared/L07-LMS.json"
+    ]
+  }
+]

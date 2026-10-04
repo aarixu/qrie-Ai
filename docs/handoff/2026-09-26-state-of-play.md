@@ -8,6 +8,8 @@ and each of them now says so at its top.
 **It is also the living status file.** Update it in place. Never write a new
 dated handoff beside it.
 
+**Moving to a fresh computer (2026-10-04):** `docs/ops/resume-on-a-new-computer.md` is the runbook, with the resume ledger of every session and the part-finished LAM deep test (`docs/verify/2026-10-04-lam-deep-test-partial.json`).
+
 Read `docs/handoff/2026-08-23-continue-here.md` only for what the tutor product
 IS — the recorded-first-class + raise-hand seam. That has not changed and is not
 repeated here.
@@ -143,6 +145,139 @@ Professional courses and the sandbox come later.
 - Is the student's own check enough, or does a person review a course map before it is sold?
 - The login method for college students.
 - ~~The school board: CBSE/NCERT only at first?~~ **Decided 2026-09-30: CBSE first, with the scope above.**
+
+---
+
+## ► NEXT TRACK (Aarav, 2026-10-03): the super admin panel — Qrie's own console for users, schools and everything. PLAN, NOT BUILT
+
+Aarav: *"super admin panel … jahan se saare users, schools aur har chiz ko control kar sakun."*
+
+**This is not the school principal's panel.** That is the school-admin role: `lms.require_admin` and the school screens in `apps/lms` (`mark_left`, `move_student`, `set_teaching`, `restore_account`, the activity log, notices). The only platform-side tool today is `tools/lms-demo`, the "founder console" over `lms.founder_schools` and `lms.set_licence` (migration 0041, service role only). Per the read below it runs only against the local PGlite demo (UNVERIFIED by me).
+
+### Decided by Aarav (2026-10-03)
+
+1. **A real web app, separate, on its own origin**, built in tiers. "Control everything" means **named, audited actions** (suspend, PIN reset, erase, publish, halt, licence). It does not mean a raw SQL box or a table editor: this is children's data, and one wrong click or one stolen login must not be able to move the whole platform.
+2. **Two doors to a user.** (a) **Schools:** pick the school, then search by name or login ID inside it. (b) **Direct users**, who came on their own (contest, the tutor site, later college) and have no school: they get a record too. Lists are masked; an address, a full phone number, an answer or a photo opens only with a typed reason, and that is logged.
+3. **Who logs in for the first six months:** Aarav as Owner (super admin) and **one backup safety reviewer**, a non-engineer with the `safety` role only.
+
+### Assumed, not yet confirmed (Aarav: say so if wrong)
+
+- The first pilot is **homework-only**; the tutor joins the app later. So a per-school AI budget is T1.
+- Staff share the children's Supabase project, with the checks inside every function (below); a separate staff identity provider is reconsidered at T1.
+- Admin tables live in the LMS lane, in a new `admin` schema, migrations **0043 onward** (0042 was still untracked when read). Relay-side code builds on the `phase3-completion` lineage, not the `lms` branch, whose relay lacks Vertex speech, ear and Live.
+- Who is the data fiduciary for a school child is a **counsel** question. The panel holds one row per school, reading "undecided" until counsel answers, and refuses that school's import while it does.
+
+### Where this comes from
+
+A read-only, 21-agent brainstorm on 2026-10-03: six subsystem readers, a benchmark of other consoles, nine people who would use the panel (founder, on-call, onboarding, support, content, safety and DPDP, finance, AI quality, security), a synthesiser, three critics (cut, safety, completeness) and a final edit. No live database, no deploy, no model spend. **It took over three hours; Aarav does not want workflows for this kind of work, so the rest is built inline.** The file-and-line citations in the module notes are the agents'; **only the lines marked MEASURED were re-read by hand.** Raw result: run `wf_1beffca5-743`, `journal.jsonl` line 43 (session-local, not in the repo).
+
+### What is MEASURED about today (re-read by hand, 2026-10-03)
+
+- **Platform admin today is whoever holds the service-role key or the SQL editor.** The halt is two raw `UPDATE` statements, and the runbook says itself that "no definer function to set halted exists" (`docs/ops/runbook.md:41-59`). `relay_control` has RLS on and no policy (`0016:45`). No hand edit leaves a trace.
+- **`claim_relay` never reads `p_relay` or any org.** (`0016:50-174`): a school cannot be metered or capped, and one relay cannot be halted alone. `global_units_per_day` has no CHECK bound (`0016:33`).
+- **No `is_anonymous` or `aal` check anywhere in `supabase/`** of the `lms` worktree (migrations 0001-0042; one hit, in `supabase/tests/harness.ts`). Anonymous children hold the `authenticated` role, so "any signed-in user" is never "staff".
+- **Class publish is a hand SQL `update prepared_class set review_status = 'published' …`** (`tools/prewarm/README.md:25-27`). `tools/bin/retract-class.mjs` is promised and exists in neither checkout.
+- **A child's distress verdict never leaves the phone.** `recordFlag` (`apps/classroom/src/lib/safety.ts:42,83`) writes `flagStore`, created `neverSync: true` (`stores/flags.ts:159`). A child's *report* does reach the server, but `student_report.status`, `actioned_at` and `action_note` (`0019:67-69`) are written by no code (only the migration and `tests/migrations.test.ts` mention them), and the child is told "Somebody will read it" (`apps/classroom/src/ui/ReportSheet.tsx:390`).
+- **`OPS_ALERT_WEBHOOK` is optional**, read at `supabase/functions/relay/index.ts:213`; per its own comment it fires on a kept report. Whether it is set live is UNVERIFIED. Nothing alarms on spend, halts or caps.
+- **`lms.audit()` cannot be the platform's audit log.** It records `auth.uid()` as the actor, which is null for the service role (`0034:55-56`; so `licence-set` rows have no actor, `0041:91-92`); `audit_event` cascades with its school and is `grant all` to the service role (`0034:37-38,46-47`).
+- **Staff accounts would be made into child-shaped rows.** Every `auth.users` insert gets a solo organisation and a student membership unless `app_metadata.provisioned_by = 'school'` (`0021:123-128`).
+- **In `0021` as written, `purge_old_ledger` deletes no events**: it deletes only where `learner_model.purge_safe_before` is set, and nothing sets it (`0021:140-161`, its own comment says so). Whether `0021` is applied to the hosted project, and what the privacy page promises, are UNVERIFIED by me.
+- **Erasure today is a raw delete.** `delete_own_account` refuses school members and, for everyone else, deletes from `auth.users`, which cascades (`0021:174-196`).
+- **A contest child's record** holds name, class, phone, **home address**, city and typed school, plus the parent's name and number *as typed and unverified* (`0020:33-64`). The migration calls the address something "only read by a person posting a prize". Verified consent is a different table (`consent_record`). Both have RLS on with zero policies.
+- **Today's real population is direct users**: 204 users, all anonymous, no school organisation (live DB, 2026-09-24; STALE, re-check).
+
+### The panel — shape and rules that run through every module
+
+- **Shape.** A separate app (for example `apps/admin`) on its own Vercel project and origin, never `qrie-ai.vercel.app`, which children's sessions share. Everything it does is a **named `SECURITY DEFINER` function** under an `admin` schema; the CLI (`tools/bin/admin.mjs`) is v0 of the same functions, then the phone-first page. The panel must keep working while the relay is halted, so its data path never goes through the relay.
+- **No service-role key in the browser host.** The page calls `admin.*` functions with the staff member's own JWT. The few operations that need the Auth admin API (PIN reset, disable a user, erase) run in a small server-side function that holds the key. Whether Supabase lets us scope a database role to `EXECUTE` on `admin.*` only is UNVERIFIED.
+- **Three roles.** `owner` (Aarav: mints roles, resumes, raises caps), `ops` (halt, retract, classes, schools and users; no child evidence), `safety` (report list and evidence). Halt, retract and disable are available to any active staff member in one tap, reason after the fact. Resume, cap raise, publish, erase, licence change and import apply need step-up, a typed confirmation, a reason and a blast-radius line ("stops the tutor for N children at M schools until 06:00 IST").
+- **Every function checks, inside itself:** the caller is in the staff allowlist AND not anonymous AND `aal2` AND active. Never `user_metadata`, never a request parameter. Negative tests against real Postgres: an anonymous, a student, a school-admin and an `aal1` JWT each get nothing and write nothing.
+- **Immutable audit.** `admin.audit_event` is insert-only (revoke update, delete and truncate from every role including `service_role`, plus a raising trigger; no cascade or set-null on actor or subject), written in the same transaction as each action, holding ids, reasons and hashes only, never child content, so it survives erasure. New rows are copied daily to a store the service-role holder cannot write. Triggers on `relay_control`, `prepared_class`, `model_price`, `lms.licence` and `platform_staff` write an "unmanaged change" row when no admin session flag is set, so hand-SQL leaves a trace too.
+- **Staff authentication.** Own origin, a hardware key or passkey as the second factor if the plan allows it (UNVERIFIED), else an authenticator app; never SMS. Short staff sessions (5-15 min JWT, idle timeout 10-15 min) with a session epoch checked in each function. Staff accounts and probe accounts carry a flag so they never enter cost-per-student-hour, adoption or LAM numbers, and are excluded from the solo-organisation trigger.
+- **Purpose-bound, masked, quota-limited reads.** Reading a report, consent record, contest entry, OTP row, answer or photo needs a case id and a typed reason, **refused by the function without them**; one record at a time; phones show the last 2 digits. Per-staff per-hour quotas freeze a session and alert the Owner.
+- **Honest numbers.** Meter units are never shown as rupees; a rupee figure carries its unpriced share and a "floor" label. A tile whose data is not captured says "not captured" in grey, never 0 and never green. Every daily chart names its clock (UTC reset is 05:30 IST).
+- **Show, never do:** deploys, migrations, distress patterns, helplines, model allow-lists and retention windows are displayed read-only; they change in code, together with the privacy page and its test.
+- **Never shown, never exported:** raw PINs or hashes; any secret value (presence and set date only); child transcripts or answers outside one case-bound read; report notes in any list, alert or notification; full phone numbers and parent names; home addresses (one purpose-bound reveal for the prize post); photos in lookups; a ranked or at-risk list of children; per-child behavioural trails (DPDP s.9(3)); consent rows next to a child's activity.
+- **Alerts** carry an opaque case id and a severity, nothing else, on **two private channels** (safety; cost and health), each with a named person. The evaluator runs outside Supabase (scheduled job or a small worker, plus an uptime monitor), and its own liveness is a tile.
+
+### The modules
+
+T0 = before a pilot school's real children use it. T1 = before about ten schools. T2 = at scale or the college launch.
+
+| Tier | Module | What it is | Exists today |
+|---|---|---|---|
+| T0 | **M-ACCESS** | Staff allowlist, three roles, insert-only audit, the in-function checks, quotas, tripwires | greenfield; copy the shape of `lms.audit_event` but fix its grants and cascade |
+| T0 | **M-TODAY** | One home page from one function: queues first (new reports and their age, pending classes, schools near licence end or seat cap, contest cap burn), then about twelve tiles (halted, units against the cap with projected trip time in IST, `model_price` row count, Rs per student-hour with unpriced share, upstream failure rate, last purge run, migration level, `founder_schools`) | partly: the data exists, nothing displays or alarms |
+| T0 | **M-KILL** | `set_halt` and `set_caps` as audited, CHECK-bounded functions; cap raises auto-revert at the next UTC day; halt is tutor-only (`/api/report` stays exempt, runbook lines 61-63); `RELAY_DISABLED` stays a CLI secret; one timed halt drill; fix the child-facing "a few minutes" wording in `apps/classroom/src/lib/refusal.ts` | partly: the `relay_control` row and the env secret |
+| T0 | **M-SAFETY** | Server-side distress capture (`/api/flag`, metadata only, labelled a client-asserted lower bound); a report button and helpline in `apps/student` and `apps/lms` (none today, per the read); triage that writes actor and note into the existing columns; a named safety recipient per school; evidence read one at a time; a written disclosure runbook | partly. The first deliverable is capture plus an alarm: app and relay work, not admin UI |
+| T0 | **M-CLASSES** | Pending list with a play-as-child link; `publish(id, reason)` recording who; `retract` that really removes the public files; `reject_and_free` deleting row and folder together; a server-side personal-text scan at keep and publish | partly: the review columns exist (`0018:308-336`), the rest is a hand `UPDATE` |
+| T0 | **M-SCHOOLS** | Harden `tools/lms-import` and the founder console for the hosted project: seat check against the licence, audit rows with a real actor, atomic account creation, the right login URL, a go-live preflight; hosted `set_licence` with a history row; the school code is permanent (typed confirmation) | partly: `lms.founder_schools`, `set_licence`, the import CLI (dry run by default) |
+| T0 | **M-USERS** (was M-SUPPORT) | The two-door directory below; hosted PIN reset (the school admin first); disable the Auth user together with `mark_left` | greenfield for direct users; partly for schools |
+| T0 | **M-PRIVACY** | `erase_child(user_id, request_ref)` (verified requester, plan-hash dry run, hold if an unread report is open, school children need the school admin's co-signature, soft delete then a 30-day purge); a requests sheet (a spreadsheet, not a screen); a retention-truth tile; a contest-data purge date and stop collecting home addresses until the prizes are decided; the per-school fiduciary row | partly |
+| T1 | M-COST | Stays `tools/bin/cost-report.mjs` and `apply-prices.mjs` for now; two tiles on Today. Run `apply-prices` once at T0 so there is a number | wraps existing |
+| T1 | M-ENV | A document (`docs/ops/environment.md`) and a timed restore drill; two tiles | partly |
+| T1 | M-LIBRARY | Question QA by hand and one weekly SQL; a retire flag only when a wrong key is found. Becomes T0 the day a pilot school assigns library items before its own teachers read them | partly |
+| T1 | M-ENTITLE | Per-school daily AI budget in `claim_relay`. Becomes T0 the day the tutor reaches school children: a 500-pupil school would trip the Rs 500 day on its first morning | greenfield |
+| T1 | M-BRAIN | Three tiles when the hosted LAM fold (L6) lands | partly |
+| T2 | M-CURRICULUM | Coverage script now; edition promotion waits for the staged-syllabus project | partly |
+
+**M-SAFETY, in plain words.** Until `/api/flag` exists, the only safety signal the server ever sees is a child choosing to file a report. Until the list page exists, `student_report` may be read by a documented `supabase db query` for the first week only, and only if the alarm exists.
+
+**M-SCHOOLS, T1 triggers.** A snapshot-and-rollback of `lms.start_new_year` before the first hosted rollover (it promotes everyone and graduates Class 12 with no undo, per the read of 0037); pause and restore a school; export a school before the pilot contract ends; offboarding is **never** a delete button: suspend, export, a 30-day hold, the principal's signed approval and an Owner step-up.
+
+### M-USERS — the two doors
+
+| | **Door 1: a school** | **Door 2: direct users (came on their own)** |
+|---|---|---|
+| Find | Pick the school, then name or login ID inside it | Pick "Direct", then filter: source (contest, tutor, college), class, city, campaign, date. Or type a **full phone number** (a parent rings from it) |
+| Person card | Login ID, kind, section, subjects, `left_at`, seat counted, last sign-in, open reports | Account (anonymous or named), contest entry, parent consent **shown apart from the typed parent number**, sessions, mastery summary, cost against the cap, open reports; payments once college exists |
+| Reveals | A child's answers or photos: case id and reason | Address, full phone, parent details: case id and reason; the address opens once, for the prize post |
+| Actions | Reset PIN, disable with `mark_left`, erase through M-PRIVACY | Suspend, erase through M-PRIVACY, resend an OTP |
+
+- **Direct users are T0.** Aarav asked that their record exist; the tier is my recommendation, because they are the only population today.
+- **A tutor child is an anonymous UUID with no login ID**, so a parent's call can only be matched through the contest entry or consent record. That lookup needs a case id; the phone-number match is a lead to verify, because the parent number is unverified typed text. Whether `contest_signup` has an index on the phone is UNVERIFIED.
+- **PIN reset:** the school admin resets inside the school panel, so the new PIN appears on the school admin's screen and not a Qrie staff member's. Qrie resets only for a locked-out admin, after a callback to a number on file. The hosted reset throws today (`packages/lms-client/src/backend.ts:181-188`, per the read; UNVERIFIED by me).
+- **Merge an anonymous account into a named one** was offered in chat and the review **parked** it: it is irreversible and has no reversible-log design. Design that first.
+- **Cross-school search by a child's name does not exist**, by design.
+
+### Step 0 — no code, before school 1 (cheaper than any screen, and everything waits on it)
+
+1. Hardware-key or authenticator MFA on the Supabase organisation owner, Vercel, GitHub, Google Cloud, the registrar and the mailbox. Supabase membership limited to the Owner.
+2. Name the backup safety reviewer (signs a confidentiality and safeguarding undertaking), a **second person who can halt**, and a **second alert recipient on a different device and carrier** than Aarav's. A named grievance contact on a mailbox someone reads (the privacy page names `hello@curie.study`; UNVERIFIED that it reaches a person).
+3. Counsel's written answer on who is the data fiduciary for a school child, who receives a distress disclosure, and whether any child words may be kept.
+4. Verify live state once and write it into `docs/ops/environment.md`: `supabase migration list --linked` (are 0021-0042 applied? is the `lms` schema exposed?), run `apply-prices` and record the `model_price` row count, whether `OPS_ALERT_WEBHOOK`, the Gemini key and the Vertex secret are set, backup and point-in-time-recovery status, one timed restore drill.
+5. Independent cost backstop: Google Cloud budget alerts and Vertex quota caps, because the meter is a flat-rate gauge that Live tokens and the authoring CLIs bypass.
+6. Record the hosted Auth rate-limit settings with a date. Student PINs are 6 digits (10^6) and lockout exists in the demo only, per the read.
+
+### Build order
+
+1. Step 0.
+2. **M-ACCESS:** the `admin` migration (0043+), staff allowlist, insert-only audit, the function template with the in-function check and its negative tests, tripwires; `tools/bin/admin.mjs` first; then the panel shell on its own origin with MFA login and an environment badge (HOSTED / DEMO).
+3. **M-TODAY** plus the external alarm evaluator, with the two M-COST tiles and the migration and purge tiles.
+4. **M-KILL.**
+5. **M-SAFETY:** capture first, then triage.
+6. **M-CLASSES.**
+7. **M-SCHOOLS and M-USERS**, each as CLI first, page after.
+8. **M-PRIVACY** floor.
+9. Then by trigger, not by date: M-ENTITLE when the tutor reaches school children; M-LIBRARY when a pilot assigns library items; M-BRAIN at L6; per-relay halt when a pilot class uses voice daily; a school export before a contract ends; the new-year snapshot before the first hosted rollover.
+
+**Before school 1 the minimum is:** Step 0, M-ACCESS, the Today page with the alarm, `set_halt`/`set_caps`, safety capture and triage, publish/retract/reject, hardened import with hosted licence and PIN reset, `erase_child` with the requests sheet.
+
+### Decisions still open — Aarav
+
+- **When a licence ends:** nothing enforced (today), grace then tutor-off with homework, marks and exports kept, or a hard lockout. Recommendation: grace, then tutor-off, 14-30 days' notice, exam-week exemption, Owner-only suspend; write it as a contract paragraph before building anything.
+- **Which channel pages him**, and what runs the evaluator. Recommendation: two private authenticated channels with opaque payloads, the evaluator outside Supabase; email alone is not an alarm and a public topic leaks. The vendor goes on the privacy page and the sub-processor list.
+- **Whether the platform may keep a flagged turn's words** so "the tutor upset my child" can be investigated. Recommendation: metadata only at T0, plus the existing report note; anything more needs counsel and a change to the privacy page and `privacyClaims.test.tsx` together.
+- **Who receives a distress disclosure for a school child.** Recommendation: recorded per school with counsel's wording, never routed to the school by default; POCSO questions go to counsel.
+- **A server-side prewarm and eval runner:** defer to the staged-syllabus work, and give staff runs their own daily budget, because prewarm shares the project's 50,000-unit ceiling today.
+
+### Parked, with reasons (do not rebuild without a trigger)
+
+A billing and invoicing module (no payments code exists; college pricing is undecided; invoice the pilots by hand). A Razorpay desk (designed when a college product exists; force a named account before checkout, because an anonymous UUID dies with localStorage). A hash-chained audit log, elevation leases, a sealed owner credential and nine job-shaped roles (ceremony for a team of one). Consented "view as", a synthetic twin and any write-capable impersonation (a school admin's consent is not the child's or the parent's under DPDP). A generic SQL console or a table or lesson editor (it makes the panel a second all-powerful key holder and bypasses the 12 keep-gate rules). Auto-publish on a reviewer-model score (planner and reviewer share a model id). A canary child (about Rs 48 a day, and it pollutes cost numbers). Churn and at-risk dashboards (DPDP s.9(3)). Any ERP module: fees, admissions, timetable, transport.
+
+### Where it meets the school principal's panel
+
+The licence card (a "request" goes through a shared mailbox at one or two schools); the school's activity log, where Qrie staff actions will show as "Qrie staff" at T1 (its view joins names through `lms.account`, which staff lack, so that function must change); seat counts feeding the import check; the school's named safety recipient; the principal's co-signature on destructive actions on that school's data; a principal's "pause for exam days".
 
 ---
 
