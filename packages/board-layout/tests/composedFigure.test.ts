@@ -101,6 +101,27 @@ describe('a labelled picture on a composed page', () => {
   });
 });
 
+describe('a comparison on a picture page', () => {
+  const made = lay([
+    ...VILLI.slice(0, 11),
+    { do: 'say', text: 'Compare a smooth tube with one full of villi.' },
+    {
+      do: 'compare',
+      left: { heading: 'Without villi', points: ['smooth wall', 'small surface', 'slow absorption'] },
+      right: { heading: 'With villi', points: ['millions of fingers', 'huge surface', 'fast absorption'] },
+    },
+    ...VILLI.slice(11),
+  ]);
+
+  it('is written under the picture as a section of the page, and the picture keeps the hero', () => {
+    const frame = made.elements.find((e) => e.kind === 'box' && e.id === 'b2_12')!;
+    expect(made.regions[frame.id]).toBe('0/bottom');
+    const image = made.elements.find((e) => e.kind === 'image')!;
+    expect(made.regions[image.id]).toBe('0/hero');
+    expect(made.pages).toBe(1);
+  });
+});
+
 describe('a zoom inset on a composed page', () => {
   const made = lay([
     ...VILLI.slice(0, 9),

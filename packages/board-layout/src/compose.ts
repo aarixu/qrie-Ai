@@ -124,11 +124,15 @@ export function isMainKind(kind: string): boolean {
  * The arrangement for a page whose instructions are `kinds`.
  *
  * A scene is many `place` instructions and one demonstration, so it counts
- * once. Two main demonstrations on one page is two beats the planner did not
- * split, and gets the stack it always had.
+ * once. A comparison is the main demonstration only of a page with no other;
+ * beside a picture, a scene or working it is a section of that page (Aarav,
+ * 2026-10-04: the "without villi / with villi" box under the villus). Two
+ * main demonstrations on one page is two beats the planner did not split, and
+ * gets the stack it always had.
  */
 export function arrangementOf(kinds: readonly string[]): ArrangementName | 'fallback' {
-  const mains = kinds.filter((k, n) => isMainKind(k) && (k !== 'place' || kinds.indexOf(k) === n));
+  const found = kinds.filter((k, n) => isMainKind(k) && (k !== 'place' || kinds.indexOf(k) === n));
+  const mains = found.some((k) => k !== 'compare') ? found.filter((k) => k !== 'compare') : found;
   if (mains.length === 0) return 'notes';
   if (mains.length > 1) return 'fallback';
   return MAIN_OF.get(mains[0])!;

@@ -106,8 +106,12 @@ const CARD_BODY_SIZES = [16, 15, 14, 13];
 const SUMMARY_SIZE = 17;
 const SUMMARY_LEAD = 24;
 const SUMMARY_NOTCH = 28;
-/** A comparison: its inner padding, headings, points and their line pitch. */
-const COMPARE_PAD = 16;
+/**
+ * A comparison: its inner padding, headings, points and their line pitch. A
+ * padding of 12 keeps three one-line rows (144 tall) inside the 148-unit band
+ * under a composed figure (compose.ts).
+ */
+const COMPARE_PAD = 12;
 const COMPARE_HEAD = 19;
 const COMPARE_SIZE = 16;
 const COMPARE_LEAD = 22;
@@ -2096,7 +2100,9 @@ export function layoutBeat(
    */
   let composedSheets = 0;
   if (composition) {
-    const mainBlock = blocks.find((b) => isMainKind(b.kind));
+    // A comparison is this page's main demonstration only on a compare page;
+    // anywhere else it is a section written beside the main one.
+    const mainBlock = blocks.find((b) => isMainKind(b.kind) && (b.kind !== 'compare' || composition.name === 'compare'));
     if (composition.main && mainBlock) {
       current = mainBlock.at ?? -1;
       regionNow = `0/${composition.main.id}`;
@@ -2111,12 +2117,14 @@ export function layoutBeat(
     const rest = blocks.filter((b) => b !== mainBlock);
     const fillables: Fillable[] = rest.map((b) => ({
       line: b.at === null ? -1 : (lineOf[b.at] ?? -1),
+      // A comparison is read across its two columns, so it goes where the key
+      // points go: the widest place writing takes (under a figure, beside a scene).
       role:
         b.kind === 'summary'
           ? 'summary'
           : b.kind === 'newPage'
             ? 'newPage'
-            : b.kind === 'write' || b.kind === 'caption'
+            : b.kind === 'write' || b.kind === 'caption' || b.kind === 'compare'
               ? 'points'
               : 'notes',
       heightAt: b.heightAt ?? ((w: number) => measured(b, w)),

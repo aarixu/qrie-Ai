@@ -636,8 +636,10 @@ line as she speaks:
 
 For "the difference between X and Y" there is a comparison:
 {"do":"compare","left":{"heading":"Aerobic","points":["uses oxygen","much energy"]},"right":{"heading":"Anaerobic","points":["no oxygen","little energy"]}}
-Two to six points a side; point n on the left answers point n on the right. It
-is a main demonstration of its own.
+Two to six points a side; point n on the left answers point n on the right. On
+a board with a picture, a scene or working it is a section of that page,
+written under it ("without villi" against "with villi" under the villus); on a
+board with nothing else it is the main demonstration.
 
 The board colours each part you label, and that part's name in the notes, in
 the same colour. You never name a colour.`;

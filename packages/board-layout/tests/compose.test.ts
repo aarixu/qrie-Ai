@@ -17,6 +17,13 @@ describe('which arrangement a page gets', () => {
     expect(arrangementOf(['write', 'list', 'equation'])).toBe('notes');
   });
 
+  it('makes a comparison a supporting section of a page that has another main demonstration', () => {
+    expect(arrangementOf(['picture', 'label', 'compare', 'list'])).toBe('figure');
+    expect(arrangementOf(['place', 'compare'])).toBe('scene');
+    expect(arrangementOf(['compare', 'write'])).toBe('compare');
+    expect(arrangementOf(['picture', 'flow', 'compare'])).toBe('fallback');
+  });
+
   it('is the old stack when a page has two main demonstrations', () => {
     expect(arrangementOf(['picture', 'flow'])).toBe('fallback');
     expect(arrangementOf(['picture', 'picture'])).toBe('fallback');
