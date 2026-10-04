@@ -2,6 +2,29 @@
 
 Date: 2026-10-03. Branch: `canvas` (worktree `.claude/worktrees/canvas`, from `phase3-completion` at `847b1ab`).
 Status: design approved section by section by Aarav in chat on 2026-10-03; this file is the written spec for his review.
+Built 2026-10-03 on branch `canvas` (plan `docs/superpowers/plans/2026-10-03-canvas-visual-toolkit.md`). See "As built" below for where the build differs from the design as first written.
+
+## As built (2026-10-03)
+
+The sections below are updated to match the code. Where the build changed the design, and why:
+
+1. **The name is `tool`, not `visual`.** `Blueprint` already has `visuals: VisualBrief[]` (picture briefs), so
+   `{do:'visual'}` would have sat next to "visuals" in every plan the planner writes. Instead:
+   - the planner writes the tool's own name as `do`, with its params flat: `{"do":"pieChart","slices":[…]}`;
+   - the element is `{kind:'tool', tool, params, after?}`;
+   - the registry is `lesson-format/src/tools/` (`TOOLS`, `ToolSpec`) and the renderers are in `stage/src/tools/`;
+   - the gate rules are `tool-valid`, `tool-maths`, `tool-one-motion` and `tool-fits-line` (`class-prep/src/toolChecks.ts`).
+2. **Sequences inside existing elements finish within 2.4 s of appearing** (`SEQUENCE_CAP_MS`), not "within the
+   spoken line". Scene never receives a line's narration. 2.4 s is about 34 characters of speech, shorter than
+   nearly every line. The tools themselves are held to their lines by `tool-fits-line`.
+3. **`equationMove` draws its working in the board's monospace face (SVG text), not KaTeX.** A term cannot slide
+   inside one KaTeX block. This is the same face `formula` falls back to.
+4. **`tool-maths` uses maths-check's `checkStep`, not `sameEquation`.** `sameEquation` means "written the same
+   way", so it refused every true step. `checkStep` asks whether the step has the same solution with no
+   arithmetic slip. A step it cannot check is let through, as `derive`'s chain is.
+5. **Not built in part 1: `boardPixels` over text inside tools.** The plan had no task for it. A tool's text
+   sizes are fixed in its renderer (14–20 units). Measuring them at 812×375 is left for part 2, which adds more
+   tools.
 
 ## Why
 
@@ -32,7 +55,7 @@ The board rules from `canvas-vision` stay:
    - (3) live simulations.
    - **3D moves to v2.**
 2. **Prepared classes first.** The live doubt board and the live tutor reuse the same tool specs later.
-3. **Approach 1: a registry and one generic `visual` element.** Not a new element kind per tool, and not
+3. **Approach 1: a registry and one generic `tool` element.** Not a new element kind per tool, and not
    Motion Canvas as the engine (raster canvas inside an SVG board).
 4. **Improvements to existing elements apply to every class after merge,** old ones included, with no
    re-preparation.
@@ -62,7 +85,7 @@ The board rules from `canvas-vision` stay:
     `case 'point'`).
 - **The relay** imports the lesson validator by relative path
   (`packages/relay/src/classStore.ts:4` → `lesson-format/src/validate.ts`, Deno, `.ts` imports). Whatever
-  validates a `visual` must therefore be dependency-free TypeScript inside `lesson-format`.
+  validates a `tool` must therefore be dependency-free TypeScript inside `lesson-format`.
 - **The fact-check reviewer** (`class-prep/src/review.ts`) shows the model every board element as JSON, with
   `show, frame, focus, x, y, w, h, points` removed **at every depth** (`LAYOUT_ONLY`). A tool param named
   `x` or `y` would therefore hide its numbers from the fact-check.
@@ -75,11 +98,11 @@ The board rules from `canvas-vision` stay:
 
 ### One tool = one spec file, one renderer, and an optional check
 
-1. **The spec: `packages/lesson-format/src/visuals/<tool>.ts`.** Pure TypeScript with no dependencies,
+1. **The spec: `packages/lesson-format/src/tools/<tool>.ts`.** Pure TypeScript with no dependencies,
    imported with `.ts` paths so the relay can load it.
 
    ```ts
-   export interface VisualSpec<P> {
+   export interface ToolSpec<P> {
      tool: string;                 // registry key, e.g. 'pieChart'
      summary: string;              // one line for the planner
      whenToUse: string;            // when to choose it, and when not to
@@ -93,37 +116,38 @@ The board rules from `canvas-vision` stay:
    }
    ```
 
-   `visuals/index.ts` holds the registry, `VISUALS: Record<string, VisualSpec<any>>`. Every `validate`
+   `tools/index.ts` holds the registry, `TOOLS` (one entry per tool). Every `validate`
    refuses the reserved keys `x, y, w, h, points, show, frame, focus` at any depth inside `params`.
-2. **The renderer: `packages/stage/src/visuals/<tool>.tsx`.**
+2. **The renderer: `packages/stage/src/tools/<tool>.tsx`.**
    - It draws SVG for the element's box.
    - Motion is CSS (transform, opacity, stroke-dashoffset) with delays computed once. There is no per-frame
      JavaScript.
    - Under `prefers-reduced-motion` it draws the final state at once.
-   - `stage/src/visuals/index.ts` maps the tool name to its renderer.
-3. **The optional check: `packages/class-prep/src/visualChecks.ts`.** For checks that need another package,
+   - `stage/src/tools/index.tsx` maps the tool name to its renderer.
+3. **The checks: `packages/class-prep/src/toolChecks.ts`.** For checks that need another package,
    such as maths-check. It dispatches by tool name.
 
 ### The format
 
 - **The element** (`lesson-format/src/types.ts`):
-  `{ kind: 'visual'; id; x; y; w; h; tool: string; params: Record<string, unknown>; after?: number }`
+  `{ kind: 'tool'; id; x; y; w; h; tool: string; params: Record<string, unknown>; after?: number }`
 - **The planner instruction** (`board-layout/src/types.ts`):
-  `{ do: 'visual'; tool: string; params: Record<string, unknown>; id?: string; at?: string }`
+  `{ do: <toolName>; id?: string; at?: string; …params }`, with the params flat beside `do`
+  (`board-layout`'s `ToolInstruction`; a nested `"params": {…}` is flattened by class-prep)
 
 Both are additive and optional. No existing lesson changes, and old lessons validate exactly as before.
 
-### How a visual flows
+### How a tool flows
 
-1. **Planner.** The prompt's "VISUAL TOOLS" section is generated from the registry (see Planner guidance),
-   and the planner writes `do: 'visual'`.
+1. **Planner.** The prompt's toolkit section is generated from the registry (see Planner guidance), and the
+   planner writes the tool's own name as `do`.
 2. **class-prep.** It runs `spec.validate`. A failure goes to the existing repair round, in planner terms:
    `tool pieChart, param slices: values add up to 97, percent needs 100`.
-3. **board-layout.** It places the visual like a figure, at `spec.aspect` and no smaller than `spec.minSize`.
+3. **board-layout.** It places the tool like a figure, at `spec.aspect` and no smaller than `spec.minSize`.
    `at` becomes `after` exactly as it does for `write` and `equation`.
 4. **lesson-format `validateLesson`.** The tool must be known and the params must be valid. The relay runs
    this too.
-5. **Gate.** Every existing rule, plus the visual rules below.
+5. **Gate.** Every existing rule, plus the tool rules below.
 6. **Scene.** It looks the renderer up by `tool`. Animation starts when the element first becomes visible,
    after any `after`. An unknown tool renders a labelled placeholder box and never throws.
 
@@ -148,8 +172,10 @@ Both are additive and optional. No existing lesson changes, and old lessons vali
     never shown.
 - **Rules:**
   - `validate`: 2–6 steps, each a non-empty string of at most 60 characters.
-  - The `visual-maths` gate rule: every line parses (`parseLine`), and each step is `sameEquation` with the
-    one before. A wrong step refuses the class into repair.
+  - The `tool-maths` gate rule: every line parses (`parseLine`), and each step follows from the one before by
+    maths-check's `checkStep` (same solution, no arithmetic slip); a step it cannot check is let through. A
+    wrong step refuses the class into repair. (First written as `sameEquation`; see As built, item 4.)
+  - `validate` also needs exactly one `=` in every step.
 - **Timing:** one step every ~1.4 s (as `derive`), with each move taking ~0.7 s. `durationMs = steps × 1400`.
 - **Recipe:** solving or rearranging an equation step by step. Long working stays `derive`.
 
@@ -202,26 +228,27 @@ These go into every class after merge, with no format change. They are made only
      light-and-dim and do not zoom.
 
 **Timing rules:**
-- Every sequenced animation inside an element finishes within its spoken line. Line length is estimated at
-  ~14 characters a second, as `at` estimates it.
+- Every sequenced animation inside an existing element starts its last piece within 2.4 s of appearing
+  (`SEQUENCE_CAP_MS`, about 34 characters of speech at ~14 a second): Scene never sees the line, so a fixed cap
+  stands in for it (As built, item 2). Tools are held to their own line by `tool-fits-line`.
 - When the steps would overrun, the gap between them shrinks; nothing is dropped.
 - The animation starts when the element appears, as today.
 
 **Performance:** CSS only, with no per-frame JavaScript. Reduced motion shows the final state.
 
-## Rules (gate) for visuals
+## Rules (gate) for tools
 
 New rules (`class-prep/src/gate.ts`, with problems phrased for the repair round):
 
 | Rule | Checks |
 |---|---|
-| `visual-valid` | the tool is in the registry, and the params pass `spec.validate` (reserved keys included) |
-| `visual-maths` | for `equationMove`: every step parses, and each is `sameEquation` with the one before |
-| `visual-one-motion` | at most one animated visual per spoken line |
-| `visual-fits-line` | `spec.durationMs` is no longer than the line's estimated length plus 0.5 s |
+| `tool-valid` | the tool is in the registry, and the params pass `spec.validate` (reserved keys included) |
+| `tool-maths` | for `equationMove`: every step parses, and each follows from the one before (`checkStep`) |
+| `tool-one-motion` | at most one tool starts per spoken line |
+| `tool-fits-line` | `spec.durationMs` is no longer than the line's estimated length plus 0.5 s |
 
-Existing rules that now also cover visuals:
-- `on-board` and `on-camera`, using the visual's box;
+Existing rules that now also cover tools:
+- `on-board` and `on-camera`, using the tool's box;
 - `echo`, applied to `spec.strings` (caption, labels, series names), so a caption cannot read her line back
   as a subtitle;
 - the prep safety screen, which reads `spec.strings`;
@@ -229,7 +256,7 @@ Existing rules that now also cover visuals:
 
 ## Planner guidance
 
-`class-prep/src/prompts.ts` gets a **VISUAL TOOLS** section built from the registry: each tool's summary,
+`class-prep/src/prompts.ts` gets a **toolkit** section built from the registry (`class-prep/src/toolPrompt.ts`): each tool's summary,
 when to use it, its example params and its limits. A recipe table maps the concept to the tool:
 
 | Concept | Tool |
@@ -262,12 +289,12 @@ measured during the build and reported.
   - zoom only when the image is the newest element;
   - the zoom floor;
   - normal framing on the next line.
-- **Gate tests** for the four new rules, and the existing rules applied to visuals.
+- **Gate tests** for the four new rules, and the existing rules applied to tools.
 - **The fuzz:**
-  - `class-prep/tests/boardFuzz.test.ts` gains opt-in visual beats; the gate counts stay at 0 off camera
+  - `class-prep/tests/boardFuzz.test.ts` gains opt-in tool beats; the gate counts stay at 0 off camera
     and 0 off board.
-  - `boardPixels` covers text inside visuals.
-- **A canvas-lab "Visual tools" panel:** every tool and every improvement with sample data, checked in the
+  - `boardPixels` over text inside tools: not built in part 1 (see As built, item 5).
+- **A canvas-lab "Toolkit demo (₹0)" button:** every tool and every improvement with sample data, checked in the
   browser at 1280×720 and 812×375.
 - **A kept class (Respiration),** played in the browser: nothing breaks, and the improvements show.
 - **The full suite** passes before merge.
@@ -285,13 +312,13 @@ measured during the build and reported.
 
 1. Deploy the relay (the new validator), then run `relay-check`.
 2. Deploy the site.
-3. Only then publish any class with a `visual`.
+3. Only then publish any class with a `tool`.
 
 This way the old app never meets a lesson that contains the new element.
 
 ## Out of scope for part 1
 
-- Visual tools on the live doubt board or in the live tutor (the specs are built to be reused there).
+- Toolkit tools on the live doubt board or in the live tutor (the specs are built to be reused there).
 - 2D process animation (part 2) and live simulations (part 3).
 - 3D (v2).
 - Zoom on `diagram` parts.
