@@ -5,6 +5,7 @@ import { usePlayer, createBrowserTts } from '@ai-tutor/player';
 import type { PrepProgress, PrepReport } from '@ai-tutor/class-prep';
 import { prepareLiveClass } from '../lib/liveClass';
 import { toolkitDemoLesson } from '../lib/toolkitDemo';
+import { composerDemoLesson } from '../lib/composerDemo';
 
 export function CanvasLab() {
   const [topic, setTopic] = useState('Speed: distance divided by time');
@@ -20,11 +21,14 @@ export function CanvasLab() {
   } | null>(null);
   /** The toolkit on one board, assembled here with no model call. */
   const [demo, setDemo] = useState<ReturnType<typeof toolkitDemoLesson> | null>(null);
+  /** The composed board on three pages, assembled here with no model call. */
+  const [composedDemo, setComposedDemo] = useState<ReturnType<typeof composerDemoLesson> | null>(null);
 
   const run = useCallback(async () => {
     setError(null);
     setPrepared(null);
     setDemo(null);
+    setComposedDemo(null);
     setProgress({ phase: 'planning', message: 'Starting…', done: 0 });
     try {
       setPrepared(await prepareLiveClass({ topic, klass, minutes }, setProgress));
@@ -79,11 +83,22 @@ export function CanvasLab() {
         <button
           onClick={() => {
             setPrepared(null);
+            setComposedDemo(null);
             setDemo(toolkitDemoLesson());
           }}
           style={S.button}
         >
           Toolkit demo (₹0)
+        </button>
+        <button
+          onClick={() => {
+            setPrepared(null);
+            setDemo(null);
+            setComposedDemo(composerDemoLesson());
+          }}
+          style={S.button}
+        >
+          Composer demo (₹0)
         </button>
       </div>
 
@@ -101,6 +116,17 @@ export function CanvasLab() {
           <Board lesson={demo.lesson} assets={{}} />
           <p style={S.muted}>
             Gate: {demo.problems.length === 0 ? 'no problems' : demo.problems.map((p) => `${p.rule}@${p.where}`).join(', ')}
+          </p>
+        </>
+      )}
+      {composedDemo && (
+        <>
+          <Board lesson={composedDemo.lesson} assets={composedDemo.assets} />
+          <p style={S.muted}>
+            Pages: {composedDemo.pages.map((p) => `${p.plannerBeat} ${Math.round(p.coverage * 100)}%`).join(' · ')} · Gate:{' '}
+            {composedDemo.problems.length === 0
+              ? 'no problems'
+              : composedDemo.problems.map((p) => `${p.rule}@${p.where}`).join(', ')}
           </p>
         </>
       )}

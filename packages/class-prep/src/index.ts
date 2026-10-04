@@ -53,5 +53,6 @@ export {
   type GateOptions,
   type MathsCheck,
 } from './gate.ts';
+export type { ComposerReport, PageReport } from './composerChecks.ts';
 export * from './fromWeb.ts';
 export * from './commons.ts';
