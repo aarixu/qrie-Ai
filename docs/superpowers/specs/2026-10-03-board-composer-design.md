@@ -59,6 +59,11 @@ From the final review (2026-10-04), each fixed test-first:
     composed classes are measured; the prewarm runner asks with `--composed`. A class the gate refuses is not kept,
     so switching on before measuring could make every student on a cold topic pay to prepare it again.
 
+Asked for by Aarav after the review (2026-10-04):
+23. **Key points are bullet points**: on a composed page each is written from the left of its region with a bullet
+    in a 32-unit margin, and a wrapped line starts under the point's words, not under the bullet. Centred, a wrapped
+    point read as two notes. A stacked board's key points are unchanged.
+
 Open (Aarav, 2026-10-04): the fuzz writes the contract's least (three notes, three key points), and its pages read
 about half written (median 0.51), so `page-full` fails most fuzz classes. If the fuzz's thin plans skew a result, the
 fixture is fixed then. How many real classes pass must be measured (Testing, item 5) before deploy.

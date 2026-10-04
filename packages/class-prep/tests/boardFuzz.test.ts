@@ -168,9 +168,12 @@ describe('300 seeded classes with a pie, a line chart and moving working', () =>
  * breadcrumb's size, the camera on a scene line and on a page's first line,
  * and pages measured by their written area) and the final review's (the
  * camera close on what a line writes in any region, a readable summary, a
- * leading newPage ignored): 1334 pages, median 0.53 written on; on-board 0,
- * overlap 0, one-page 0, on-camera 0, one-main 0; page-full in 293 classes,
- * phone-readable in 80.
+ * leading newPage ignored) and with key points written as bullet points from
+ * the left (Aarav, 2026-10-04): 1347 pages, median 0.54 written on; on-board
+ * 0, overlap 0, one-page 0, on-camera 0, one-main 0; page-full in 289 classes,
+ * phone-readable in 84 (80 before the bullets: a bullet's margin wraps a few
+ * long points onto one more line, and a line that writes a list and a key
+ * point together then frames a little smaller).
  *
  * The plans here write the page contract's least — three notes, three key
  * points — and a page of that reads about half written on (figure pages 0.47,
@@ -179,9 +182,9 @@ describe('300 seeded classes with a pie, a line chart and moving working', () =>
  * both a notes list and a key point, which the rule tells the planner to
  * split. The guards below hold those numbers.
  */
-const PAGE_FULL_CEILING = 293;
-const PHONE_READABLE_CEILING = 80;
-const COVERAGE_FLOOR = 0.51;
+const PAGE_FULL_CEILING = 289;
+const PHONE_READABLE_CEILING = 84;
+const COVERAGE_FLOOR = 0.52;
 
 describe('300 seeded classes on a composed board', () => {
   const plain = run();

@@ -164,6 +164,8 @@ const BAND_SIZES = [30, 26, 23, 20];
  * the page has more to hold.
  */
 const POINT_SIZE = 22;
+/** How far a composed key point's words start from its region's left edge: the bullet's margin. */
+const BULLET_INDENT = 32;
 
 /**
  * From one handwritten line to the next.
@@ -929,7 +931,13 @@ export function layoutBeat(
               }));
             }
             const size = narrow ? (composition ? POINT_SIZE : 27) : 36;
-            const lines = narrow ? wrapText(item.text, r.w, size) : [item.text];
+            // On a composed page a key point is a bullet point (Aarav,
+            // 2026-10-04): written from the left of its region, the bullet in
+            // a margin of its own, and a wrapped line under the point's words
+            // rather than under the bullet. Centred, a wrapped point read as
+            // two notes.
+            const indent = composition ? BULLET_INDENT : 0;
+            const lines = narrow ? wrapText(item.text, r.w - indent, size) : [item.text];
             // Wide enough that the overlap solver does not read two
             // consecutive lines as a collision and shrink the point until it
             // fits a gap that was never there.
@@ -938,16 +946,20 @@ export function layoutBeat(
             // Each line waits for the one above it — a person writes a second
             // line after the first, not alongside it — and waits exactly as
             // long as that line takes, which only the shared ruler knows.
-            return lines.map((line, n) => ({
+            const written: Element[] = lines.map((line, n) => ({
               kind: 'handwrite',
               ...(n > 0 ? { after: afterLines(lines, n) } : {}),
               id: n === 0 ? idFor(beat.id, index) : idFor(beat.id, index, `_l${n}`),
-              x: r.x + r.w / 2,
+              x: composition ? r.x + indent + handWidth(line, size) / 2 : r.x + r.w / 2,
               y: narrow ? top + n * lead : r.y + Math.min(WRITE_H, r.h) * 0.7,
               text: line,
               size: narrow ? size : fitHand(item.text, r.w * 0.94, 36, 17),
               ...(item.tone ? { tone: item.tone } : {}),
             }));
+            if (!composition) return written;
+            // The bullet, level with the first line and clear of it by more
+            // than the overlap solver's breathing room.
+            return [{ kind: 'text', id: idFor(beat.id, index, '_dot'), x: r.x + 10, y: top, text: '•', size }, ...written];
           },
         });
         i += 1;

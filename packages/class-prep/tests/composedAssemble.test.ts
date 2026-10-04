@@ -37,7 +37,8 @@ describe('a composed class, assembled', () => {
     expect(lesson.beats.map((b) => b.id)).toEqual(['b1_1', 'b1_2', 'b1_3', 'b1_4']);
     expect(kindsIn(lesson.beats[0].frame!)).toEqual(new Set(['flow']));
     expect(kindsIn(lesson.beats[1].frame!)).toEqual(new Set(['list']));
-    expect(kindsIn(lesson.beats[2].frame!)).toEqual(new Set(['handwrite']));
+    // A key point and its bullet.
+    expect(kindsIn(lesson.beats[2].frame!)).toEqual(new Set(['handwrite', 'text']));
   });
 
   it('pulls back to the whole page on its last line', () => {

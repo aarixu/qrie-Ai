@@ -88,6 +88,31 @@ describe('a composed page', () => {
     expect(made.sheets[0].coverage).toBeGreaterThan(inkOnly);
   });
 
+  it('writes key points from the left with a bullet, and a wrapped point under its own words (Aarav, 2026-10-04)', () => {
+    const made = composed([
+      { do: 'say', text: 'One.' },
+      { do: 'write', text: 'Villi are tiny fingers' },
+      { do: 'say', text: 'Two.' },
+      { do: 'write', text: 'Whatever is not absorbed moves on to the large intestine, where water is taken back' },
+    ]);
+    const written = made.elements.filter((e) => e.kind === 'handwrite') as Extract<Element, { kind: 'handwrite' }>[];
+    const bullets = made.elements.filter((e) => e.kind === 'text' && e.text === '•');
+    expect(bullets).toHaveLength(2);
+    // Every line, first or wrapped, starts at the same left edge, right of its bullet.
+    const lefts = written.map((e) => Math.round(boxOf(e).x));
+    expect(new Set(lefts).size).toBe(1);
+    expect(written.length).toBeGreaterThan(2);
+    for (const b of bullets) expect(boxOf(b).x + boxOf(b).w).toBeLessThanOrEqual(lefts[0]);
+    // Each bullet sits level with the first line of its point.
+    const first = written.filter((e) => !e.id.includes('_l'));
+    expect(bullets.map((b) => (b as { y: number }).y)).toEqual(first.map((e) => e.y));
+  });
+
+  it('keeps key points centred, with no bullet, on a stacked board', () => {
+    const made = layoutBeat(beat([{ do: 'say', text: 'One.' }, { do: 'write', text: 'Villi are tiny fingers' }]));
+    expect(made.elements.some((e) => e.kind === 'text' && e.text === '•')).toBe(false);
+  });
+
   it('writes key points smaller than a stacked board, because the camera comes close', () => {
     const made = composed([{ do: 'say', text: 'One.' }, { do: 'write', text: 'Villi are tiny fingers' }]);
     expect(made.elements.filter((e) => e.kind === 'handwrite').map((e) => (e as { size?: number }).size)).toEqual([22]);
