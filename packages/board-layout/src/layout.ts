@@ -102,9 +102,14 @@ const WRITE_H = 62;
 const CARD_H = 128;
 /** The sizes a card's body may wrap at, largest first; see the card block. */
 const CARD_BODY_SIZES = [16, 15, 14, 13];
-/** A summary's words: size, line pitch, and the room the banner's notches take at each end. */
-const SUMMARY_SIZE = 17;
-const SUMMARY_LEAD = 24;
+/**
+ * A summary's words: size, line pitch, and the room the banner's notches take
+ * at each end. 20 because on a composed page the summary is written on the
+ * page's last line, whose frame is the whole page (1102 wide at 16:9), and 20
+ * units there is 12px on a phone. Two lines of it fill an 80-unit summary place.
+ */
+const SUMMARY_SIZE = 20;
+const SUMMARY_LEAD = 28;
 const SUMMARY_NOTCH = 28;
 /**
  * A comparison: its inner padding, headings, points and their line pitch. A
@@ -565,7 +570,12 @@ export function layoutBeat(
    * differently. A page with two main demonstrations stays a stack, exactly as
    * before.
    */
-  const arrangement = opts.composed ? arrangementOf(items.map((it) => it.do)) : 'fallback';
+  const arranged = opts.composed ? arrangementOf(items.map((it) => it.do)) : 'fallback';
+  // Names and insets are drawn round a figure only. On any other composed page
+  // they would have nowhere to go, so that page keeps the stack, which draws
+  // them, rather than lose what the planner wrote.
+  const arrangement =
+    arranged !== 'figure' && items.some((it) => it.do === 'label' || it.do === 'sketch') ? 'fallback' : arranged;
   const composition = arrangement === 'fallback' ? null : ARRANGEMENTS[arrangement];
 
   // The scene is laid out as ONE block, because a connector cannot be drawn
@@ -633,8 +643,9 @@ export function layoutBeat(
               x: CANVAS_W / 2,
               y: PAGE.crumbY,
               text: item.path.join(' › '),
-              // 18, not smaller: the header is framed at the page's full
-              // width, and on a phone that is 12px (gate, phone-readable).
+              // 20, not smaller: the breadcrumb is often seen only in the
+              // page's pull-out, framed 1102 wide, and 20 units there is
+              // 12px on a phone (gate, phone-readable).
               size: PAGE.crumbSize,
               muted: true,
             });
@@ -2126,7 +2137,14 @@ export function layoutBeat(
       }
       reserved.set(composition.main.id, bottom - composition.main.y + FILL_GAP);
     }
-    const rest = blocks.filter((b) => b !== mainBlock);
+    // A newPage at or before the main demonstration's line turns away from a
+    // page that holds only its title and that demonstration: every beat
+    // already starts on a page of its own, so it is not a turn at all.
+    const mainAt = composedFigure ? labelledHost?.at : mainBlock?.at;
+    const mainLine = mainAt === null || mainAt === undefined ? -1 : (lineOf[mainAt] ?? -1);
+    const rest = blocks.filter(
+      (b) => b !== mainBlock && !(b.kind === 'newPage' && b.at !== null && (lineOf[b.at] ?? -1) <= mainLine),
+    );
     const fillables: Fillable[] = rest.map((b) => ({
       line: b.at === null ? -1 : (lineOf[b.at] ?? -1),
       // A comparison is read across its two columns, so it goes where the key

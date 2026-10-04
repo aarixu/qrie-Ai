@@ -36,6 +36,11 @@ describe('the planner for a composed board', () => {
     expect(text).toContain('{"do":"summary"');
     expect(text).toContain('{"do":"compare"');
     expect(text).toContain('"path"');
+    // No rule left over from the stacked board contradicts the page contract.
+    expect(text).not.toContain('Nothing else on the board.');
+    expect(text).not.toContain('two to four in a beat is normal');
+    // A summary no longer than the smallest summary place holds (two lines of its 20-unit writing).
+    expect(text).toContain('under 45 characters');
     // A comparison under a picture is a section of that page, not a second demonstration.
     expect(text).toContain('a section of that page');
     expect(text).not.toContain('It\nis a main demonstration of its own.');

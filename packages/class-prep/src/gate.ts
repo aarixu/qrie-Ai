@@ -94,12 +94,14 @@ import { composerChecks, type ComposerReport } from './composerChecks.ts';
  *   tool-one-motion  one tool starts per spoken line.
  *   tool-fits-line   the line lasts as long as its tool draws.
  *
- * And two about a composed board (board composer, composerChecks.ts):
+ * And three about a composed board (board composer, composerChecks.ts):
  *   page-full        no page is left under 60% written on, and a subtopic
- *                    with a picture, flow, chart or working has its notes,
- *                    key points and summary.
+ *                    with a main demonstration (a picture, a scene, a flow, a
+ *                    chart, working or a comparison) has its notes, key points
+ *                    and summary.
  *   phone-readable   every line's frame keeps its writing 12px or more on a
- *                    phone held sideways.
+ *                    phone held sideways (on a pull-out, what that line writes).
+ *   one-main         every beat is one composed page, not a stack.
  *
  * NOT IN `validateLesson`, ON PURPOSE. The classroom validates every lesson
  * it loads and shows one that fails as "not available"
@@ -134,7 +136,8 @@ export type GateRule =
   | 'tool-one-motion'
   | 'tool-fits-line'
   | 'page-full'
-  | 'phone-readable';
+  | 'phone-readable'
+  | 'one-main';
 
 /** A board instruction that writes words and drew nothing — assemble's `undrawn`. */
 export interface Undrawn {

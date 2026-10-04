@@ -13,7 +13,7 @@ import { CANVAS_H, CANVAS_W, type Rect } from '@ai-tutor/lesson-format';
  * Pure geometry: which arrangement a page gets, where its regions are, and
  * which region each piece of writing goes to. layout.ts draws.
  */
-export const PAGE = { left: 40, right: 960, top: 96, bottom: 604, crumbY: 20, crumbSize: 18, titleY: 72 } as const;
+export const PAGE = { left: 40, right: 960, top: 96, bottom: 604, crumbY: 20, crumbSize: 20, titleY: 72 } as const;
 
 /** The gap between two things written one under the other in a region. */
 export const FILL_GAP = 14;
@@ -46,10 +46,10 @@ export const ARRANGEMENTS: Readonly<Record<ArrangementName, Arrangement>> = {
   figure: {
     name: 'figure',
     main: region('hero', 40, 96, 590, 344),
-    regions: [region('side', 650, 96, 310, 424), region('bottom', 40, 456, 590, 148)],
+    regions: [region('side', 650, 96, 310, 412), region('bottom', 40, 456, 590, 148)],
     notesOrder: ['side', 'bottom'],
     pointsOrder: ['bottom', 'side'],
-    summary: region('summary', 650, 532, 310, 72),
+    summary: region('summary', 650, 524, 310, 80),
   },
   // A scene keeps the full width: it does not shrink beside a column
   // (layout.ts, "a SCENE is not one"). It is no taller than a row or two of
@@ -58,18 +58,18 @@ export const ARRANGEMENTS: Readonly<Record<ArrangementName, Arrangement>> = {
   scene: {
     name: 'scene',
     main: region('main', 40, 96, 920, 224),
-    regions: [region('left', 40, 336, 450, 268), region('right', 510, 336, 450, 184)],
+    regions: [region('left', 40, 336, 450, 268), region('right', 510, 336, 450, 172)],
     notesOrder: ['left', 'right'],
     pointsOrder: ['right', 'left'],
-    summary: region('summary', 510, 532, 450, 72),
+    summary: region('summary', 510, 524, 450, 80),
   },
   process: {
     name: 'process',
     main: region('main', 40, 96, 920, 150),
-    regions: [region('left', 40, 262, 450, 342), region('right', 510, 262, 450, 258)],
+    regions: [region('left', 40, 262, 450, 342), region('right', 510, 262, 450, 246)],
     notesOrder: ['left', 'right'],
     pointsOrder: ['right', 'left'],
-    summary: region('summary', 510, 532, 450, 72),
+    summary: region('summary', 510, 524, 450, 80),
   },
   // The comparison down the left, as tall as its rows need; the notes and the
   // key points beside it, and under it what its column has left. (A table
@@ -78,30 +78,30 @@ export const ARRANGEMENTS: Readonly<Record<ArrangementName, Arrangement>> = {
   compare: {
     name: 'compare',
     main: region('main', 40, 96, 560, 508),
-    regions: [region('side', 620, 96, 340, 424)],
+    regions: [region('side', 620, 96, 340, 412)],
     notesOrder: ['side', 'main'],
     pointsOrder: ['main', 'side'],
-    summary: region('summary', 620, 532, 340, 72),
+    summary: region('summary', 620, 524, 340, 80),
   },
   // The working down the left, the rules and the points beside it; what the
   // working leaves of its own column takes writing too.
   working: {
     name: 'working',
     main: region('main', 40, 96, 560, 508),
-    regions: [region('side', 620, 96, 340, 424)],
+    regions: [region('side', 620, 96, 340, 412)],
     notesOrder: ['side', 'main'],
     pointsOrder: ['side', 'main'],
-    summary: region('summary', 620, 532, 340, 72),
+    summary: region('summary', 620, 524, 340, 80),
   },
   // No main demonstration: two columns of writing. Also every page a beat
   // turns onto after its first.
   notes: {
     name: 'notes',
     main: null,
-    regions: [region('left', 40, 96, 450, 508), region('right', 510, 96, 450, 424)],
+    regions: [region('left', 40, 96, 450, 508), region('right', 510, 96, 450, 412)],
     notesOrder: ['left', 'right'],
     pointsOrder: ['left', 'right'],
-    summary: region('summary', 510, 532, 450, 72),
+    summary: region('summary', 510, 524, 450, 80),
   },
 };
 

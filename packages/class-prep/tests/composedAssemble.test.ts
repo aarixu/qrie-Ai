@@ -130,6 +130,37 @@ describe('a composed class, assembled', () => {
     expect(graphics.sort()).toEqual(['b1__pipe', 'b1__pump']);
   });
 
+  it('frames a key point written low in a tall column on it and what is near it, not the whole column', () => {
+    const board: Blueprint['beats'][number]['board'] = [{ do: 'title', text: 'Notes' }];
+    for (let n = 0; n < 8; n += 1) board.push({ do: 'say', text: `Point number ${n} matters.` }, { do: 'write', text: `Key point number ${n} here` });
+    // A last line, so the eighth point's line is not the page's pull-out.
+    board.push({ do: 'say', text: 'So remember them all.' }, { do: 'summary', text: 'Eight points to remember' });
+    const l = assemble({ ...PLAN, beats: [{ id: 'b1', topic: 'Notes', narration: '', board }] }, new Set()).lesson as Lesson;
+    const text = (id: string) => (l.elements.find((e) => e.id === id) as { text?: string }).text;
+    // Some line frames the eighth point without reaching up to the first.
+    const eighth = l.beats.find((b) => b.frame?.some((id) => text(id) === 'Key point number 7 here') && !b.frame.some((id) => text(id) === 'Key point number 0 here'));
+    expect(eighth).toBeDefined();
+  });
+
+  it('reports a beat of a composed class that was laid out as a stack', () => {
+    const two: Blueprint = {
+      ...PLAN,
+      beats: [
+        {
+          id: 'b1',
+          topic: 'Two things',
+          narration: '',
+          board: [
+            { do: 'say', text: 'A flow and a chart on one board.' },
+            { do: 'flow', steps: [{ label: 'A' }, { label: 'B' }] },
+            { do: 'chart', data: [{ label: 'x', value: 1 }, { label: 'y', value: 2 }] },
+          ],
+        },
+      ],
+    };
+    expect(assemble(two, new Set()).composer?.stacked).toEqual([{ beat: 'b1', plannerBeat: 'b1' }]);
+  });
+
   it('leaves a plan that is not composed as it was', () => {
     const { layout: _composed, ...plain } = PLAN;
     const stacked = assemble(plain, new Set());

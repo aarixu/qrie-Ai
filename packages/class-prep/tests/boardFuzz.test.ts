@@ -166,9 +166,11 @@ describe('300 seeded classes with a pie, a line chart and moving working', () =>
  *
  * MEASURED 2026-10-04, after the fixes this fuzz found (scene regions, the
  * breadcrumb's size, the camera on a scene line and on a page's first line,
- * and pages measured by their written area): 1330 pages, median 0.51 written
- * on; on-board 0, overlap 0, one-page 0, on-camera 0; page-full in 297
- * classes, phone-readable in 102.
+ * and pages measured by their written area) and the final review's (the
+ * camera close on what a line writes in any region, a readable summary, a
+ * leading newPage ignored): 1334 pages, median 0.53 written on; on-board 0,
+ * overlap 0, one-page 0, on-camera 0, one-main 0; page-full in 293 classes,
+ * phone-readable in 80.
  *
  * The plans here write the page contract's least — three notes, three key
  * points — and a page of that reads about half written on (figure pages 0.47,
@@ -177,9 +179,9 @@ describe('300 seeded classes with a pie, a line chart and moving working', () =>
  * both a notes list and a key point, which the rule tells the planner to
  * split. The guards below hold those numbers.
  */
-const PAGE_FULL_CEILING = 297;
-const PHONE_READABLE_CEILING = 102;
-const COVERAGE_FLOOR = 0.48;
+const PAGE_FULL_CEILING = 293;
+const PHONE_READABLE_CEILING = 80;
+const COVERAGE_FLOOR = 0.51;
 
 describe('300 seeded classes on a composed board', () => {
   const plain = run();
@@ -195,6 +197,7 @@ describe('300 seeded classes on a composed board', () => {
     expect(composed.count('overlap')).toBeLessThanOrEqual(plain.count('overlap'));
     expect(composed.count('one-page')).toBe(0);
     expect(composed.count('on-camera')).toBe(0);
+    expect(composed.count('one-main')).toBe(0);
   });
 
   it('holds how full its pages are, page-full and phone-readable, to what was measured', () => {

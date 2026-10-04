@@ -55,6 +55,19 @@ describe('page-full', () => {
     expect(composerRules({ pages: [page({ coverage: 0.1, summary: false, opening: true })], overview: ['b2_4'] })).toEqual([]);
   });
 
+  it('tells a beat that ran onto a second page to give that page less, not to write more', () => {
+    const found = composerRules({ pages: [page({}), page({ sheet: 1, coverage: 0.06, main: false, beat: 'b2_6' })], overview: ['b2_4', 'b2_6'] });
+    expect(found).toEqual([expect.objectContaining({ rule: 'page-full', where: 'b2_6' })]);
+    expect(found[0].message).toMatch(/Beat "b2" ran onto another page/);
+    expect(found[0].message).not.toMatch(/Write each part/);
+  });
+
+  it('names a beat of a composed class that could not be laid out as one composed page', () => {
+    const found = gateLesson(BASE, { mathsCheck: noMaths, composer: { pages: [], overview: [], stacked: [{ beat: 'b2_4', plannerBeat: 'b2' }] } });
+    expect(found).toEqual([expect.objectContaining({ rule: 'one-main', where: 'b2_4' })]);
+    expect(found[0].message).toMatch(/Give each main demonstration its own beat/);
+  });
+
   it('is silent on a class that is not composed', () => {
     expect(gateLesson(BASE, { mathsCheck: noMaths }).some((p) => p.rule === 'page-full' || p.rule === 'phone-readable')).toBe(false);
   });
@@ -71,8 +84,22 @@ describe('phone-readable', () => {
     expect(found[0].message).toMatch(/"Lacteal" is \d+\.\dpx/);
   });
 
-  it('does not hold the pull-out to it', () => {
-    expect(composerRules({ pages: [], overview: ['b2_2'] }, spread)).toEqual([]);
+  it('does not hold the pull-out to what was written before it', () => {
+    const before = lessonOf(
+      [WIDE, SMALL],
+      [
+        { id: 'b2_1', topic: 't', narration: 'The lacteal takes fats.', show: ['w', 's'], frame: ['s'] },
+        { id: 'b2_2', topic: 't', narration: 'Now look at it all.', show: ['w', 's'], frame: ['w', 's'] },
+      ],
+    );
+    expect(composerRules({ pages: [], overview: ['b2_2'] }, before)).toEqual([]);
+  });
+
+  it('holds a pull-out to what that line itself writes', () => {
+    // The summary is written on the page's last line, which is the pull-out: it has to read there.
+    expect(composerRules({ pages: [], overview: ['b2_2'] }, spread)).toEqual([
+      expect.objectContaining({ rule: 'phone-readable', where: 'b2_2' }),
+    ]);
   });
 
   it('passes the same writing when the camera comes close', () => {

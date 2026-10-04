@@ -541,6 +541,8 @@ export function assemble(
   const composed = blueprint.layout === 'composed';
   const pages: PageReport[] = [];
   const overview: string[] = [];
+  /** Beats of a composed plan that layout drew as a stack (gate rule one-main). */
+  const stacked: { beat: string; plannerBeat: string }[] = [];
   const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
   /** A copy of a picture is described by the same brief the original was. */
   const briefFor = (id: string) => briefs.get(aliases.get(id) ?? id);
@@ -757,17 +759,16 @@ export function assemble(
       const body = ink.filter((id) => !regions[id].endsWith('/header'));
       const hot = new Set((body.length > 0 ? body : ink).map((id) => regions[id]));
       const inHot = onSheet.filter((id) => hot.has(regions[id]));
-      // A scene spans the page's full width, and framed whole its connector
-      // labels are too small to read on a phone. So a line that draws in a
-      // scene is framed on what it drew and on what that touches — reaching
-      // 24 units, because a connector stops a small gap (14) short of the
-      // pictures it joins.
+      // A region framed whole is often too big to read on a phone: a scene
+      // spans the page's width, and a notes column runs its full height. So a
+      // line is framed on what it drew and on what is near it — 24 units
+      // across (a connector stops 14 short of the pictures it joins), and 160
+      // up and down, the two or three lines of writing around it.
       const boxes = new Map(laidOut.map((el) => [el.id, el]));
-      if (!inHot.some((id) => boxes.get(id)?.kind === 'graphic')) return { frame: inHot, whole };
       const drawn = ink.map((id) => boxes.get(id)).filter((el) => el !== undefined).map(boxOf);
       if (drawn.length === 0) return { frame: inHot, whole };
       const reach = drawn.reduce(union);
-      const near = { x: reach.x - 24, y: reach.y - 24, w: reach.w + 48, h: reach.h + 48 };
+      const near = { x: reach.x - 24, y: reach.y - 160, w: reach.w + 48, h: reach.h + 320 };
       return {
         frame: inHot.filter((id) => ink.includes(id) || (boxes.has(id) && overlaps(boxOf(boxes.get(id)!), near))),
         whole,
@@ -815,6 +816,11 @@ export function assemble(
         ...(last && beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
       });
     });
+    // A composed plan's beat with ink and no regions was drawn as a stack: two
+    // main demonstrations, or names on something that is not a picture.
+    if (composed && !composedHere && laid.show.length > 0) {
+      stacked.push({ beat: usable.length === 1 ? beat.id : `${beat.id}_${usable.length}`, plannerBeat: beat.id });
+    }
     if (composedHere) {
       for (const report of sheetReports) {
         pages.push({
@@ -891,7 +897,7 @@ export function assemble(
     unspoken,
     opening,
     undrawn,
-    ...(composed ? { composer: { pages, overview } } : {}),
+    ...(composed ? { composer: { pages, overview, stacked } } : {}),
   };
 }
 

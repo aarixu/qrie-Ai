@@ -612,6 +612,11 @@ const COMPOSED_SWAPS: readonly (readonly [string, string])[] = [
     'One beat is one subtopic on one page: use it only when a beat truly needs a second page.',
   ],
   ['Write generously — two to four key points in a beat.', 'Write generously — three to five key points in a beat.'],
+  [
+    'place with rows, then connect and annotate. Nothing else on the board.',
+    'place with rows, then connect and annotate; the notes, key points and summary go under it.',
+  ],
+  ['two to four in a beat is normal.', 'three to five in a beat is normal.'],
 ];
 
 const PAGE_CONTRACT = `
@@ -632,7 +637,7 @@ line as she speaks:
    built that way.
 4. Three to five key points, written as she says them ("write").
 5. A summary, last: {"do":"summary","text":"Villi absorb digested food fast"}.
-   One sentence a student would copy down, under 70 characters.
+   One sentence a student would copy down, under 45 characters.
 
 For "the difference between X and Y" there is a comparison:
 {"do":"compare","left":{"heading":"Aerobic","points":["uses oxygen","much energy"]},"right":{"heading":"Anaerobic","points":["no oxygen","little energy"]}}

@@ -37,8 +37,9 @@ describe('a composed page', () => {
     const title = made.elements.find((e) => e.kind === 'title')!;
     const crumb = made.elements.find((e) => e.kind === 'text' && e.text.includes('›'))!;
     expect(crumb).toMatchObject({ text: 'Life processes › Digestion', muted: true });
-    // Readable on a phone (12px on a 667px stage) even with the whole page width in the frame.
-    expect(((crumb as { size?: number }).size ?? 20) * (667 / 1000)).toBeGreaterThanOrEqual(12);
+    // Readable on a phone (12px on a 667px stage) in the pull-out, whose frame is the whole page
+    // padded to 16:9: 1102 units wide.
+    expect(((crumb as { size?: number }).size ?? 20) * (667 / 1102)).toBeGreaterThanOrEqual(12);
     expect(boxOf(crumb).y + boxOf(crumb).h).toBeLessThanOrEqual(boxOf(title).y);
     expect(boxOf(title).y + boxOf(title).h).toBeLessThanOrEqual(PAGE.top);
     expect(made.regions[title.id]).toBe('0/header');
@@ -52,6 +53,9 @@ describe('a composed page', () => {
     expect(regionOf('list')).toEqual(['0/left']);
     expect(regionOf('handwrite')).toEqual(['0/right']);
     expect(regionOf('box')).toEqual(['0/summary']);
+    // The summary is written on the page's last line, the pull-out (1102 wide): it must read there.
+    const summary = made.elements.filter((e) => e.kind === 'text' && made.regions[e.id] === '0/summary');
+    for (const line of summary) expect(((line as { size?: number }).size ?? 20) * (667 / 1102)).toBeGreaterThanOrEqual(12);
     const process = ARRANGEMENTS.process;
     expect(inRegion(made.elements.find((e) => e.kind === 'list')!, process.regions[0])).toBe(true);
     expect(made.pages).toBe(1);
@@ -132,6 +136,38 @@ describe('a composed page', () => {
     const frame = made.elements.find((e) => e.kind === 'box')!;
     expect(made.regions[frame.id]).toBe('0/main');
     expect(boxOf(frame).w).toBeLessThanOrEqual(680);
+  });
+
+  it('does not turn the page at a newPage that comes before the main demonstration', () => {
+    const made = composed(
+      [
+        { do: 'title', text: 'The heart' },
+        { do: 'say', text: 'Now, a new idea.' },
+        { do: 'newPage' },
+        { do: 'picture', ref: 'heart' },
+        { do: 'say', text: 'It has four rooms.' },
+        { do: 'list', heading: 'Chambers', items: [{ term: 'Atria', meaning: 'receive blood' }, { term: 'Ventricles', meaning: 'pump it out' }] },
+        { do: 'say', text: 'The left side is thicker.' },
+        { do: 'write', text: 'Left wall is thickest' },
+        { do: 'say', text: 'So the heart is a pump.' },
+        { do: 'summary', text: 'The heart pumps blood' },
+      ],
+      new Map([['heart', 1]]),
+    );
+    expect(made.pages).toBe(1);
+  });
+
+  it('never drops a name written on something that is not a picture: that page is laid out as before', () => {
+    const board: Instruction[] = [
+      { do: 'say', text: 'Water moves through these steps.' },
+      { do: 'flow', steps: [{ label: 'Root' }, { label: 'Stem' }, { label: 'Leaf' }] },
+      { do: 'label', target: 'b1_1#root', text: 'Where it starts' },
+    ];
+    const stacked = layoutBeat(beat(board));
+    const made = composed(board);
+    const named = (m: typeof made) => m.elements.some((e) => e.kind === 'handwrite' && e.text === 'Where it starts');
+    expect(named(stacked)).toBe(true);
+    expect(named(made)).toBe(true);
   });
 
   it('lays a beat with two main demonstrations out as a stack, as before', () => {
