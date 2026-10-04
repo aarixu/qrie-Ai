@@ -1,6 +1,49 @@
 # Board composer — a full, well-annotated page for every subtopic
 
 Status: design approved section by section by Aarav in chat on 2026-10-03; this file is the written spec for his review.
+Built 2026-10-03/04 on branch `board-composer` (plan `docs/superpowers/plans/2026-10-03-board-composer.md`). See "As
+built" below for where the build differs from the design as first written; the sections after it are updated to match.
+
+## As built (2026-10-04)
+
+Decided while planning:
+1. **The camera is pointed by `beat.frame`, written by `assemble`.** There is no `region` key on elements: `layoutBeat`
+   returns each element's region, and `assemble` frames each spoken line on the regions its new ink is in. The
+   renderer is unchanged, so old classes keep today's camera and get no pull-out (they need none: their camera already
+   grows back to one page, which holds a third-written page whole).
+2. **Composed only on request.** `prepareClass({ composed: true })` sets `Blueprint.layout = 'composed'`; the live
+   classroom and the prewarm runner pass it. Plans, fixtures and kept classes without it keep today's layout.
+3. **The breadcrumb is one muted `text` element**, the path joined with ` › `.
+4. **No `compare-valid` rule.** A `compare` with fewer than 2 or more than 6 points a side draws nothing, and the
+   existing `drawn` rule names it.
+5. **With a zoom inset, the names stay left of the picture**, so the dashed zoom lines never cross a name.
+6. **`page-full` exempts the opening beat**; coverage is judged per page, the required parts per subtopic.
+7. **`phone-readable` skips the pull-outs**, which are for looking, not reading.
+8. **Ink goes to labelled picture parts**: the name, its leader line, the marks on that part, and the notes item whose
+   term is the label's text.
+
+Found by the 300-class fuzz and the lab demo, each fixed test-first:
+9. **A page is measured by its written area** — each region from its first writing to its last — not by the boxes of
+   its ink. By ink boxes a page following the contract (picture, three names, a three-item list, three key points, a
+   summary) read 36–42%, so 60% was out of reach of any real page; the space between lines of writing is not empty
+   board. `page-full` keeps 60%.
+10. **A scene is 224 units tall, not 288**, so its notes (268) and key points (184) fit under it on one page; 312 of
+    388 fuzz scene pages had spilled a near-empty second page.
+11. **The breadcrumb is 18 units**, so it reads at 12px on a phone even framed at full width (it was 9.3px).
+12. **A line drawn in a scene is framed on what it drew and what that touches**, not the scene's full width: framed
+    whole, a connector's 17-unit label was 11.3px on a phone.
+13. **A line that writes only the title frames the header**, never the page before; a line that keeps a whole-page
+    frame is a pull-out too.
+14. **A comparison beside another main demonstration is a section of that page** (Aarav, 2026-10-04: the "without
+    villi / with villi" box under the villus). On its own it is the main demonstration, down a 560-wide column with
+    the notes and key points beside it (a full-width table had left most of its band empty). It is never wider than
+    680, so its points read on a phone.
+15. **A composed figure's name margins are 18% of the hero, not 26%**, so a wide picture fills most of its region.
+
+Open (Aarav, 2026-10-04): the fuzz writes the contract's least (three notes, three key points), and its pages read
+about half written (median 0.51), so `page-full` fails most fuzz classes. If the fuzz's thin plans skew a result, the
+fixture is fixed then. How many real classes pass must be measured (Testing, item 5) before deploy.
+
 Builds on: `docs/superpowers/specs/2026-10-03-canvas-visual-toolkit-design.md` (branch `canvas`). The toolkit's tools
 (`pieChart`, `lineChart`, `equationMove`) are content the composer places like any other figure.
 
@@ -79,9 +122,9 @@ The exact numbers are tuned in the lab demo (Testing, item 3) and fixed as const
 | Arrangement | Chosen when the page's main demonstration is | Regions |
 |---|---|---|
 | `figure` | a `picture`, `diagram`, `chart`, `plot` or a toolkit chart (`pieChart`, `lineChart`) | hero (the figure, its labels in its own margins) · side column (notes list, a `sketch` inset at its top) · bottom-left (key points) · bottom-right (summary) |
-| `scene` | a scene of placed things | scene across the top, full width · bottom-left (notes) · bottom-right (key points, summary) |
+| `scene` | a scene of placed things | scene across the top, full width, 224 tall · bottom-left (notes) · bottom-right (key points, summary) |
 | `process` | a `flow` | the flow across the top · notes under the steps · bottom strip (key points, summary) |
-| `compare` | a `compare` | two columns, rows facing · a verdict strip under them (key points, summary) |
+| `compare` | a `compare`, and no other main demonstration | the comparison down a 560-wide column, key points under it · side column (notes) · summary |
 | `working` | `derive`, `equation` or `equationMove` | the working in the middle · side column (the rules used, notes) · result/summary box |
 | `notes` | nothing — only writing | two columns of writing · summary |
 | fallback | anything the table does not cover (two main demonstrations on one page) | today's stack, unchanged |
@@ -122,8 +165,11 @@ columns, 2–6 points each, rows facing (point *n* on the left faces point *n* o
 and Y", which CBSE asks constantly (aerobic and anaerobic respiration, plant and animal cells). Built from existing
 element kinds (`box`, `text`, `handwrite`), so no new renderer.
 
-`summary` is drawn as a `box` with `as: "banner"`. The breadcrumb is `text` elements joined by arrows. **No new
-element kind** in this part.
+A comparison beside a picture, a scene or working is a section of that page, written where the key points go; on a
+page with nothing else it is the page's main demonstration. It is never wider than 680.
+
+`summary` is drawn as a `box` with `as: "banner"`. The breadcrumb is one muted `text` element at size 18, the path
+joined with ` › `. **No new element kind** in this part.
 
 ### 3. Annotation
 
@@ -139,26 +185,28 @@ element kind** in this part.
 - **Smaller writing, because the camera zooms.** Key points move from 30–20 units to about 22–18; the lab demo fixes
   the numbers against the `phone-readable` rule.
 
-### 4. The camera (`packages/stage/src/frame.ts`)
+### 4. The camera (`beat.frame`, written by `class-prep` `assemble`)
 
-- **While teaching:** frame the region the newest ink is in, plus the part it points at when it is a label or a mark.
-  Layout writes each element's region as a new optional key `region` (a string). Today's "frame everything the beat
-  shows" would make a full page tiny, so this is required.
+- **While teaching:** frame the regions the newest ink is in. `layoutBeat` returns each element's region
+  (`"<sheet>/<region>"`), and `assemble` writes the frame; the renderer (`stage/src/frame.ts`) is unchanged. Today's
+  "frame everything the beat shows" would make a full page tiny, so this is required. In a scene, frame what the line
+  drew and what that touches. A line that writes only the title frames the header.
 - **Pull out:** on the last spoken line of a page — the next beat shows a different page, or the class ends — frame
-  the whole page, held for the whole line.
-- **Old classes:** they carry no `region`, so while teaching their camera is today's. They do get the pull-out on a
-  page's last line.
+  the whole page, held for the whole line. A line that keeps that frame is a pull-out too.
+- **Old classes:** their lessons are unchanged, so their camera is today's.
 
 ## Gate (new rules, `packages/class-prep/src`)
 
 | Rule | Fails when |
 |---|---|
-| `page-full` | the page the class is leaving is less than **60%** covered (union of element boxes, 10-unit grid, the whole 1000×620 page), or a page with a main demonstration lacks notes or labels, key points, or a summary |
-| `phone-readable` | at the camera's frame for some line, the smallest text in frame is under **12px** on an 812×375 screen |
-| `compare-valid` | a `compare` has a side with fewer than 2 or more than 6 points |
+| `page-full` | the page the class is leaving is less than **60%** written on (each region from its first writing to its last, on a 10-unit grid over the whole 1000×620 page), or a subtopic with a main demonstration lacks notes or labels, key points, or a summary. The opening is held to neither. |
+| `phone-readable` | at the camera's frame for some line (pull-outs excepted), the smallest text in frame is under **12px** on an 812×375 screen |
 
-Messages are addressed to the planner and name the beat: `Beat "b3": the page is 38% full — write each part's
-meaning in the notes, the key points as you say them, and a summary.` A failing class goes through the existing
+A `compare` with fewer than 2 or more than 6 points a side draws nothing, and the existing `drawn` rule names it.
+
+Messages are addressed to the planner and name the beat: `Beat "b3": the class leaves this page 38% written on, and a
+page must be at least 60%. Write each part's meaning in the notes, the key points as you say them, and a summary — or
+give this page less and the next one more.` A failing class goes through the existing
 repair round. Every existing rule stays (`on-board`, `one-page`, `on-camera`, overlap, `drawn`, the toolkit's four).
 
 ## Cost
@@ -175,22 +223,23 @@ repair round. Every existing rule stays (`on-board`, `one-page`, `on-camera`, ov
    regions do not overlap and stay on the page; fill before turn (a key point that does not fit its region goes to
    the next region before the page turns); the fallback stack for two main demonstrations; a page still turns only
    between spoken lines.
-2. **Fuzz** (`class-prep/tests/boardFuzz.test.ts`): the 300 seeded classes, with denser plans (more notes, key
-   points, a summary per page): 0 overlaps, 0 off-board, and the coverage of every page recorded; `page-full` passes
-   on the dense plans.
-3. **Lab demo, ₹0**: "Small intestine → villi", two pages, from a hand-written blueprint, through the real
-   `assemble` and gate, in CanvasLab. Checked in the browser at 1280×720 and 812×375: the zoom while teaching, the
-   pull-out at the end of each page, coverage ≥ 60%, every text readable.
-4. **Old classes**: every kept class under `content/` still validates and renders; the pull-out is the only change.
+2. **Fuzz** (`class-prep/tests/boardFuzz.test.ts`): the 300 seeded classes, written to the page contract's least
+   (three notes, three key points, a summary per page): 0 overlaps, 0 off-board, 0 off-camera, and how full every
+   page is left recorded and held (median 0.51 on 2026-10-04; see "As built", Open).
+3. **Lab demo, ₹0**: "Small intestine → villi", three pages (the intestine, the villus with its microvilli inset, a
+   comparison), from a hand-written blueprint, through the real `assemble` and gate, in CanvasLab: every page at
+   least 60% written on, and the gate clean. Checked in the browser at 1280×720 and 812×375: the zoom while teaching,
+   the pull-out at the end of each page, every text readable.
+4. **Old classes**: every kept class under `content/` still validates and renders, unchanged.
 5. **Two real classes with the model**, after Aarav names the topics and says yes: ₹30 total at most.
 
 ## Rollout
 
-- Built on a new branch `board-composer`, cut from `canvas`, in its own worktree. Never in the main checkout, where
-  another session works.
-- Nothing is pushed, deployed or published until Aarav says merge. Then, in order: relay (the validator learns
-  `summary`, `compare`, `title.path`, `region` and `ink`), then the site, then publish classes prepared with the
-  composer.
+- Built on a new branch `board-composer`, cut from `canvas` (in the canvas worktree; this session could not make
+  another). Never in the main checkout, where another session works.
+- Nothing is pushed, deployed or published until Aarav says merge. Then, in order: relay (the validator learns `ink`;
+  `summary`, `compare` and `title.path` are plan instructions the relay never sees), then the site (the live classroom
+  asks for composed classes from that deploy on), then publish classes prepared with the composer.
 - The canvas that is live today is not affected before that merge.
 
 ## Out of scope (later)
