@@ -14,6 +14,8 @@ export interface PrewarmArgs {
   force: boolean;
   /** Lay out again and keep the classes refused at the end (state/refused/). */
   rekeep: boolean;
+  /** Prepare for the composed board (board composer): --composed. */
+  composed: boolean;
   /** Also write each kept class into this content folder (lesson, pictures, index row). */
   out?: string;
   /** With --out and one --topic: write it in the place of this lesson id. */

@@ -126,6 +126,9 @@ export function parseArgs(argv) {
     acceptUnreviewed: false,
     force: false,
     rekeep: false,
+    // A full, well-annotated page per subtopic (board composer), asked for
+    // with --composed while real composed classes are being measured.
+    composed: false,
     out: undefined,
     as: undefined,
     relay: process.env.PREWARM_RELAY_URL,
@@ -149,6 +152,7 @@ export function parseArgs(argv) {
     else if (a === '--i-accept-unreviewed') args.acceptUnreviewed = true;
     else if (a === '--force') args.force = true;
     else if (a === '--rekeep') args.rekeep = true;
+    else if (a === '--composed') args.composed = true;
     else if (a === '--out') args.out = path.resolve(next());
     else if (a === '--as') args.as = next();
     else if (a === '--relay') args.relay = next();
@@ -386,8 +390,8 @@ async function warmOne(row, opts, client, keepRefused, writeOut) {
     klass: row.klass,
     minutes,
     outcomes,
-    // A full, well-annotated page per subtopic (board composer), as the live classroom prepares.
-    composed: true,
+    // A full, well-annotated page per subtopic (board composer), on --composed.
+    composed: opts.composed,
     planner: patient(client.llm(PLANNER_MODEL, { json: true })),
     artist: patient(client.llm(ARTIST_MODEL)),
     ...(opts.review ? { reviewer: patient(client.llm(REVIEWER_MODEL, { json: true })) } : {}),

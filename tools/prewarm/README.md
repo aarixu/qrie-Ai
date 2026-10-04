@@ -118,6 +118,16 @@ two state objects loaded from one file: doubled count, doubled bill, and the
 second pass's save erasing the first pass's record of what was already paid
 for.
 
+## `--composed`: classes for the composed board
+
+`--composed` prepares each class for the board composer
+(`docs/superpowers/specs/2026-10-03-board-composer-design.md`). The planner gets
+the page contract, the class is laid out in regions, and the keep gate also
+holds it to `page-full`, `phone-readable` and `one-main`. Without the flag the
+runner prepares classes exactly as before. The live classroom's switch,
+`COMPOSE_LIVE_CLASSES` in `apps/classroom/src/lib/liveClass.ts`, stays off until
+real composed classes are measured with this flag.
+
 ## A class refused at the end is kept for `--rekeep`
 
 When the keep refuses a class at the END — its keep gate failed after the

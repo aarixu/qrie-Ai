@@ -32,6 +32,17 @@ import { pencilGlyph } from '@ai-tutor/graphics';
  */
 const PLANNER_MODEL = 'google/gemini-3.7-flash';
 const ARTIST_MODEL = 'google/gemini-3.7-flash';
+
+/**
+ * WHETHER A LIVE CLASS IS PREPARED FOR THE COMPOSED BOARD (board composer).
+ *
+ * Off until real composed classes are measured (the composer plan's Task 13).
+ * A composed class is held to the keep gate's page-full, phone-readable and
+ * one-main rules, and a class the gate refuses is not kept: if most real
+ * classes failed them, every student on a cold topic would pay to prepare it
+ * again. Turn this on once real classes pass.
+ */
+export const COMPOSE_LIVE_CLASSES = false;
 /** Picks which meaning of a word to draw. One small call, so the fastest model. */
 const PICKER_MODEL = 'google/gemini-3.1-flash-lite';
 /**
@@ -398,8 +409,8 @@ export async function prepareLiveClass(
     minutes: ask.minutes,
     studentLines: ask.studentLines,
     outcomes: ask.outcomes,
-    // A full, well-annotated page per subtopic (board composer).
-    composed: true,
+    // A full, well-annotated page per subtopic (board composer), once switched on.
+    composed: COMPOSE_LIVE_CLASSES,
     planner: createBrowserLlm(PLANNER_MODEL, { json: true }),
     artist: createBrowserLlm(ARTIST_MODEL),
     // THE FACTUAL GATE, ON (C10). Without it the class a live student
