@@ -1715,6 +1715,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         fixed.id ||= blueprint.id;
         fixed.title ||= blueprint.title;
         for (const beat of fixed.beats) beat.topic ||= fixed.title;
+        asLines(fixed, 'corrected plan');
         // The same three deterministic trims the first plan got, with the
         // same accounting: a repaired class that silently loses the record of
         // what was dropped is a class nobody can explain afterwards.

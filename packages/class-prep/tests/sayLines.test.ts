@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Instruction, ScriptBeat } from '@ai-tutor/board-layout';
+import { SPOKEN_MS_PER_CHAR, toolDurationMs } from '@ai-tutor/lesson-format';
 import { sentencesOf, splitNarrations } from '../src/sayLines';
 import { prepareClass, type LlmAdapter } from '../src/prepare';
 import type { Blueprint, VisualBrief } from '../src/types';
@@ -61,6 +62,13 @@ describe('sentencesOf', () => {
       'Speed is 2.5 metres a second.',
       'Is that fast?',
       'Yes it is quite fast!',
+    ]);
+  });
+
+  it('does not cut after a title or an abbreviation', () => {
+    expect(sentencesOf('Dr. Rao found that villi absorb food, e.g. sugars. They are very tiny.')).toEqual([
+      'Dr. Rao found that villi absorb food, e.g. sugars.',
+      'They are very tiny.',
     ]);
   });
 
@@ -145,6 +153,49 @@ describe('splitNarrations', () => {
     expect(got.find((l) => l.said.includes('stomach churned'))!.under).toEqual(['place']);
   });
 
+  it('holds an ask asked in other words on the last line, not on a hook question before the teaching', () => {
+    const beat: ScriptBeat = {
+      id: 'b2',
+      topic: 'Villi',
+      narration:
+        'Why is the small intestine so long? Its wall is lined with millions of tiny villi. ' +
+        'Each villus holds capillaries and a lacteal. So digested food crosses into the blood fast.',
+      board: [
+        { do: 'list', heading: 'Inside a villus', items: [{ term: 'Capillaries', meaning: 'take sugars' }, { term: 'Lacteal', meaning: 'takes fats' }] },
+        { do: 'write', text: 'Millions of tiny villi' },
+        { do: 'summary', text: 'Villi pass food into blood' },
+        { do: 'ask', question: 'What do the villi absorb?', expect: 'digested food', hint: 'Think of the blood.' },
+      ],
+    };
+    splitNarrations([beat], []);
+    const got = lines(beat.board);
+    expect(got[got.length - 1].under).toContain('ask');
+    expect(got[0].under).toEqual([]);
+    expect(got.findIndex((l) => l.under.includes('Villi pass food into blood'))).toBeGreaterThan(0);
+  });
+
+  it('gives a moving tool a line as long as it takes to draw', () => {
+    const steps = ['2x + 3 = 11', '2x = 8', 'x = 4'];
+    const beat: ScriptBeat = {
+      id: 'b3',
+      topic: 'Solving',
+      narration:
+        "Let's solve two x plus three equals eleven. Take three away from both sides to leave two x equals eight. " +
+        'Then halve both sides and x is four.',
+      board: [{ do: 'equationMove', steps } as Instruction, { do: 'write', text: 'Undo each step in turn' }],
+    };
+    splitNarrations([beat], []);
+    const held = lines(beat.board).find((l) => l.under.includes('equationMove'))!;
+    expect(held.said.length * SPOKEN_MS_PER_CHAR + 500).toBeGreaterThanOrEqual(toolDurationMs('equationMove', { steps })!);
+    expect(beat.board.filter((s) => s.do !== 'say')).toHaveLength(2);
+  });
+
+  it('empties the narration it wrote as lines, so the plan says each sentence once', () => {
+    const beat = villusBeat();
+    splitNarrations([beat], [VILLUS]);
+    expect(beat.narration).toBe('');
+  });
+
   it('leaves alone a beat that already speaks in lines, and a narration of one sentence', () => {
     const spoken: ScriptBeat = {
       id: 'b1',
@@ -191,6 +242,23 @@ describe('prepareClass, given a plan written as narrations', () => {
     const { lesson, report } = await run(true);
     expect(lesson.beats.map((b) => b.narration)).toEqual(sentencesOf(PLAN.beats[0].narration));
     expect(report.issues.some((i) => /as lines/.test(i))).toBe(true);
+  });
+
+  it('writes the plan the reviewer had corrected as lines too', async () => {
+    const corrected = structuredClone(PLAN);
+    corrected.beats[0].narration = PLAN.beats[0].narration.replace('very quickly', 'quickly');
+    let plans = 0;
+    const planner: LlmAdapter = { complete: async () => JSON.stringify(plans++ === 0 ? PLAN : corrected) };
+    const verdicts = [
+      JSON.stringify({ ok: false, problems: [{ beatId: 'b1', claim: 'very quickly', why: 'it takes hours' }] }),
+      JSON.stringify({ ok: true, problems: [] }),
+    ];
+    let looked = 0;
+    const reviewer: LlmAdapter = { complete: async () => verdicts[Math.min(looked++, 1)] };
+    const artist: LlmAdapter = { complete: async () => '' };
+    const { lesson, report } = await prepareClass({ topic: 'Villi', klass: 10, planner, artist, reviewer, composed: true });
+    expect(report.review).toMatchObject({ repaired: true });
+    expect(lesson.beats.map((b) => b.narration)).toEqual(sentencesOf(corrected.beats[0].narration));
   });
 
   it('leaves a class that is not composed as the planner wrote it', async () => {

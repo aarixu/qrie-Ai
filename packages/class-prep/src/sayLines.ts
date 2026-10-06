@@ -1,4 +1,5 @@
 import type { Instruction, ScriptBeat } from '@ai-tutor/board-layout';
+import { SPOKEN_MS_PER_CHAR, toolDurationMs } from '@ai-tutor/lesson-format';
 import type { VisualBrief } from './types.ts';
 
 /**
@@ -13,20 +14,33 @@ import type { VisualBrief } from './types.ts';
  * by the words they share, never moved ahead of anything the planner wrote
  * before it.
  *
- * The title stays above the first line. The summary lands on the last line that
- * is not a question. An ask is held on the question it asks, and what the board
- * writes after an ask goes under a later line, so it still arrives after the
- * answer. A thing that shares no word with any later sentence stays under the
+ * The title stays above the first line. An ask is held on the question it asks
+ * or, asked in other words, on the last sentence. What the board writes after an
+ * ask goes under a later line when there is one, so it arrives after the
+ * answer; when the ask is held on the last line it waits for the answer with no
+ * line of its own, as it did in the one narration, and the keep gate's
+ * `unspoken` rule names it. The summary lands on the last line that is not a
+ * question, no later than the next ask's. A moving tool gets a line as long as
+ * it draws. A thing that shares no word with any later sentence stays under the
  * line it follows.
  */
 
+/** A piece ending in one of these did not end its sentence: "Dr. Rao", "e.g. sugars". */
+const ABBREVIATION = /(?:^|[\s(])(?:dr|mr|mrs|ms|prof|st|vs|etc|e\.g|i\.e|approx|fig|no)\.$/i;
+
 /** Sentences of a narration: split after . ! or ?, and at a blank line. */
 export function sentencesOf(narration: string): string[] {
-  const raw = narration
+  const pieces = narration
     .split(/\n\s*\n/)
     .flatMap((paragraph) => paragraph.trim().split(/(?<=[.!?])\s+/))
     .map((s) => s.trim())
     .filter((s) => s !== '');
+  const raw: string[] = [];
+  for (const piece of pieces) {
+    const before = raw[raw.length - 1];
+    if (before !== undefined && ABBREVIATION.test(before)) raw[raw.length - 1] = `${before} ${piece}`;
+    else raw.push(piece);
+  }
   // A greeting or an aside of a word or two is said with the sentence after it:
   // "Hello!" alone is a moment with nothing to show.
   const out: string[] = [];
@@ -203,6 +217,43 @@ const WRITING: ReadonlySet<string> = new Set([
   'sketch',
 ]);
 
+/** How long a moving tool draws, or null for anything that is not one (lesson-format's own clock). */
+function toolMs(step: Instruction): number | null {
+  const { do: tool, id: _id, at: _at, ...params } = step as unknown as Record<string, unknown>;
+  return toolDurationMs(tool, params);
+}
+
+/**
+ * A MOVING TOOL GETS A LINE AS LONG AS IT DRAWS (the keep gate's
+ * tool-fits-line: about 14 characters a second, plus half a second).
+ *
+ * One narration was one long line, so working that moves step by step always
+ * had time to finish. Under one sentence it may not, and the class would be
+ * refused for it. So the sentences after the tool's are said with it until the
+ * line is long enough, then the ones before — never one that holds another
+ * tool, never past an ask the tool's line is held on, and never one before that
+ * holds an ask.
+ */
+function giveToolsTheirTime(lines: { text: string; under: Instruction[] }[]): void {
+  const lineMs = (text: string): number => text.length * SPOKEN_MS_PER_CHAR + 500;
+  const needs = (ink: readonly Instruction[]): number => Math.max(0, ...ink.map((s) => toolMs(s) ?? 0));
+  const hasTool = (ink: readonly Instruction[]): boolean => ink.some((s) => toolMs(s) !== null);
+  const asks = (ink: readonly Instruction[]): boolean => ink.some((s) => s.do === 'ask');
+  for (let k = 0; k < lines.length; k += 1) {
+    const want = needs(lines[k].under);
+    if (want === 0) continue;
+    while (lineMs(lines[k].text) < want && k + 1 < lines.length && !asks(lines[k].under) && !hasTool(lines[k + 1].under)) {
+      const next = lines.splice(k + 1, 1)[0];
+      lines[k] = { text: `${lines[k].text} ${next.text}`, under: [...lines[k].under, ...next.under] };
+    }
+    while (lineMs(lines[k].text) < want && k > 0 && !asks(lines[k - 1].under) && !hasTool(lines[k - 1].under)) {
+      const before = lines.splice(k - 1, 1)[0];
+      k -= 1;
+      lines[k] = { text: `${before.text} ${lines[k].text}`, under: [...before.under, ...lines[k].under] };
+    }
+  }
+}
+
 /**
  * Write every beat that has a narration of two or more sentences and no `say`
  * as lines, in place. Returns how many beats it wrote again.
@@ -222,19 +273,21 @@ export function splitNarrations(beats: ScriptBeat[], visuals: readonly VisualBri
       Array.from({ length: Math.max(0, to - from + 1) }, (_, k) => from + k);
 
     /**
-     * Each ask first, on the question it asks — failing that the last question
-     * still to come, failing that the last sentence — because everything the
-     * planner wrote before an ask must arrive by the line it is held on, and
-     * everything after it under a later line.
+     * Each ask first, on the question it asks — failing that on the last
+     * sentence, where a beat of one narration always asked it — because
+     * everything the planner wrote before an ask must arrive by the line it is
+     * held on, and everything after it under a later line. Not on just any
+     * question: a hook ("Why is the intestine so long?") said before the
+     * teaching is not the question the class stops on, and held there, the
+     * whole page arrived with the hook and the ask came before the teaching.
      */
     const heldAt = new Map<number, number>();
     let askFloor = 0;
     beat.board.forEach((step, index) => {
       if (step.do !== 'ask') return;
-      const questions = range(askFloor, last).filter(asking);
-      const n = bestFrom(stemsOf(step.question), said, askFloor, asking) ?? questions[questions.length - 1] ?? last;
-      heldAt.set(index, Math.max(n, askFloor));
-      askFloor = Math.min(Math.max(n, askFloor) + 1, last);
+      const n = Math.max(bestFrom(stemsOf(step.question), said, askFloor, asking) ?? last, askFloor);
+      heldAt.set(index, n);
+      askFloor = Math.min(n + 1, last);
     });
 
     const early: Instruction[] = [];
@@ -260,9 +313,9 @@ export function splitNarrations(beats: ScriptBeat[], visuals: readonly VisualBri
       const stems = stemsOf(wordsOf(step, briefs));
       let n: number;
       if (step.do === 'summary') {
-        // The point the beat lands on: its last line that is not a question
-        // (and, before an ask, the line before the one that asks).
-        const statements = range(floor, nextAsk === undefined ? ceiling : ceiling - 1).filter((k) => !asking(k));
+        // The point the beat lands on: its last line that is not a question,
+        // no later than the line the next ask is held on.
+        const statements = range(floor, ceiling).filter((k) => !asking(k));
         n = statements[statements.length - 1] ?? floor;
       } else {
         const exact = step.do === 'write' || step.do === 'equation' ? step.at : undefined;
@@ -280,7 +333,12 @@ export function splitNarrations(beats: ScriptBeat[], visuals: readonly VisualBri
       floor = n;
     });
 
-    beat.board = [...early, ...sentences.flatMap((text, n) => [{ do: 'say' as const, text }, ...under[n]])];
+    const lines = sentences.map((text, n) => ({ text, under: under[n] }));
+    giveToolsTheirTime(lines);
+    beat.board = [...early, ...lines.flatMap(({ text, under: ink }) => [{ do: 'say' as const, text }, ...ink])];
+    // Said once: the lines are what is spoken, and a narration left beside them
+    // is a second copy of every sentence in the repair prompt, never spoken.
+    beat.narration = '';
     split += 1;
   }
   return split;
