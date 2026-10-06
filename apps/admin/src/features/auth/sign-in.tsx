@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { browserStore, markActive } from '@/lib/idle-store';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,8 @@ export function SignIn() {
     setBusy(false);
     // One message for every failure: it does not say whether the address exists.
     if (err) setError('Those details did not work.');
+    // A fresh sign-in starts the idle clock, so the console does not sign out a person who just arrived.
+    else markActive(browserStore(), Date.now());
   }
 
   return (

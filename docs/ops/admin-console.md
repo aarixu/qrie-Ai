@@ -19,11 +19,13 @@ time they are done.
    return 404. (UNVERIFIED: the dashboard's wording.)
 3. **Turn on authenticator codes.** Dashboard, Authentication, Multi-factor:
    enable TOTP. Do not enable SMS.
-4. **Close email sign-up** (recommended until the college track needs it).
-   No app calls `signUp`, and children sign in anonymously or with a school ID and
-   PIN made by the import. Dashboard, Authentication, "Allow new users to sign
-   up": off. Anonymous sign-ins stay on. Open the tutor afterwards and start a
-   class to be sure. (UNVERIFIED: that the two toggles are independent.)
+4. **Leave email sign-up as it is for now.** Closing it ("Allow new users to sign
+   up": off) would be tidier, since no app calls `signUp`, but it may also refuse
+   ANONYMOUS sign-ins, which is how every child on the tutor gets in
+   (UNVERIFIED either way). Try it first on a project that is not the live one: turn
+   it off, open the tutor in a fresh private window, start a class. Only if that
+   works, do the same on the live project, and check again the same way. The
+   console does not depend on it: staff are added by an owner, never by sign-up.
 5. **Make the first owner**, from your laptop:
 
    ```bash
@@ -49,6 +51,13 @@ time they are done.
    - GitHub, Settings, Secrets, Actions: `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
      `ALERT_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_OPS`,
      `TELEGRAM_CHAT_SAFETY`.
+   - Same page, the **Variables** tab: `ADMIN_ALERT_ENABLED` = `true`. The workflow
+     does nothing until this is set, so it never runs half-configured.
+   - **Cost.** It runs every 5 minutes. On a public repository that is free. On a
+     private one each run bills at least a minute, about 8,600 minutes a month,
+     more than the free allowance. If the repository is private, run
+     `npm run admin:alert` from cron on a server you already pay for instead, with
+     the same values in its environment, and leave `ADMIN_ALERT_ENABLED` unset.
    - Run the "Admin alert" workflow once by hand. The home page's "Alarm checker"
      tile turns green.
 8. **An outside uptime monitor** (any free one) on the relay and on the panel.

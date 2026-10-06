@@ -54,6 +54,16 @@ describe('the bundle guard', () => {
     expect(r.stderr).toMatch(/leak2/);
   });
 
+  it('refuses a build that holds a new-style secret key (sb_secret_), and allows the publishable one', () => {
+    const secret = `sb_secret_${'A1b2C3d4'.repeat(4)}`;
+    const r = run(build('newsecret', `const KEY="${secret}";`));
+    expect(r.status).toBe(1);
+    expect(r.stderr).toMatch(/Supabase secret key/);
+    expect(r.stderr).not.toContain(secret);
+    const ok = run(build('publishable', `const KEY="sb_publishable_${'A1b2C3d4'.repeat(4)}";`));
+    expect(ok.status).toBe(0);
+  });
+
   it('ignores something JWT-shaped that is not a JWT', () => {
     const r = run(build('shaped', 'const s="eyJhbGciOiJIUzI1NiJ9.eyJub3RqcyBhdCBhbGw.aaaaaaaaaaaaaaaa";'));
     expect(r.status).toBe(0);

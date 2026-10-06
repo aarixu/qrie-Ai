@@ -2,8 +2,10 @@ import type { RelayStatus } from '@ai-tutor/admin-client';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { admin } from '@/lib/client';
+import { checkWrite } from '@/lib/confirm';
 import { useMe } from '@/lib/me';
 import { useGuarded } from '@/lib/stepup';
+import { EXPECTED_ENV } from '@/lib/supabase';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -20,8 +22,9 @@ import { Label } from '@/components/ui/label';
 /**
  * STOP THE TUTOR, OR RESUME IT. Stopping is one tap for anybody on staff, with a
  * reason already filled in. Resuming is for the owner, and asks for a fresh
- * authenticator code. Both make the person type which environment they are in,
- * so a stop meant for a test database never lands on the live one.
+ * authenticator code. Both make the person type the environment, and send the
+ * environment this console was BUILT for (checkWrite): the database refuses a
+ * write from a console built for another one.
  */
 export function StopControl({ status, onChanged }: { status: RelayStatus; onChanged: () => void }) {
   const me = useMe();
@@ -34,6 +37,7 @@ export function StopControl({ status, onChanged }: { status: RelayStatus; onChan
 
   const stopping = !status.halted;
   const mayResume = me.role === 'owner';
+  const shownEnv = EXPECTED_ENV || me.environment;
 
   function begin() {
     setReason(stopping ? 'Stopped from the control panel' : '');
@@ -43,14 +47,15 @@ export function StopControl({ status, onChanged }: { status: RelayStatus; onChan
   }
 
   async function confirm() {
-    if (typed !== me.environment) {
-      setError(`Type ${me.environment} to confirm.`);
+    const verdict = checkWrite({ expectedEnv: EXPECTED_ENV, databaseEnv: me.environment, typed, reason });
+    if (!verdict.ok) {
+      setError(verdict.error);
       return;
     }
     setBusy(true);
     setError('');
     try {
-      await guarded(() => admin.setHalt(stopping, reason, me.environment));
+      await guarded(() => admin.setHalt(stopping, verdict.reason, verdict.env));
       setOpen(false);
       toast.success(stopping ? 'The tutor is stopped.' : 'The tutor is running again.');
       onChanged();
@@ -89,7 +94,7 @@ export function StopControl({ status, onChanged }: { status: RelayStatus; onChan
             </div>
             <div className='space-y-1'>
               <Label htmlFor='stop-env'>
-                Type <strong>{me.environment}</strong> to confirm
+                Type <strong>{shownEnv}</strong> to confirm
               </Label>
               <Input id='stop-env' value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete='off' />
             </div>

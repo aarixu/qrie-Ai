@@ -2,8 +2,19 @@ import type { FlagRow } from '@ai-tutor/admin-client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { admin } from '@/lib/client';
+import { checkWrite, describeFlagChange } from '@/lib/confirm';
 import { useMe } from '@/lib/me';
 import { useGuarded } from '@/lib/stepup';
+import { EXPECTED_ENV } from '@/lib/supabase';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,17 +32,22 @@ interface Group {
   schools: FlagRow[];
 }
 
+interface Pending {
+  group: Group;
+  value: unknown;
+}
+
 /**
  * The remote switches every app reads. Only the global value is edited here; a
  * school's own value is shown, and is set from that school's page (plan 2).
- * Every change needs a reason, is audited with the value before and after, and a
+ * Touching a control changes nothing by itself: it opens a confirmation that says
+ * what every app will do, and asks for this change's own reason and the typed
+ * environment. Each change is audited with the value before and after, and a
  * guarded one asks for a fresh authenticator code.
  */
 export function Switches() {
-  const me = useMe();
-  const guarded = useGuarded();
   const [rows, setRows] = useState<FlagRow[]>([]);
-  const [reason, setReason] = useState('');
+  const [pending, setPending] = useState<Pending | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -55,26 +71,8 @@ export function Switches() {
     return [...by.values()];
   }, [rows]);
 
-  async function save(g: Group, value: unknown) {
-    if (reason.trim().length < 3) {
-      toast.error('Say why in the reason box first.');
-      return;
-    }
-    try {
-      await guarded(() => admin.flagSet({ key: g.key, scope: 'global', value, reason: reason.trim(), env: me.environment }));
-      toast.success(`${g.key} saved.`);
-      await load();
-    } catch (e) {
-      toast.error((e as Error).message);
-    }
-  }
-
   return (
     <AdminPage title='Switches'>
-      <div className='mb-4 max-w-md space-y-1'>
-        <Label htmlFor='reason'>Reason for the next change</Label>
-        <Input id='reason' value={reason} onChange={(e) => setReason(e.target.value)} placeholder='Why are you changing this?' />
-      </div>
       <Card className='py-0'>
         <CardContent className='px-0'>
           <Table>
@@ -106,7 +104,11 @@ export function Switches() {
                     )}
                   </TableCell>
                   <TableCell className='text-end align-top'>
-                    <Editor kind={g.def.kind} value={g.global ? g.global.value : g.def.safeDefault} onSave={(v) => void save(g, v)} />
+                    <Editor
+                      kind={g.def.kind}
+                      value={g.global ? g.global.value : g.def.safeDefault}
+                      onPropose={(v) => setPending({ group: g, value: v })}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -114,18 +116,92 @@ export function Switches() {
           </Table>
         </CardContent>
       </Card>
+      {pending && (
+        <ConfirmChange
+          key={`${pending.group.key}:${JSON.stringify(pending.value)}`}
+          pending={pending}
+          onClose={() => setPending(null)}
+          onSaved={() => {
+            setPending(null);
+            void load();
+          }}
+        />
+      )}
     </AdminPage>
   );
 }
 
-function Editor({ kind, value, onSave }: { kind: FlagRow['kind']; value: unknown; onSave: (v: unknown) => void }) {
+function ConfirmChange({ pending, onClose, onSaved }: { pending: Pending; onClose: () => void; onSaved: () => void }) {
+  const me = useMe();
+  const guarded = useGuarded();
+  const [reason, setReason] = useState('');
+  const [typed, setTyped] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const { group, value } = pending;
+  const shownEnv = EXPECTED_ENV || me.environment;
+
+  async function confirm() {
+    const verdict = checkWrite({ expectedEnv: EXPECTED_ENV, databaseEnv: me.environment, typed, reason });
+    if (!verdict.ok) {
+      setError(verdict.error);
+      return;
+    }
+    setBusy(true);
+    setError('');
+    try {
+      await guarded(() => admin.flagSet({ key: group.key, scope: 'global', value, reason: verdict.reason, env: verdict.env }));
+      toast.success(`${group.key} saved.`);
+      onSaved();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <AlertDialog open onOpenChange={(o) => !o && onClose()}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            Change <span className='font-mono'>{group.key}</span> to {JSON.stringify(value)}?
+          </AlertDialogTitle>
+          <AlertDialogDescription>{describeFlagChange(group.key, value)}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <div className='space-y-3'>
+          {group.def.guarded && <p className='text-sm text-muted-foreground'>This switch is guarded: you will be asked for a fresh authenticator code.</p>}
+          <div className='space-y-1'>
+            <Label htmlFor='flag-reason'>Reason</Label>
+            <Input id='flag-reason' value={reason} onChange={(e) => setReason(e.target.value)} placeholder='Why are you changing this?' />
+          </div>
+          <div className='space-y-1'>
+            <Label htmlFor='flag-env'>
+              Type <strong>{shownEnv}</strong> to confirm
+            </Label>
+            <Input id='flag-env' value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete='off' />
+          </div>
+          {error && <p role='alert' className='text-sm text-destructive'>{error}</p>}
+        </div>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <Button disabled={busy} onClick={() => void confirm()}>
+            {busy ? 'Saving…' : 'Change it'}
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+function Editor({ kind, value, onPropose }: { kind: FlagRow['kind']; value: unknown; onPropose: (v: unknown) => void }) {
   const [text, setText] = useState(typeof value === 'string' ? value : '');
   if (kind === 'bool') {
-    return <Switch checked={value === true} onCheckedChange={(on) => onSave(on)} aria-label='On or off' />;
+    return <Switch checked={value === true} onCheckedChange={(on) => onPropose(on)} aria-label='On or off' />;
   }
   if (kind === 'tone') {
     return (
-      <Select value={String(value)} onValueChange={(v) => onSave(v)}>
+      <Select value={String(value)} onValueChange={(v) => onPropose(v)}>
         <SelectTrigger className='ms-auto w-32' aria-label='Tone'>
           <SelectValue />
         </SelectTrigger>
@@ -139,7 +215,7 @@ function Editor({ kind, value, onSave }: { kind: FlagRow['kind']; value: unknown
   return (
     <div className='flex justify-end gap-2'>
       <Input value={text} onChange={(e) => setText(e.target.value)} maxLength={280} aria-label='Value' className='w-56' />
-      <Button variant='outline' onClick={() => onSave(text)}>
+      <Button variant='outline' onClick={() => onPropose(text)}>
         Save
       </Button>
     </div>

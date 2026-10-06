@@ -1,6 +1,7 @@
 import type { RelayStatus, Today as TodayData } from '@ai-tutor/admin-client';
 import { useCallback, useEffect, useState } from 'react';
 import { admin } from '@/lib/client';
+import { loadToday } from '@/lib/load-today';
 import { schoolNotes, tilesFor, type Tone } from '@/lib/tiles';
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -24,15 +25,14 @@ export function Today() {
   const [relay, setRelay] = useState<RelayStatus | null>(null);
   const [error, setError] = useState('');
 
+  // The two reads stand apart (loadToday): the stop button appears as soon as
+  // relay_status answers, even when today() fails. A failed refresh keeps the
+  // last good value on screen.
   const load = useCallback(async () => {
-    try {
-      const [t, r] = await Promise.all([admin.today(), admin.relayStatus()]);
-      setToday(t);
-      setRelay(r);
-      setError('');
-    } catch (e) {
-      setError((e as Error).message);
-    }
+    const r = await loadToday(admin);
+    if (r.today) setToday(r.today);
+    if (r.relay) setRelay(r.relay);
+    setError(r.error);
   }, []);
 
   useEffect(() => {

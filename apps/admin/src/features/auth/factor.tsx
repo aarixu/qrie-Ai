@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { browserStore, markActive } from '@/lib/idle-store';
 import { finishEnrolment, startEnrolment, verifyCode, type Enrolment } from '@/lib/mfa';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
@@ -42,6 +43,7 @@ export function Factor({ mode }: { mode: 'enrol-factor' | 'verify-factor' }) {
       } else {
         await verifyCode(code);
       }
+      markActive(browserStore(), Date.now());
     } catch (e) {
       setError((e as Error).message);
     } finally {

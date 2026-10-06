@@ -29,7 +29,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // Which builds to search: the paths given on the command line, else the tutor's.
-// The admin console's build is checked in CI by passing apps/admin/dist.
+// The admin console's own `npm run build` ends by running this on its dist, from
+// apps/admin, so .env.local and .secrets below are that folder's.
 const DISTS = process.argv.length > 2 ? process.argv.slice(2) : ['apps/classroom/dist'];
 const PUBLIC_BY_DESIGN = new Set([
   'VITE_SUPABASE_URL',
@@ -67,6 +68,10 @@ const SHAPES = [
   { name: 'Sentry auth token', re: /\bsntrys_[A-Za-z0-9+/=]{20,}/ },
   { name: 'PostHog personal key', re: /\bphx_[A-Za-z0-9]{20,}/ },
   { name: 'ElevenLabs key', re: /\bsk_[a-f0-9]{40,}/ },
+  // Supabase's new-style secret key, which bypasses row-level security like the
+  // service-role JWT below. Its partner `sb_publishable_` is the anon key's
+  // replacement and belongs in a bundle.
+  { name: 'Supabase secret key', re: /\bsb_secret_[A-Za-z0-9_-]{20,}/ },
   // Any PEM private key at all. Nothing in a browser bundle has a reason to
   // carry one, whoever issued it.
   { name: 'private key', re: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
