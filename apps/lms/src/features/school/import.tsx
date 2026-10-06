@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { friendlyError } from '@ai-tutor/lms-client'
+import { friendlyError, xlsxToCsv } from '@ai-tutor/lms-client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, CheckCircle2, Download, Eye, EyeOff, FileSpreadsheet, Upload, Users, XCircle } from 'lucide-react'
 import {
@@ -98,15 +98,23 @@ export function SchoolImportPage() {
     commit.reset()
     setAccepted(false)
     if (!file) return
-    if (/\.(xlsx?|ods|numbers)$/i.test(file.name)) {
-      setPickError(`${file.name} is a spreadsheet file. Save it as CSV first (File → Save as → CSV UTF-8), then upload that.`)
+    if (/\.(xls|ods|numbers)$/i.test(file.name)) {
+      setPickError(`${file.name} is a spreadsheet file this page cannot read. Save it as .xlsx or as CSV (File → Save as), then upload that.`)
       return
     }
     if (file.size > MAX_BYTES) {
       setPickError(`${file.name} is larger than 1 MB.`)
       return
     }
-    const sheet = { name: file.name, text: await file.text() }
+    // An Excel workbook is read here, in the browser: its first worksheet, as CSV.
+    let text: string
+    try {
+      text = /\.xlsx$/i.test(file.name) ? await xlsxToCsv(new Uint8Array(await file.arrayBuffer())) : await file.text()
+    } catch (e) {
+      setPickError(friendlyError(e))
+      return
+    }
+    const sheet = { name: file.name, text }
     if (which === 'students') setStudents(sheet)
     else setTeachers(sheet)
   }
@@ -133,7 +141,7 @@ export function SchoolImportPage() {
             <CardHeader>
               <CardTitle>1. Download the templates</CardTitle>
               <CardDescription>
-                Open them in Excel or Google Sheets, add one row per person, and save as CSV. Your school’s own sheet
+                Open them in Excel or Google Sheets, add one row per person, and upload it as it is (.xlsx) or saved as CSV. Your school’s own sheet
                 works too: headings like Student Name, Roll No. or Class are understood, and the check shows how each
                 one was read.
               </CardDescription>
@@ -237,12 +245,12 @@ function FilePick({
       <span className='min-w-0 flex-1'>
         <span className='block font-medium'>{label}</span>
         <span className='block truncate text-sm text-muted-foreground'>
-          {sheet ? `${sheet.name} · ${Math.max(0, sheet.text.trim().split(/\r?\n/).length - 1)} rows` : 'Choose a .csv file'}
+          {sheet ? `${sheet.name} · ${Math.max(0, sheet.text.trim().split(/\r?\n/).length - 1)} rows` : 'Choose a .csv or .xlsx file'}
         </span>
       </span>
       <input
         type='file'
-        accept='.csv,text/csv'
+        accept='.csv,text/csv,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         className='sr-only'
         disabled={disabled}
         onChange={(e) => {
