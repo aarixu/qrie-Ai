@@ -28,7 +28,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const DIST = 'apps/classroom/dist';
+// Which builds to search: the paths given on the command line, else the tutor's.
+// The admin console's build is checked in CI by passing apps/admin/dist.
+const DISTS = process.argv.length > 2 ? process.argv.slice(2) : ['apps/classroom/dist'];
 const PUBLIC_BY_DESIGN = new Set([
   'VITE_SUPABASE_URL',
   'VITE_SUPABASE_ANON_KEY',
@@ -122,14 +124,34 @@ function serviceAccountSecrets() {
   return out;
 }
 
+/**
+ * A Supabase service-role key is a JWT whose payload says role = service_role.
+ * The anon key is a JWT too, and belongs in the bundle, so the shape alone cannot
+ * tell them apart: the payload can. Nothing in a browser has a reason to hold the
+ * key that bypasses row-level security, whichever app it is.
+ */
+function serviceRoleTokens(body) {
+  const found = [];
+  for (const m of body.matchAll(/eyJ[A-Za-z0-9_-]{10,}\.(eyJ[A-Za-z0-9_-]{10,})\.[A-Za-z0-9_-]{10,}/g)) {
+    try {
+      const payload = JSON.parse(Buffer.from(m[1], 'base64url').toString('utf8'));
+      if (payload && payload.role === 'service_role') found.push(m[0]);
+    } catch {
+      // not a JWT after all
+    }
+  }
+  return found;
+}
+
 const files = [];
-(function walk(dir) {
+function walk(dir) {
   for (const entry of fs.readdirSync(dir)) {
     const full = path.join(dir, entry);
     if (fs.statSync(full).isDirectory()) walk(full);
     else files.push(full);
   }
-})(DIST);
+}
+for (const dist of DISTS) walk(dist);
 
 const leaks = [];
 
@@ -166,6 +188,7 @@ for (const file of files) {
       leaks.push(`${secret.name} appears in ${file}`);
     }
   }
+  if (serviceRoleTokens(body).length > 0) leaks.push(`a service-role key appears in ${file}`);
   for (const shape of SHAPES) {
     if (shape.re.test(body)) leaks.push(`something shaped like a ${shape.name} appears in ${file}`);
   }
