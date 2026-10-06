@@ -1147,15 +1147,20 @@ export function createLmsClient(t: Transport) {
     async myWorkComment(assignmentId: string): Promise<MyWorkComment | null> {
       return (await rows<MyWorkComment>('my_work_comment', { p_assignment: assignmentId }))[0] ?? null;
     },
-    async submitMcq(assignmentId: string, answers: Record<string, number>): Promise<McqResult> {
-      const [r] = await rows<McqResult>('submit_mcq', {
-        p_assignment: assignmentId,
-        p_answers: answers,
-      });
+    /**
+     * With `key` (one the phone made for this hand-in), sending it again
+     * answers as the first time and makes no second attempt (0044).
+     */
+    async submitMcq(assignmentId: string, answers: Record<string, number>, key?: string): Promise<McqResult> {
+      const [r] = key
+        ? await rows<McqResult>('submit_mcq_once', { p_assignment: assignmentId, p_answers: answers, p_key: key })
+        : await rows<McqResult>('submit_mcq', { p_assignment: assignmentId, p_answers: answers });
       return r;
     },
-    async submitPhotos(assignmentId: string, objectNames: string[]): Promise<string> {
-      return (await t.value('submit_photos', { p_assignment: assignmentId, p_paths: objectNames })) as string;
+    async submitPhotos(assignmentId: string, objectNames: string[], key?: string): Promise<string> {
+      return (await (key
+        ? t.value('submit_photos_once', { p_assignment: assignmentId, p_paths: objectNames, p_key: key })
+        : t.value('submit_photos', { p_assignment: assignmentId, p_paths: objectNames }))) as string;
     },
   };
 }

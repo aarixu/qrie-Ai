@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Camera, Loader2, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { workPath, type MyAssignment } from '@ai-tutor/lms-client'
+import { isOffline, newKey, workPath, type MyAssignment } from '@ai-tutor/lms-client'
 import { api, backend, say } from '@/lib/backend'
+import { useOutbox } from '@/lib/outbox'
 import { shrinkPhoto } from '@/lib/photo'
 import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
@@ -21,6 +22,7 @@ export function Photos({ a }: { a: MyAssignment }) {
   const [preparing, setPreparing] = useState(false)
   const [sending, setSending] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
+  const { box } = useOutbox()
 
   // Previews are freed when removed, and the rest when the screen closes.
   const made = useRef<string[]>([])
@@ -50,17 +52,31 @@ export function Photos({ a }: { a: MyAssignment }) {
   async function handIn() {
     setSending(true)
     setProblem(null)
+    const stamp = Date.now()
+    const names = pages.map((_, i) => workPath(me.orgId, a.id, me.userId, `page-${i + 1}-${stamp}.jpg`))
+    const blobs = pages.map((p) => new Blob([p.blob], { type: 'image/jpeg' }))
+    // The key this hand-in is sent under, so sending it again is the same hand-in (0044).
+    const key = newKey()
+    let uploaded = 0
     try {
-      const stamp = Date.now()
-      const names = pages.map((_, i) => workPath(me.orgId, a.id, me.userId, `page-${i + 1}-${stamp}.jpg`))
-      for (const [i, p] of pages.entries()) {
-        await backend.uploadWork(names[i], new Blob([p.blob], { type: 'image/jpeg' }))
+      for (const [i, blob] of blobs.entries()) {
+        await backend.uploadWork(names[i], blob)
+        uploaded = i + 1
       }
-      await api.submitPhotos(a.id, names)
+      await api.submitPhotos(a.id, names, key)
       await queryClient.invalidateQueries({ queryKey: ['my-assignments'] })
       toast.success('Photos handed in!')
     } catch (e) {
-      setProblem(say(e))
+      if (isOffline(e) && box) {
+        // No internet: the photos wait on the phone and go by themselves when
+        // it is back (components/outbox-banner.tsx), from the page they got to.
+        await box.add({ kind: 'photos', assignmentId: a.id, title: a.title, key, names, pages: blobs, uploaded })
+        pages.forEach((p) => URL.revokeObjectURL(p.url))
+        setPages([])
+        toast.info('No internet. Your photos are kept on this phone and will be handed in when it is back.')
+      } else {
+        setProblem(say(e))
+      }
     } finally {
       setSending(false)
     }

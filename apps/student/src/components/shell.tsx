@@ -3,6 +3,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Link, Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
 import { BarChart3, ClipboardList, House, LogOut, Sparkles } from 'lucide-react'
 import { useSchoolLogo } from '@/lib/brand'
+import { useOutbox } from '@/lib/outbox'
+import { OutboxBanner } from '@/components/outbox-banner'
 import { signOut, useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
 import {
@@ -37,6 +39,7 @@ export function Shell() {
   const path = useRouterState({ select: (s) => s.location.pathname })
   const logo = useSchoolLogo(!!me)
   const focused = path.startsWith('/homework/') || path.startsWith('/learn/practice')
+  const waiting = useOutbox().jobs.length
 
   return (
     <div className='mx-auto flex min-h-svh max-w-md flex-col bg-background'>
@@ -61,6 +64,7 @@ export function Shell() {
         </header>
       )}
       <main className={cn('flex-1 px-4 py-4', focused ? 'pb-[max(env(safe-area-inset-bottom),1rem)]' : 'pb-24')}>
+        <OutboxBanner />
         <Outlet />
       </main>
       {!focused && (
@@ -95,6 +99,8 @@ export function Shell() {
             <AlertDialogTitle>Sign out?</AlertDialogTitle>
             <AlertDialogDescription>
               You will need your ID and PIN to sign in again.
+              {waiting > 0 &&
+                ' Work waiting for the internet stays on this phone, and goes to your school when you sign in again.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

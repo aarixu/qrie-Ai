@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import type { MyAssignment } from '@ai-tutor/lms-client'
+import { isOffline, newKey, type MyAssignment } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
+import { useOutbox } from '@/lib/outbox'
 import { cn } from '@/lib/utils'
 import {
   AlertDialog,
@@ -39,6 +40,28 @@ function saveDraft(id: string, answers: Record<string, number> | null) {
   }
 }
 
+// The key this hand-in is sent under (0044), kept on the phone until it is
+// handed in, so sending it again — after a reload too — is the same hand-in.
+const keyKey = (id: string) => `qrie-hand-in-key-${id}`
+function handInKey(id: string): string {
+  try {
+    const kept = localStorage.getItem(keyKey(id))
+    if (kept) return kept
+    const made = newKey()
+    localStorage.setItem(keyKey(id), made)
+    return made
+  } catch {
+    return newKey()
+  }
+}
+function forgetKey(id: string) {
+  try {
+    localStorage.removeItem(keyKey(id))
+  } catch {
+    /* nothing was kept */
+  }
+}
+
 /** One question to a screen, big buttons, then a check before handing in. */
 export function Quiz({
   a,
@@ -65,7 +88,9 @@ export function Quiz({
   // A test saves each answer to the school's server as it is tapped (0030),
   // so the server can hand in what was saved if the phone drops off.
   const isTest = a.kind === 'test'
-  const [unsaved, setUnsaved] = useState(0)
+  const { box } = useOutbox()
+  // What happened to the last answer saved: null when the school has it.
+  const [note, setNote] = useState<{ text: string; bad: boolean } | null>(null)
   const saved = useQuery({
     queryKey: ['saved-answers', a.id],
     queryFn: () => api.mySavedAnswers(a.id),
@@ -82,8 +107,15 @@ export function Quiz({
     setAnswers((mine) => ({ ...mine, [itemId]: index }))
     if (!isTest) return
     api.saveTestAnswer(a.id, itemId, index).then(
-      () => setUnsaved(0),
-      () => setUnsaved((n) => n + 1)
+      () => setNote(null),
+      async (e) => {
+        if (isOffline(e) && box) {
+          await box.add({ kind: 'answer', assignmentId: a.id, itemId, chosen: index })
+          setNote({ text: 'Kept on this phone; it goes to your school when the internet is back', bad: false })
+        } else {
+          setNote({ text: `Not saved: ${say(e)}`, bad: true })
+        }
+      }
     )
   }
 
@@ -104,9 +136,11 @@ export function Quiz({
     if (handedIn.current) return
     handedIn.current = true
     setBusy(true)
+    const key = handInKey(a.id)
     try {
-      const r = await api.submitMcq(a.id, answers)
+      const r = await api.submitMcq(a.id, answers, key)
       saveDraft(a.id, null)
+      forgetKey(a.id)
       await queryClient.invalidateQueries({ queryKey: ['my-assignments'] })
       await queryClient.invalidateQueries({ queryKey: ['review', a.id] })
       await queryClient.invalidateQueries({ queryKey: ['my-progress'] })
@@ -117,6 +151,16 @@ export function Quiz({
       )
       onDone()
     } catch (e) {
+      if (isOffline(e) && box) {
+        // No internet: the hand-in waits on the phone, under its key, and goes
+        // by itself when the internet is back (components/outbox-banner.tsx).
+        await box.add({ kind: 'mcq', assignmentId: a.id, title: a.title, answers, key })
+        saveDraft(a.id, null)
+        forgetKey(a.id)
+        toast.info('No internet. Your answers are kept on this phone and will be handed in when it is back.')
+        onDone()
+        return
+      }
       handedIn.current = false
       toast.error(say(e))
     } finally {
@@ -218,8 +262,8 @@ export function Quiz({
         </div>
         <div className='flex items-center justify-between gap-2 text-xs'>
           {isTest ? (
-            <span className={cn(unsaved ? 'text-destructive' : 'text-muted-foreground')}>
-              {unsaved ? 'Not saved — check your internet' : 'Answers saved'}
+            <span className={cn(note?.bad ? 'text-destructive' : 'text-muted-foreground')}>
+              {note ? note.text : 'Answers saved'}
             </span>
           ) : (
             <span />
