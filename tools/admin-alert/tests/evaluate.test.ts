@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { evaluate, RUN_EVERY_MINUTES, type Snapshot } from '../src/evaluate.ts';
+import { DUE_SPAN_MINUTES, evaluate, RUN_EVERY_MINUTES, type Snapshot } from '../src/evaluate.ts';
 
 const quiet: Snapshot = {
   at: '2026-10-06T10:00:00Z',
@@ -14,9 +14,11 @@ const quiet: Snapshot = {
   relayFailures5m: 0,
 };
 const keys = (a: ReturnType<typeof evaluate>) => a.map((x) => x.key);
+const channels = (a: ReturnType<typeof evaluate>) => a.map((x) => x.channel).sort();
 // A minute count at the very start of every 5-, 15-, 30-, 60- and 120-minute block.
 const START = 120 * 1000;
-const LATER = START + 7;
+// Past the due span of every windowed rule, inside the same window.
+const NOT_DUE = START + DUE_SPAN_MINUTES + 5;
 
 describe('a quiet platform', () => {
   it('sends nothing', () => {
@@ -27,7 +29,7 @@ describe('a quiet platform', () => {
 describe('safety', () => {
   it('speaks on every run while an unsafe report is unread, on the safety channel', () => {
     const s = { ...quiet, unsafeNewReports: 2, newReports: 2, oldestNewReportMinutes: 45 };
-    for (const t of [START, LATER]) {
+    for (const t of [START, NOT_DUE]) {
       const a = evaluate(s, t);
       expect(a).toHaveLength(1);
       expect(a[0]).toMatchObject({ channel: 'safety', key: 'unsafe-report' });
@@ -35,18 +37,24 @@ describe('safety', () => {
     }
   });
 
-  it('an ordinary report is quiet for two hours, then speaks once per two-hour block', () => {
+  it('an ordinary report is quiet for two hours, then speaks at the start of each two-hour block', () => {
     expect(evaluate({ ...quiet, newReports: 1, oldestNewReportMinutes: 119 }, START)).toEqual([]);
     const old = { ...quiet, newReports: 1, oldestNewReportMinutes: 130 };
     expect(keys(evaluate(old, START))).toEqual(['old-report']);
-    expect(evaluate(old, LATER)).toEqual([]);
+    expect(evaluate(old, NOT_DUE)).toEqual([]);
   });
 });
 
 describe('operations', () => {
-  it('tells when the tutor is stopped, once per hour', () => {
+  it('tells when the tutor is stopped at the start of each hour, and not again later in it', () => {
     expect(evaluate({ ...quiet, halted: true }, START)).toEqual([{ channel: 'ops', key: 'halted', text: 'Qrie ops: the tutor is stopped.' }]);
-    expect(evaluate({ ...quiet, halted: true }, LATER)).toEqual([]);
+    expect(evaluate({ ...quiet, halted: true }, NOT_DUE)).toEqual([]);
+  });
+
+  it('still tells once an hour when the scheduler drifts and no run lands in the first five minutes', () => {
+    const runs = [7, 19, 38, 52].map((m) => START + m);
+    const sent = runs.flatMap((t) => keys(evaluate({ ...quiet, halted: true }, t)));
+    expect(sent).toContain('halted');
   });
 
   it('warns at 80% of the ceiling and says so at 100%', () => {
@@ -65,22 +73,31 @@ describe('operations', () => {
 });
 
 describe('the checker itself', () => {
-  it('says so when it cannot reach the database, and when its token is refused', () => {
-    expect(keys(evaluate(null, START))).toEqual(['unreachable']);
-    expect(evaluate({ error: 'not-allowed' }, START)[0].text).toBe('Qrie ops: the alarm was refused (not-allowed).');
-    expect(evaluate({ error: 'busy' }, LATER)).toEqual([]);
+  it('says it cannot reach the database on every run, to both chats', () => {
+    for (const t of [START, NOT_DUE]) {
+      const a = evaluate(null, t);
+      expect(keys(a)).toEqual(['unreachable', 'unreachable']);
+      expect(channels(a)).toEqual(['ops', 'safety']);
+    }
+  });
+
+  it('says its token was refused to both chats, at the start of each hour', () => {
+    const a = evaluate({ error: 'not-allowed' }, START);
+    expect(channels(a)).toEqual(['ops', 'safety']);
+    expect(a.find((x) => x.channel === 'ops')?.text).toBe('Qrie ops: the alarm was refused (not-allowed).');
+    expect(evaluate({ error: 'not-allowed' }, NOT_DUE)).toEqual([]);
   });
 });
 
 describe('what a message may carry', () => {
   it('never names a school, a lesson, a child or a note, whatever the numbers', () => {
     const worst = { ...quiet, halted: true, unsafeNewReports: 3, newReports: 5, oldestNewReportMinutes: 500, unitsToday: 99999, relayEvents5m: 100, relayFailures5m: 100 };
-    const text = evaluate(worst, START).map((a) => a.text).join(' ');
+    const text = [...evaluate(worst, START), ...evaluate(null, START)].map((a) => a.text).join(' ');
     expect(text.length).toBeGreaterThan(0);
     expect(text).not.toMatch(/school|lesson|student|child|note|class\b/i);
   });
 
-  it('runs often enough that a block of 5 minutes is always hit', () => {
-    expect(RUN_EVERY_MINUTES).toBe(5);
+  it('gives a windowed rule three runs to land in, so a late scheduler still fires it', () => {
+    expect(DUE_SPAN_MINUTES).toBe(3 * RUN_EVERY_MINUTES);
   });
 });

@@ -1,10 +1,13 @@
 /**
  * THE FIRST OWNER. Run once, from a laptop, with the service-role key.
  *
- * It does three things, in this order, over plain HTTP: makes a permanent auth
- * account marked app_metadata.provisioned_by = 'staff' (so the sign-up trigger
- * gives it no solo organisation, 0047), tells the database which environment
- * this is, and makes the account the owner. The owner then signs in to the
+ * It first asks the database what is already there, and changes nothing if there
+ * is an owner or if the database already names a different environment: a second
+ * run with the wrong --env must not leave a stray account or relabel HOSTED as
+ * DEMO. Then, in this order, over plain HTTP: it makes a permanent auth account
+ * marked app_metadata.provisioned_by = 'staff' (so the sign-up trigger gives it
+ * no solo organisation, 0047), tells the database which environment this is, and
+ * makes the account the owner. The owner then signs in to the
  * panel and enrols an authenticator app straight away; until they do, anyone
  * who learns the password could enrol their own, so do not leave the gap open.
  *
@@ -41,6 +44,15 @@ export async function provisionOwner(input: ProvisionInput): Promise<{ userId: s
     const text = await res.text();
     if (!res.ok) throw new Error(`${label} failed: ${res.status} ${text.slice(0, 300)}`);
     return text ? JSON.parse(text) : null;
+  }
+
+  const status = (await call('reading what is there', '/rest/v1/rpc/bootstrap_status', {}, { 'content-profile': 'admin' })) as {
+    environment?: unknown;
+    hasOwner?: unknown;
+  } | null;
+  if (status?.hasOwner === true) throw new Error('there is already an owner; nothing was changed');
+  if (typeof status?.environment === 'string' && status.environment !== 'UNSET' && status.environment !== environment) {
+    throw new Error(`the database says ${status.environment}; nothing was changed`);
   }
 
   const created = (await call('creating the account', '/auth/v1/admin/users', {

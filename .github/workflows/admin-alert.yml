@@ -9,9 +9,19 @@
 # It holds the public anon key and one long random token: no service-role key.
 # Safety and operations go to two different chats (tools/admin-alert/src/run.ts).
 #
-# GitHub may delay a scheduled run by several minutes at busy times and pauses
-# scheduled workflows in a repository with no activity for 60 days (UNVERIFIED
-# here, from GitHub's documentation); the dead-checker tile is why that is safe.
+# GitHub may delay a scheduled run by several minutes at busy times (the
+# checker gives each windowed alert three runs to land in, so a late run still
+# fires it) and pauses scheduled workflows in a repository with no activity for
+# 60 days (UNVERIFIED here, from GitHub's documentation); the dead-checker tile
+# shows a checker that has stopped.
+#
+# SWITCHED OFF until the repository variable ADMIN_ALERT_ENABLED is 'true', so it
+# does not fail every five minutes before its secrets exist. COST: 288 runs a
+# day, each billed as at least a minute, is about 8,600 job-minutes a month. On
+# a public repository that is free; on a private one it is several times the
+# free quota, and when the quota runs out CI stops too. For a private
+# repository, run `npm run admin:alert` from cron on a server instead (the same
+# six values as environment variables) and leave this switched off.
 name: Admin alert
 
 permissions:
@@ -28,6 +38,7 @@ concurrency:
 
 jobs:
   check:
+    if: ${{ vars.ADMIN_ALERT_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:

@@ -2,13 +2,16 @@
  * WHEN TO WAKE A PERSON. A pure function from the snapshot to messages.
  *
  * The checker runs every 5 minutes and keeps no state, so repeats are paced by
- * the clock: a rule with a window of N minutes fires only in the first run of
- * each N-minute block. A rule with no window fires on every run: that is for
- * an unread unsafe report, which should be loud until somebody opens it.
+ * the clock: a rule with a window of N minutes fires in any run that lands in
+ * the first DUE_SPAN_MINUTES of each N-minute block. That span is three runs
+ * wide because schedulers drift: a duplicate is cheap, a missed alarm is not. A
+ * rule with no window fires on every run: an unread unsafe report, and a
+ * checker that cannot reach the database, stay loud until somebody acts.
  *
  * Messages carry counts and ages and nothing that names a school, a lesson, a
  * child or a word of what a child wrote. Safety and operations go to different
- * chats, with different people, and safety is never merged into the other.
+ * chats, with different people. A checker that cannot see goes to both, because
+ * a blind alarm is a safety problem too.
  */
 export interface Snapshot {
   at: string;
@@ -33,11 +36,14 @@ export interface Alert {
   text: string;
 }
 
-/** How often the checker runs. A windowed rule fires in the first run of its block. */
+/** How often the checker is scheduled to run. */
 export const RUN_EVERY_MINUTES = 5;
 
+/** A windowed rule fires in any run within this many minutes of its block's start. */
+export const DUE_SPAN_MINUTES = 3 * RUN_EVERY_MINUTES;
+
 const due = (nowMinutes: number, windowMinutes: number): boolean =>
-  windowMinutes <= 0 || nowMinutes % windowMinutes < RUN_EVERY_MINUTES;
+  windowMinutes <= 0 || nowMinutes % windowMinutes < DUE_SPAN_MINUTES;
 
 const isSnapshot = (a: SnapshotAnswer): a is Snapshot => !('error' in a);
 
@@ -46,13 +52,18 @@ export function evaluate(answer: SnapshotAnswer | null, nowMinutes: number): Ale
   const ops = (key: string, windowMinutes: number, text: string) => {
     if (due(nowMinutes, windowMinutes)) out.push({ channel: 'ops', key, text: `Qrie ops: ${text}` });
   };
+  const both = (key: string, windowMinutes: number, text: string) => {
+    if (!due(nowMinutes, windowMinutes)) return;
+    out.push({ channel: 'ops', key, text: `Qrie ops: ${text}` });
+    out.push({ channel: 'safety', key, text: `Qrie safety: ${text}` });
+  };
 
   if (answer === null) {
-    ops('unreachable', 15, 'the alarm could not reach the database.');
+    both('unreachable', 0, 'the alarm could not reach the database.');
     return out;
   }
   if (!isSnapshot(answer)) {
-    ops('token-refused', 60, `the alarm was refused (${answer.error}).`);
+    both('token-refused', 60, `the alarm was refused (${answer.error}).`);
     return out;
   }
 
