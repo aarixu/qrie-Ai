@@ -26,7 +26,7 @@ export interface School {
 export async function seat(
   db: PGlite,
   org: string,
-  role: 'student' | 'teacher' | 'admin',
+  role: 'student' | 'teacher' | 'admin' | 'parent',
   loginId: string,
   name: string,
 ): Promise<string> {

@@ -77,6 +77,7 @@ describe('the lms schema', () => {
       'usable_question(p_stem text, p_options jsonb, p_correct integer, p_labels jsonb)',
       'own_draft(p_draft uuid)',
       'handed_in_with(p_key uuid, p_assignment uuid)',
+      'is_guardian_of(p_student uuid)',
       'set_licence(p_code text, p_plan text, p_seats integer, p_until date)',
       'founder_schools()',
     ];

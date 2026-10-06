@@ -34,6 +34,7 @@ import { ResetPinButton } from '@/features/school/reset-pin'
 import { LeaveButton } from '@/features/school/leavers'
 import { MoveStudentButton } from '@/features/school/new-year'
 import { ProfileHeader } from './profile-header'
+import { ParentsCard } from './parents'
 import { RemarkCard } from './remark'
 import { ReportCardButtons } from './report-buttons'
 
@@ -175,6 +176,8 @@ export function StudentReport({ studentId }: { studentId: string }) {
           )}
 
           <RemarkCard studentId={studentId} name={s.displayName} />
+
+          {me?.kind === 'admin' && <ParentsCard studentId={studentId} loginId={s.loginId} name={s.displayName} />}
 
           <div className='grid gap-4 lg:grid-cols-2'>
             <ChartCard title='Scores over time' description='Each marked piece of work, oldest first.'>

@@ -24,32 +24,49 @@ export function standingOf(mastery: number | null, answers: number): { word: str
 
 const pct = (x: number | null) => (x === null ? '—' : `${Math.round(x * 100)}%`)
 
+/** One child, as a parent sees them (lms.my_children, 0045). */
+export type ChildShown = { userId: string; displayName: string }
+
 /**
- * The child's own progress: how much work they hand in, their teacher's
- * remark for the year, their marks over time (a test's only once released),
- * and, chapter by chapter, what the learning model believes from every
- * answer (lms.student_* and lms.report_remark for themselves, lms.my_progress).
+ * A child's progress: how much work they hand in, their teacher's remark for
+ * the year, their marks over time (a test's only once released), and,
+ * chapter by chapter, what the learning model believes from every answer
+ * (lms.student_* and lms.report_remark). The child's own, or — with `child` —
+ * one of a parent's children, read-only, with the year's attendance.
  */
-export function ProgressPage() {
+export function ProgressPage({ child }: { child?: ChildShown } = {}) {
   const me = useAuthStore((s) => s.me)
+  const studentId = child?.userId ?? me?.userId
   const subjects = useQuery({
-    queryKey: ['my-subjects'],
-    queryFn: () => api.studentSubjects(me!.userId),
-    enabled: !!me,
+    queryKey: ['my-subjects', studentId],
+    queryFn: () => api.studentSubjects(studentId!),
+    enabled: !!studentId,
   })
   const remark = useQuery({
-    queryKey: ['my-remark'],
-    queryFn: () => api.reportRemark(me!.userId),
-    enabled: !!me,
+    queryKey: ['my-remark', studentId],
+    queryFn: () => api.reportRemark(studentId!),
+    enabled: !!studentId,
   })
-  const attendance = useQuery({ queryKey: ['my-attendance'], queryFn: () => api.myAttendance(30) })
+  // The child's own last 30 days; a parent, the year so far (lms.student_attendance).
+  const attendance = useQuery({
+    queryKey: ['my-attendance', studentId],
+    queryFn: async () => {
+      if (!child) {
+        const r = await api.myAttendance(30)
+        return { rate: r.rate, hint: r.days.length ? 'Last 30 days' : 'Not marked yet' }
+      }
+      const r = await api.studentAttendance(child.userId)
+      return { rate: r.rate, hint: r.marked ? 'This year' : 'Not marked yet' }
+    },
+    enabled: !!studentId,
+  })
   const timeline = useQuery({
-    queryKey: ['my-timeline'],
-    queryFn: () => api.studentTimeline(me!.userId),
-    enabled: !!me,
+    queryKey: ['my-timeline', studentId],
+    queryFn: () => api.studentTimeline(studentId!),
+    enabled: !!studentId,
   })
 
-  if (subjects.isPending) return <p className='text-muted-foreground'>Loading your progress…</p>
+  if (subjects.isPending) return <p className='text-muted-foreground'>Loading the progress…</p>
   if (subjects.isError) return <p className='text-destructive'>{say(subjects.error)}</p>
 
   const due = subjects.data.reduce((n, x) => n + x.workDue, 0)
@@ -59,15 +76,15 @@ export function ProgressPage() {
 
   return (
     <div className='space-y-6'>
-      <h1 className='text-2xl font-bold'>Your progress</h1>
-      <MyReportCard />
+      <h1 className='text-2xl font-bold'>{child ? `${child.displayName}’s progress` : 'Your progress'}</h1>
+      <MyReportCard studentId={child?.userId} />
       <div className='grid grid-cols-3 gap-2'>
         <Ring label='Handed in' value={due ? handed / due : null} hint={`${handed} of ${due}`} colour='#059669' />
         <Ring label='Average mark' value={average} hint='Marked work' colour='#2563eb' />
         <Ring
           label='Attendance'
           value={attendance.data?.rate ?? null}
-          hint={attendance.data?.days.length ? 'Last 30 days' : 'Not marked yet'}
+          hint={attendance.data?.hint ?? 'Not marked yet'}
           colour='#0284c7'
         />
       </div>
@@ -75,14 +92,14 @@ export function ProgressPage() {
       {remark.data?.text && (
         <section className='space-y-1 rounded-2xl border border-primary/40 bg-primary/5 p-4'>
           <h2 className='flex items-center gap-2 text-sm font-semibold'>
-            <MessageSquareQuote className='size-4' /> Your teacher’s remark
+            <MessageSquareQuote className='size-4' /> {child ? 'The teacher’s remark' : 'Your teacher’s remark'}
           </h2>
           <p className='text-sm whitespace-pre-wrap'>{remark.data.text}</p>
           {remark.data.writtenByName && <p className='text-xs text-muted-foreground'>{remark.data.writtenByName}</p>}
         </section>
       )}
 
-      {timeline.data && <Marks rows={timeline.data} />}
+      {timeline.data && <Marks rows={timeline.data} title={child ? 'Last marks' : 'Your last marks'} />}
 
       <section>
         <h2 className='mb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase'>Subjects</h2>
@@ -95,7 +112,7 @@ export function ProgressPage() {
         </ul>
       </section>
 
-      <Chapters />
+      <Chapters child={child} />
     </div>
   )
 }
@@ -119,7 +136,7 @@ function Ring({ label, value, hint, colour }: { label: string; value: number | n
 }
 
 /** The last marks, oldest on the left, as bars a child can read at a glance. */
-function Marks({ rows }: { rows: TimelineRow[] }) {
+function Marks({ rows, title }: { rows: TimelineRow[]; title: string }) {
   const marked = rows
     .filter((r) => r.score !== null)
     .sort((a, b) => a.dueAt.localeCompare(b.dueAt))
@@ -127,7 +144,7 @@ function Marks({ rows }: { rows: TimelineRow[] }) {
   if (marked.length === 0) return null
   return (
     <section>
-      <h2 className='mb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase'>Your last marks</h2>
+      <h2 className='mb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase'>{title}</h2>
       <div className='rounded-2xl border bg-card p-3'>
         <div className='flex h-36 items-end gap-2'>
           {marked.map((r) => {
@@ -193,15 +210,23 @@ function SubjectCard({ s }: { s: StudentSubject }) {
   )
 }
 
-/** The child's own standing per chapter, from every answer they have given (lms.my_progress). */
-function Chapters() {
-  const mine = useQuery({ queryKey: ['my-progress'], queryFn: api.myProgress })
+/**
+ * The child's standing per chapter, from every answer they have given: their
+ * own (lms.my_progress), or a parent's child's (lms.student_chapters).
+ */
+function Chapters({ child }: { child?: ChildShown }) {
+  const mine = useQuery({
+    queryKey: ['my-progress', child?.userId],
+    queryFn: () => (child ? api.studentChapters(child.userId) : api.myProgress()),
+  })
   if (mine.isPending) return null
   if (mine.isError) return <p className='text-sm text-destructive'>{say(mine.error)}</p>
   if (mine.data.length === 0) {
     return (
       <p className='rounded-xl bg-muted p-3 text-sm text-muted-foreground'>
-        Hand in work or practise in Learn, and your chapters show up here.
+        {child
+          ? `When ${child.displayName} hands in work or practises in Learn, their chapters show up here.`
+          : 'Hand in work or practise in Learn, and your chapters show up here.'}
       </p>
     )
   }

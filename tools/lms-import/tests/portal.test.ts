@@ -166,6 +166,23 @@ describe('checking a teachers sheet', () => {
     expect(p.changes).toBe(1);
   });
 
+  it("never takes a parent for a teacher: a teacher with a parent's name is a new teacher, and a parent's ID is refused", () => {
+    const withParent: SchoolSnapshot = {
+      ...school,
+      accounts: [
+        ...school.accounts,
+        { loginId: 'DEMO-P1', kind: 'parent', displayName: 'Sunita Rao', className: null, roll: null, teaches: [] },
+      ],
+    };
+    const p = previewImport(withParent, { teachers: 'name,teaches\nSunita Rao,8A English\n' });
+    expect(p.errors).toEqual([]);
+    expect(p.people.map((x) => [x.loginId, x.status])).toEqual([['DEMO-T06', 'new']]);
+    expect(p.warnings.join('\n')).not.toMatch(/already on the staff|taken to be/);
+    const byId = previewImport(withParent, { teachers: 'name,teaches,staff_id\nSunita Rao,8A English,P1\n' });
+    expect(byId.errors.join('\n')).toMatch(/DEMO-P1 is a parent's ID \(Sunita Rao\)/);
+    expect(byId.plan).toBeNull();
+  });
+
   it('says nothing about a teacher listed again with no new classes', () => {
     const p = previewImport(school, { teachers: 'name,teaches\nNeha Sharma,8A Mathematics\n' });
     expect(p.warnings).toEqual([]);

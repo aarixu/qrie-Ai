@@ -29,6 +29,9 @@ const WORDS: Record<string, string> = {
   'year-started': 'New school year started',
   'remark-set': 'Report card remark written',
   'remark-removed': 'Report card remark removed',
+  'parent-added': 'Parent given a sign-in',
+  'parent-linked': 'Parent linked to a child',
+  'parent-unlinked': 'Parent unlinked from a child',
   'notice-sent': 'Notice sent',
   'notice-deleted': 'Notice deleted',
   'practice-sent': 'Practice sent to some children',
@@ -41,7 +44,7 @@ export function SchoolActivityPage() {
   return (
     <Page
       title='Activity log'
-      description='Every change to who is in the school, who teaches what, and how it looks, every report card remark written or removed, every notice sent or deleted, every practice sent to some children of a class, and every change to the school’s licence. Newest first.'
+      description='Every change to who is in the school, who teaches what, and how it looks, every report card remark written or removed, every parent given a sign-in, linked or unlinked, every notice sent or deleted, every practice sent to some children of a class, and every change to the school’s licence. Newest first.'
     >
       {log.isPending ? (
         <Loading what='the activity log' />

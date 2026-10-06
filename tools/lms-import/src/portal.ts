@@ -35,7 +35,7 @@ export interface SchoolSnapshot {
   config: SchoolConfig;
   accounts: {
     loginId: string;
-    kind: 'student' | 'teacher' | 'admin';
+    kind: 'student' | 'teacher' | 'admin' | 'parent';
     displayName: string;
     /** A student's class this year, e.g. '8A'; null for staff and for a child in no class. */
     className: string | null;
@@ -122,7 +122,8 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
   if (students.length + teachers.length === 0) return fail(['The sheets have nobody in them.']);
 
   const byId = new Map(school.accounts.map((a) => [a.loginId, a]));
-  const staff = school.accounts.filter((a) => a.kind !== 'student');
+  // The staff: teachers and the admin — never a parent (0045), whose name may well match a teacher's.
+  const staff = school.accounts.filter((a) => a.kind === 'teacher' || a.kind === 'admin');
 
   // One person per name in a teachers sheet, unless staff IDs tell them apart.
   const byName = new Map<string, Teacher[]>();
@@ -183,6 +184,10 @@ export function previewImport(school: SchoolSnapshot, sheets: { students?: strin
     const file = isStudent ? 'students.csv' : 'teachers.csv';
     const found = byId.get(p.loginId);
     if (found) {
+      if (found.kind === 'parent') {
+        errors.push(`${file} row ${src.row}: ${p.loginId} is a parent's ID (${found.displayName}).`);
+        return;
+      }
       if ((found.kind === 'student') !== isStudent) {
         errors.push(
           `${file} row ${src.row}: ${p.loginId} is ${found.kind === 'student' ? "a student's ID" : 'a staff ID'} (${found.displayName}).`,

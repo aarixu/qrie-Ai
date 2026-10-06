@@ -8,7 +8,7 @@ import type { Transport } from './transport.ts';
  * the functions' own checks — never here. This file only names things.
  */
 
-export type AccountKind = 'student' | 'teacher' | 'admin';
+export type AccountKind = 'student' | 'teacher' | 'admin' | 'parent';
 export type AssignmentKind = 'homework' | 'quiz' | 'test' | 'assignment';
 /**
  * How students answer: MCQs (auto-marked), a photo of their work, a checklist
@@ -96,6 +96,16 @@ export interface NewItem {
   kind?: 'mcq' | 'task';
   options?: string[];
   correctIndex?: number;
+}
+
+/** One of a parent's children (0045). */
+export interface MyChild {
+  userId: string;
+  loginId: string;
+  displayName: string;
+  /** This year's class, e.g. '8A'; null when the child is in none. */
+  className: string | null;
+  rollNumber: string | null;
 }
 
 /** Drafts an AI wrote, to keep in the caller's own queue (0043). */
@@ -1067,6 +1077,18 @@ export function createLmsClient(t: Transport) {
     schoolAttendanceToday: () => rows<ClassAttendanceToday>('school_attendance_today'),
     /** What the school's admins have done, newest first (lms.audit_log). */
     auditLog: (limit?: number) => rows<AuditEvent>('audit_log', { p_limit: limit }),
+    /** A parent's own children (0045). */
+    myChildren: () => rows<MyChild>('my_children'),
+    /** The admin linking a parent to a child; again for a brother or sister. */
+    async linkParent(parentLoginId: string, studentLoginId: string): Promise<void> {
+      await t.value('link_parent', { p_parent_login: parentLoginId, p_student_login: studentLoginId });
+    },
+    async unlinkParent(parentLoginId: string, studentLoginId: string): Promise<void> {
+      await t.value('unlink_parent', { p_parent_login: parentLoginId, p_student_login: studentLoginId });
+    },
+    /** A child's parents at the school. The admin only. */
+    studentParents: (studentUserId: string) =>
+      rows<{ loginId: string; displayName: string }>('student_parents', { p_student: studentUserId }),
     /** A PNG or JPEG as base64, or (null, null) to remove the logo. */
     async setSchoolLogo(mime: SchoolLogo['mime'] | 'image/svg+xml' | null, base64: string | null): Promise<void> {
       await t.value('set_school_logo', { p_mime: mime, p_data: base64 });

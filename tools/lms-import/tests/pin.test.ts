@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { isWeakPin, newPin, PIN_LENGTH } from '../src/pin.ts';
 
 describe('PINs', () => {
-  it('are 6 digits for a student and 8 for a teacher or admin (decision 12)', () => {
-    expect(PIN_LENGTH).toEqual({ student: 6, teacher: 8, admin: 8 });
+  it('are 6 digits for a student and 8 for a teacher, the admin or a parent (decision 12; parents, 0045)', () => {
+    expect(PIN_LENGTH).toEqual({ student: 6, teacher: 8, admin: 8, parent: 8 });
+    expect(newPin('parent')).toMatch(/^\d{8}$/);
     expect(newPin('student')).toMatch(/^\d{6}$/);
     expect(newPin('teacher')).toMatch(/^\d{8}$/);
     expect(newPin('admin')).toMatch(/^\d{8}$/);

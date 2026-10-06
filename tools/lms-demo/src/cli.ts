@@ -26,8 +26,9 @@ function arg(name: string): string | undefined {
 }
 
 function loginsMarkdown(logins: CreatedAccount[], planted: Planted[]): string {
-  const staff = logins.filter((l) => l.kind !== 'student');
+  const staff = logins.filter((l) => l.kind === 'admin' || l.kind === 'teacher');
   const students = logins.filter((l) => l.kind === 'student');
+  const parents = logins.filter((l) => l.kind === 'parent');
   const lines = [
     '# Qrie Demo School — sign-in sheet',
     '',
@@ -46,6 +47,12 @@ function loginsMarkdown(logins: CreatedAccount[], planted: Planted[]): string {
     ...students.map(
       (l) => `| ${l.grade}${l.section} | ${l.loginId.split('-').pop()} | ${l.displayName} | ${l.loginId} | ${l.pin} |`,
     ),
+    '',
+    '## Parents (student app)',
+    '',
+    '| Name | ID | PIN |',
+    '|---|---|---|',
+    ...parents.map((l) => `| ${l.displayName} | ${l.loginId} | ${l.pin} |`),
     '',
     '## Planted misconceptions (the answer key for checking the brain)',
     '',

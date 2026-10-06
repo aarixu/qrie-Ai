@@ -1,5 +1,6 @@
 import type { PGlite } from '@electric-sql/pglite';
 import type { ImportRequest, ImportResponse } from '../../../packages/lms-client/src/backend.ts';
+import { loginEmail } from '../../../packages/lms-client/src/login.ts';
 import { applyPlan } from '../../lms-import/src/apply.ts';
 import { pgliteStore } from '../../lms-import/src/pgliteStore.ts';
 import { newPin } from '../../lms-import/src/pin.ts';
@@ -135,6 +136,64 @@ export async function resetPinForAdmin(
   return { loginId: id, displayName: who.display_name, pin };
 }
 
+/**
+ * A child's parent, given their own sign-in by the admin (0045): an account
+ * of kind 'parent' with the school's next P-number ID and an 8-digit PIN,
+ * linked to the child. The PIN is returned this once.
+ */
+export async function addParentForAdmin(
+  db: PGlite,
+  caller: string,
+  request: Record<string, unknown>,
+): Promise<{ loginId: string; displayName: string; pin: string }> {
+  const org = await adminOrg(db, caller, 'give a parent a sign-in');
+  const name = typeof request.displayName === 'string' ? request.displayName.trim().replace(/\s+/g, ' ') : '';
+  if (name.length < 1 || name.length > 80) throw new ImportRefused(400, "Write the parent's name, up to 80 letters.");
+  const studentId = typeof request.studentLoginId === 'string' ? request.studentLoginId.trim().toUpperCase() : '';
+  const child = (
+    await db.query<{ user_id: string; kind: string; left_at: string | null }>(
+      `select user_id, kind, left_at from lms.account where org_id = $1 and login_id = $2`,
+      [org, studentId],
+    )
+  ).rows[0];
+  if (!child) throw new ImportRefused(404, `There is no one in your school with the ID ${studentId || '(none)'}.`);
+  if (child.kind !== 'student' || child.left_at) throw new ImportRefused(400, `${studentId} is not a student at your school.`);
+  const code = (await db.query<{ code: string }>(`select code from lms.school where org_id = $1`, [org])).rows[0].code;
+  const pin = newPin('parent');
+  return db.transaction(async (tx) => {
+    const t = tx as unknown as PGlite;
+    // The next P-number: one more than the highest, never a gap reused.
+    const highest = (
+      await t.query<{ n: number | null }>(
+        `select max(substring(login_id from '-P([0-9]+)$')::int) as n from lms.account where org_id = $1 and kind = 'parent'`,
+        [org],
+      )
+    ).rows[0].n;
+    const loginId = `${code}-P${(highest ?? 0) + 1}`;
+    const user = (
+      await t.query<{ id: string }>(`insert into auth.users (email, raw_app_meta_data) values ($1, $2::jsonb) returning id`, [
+        loginEmail(loginId),
+        JSON.stringify({ provisioned_by: 'school', school_code: code }),
+      ])
+    ).rows[0].id;
+    await t.query(`insert into public.membership (org_id, user_id, role) values ($1, $2, 'parent')`, [org, user]);
+    await t.query(`insert into lms.account (org_id, user_id, login_id, kind, display_name) values ($1, $2, $3, 'parent', $4)`, [
+      org,
+      user,
+      loginId,
+      name,
+    ]);
+    await setPin(t, loginId, user, pin);
+    await t.query(`insert into lms.guardian (parent_user_id, student_user_id, org_id) values ($1, $2, $3)`, [user, child.user_id, org]);
+    await t.query(`insert into lms.audit_event (org_id, actor, action, target) values ($1, $2, 'parent-added', $3)`, [
+      org,
+      caller,
+      `${loginId} ${studentId}`,
+    ]);
+    return { loginId, displayName: name, pin };
+  });
+}
+
 /** What the school has now: this year's classes, its subjects, everybody's ID, rolls and classes taught, and its licence's seats. */
 async function schoolSnapshot(db: PGlite, org: string): Promise<SchoolSnapshot> {
   const school = (
@@ -155,7 +214,7 @@ async function schoolSnapshot(db: PGlite, org: string): Promise<SchoolSnapshot> 
   const accounts = (
     await db.query<{
       login_id: string;
-      kind: 'student' | 'teacher' | 'admin';
+      kind: 'student' | 'teacher' | 'admin' | 'parent';
       display_name: string;
       class_name: string | null;
       roll: string | null;

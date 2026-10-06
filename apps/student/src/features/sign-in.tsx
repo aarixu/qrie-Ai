@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { api, backend, say } from '@/lib/backend'
-import { NOT_A_STUDENT, useAuthStore } from '@/stores/auth-store'
+import { forThisApp, NOT_A_STUDENT, useAuthStore } from '@/stores/auth-store'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,7 +25,7 @@ export function SignIn() {
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     if (!idOk || !pinOk) {
-      setProblem(!idOk ? 'Type the ID on your slip, like DEMO-8A-1.' : 'Your PIN is 6 digits.')
+      setProblem(!idOk ? 'Type the ID on your slip, like DEMO-8A-1.' : 'Your PIN is the 6 or 8 digits on your slip.')
       return
     }
     setBusy(true)
@@ -33,7 +33,7 @@ export function SignIn() {
     try {
       await backend.signIn(loginId.trim().toUpperCase(), pin)
       const me = await api.me()
-      if (!me || me.kind !== 'student') {
+      if (!forThisApp(me)) {
         await backend.signOut()
         setProblem(NOT_A_STUDENT)
         return

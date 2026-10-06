@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
-import { BarChart3, ClipboardList, House, LogOut, Sparkles } from 'lucide-react'
+import { BarChart3, ClipboardList, House, LogOut, Megaphone, Sparkles } from 'lucide-react'
 import { useSchoolLogo } from '@/lib/brand'
 import { useOutbox } from '@/lib/outbox'
 import { OutboxBanner } from '@/components/outbox-banner'
@@ -26,10 +26,17 @@ const TABS = [
   { to: '/progress', label: 'Progress', icon: BarChart3 },
 ] as const
 
+/** A parent's: their children at Home, and the school's notices. */
+const PARENT_TABS = [
+  { to: '/', label: 'Home', icon: House },
+  { to: '/notices', label: 'Notices', icon: Megaphone },
+] as const
+
 /**
  * The phone frame every signed-in screen sits in: the school's name, a way
- * out, and the four tabs. The tabs step aside while a child is inside one
- * piece of work or a practice round, so a stray tap does not leave it.
+ * out, and the tabs — a student's four, a parent's two. The tabs step aside
+ * while a child is inside one piece of work or a practice round, so a stray
+ * tap does not leave it.
  */
 export function Shell() {
   const me = useAuthStore((s) => s.me)
@@ -72,7 +79,7 @@ export function Shell() {
           aria-label='Sections'
           className='fixed inset-x-0 bottom-0 z-10 mx-auto flex max-w-md border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur'
         >
-          {TABS.map((t) => {
+          {(me?.kind === 'parent' ? PARENT_TABS : TABS).map((t) => {
             const active = t.to === '/' ? path === '/' : path.startsWith(t.to)
             return (
               <Link

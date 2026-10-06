@@ -14,6 +14,7 @@ import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppProgressRouteImport } from './routes/_app/progress'
 import { Route as AppWorkRouteImport } from './routes/_app/work'
+import { Route as AppChildStudentIdRouteImport } from './routes/_app/child.$studentId'
 import { Route as AppHomeworkAssignmentIdRouteImport } from './routes/_app/homework.$assignmentId'
 import { Route as AppLearnIndexRouteImport } from './routes/_app/learn.index'
 import { Route as AppLearnPracticeRouteImport } from './routes/_app/learn.practice'
@@ -42,6 +43,11 @@ const AppProgressRoute = AppProgressRouteImport.update({
 const AppWorkRoute = AppWorkRouteImport.update({
   id: '/work',
   path: '/work',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppChildStudentIdRoute = AppChildStudentIdRouteImport.update({
+  id: '/child/$studentId',
+  path: '/child/$studentId',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppHomeworkAssignmentIdRoute = AppHomeworkAssignmentIdRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/progress': typeof AppProgressRoute
   '/work': typeof AppWorkRoute
+  '/child/$studentId': typeof AppChildStudentIdRoute
   '/homework/$assignmentId': typeof AppHomeworkAssignmentIdRoute
   '/learn/practice': typeof AppLearnPracticeRoute
   '/notices/$noticeId': typeof AppNoticesNoticeIdRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/progress': typeof AppProgressRoute
   '/work': typeof AppWorkRoute
   '/': typeof AppIndexRoute
+  '/child/$studentId': typeof AppChildStudentIdRoute
   '/homework/$assignmentId': typeof AppHomeworkAssignmentIdRoute
   '/learn/practice': typeof AppLearnPracticeRoute
   '/notices/$noticeId': typeof AppNoticesNoticeIdRoute
@@ -99,6 +107,7 @@ export interface FileRoutesById {
   '/_app/progress': typeof AppProgressRoute
   '/_app/work': typeof AppWorkRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/child/$studentId': typeof AppChildStudentIdRoute
   '/_app/homework/$assignmentId': typeof AppHomeworkAssignmentIdRoute
   '/_app/learn/practice': typeof AppLearnPracticeRoute
   '/_app/notices/$noticeId': typeof AppNoticesNoticeIdRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/progress'
     | '/work'
+    | '/child/$studentId'
     | '/homework/$assignmentId'
     | '/learn/practice'
     | '/notices/$noticeId'
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/work'
     | '/'
+    | '/child/$studentId'
     | '/homework/$assignmentId'
     | '/learn/practice'
     | '/notices/$noticeId'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '/_app/progress'
     | '/_app/work'
     | '/_app/'
+    | '/_app/child/$studentId'
     | '/_app/homework/$assignmentId'
     | '/_app/learn/practice'
     | '/_app/notices/$noticeId'
@@ -184,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWorkRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/child/$studentId': {
+      id: '/_app/child/$studentId'
+      path: '/child/$studentId'
+      fullPath: '/child/$studentId'
+      preLoaderRoute: typeof AppChildStudentIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/homework/$assignmentId': {
       id: '/_app/homework/$assignmentId'
       path: '/homework/$assignmentId'
@@ -226,6 +245,7 @@ interface AppRouteRouteChildren {
   AppProgressRoute: typeof AppProgressRoute
   AppWorkRoute: typeof AppWorkRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppChildStudentIdRoute: typeof AppChildStudentIdRoute
   AppHomeworkAssignmentIdRoute: typeof AppHomeworkAssignmentIdRoute
   AppLearnPracticeRoute: typeof AppLearnPracticeRoute
   AppNoticesNoticeIdRoute: typeof AppNoticesNoticeIdRoute
@@ -237,6 +257,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppProgressRoute: AppProgressRoute,
   AppWorkRoute: AppWorkRoute,
   AppIndexRoute: AppIndexRoute,
+  AppChildStudentIdRoute: AppChildStudentIdRoute,
   AppHomeworkAssignmentIdRoute: AppHomeworkAssignmentIdRoute,
   AppLearnPracticeRoute: AppLearnPracticeRoute,
   AppNoticesNoticeIdRoute: AppNoticesNoticeIdRoute,

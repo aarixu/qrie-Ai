@@ -1,3 +1,4 @@
+import { addParentForAdmin } from './import.ts';
 import fs from 'node:fs';
 import type { PGlite } from '@electric-sql/pglite';
 import { createLmsClient, pgliteTransport, type LmsClient } from '../../../packages/lms-client/src/index.ts';
@@ -353,18 +354,34 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   // children who show the class's most-shown misconception.
   await seedPracticeForSome(db);
 
+  // 13. A parent (0045): the first child of 8A's mother, with her own sign-in.
+  const parent = await seedParent(db, imported.created);
+
   // 6. The brain. It is given the ledger and nothing else — not `planted`.
   await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
 
   return {
     orgId,
-    logins: imported.created.sort((a, b) => kindOrder(a) - kindOrder(b) || a.loginId.localeCompare(b.loginId, 'en', { numeric: true })),
+    logins: [...imported.created, parent].sort(
+      (a, b) => kindOrder(a) - kindOrder(b) || a.loginId.localeCompare(b.loginId, 'en', { numeric: true }),
+    ),
     planted,
   };
 }
 
 function kindOrder(a: CreatedAccount): number {
-  return a.kind === 'admin' ? 0 : a.kind === 'teacher' ? 1 : 2;
+  return a.kind === 'admin' ? 0 : a.kind === 'teacher' ? 1 : a.kind === 'student' ? 2 : 3;
+}
+
+/** The first child of 8A's mother, given a sign-in by the admin as the portal does. */
+async function seedParent(db: PGlite, created: CreatedAccount[]): Promise<CreatedAccount> {
+  const admin = created.find((a) => a.kind === 'admin')!;
+  const child = created.find((a) => a.loginId === 'DEMO-8A-1')!;
+  const surname = child.displayName.split(' ').at(-1);
+  const p = await addParentForAdmin(db, admin.userId, { studentLoginId: child.loginId, displayName: `Sunita ${surname}` });
+  const userId = (await db.query<{ user_id: string }>(`select user_id from lms.account where login_id = $1`, [p.loginId])).rows[0]
+    .user_id;
+  return { loginId: p.loginId, kind: 'parent', displayName: p.displayName, userId, pin: p.pin };
 }
 
 /** Homework-sized groups: a chapter's questions, six at most; small chapters are merged in order. */

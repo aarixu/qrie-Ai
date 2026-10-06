@@ -8,7 +8,7 @@ import { webcrypto } from 'node:crypto';
  * import writes it into the auth user's password and onto the slip, and no
  * table or log ever holds it.
  */
-export const PIN_LENGTH = { student: 6, teacher: 8, admin: 8 } as const;
+export const PIN_LENGTH = { student: 6, teacher: 8, admin: 8, parent: 8 } as const;
 
 export type AccountKind = keyof typeof PIN_LENGTH;
 

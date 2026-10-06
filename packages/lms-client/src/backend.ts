@@ -35,6 +35,12 @@ export interface Backend {
   importPeople(request: ImportRequest): Promise<ImportResponse>;
   /** The school admin giving somebody in the school a new PIN; the old one stops working. */
   resetPin(loginId: string): Promise<{ loginId: string; displayName: string; pin: string }>;
+  /**
+   * The school admin giving a child's parent their own sign-in, linked to the
+   * child (0045); the PIN is shown this once. A brother or sister is linked
+   * to the same sign-in with api.linkParent.
+   */
+  addParent(request: { studentLoginId: string; displayName: string }): Promise<{ loginId: string; displayName: string; pin: string }>;
   /** A school's name, colours and logo by its code, for the sign-in screen; null for no such school. */
   schoolBrand(code: string): Promise<SchoolPublicBrand | null>;
   /**
@@ -97,7 +103,7 @@ export interface ImportPerson {
 
 export interface ImportedAccount {
   loginId: string;
-  kind: 'student' | 'teacher' | 'admin';
+  kind: 'student' | 'teacher' | 'admin' | 'parent';
   displayName: string;
   className?: string;
   roll?: string;
@@ -206,6 +212,10 @@ export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: st
     },
     async resetPin() {
       throw new Error('New PINs from the portal work in the demo school only, for now.');
+    },
+    async addParent() {
+      // Creating a sign-in needs the service role: an edge function, as for importPeople.
+      throw new Error('Parent sign-ins from the portal work in the demo school only, for now.');
     },
     async schoolBrand(code) {
       if (!SCHOOL_CODE.test(code)) return null;
@@ -345,6 +355,9 @@ export function demoBackend(baseUrl: string, session: SessionStore = memorySessi
     },
     async resetPin(loginId) {
       return (await post('/admin/reset-pin', { loginId })) as { loginId: string; displayName: string; pin: string };
+    },
+    async addParent(request) {
+      return (await post('/admin/add-parent', request)) as { loginId: string; displayName: string; pin: string };
     },
     async schoolBrand(code) {
       if (!SCHOOL_CODE.test(code)) return null;

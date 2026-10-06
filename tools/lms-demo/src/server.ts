@@ -9,7 +9,7 @@ import { AI_OFF } from '../../../packages/lms-client/src/backend.ts';
 import { DRAFT_MODEL } from '../../../packages/lms-client/src/drafts.ts';
 import { pgliteTransport } from '../../../packages/lms-client/src/transport.ts';
 import { checkPin } from './auth.ts';
-import { ImportRefused, importForAdmin, resetPinForAdmin } from './import.ts';
+import { addParentForAdmin, ImportRefused, importForAdmin, resetPinForAdmin } from './import.ts';
 
 /**
  * The demo school, served to both apps over HTTP — what PostgREST, Supabase
@@ -26,6 +26,7 @@ import { ImportRefused, importForAdmin, resetPinForAdmin } from './import.ts';
  *   POST /admin/import {students?, teachers?, commit?, acceptWarnings?, importKey?}
  *                                      the admin adding people (./import.ts)
  *   POST /admin/reset-pin {loginId}    → {loginId, displayName, pin}
+ *   POST /admin/add-parent {studentLoginId, displayName} → {loginId, displayName, pin}
  *   GET  /public/school-brand/<code>   → {rows}   the sign-in screen's school look, unsigned
  *   POST /ai/chat {drafting request}    → {text}   a teacher's "Draft with AI" (opts.ai)
  *
@@ -183,13 +184,17 @@ export async function startDemoServer(opts: {
       return send(res, 200, { rows });
     }
 
-    if (req.method === 'POST' && (route === '/admin/import' || route === '/admin/reset-pin')) {
+    if (req.method === 'POST' && (route === '/admin/import' || route === '/admin/reset-pin' || route === '/admin/add-parent')) {
       const me = await caller(req);
       try {
         return send(
           res,
           200,
-          route === '/admin/import' ? await importForAdmin(db, me, json()) : await resetPinForAdmin(db, me, json().loginId),
+          route === '/admin/import'
+            ? await importForAdmin(db, me, json())
+            : route === '/admin/reset-pin'
+              ? await resetPinForAdmin(db, me, json().loginId)
+              : await addParentForAdmin(db, me, json()),
         );
       } catch (e) {
         if (e instanceof ImportRefused) throw new HttpError(e.status, e.message);

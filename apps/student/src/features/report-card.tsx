@@ -17,10 +17,11 @@ function canShareFiles(): boolean {
 }
 
 /**
- * The child's own report card as a PDF, to keep or send home. It is built
- * from what the child may see, so a test's mark appears only once released.
+ * A child's report card as a PDF, to keep or send home: the child's own, or
+ * — with `studentId` — one of a parent's children. It is built from what the
+ * child may see, so a test's mark appears only once released.
  */
-export function MyReportCard() {
+export function MyReportCard({ studentId }: { studentId?: string } = {}) {
   const me = useAuthStore((s) => s.me)
   const [busy, setBusy] = useState(false)
 
@@ -28,7 +29,7 @@ export function MyReportCard() {
     if (!me) return
     setBusy(true)
     try {
-      const id = me.userId
+      const id = studentId ?? me.userId
       const { deliverPdf, reportCardBytes, reportFileName } = await import('@ai-tutor/lms-report')
       const [card, subjects, chapters, timeline, mistakes, logo, photos, attendance, written] = await Promise.all([
         api.studentCard(id),
@@ -41,7 +42,7 @@ export function MyReportCard() {
         api.studentAttendance(id).catch(() => null),
         api.reportRemark(id).catch(() => null),
       ])
-      if (!card) throw new Error('Your report could not be found.')
+      if (!card) throw new Error('The report could not be found.')
       const photo = photos[0]?.base64 ?? null
       const remark = written?.text ? { text: written.text, by: written.writtenByName ?? '' } : null
       const bytes = reportCardBytes([{ card, subjects, chapters, timeline, mistakes, photo, attendance, remark }], {
@@ -53,7 +54,7 @@ export function MyReportCard() {
         generatedAt: new Date(),
       })
       const r = await deliverPdf(bytes, reportFileName(card), how, `${card.displayName} — progress report`)
-      if (r === 'downloaded') toast.success('Your report card is downloaded.')
+      if (r === 'downloaded') toast.success('The report card is downloaded.')
     } catch (e) {
       toast.error(say(e))
     } finally {
@@ -64,10 +65,10 @@ export function MyReportCard() {
   return (
     <div className='flex gap-2'>
       <Button className='h-11 flex-1' disabled={busy} onClick={() => make('download')}>
-        <FileDown /> {busy ? 'Making it…' : 'My report card (PDF)'}
+        <FileDown /> {busy ? 'Making it…' : studentId ? 'Report card (PDF)' : 'My report card (PDF)'}
       </Button>
       {canShareFiles() && (
-        <Button variant='outline' className='h-11' disabled={busy} onClick={() => make('share')} aria-label='Share my report card'>
+        <Button variant='outline' className='h-11' disabled={busy} onClick={() => make('share')} aria-label='Share the report card'>
           <Share2 />
         </Button>
       )}

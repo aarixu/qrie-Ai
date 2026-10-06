@@ -443,6 +443,47 @@ describe('adding people from the school portal', () => {
   });
 });
 
+describe('parents', () => {
+  it("are given a sign-in by the admin from the child's page, and see that child, and a brother or sister too", async () => {
+    const admin = await signedIn('DEMO-T05');
+    const p = await admin.addParent({ studentLoginId: 'DEMO-8A-4', displayName: '  Meena Rao ' });
+    expect(p).toMatchObject({ displayName: 'Meena Rao' });
+    expect(p.loginId).toMatch(/^DEMO-P\d+$/);
+    expect(p.pin).toMatch(/^[1-9]\d{7}$/);
+    const parent = demoBackend(server.url, memorySession());
+    await parent.signIn(p.loginId, p.pin);
+    expect(await parent.api.me()).toMatchObject({ kind: 'parent', displayName: 'Meena Rao' });
+    const [child] = await parent.api.myChildren();
+    expect(child).toMatchObject({ loginId: 'DEMO-8A-4', className: '8A' });
+    expect((await parent.api.studentCard(child.userId))?.loginId).toBe('DEMO-8A-4');
+    await admin.api.linkParent(p.loginId, 'DEMO-8B-4');
+    expect((await parent.api.myChildren()).map((k) => k.loginId)).toEqual(['DEMO-8A-4', 'DEMO-8B-4']);
+    // The next parent's ID follows on.
+    const q = await admin.addParent({ studentLoginId: 'DEMO-8A-6', displayName: 'Ravi Kumar' });
+    expect(Number(q.loginId.split('-P')[1])).toBe(Number(p.loginId.split('-P')[1]) + 1);
+    expect((await admin.api.auditLog(50)).filter((e) => e.action === 'parent-added').map((e) => e.target)).toEqual(
+      expect.arrayContaining([`${p.loginId} DEMO-8A-4`, `${q.loginId} DEMO-8A-6`]),
+    );
+  });
+
+  it("are the admin's to add, with a name, for a child of the school", async () => {
+    const teacher = await signedIn('DEMO-T01');
+    await expect(teacher.addParent({ studentLoginId: 'DEMO-8A-4', displayName: 'Asha Rao' })).rejects.toThrow(/Only the school admin/);
+    const admin = await signedIn('DEMO-T05');
+    await expect(admin.addParent({ studentLoginId: 'DEMO-8A-4', displayName: '  ' })).rejects.toThrow(/parent's name/);
+    await expect(admin.addParent({ studentLoginId: 'DEMO-8A-4', displayName: 'x'.repeat(81) })).rejects.toThrow(/parent's name/);
+    await expect(admin.addParent({ studentLoginId: 'DEMO-T01', displayName: 'Asha Rao' })).rejects.toThrow(/not a student/);
+    await expect(admin.addParent({ studentLoginId: 'NOPE-1', displayName: 'Asha Rao' })).rejects.toThrow(/no one in your school/i);
+  });
+
+  it('has a demo parent in the logins, who sees their child', async () => {
+    const demoParent = seeded.logins.find((l) => l.kind === 'parent')!;
+    expect(demoParent).toBeDefined();
+    const parent = await signedIn(demoParent.loginId);
+    expect((await parent.api.myChildren()).length).toBeGreaterThan(0);
+  });
+});
+
 describe('drafting questions with AI', () => {
   // The demo server as it runs with Qrie's AI key: here a stand-in that
   // answers what it is told to, so no test calls a real model.
