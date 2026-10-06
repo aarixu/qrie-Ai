@@ -167,8 +167,29 @@ const BAND_SIZES = [30, 26, 23, 20];
 const POINT_SIZE = 22;
 /** How far a composed key point's words start from its region's left edge: the bullet's margin. */
 const BULLET_INDENT = 32;
-/** A part's name written down the notes column because its part was not found: the size of a name in the margin. */
+/** A part's name in the key under a picture, its part not found: the size of a name in the margin. */
 const HOMELESS_NAME_SIZE = 20;
+/** The key under a picture: the gap above it, a bullet's room before each name, and the room between names. */
+const KEY_GAP = 12;
+const KEY_DOT_W = 26;
+const KEY_ITEM_GAP = 28;
+
+/** Names in rows no wider than `w`, each name with its bullet; a row's width is what its names take. */
+function keyRowsOf(texts: readonly string[], w: number): { items: { index: number; w: number }[]; w: number }[] {
+  const rows: { items: { index: number; w: number }[]; w: number }[] = [];
+  texts.forEach((text, index) => {
+    const width = handWidth(text, HOMELESS_NAME_SIZE);
+    const row = rows[rows.length - 1];
+    const wider = row ? row.w + KEY_ITEM_GAP + KEY_DOT_W + width : Infinity;
+    if (row && wider <= w) {
+      row.items.push({ index, w: width });
+      row.w = wider;
+    } else {
+      rows.push({ items: [{ index, w: width }], w: KEY_DOT_W + width });
+    }
+  });
+  return rows;
+}
 
 /**
  * From one handwritten line to the next.
@@ -1515,10 +1536,44 @@ export function layoutBeat(
   if (labelledHost && (composition === null || composedFigure)) {
     if (composedFigure) regionNow = '0/hero';
     const MARGIN_GAP = 18;
+
+    /**
+     * A NAME WHOSE PART WAS LOOKED FOR AND NOT FOUND IS WRITTEN IN A KEY UNDER
+     * THE PICTURE (small intestine, 2026-10-06).
+     *
+     * In the margin with no line it floats beside the picture pointing at
+     * nothing, which every name on that class's villus did. So once the
+     * picture has been looked at — `parts` knows it, found or not — a name it
+     * has no part for is written in a row under the picture, inside the hero,
+     * a bullet before it, at the line that names it. (Down the notes column it
+     * pushed the list of the parts onto the next page.) When every name is in
+     * the key, the margins are the picture's. Before anyone has looked — the
+     * draft, laid out while the picture is still being made — names wait in
+     * the margin as they always have: the part may yet be found. Composed
+     * pages only.
+     */
+    const lookedAt =
+      composedFigure && labelledHost.kind === 'picture' && labelledHost.ref !== undefined
+        ? parts.get(labelledHost.ref)
+        : undefined;
+    const keyed = new Set(
+      lookedAt
+        ? pendingLabels.filter((p) => {
+            const { elementId, part } = splitPartRef(p.step.target);
+            return elementId === labelledHost.ref && part !== null && !lookedAt.some((q) => q.name === part);
+          })
+        : [],
+    );
+    const keyNames = pendingLabels.filter((p) => keyed.has(p));
+    const keyRows = keyRowsOf(keyNames.map((p) => p.step.text), area.w);
+    const keyLead = handLead(HOMELESS_NAME_SIZE);
+    const keyH = keyRows.length > 0 ? keyRows.length * keyLead + KEY_GAP : 0;
+    const everyNameKeyed = keyNames.length > 0 && keyNames.length === pendingLabels.length && !pendingSketch;
+
     // A composed hero is 590 wide, not the board's 860: a 26% margin either
     // side left a wide picture 266 units across, under half its region. 18%
     // still holds a name at the sizes below, and the picture takes the rest.
-    const leastMargin = Math.round((area.w - MARGIN_GAP * 2) * (composedFigure ? 0.18 : 0.26));
+    const leastMargin = everyNameKeyed ? 0 : Math.round((area.w - MARGIN_GAP * 2) * (composedFigure ? 0.18 : 0.26));
     const columnW = area.w - MARGIN_GAP * 2 - leastMargin * 2;
     const columnX = area.x + leastMargin + MARGIN_GAP;
 
@@ -1541,7 +1596,7 @@ export function layoutBeat(
     );
     const under = band.height + listsH;
     const figureH = composedFigure
-      ? area.h
+      ? area.h - keyH
       : under > 0
         ? Math.max(MIN_FIGURE_H, bandRoom - under - BAND_GAP)
         : MAIN.h;
@@ -1553,6 +1608,28 @@ export function layoutBeat(
 
     const host = elements.find((el) => el.id === labelledHost.ref);
     const hostBox = host ? boxOf(host) : null;
+
+    // The key: each row centred under the picture, each name at its own line.
+    keyRows.forEach((row, r) => {
+      const y = area.y + figureH + KEY_GAP + HOMELESS_NAME_SIZE * 0.9 + r * keyLead;
+      let x = area.x + (area.w - row.w) / 2;
+      for (const { index, w } of row.items) {
+        const pending = keyNames[index];
+        current = pending.at;
+        emit({ kind: 'text', id: `${pending.id}_dot`, x: x + 8, y, text: '•', size: HOMELESS_NAME_SIZE });
+        emit({
+          kind: 'handwrite',
+          id: pending.id,
+          x: x + KEY_DOT_W + w / 2,
+          y,
+          text: pending.step.text,
+          size: HOMELESS_NAME_SIZE,
+          ...(pending.step.tone ? { tone: pending.step.tone } : {}),
+        });
+        leashes.push({ id: pending.id, region: { x: x + KEY_DOT_W + w / 2 - 14, y: y - 12, w: 28, h: 24 } });
+        x += KEY_DOT_W + w + KEY_ITEM_GAP;
+      }
+    });
 
     /**
      * The margins are whatever room is left either side of the picture ITSELF.
@@ -1593,52 +1670,13 @@ export function layoutBeat(
      * already there.
      */
     type Pending = (typeof pendingLabels)[number];
-    const names = pendingLabels.map((pending) => {
-      const box = hostBox ? partBox(pending.step.target, elements) : null;
-      return { pending, box };
-    });
-
-    /**
-     * A NAME WHOSE PART WAS LOOKED FOR AND NOT FOUND IS WRITTEN DOWN THE NOTES
-     * COLUMN (small intestine, 2026-10-06).
-     *
-     * In the margin with no line it floats beside the picture pointing at
-     * nothing, which every name on that class's villus did. So once the
-     * picture has been looked at (its element carries `parts`, found or not),
-     * a name it has no part for is a line of the notes, written at the line
-     * that names it. Before anyone has looked — the draft, laid out while the
-     * picture is still being made — it stays in the margin as it always has:
-     * the part may yet be found. On a composed page only.
-     */
-    const looked = composedFigure && host?.kind === 'image' && host.parts !== undefined;
-    const homeless = looked ? names.filter(({ box }) => box === null) : [];
-    const placedFor = names.filter((n) => !homeless.includes(n));
-    for (const { pending } of homeless) {
-      const { text, tone } = pending.step;
-      const lead = handLead(HOMELESS_NAME_SIZE);
-      const name: Block = {
-        kind: 'label',
-        at: pending.at,
-        height: lead,
-        heightAt: (w) => wrapText(text, w, HOMELESS_NAME_SIZE).length * lead,
-        place: (r) => {
-          const lines = wrapText(text, r.w, HOMELESS_NAME_SIZE);
-          return lines.map((line, n) => ({
-            kind: 'handwrite',
-            ...(n > 0 ? { after: afterLines(lines, n) } : {}),
-            id: n === 0 ? pending.id : `${pending.id}_l${n}`,
-            x: r.x + handWidth(line, HOMELESS_NAME_SIZE) / 2,
-            y: r.y + HOMELESS_NAME_SIZE * 0.9 + n * lead,
-            text: line,
-            size: HOMELESS_NAME_SIZE,
-            ...(tone ? { tone } : {}),
-          }));
-        },
-      };
-      // In the order the beat says things, so the column fills down in time.
-      const after = blocks.findIndex((b) => b.at !== null && b.at > pending.at);
-      blocks.splice(after < 0 ? blocks.length : after, 0, name);
-    }
+    // The names written beside the picture: every one but those in its key.
+    const placedFor = pendingLabels
+      .filter((pending) => !keyed.has(pending))
+      .map((pending) => {
+        const box = hostBox ? partBox(pending.step.target, elements) : null;
+        return { pending, box };
+      });
 
     // Which side each name goes to. A name whose part could not be found has
     // no side of its own, so it takes whichever is emptier — better than

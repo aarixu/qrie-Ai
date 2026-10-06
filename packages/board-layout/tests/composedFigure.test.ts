@@ -60,31 +60,70 @@ const written = (made: ReturnType<typeof lay>, text: string) =>
  *
  * Written in the margin with no line, it floats beside the picture pointing at
  * nothing — every name on that class's villus did. Once the picture has been
- * looked at, a name it has no part for is written down the notes column
- * instead. Before anyone has looked (the draft), it waits in the margin as it
- * always has: the part may yet be found.
+ * looked at, a name it has no part for is written in a row under the picture,
+ * a key to it, inside its own region: down the notes column it pushed the list
+ * of the parts onto the next page (review, 2026-10-06). A margin no name is
+ * written in is given back to the picture. Before anyone has looked (the
+ * draft), names wait in the margin as they always have: the part may be found.
  */
 describe('a name whose part could not be found in the picture', () => {
   const found = new Map([['villus', PARTS.get('villus')!.filter((p) => p.name !== 'lacteal')]]);
-  const layWith = (parts: typeof PARTS) =>
-    layoutBeat({ id: 'b2', topic: 'villi', narration: '', board: VILLI }, parts, SHAPES, { composed: true });
+  const layWith = (parts: typeof PARTS, board = VILLI, shapes = SHAPES) =>
+    layoutBeat({ id: 'b2', topic: 'villi', narration: '', board }, parts, shapes, { composed: true });
+  const imageOf = (made: ReturnType<typeof lay>) => boxOf(made.elements.find((e) => e.kind === 'image')!);
 
-  it('is written down the notes column, at its own line, once the picture has been looked at', () => {
+  it('is written under the picture, at its own line, once the picture has been looked at', () => {
     const made = layWith(found);
     const lacteal = written(made, 'Lacteal');
-    expect(made.regions[lacteal.id]).toBe('0/side');
+    expect(made.regions[lacteal.id]).toBe('0/hero');
+    expect(inside(lacteal, hero)).toBe(true);
+    expect(boxOf(lacteal).y).toBeGreaterThanOrEqual(imageOf(made).y + imageOf(made).h);
     expect(made.elements.some((e) => e.id === `${lacteal.id}_line`)).toBe(false);
-    // The names it found stay on the picture, each with its line.
-    expect(made.regions[written(made, 'Capillaries').id]).toBe('0/hero');
+    // The names it found stay beside the picture, each with its line.
     expect(made.elements.some((e) => e.id === `${written(made, 'Capillaries').id}_line`)).toBe(true);
     // It arrives on the line that names it.
     const step = made.steps.findIndex((s) => s.show.includes(lacteal.id));
     expect(made.steps[step].narration).toBe('The lacteal takes the fats.');
   });
 
-  it('every name is, when none of the parts were found', () => {
-    const made = layWith(new Map([['villus', []]]));
-    for (const name of ['Capillaries', 'Lacteal', 'Epithelium']) expect(made.regions[written(made, name).id], name).toBe('0/side');
+  it('gives the picture its margins back when none of the parts were found', () => {
+    const wide = new Map([['villus', 1.6]]);
+    const made = layWith(new Map([['villus', []]]), VILLI, wide);
+    for (const name of ['Capillaries', 'Lacteal', 'Epithelium']) {
+      expect(boxOf(written(made, name)).y, name).toBeGreaterThanOrEqual(imageOf(made).y + imageOf(made).h);
+    }
+    // Wider than the draft drew it between two margins of names (354 of 590 here).
+    const draft = layWith(new Map(), VILLI, wide);
+    expect(imageOf(made).w).toBeGreaterThan(imageOf(draft).w * 1.25);
+  });
+
+  it('keeps the list of the parts beside the picture, on one page', () => {
+    const board: Instruction[] = [
+      { do: 'say', text: 'Here is one villus.' },
+      { do: 'picture', ref: 'villus' },
+      { do: 'label', target: 'villus#microvilli', text: 'Microvilli' },
+      { do: 'label', target: 'villus#capillaries', text: 'Blood capillaries' },
+      { do: 'label', target: 'villus#epithelium', text: 'Single-cell epithelium' },
+      { do: 'label', target: 'villus#lacteal', text: 'Central lacteal' },
+      { do: 'say', text: 'Here is what each part does.' },
+      {
+        do: 'list',
+        heading: 'How each part aids absorption',
+        items: [
+          { term: 'Microvilli', meaning: 'fold the edge to multiply the surface' },
+          { term: 'Blood capillaries', meaning: 'carry sugars and amino acids away' },
+          { term: 'Single-cell epithelium', meaning: 'a short path for food to cross' },
+          { term: 'Central lacteal', meaning: 'takes in the fats' },
+        ],
+      },
+      { do: 'say', text: 'Blood keeps flowing.' },
+      { do: 'write', text: 'Flowing blood keeps absorption fast' },
+      { do: 'say', text: 'So villi soak up food.' },
+      { do: 'summary', text: 'Villi absorb food fast' },
+    ];
+    const made = layWith(new Map([['villus', []]]), board);
+    expect(made.pages).toBe(1);
+    expect(made.regions[made.elements.find((e) => e.kind === 'list')!.id]).toBe('0/side');
   });
 
   it('waits in the margin in the draft, before the picture has been looked at', () => {

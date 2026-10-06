@@ -61,21 +61,59 @@ const PLAN: Blueprint = {
   ],
 };
 
-describe('the copy kept, after the picture is made', () => {
-  it('writes the names nothing was found for down the notes column, and keeps that copy', async () => {
-    const planner: LlmAdapter = { complete: async () => JSON.stringify(PLAN) };
-    const artist: LlmAdapter = { complete: async () => '' };
-    const imageArtist: ImageAdapter = { draw: async () => PNG };
-    // It looked, and found none of the parts.
-    const eyes: VisionAdapter = { look: async () => '{}' };
-    const made = await prepareClass({ topic: 'Villi', klass: 10, planner, artist, imageArtist, eyes, composed: true });
+/** The villus beat with the list of its parts beside the picture, as the composed prompt asks. */
+const WITH_LIST: Blueprint = {
+  ...PLAN,
+  beats: [
+    PLAN.beats[0],
+    {
+      ...PLAN.beats[1],
+      board: [
+        ...PLAN.beats[1].board.slice(0, -2),
+        { do: 'say', text: 'Here is what each part does.' },
+        {
+          do: 'list',
+          heading: 'How each part aids absorption',
+          items: [
+            { term: 'Capillaries', meaning: 'carry sugars and amino acids away' },
+            { term: 'Lacteal', meaning: 'takes in the digested fats' },
+            { term: 'Epithelium', meaning: 'one cell thick, a short path to cross' },
+          ],
+        },
+        ...PLAN.beats[1].board.slice(-2),
+      ],
+    },
+  ],
+};
 
+const prepare = async (plan: Blueprint) => {
+  const planner: LlmAdapter = { complete: async () => JSON.stringify(plan) };
+  const artist: LlmAdapter = { complete: async () => '' };
+  const imageArtist: ImageAdapter = { draw: async () => PNG };
+  // It looked, and found none of the parts.
+  const eyes: VisionAdapter = { look: async () => '{}' };
+  return prepareClass({ topic: 'Villi', klass: 10, planner, artist, imageArtist, eyes, composed: true });
+};
+
+const NAMES = ['Capillaries', 'Lacteal', 'Epithelium'];
+
+describe('the copy kept, after the picture is made', () => {
+  it('writes the names nothing was found for in a key under the picture, and keeps that copy', async () => {
+    const made = await prepare(PLAN);
     expect(made.report.issues.some((i) => i.startsWith('Kept as drafted'))).toBe(false);
-    const names = made.lesson.elements.filter(
-      (e) => e.kind === 'handwrite' && ['Capillaries', 'Lacteal', 'Epithelium'].includes(e.text),
-    );
+    const image = made.lesson.elements.find((e) => e.kind === 'image') as { y: number; h: number };
+    const names = made.lesson.elements.filter((e) => e.kind === 'handwrite' && NAMES.includes(e.text));
     expect(names).toHaveLength(3);
-    // Down the notes column, right of the picture's hero region (which ends at x 630).
-    for (const name of names) expect((name as { x: number }).x).toBeGreaterThan(640);
+    for (const name of names) expect((name as { y: number }).y).toBeGreaterThan(image.y + image.h);
+    expect(made.lesson.elements.some((e) => e.kind === 'arrow')).toBe(false);
+  });
+
+  it('keeps that copy with the list of the parts beside the picture, all on one page', async () => {
+    const made = await prepare(WITH_LIST);
+    expect(made.report.issues.filter((i) => i.startsWith('Kept as drafted'))).toEqual([]);
+    const image = made.lesson.elements.find((e) => e.kind === 'image') as { y: number; h: number };
+    for (const name of made.lesson.elements.filter((e) => e.kind === 'handwrite' && NAMES.includes(e.text))) {
+      expect((name as { y: number }).y).toBeGreaterThan(image.y + image.h);
+    }
   });
 });
