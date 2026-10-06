@@ -639,6 +639,14 @@ line as she speaks:
 5. A summary, last: {"do":"summary","text":"Villi absorb digested food fast"}.
    One sentence a student would copy down, under 45 characters.
 
+The list of a picture's parts goes on the picture's own board, beside it — never
+on the next board: there it is a page of writing with nothing to explain.
+
+A board with no picture, scene, flow, chart, working or comparison is two
+columns of writing: the notes (a "list") in one, three to five key points in the
+other, and the summary. Most subtopics have something to show; when this one
+does, give the board that demonstration instead.
+
 Every beat is written as {"do":"say"} lines with the board between them: a line,
 then what she writes while saying it, then the next line.
 Leave "narration" empty. A beat with no line arrives on the board all at once,

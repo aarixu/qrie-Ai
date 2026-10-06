@@ -46,6 +46,12 @@ describe('the planner for a composed board', () => {
     expect(text).not.toContain('It\nis a main demonstration of its own.');
   });
 
+  it('keeps a picture’s list on its own page, and says what a page of writing alone is (small intestine, 2026-10-06)', () => {
+    const text = plannerSystemFor(true);
+    expect(text).toContain("The list of a picture's parts goes on the picture's own board");
+    expect(text).toContain('A board with no picture, scene, flow, chart, working or comparison');
+  });
+
   it('asks for every beat as lines, never as one narration (small intestine, 2026-10-06)', () => {
     const text = plannerSystemFor(true);
     expect(text).toContain('Every beat is written as {"do":"say"} lines');

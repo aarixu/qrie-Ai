@@ -15,9 +15,12 @@ const lessonOf = (elements: Element[], beats: Lesson['beats']): Lesson => ({
 });
 const page = (over: Partial<PageReport>): PageReport => ({
   sheet: 0,
+  arrangement: 'figure',
+  empty: [],
   coverage: 0.7,
   main: true,
   notes: true,
+  list: true,
   points: 2,
   summary: true,
   beat: 'b2_4',
@@ -43,6 +46,41 @@ describe('page-full', () => {
     const found = composerRules({ pages: [page({ coverage: 0.38 })], overview: ['b2_4'] });
     expect(found).toEqual([expect.objectContaining({ rule: 'page-full', where: 'b2_4' })]);
     expect(found[0].message).toMatch(/Beat "b2": the class leaves this page 38% written on/);
+  });
+
+  /**
+   * WHAT TO WRITE, AND WHERE (small intestine, 2026-10-06). "Write more" sent
+   * to repair three pages at 44-56% and none came back fuller; the planner is
+   * now told which place on the page is empty and what goes there.
+   */
+  it('names the empty column beside a picture, and that a list of its parts goes there', () => {
+    const [found] = composerRules({ pages: [page({ coverage: 0.56, empty: ['side'], points: 2 })], overview: ['b2_4'] });
+    expect(found.message).toMatch(/The column beside the picture has nothing in it\./);
+    expect(found.message).toMatch(/a "list" of each part or idea you name, with what it does and why/);
+    expect(found.message).toMatch(/1 more key point \("write"\)/);
+  });
+
+  it('asks a labelled picture with no list for one, though its names fill nothing beside it', () => {
+    const [found] = composerRules({ pages: [page({ coverage: 0.57, list: false, points: 2 })], overview: ['b2_4'] });
+    expect(found.message).toMatch(/a "list" of each part or idea you name/);
+  });
+
+  it('tells a page of writing alone to take a demonstration, or to go with the beat it belongs to', () => {
+    const [found] = composerRules({
+      pages: [page({ coverage: 0.53, arrangement: 'notes', main: false, empty: ['right'], points: 2 })],
+      overview: ['b2_4'],
+    });
+    expect(found.message).toMatch(/The right column has nothing in it\./);
+    expect(found.message).toMatch(/no picture, scene, flow or comparison/);
+  });
+
+  it('counts the key points a comparison page still needs', () => {
+    const [found] = composerRules({
+      pages: [page({ coverage: 0.44, arrangement: 'compare', empty: ['side'], points: 1 })],
+      overview: ['b2_4'],
+    });
+    expect(found.message).toMatch(/The column beside the comparison has nothing in it\./);
+    expect(found.message).toMatch(/2 more key points \("write"\)/);
   });
 
   it('names what a subtopic with a main demonstration is missing', () => {

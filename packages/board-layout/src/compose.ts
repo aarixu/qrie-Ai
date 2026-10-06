@@ -142,6 +142,22 @@ export function arrangementOf(kinds: readonly string[]): ArrangementName | 'fall
   return MAIN_OF.get(mains[0])!;
 }
 
+/**
+ * A PAGE OF WRITING IN TWO COLUMNS: the notes in the left, the key points in
+ * the right.
+ *
+ * A notes page fills its left column first with everything, so a list and two
+ * key points were all written down the left and the right column stood empty
+ * (small intestine, 2026-10-06: 53% of a page). When a beat's first page is a
+ * notes page and carries both, each takes a column, and either runs on into
+ * the other. A page of key points alone, or a page turned onto, still writes
+ * from the left.
+ */
+export function inTwoColumns(first: Arrangement, roles: readonly Fillable['role'][]): Arrangement {
+  if (first.name !== 'notes' || !roles.includes('notes') || !roles.includes('points')) return first;
+  return { ...first, pointsOrder: ['right', 'left'] };
+}
+
 /** One piece of writing to put on the page. */
 export interface Fillable {
   /** The spoken line it is written under: a line's writing stays on one page. */
@@ -164,12 +180,22 @@ export interface Placement {
 /** How full a page of a composed beat is, and what is on it. */
 export interface SheetReport {
   sheet: number;
+  /** How the page is divided. Every page after a beat's first is a notes page. */
+  arrangement: ArrangementName;
+  /**
+   * The page's places for writing (its regions, not its main demonstration or
+   * its summary) with nothing written in them, by region id: what the keep
+   * gate names when a page is left too empty.
+   */
+  empty: string[];
   /** The share of the 1000 x 620 page that is written on (writtenArea), 0 to 1. */
   coverage: number;
   /** A main demonstration is on it. */
   main: boolean;
   /** A list, a note, a card, a comparison or a label is on it. */
   notes: boolean;
+  /** A list, a note or a card is on it: notes in words, not names on a picture. */
+  list: boolean;
   /** How many key points are written on it. */
   points: number;
   summary: boolean;

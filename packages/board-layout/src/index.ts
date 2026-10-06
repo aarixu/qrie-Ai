@@ -4,7 +4,7 @@ export type { CompareSide, Instruction, InstructionKind, ScriptBeat, LaidOutBeat
 export { layoutScene, connectElements, annotateElement, type Placed } from './scene';
 export type { RevealStep } from './layout';
 export { resolveOverlaps, type Bond, type Leash } from './collide';
-export { type SheetReport } from './compose';
+export { ARRANGEMENTS, type ArrangementName, type SheetReport } from './compose';
 export {
   assertNoOverlap,
   findOverlaps,

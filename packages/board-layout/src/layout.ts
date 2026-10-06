@@ -38,6 +38,7 @@ import {
   coverage,
   fillRegions,
   FILL_GAP,
+  inTwoColumns,
   isMainKind,
   PAGE,
   writtenArea,
@@ -2171,7 +2172,8 @@ export function layoutBeat(
               : 'notes',
       heightAt: b.heightAt ?? ((w: number) => measured(b, w)),
     }));
-    for (const p of fillRegions(fillables, composition, reserved)) {
+    const first = inTwoColumns(composition, fillables.map((f) => f.role));
+    for (const p of fillRegions(fillables, first, reserved)) {
       const b = rest[p.index];
       current = b.at ?? -1;
       regionNow = `${p.sheet}/${p.region}`;
@@ -2437,17 +2439,28 @@ export function layoutBeat(
       const byRegion = new Map<string, Rect[]>();
       for (const el of here) {
         const id = regions[el.id].split('/')[1];
-        const b = boxOf(el);
-        byRegion.set(id, [...(byRegion.get(id) ?? []), { ...b, x: b.x - s * PAGE_STRIDE }]);
+        const ink = boxOf(el);
+        const local = { ...ink, x: ink.x - s * PAGE_STRIDE };
+        // A key point is a row of the notes a student copies, and is counted
+        // across its column the way a list's rows are: a list is as wide as its
+        // column whatever its words, and a bullet point was counted only as
+        // wide as its words, so a page that wrote its key points in a column of
+        // their own read emptier than one that wrote them under its list.
+        const region = rectOf(id);
+        const row = kindOf(el.id) === 'write' && id !== 'header' ? { ...local, w: region.x + region.w - local.x } : local;
+        byRegion.set(id, [...(byRegion.get(id) ?? []), row]);
       }
       const written = writtenArea([...byRegion].map(([id, boxes]) => ({ region: rectOf(id), boxes })));
       sheetReports.push({
         sheet: s,
+        arrangement: sheetPage.name,
+        empty: sheetPage.regions.filter((r) => !byRegion.has(r.id)).map((r) => r.id),
         coverage: coverage(written, 0),
         main: here.some(
           (el) => regions[el.id] === `${s}/hero` || (regions[el.id] === `${s}/main` && isMainKind(kindOf(el.id))),
         ),
         notes: ['list', 'note', 'card', 'compare', 'label'].some((k) => kinds.has(k)),
+        list: ['list', 'note', 'card'].some((k) => kinds.has(k)),
         points: new Set(here.filter((el) => kindOf(el.id) === 'write').map((el) => itemOf.get(el.id))).size,
         summary: kinds.has('summary'),
       });

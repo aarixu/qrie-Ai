@@ -1039,6 +1039,29 @@ export function capChecks(
  * The rules mirror `validateLesson`'s exactly, which is the point — anything
  * this leaves in place is something the validator will accept.
  */
+/**
+ * EACH KIND OF PROBLEM ONCE A BEAT, for the repair prompt's ten places.
+ *
+ * The gate names every thing a rule catches, and one line can catch nine: the
+ * small-intestine class's first plan (2026-10-06) had one line on beat 3 that
+ * put nine things off camera, those took nine of the ten places, and its three
+ * half-empty pages were never sent to repair. So a rule's problems on one beat
+ * are sent as the first of them, with how many more there are.
+ */
+export function oncePerBeat(problems: readonly GateProblem[]): string[] {
+  const groups = new Map<string, { message: string; more: number }>();
+  for (const p of problems) {
+    const beat = /^Beat "([^"]+)"/.exec(p.message)?.[1] ?? p.where;
+    const key = `${p.rule}|${beat}`;
+    const group = groups.get(key);
+    if (group) group.more += 1;
+    else groups.set(key, { message: p.message, more: 0 });
+  }
+  return [...groups.values()].map(({ message, more }) =>
+    more === 0 ? message : `${message} (And ${more} more like it in this beat.)`,
+  );
+}
+
 export function dropBadProbes(beats: readonly { board?: readonly { do: string }[] }[]): number {
   let dropped = 0;
   for (const beat of beats) {
@@ -1478,7 +1501,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       ...gate.filter((p) => p.rule === 'maths').map((p) => p.message),
       ...(validated.ok ? [] : validated.errors),
       ...(firstGate === null ? inkWaitsForALine(blueprint.beats) : []),
-      ...gate.filter((p) => p.rule !== 'maths').map((p) => p.message),
+      ...oncePerBeat(gate.filter((p) => p.rule !== 'maths')),
       ...unwritten,
     ];
     // Every problem it was sent for, not only the first: when the repair does

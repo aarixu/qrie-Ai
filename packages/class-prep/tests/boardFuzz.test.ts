@@ -181,10 +181,17 @@ describe('300 seeded classes with a pie, a line chart and moving working', () =>
  * the contract's fuller end. phone-readable is almost all one line writing
  * both a notes list and a key point, which the rule tells the planner to
  * split. The guards below hold those numbers.
+ *
+ * MEASURED AGAIN 2026-10-06, after the small-intestine class: a page of writing
+ * puts its notes and its key points in two columns, and a key point counts as a
+ * row across its column the way a list's rows do. Two columns alone measured
+ * emptier (page-full 289 -> 294, notes pages 0.546 -> 0.523), because a bullet
+ * was counted only as wide as its words while a list counts its column; with
+ * both: median 0.555, page-full in 286 classes, phone-readable 84.
  */
-const PAGE_FULL_CEILING = 289;
+const PAGE_FULL_CEILING = 286;
 const PHONE_READABLE_CEILING = 84;
-const COVERAGE_FLOOR = 0.52;
+const COVERAGE_FLOOR = 0.53;
 
 describe('300 seeded classes on a composed board', () => {
   const plain = run();

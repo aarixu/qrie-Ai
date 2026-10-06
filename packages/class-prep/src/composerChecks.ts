@@ -1,4 +1,4 @@
-import type { SheetReport } from '@ai-tutor/board-layout';
+import { ARRANGEMENTS, type ArrangementName, type SheetReport } from '@ai-tutor/board-layout';
 import { LIST_ITEM_SIZE, NOTE_FONT, STAGE_ASPECT, type Element, type Lesson } from '@ai-tutor/lesson-format';
 import { computeFrame, MAX_UNIT_PX } from '../../stage/src/frame.ts';
 import type { GateProblem } from './gate.ts';
@@ -37,6 +37,52 @@ export const PHONE_STAGE_W = 667;
 
 /** "b2_3" belongs to planner beat "b2", as gate.ts reads it. */
 const plannerOf = (id: string): string => id.replace(/_\d+$/, '');
+
+/** Each place on a page, as the planner is told about it. */
+const PLACES: Readonly<Record<ArrangementName, Readonly<Record<string, string>>>> = {
+  figure: { side: 'the column beside the picture', bottom: 'the space under the picture' },
+  scene: { left: 'the left of the space under the scene', right: 'the right of the space under the scene' },
+  process: { left: 'the left of the space under the flow', right: 'the right of the space under the flow' },
+  compare: { side: 'the column beside the comparison' },
+  working: { side: 'the column beside the working' },
+  notes: { left: 'the left column', right: 'the right column' },
+};
+
+/**
+ * WHAT A PAGE LEFT TOO EMPTY NEEDS, AND WHERE IT GOES (small intestine,
+ * 2026-10-06). "Write more" sent three pages at 44–56% to repair and none came
+ * back fuller; so the planner is told which of the page's places has nothing
+ * in it, and what the page is short of.
+ */
+function whatItNeeds(page: PageReport): string {
+  const places = page.empty.map((id) => PLACES[page.arrangement][id]).filter((p): p is string => p !== undefined);
+  const said: string[] = [];
+  if (places.length > 0) {
+    const named = places.length === 1 ? places[0] : `${places.slice(0, -1).join(', ')} and ${places[places.length - 1]}`;
+    said.push(`${named[0].toUpperCase()}${named.slice(1)} ${places.length === 1 ? 'has nothing in it' : 'have nothing in them'}.`);
+  }
+  if (!page.main) {
+    said.push(
+      'This page has no picture, scene, flow or comparison: give it the one that shows what it explains, or ' +
+        'write this on the page of the beat it belongs to.',
+    );
+  }
+  const needs: string[] = [];
+  // Names on a picture are not its notes: what each part does is a list.
+  if ((page.main && !page.list) || page.empty.includes(ARRANGEMENTS[page.arrangement].notesOrder[0])) {
+    needs.push('a "list" of each part or idea you name, with what it does and why');
+  }
+  const short = 3 - page.points;
+  if (short === 3) needs.push('three to five key points ("write") as you say them');
+  else if (short > 0) needs.push(`${short} more key point${short === 1 ? '' : 's'} ("write") as you say them`);
+  if (!page.summary) needs.push('a "summary" last');
+  said.push(
+    needs.length > 0
+      ? `Write ${needs.join(', ')}.`
+      : 'Write more on it: what each thing on it does and why, and up to five key points.',
+  );
+  return said.join(' ');
+}
 
 /** How large an element's writing is, and a few of its words to name it by. */
 function writingOf(el: Element): { size: number; words: string } | null {
@@ -89,8 +135,7 @@ export function composerChecks(lesson: Lesson, report: ComposerReport | undefine
           ? `Beat "${page.plannerBeat}" ran onto another page, which the class leaves ${pct}% written on. Give this ` +
             `beat less, or split it into two beats, each with its own page.`
           : `Beat "${page.plannerBeat}": the class leaves this page ${pct}% written on, and a page must be at least ` +
-            `${PAGE_FULL * 100}%. Write each part's meaning in the notes, the key points as you say them, and a ` +
-            `summary — or give this page less and the next one more.`,
+            `${PAGE_FULL * 100}%. ${whatItNeeds(page)}`,
     });
   }
 
