@@ -2,7 +2,7 @@
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { aal2, anonymousChild, fresh, makeStaff, setEnvironment, staleAmr, type Staff } from './admin-fixtures.ts';
-import { asClaims, asService, freshDatabase, type JwtClaims } from './harness.ts';
+import { applyAfter, asClaims, asService, freshDatabase, type JwtClaims } from './harness.ts';
 
 /**
  * THE STOP SWITCH AND THE CEILING (migration 0048). Written first.
@@ -119,6 +119,46 @@ describe('the daily ceiling', () => {
   it('is reverted every night by a scheduled job', async () => {
     const { rows } = await db.query<{ schedule: string }>(`select schedule from cron.job where jobname = 'admin-revert-caps'`);
     expect(rows).toEqual([{ schedule: '5 0 * * *' }]);
+  });
+});
+
+describe('a cut after a raise', () => {
+  const revertToday = async () => {
+    await db.query(`update admin.cap_override set revert_on = (now() at time zone 'utc')::date`);
+    await asService(db, (tx) => tx.query(`select admin.revert_caps()`));
+  };
+
+  it('a cut below the old ceiling survives the midnight revert', async () => {
+    await call(fresh(owner), `select admin.set_caps(80000, 'launch day', 'TEST')`);
+    await call(fresh(owner), `select admin.set_caps(30000, 'emergency cut', 'TEST')`);
+    await revertToday();
+    expect((await status(aal2(owner))).ceilingUnits).toBe(30000);
+  });
+
+  it('a cut that stays above the old ceiling still ends with the raise', async () => {
+    await call(fresh(owner), `select admin.set_caps(80000, 'launch day', 'TEST')`);
+    await call(fresh(owner), `select admin.set_caps(60000, 'a little less', 'TEST')`);
+    await revertToday();
+    expect((await status(aal2(owner))).ceilingUnits).toBe(50000);
+  });
+});
+
+describe('the bound on the ceiling', () => {
+  it('refuses to apply over a ceiling already outside it, and says what to do', async () => {
+    const d = await freshDatabase({ through: '0047' });
+    try {
+      await d.query(`update public.relay_control set global_units_per_day = 2000000`);
+      await expect(applyAfter(d, '0047')).rejects.toThrow(/outside 1000 to 1000000/);
+    } finally {
+      await d.close();
+    }
+  });
+
+  it('is a validated constraint, so no row outside it can exist afterwards', async () => {
+    const { rows } = await db.query<{ convalidated: boolean }>(
+      `select convalidated from pg_constraint where conname = 'relay_control_ceiling_bounds'`,
+    );
+    expect(rows).toEqual([{ convalidated: true }]);
   });
 });
 

@@ -51,11 +51,12 @@ describe('the snapshot', () => {
     expect(await snapshot(null)).toEqual({ error: 'not-allowed' });
   });
 
-  it('refuses a burst of wrong tokens, even when the right one follows', async () => {
-    for (let i = 0; i < 21; i++) await snapshot('c'.repeat(40));
-    expect(await snapshot(TOKEN)).toEqual({ error: 'busy' });
+  it('never lets a burst of wrong tokens block the right one, and still counts the wrong ones', async () => {
     await db.query(`delete from admin.alert_miss`);
+    for (let i = 0; i < 25; i++) expect(await snapshot('c'.repeat(40))).toEqual({ error: 'not-allowed' });
     expect((await snapshot(TOKEN)).halted).toBe(false);
+    const { rows } = await db.query<{ n: number }>(`select count(*)::int as n from admin.alert_miss`);
+    expect(rows[0].n).toBe(25);
   });
 
   it('stores the token only as a hash, and wants at least 32 characters', async () => {

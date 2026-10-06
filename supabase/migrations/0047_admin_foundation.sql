@@ -295,19 +295,43 @@ begin
 end;
 $$;
 
-create or replace function admin.set_environment(p_env text)
+-- The environment is set once. Changing it later needs p_force, because a console
+-- built for one environment trusts this value to refuse writes meant for another:
+-- a second, mistaken bootstrap must not quietly turn HOSTED into DEMO.
+create or replace function admin.set_environment(p_env text, p_force boolean default false)
 returns void
 language plpgsql volatile security definer
 set search_path = admin, public
 as $$
+declare
+  current_env text := admin.environment();
 begin
   if p_env is null or p_env not in ('HOSTED', 'STAGING', 'DEMO', 'TEST') then
     raise exception 'the environment is HOSTED, STAGING, DEMO or TEST';
   end if;
+  if current_env = p_env then
+    return;
+  end if;
+  if current_env <> 'UNSET' and not coalesce(p_force, false) then
+    raise exception 'the environment is already %; pass force to change it', current_env;
+  end if;
   insert into admin.setting (key, value) values ('environment', to_jsonb(p_env))
   on conflict (key) do update set value = excluded.value, updated_at = now();
-  perform admin.audit_service('environment-set', 'setting', 'environment', '', jsonb_build_object('environment', p_env));
+  perform admin.audit_service('environment-set', 'setting', 'environment', '',
+    jsonb_build_object('environment', p_env, 'from', current_env));
 end;
+$$;
+
+-- What the laptop bootstrap reads before it changes anything.
+create or replace function admin.bootstrap_status()
+returns jsonb
+language sql stable security definer
+set search_path = admin, public
+as $$
+  select jsonb_build_object(
+    'environment', admin.environment(),
+    'hasOwner', exists (select 1 from admin.platform_staff where role = 'owner' and active)
+  )
 $$;
 
 -- ---------------------------------------------------------------------------
@@ -339,10 +363,12 @@ revoke all on function admin.me() from public, anon;
 revoke all on function admin.staff_list() from public, anon;
 revoke all on function admin.staff_set(uuid, text, text, boolean, text) from public, anon;
 revoke all on function admin.bootstrap_owner(uuid, text) from public, anon, authenticated;
-revoke all on function admin.set_environment(text) from public, anon, authenticated;
+revoke all on function admin.set_environment(text, boolean) from public, anon, authenticated;
+revoke all on function admin.bootstrap_status() from public, anon, authenticated;
 
 grant execute on function admin.me() to authenticated;
 grant execute on function admin.staff_list() to authenticated;
 grant execute on function admin.staff_set(uuid, text, text, boolean, text) to authenticated;
 grant execute on function admin.bootstrap_owner(uuid, text) to service_role;
-grant execute on function admin.set_environment(text) to service_role;
+grant execute on function admin.set_environment(text, boolean) to service_role;
+grant execute on function admin.bootstrap_status() to service_role;

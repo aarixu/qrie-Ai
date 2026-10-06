@@ -9,7 +9,9 @@
 -- The token is stored only as its SHA-256. The snapshot returns a fixed set of
 -- counts, ages and booleans, never a name, note, school or word, so a stolen
 -- token reveals how busy Qrie is and nothing about any child. Wrong tokens are
--- counted, and a burst of them is refused. Every successful call records the
+-- counted but never slow down the right one: the anon key is in every app, so a
+-- cap on wrong tokens would let anybody silence the alarm, and a token of 32 or
+-- more random characters is not guessed in a lifetime. Every successful call records the
 -- time, which the Today page shows as "the alarm last checked N minutes ago":
 -- a checker that has died is visible.
 
@@ -50,7 +52,6 @@ set search_path = admin, public
 as $$
 declare
   expected text;
-  misses integer;
   utc_day date := (now() at time zone 'utc')::date;
   rc record;
   units integer;
@@ -60,11 +61,7 @@ declare
   failed integer;
 begin
   -- A wrong token is ANSWERED, not raised: an exception would roll back the
-  -- insert below, and a counter that never counts stops nothing.
-  select count(*)::int into misses from admin.alert_miss m where m.at > now() - interval '1 minute';
-  if misses >= 20 then
-    return jsonb_build_object('error', 'busy');
-  end if;
+  -- insert below, and the count of misses is how an attack becomes visible.
   select t.token_hash into expected from admin.alert_token t where t.id;
   if expected is null or p_token is null
      or encode(sha256(convert_to(p_token, 'utf8')), 'hex') <> expected then

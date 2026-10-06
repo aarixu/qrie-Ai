@@ -165,3 +165,36 @@ describe('the first owner', () => {
     }
   });
 });
+
+describe('the environment is set once', () => {
+  it('refuses to change it without force, and allows the same value again', async () => {
+    const d = await freshDatabase();
+    try {
+      await d.query(`select admin.set_environment('HOSTED')`);
+      await d.query(`select admin.set_environment('HOSTED')`);
+      await expect(d.query(`select admin.set_environment('DEMO')`)).rejects.toThrow(/already HOSTED/);
+      await d.query(`select admin.set_environment('DEMO', true)`);
+      expect((await d.query<{ e: string }>(`select admin.environment() as e`)).rows[0].e).toBe('DEMO');
+    } finally {
+      await d.close();
+    }
+  });
+
+  it('bootstrap_status tells the laptop tool, before it changes anything, what is already there', async () => {
+    const d = await freshDatabase();
+    try {
+      const read = async () =>
+        (await asService(d, (tx) => tx.query<{ s: { environment: string; hasOwner: boolean } }>(`select admin.bootstrap_status() as s`))).rows[0].s;
+      expect(await read()).toEqual({ environment: 'UNSET', hasOwner: false });
+      const who = await createUser(d, { appMeta: { provisioned_by: 'staff' } });
+      await asService(d, (tx) => tx.query(`select admin.set_environment('HOSTED')`));
+      await asService(d, (tx) => tx.query(`select admin.bootstrap_owner($1, 'Aarav')`, [who]));
+      expect(await read()).toEqual({ environment: 'HOSTED', hasOwner: true });
+      await expect(
+        asClaims(d, { sub: who, aal: 'aal2' }, (tx) => tx.query(`select admin.bootstrap_status()`)),
+      ).rejects.toThrow(/permission denied/);
+    } finally {
+      await d.close();
+    }
+  });
+});

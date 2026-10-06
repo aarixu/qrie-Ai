@@ -53,10 +53,16 @@ describe('the admin schema', () => {
   it('keeps the service-role tools to the service role', async () => {
     const service = await callableBy('service_role');
     expect(service).toEqual(
-      expect.arrayContaining(['admin.alert_token_set', 'admin.bootstrap_owner', 'admin.revert_caps', 'admin.set_environment']),
+      expect.arrayContaining([
+        'admin.alert_token_set',
+        'admin.bootstrap_owner',
+        'admin.bootstrap_status',
+        'admin.revert_caps',
+        'admin.set_environment',
+      ]),
     );
     const signedIn = await callableBy('authenticated');
-    for (const fn of ['admin.alert_token_set', 'admin.bootstrap_owner', 'admin.revert_caps', 'admin.set_environment']) {
+    for (const fn of ['admin.alert_token_set', 'admin.bootstrap_owner', 'admin.bootstrap_status', 'admin.revert_caps', 'admin.set_environment']) {
       expect(signedIn).not.toContain(fn);
     }
   });

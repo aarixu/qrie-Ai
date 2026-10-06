@@ -22,14 +22,23 @@
 alter table public.relay_control add column if not exists halted_at timestamptz;
 alter table public.relay_control add column if not exists halted_by text;
 
--- NOT VALID: the bound is enforced on every new write and the existing row is
--- not rescanned, so a ceiling somebody set by hand cannot make this fail.
+-- The bound is checked against the row that is there now, and the migration
+-- stops with a plain message if that row is outside it. A CHECK is evaluated on
+-- every update of the row, whatever column changes, so an out-of-bounds ceiling
+-- left in place would make the next STOP fail; it must be fixed here, at push
+-- time, not discovered by the stop button.
 do $$
+declare
+  units integer;
 begin
+  select c.global_units_per_day into units from public.relay_control c where c.id;
+  if units is not null and units not between 1000 and 1000000 then
+    raise exception 'relay_control.global_units_per_day is %, outside 1000 to 1000000: set it inside that range, then apply this migration', units;
+  end if;
   if not exists (select 1 from pg_constraint where conname = 'relay_control_ceiling_bounds') then
     alter table public.relay_control
       add constraint relay_control_ceiling_bounds
-      check (global_units_per_day between 1000 and 1000000) not valid;
+      check (global_units_per_day between 1000 and 1000000);
   end if;
 end
 $$;
@@ -149,6 +158,9 @@ begin
     values (true, coalesce(prev, rc.global_units_per_day), utc_day + 1, me.user_id)
     on conflict (id) do update set revert_on = excluded.revert_on, set_by = excluded.set_by;
   end if;
+  -- A cut to or below the ceiling a raise would revert to ends that raise: the
+  -- midnight revert must never lift a ceiling somebody lowered on purpose.
+  delete from admin.cap_override o where o.id and p_units <= o.previous_units;
   update public.relay_control set global_units_per_day = p_units, updated_at = now() where id;
   perform admin.audit(me, 'ceiling-set', 'relay', 'relay_control', p_reason,
     jsonb_build_object('from', rc.global_units_per_day, 'to', p_units, 'spentToday', spent));
@@ -169,7 +181,10 @@ begin
     return 0;
   end if;
   perform set_config('admin.session', 'on', true);
-  update public.relay_control set global_units_per_day = ov.previous_units, updated_at = now() where id;
+  -- least(): the revert only ever lowers.
+  update public.relay_control
+     set global_units_per_day = least(ov.previous_units, global_units_per_day), updated_at = now()
+   where id;
   delete from admin.cap_override where id;
   perform admin.audit_service('ceiling-reverted', 'relay', 'relay_control', 'the one-day raise ended',
     jsonb_build_object('to', ov.previous_units));
