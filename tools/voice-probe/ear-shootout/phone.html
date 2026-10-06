@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Browser ear test</title>
+<style>
+  :root { --bg: #fbfaf7; --ink: #1d1b16; --soft: #6b665c; --line: #e3ded2; --card: #fff; --accent: #2f6f4e; --blue: #2b5fa8; --warn: #b4531a; --bad: #b3261e; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #17160f; --ink: #f1eee6; --soft: #a39d8f; --line: #34312a; --card: #1f1d15; --accent: #6fcf9f; --blue: #7fb0ee; --warn: #e6975c; --bad: #ff8a80; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px 16px 90px; }
+  h1 { font-size: 21px; margin: 0 0 4px; }
+  h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 24px 0 8px; }
+  p.lede { color: var(--soft); margin: 0 0 12px; font-size: 15px; }
+  #env { font-size: 13px; color: var(--soft); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin-bottom: 12px; }
+  label { display: flex; flex-direction: column; font-size: 13px; color: var(--soft); gap: 4px; margin-bottom: 10px; }
+  label.chk { flex-direction: row; align-items: center; gap: 8px; font-size: 14px; }
+  select, input[type=text], textarea { font: inherit; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); width: 100%; }
+  button { font: inherit; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; min-height: 44px; padding: 8px 18px; }
+  .modes { display: grid; gap: 8px; margin: 8px 0; }
+  button.talk { width: 100%; color: #fff; font-size: 18px; min-height: 58px; border: 0; }
+  button.talk.browser { background: var(--accent); }
+  button.talk.gemini { background: var(--blue); }
+  button.talk.both { background: var(--warn); font-size: 15px; min-height: 48px; }
+  button.talk.live { background: var(--bad); }
+  button:disabled { opacity: .5; }
+  #live { font-size: 22px; font-weight: 600; min-height: 36px; margin: 8px 0; word-break: break-word; }
+  #status { color: var(--soft); font-size: 14px; min-height: 22px; }
+  .att { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+  .att .t { font-size: 19px; word-break: break-word; margin: 2px 0 4px; }
+  .att .t.none { color: var(--bad); font-size: 15px; }
+  .att .m { font-size: 12px; color: var(--soft); margin-bottom: 8px; }
+  .rate { display: flex; gap: 8px; margin-bottom: 8px; }
+  .rate button { flex: 1; min-height: 44px; }
+  .rate button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .rate button.on.half { background: var(--warn); border-color: var(--warn); }
+  .rate button.on.bad { background: var(--bad); border-color: var(--bad); }
+  .said { font-size: 14px; }
+  #score { font-size: 15px; white-space: pre-line; }
+  textarea { height: 150px; font: 12px/1.4 ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Browser ear test</h1>
+  <p class="lede">Teen button hain. <b>Browser</b>: phone ka apna STT. <b>Gemini</b>: jo hamari app mein hai (asli production ear). <b>Dono saath</b>: ek hi baar bolne par dono (agar phone dono mic ek saath de de). Jo likha aaye uspar ✓ / ~ / ✗ dabao. Phir "Results copy karo".</p>
+  <div id="env">checking...</div>
+
+  <label>Browser ki bhasha
+    <select id="lang">
+      <option value="hi-IN">hi-IN (Hinglish ke liye)</option>
+      <option value="en-IN">en-IN</option>
+      <option value="en-US">en-US</option>
+    </select>
+  </label>
+  <label>Lesson ke words (optional, sirf Browser ke liye, comma se)
+    <input id="vocab" type="text" placeholder="mitochondria, yeast, cramp, hint" autocomplete="off">
+  </label>
+  <label class="chk"><input id="local" type="checkbox"> Browser: sirf phone par chalao (on-device, agar support kare)</label>
+
+  <div class="modes">
+    <button id="bBrowser" class="talk browser">🎤 Browser STT</button>
+    <button id="bGemini" class="talk gemini">🎤 Gemini (app wala)</button>
+    <button id="bBoth" class="talk both">🎤 Dono saath (experiment)</button>
+  </div>
+  <div id="status"></div>
+  <div id="live"></div>
+
+  <h2>Score</h2>
+  <div id="score">abhi koi nahi</div>
+
+  <h2>Koshishein</h2>
+  <div id="log"></div>
+
+  <h2>Mujhe bhejne ke liye</h2>
+  <button id="copy">Results copy karo</button>
+  <textarea id="out" readonly placeholder="yahan results aayenge"></textarea>
+</main>
+<script>
+// Filled in when the page is built for deployment; the repo copy keeps placeholders.
+const CFG = { relay: '__RELAY__', supabase: '__SUPABASE__', anon: '__ANON__' };
+const GEMINI_READY = !CFG.relay.startsWith('__') && !CFG.anon.startsWith('__');
+
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const RATE = 16000;
+const APP_MIC = { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
+const $ = (id) => document.getElementById(id);
+const terms = () => $('vocab').value.split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
+const setStatus = (s) => { $('status').textContent = s; };
+const results = [];   // one per engine answer
+let round = 0;
+let active = null;    // the recording in progress
+
+// ---------------------------------------------------------------- environment line
+function envLine() {
+  const ua = navigator.userAgent;
+  const bits = [];
+  bits.push(/iPhone|iPad/.test(ua) ? 'iPhone/iPad' : /Android/.test(ua) ? 'Android' : /Windows/.test(ua) ? 'Windows' : /Mac/.test(ua) ? 'Mac' : 'device?');
+  bits.push(/Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Firefox|FxiOS/.test(ua) ? 'Firefox' : /Safari/.test(ua) ? 'Safari' : 'browser?');
+  bits.push(SR ? 'Web Speech: HAI' : 'Web Speech: NAHI');
+  bits.push('on-device: ' + (SR && 'processLocally' in SR.prototype ? 'support hai' : 'nahi'));
+  bits.push('Gemini link: ' + (GEMINI_READY ? 'ready' : 'NAHI'));
+  return bits.join(' · ');
+}
+$('env').textContent = envLine();
+if (!SR) { $('bBrowser').disabled = true; $('bBoth').disabled = true; }
+if (!GEMINI_READY) { $('bGemini').disabled = true; $('bBoth').disabled = true; }
+
+// ---------------------------------------------------------------- Gemini through the production relay
+const SESSION_KEY = 'eartest.session';
+function loadSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; } }
+function saveSession(s) { try { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); } catch {} }
+
+/** The same anonymous sign-in the app does for every visitor (supabase signInAnonymously). */
+async function accessToken(force) {
+  let s = loadSession();
+  if (!force && s && s.expires_at * 1000 - Date.now() > 60_000) return s.access_token;
+  const res = await fetch(CFG.supabase + '/auth/v1/signup', {
+    method: 'POST',
+    headers: { apikey: CFG.anon, 'content-type': 'application/json' },
+    body: JSON.stringify({ data: {} }),
+  });
+  if (!res.ok) throw new Error('sign-in ' + res.status + ' ' + (await res.text()).slice(0, 120));
+  s = await res.json();
+  saveSession({ access_token: s.access_token, expires_at: s.expires_at });
+  return s.access_token;
+}
+
+async function hearOnRelay(wav) {
+  const t0 = performance.now();
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const token = await accessToken(attempt > 0);
+    const res = await fetch(CFG.relay + '/api/hear', { method: 'POST', headers: { authorization: 'Bearer ' + token, 'content-type': 'audio/wav' }, body: wav });
+    if (res.status === 401 && attempt === 0) continue;
+    const body = await res.json().catch(() => ({}));
+    const ms = Math.round(performance.now() - t0);
+    if (!res.ok) throw new Error('relay ' + res.status + ' ' + (body?.error?.message || '').slice(0, 140));
+    return { text: (body.text || '').trim(), ms };
+  }
+  throw new Error('relay: not signed in');
+}
+
+// ---------------------------------------------------------------- mic capture as 16 kHz WAV (what the app uploads)
+function downsample(f32, from) {
+  if (from <= RATE) return f32;
+  const ratio = from / RATE, n = Math.floor(f32.length / ratio), out = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const a = Math.floor(i * ratio), b = Math.min(f32.length, Math.floor((i + 1) * ratio));
+    let sum = 0, c = 0; for (let j = a; j < b; j++) { sum += f32[j]; c++; }
+    out[i] = c ? sum / c : 0;
+  }
+  return out;
+}
+function wavOf(f32) {
+  const bytes = f32.length * 2, buf = new ArrayBuffer(44 + bytes), v = new DataView(buf);
+  const w = (at, s) => { for (let i = 0; i < s.length; i++) v.setUint8(at + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + bytes, true); w(8, 'WAVE'); w(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, RATE, true); v.setUint32(28, RATE * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  w(36, 'data'); v.setUint32(40, bytes, true);
+  for (let i = 0; i < f32.length; i++) { const s = Math.max(-1, Math.min(1, f32[i])); v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true); }
+  return new Blob([buf], { type: 'audio/wav' });
+}
+async function openMic() {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: APP_MIC });
+  let ctx;
+  try { ctx = new AudioContext({ sampleRate: RATE }); } catch { ctx = new AudioContext(); }
+  if (ctx.state === 'suspended') await ctx.resume().catch(() => {});
+  const rate = ctx.sampleRate;
+  const src = ctx.createMediaStreamSource(stream);
+  const sp = ctx.createScriptProcessor(4096, 1, 1);
+  const parts = [];
+  sp.onaudioprocess = (e) => parts.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+  const mute = ctx.createGain(); mute.gain.value = 0;
+  src.connect(sp); sp.connect(mute); mute.connect(ctx.destination);
+  return {
+    async stop() {
+      sp.onaudioprocess = null;
+      stream.getTracks().forEach((t) => t.stop());
+      await ctx.close().catch(() => {});
+      const n = parts.reduce((a, p) => a + p.length, 0), all = new Float32Array(n);
+      let at = 0; for (const p of parts) { all.set(p, at); at += p.length; }
+      const out = downsample(all, rate);
+      let peak = 0; for (let i = 0; i < out.length; i++) peak = Math.max(peak, Math.abs(out[i]));
+      return { wav: wavOf(out), seconds: out.length / RATE, peak, rate };
+    },
+  };
+}
+
+// ---------------------------------------------------------------- the browser's recogniser
+function recognise(lang, onText) {
+  const r = new SR();
+  r.lang = lang; r.interimResults = true; r.maxAlternatives = 3; r.continuous = false;
+  if ($('local').checked) { try { r.processLocally = true; } catch {} }
+  try { if (terms().length && 'phrases' in r && window.SpeechRecognitionPhrase) r.phrases = terms().map((t) => new SpeechRecognitionPhrase(t, 5.0)); } catch {}
+  const st = { text: '', alts: [], conf: null, error: '', ended: false, firstMs: null, t0: performance.now(), r, onend: () => {} };
+  r.onresult = (e) => {
+    if (st.firstMs === null) st.firstMs = Math.round(performance.now() - st.t0);
+    let t = '';
+    for (let i = 0; i < e.results.length; i++) {
+      t += e.results[i][0].transcript + ' ';
+      if (e.results[i].isFinal) { st.conf = e.results[i][0].confidence; st.alts = []; for (let k = 0; k < e.results[i].length; k++) st.alts.push(e.results[i][k].transcript); }
+    }
+    st.text = t.trim(); onText(st.text);
+  };
+  r.onerror = (e) => { st.error = e.error + (e.message ? ' (' + e.message + ')' : ''); };
+  r.onend = () => { st.ended = true; st.onend(); };
+  try { r.start(); } catch (e) { st.error = String(e.message || e); st.ended = true; }
+  return st;
+}
+
+// ---------------------------------------------------------------- one round
+function setButtons(live, which) {
+  const names = { browser: ['bBrowser', '🎤 Browser STT'], gemini: ['bGemini', '🎤 Gemini (app wala)'], both: ['bBoth', '🎤 Dono saath (experiment)'] };
+  for (const [k, [id, label]] of Object.entries(names)) {
+    const b = $(id);
+    b.classList.toggle('live', live && k === which);
+    b.textContent = live && k === which ? '⏹ Ruko' : label;
+    b.disabled = live && k !== which ? true : (k !== 'browser' && !GEMINI_READY) || ((k === 'browser' || k === 'both') && !SR);
+  }
+}
+
+async function begin(mode) {
+  const lang = $('lang').value;
+  const a = { mode, lang, n: ++round, startedAt: performance.now(), rec: null, mic: null, finishing: false };
+  active = a;
+  setButtons(true, mode);
+  $('live').textContent = '';
+  setStatus('mic khul raha hai...');
+  // The recogniser starts inside the tap, before any await, so the browser still counts it as user-initiated.
+  if (mode !== 'gemini') {
+    a.rec = recognise(lang, (t) => { $('live').textContent = t; });
+    a.rec.onend = () => { if (active === a && mode === 'browser' && !a.finishing) setTimeout(() => finish(a), 250); };
+  }
+  if (mode !== 'browser') {
+    try { a.mic = await openMic(); }
+    catch (e) { setStatus('mic nahi mila: ' + e.message); a.rec?.r.stop(); active = null; setButtons(false); return; }
+  }
+  setStatus(mode === 'gemini' ? 'sun raha hai... bolo, phir "Ruko" dabao' : 'sun raha hai... bolo');
+}
+
+async function finish(a) {
+  if (!a || a.finishing) return;
+  a.finishing = true;
+  try { a.rec?.r.stop(); } catch {}
+  setStatus('jawab la raha hoon...');
+  let clip = null;
+  if (a.mic) clip = await a.mic.stop();
+  const tag = '#' + a.n;
+  if (a.rec) {
+    results.push({ n: a.n, engine: 'Browser ' + a.lang + ($('local').checked ? ' (on-device)' : '') + (a.mode === 'both' ? ' [saath]' : ''), text: a.rec.text, conf: a.rec.conf, alts: a.rec.alts, error: a.rec.error, firstMs: a.rec.firstMs, rating: '', said: '' });
+  }
+  if (clip) {
+    const e = { n: a.n, engine: 'Gemini (app wala)' + (a.mode === 'both' ? ' [saath]' : ''), text: '', conf: null, alts: [], error: '', ms: null, secs: clip.seconds, peak: clip.peak, rating: '', said: '' };
+    results.push(e);
+    if (clip.peak < 0.02) e.error = 'mic se awaaz hi nahi aayi (peak ' + clip.peak.toFixed(3) + ')';
+    else if (clip.seconds < 0.4) e.error = 'bahut chhota clip (' + clip.seconds.toFixed(1) + ' s)';
+    else {
+      try { const r = await hearOnRelay(clip.wav); e.text = r.text; e.ms = r.ms; }
+      catch (err) { e.error = String(err.message || err); }
+    }
+  }
+  active = null;
+  setButtons(false);
+  $('live').textContent = '';
+  setStatus('ho gaya. ' + tag + ' ke jawab par ✓ / ~ / ✗ dabao, ya dobara bolo.');
+  render();
+}
+
+for (const [id, mode] of [['bBrowser', 'browser'], ['bGemini', 'gemini'], ['bBoth', 'both']]) {
+  $(id).addEventListener('click', () => {
+    if (active) { if (active.mode === mode) finish(active); return; }
+    begin(mode);
+  });
+}
+
+// ---------------------------------------------------------------- the list, the score, the copy text
+function render() {
+  const log = $('log'); log.replaceChildren();
+  for (const e of [...results].reverse()) {
+    const box = document.createElement('div'); box.className = 'att';
+    const t = document.createElement('div'); t.className = 't' + (e.text ? '' : ' none'); t.textContent = e.text || '(kuch nahi' + (e.error ? ': ' + e.error : '') + ')';
+    const m = document.createElement('div'); m.className = 'm';
+    m.textContent = '#' + e.n + ' · ' + e.engine + (e.conf != null ? ' · conf ' + e.conf.toFixed(2) : '') + (e.firstMs != null ? ' · pehla shabd ' + e.firstMs + ' ms' : '') + (e.ms != null ? ' · jawab ' + e.ms + ' ms' : '') + (e.secs != null ? ' · clip ' + e.secs.toFixed(1) + ' s' : '');
+    box.append(t, m);
+    if (e.alts && e.alts.length > 1) { const al = document.createElement('div'); al.className = 'm'; al.textContent = 'aur options: ' + e.alts.slice(1).join(' | '); box.append(al); }
+    if (e.text) {
+      const rate = document.createElement('div'); rate.className = 'rate';
+      for (const [val, label, cls] of [['good', '✓ sahi', ''], ['half', '~ thoda', 'half'], ['bad', '✗ galat', 'bad']]) {
+        const b = document.createElement('button'); b.textContent = label;
+        if (e.rating === val) { b.classList.add('on'); if (cls) b.classList.add(cls); }
+        b.addEventListener('click', () => { e.rating = val; render(); });
+        rate.append(b);
+      }
+      const said = document.createElement('input'); said.type = 'text'; said.className = 'said'; said.placeholder = 'maine asal mein ye bola (optional)'; said.value = e.said;
+      said.addEventListener('input', () => { e.said = said.value; summary(); });
+      box.append(rate, said);
+    }
+    log.append(box);
+  }
+  summary();
+}
+
+function summary() {
+  const by = {};
+  for (const e of results) if (e.rating) (by[e.engine] ??= { good: 0, half: 0, bad: 0 })[e.rating] += 1;
+  const lines = Object.entries(by).map(([k, v]) => { const n = v.good + v.half + v.bad; return k + ': ✓' + v.good + ' ~' + v.half + ' ✗' + v.bad + ' = ' + Math.round(((v.good + 0.5 * v.half) / n) * 100) + '% (' + n + ')'; });
+  $('score').textContent = lines.join('\n') || 'abhi koi nahi';
+  const rows = results.map((e) => '#' + e.n + ' ' + e.engine + ' [' + (e.rating || '?') + '] "' + e.text + '"' + (e.said ? ' | said: "' + e.said + '"' : '') + (e.conf != null ? ' | conf ' + e.conf.toFixed(2) : '') + (e.ms != null ? ' | ' + e.ms + 'ms' : '') + (e.error ? ' | err ' + e.error : ''));
+  $('out').value = $('env').textContent + '\n' + lines.join('\n') + '\n' + rows.join('\n');
+}
+
+$('copy').addEventListener('click', async () => {
+  summary();
+  try { await navigator.clipboard.writeText($('out').value); setStatus('copy ho gaya, chat mein paste karo.'); }
+  catch { $('out').select(); setStatus('neeche wala text select kar ke copy karo.'); }
+});
+setButtons(false);
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ear shootout</title>
+<style>
+  :root { --bg: #fbfaf7; --ink: #1d1b16; --soft: #6b665c; --line: #e3ded2; --card: #fff; --accent: #2f6f4e; --warn: #b4531a; --bad: #b3261e; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #17160f; --ink: #f1eee6; --soft: #a39d8f; --line: #34312a; --card: #1f1d15; --accent: #6fcf9f; --warn: #e6975c; --bad: #ff8a80; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 820px; margin: 0 auto; padding: 18px 16px 80px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 24px 0 8px; }
+  p.lede { color: var(--soft); margin: 0 0 12px; }
+  .controls { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin: 12px 0; }
+  label { display: flex; flex-direction: column; font-size: 13px; color: var(--soft); gap: 4px; }
+  select, input[type=text] { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); min-height: 40px; }
+  input.vocab { min-width: 280px; }
+  button { font: inherit; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; min-height: 40px; }
+  button.talk { background: var(--accent); color: #fff; border-color: var(--accent); font-size: 18px; padding: 12px 28px; }
+  button.talk.live { background: var(--bad); border-color: var(--bad); }
+  button:disabled { opacity: .5; cursor: default; }
+  #status { color: var(--soft); min-height: 24px; margin: 4px 0 8px; }
+  #live { font-size: 20px; font-weight: 600; min-height: 32px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  .round { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+  .round h3 { margin: 0 0 8px; font-size: 14px; color: var(--soft); font-weight: 600; }
+  .ear { display: grid; grid-template-columns: 170px 1fr auto; gap: 8px; align-items: start; padding: 8px 0; border-top: 1px solid var(--line); }
+  .ear:first-of-type { border-top: 0; }
+  .name { font-size: 13px; color: var(--soft); }
+  .text { font-size: 17px; word-break: break-word; }
+  .text.err { color: var(--bad); font-size: 13px; }
+  .meta { font-size: 12px; color: var(--soft); }
+  .rate { display: flex; gap: 6px; }
+  .rate button { min-height: 34px; padding: 4px 12px; }
+  .rate button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .rate button.on.bad { background: var(--bad); border-color: var(--bad); }
+  .rate button.on.half { background: var(--warn); border-color: var(--warn); }
+  @media (max-width: 560px) { .ear { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ear shootout</h1>
+  <p class="lede">Mic button dabao, jaise class mein bolte ho waise bolo (Hinglish ya English), phir dobara dabao. Har engine ne kya suna wo neeche aayega. Har jawab par <b>✓ sahi</b>, <b>~ thoda galat</b> ya <b>✗ galat</b> dabao. Kuch likhna nahi hai.</p>
+
+  <div class="controls">
+    <label>Browser ki bhasha
+      <select id="lang">
+        <option value="hi-IN">hi-IN (Hinglish ke liye)</option>
+        <option value="en-IN">en-IN</option>
+        <option value="en-US">en-US</option>
+      </select>
+    </label>
+    <label>Lesson ke words (optional, comma se)
+      <input id="vocab" class="vocab" type="text" placeholder="mitochondria, yeast, cramp, hint">
+    </label>
+    <button id="talk" class="talk">🎤 Bolo</button>
+  </div>
+  <div id="status"></div>
+  <div id="live"></div>
+
+  <h2>Score (tumhare ✓ / ~ / ✗ se)</h2>
+  <table id="score"><thead><tr><th>Engine</th><th>✓</th><th>~</th><th>✗</th><th>Score</th></tr></thead><tbody></tbody></table>
+
+  <h2>Rounds</h2>
+  <div id="rounds"></div>
+</main>
+<script>
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const RATE = 16000;
+const APP_MIC = { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
+const $ = (id) => document.getElementById(id);
+const terms = () => $('vocab').value.split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
+
+let engines = [];
+let session = null;
+let roundNo = 0;
+const score = new Map(); // engine label -> {good, half, bad}
+
+function wavOf(f32) {
+  const bytes = f32.length * 2, buf = new ArrayBuffer(44 + bytes), v = new DataView(buf);
+  const w = (at, s) => { for (let i = 0; i < s.length; i++) v.setUint8(at + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + bytes, true); w(8, 'WAVE'); w(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, RATE, true); v.setUint32(28, RATE * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  w(36, 'data'); v.setUint32(40, bytes, true);
+  for (let i = 0; i < f32.length; i++) { const s = Math.max(-1, Math.min(1, f32[i])); v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true); }
+  return new Blob([buf], { type: 'audio/wav' });
+}
+
+async function openMic() {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: APP_MIC });
+  const ctx = new AudioContext({ sampleRate: RATE });
+  const src = ctx.createMediaStreamSource(stream);
+  const sp = ctx.createScriptProcessor(4096, 1, 1);
+  const parts = [];
+  sp.onaudioprocess = (e) => parts.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+  const mute = ctx.createGain(); mute.gain.value = 0;
+  src.connect(sp); sp.connect(mute); mute.connect(ctx.destination);
+  return {
+    async stop() {
+      sp.onaudioprocess = null;
+      stream.getTracks().forEach((t) => t.stop());
+      await ctx.close().catch(() => {});
+      const n = parts.reduce((a, p) => a + p.length, 0), out = new Float32Array(n);
+      let at = 0; for (const p of parts) { out.set(p, at); at += p.length; }
+      return out;
+    },
+  };
+}
+
+function listen(lang, onText) {
+  if (!SR) return null;
+  const r = new SR();
+  r.lang = lang; r.interimResults = true; r.maxAlternatives = 1; r.continuous = false;
+  try {
+    if ('phrases' in r && window.SpeechRecognitionPhrase && terms().length) r.phrases = terms().map((t) => new SpeechRecognitionPhrase(t, 5.0));
+  } catch {}
+  const state = { text: '', conf: null, error: '', ended: false, onend: () => {} };
+  r.onresult = (e) => {
+    let t = '', c = null;
+    for (let i = 0; i < e.results.length; i++) { t += e.results[i][0].transcript + ' '; if (e.results[i].isFinal) c = e.results[i][0].confidence; }
+    state.text = t.trim(); state.conf = c; onText(state.text);
+  };
+  r.onerror = (e) => { state.error = e.error; };
+  r.onend = () => { state.ended = true; state.onend(); };
+  try { r.start(); } catch (e) { state.error = String(e.message || e); state.ended = true; }
+  state.stop = () => { try { r.stop(); } catch {} };
+  return state;
+}
+
+function setStatus(s) { $('status').textContent = s; }
+
+async function begin() {
+  setStatus('mic khul raha hai...');
+  $('talk').disabled = true;
+  try {
+    const mic = await openMic();
+    const lang = $('lang').value;
+    const rec = listen(lang, (t) => { $('live').textContent = t; });
+    session = { mic, rec, lang, vocab: terms().join(', '), startedAt: performance.now() };
+    if (rec) rec.onend = () => { if (session && !session.finishing) setTimeout(finish, 300); };
+    $('live').textContent = '';
+    $('talk').textContent = '⏹ Ruko'; $('talk').classList.add('live'); $('talk').disabled = false;
+    setStatus(SR ? 'sun raha hai... bolo' : 'ye browser Web Speech nahi deta, sirf server wale engines chalenge. bolo.');
+  } catch (e) {
+    $('talk').disabled = false;
+    setStatus('mic nahi mila: ' + e.message);
+  }
+}
+
+async function finish() {
+  const s = session; if (!s || s.finishing) return;
+  s.finishing = true;
+  setStatus('engines se pooch raha hoon...');
+  $('talk').disabled = true;
+  s.rec?.stop();
+  const samples = await s.mic.stop();
+  const seconds = samples.length / RATE;
+  const wav = wavOf(samples);
+  roundNo += 1;
+  const round = { n: roundNo, lang: s.lang, vocab: s.vocab, seconds, ears: [] };
+  const card = document.createElement('div'); card.className = 'round';
+  card.innerHTML = '<h3>Round ' + roundNo + ' · ' + seconds.toFixed(1) + ' s · browser: ' + s.lang + '</h3>';
+  $('rounds').prepend(card);
+
+  const add = (name, text, meta, isErr) => {
+    const ear = { name, text, meta, rating: '' };
+    round.ears.push(ear);
+    const row = document.createElement('div'); row.className = 'ear';
+    const nm = document.createElement('div'); nm.className = 'name'; nm.textContent = name;
+    const mid = document.createElement('div');
+    const tx = document.createElement('div'); tx.className = 'text' + (isErr ? ' err' : ''); tx.textContent = text || '(kuch nahi suna)';
+    const mt = document.createElement('div'); mt.className = 'meta'; mt.textContent = meta || '';
+    mid.append(tx, mt);
+    const rate = document.createElement('div'); rate.className = 'rate';
+    if (!isErr) for (const [val, label, cls] of [['good', '✓', ''], ['half', '~', 'half'], ['bad', '✗', 'bad']]) {
+      const b = document.createElement('button'); b.textContent = label;
+      b.addEventListener('click', () => {
+        const prev = ear.rating; ear.rating = val;
+        rate.querySelectorAll('button').forEach((x) => x.classList.remove('on', 'half', 'bad'));
+        b.classList.add('on'); if (cls) b.classList.add(cls);
+        const t = score.get(name) ?? { good: 0, half: 0, bad: 0 };
+        if (prev) t[prev] -= 1; t[val] += 1; score.set(name, t); drawScore();
+        fetch('/log', { method: 'POST', body: JSON.stringify({ kind: 'rating', round: round.n, engine: name, rating: val, text, lang: round.lang, vocab: round.vocab, seconds }) }).catch(() => {});
+      });
+      rate.append(b);
+    }
+    row.append(nm, mid, rate); card.append(row);
+  };
+
+  if (s.rec) {
+    const conf = s.rec.conf != null ? ' · confidence ' + s.rec.conf.toFixed(2) : '';
+    add('Browser (' + s.lang + ')', s.rec.error && !s.rec.text ? 'error: ' + s.rec.error : s.rec.text, 'Web Speech API' + conf, !!(s.rec.error && !s.rec.text));
+  }
+  await Promise.all(engines.map(async (en) => {
+    const q = new URLSearchParams({ engine: en.id, lang: s.lang.startsWith('en') ? 'en' : 'hi', vocab: s.vocab });
+    try {
+      const r = await (await fetch('/hear?' + q, { method: 'POST', headers: { 'content-type': 'audio/wav' }, body: wav })).json();
+      if (r.error) add(en.label, r.error, r.ms + ' ms', true);
+      else add(en.label, r.text, r.ms + ' ms' + (r.note ? ' · ' + r.note : ''), false);
+    } catch (e) { add(en.label, String(e.message || e), '', true); }
+  }));
+  fetch('/log', { method: 'POST', body: JSON.stringify({ kind: 'round', ...round }) }).catch(() => {});
+  session = null;
+  $('talk').textContent = '🎤 Bolo'; $('talk').classList.remove('live'); $('talk').disabled = false;
+  $('live').textContent = '';
+  setStatus('ho gaya. ab har jawab par ✓ / ~ / ✗ dabao, ya dobara bolo.');
+}
+
+function drawScore() {
+  const body = $('score').querySelector('tbody'); body.replaceChildren();
+  for (const [name, t] of score) {
+    const n = t.good + t.half + t.bad;
+    const tr = document.createElement('tr');
+    for (const v of [name, t.good, t.half, t.bad, n ? Math.round(((t.good + 0.5 * t.half) / n) * 100) + '% (' + n + ')' : '-']) {
+      const td = document.createElement('td'); td.textContent = v; tr.append(td);
+    }
+    body.append(tr);
+  }
+}
+
+$('talk').addEventListener('click', () => { if (session) finish(); else begin(); });
+fetch('/engines').then((r) => r.json()).then((list) => {
+  engines = list;
+  setStatus('browser STT: ' + (SR ? 'hai' : 'nahi hai') + ' · server engines: ' + (list.map((e) => e.label).join(', ') || 'koi nahi'));
+}).catch(() => setStatus('server nahi mila'));
+</script>
+</body>
+</html>
