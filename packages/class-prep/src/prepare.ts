@@ -2036,7 +2036,11 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * layout it was never shown — whatever, in the layout engine, moved.
    */
   if (final !== lesson && keepGate.length > 0) {
-    const key = (p: GateProblem): string => `${p.rule}|${p.where}|${p.message}`;
+    // A problem is the rule and the place, not its wording: a page the draft
+    // left 52% written on and the re-fit 55% is the draft's problem, not a new
+    // one, and keeping the draft for it kept the names that point at nothing
+    // (small intestine, 2026-10-06).
+    const key = (p: GateProblem): string => `${p.rule}|${p.where}`;
     const drafted = new Set(gate.map(key));
     const fresh = keepGate.filter((p) => !drafted.has(key(p)));
     if (fresh.length > 0) {

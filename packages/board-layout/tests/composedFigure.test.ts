@@ -55,6 +55,44 @@ const inside = (el: Element, r: { x: number; y: number; w: number; h: number }):
 const written = (made: ReturnType<typeof lay>, text: string) =>
   made.elements.find((e) => e.kind === 'handwrite' && e.text === text) as Extract<Element, { kind: 'handwrite' }>;
 
+/**
+ * A NAME WHOSE PART WAS LOOKED FOR AND NOT FOUND (small intestine, 2026-10-06).
+ *
+ * Written in the margin with no line, it floats beside the picture pointing at
+ * nothing — every name on that class's villus did. Once the picture has been
+ * looked at, a name it has no part for is written down the notes column
+ * instead. Before anyone has looked (the draft), it waits in the margin as it
+ * always has: the part may yet be found.
+ */
+describe('a name whose part could not be found in the picture', () => {
+  const found = new Map([['villus', PARTS.get('villus')!.filter((p) => p.name !== 'lacteal')]]);
+  const layWith = (parts: typeof PARTS) =>
+    layoutBeat({ id: 'b2', topic: 'villi', narration: '', board: VILLI }, parts, SHAPES, { composed: true });
+
+  it('is written down the notes column, at its own line, once the picture has been looked at', () => {
+    const made = layWith(found);
+    const lacteal = written(made, 'Lacteal');
+    expect(made.regions[lacteal.id]).toBe('0/side');
+    expect(made.elements.some((e) => e.id === `${lacteal.id}_line`)).toBe(false);
+    // The names it found stay on the picture, each with its line.
+    expect(made.regions[written(made, 'Capillaries').id]).toBe('0/hero');
+    expect(made.elements.some((e) => e.id === `${written(made, 'Capillaries').id}_line`)).toBe(true);
+    // It arrives on the line that names it.
+    const step = made.steps.findIndex((s) => s.show.includes(lacteal.id));
+    expect(made.steps[step].narration).toBe('The lacteal takes the fats.');
+  });
+
+  it('every name is, when none of the parts were found', () => {
+    const made = layWith(new Map([['villus', []]]));
+    for (const name of ['Capillaries', 'Lacteal', 'Epithelium']) expect(made.regions[written(made, name).id], name).toBe('0/side');
+  });
+
+  it('waits in the margin in the draft, before the picture has been looked at', () => {
+    const made = layWith(new Map());
+    for (const name of ['Capillaries', 'Lacteal', 'Epithelium']) expect(made.regions[written(made, name).id], name).toBe('0/hero');
+  });
+});
+
 describe('a labelled picture on a composed page', () => {
   const made = lay(VILLI);
 

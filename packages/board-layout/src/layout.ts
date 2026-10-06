@@ -167,6 +167,8 @@ const BAND_SIZES = [30, 26, 23, 20];
 const POINT_SIZE = 22;
 /** How far a composed key point's words start from its region's left edge: the bullet's margin. */
 const BULLET_INDENT = 32;
+/** A part's name written down the notes column because its part was not found: the size of a name in the margin. */
+const HOMELESS_NAME_SIZE = 20;
 
 /**
  * From one handwritten line to the next.
@@ -1591,10 +1593,52 @@ export function layoutBeat(
      * already there.
      */
     type Pending = (typeof pendingLabels)[number];
-    const placedFor = pendingLabels.map((pending) => {
+    const names = pendingLabels.map((pending) => {
       const box = hostBox ? partBox(pending.step.target, elements) : null;
       return { pending, box };
     });
+
+    /**
+     * A NAME WHOSE PART WAS LOOKED FOR AND NOT FOUND IS WRITTEN DOWN THE NOTES
+     * COLUMN (small intestine, 2026-10-06).
+     *
+     * In the margin with no line it floats beside the picture pointing at
+     * nothing, which every name on that class's villus did. So once the
+     * picture has been looked at (its element carries `parts`, found or not),
+     * a name it has no part for is a line of the notes, written at the line
+     * that names it. Before anyone has looked — the draft, laid out while the
+     * picture is still being made — it stays in the margin as it always has:
+     * the part may yet be found. On a composed page only.
+     */
+    const looked = composedFigure && host?.kind === 'image' && host.parts !== undefined;
+    const homeless = looked ? names.filter(({ box }) => box === null) : [];
+    const placedFor = names.filter((n) => !homeless.includes(n));
+    for (const { pending } of homeless) {
+      const { text, tone } = pending.step;
+      const lead = handLead(HOMELESS_NAME_SIZE);
+      const name: Block = {
+        kind: 'label',
+        at: pending.at,
+        height: lead,
+        heightAt: (w) => wrapText(text, w, HOMELESS_NAME_SIZE).length * lead,
+        place: (r) => {
+          const lines = wrapText(text, r.w, HOMELESS_NAME_SIZE);
+          return lines.map((line, n) => ({
+            kind: 'handwrite',
+            ...(n > 0 ? { after: afterLines(lines, n) } : {}),
+            id: n === 0 ? pending.id : `${pending.id}_l${n}`,
+            x: r.x + handWidth(line, HOMELESS_NAME_SIZE) / 2,
+            y: r.y + HOMELESS_NAME_SIZE * 0.9 + n * lead,
+            text: line,
+            size: HOMELESS_NAME_SIZE,
+            ...(tone ? { tone } : {}),
+          }));
+        },
+      };
+      // In the order the beat says things, so the column fills down in time.
+      const after = blocks.findIndex((b) => b.at !== null && b.at > pending.at);
+      blocks.splice(after < 0 ? blocks.length : after, 0, name);
+    }
 
     // Which side each name goes to. A name whose part could not be found has
     // no side of its own, so it takes whichever is emptier — better than
