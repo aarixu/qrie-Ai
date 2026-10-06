@@ -146,7 +146,11 @@ export function createRelayClient({ relayUrl, token, prepId, fetchImpl = fetch }
       };
     },
 
-    /** VisionAdapter — the picture goes back up as the data: URL it already is. */
+    /**
+     * VisionAdapter — the picture goes back up as the data: URL it already is
+     * (about 1.2 MB for a generated one; the relay takes one picture a call
+     * beside its text ceiling, packages/relay/src/vertex.ts MAX_PICTURE_BYTES).
+     */
     vision(model) {
       return {
         async look(imageUrl, system, user) {

@@ -47,9 +47,10 @@ export function createBrowserImageArtist(model: string): ImageAdapter {
 /**
  * Looks at a picture and answers about it.
  *
- * The picture goes back up as the `data:` URL it already is. It is half a
- * megabyte over a loopback connection, which costs nothing worth counting, and
- * it means nothing has to be stored anywhere to be looked at.
+ * The picture goes back up as the `data:` URL it already is, so nothing has to
+ * be stored anywhere to be looked at. A generated one is about 1.2 MB of it;
+ * the relay takes one picture a call beside its text ceiling
+ * (packages/relay/src/vertex.ts, MAX_PICTURE_BYTES).
  */
 export function createBrowserVision(model: string): VisionAdapter {
   return {
