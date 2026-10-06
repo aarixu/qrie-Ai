@@ -2063,8 +2063,14 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * the one the in-prep gate judged and the first student was taught. So a
    * class that passed in preparation cannot be refused at the keep for a
    * layout it was never shown — whatever, in the layout engine, moved.
+   *
+   * Only a draft that PASSED is protected this way. A draft its own gate
+   * already failed is not kept either, so keeping it protects nothing and
+   * throws away the truer copy: the second small-intestine class (2026-10-06)
+   * found every part of its villus, and came back as the draft with every
+   * name floating.
    */
-  if (final !== lesson && keepGate.length > 0) {
+  if (final !== lesson && keepGate.length > 0 && gate.length === 0) {
     // A problem is the rule and the place, not its wording: a page the draft
     // left 52% written on and the re-fit 55% is the draft's problem, not a new
     // one, and keeping the draft for it kept the names that point at nothing

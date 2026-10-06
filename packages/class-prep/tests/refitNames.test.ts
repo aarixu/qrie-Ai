@@ -108,6 +108,67 @@ describe('the copy kept, after the picture is made', () => {
     expect(made.lesson.elements.some((e) => e.kind === 'arrow')).toBe(false);
   });
 
+  /**
+   * A DRAFT THAT WOULD NOT BE KEPT EITHER IS NOTHING TO PROTECT (the second
+   * small-intestine class, 2026-10-06). The guard keeps the draft so a class
+   * that passed in preparation is not refused at the keep; that class's draft
+   * already failed (a thin second page), the re-fit found every part of the
+   * villus, and the draft — names floating, no lines — was what came back.
+   */
+  it('keeps the re-fit, its names drawn to their parts, when the draft fails the gate too', async () => {
+    // A tall, narrow picture: the draft counts the whole box the layout gave
+    // it, the re-fit only the picture, so the re-fit's page reads emptier.
+    const narrow = (() => {
+      const bytes = new Uint8Array(24);
+      bytes.set([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13, 0x49, 0x48, 0x44, 0x52]);
+      new DataView(bytes.buffer).setUint32(16, 300);
+      new DataView(bytes.buffer).setUint32(20, 1200);
+      return `data:image/png;base64,${btoa(String.fromCharCode(...bytes))}`;
+    })();
+    const parts = JSON.stringify({
+      capillaries: { x: 0.1, y: 0.3, w: 0.2, h: 0.3 },
+      lacteal: { x: 0.45, y: 0.2, w: 0.1, h: 0.5 },
+      epithelium: { x: 0.7, y: 0.3, w: 0.2, h: 0.4 },
+    });
+    const plan: Blueprint = {
+      ...WITH_LIST,
+      beats: [
+        WITH_LIST.beats[0],
+        {
+          ...WITH_LIST.beats[1],
+          board: [
+            ...WITH_LIST.beats[1].board.slice(0, -2),
+            { do: 'write', text: 'Villi make the inner surface enormous' },
+            { do: 'write', text: 'Each villus is one cell thick' },
+            ...WITH_LIST.beats[1].board.slice(-2),
+          ],
+        },
+        // A thin page of its own: fails page-full in the draft and the re-fit alike.
+        {
+          id: 'b3',
+          topic: 'Recap',
+          narration: '',
+          board: [
+            { do: 'say', text: 'One thing to remember.' },
+            { do: 'write', text: 'Villi absorb food' },
+          ],
+        },
+      ],
+    };
+    const made = await prepareClass({
+      topic: 'Villi',
+      klass: 10,
+      planner: { complete: async () => JSON.stringify(plan) },
+      artist: { complete: async () => '' },
+      imageArtist: { draw: async () => narrow },
+      eyes: { look: async () => parts },
+      composed: true,
+    });
+    expect(made.report.gate!.problems.some((p) => p.rule === 'page-full' && p.where.startsWith('b3'))).toBe(true);
+    expect(made.report.issues.filter((i) => i.startsWith('Kept as drafted'))).toEqual([]);
+    expect(made.lesson.elements.filter((e) => e.kind === 'arrow').length).toBeGreaterThanOrEqual(3);
+  });
+
   it('keeps that copy with the list of the parts beside the picture, all on one page', async () => {
     const made = await prepare(WITH_LIST);
     expect(made.report.issues.filter((i) => i.startsWith('Kept as drafted'))).toEqual([]);
