@@ -98,9 +98,14 @@ jobs:
       - name: Production build
         run: npm run build
 
+      # The admin console is a second app with its own bundle; it is built here so
+      # the scan below can read it too.
+      - name: Admin console build
+        run: npm run admin:build
+
       # Must follow the build: the scan walks apps/classroom/dist and fails
       # loudly if it is not there, which is the correct behaviour — a scan
       # that "passes" on an empty directory is the lie this file exists to
       # prevent.
       - name: No secret may reach the bundle
-        run: node tools/bin/check-bundle-secrets.mjs
+        run: node tools/bin/check-bundle-secrets.mjs apps/classroom/dist apps/admin/dist
