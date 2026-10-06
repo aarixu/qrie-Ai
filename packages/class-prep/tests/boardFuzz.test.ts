@@ -182,12 +182,16 @@ describe('300 seeded classes with a pie, a line chart and moving working', () =>
  * both a notes list and a key point, which the rule tells the planner to
  * split. The guards below hold those numbers.
  *
- * MEASURED AGAIN 2026-10-06, after the small-intestine class: a page of writing
- * puts its notes and its key points in two columns, and a key point counts as a
- * row across its column the way a list's rows do. Two columns alone measured
- * emptier (page-full 289 -> 294, notes pages 0.546 -> 0.523), because a bullet
- * was counted only as wide as its words while a list counts its column; with
- * both: median 0.555, page-full in 286 classes, phone-readable 84.
+ * MEASURED AGAIN 2026-10-06, after the small-intestine class, from 289:
+ *   - two columns alone (a page of writing puts its notes in the left and its
+ *     key points in the right): page-full 294, notes pages 0.546 -> 0.523 —
+ *     a key point counted only as wide as its words, a list as wide as its
+ *     column, so the right column read emptier than the same points under the
+ *     list;
+ *   - a key point counted as a row across its column, as a list's rows are,
+ *     alone: page-full 274, median 0.574. This is how much easier the gate is
+ *     on short key points: 15 classes of 300;
+ *   - both, as built: median 0.555, page-full in 286 classes, phone-readable 84.
  */
 const PAGE_FULL_CEILING = 286;
 const PHONE_READABLE_CEILING = 84;

@@ -38,6 +38,11 @@ export const PHONE_STAGE_W = 667;
 /** "b2_3" belongs to planner beat "b2", as gate.ts reads it. */
 const plannerOf = (id: string): string => id.replace(/_\d+$/, '');
 
+/** What a beat that ran onto a second page is told: less, so it fits its own. */
+const LESS =
+  'Give this beat less — a shorter list (fewer items, shorter meanings) and fewer key points — so all of it ' +
+  'fits on its own page.';
+
 /** Each place on a page, as the planner is told about it. */
 const PLACES: Readonly<Record<ArrangementName, Readonly<Record<string, string>>>> = {
   figure: { side: 'the column beside the picture', bottom: 'the space under the picture' },
@@ -50,9 +55,9 @@ const PLACES: Readonly<Record<ArrangementName, Readonly<Record<string, string>>>
 
 /**
  * WHAT A PAGE LEFT TOO EMPTY NEEDS, AND WHERE IT GOES (small intestine,
- * 2026-10-06). "Write more" sent three pages at 44–56% to repair and none came
- * back fuller; so the planner is told which of the page's places has nothing
- * in it, and what the page is short of.
+ * 2026-10-06). That class left three pages 44–57% written on, and all the gate
+ * could say was "write more"; so the planner is told which of the page's places
+ * has nothing in it, and what the page is short of.
  */
 function whatItNeeds(page: PageReport): string {
   const places = page.empty.map((id) => PLACES[page.arrangement][id]).filter((p): p is string => p !== undefined);
@@ -68,8 +73,13 @@ function whatItNeeds(page: PageReport): string {
     );
   }
   const needs: string[] = [];
-  // Names on a picture are not its notes: what each part does is a list.
-  if ((page.main && !page.list) || page.empty.includes(ARRANGEMENTS[page.arrangement].notesOrder[0])) {
+  // Names on a picture are not its notes: what each part does is a list. And a
+  // page of writing is two columns only when it has notes for the first.
+  if (
+    (page.main && !page.list) ||
+    (page.arrangement === 'notes' && !page.list) ||
+    page.empty.includes(ARRANGEMENTS[page.arrangement].notesOrder[0])
+  ) {
     needs.push('a "list" of each part or idea you name, with what it does and why');
   }
   const short = 3 - page.points;
@@ -122,20 +132,25 @@ export function composerChecks(lesson: Lesson, report: ComposerReport | undefine
   if (!report) return [];
   const problems: GateProblem[] = [];
 
+  /** Planner beats whose writing ran onto a second page. */
+  const ranOver = new Set(report.pages.filter((p) => p.sheet > 0).map((p) => p.plannerBeat));
   for (const page of report.pages) {
     if (page.opening || page.coverage >= PAGE_FULL) continue;
     const pct = Math.round(page.coverage * 100);
     problems.push({
       rule: 'page-full',
       where: page.beat,
-      // A beat's second page is what did not fit its first: the fix is less
-      // on this beat, never more writing.
+      // A beat's second page is what did not fit its first, and its first page
+      // is emptier for what moved: the fix for both is less on this beat,
+      // never more writing — what a first page lacks is on the next one.
       message:
         page.sheet > 0
-          ? `Beat "${page.plannerBeat}" ran onto another page, which the class leaves ${pct}% written on. Give this ` +
-            `beat less, or split it into two beats, each with its own page.`
-          : `Beat "${page.plannerBeat}": the class leaves this page ${pct}% written on, and a page must be at least ` +
-            `${PAGE_FULL * 100}%. ${whatItNeeds(page)}`,
+          ? `Beat "${page.plannerBeat}" ran onto another page, which the class leaves ${pct}% written on. ${LESS}`
+          : ranOver.has(page.plannerBeat)
+            ? `Beat "${page.plannerBeat}": what it writes did not fit on its page and ran onto another, leaving this ` +
+              `one ${pct}% written on. ${LESS}`
+            : `Beat "${page.plannerBeat}": the class leaves this page ${pct}% written on, and a page must be at least ` +
+              `${PAGE_FULL * 100}%. ${whatItNeeds(page)}`,
     });
   }
 

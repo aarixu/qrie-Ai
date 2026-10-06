@@ -65,6 +65,28 @@ describe('page-full', () => {
     expect(found.message).toMatch(/a "list" of each part or idea you name/);
   });
 
+  it('tells a first page whose writing ran onto the next to give it less, not to write what it already has', () => {
+    const found = composerRules({
+      pages: [
+        page({ coverage: 0.3, empty: ['side', 'bottom'], list: false, points: 0, summary: false }),
+        page({ sheet: 1, coverage: 0.38, arrangement: 'notes', main: false, list: true, points: 2, summary: true, beat: 'b2_6' }),
+      ],
+      overview: ['b2_4', 'b2_6'],
+    });
+    const first = found.find((p) => p.where === 'b2_4')!;
+    expect(first.message).toMatch(/did not fit/);
+    expect(first.message).not.toMatch(/Write a "list"/);
+    expect(found.find((p) => p.where === 'b2_6')!.message).not.toMatch(/split it into two beats/);
+  });
+
+  it('asks a page of key points alone for its notes, so it is written in two columns', () => {
+    const [found] = composerRules({
+      pages: [page({ coverage: 0.4, arrangement: 'notes', main: false, notes: false, list: false, empty: ['right'], points: 3 })],
+      overview: ['b2_4'],
+    });
+    expect(found.message).toMatch(/a "list" of each part or idea you name/);
+  });
+
   it('tells a page of writing alone to take a demonstration, or to go with the beat it belongs to', () => {
     const [found] = composerRules({
       pages: [page({ coverage: 0.53, arrangement: 'notes', main: false, empty: ['right'], points: 2 })],

@@ -1023,6 +1023,51 @@ export function capChecks(
   return cut;
 }
 
+/** How many problems the repair prompt carries. */
+const REPAIR_PLACES = 10;
+
+/**
+ * Rules whose fix is the same for everything they catch in one beat — "write
+ * less beside it, or give it a line of its own" — so one of them stands for
+ * the rest. Every other rule's message names what to fix (a reaction, a line,
+ * a page), and is sent whole.
+ */
+const SAME_FIX: ReadonlySet<GateProblem['rule']> = new Set(['on-camera', 'on-board', 'overlap']);
+
+/**
+ * WHAT THE REPAIR PROMPT'S TEN PLACES CARRY, when there are more problems than
+ * places.
+ *
+ * The gate names every thing a rule catches, and one line can catch nine: the
+ * small-intestine class's first plan (2026-10-06) had one line on beat 3 that
+ * put nine things off camera, those took nine of the ten places, and its three
+ * half-empty pages were never sent to repair. So when `room` is too small for
+ * them all, a same-fix rule's problems on one beat are sent as the first of
+ * them, with how many more there are. When there is room, every one is sent.
+ */
+export function oncePerBeat(problems: readonly GateProblem[], room: number = REPAIR_PLACES): string[] {
+  if (problems.length <= room) return problems.map((p) => p.message);
+  const out: { message: string; more: number }[] = [];
+  const groups = new Map<string, { message: string; more: number }>();
+  for (const p of problems) {
+    if (!SAME_FIX.has(p.rule)) {
+      out.push({ message: p.message, more: 0 });
+      continue;
+    }
+    const beat = /^Beat "([^"]+)"/.exec(p.message)?.[1] ?? p.where;
+    const key = `${p.rule}|${beat}`;
+    const group = groups.get(key);
+    if (group) {
+      group.more += 1;
+      continue;
+    }
+    const fresh = { message: p.message, more: 0 };
+    groups.set(key, fresh);
+    out.push(fresh);
+  }
+  return out.map(({ message, more }) => (more === 0 ? message : `${message} (And ${more} more like it in this beat.)`));
+}
+
 /**
  * A MIS-SHAPED whyProbe IS ONE BAD FIELD, NOT A BAD CLASS.
  *
@@ -1039,29 +1084,6 @@ export function capChecks(
  * The rules mirror `validateLesson`'s exactly, which is the point — anything
  * this leaves in place is something the validator will accept.
  */
-/**
- * EACH KIND OF PROBLEM ONCE A BEAT, for the repair prompt's ten places.
- *
- * The gate names every thing a rule catches, and one line can catch nine: the
- * small-intestine class's first plan (2026-10-06) had one line on beat 3 that
- * put nine things off camera, those took nine of the ten places, and its three
- * half-empty pages were never sent to repair. So a rule's problems on one beat
- * are sent as the first of them, with how many more there are.
- */
-export function oncePerBeat(problems: readonly GateProblem[]): string[] {
-  const groups = new Map<string, { message: string; more: number }>();
-  for (const p of problems) {
-    const beat = /^Beat "([^"]+)"/.exec(p.message)?.[1] ?? p.where;
-    const key = `${p.rule}|${beat}`;
-    const group = groups.get(key);
-    if (group) group.more += 1;
-    else groups.set(key, { message: p.message, more: 0 });
-  }
-  return [...groups.values()].map(({ message, more }) =>
-    more === 0 ? message : `${message} (And ${more} more like it in this beat.)`,
-  );
-}
-
 export function dropBadProbes(beats: readonly { board?: readonly { do: string }[] }[]): number {
   let dropped = 0;
   for (const beat of beats) {
@@ -1497,19 +1519,25 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
      * could read this plan; by inkWaitsForALine, which reads the plan, when it
      * could not. Both at once filled two of the ten places with one problem.
      */
-    const toFix = [
+    const ahead = [
       ...gate.filter((p) => p.rule === 'maths').map((p) => p.message),
       ...(validated.ok ? [] : validated.errors),
       ...(firstGate === null ? inkWaitsForALine(blueprint.beats) : []),
-      ...oncePerBeat(gate.filter((p) => p.rule !== 'maths')),
+    ];
+    const toFix = [
+      ...ahead,
+      ...oncePerBeat(
+        gate.filter((p) => p.rule !== 'maths'),
+        Math.max(0, REPAIR_PLACES - ahead.length),
+      ),
       ...unwritten,
     ];
     // Every problem it was sent for, not only the first: when the repair does
     // not fix one, the state file is the only place left to find out which.
-    issues.push(`The first plan was sent to repair, for: ${toFix.slice(0, 10).join(' | ')}`);
+    issues.push(`The first plan was sent to repair, for: ${toFix.slice(0, REPAIR_PLACES).join(' | ')}`);
     say('checking', 'Fixing the plan…', 0.2);
     try {
-      const reply = await repairCall(repairPlanUser(JSON.stringify(blueprint), toFix.slice(0, 10), language), 0.2);
+      const reply = await repairCall(repairPlanUser(JSON.stringify(blueprint), toFix.slice(0, REPAIR_PLACES), language), 0.2);
       // parsePlan, not bare JSON.parse: a repair reply is a model reply, and
       // recovering JSON from prose is the whole reason parsePlan exists.
       const fixed = stamp(parsePlan(reply));

@@ -49,6 +49,19 @@ describe('oncePerBeat', () => {
     expect(sent).toContain(FIRST_PLAN[3].message);
   });
 
+  it('folds nothing when every problem fits the repair prompt, as two reactions in one beat do', () => {
+    const chem = (eq: string) => real('chem', 'b4', `Beat "b4": the reaction "${eq}" does not balance.`);
+    const two = [chem('$\\ce{H2 + O2 -> H2O}$'), chem('$\\ce{Na + Cl2 -> NaCl}$')];
+    expect(oncePerBeat(two)).toEqual(two.map((p) => p.message));
+  });
+
+  it('never folds what is not the same fix for the whole beat: a line too small on a phone, a half-empty page', () => {
+    const phone = (line: string) => real('phone-readable', `b1_${line}`, `Beat "b1": on a phone, "${line}" is 10px.`);
+    const many = [...FIRST_PLAN, phone('a'), phone('b'), phone('c')];
+    const sent = oncePerBeat(many);
+    for (const p of many.filter((x) => x.rule === 'phone-readable' || x.rule === 'page-full')) expect(sent).toContain(p.message);
+  });
+
   it('leaves room in the ten for the half-empty pages and the lines too small on a phone', () => {
     const ten = oncePerBeat(FIRST_PLAN).slice(0, 10);
     for (const p of FIRST_PLAN.filter((x) => x.rule === 'page-full' || x.rule === 'phone-readable')) {
