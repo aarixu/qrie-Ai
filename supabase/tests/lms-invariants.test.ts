@@ -78,6 +78,13 @@ describe('the lms schema', () => {
       'own_draft(p_draft uuid)',
       'handed_in_with(p_key uuid, p_assignment uuid)',
       'is_guardian_of(p_student uuid)',
+      'import_snapshot(p_org uuid)',
+      'admin_school(p_user uuid)',
+      'account_by_login(p_org uuid, p_login text)',
+      'audit_by(p_org uuid, p_actor uuid, p_action text, p_target text, p_details jsonb)',
+      'end_sessions(p_user uuid)',
+      'next_parent_login(p_org uuid)',
+      'attach_parent(p_org uuid, p_actor uuid, p_parent_login text, p_child_login text)',
       'set_licence(p_code text, p_plan text, p_seats integer, p_until date)',
       'founder_schools()',
     ];

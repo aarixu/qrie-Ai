@@ -38,12 +38,19 @@ const KEY = /^[A-Za-z0-9-]{8,64}$/;
 const kept = new Map<string, { until: number; response: ImportResponse }>();
 
 async function adminOrg(db: PGlite, caller: string, what: string): Promise<string> {
-  const { rows } = await db.query<{ org_id: string }>(
-    `select org_id from lms.account where user_id = $1 and kind = 'admin'`,
-    [caller],
-  );
-  if (!rows[0]) throw new ImportRefused(403, `Only the school admin can ${what}.`);
-  return rows[0].org_id;
+  const org = (await db.query<{ org: string | null }>(`select lms.admin_school($1) as org`, [caller])).rows[0]?.org;
+  if (!org) throw new ImportRefused(403, `Only the school admin can ${what}.`);
+  return org;
+}
+
+/** One account of the school by its ID (0046), or null. */
+async function accountByLogin(db: PGlite, org: string, loginId: string) {
+  return (
+    await db.query<{ a: { userId: string; kind: 'student' | 'teacher' | 'admin' | 'parent'; displayName: string; leftAt: string | null } | null }>(
+      `select lms.account_by_login($1, $2) as a`,
+      [org, loginId],
+    )
+  ).rows[0]?.a ?? null;
 }
 
 export async function importForAdmin(db: PGlite, caller: string, request: ImportRequest): Promise<ImportResponse> {
@@ -84,10 +91,12 @@ export async function importForAdmin(db: PGlite, caller: string, request: Import
     const result = await applyPlan(preview.plan, pgliteStore(t));
     for (const c of result.created) await setPin(t, c.loginId, c.userId, c.pin);
     if (result.created.length) {
-      await t.query(
-        `insert into lms.audit_event (org_id, actor, action, target, details) values ($1, $2, 'people-added', $3, $4)`,
-        [org, caller, `${result.created.length} people`, JSON.stringify({ ids: result.created.map((c) => c.loginId) })],
-      );
+      await t.query(`select lms.audit_by($1, $2, 'people-added', $3, $4)`, [
+        org,
+        caller,
+        `${result.created.length} people`,
+        JSON.stringify({ ids: result.created.map((c) => c.loginId) }),
+      ]);
     }
     const rolls = new Map(preview.people.map((p) => [p.loginId, p.roll]));
     return {
@@ -115,25 +124,17 @@ export async function resetPinForAdmin(
 ): Promise<{ loginId: string; displayName: string; pin: string }> {
   const org = await adminOrg(db, caller, 'give out new PINs');
   const id = typeof loginId === 'string' ? loginId.trim().toUpperCase() : '';
-  const { rows } = await db.query<{ user_id: string; kind: 'student' | 'teacher' | 'admin'; display_name: string }>(
-    `select user_id, kind, display_name from lms.account where org_id = $1 and login_id = $2`,
-    [org, id],
-  );
-  const who = rows[0];
+  const who = await accountByLogin(db, org, id);
   if (!who) throw new ImportRefused(404, `There is no one in your school with the ID ${id || '(none)'}.`);
   const pin = newPin(who.kind);
   await db.transaction(async (tx) => {
     const t = tx as unknown as PGlite;
-    await setPin(t, id, who.user_id, pin);
-    // Whoever held the old PIN is signed out everywhere.
-    await t.query(`delete from demo_auth.session where user_id = $1`, [who.user_id]);
-    await t.query(`insert into lms.audit_event (org_id, actor, action, target) values ($1, $2, 'pin-reset', $3)`, [
-      org,
-      caller,
-      id,
-    ]);
+    await setPin(t, id, who.userId, pin);
+    // Whoever held the old PIN is signed out everywhere (the demo's own sessions).
+    await t.query(`delete from demo_auth.session where user_id = $1`, [who.userId]);
+    await t.query(`select lms.audit_by($1, $2, 'pin-reset', $3)`, [org, caller, id]);
   });
-  return { loginId: id, displayName: who.display_name, pin };
+  return { loginId: id, displayName: who.displayName, pin };
 }
 
 /**
@@ -150,122 +151,32 @@ export async function addParentForAdmin(
   const name = typeof request.displayName === 'string' ? request.displayName.trim().replace(/\s+/g, ' ') : '';
   if (name.length < 1 || name.length > 80) throw new ImportRefused(400, "Write the parent's name, up to 80 letters.");
   const studentId = typeof request.studentLoginId === 'string' ? request.studentLoginId.trim().toUpperCase() : '';
-  const child = (
-    await db.query<{ user_id: string; kind: string; left_at: string | null }>(
-      `select user_id, kind, left_at from lms.account where org_id = $1 and login_id = $2`,
-      [org, studentId],
-    )
-  ).rows[0];
+  const child = await accountByLogin(db, org, studentId);
   if (!child) throw new ImportRefused(404, `There is no one in your school with the ID ${studentId || '(none)'}.`);
-  if (child.kind !== 'student' || child.left_at) throw new ImportRefused(400, `${studentId} is not a student at your school.`);
-  const code = (await db.query<{ code: string }>(`select code from lms.school where org_id = $1`, [org])).rows[0].code;
+  if (child.kind !== 'student' || child.leftAt) throw new ImportRefused(400, `${studentId} is not a student at your school.`);
   const pin = newPin('parent');
   return db.transaction(async (tx) => {
     const t = tx as unknown as PGlite;
-    // The next P-number: one more than the highest, never a gap reused.
-    const highest = (
-      await t.query<{ n: number | null }>(
-        `select max(substring(login_id from '-P([0-9]+)$')::int) as n from lms.account where org_id = $1 and kind = 'parent'`,
-        [org],
-      )
-    ).rows[0].n;
-    const loginId = `${code}-P${(highest ?? 0) + 1}`;
-    const user = (
-      await t.query<{ id: string }>(`insert into auth.users (email, raw_app_meta_data) values ($1, $2::jsonb) returning id`, [
-        loginEmail(loginId),
-        JSON.stringify({ provisioned_by: 'school', school_code: code }),
-      ])
-    ).rows[0].id;
-    await t.query(`insert into public.membership (org_id, user_id, role) values ($1, $2, 'parent')`, [org, user]);
-    await t.query(`insert into lms.account (org_id, user_id, login_id, kind, display_name) values ($1, $2, $3, 'parent', $4)`, [
-      org,
-      user,
+    // The next P-number: one more than the highest, never a gap reused (0046).
+    const loginId = (await t.query<{ id: string }>(`select lms.next_parent_login($1) as id`, [org])).rows[0].id;
+    const user = await pgliteStore(t).createAccount({
+      orgId: org,
       loginId,
-      name,
-    ]);
+      kind: 'parent',
+      displayName: name,
+      email: loginEmail(loginId),
+      password: pin,
+      appMetadata: { provisioned_by: 'school', school_code: loginId.slice(0, loginId.lastIndexOf('-P')) },
+    });
     await setPin(t, loginId, user, pin);
-    await t.query(`insert into lms.guardian (parent_user_id, student_user_id, org_id) values ($1, $2, $3)`, [user, child.user_id, org]);
-    await t.query(`insert into lms.audit_event (org_id, actor, action, target) values ($1, $2, 'parent-added', $3)`, [
-      org,
-      caller,
-      `${loginId} ${studentId}`,
-    ]);
+    await t.query(`select lms.attach_parent($1, $2, $3, $4)`, [org, caller, loginId, studentId]);
     return { loginId, displayName: name, pin };
   });
 }
 
-/** What the school has now: this year's classes, its subjects, everybody's ID, rolls and classes taught, and its licence's seats. */
+/** What the school has now, as the preview reads it (0046's import_snapshot, the hosted function's too). */
 async function schoolSnapshot(db: PGlite, org: string): Promise<SchoolSnapshot> {
-  const school = (
-    await db.query<{ code: string; display_name: string; short_name: string | null; board: SchoolSnapshot['config']['board'] }>(
-      `select code, display_name, short_name, board from lms.school where org_id = $1`,
-      [org],
-    )
-  ).rows[0];
-  // This year as every other part of the school reads it (lms.current_year): the
-  // latest that has begun, or begins within the week.
-  const year = (
-    await db.query<{ id: string; label: string; starts_on: string; ends_on: string }>(
-      `select id, label, starts_on::text, ends_on::text from lms.academic_year where id = lms.current_year($1)`,
-      [org],
-    )
-  ).rows[0];
-  if (!school || !year) throw new ImportRefused(409, 'The school has no academic year yet.');
-  const accounts = (
-    await db.query<{
-      login_id: string;
-      kind: 'student' | 'teacher' | 'admin' | 'parent';
-      display_name: string;
-      class_name: string | null;
-      roll: string | null;
-      teaches: string[];
-    }>(
-      `select a.login_id, a.kind, a.display_name, en.class_name, en.roll,
-              coalesce((select array_agg(sec.grade || sec.name || ' ' || sub.name order by sec.grade, sec.name, sub.name)
-                          from lms.teaching_assignment ta
-                          join lms.section sec on sec.id = ta.section_id and sec.academic_year_id = $2
-                          join lms.subject sub on sub.id = ta.subject_id
-                         where ta.teacher_user_id = a.user_id), '{}') as teaches
-         from lms.account a
-         left join lateral (
-           select sec.grade || sec.name as class_name, e.roll_number as roll
-             from lms.enrolment e join lms.section sec on sec.id = e.section_id
-            where e.student_user_id = a.user_id and e.academic_year_id = $2 and e.left_on is null
-            limit 1
-         ) en on true
-        where a.org_id = $1`,
-      [org, year.id],
-    )
-  ).rows;
-  const sections = (
-    await db.query<{ name: string }>(`select grade || name as name from lms.section where academic_year_id = $1`, [year.id])
-  ).rows;
-  const subjects = (await db.query<{ name: string }>(`select name from lms.subject where org_id = $1 order by name`, [org])).rows;
-  // The licence's seats and those in use (0041); no row when no licence is set.
-  const licence = (
-    await db.query<{ seats: number; used: number }>(
-      `select l.seats, lms.seats_used(l.org_id) as used from lms.licence l where l.org_id = $1`,
-      [org],
-    )
-  ).rows[0];
-  return {
-    config: {
-      code: school.code,
-      displayName: school.display_name,
-      ...(school.short_name ? { shortName: school.short_name } : {}),
-      board: school.board,
-      year: { label: year.label, startsOn: year.starts_on, endsOn: year.ends_on },
-    },
-    accounts: accounts.map((a) => ({
-      loginId: a.login_id,
-      kind: a.kind,
-      displayName: a.display_name,
-      className: a.class_name,
-      roll: a.roll,
-      teaches: a.teaches,
-    })),
-    sections: sections.map((s) => s.name),
-    subjects: subjects.map((s) => s.name),
-    licence: licence ? { seats: licence.seats, used: licence.used } : null,
-  };
+  const snapshot = (await db.query<{ s: SchoolSnapshot | null }>(`select lms.import_snapshot($1) as s`, [org])).rows[0]?.s;
+  if (!snapshot) throw new ImportRefused(409, 'The school has no academic year yet.');
+  return snapshot;
 }

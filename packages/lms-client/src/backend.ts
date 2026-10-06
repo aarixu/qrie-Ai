@@ -178,9 +178,27 @@ export interface SupabaseLike extends RpcClient {
 /**
  * The hosted project. `relayUrl` is the relay's address (supabase/functions/
  * relay), which answers askAi on its /llm route with the caller's own token,
- * so the relay's gate counts it against them.
+ * so the relay's gate counts it against them. `adminUrl` is the lms-admin
+ * function's (supabase/functions/lms-admin), which answers the admin's
+ * importPeople, resetPin and addParent the same way, checking the token.
  */
-export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: string } = {}): Backend {
+export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: string; adminUrl?: string } = {}): Backend {
+  const token = async () => {
+    const session = (await supabase.auth.getSession()).data.session as { access_token?: string } | null;
+    if (!session?.access_token) throw new Error('Please sign in again.');
+    return session.access_token;
+  };
+  async function admin<T>(call: 'import' | 'reset-pin' | 'add-parent', body: unknown): Promise<T> {
+    if (!options.adminUrl) throw new Error('Adding people and giving PINs from the portal is not set up for this school yet.');
+    const res = await fetch(`${options.adminUrl.replace(/\/+$/, '')}/${call}`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${await token()}`, 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const answer = (await res.json().catch(() => null)) as (T & { error?: string }) | null;
+    if (!res.ok || !answer) throw new Error(answer?.error ?? `the school's server said ${res.status}`);
+    return answer;
+  }
   return {
     mode: 'supabase',
     async signIn(loginId, pin) {
@@ -205,18 +223,11 @@ export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: st
       if (error || !data) throw new Error(error?.message ?? 'no address for that photo');
       return data.signedUrl;
     },
-    async importPeople() {
-      // Creating sign-ins needs the service role, so on the hosted project
-      // this belongs in an edge function, which does not exist yet.
-      throw new Error('Adding people from the portal works in the demo school only, for now.');
-    },
-    async resetPin() {
-      throw new Error('New PINs from the portal work in the demo school only, for now.');
-    },
-    async addParent() {
-      // Creating a sign-in needs the service role: an edge function, as for importPeople.
-      throw new Error('Parent sign-ins from the portal work in the demo school only, for now.');
-    },
+    // Creating or changing a sign-in needs the service role, which only the
+    // lms-admin function holds.
+    importPeople: (request) => admin<ImportResponse>('import', request),
+    resetPin: (loginId) => admin<{ loginId: string; displayName: string; pin: string }>('reset-pin', { loginId }),
+    addParent: (request) => admin<{ loginId: string; displayName: string; pin: string }>('add-parent', request),
     async schoolBrand(code) {
       if (!SCHOOL_CODE.test(code)) return null;
       const { data, error } = await supabase.schema('lms').rpc('school_brand', { p_code: code });
@@ -225,11 +236,9 @@ export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: st
     },
     async askAi(chat) {
       if (!options.relayUrl) throw new Error(AI_OFF);
-      const session = (await supabase.auth.getSession()).data.session as { access_token?: string } | null;
-      if (!session?.access_token) throw new Error('Please sign in again.');
       const res = await fetch(`${options.relayUrl.replace(/\/+$/, '')}/llm`, {
         method: 'POST',
-        headers: { authorization: `Bearer ${session.access_token}`, 'content-type': 'application/json' },
+        headers: { authorization: `Bearer ${await token()}`, 'content-type': 'application/json' },
         body: JSON.stringify(chat),
       });
       const body = (await res.json().catch(() => null)) as {
