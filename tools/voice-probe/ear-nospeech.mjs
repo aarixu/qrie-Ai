@@ -10,8 +10,17 @@
  *
  * This replays no-speech clips and the eight spoken clips of the ear lab through
  * the ear's instruction as it is today and through variants that give the model
- * an explicit way to say "nobody spoke". The variant wins only if it silences
+ * an explicit way to say "nobody spoke". A variant wins only if it silences
  * every non-speech clip AND leaves the spoken ones as accurate as before.
+ *
+ * THE SECOND ROUND (same day). The first fix, one sentence naming [NO_SPEECH],
+ * silenced noise, hum, a tone, a rumble and clicks on the live relay, but pure
+ * digital silence of 2 s and 3 s still came back as the invented line while
+ * 1.5 s and 2.5 s came back empty. So silence is now tried at six lengths, as
+ * exact zeros and as the faint dither a real microphone always has, and the
+ * variants are compared on all of it. The model's behaviour on silence turned
+ * out to hang on small wording, which is why a measurement and not an opinion
+ * picks the wording that ships.
  *
  *   node tools/voice-probe/ear-nospeech.mjs --spend [clips-dir]
  * Key file: VERTEX_SA, else .secrets/vertex-service-account.json. Spends paise.
@@ -46,32 +55,33 @@ let seed = 12345;
 const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296) - 0.5;
 const make = (secs, f) => wav(Float32Array.from({ length: Math.floor(16000 * secs) }, (_, i) => f(i)));
 let brown = 0;
-const nonSpeech = [
-  ['silence 2 s', make(2, () => 0)],
+const nonSpeech = [];
+for (const secs of [1, 1.5, 2, 2.5, 3, 4]) nonSpeech.push([`zeros ${secs} s`, make(secs, () => 0)]);
+for (const secs of [1, 1.5, 2, 2.5, 3, 4]) nonSpeech.push([`faint mic floor ${secs} s`, make(secs, () => 0.0006 * rnd())]);
+nonSpeech.push(
   ['white noise 2 s', make(2, () => 0.2 * rnd())],
   ['tone 220 Hz 2 s', make(2, (i) => 0.2 * Math.sin((2 * Math.PI * 220 * i) / 16000))],
   ['hum + noise 3 s', make(3, (i) => 0.1 * Math.sin((2 * Math.PI * 100 * i) / 16000) + 0.08 * rnd())],
   ['fan-like rumble 3 s', make(3, () => (brown = Math.max(-0.5, Math.min(0.5, brown + 0.04 * rnd()))))],
   ['clicks (keyboard) 3 s', make(3, (i) => (i % 8000 < 60 ? 0.6 * rnd() : 0.003 * rnd()))],
-];
+);
 const refs = JSON.parse(readFileSync(join(DIR, 'refs.json'), 'utf8'));
 const spoken = readdirSync(DIR)
   .filter((f) => /^s\d\d-app\.wav$/.test(f))
   .map((f) => ({ name: f, ref: refs[Number(f.slice(1, 3))], bytes: readFileSync(join(DIR, f)) }));
 
 // ---------------------------------------------------------------- the instructions
-const NO_SPEECH = 'Nobody is speaking in this audio. The only valid output is exactly: [NO_SPEECH]';
+const BASE = HEAR_INSTRUCTION.split('\n').slice(0, 4).join('\n'); // the four lines before the no-speech sentence
+const ONE = 'If the audio has no clear human speech (silence, noise, a hum, music, a cough, a tap), output exactly [NO_SPEECH] and nothing else. Never invent, guess or complete words that were not clearly spoken: a wrong transcript is worse than [NO_SPEECH].';
 const variants = [
-  ['today', HEAR_INSTRUCTION],
+  ['deployed (one sentence)', HEAR_INSTRUCTION],
   [
-    'sentinel',
-    HEAR_INSTRUCTION.replace('If there is no speech, output nothing.', '') +
-      '\nIf the audio has no clear human speech (silence, noise, a hum, music, a cough, a tap), output exactly [NO_SPEECH] and nothing else. Never invent, guess or complete words that were not clearly spoken: a wrong transcript is worse than [NO_SPEECH].',
+    'one sentence + examples',
+    `${BASE}\n${ONE}\nExamples: silence -> [NO_SPEECH]; room noise -> [NO_SPEECH]; a faint unclear mumble -> [NO_SPEECH]; "pata nahi" clearly spoken -> pata nahi.`,
   ],
   [
-    'sentinel+examples',
-    HEAR_INSTRUCTION.replace('If there is no speech, output nothing.', '') +
-      '\nIf the audio has no clear human speech (silence, noise, a hum, music, a cough, a tap, a fan), output exactly [NO_SPEECH] and nothing else. Never invent, guess or complete words that were not clearly spoken: a wrong transcript is worse than [NO_SPEECH].\nExamples: silence -> [NO_SPEECH]; room noise -> [NO_SPEECH]; a faint unclear mumble -> [NO_SPEECH]; "pata nahi" clearly spoken -> pata nahi.',
+    'rule first, then examples',
+    `If the audio has no clear human speech at all - total silence, a faint hiss, noise, a hum, music, a cough, a tap - your whole answer is exactly [NO_SPEECH]. Never invent, guess or complete words that were not clearly spoken: a wrong transcript is worse than [NO_SPEECH].\n${BASE}\nExamples: total silence -> [NO_SPEECH]; room noise -> [NO_SPEECH]; a faint unclear mumble -> [NO_SPEECH]; "pata nahi" clearly spoken -> pata nahi.`,
   ],
 ];
 
@@ -104,11 +114,11 @@ const isNone = (t) => t === '' || /^\[?\s*no[_ ]speech\s*\]?\.?$/i.test(t);
 for (const [name, system] of variants) {
   const ns = await Promise.all(nonSpeech.map(([, b]) => hear(system, b)));
   const sp = await Promise.all(spoken.map((c) => hear(system, c.bytes)));
-  const invented = ns.filter((t) => !isNone(t));
+  const invented = nonSpeech.map(([n], i) => [n, ns[i]]).filter(([, t]) => !isNone(t));
   const lost = sp.filter((t) => isNone(t));
   const meanWer = sp.reduce((s, t, i) => s + (isNone(t) ? 1 : wer(spoken[i].ref, t)), 0) / sp.length;
   console.log(`\n== ${name}`);
   console.log(`   no-speech clips answered with words: ${invented.length}/${nonSpeech.length}`);
-  nonSpeech.forEach(([n], i) => console.log(`     ${n.padEnd(24)} -> ${ns[i] === '' ? '(empty)' : ns[i]}`));
+  for (const [n, t] of invented) console.log(`     INVENTED  ${n.padEnd(26)} -> ${t}`);
   console.log(`   spoken clips: mean WER ${(meanWer * 100).toFixed(0)}%, treated as no speech: ${lost.length}/${sp.length}`);
 }

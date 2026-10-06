@@ -43,16 +43,20 @@ import { romaniseDevanagari } from './romanise.ts';
 export const VERTEX_HEAR_MODEL = 'gemini-3.1-flash-lite';
 
 export const HEAR_INSTRUCTION = [
+  // THE RULE FOR "NOBODY SPOKE" COMES FIRST, WITH EXAMPLES AT THE END. The old last line, "If
+  // there is no speech, output nothing", did not work: silence, white noise, a tone, a hum, a
+  // fan rumble and keyboard clicks all came back as "sir photosynthesis kya hota hai", a
+  // question in no audio and no file of this repo (2026-10-06). One sentence naming [NO_SPEECH]
+  // as the LAST line silenced the noise but not exact digital silence of 2, 3 and 4 s: 3 of 17
+  // no-speech clips still got the invented line on the live relay. This order and these
+  // examples answered 0 of the same 17 with words and heard eight spoken clips at a mean WER
+  // of 1% (tools/voice-probe/ear-nospeech.mjs). `heardFrom` turns the word back into "".
+  'If the audio has no clear human speech at all - total silence, a faint hiss, noise, a hum, music, a cough, a tap - your whole answer is exactly [NO_SPEECH]. Never invent, guess or complete words that were not clearly spoken: a wrong transcript is worse than [NO_SPEECH].',
   'You are a speech-to-text engine for an Indian school tutoring app. You output ONLY the words spoken, nothing else.',
   'The speaker is a student aged 11-18 who speaks English, Hindi, or Hinglish (a mix).',
   'ALWAYS write in the Latin alphabet (a-z). Write every Hindi word the way Indians type it in chats, in Roman letters: "मुझे लगता है" -> "mujhe lagta hai", "पता नहीं" -> "pata nahi", "हां समझ आ गया" -> "haan samajh aa gaya". NEVER output Devanagari characters.',
   'Keep English words in English spelling (hint, energy, oxygen, cramp). Do not translate, correct grammar, summarise or answer the question.',
-  // "If there is no speech, output nothing" did not work: silence, white noise, a tone, a hum, a
-  // fan rumble and keyboard clicks all came back as "sir photosynthesis kya hota hai", a question
-  // in no audio and no file of this repo (2026-10-06, tools/voice-probe/ear-nospeech.mjs). Given
-  // a word to say instead, the same model answered 0 of those 6 with words and heard eight
-  // spoken clips as before (mean WER 3% to 2%). `heardFrom` turns the word back into "".
-  'If the audio has no clear human speech (silence, noise, a hum, music, a cough, a tap), output exactly [NO_SPEECH] and nothing else. Never invent, guess or complete words that were not clearly spoken: a wrong transcript is worse than [NO_SPEECH].',
+  'Examples: total silence -> [NO_SPEECH]; room noise -> [NO_SPEECH]; a faint unclear mumble -> [NO_SPEECH]; "pata nahi" clearly spoken -> pata nahi.',
 ].join('\n');
 
 /** The model's word for "nobody spoke". Brackets are required, so a student who says "no speech" is heard. */

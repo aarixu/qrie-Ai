@@ -60,15 +60,15 @@ export const COMPRESSED_HEAR_SECONDS = 12;
  * 3.52 s and 4.24 s: 247, 253 and 271 prompt tokens — 25 a second and 165
  * besides, on all three.
  *
- * 165 became 218 on 2026-10-06 when the instruction gained its "[NO_SPEECH]"
- * sentence (vertexHear.ts). Measured again with
+ * 165 became 267 on 2026-10-06 when the instruction gained its "[NO_SPEECH]"
+ * rule and examples (vertexHear.ts). Measured again with
  * tools/voice-probe/ear-instruction-tokens.mjs on 2 s, 4 s and 8 s of audio:
- * 268, 318 and 418 prompt tokens, which is 25.0 a second and 218 besides.
+ * 317, 367 and 467 prompt tokens, which is 25.0 a second and 267 besides.
  * Change the instruction and this number must be measured again, or every
  * answer is settled a couple of seconds long.
  */
 export const AUDIO_TOKENS_PER_SECOND = 25;
-export const HEAR_INSTRUCTION_TOKENS = 218;
+export const HEAR_INSTRUCTION_TOKENS = 267;
 
 /** How many seconds of audio Vertex says it heard. */
 export function heardSeconds(promptTokens: number): number {

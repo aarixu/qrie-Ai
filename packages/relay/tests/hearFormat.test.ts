@@ -68,9 +68,9 @@ describe('hearFormat', () => {
     expect(hearFormat('text/plain')).toBeNull();
   });
 
-  it('reads the seconds Vertex heard from its prompt tokens (measured 2026-10-06: 268 tokens for 2 s, 418 for 8 s)', () => {
-    expect(heardSeconds(268)).toBeCloseTo(2, 1);
-    expect(heardSeconds(418)).toBeCloseTo(8, 1);
+  it('reads the seconds Vertex heard from its prompt tokens (measured 2026-10-06: 317 tokens for 2 s, 467 for 8 s)', () => {
+    expect(heardSeconds(317)).toBeCloseTo(2, 1);
+    expect(heardSeconds(467)).toBeCloseTo(8, 1);
     expect(heardSeconds(100)).toBe(0);
   });
 });

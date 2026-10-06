@@ -81,6 +81,11 @@ describe('hearOnVertex', () => {
     });
     expect(system).toContain('[NO_SPEECH]');
     expect(system).toMatch(/Never invent/);
+    // Order matters, and was measured: as the LAST line the rule left 3 of 17 no-speech clips
+    // inventing a question (exact digital silence of 2, 3 and 4 s); first, with examples
+    // after the rest, it left none (tools/voice-probe/ear-nospeech.mjs).
+    expect(system.split('\n')[0]).toContain('[NO_SPEECH]');
+    expect(system.split('\n').at(-1)).toMatch(/^Examples: total silence -> \[NO_SPEECH\]/);
   });
 
   it.each(['[NO_SPEECH]', '[NO_SPEECH].', '  [no_speech]  ', '"[NO_SPEECH]"', '[NO SPEECH]'])(
