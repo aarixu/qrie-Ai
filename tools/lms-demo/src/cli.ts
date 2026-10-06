@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 import type { CreatedAccount } from '../../lms-import/src/apply.ts';
 import { isSeeded, openDemoDatabase } from './database.ts';
 import { seedDemoSchool, type Planted } from './seed.ts';
-import { diskWork, startDemoServer } from './server.ts';
+import { vertexAiFromKey } from './ai.ts';
+import { diskWork, startDemoServer, type DemoAi } from './server.ts';
 
 /**
  * npm run demo [-- --reset] [-- --port 54400]
@@ -70,8 +71,24 @@ async function main(): Promise<void> {
     fs.writeFileSync(path.join(DATA, 'planted.json'), `${JSON.stringify(seeded.planted, null, 2)}\n`);
   }
 
-  const server = await startDemoServer({ db, port, work: diskWork(path.join(DATA, 'work')) });
+  // "Draft with AI" runs only with Qrie's Google Cloud key, as the relay's does.
+  let ai: DemoAi | undefined;
+  const key = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  if (key) {
+    try {
+      ai = vertexAiFromKey(key);
+    } catch (e) {
+      console.error(`GOOGLE_SERVICE_ACCOUNT_JSON is set but unusable (${(e as Error).message}); Draft with AI stays off.`);
+    }
+  }
+
+  const server = await startDemoServer({ db, port, work: diskWork(path.join(DATA, 'work')), ai });
   console.log(`\nDemo school running at ${server.url}`);
+  console.log(
+    ai
+      ? 'Draft with AI: on, billed to the Google Cloud project in GOOGLE_SERVICE_ACCOUNT_JSON.'
+      : 'Draft with AI: off. Set GOOGLE_SERVICE_ACCOUNT_JSON to a service-account key to switch it on.',
+  );
   console.log(`Sign-in IDs and PINs: ${path.join(DATA, 'logins.md')}`);
   console.log('Stop with Ctrl+C.\n');
 

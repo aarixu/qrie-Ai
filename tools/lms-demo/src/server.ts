@@ -5,6 +5,8 @@ import type { AddressInfo } from 'node:net';
 import path from 'node:path';
 import type { PGlite } from '@electric-sql/pglite';
 import { think } from '../../../packages/lms-brain/src/index.ts';
+import { AI_OFF } from '../../../packages/lms-client/src/backend.ts';
+import { DRAFT_MODEL } from '../../../packages/lms-client/src/drafts.ts';
 import { pgliteTransport } from '../../../packages/lms-client/src/transport.ts';
 import { checkPin } from './auth.ts';
 import { ImportRefused, importForAdmin, resetPinForAdmin } from './import.ts';
@@ -25,6 +27,7 @@ import { ImportRefused, importForAdmin, resetPinForAdmin } from './import.ts';
  *                                      the admin adding people (./import.ts)
  *   POST /admin/reset-pin {loginId}    → {loginId, displayName, pin}
  *   GET  /public/school-brand/<code>   → {rows}   the sign-in screen's school look, unsigned
+ *   POST /ai/chat {drafting request}    → {text}   a teacher's "Draft with AI" (opts.ai)
  *
  * Every database call runs as `authenticated` with auth.uid() set to the
  * caller, so RLS decides what each person sees, as in production. It listens
@@ -80,12 +83,24 @@ class HttpError extends Error {
   }
 }
 
+/**
+ * The model behind "Draft with AI": given the teacher's request (lms-client
+ * drafts.ts), its answer's text or why there is none. Absent, the demo says
+ * drafting is not switched on (cli.ts sets it from GOOGLE_SERVICE_ACCOUNT_JSON).
+ */
+export type DemoAi = (chat: Record<string, unknown>) => Promise<{ text: string } | { error: string }>;
+
+/** How many times an hour one person may ask the AI. */
+const AI_PER_HOUR = 20;
+
 export async function startDemoServer(opts: {
   db: PGlite;
   port?: number;
   work?: WorkStore;
+  ai?: DemoAi;
 }): Promise<DemoServer> {
   const { db } = opts;
+  const aiAsked = new Map<string, number[]>();
   const work = opts.work ?? memoryWork();
   const signed = new Map<string, { name: string; until: number }>();
 
@@ -180,6 +195,30 @@ export async function startDemoServer(opts: {
         if (e instanceof ImportRefused) throw new HttpError(e.status, e.message);
         throw e;
       }
+    }
+
+    // A teacher's or the admin's "Draft with AI", and nothing else: the
+    // drafting model, asked for JSON, at most AI_PER_HOUR times an hour each.
+    if (req.method === 'POST' && route === '/ai/chat') {
+      const me = await caller(req);
+      const kind = (await db.query<{ kind: string }>(`select kind from lms.account where user_id = $1`, [me])).rows[0]?.kind;
+      if (kind !== 'teacher' && kind !== 'admin') {
+        throw new HttpError(403, 'Only a teacher or the school admin can draft questions with AI.');
+      }
+      const chat = json();
+      if (chat.model !== DRAFT_MODEL || (chat.response_format as { type?: unknown } | undefined)?.type !== 'json_object') {
+        throw new HttpError(400, 'This demo asks the AI for question drafts only.');
+      }
+      if (!opts.ai) throw new HttpError(501, AI_OFF);
+      const hourAgo = Date.now() - 60 * 60 * 1000;
+      const recent = (aiAsked.get(me) ?? []).filter((t) => t > hourAgo);
+      if (recent.length >= AI_PER_HOUR) {
+        throw new HttpError(429, 'That is a lot of drafting in one hour. Try again a little later.');
+      }
+      aiAsked.set(me, [...recent, Date.now()]);
+      const r = await opts.ai(chat);
+      if ('error' in r) throw new HttpError(502, `The AI could not answer: ${r.error}`);
+      return send(res, 200, { text: r.text });
     }
 
     const call = /^\/(rows|value)\/([a-z_]+)$/.exec(route);

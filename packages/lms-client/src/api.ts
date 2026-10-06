@@ -1,3 +1,4 @@
+import type { QuestionDraft } from './drafts.ts';
 import type { Transport } from './transport.ts';
 
 /**
@@ -95,6 +96,43 @@ export interface NewItem {
   kind?: 'mcq' | 'task';
   options?: string[];
   correctIndex?: number;
+}
+
+/** Drafts an AI wrote, to keep in the caller's own queue (0043). */
+export interface NewItemDrafts {
+  grade: number;
+  subject: string;
+  /** The topic they are on; must be of the same class and subject. */
+  outcomeId?: string | null;
+  /** The model that wrote them. */
+  model: string;
+  drafts: QuestionDraft[];
+}
+
+/** One drafted question waiting for its teacher (0043). */
+export interface ItemDraft {
+  draftId: string;
+  grade: number;
+  subject: string;
+  outcomeId: string | null;
+  chapter: string | null;
+  topic: string | null;
+  stem: string;
+  options: string[];
+  correctIndex: number;
+  /** For each option, the mistake it catches; '' for none. Null when the draft had none. */
+  misconceptions: string[] | null;
+  model: string;
+  createdAt: string;
+}
+
+/** A draft as the teacher edited it, to add as their own question. */
+export interface DraftEdit {
+  stem: string;
+  options: string[];
+  correctIndex: number;
+  /** Omitted: the draft's own, when the options are as many as before. */
+  misconceptions?: string[];
 }
 
 export interface NewAssignment {
@@ -792,6 +830,32 @@ export function createLmsClient(t: Transport) {
         p_correct_index: item.correctIndex,
         p_outcome: item.outcomeId,
       })) as string;
+    },
+    /** Keeps an AI's drafts in the caller's queue; returns how many. */
+    async saveItemDrafts(d: NewItemDrafts): Promise<number> {
+      return Number(
+        await t.value('save_item_drafts', {
+          p_grade: d.grade,
+          p_subject: d.subject,
+          p_outcome: d.outcomeId ?? null,
+          p_model: d.model,
+          p_drafts: d.drafts,
+        }),
+      );
+    },
+    myItemDrafts: () => rows<ItemDraft>('my_item_drafts'),
+    /** Adds a draft, as edited, as the caller's own question; returns the question's id. */
+    async acceptItemDraft(draftId: string, edit: DraftEdit): Promise<string> {
+      return (await t.value('accept_item_draft', {
+        p_draft: draftId,
+        p_stem: edit.stem,
+        p_options: edit.options,
+        p_correct_index: edit.correctIndex,
+        p_misconceptions: edit.misconceptions ?? null,
+      })) as string;
+    },
+    async discardItemDraft(draftId: string): Promise<void> {
+      await t.value('discard_item_draft', { p_draft: draftId });
     },
     async createAssignment(a: NewAssignment): Promise<string> {
       return (await t.value('create_assignment', {

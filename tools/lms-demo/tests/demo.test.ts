@@ -1,7 +1,16 @@
 // @vitest-environment node
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { demoBackend, memorySession, workPath, type Backend } from '../../../packages/lms-client/src/index.ts';
+import {
+  DRAFT_MODEL,
+  demoBackend,
+  draftChat,
+  draftQuestions,
+  memorySession,
+  workPath,
+  type Backend,
+  type DraftAsk,
+} from '../../../packages/lms-client/src/index.ts';
 import { openDemoDatabase } from '../src/database.ts';
 import { seedDemoSchool, type Seeded } from '../src/seed.ts';
 import { startDemoServer, type DemoServer } from '../src/server.ts';
@@ -431,6 +440,98 @@ describe('adding people from the school portal', () => {
     const t = await signedIn('DEMO-T01');
     await expect(t.resetPin('DEMO-8A-3')).rejects.toThrow(/only the school admin/i);
     await expect(admin.resetPin('NOPE-1')).rejects.toThrow(/no one in your school/i);
+  });
+});
+
+describe('drafting questions with AI', () => {
+  // The demo server as it runs with Qrie's AI key: here a stand-in that
+  // answers what it is told to, so no test calls a real model.
+  let answer: () => { text: string } | { error: string };
+  const asked: Record<string, unknown>[] = [];
+  let aiServer: DemoServer;
+  beforeAll(async () => {
+    aiServer = await startDemoServer({
+      db,
+      port: 0,
+      ai: async (chat) => {
+        asked.push(chat);
+        return answer();
+      },
+    });
+  });
+  afterAll(async () => {
+    await aiServer?.close();
+  });
+  const on = async (id: string, url = aiServer.url): Promise<Backend> => {
+    const b = demoBackend(url, memorySession());
+    await b.signIn(id, login(id).pin);
+    return b;
+  };
+  const ask: DraftAsk & { outcomeId: null } = {
+    grade: 8,
+    subject: 'Mathematics',
+    chapter: 'Rational numbers',
+    topic: null,
+    outcomeId: null,
+    count: 3,
+  };
+  const question = (stem: string) => ({
+    stem,
+    options: ['1/2', '1/3', '2/3', '3/2'],
+    correctIndex: 2,
+    misconceptions: ['Adds the numerators only', 'Thinks a smaller denominator means smaller', '', 'Turns the fraction upside down'],
+  });
+
+  it("puts the AI's usable questions in the asking teacher's queue, and says how many it dropped", async () => {
+    answer = () => ({ text: JSON.stringify({ questions: [question('What is 1/3 + 1/3?'), { stem: 'broken' }, question('Which is equal to 4/6?')] }) });
+    const neha = await on('DEMO-T01');
+    expect(await draftQuestions(neha, ask)).toEqual({ kept: 2, rejected: 1 });
+    const queue = await neha.api.myItemDrafts();
+    expect(queue.slice(0, 2).map((d) => [d.stem, d.model])).toEqual([
+      ['Which is equal to 4/6?', DRAFT_MODEL],
+      ['What is 1/3 + 1/3?', DRAFT_MODEL],
+    ]);
+    // Nothing about a child goes to the model: only the class, subject and chapter.
+    const sent = JSON.stringify(asked.at(-1));
+    expect(sent).toContain('Rational numbers');
+    for (const l of seeded.logins.filter((x) => x.kind === 'student').slice(0, 20)) expect(sent).not.toContain(l.displayName);
+    expect((await (await on('DEMO-T02')).api.myItemDrafts()).map((d) => d.stem)).not.toContain('Which is equal to 4/6?');
+  });
+
+  it('keeps nothing, and says so plainly, when the answer has no usable question in it', async () => {
+    const neha = await on('DEMO-T01');
+    const before = (await neha.api.myItemDrafts()).length;
+    answer = () => ({ text: 'Sure! Here are your questions.' });
+    await expect(draftQuestions(neha, ask)).rejects.toThrow(/could not be read/);
+    answer = () => ({ text: JSON.stringify({ questions: [{ stem: 'broken' }] }) });
+    await expect(draftQuestions(neha, ask)).rejects.toThrow(/no usable questions/);
+    answer = () => ({ error: 'quota exceeded' });
+    await expect(draftQuestions(neha, ask)).rejects.toThrow(/The AI could not answer/);
+    expect((await neha.api.myItemDrafts()).length).toBe(before);
+  });
+
+  it('is for teachers and the admin only, and answers question drafts only', async () => {
+    answer = () => ({ text: JSON.stringify({ questions: [question('Admin question?')] }) });
+    expect(await draftQuestions(await on('DEMO-T05'), { ...ask, count: 1 })).toEqual({ kept: 1, rejected: 0 });
+    const kid = await on('DEMO-8A-3');
+    await expect(kid.askAi(draftChat(ask))).rejects.toThrow(/Only a teacher or the school admin/);
+    const neha = await on('DEMO-T01');
+    await expect(neha.askAi({ ...draftChat(ask), model: 'google/gemini-3.8-flash' })).rejects.toThrow(/question drafts only/);
+    await expect(neha.askAi({ ...draftChat(ask), response_format: undefined } as never)).rejects.toThrow(/question drafts only/);
+  });
+
+  it('says plainly when AI is not switched on for this demo', async () => {
+    const neha = await on('DEMO-T01', server.url);
+    await expect(neha.askAi(draftChat(ask))).rejects.toThrow(/not switched on/);
+  });
+
+  it('asks at most 20 times an hour for any one teacher', async () => {
+    answer = () => ({ text: JSON.stringify({ questions: [] }) });
+    const anil = await on('DEMO-T03');
+    for (let i = 0; i < 20; i += 1) await anil.askAi(draftChat(ask));
+    await expect(anil.askAi(draftChat(ask))).rejects.toThrow(/a little later/);
+    // Another teacher still can.
+    await (await on('DEMO-T02')).askAi(draftChat(ask));
   });
 });
 

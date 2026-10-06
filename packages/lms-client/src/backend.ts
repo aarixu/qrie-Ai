@@ -1,3 +1,4 @@
+import type { DraftChat } from './drafts.ts';
 import { createLmsClient, type LmsClient } from './api.ts';
 import { loginEmail } from './login.ts';
 import type { HeadingRead } from './sheets.ts';
@@ -36,6 +37,12 @@ export interface Backend {
   resetPin(loginId: string): Promise<{ loginId: string; displayName: string; pin: string }>;
   /** A school's name, colours and logo by its code, for the sign-in screen; null for no such school. */
   schoolBrand(code: string): Promise<SchoolPublicBrand | null>;
+  /**
+   * A teacher's or the admin's request for drafted questions (drafts.ts),
+   * answered by the AI; returns the answer's text. Throws an Error whose
+   * message can be shown as it is.
+   */
+  askAi(chat: DraftChat): Promise<string>;
 }
 
 export interface SchoolPublicBrand {
@@ -162,7 +169,12 @@ export interface SupabaseLike extends RpcClient {
   };
 }
 
-export function supabaseBackend(supabase: SupabaseLike): Backend {
+/**
+ * The hosted project. `relayUrl` is the relay's address (supabase/functions/
+ * relay), which answers askAi on its /llm route with the caller's own token,
+ * so the relay's gate counts it against them.
+ */
+export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: string } = {}): Backend {
   return {
     mode: 'supabase',
     async signIn(loginId, pin) {
@@ -201,8 +213,29 @@ export function supabaseBackend(supabase: SupabaseLike): Backend {
       if (error) throw new Error(error.message);
       return publicBrand(Array.isArray(data) ? (data[0] as Record<string, unknown> | undefined) : undefined);
     },
+    async askAi(chat) {
+      if (!options.relayUrl) throw new Error(AI_OFF);
+      const session = (await supabase.auth.getSession()).data.session as { access_token?: string } | null;
+      if (!session?.access_token) throw new Error('Please sign in again.');
+      const res = await fetch(`${options.relayUrl.replace(/\/+$/, '')}/llm`, {
+        method: 'POST',
+        headers: { authorization: `Bearer ${session.access_token}`, 'content-type': 'application/json' },
+        body: JSON.stringify(chat),
+      });
+      const body = (await res.json().catch(() => null)) as {
+        choices?: { message?: { content?: unknown } }[];
+        error?: { message?: string };
+      } | null;
+      if (!res.ok) throw new Error(`The AI could not answer: ${body?.error?.message ?? res.status}`);
+      const text = body?.choices?.[0]?.message?.content;
+      if (typeof text !== 'string') throw new Error('The AI could not answer: it sent no text.');
+      return text;
+    },
   };
 }
+
+/** Said when no AI is set up for this school's server. */
+export const AI_OFF = 'Drafting with AI is not switched on for this school yet.';
 
 // ---------------------------------------------------------------------------
 // The demo server.
@@ -317,6 +350,9 @@ export function demoBackend(baseUrl: string, session: SessionStore = memorySessi
       if (!SCHOOL_CODE.test(code)) return null;
       const { rows } = (await (await send(`/public/school-brand/${code}`)).json()) as { rows: Record<string, unknown>[] };
       return publicBrand(rows[0]);
+    },
+    async askAi(chat) {
+      return ((await post('/ai/chat', chat)) as { text: string }).text;
     },
   };
 }

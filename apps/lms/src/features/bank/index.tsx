@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { friendlyError } from '@ai-tutor/lms-client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CheckCheck, PenLine } from 'lucide-react'
+import { CheckCheck, PenLine, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
 import { api } from '@/lib/backend'
 import { chapterTitle } from '@/lib/curriculum'
@@ -21,6 +21,7 @@ import { Loading, Page, Problem } from '@/components/layout/page'
 import { QuestionView } from '@/features/questions/question-view'
 import { TopicFilter } from '@/features/questions/topic-filter'
 import { WriteQuestionDialog } from '@/features/questions/write-question-dialog'
+import { DraftQueue, DraftWithAiDialog } from './ai-drafts'
 
 const PAGE = 30
 
@@ -50,6 +51,7 @@ export function QuestionBank() {
   })
   const [limit, setLimit] = useState(PAGE)
   const [writing, setWriting] = useState(false)
+  const [drafting, setDrafting] = useState(false)
   const queryClient = useQueryClient()
 
   const bank = useQuery({
@@ -85,12 +87,18 @@ export function QuestionBank() {
       description='Approve a question once, and every teacher at your school can set it.'
       actions={
         grade !== undefined && (
-          <Button onClick={() => setWriting(true)}>
-            <PenLine /> Write a question
-          </Button>
+          <div className='flex flex-wrap gap-2'>
+            <Button variant='outline' onClick={() => setDrafting(true)}>
+              <Sparkles /> Draft with AI
+            </Button>
+            <Button onClick={() => setWriting(true)}>
+              <PenLine /> Write a question
+            </Button>
+          </div>
         )
       }
     >
+      <DraftQueue />
       {classes.isPending ? (
         <Loading what='your classes' />
       ) : classes.isError ? (
@@ -194,6 +202,16 @@ export function QuestionBank() {
             </Button>
           )}
         </>
+      )}
+      {grade !== undefined && subject !== undefined && drafting && (
+        <DraftWithAiDialog
+          open={drafting}
+          onOpenChange={setDrafting}
+          grade={grade}
+          subject={subject}
+          chapter={place.chapter}
+          outcome={place.outcome}
+        />
       )}
       {grade !== undefined && subject !== undefined && (
         <WriteQuestionDialog

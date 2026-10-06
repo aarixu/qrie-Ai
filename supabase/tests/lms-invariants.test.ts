@@ -74,6 +74,8 @@ describe('the lms schema', () => {
       'guard_set_for()',
       'seats_used(p_org uuid)',
       'require_seat(p_org uuid)',
+      'usable_question(p_stem text, p_options jsonb, p_correct integer, p_labels jsonb)',
+      'own_draft(p_draft uuid)',
       'set_licence(p_code text, p_plan text, p_seats integer, p_until date)',
       'founder_schools()',
     ];
