@@ -47,8 +47,16 @@ export const HEAR_INSTRUCTION = [
   'The speaker is a student aged 11-18 who speaks English, Hindi, or Hinglish (a mix).',
   'ALWAYS write in the Latin alphabet (a-z). Write every Hindi word the way Indians type it in chats, in Roman letters: "मुझे लगता है" -> "mujhe lagta hai", "पता नहीं" -> "pata nahi", "हां समझ आ गया" -> "haan samajh aa gaya". NEVER output Devanagari characters.',
   'Keep English words in English spelling (hint, energy, oxygen, cramp). Do not translate, correct grammar, summarise or answer the question.',
-  'If there is no speech, output nothing.',
+  // "If there is no speech, output nothing" did not work: silence, white noise, a tone, a hum, a
+  // fan rumble and keyboard clicks all came back as "sir photosynthesis kya hota hai", a question
+  // in no audio and no file of this repo (2026-10-06, tools/voice-probe/ear-nospeech.mjs). Given
+  // a word to say instead, the same model answered 0 of those 6 with words and heard eight
+  // spoken clips as before (mean WER 3% to 2%). `heardFrom` turns the word back into "".
+  'If the audio has no clear human speech (silence, noise, a hum, music, a cough, a tap), output exactly [NO_SPEECH] and nothing else. Never invent, guess or complete words that were not clearly spoken: a wrong transcript is worse than [NO_SPEECH].',
 ].join('\n');
+
+/** The model's word for "nobody spoke". Brackets are required, so a student who says "no speech" is heard. */
+const NO_SPEECH = /^\[\s*no[_ ]speech\s*\]\.?$/i;
 
 /** How long one call may take before it is given up. */
 const HEAR_TIMEOUT_MS = 8_000;
@@ -174,14 +182,14 @@ export async function hearOnVertex(
 }
 
 function heardFrom(reply: Reply): VertexHeard {
-  const text = romaniseDevanagari(
-    (reply.candidates?.[0]?.content?.parts ?? [])
-      .map((p) => p.text ?? '')
-      .join('')
-      .trim()
-      .replace(/^["'“”]+|["'“”]+$/g, '')
-      .trim(),
-  );
+  const said = (reply.candidates?.[0]?.content?.parts ?? [])
+    .map((p) => p.text ?? '')
+    .join('')
+    .trim()
+    .replace(/^["'“”]+|["'“”]+$/g, '')
+    .trim();
+  // An empty transcript is what the app already reads as silence (ear.ts: `text ? heard : silence`).
+  const text = NO_SPEECH.test(said) ? '' : romaniseDevanagari(said);
   const promptTokens = count(reply.usageMetadata?.promptTokenCount);
   const outputTokens = count(reply.usageMetadata?.candidatesTokenCount);
   return {

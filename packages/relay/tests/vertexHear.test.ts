@@ -61,6 +61,48 @@ describe('hearOnVertex', () => {
     expect(out.response.body).toEqual({ kind: 'json', value: { text: 'haan, samajh gaya' } });
   });
 
+  /**
+   * THE EAR INVENTED A STUDENT (2026-10-06). Sent silence, white noise, a tone,
+   * a hum, a fan rumble and keyboard clicks, the instruction "If there is no
+   * speech, output nothing" got "sir photosynthesis kya hota hai" back on all
+   * six, and the tutor would have answered a question nobody asked. Given an
+   * explicit word to say instead, the same model answered it 0 of 6 times and
+   * heard eight spoken clips as well as before (mean WER 3% to 2%,
+   * tools/voice-probe/ear-nospeech.mjs).
+   */
+  it('gives the model an explicit way to say nobody spoke', async () => {
+    let system = '';
+    await hearOnVertex(new Uint8Array([1]), 'audio/wav', {
+      tokens,
+      fetch: (async (_url: string, init: RequestInit) => {
+        system = JSON.parse(String(init.body)).systemInstruction.parts[0].text;
+        return reply('[NO_SPEECH]');
+      }) as unknown as typeof fetch,
+    });
+    expect(system).toContain('[NO_SPEECH]');
+    expect(system).toMatch(/Never invent/);
+  });
+
+  it.each(['[NO_SPEECH]', '[NO_SPEECH].', '  [no_speech]  ', '"[NO_SPEECH]"', '[NO SPEECH]'])(
+    'turns the model\'s %j into an empty transcript, which the app already treats as silence',
+    async (said) => {
+      const out = await hearOnVertex(new Uint8Array([1]), 'audio/wav', {
+        tokens,
+        fetch: (async () => reply(said)) as unknown as typeof fetch,
+      });
+      expect(out.status).toBe(200);
+      expect(out.response.body).toEqual({ kind: 'json', value: { text: '' } });
+    },
+  );
+
+  it('does not swallow a student who really says those words', async () => {
+    const out = await hearOnVertex(new Uint8Array([1]), 'audio/wav', {
+      tokens,
+      fetch: (async () => reply('no speech wala part samajh nahi aaya')) as unknown as typeof fetch,
+    });
+    expect(out.response.body).toEqual({ kind: 'json', value: { text: 'no speech wala part samajh nahi aaya' } });
+  });
+
   it('passes a refusal through with its status, never a made-up transcript', async () => {
     const out = await hearOnVertex(new Uint8Array([1]), 'audio/wav', {
       tokens,
