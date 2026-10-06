@@ -37,6 +37,7 @@ function setup() {
   const deps: HandlerDeps = {
     key: '',
     gate,
+    transcribe: async () => ({ status: 500, headers: {}, body: { kind: 'json' as const, value: {} } }),
     vertex: {
       tokens,
       fetch: (async (_url: string, init: RequestInit) => {
