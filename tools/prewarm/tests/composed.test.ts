@@ -12,6 +12,12 @@ describe('composed classes are asked for, never assumed (board composer)', () =>
   it('the live classroom asks for them through one switch, off until real classes are measured', () => {
     const live = fs.readFileSync(path.resolve(__dirname, '../../../apps/classroom/src/lib/liveClass.ts'), 'utf8');
     expect(live).toMatch(/export const COMPOSE_LIVE_CLASSES = false;/);
-    expect(live).toMatch(/composed: COMPOSE_LIVE_CLASSES,/);
+    // A caller may ask for one class composed (the canvas lab does); every other class follows the switch.
+    expect(live).toMatch(/composed: ask\.composed \?\? COMPOSE_LIVE_CLASSES,/);
+  });
+
+  it('the canvas lab prepares composed classes, to measure them', () => {
+    const lab = fs.readFileSync(path.resolve(__dirname, '../../../apps/classroom/src/screens/CanvasLab.tsx'), 'utf8');
+    expect(lab).toMatch(/prepareLiveClass\(\{ topic, klass, minutes, composed \}/);
   });
 });

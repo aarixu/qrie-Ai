@@ -339,6 +339,13 @@ export async function prepareLiveClass(
      * preparation comes out Hinglish today. All three are handoffs.
      */
     language?: TutorLanguage;
+    /**
+     * Prepare THIS class for the composed board, whatever COMPOSE_LIVE_CLASSES
+     * says. The canvas lab asks, to measure real composed classes before the
+     * switch is turned on; every other caller leaves it out and follows the
+     * switch.
+     */
+    composed?: boolean;
   },
   onProgress: (progress: PrepProgress) => void,
   /**
@@ -409,8 +416,9 @@ export async function prepareLiveClass(
     minutes: ask.minutes,
     studentLines: ask.studentLines,
     outcomes: ask.outcomes,
-    // A full, well-annotated page per subtopic (board composer), once switched on.
-    composed: COMPOSE_LIVE_CLASSES,
+    // A full, well-annotated page per subtopic (board composer), once switched
+    // on, or for a caller that asks for this class.
+    composed: ask.composed ?? COMPOSE_LIVE_CLASSES,
     planner: createBrowserLlm(PLANNER_MODEL, { json: true }),
     artist: createBrowserLlm(ARTIST_MODEL),
     // THE FACTUAL GATE, ON (C10). Without it the class a live student

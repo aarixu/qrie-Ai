@@ -11,6 +11,8 @@ export function CanvasLab() {
   const [topic, setTopic] = useState('Speed: distance divided by time');
   const [klass, setKlass] = useState(9);
   const [minutes, setMinutes] = useState(2);
+  /** Prepare for the composed board (board composer): on here, where real composed classes are measured. */
+  const [composed, setComposed] = useState(true);
 
   const [progress, setProgress] = useState<PrepProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export function CanvasLab() {
     setComposedDemo(null);
     setProgress({ phase: 'planning', message: 'Starting…', done: 0 });
     try {
-      setPrepared(await prepareLiveClass({ topic, klass, minutes }, setProgress));
+      setPrepared(await prepareLiveClass({ topic, klass, minutes, composed }, setProgress));
     } catch (e) {
       // The whole error, stack included: this is the lab, and a message alone
       // ("cannot read trim") names no file.
@@ -39,7 +41,7 @@ export function CanvasLab() {
       setError(e instanceof Error ? e.message : String(e));
       setProgress(null);
     }
-  }, [topic, klass, minutes]);
+  }, [topic, klass, minutes, composed]);
 
   return (
     <main style={S.page}>
@@ -76,6 +78,9 @@ export function CanvasLab() {
             onChange={(e) => setMinutes(Number(e.target.value))}
             style={{ ...S.input, width: 56 }}
           />
+        </label>
+        <label style={S.muted}>
+          <input type="checkbox" checked={composed} onChange={(e) => setComposed(e.target.checked)} /> Composed board
         </label>
         <button onClick={run} disabled={progress !== null && progress.phase !== 'done'} style={S.primary}>
           {progress && progress.phase !== 'done' ? 'Preparing…' : 'Prepare the class'}
