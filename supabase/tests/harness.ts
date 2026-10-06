@@ -58,6 +58,13 @@ create role authenticated nologin;
 create role service_role nologin bypassrls;
 grant usage on schema public, auth to anon, authenticated, service_role;
 grant execute on function auth.uid() to anon, authenticated, service_role;
+
+-- auth.jwt() as Supabase defines it: the whole claims object of the request.
+-- The admin console reads aal, is_anonymous and amr from it.
+create function auth.jwt() returns jsonb language sql stable as $$
+  select coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb
+$$;
+grant execute on function auth.jwt() to anon, authenticated, service_role;
 alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
 alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;
 alter default privileges in schema public grant execute on functions to anon, authenticated, service_role;
@@ -226,6 +233,34 @@ export async function asUser<T>(db: PGlite, userId: string, fn: (tx: Tx) => Prom
 export async function asService<T>(db: PGlite, fn: (tx: Tx) => Promise<T>): Promise<T> {
   return db.transaction(async (tx) => {
     await tx.exec('set local role service_role');
+    return fn(tx);
+  });
+}
+
+/** The claims a signed-in person's JWT can carry that the admin console reads. */
+export interface JwtClaims {
+  sub: string;
+  /** aal1 = signed in; aal2 = a second factor was verified. Default aal1. */
+  aal?: 'aal1' | 'aal2';
+  /** Default false. */
+  is_anonymous?: boolean;
+  /** One entry per method used, with the epoch second it was verified. */
+  amr?: { method: string; timestamp: number }[];
+}
+
+/**
+ * Runs n as PostgREST would for a JWT with these claims: the uthenticated
+ * role, auth.uid() = sub, and auth.jwt() returning the whole claims object. A
+ * claim left out reads as absent, so a test that forgets aal2 is refused, the
+ * way production refuses it.
+ */
+export async function asClaims<T>(db: PGlite, claims: JwtClaims, fn: (tx: Tx) => Promise<T>): Promise<T> {
+  return db.transaction(async (tx) => {
+    await tx.exec('set local role authenticated');
+    await tx.query(`select set_config('request.jwt.claim.sub', $1, true)`, [claims.sub]);
+    await tx.query(`select set_config('request.jwt.claims', $1, true)`, [
+      JSON.stringify({ role: 'authenticated', aal: 'aal1', is_anonymous: false, ...claims }),
+    ]);
     return fn(tx);
   });
 }
