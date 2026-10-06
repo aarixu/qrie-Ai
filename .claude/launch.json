@@ -41,6 +41,17 @@
         "lms"
       ],
       "port": 5180
+    },
+    {
+      "name": "admin",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--workspace",
+        "@ai-tutor/admin"
+      ],
+      "port": 5182
     }
   ]
 }
