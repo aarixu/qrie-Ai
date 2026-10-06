@@ -45,6 +45,12 @@ describe('the planner for a composed board', () => {
     expect(text).toContain('a section of that page');
     expect(text).not.toContain('It\nis a main demonstration of its own.');
   });
+
+  it('asks for every beat as lines, never as one narration (small intestine, 2026-10-06)', () => {
+    const text = plannerSystemFor(true);
+    expect(text).toContain('Every beat is written as {"do":"say"} lines');
+    expect(text).toContain('Leave "narration" empty');
+  });
 });
 
 describe('a plan with the composer’s instructions', () => {

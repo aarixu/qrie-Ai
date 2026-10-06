@@ -36,6 +36,7 @@ import {
 } from './prompts.ts';
 import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
+import { splitNarrations } from './sayLines.ts';
 import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck, type Undrawn } from './gate.ts';
 import type { ComposerReport, PageReport } from './composerChecks.ts';
 import { askAgainLater, type RepairRetry } from './notNow.ts';
@@ -1268,6 +1269,15 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   // board — and it would be spent recovering a word we already have.
   for (const beat of blueprint.beats) beat.topic ||= blueprint.title;
 
+  // A composed board is taught line by line (sayLines.ts): a beat the planner
+  // wrote as one narration is written again as its sentences.
+  const asLines = (plan: Blueprint, who: string): void => {
+    if (!opts.composed) return;
+    const split = splitNarrations(plan.beats, plan.visuals);
+    if (split > 0) issues.push(`Wrote ${split} beat(s) of the ${who} as lines: the planner gave each one narration and no line.`);
+  };
+  asLines(blueprint, 'plan');
+
   /**
    * AN OUTCOME THE MAP DOES NOT HAVE IS NOT AN OUTCOME.
    *
@@ -1487,6 +1497,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       // that is never going to arrive.
       fixed.visuals = blueprint.visuals;
       fixed.id ||= blueprint.id;
+      asLines(fixed, 'repaired plan');
 
       /**
        * The repaired plan is fresh planner output, and it gets the same check

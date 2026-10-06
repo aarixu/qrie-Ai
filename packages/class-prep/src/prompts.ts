@@ -639,6 +639,12 @@ line as she speaks:
 5. A summary, last: {"do":"summary","text":"Villi absorb digested food fast"}.
    One sentence a student would copy down, under 45 characters.
 
+Every beat is written as {"do":"say"} lines with the board between them: a line,
+then what she writes while saying it, then the next line.
+Leave "narration" empty. A beat with no line arrives on the board all at once,
+the camera has to show the whole page, and on a phone that writing is too small
+to read.
+
 For "the difference between X and Y" there is a comparison:
 {"do":"compare","left":{"heading":"Aerobic","points":["uses oxygen","much energy"]},"right":{"heading":"Anaerobic","points":["no oxygen","little energy"]}}
 Two to six points a side; point n on the left answers point n on the right. On
