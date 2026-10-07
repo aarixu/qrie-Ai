@@ -38,6 +38,16 @@ describe('the admin schema', () => {
 
   it('lets a signed-in person call exactly the functions the panel uses, each of which checks for staff itself', async () => {
     expect(await callableBy('authenticated')).toEqual([
+      'admin.billing_account_set',
+      'admin.billing_invoice',
+      'admin.billing_invoice_raise',
+      'admin.billing_invoices',
+      'admin.billing_plan_set',
+      'admin.billing_plans',
+      'admin.billing_settings',
+      'admin.billing_settings_set',
+      'admin.billing_subscription_create',
+      'admin.billing_subscriptions',
       'admin.flag_list',
       'admin.flag_set',
       'admin.me',
