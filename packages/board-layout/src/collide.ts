@@ -207,6 +207,14 @@ export function resolveOverlaps(
    * crowded than end up somewhere tidy and meaningless.
    */
   leashes: readonly Leash[] = [],
+  /**
+   * `parkFirst`: a label still stuck is first moved, at its own size, to the
+   * nearest free place in its room and on its leash, and only written smaller
+   * when there is none. A composed board asks for it: shrinking first left
+   * every moved connector label at 14 units, far from its arrow (small
+   * intestine, 2026-10-07). A stacked board keeps the old order.
+   */
+  opts: { parkFirst?: boolean } = {},
 ): Element[] {
   const boards = rooms === undefined ? [] : Array.isArray(rooms) ? rooms : [rooms as Rect];
   const board = boards[0];
@@ -280,6 +288,14 @@ export function resolveOverlaps(
   // board, and doing it every round costs far more than it can ever save.
   for (const i of movable) {
     if (!firstClash(i)) continue;
+
+    if (opts.parkFirst && boards.length > 0) {
+      const parked = park(out[i], out, boards[0], clashes, i, leashOf.get(out[i].id));
+      if (parked) {
+        out[i] = parked;
+        continue;
+      }
+    }
 
     let size = 'size' in out[i] && typeof out[i].size === 'number' ? out[i].size : 26;
     while (size * SHRINK >= MIN_SIZE) {

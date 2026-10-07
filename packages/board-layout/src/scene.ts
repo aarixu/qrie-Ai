@@ -56,6 +56,13 @@ export function layoutScene(
   band: { x: number; y: number; w: number; h: number },
   /** Makes an element id from the author's — see `Placed.elementId`. */
   namespaced: (authorId: string) => string = (id) => id,
+  /**
+   * The gap between two rows. 18 on a stacked board; a composed board asks for
+   * a lane, so the words of an arrow from one row to the next have room beside
+   * it (small intestine, 2026-10-07: in 18 units they were shrunk and parked
+   * far from their arrow).
+   */
+  gapBetweenRows = 18,
 ): { elements: Element[]; boxes: Map<string, Placed> } {
   const boxes = new Map<string, Placed>();
   const elements: Element[] = [];
@@ -69,7 +76,6 @@ export function layoutScene(
   // the others.
   const rows = [...new Set(places.map((p) => p.row ?? 0))].sort((a, b) => a - b);
   if (rows.length > 1) {
-    const gapBetweenRows = 18;
     const each = (band.h - gapBetweenRows * (rows.length - 1)) / rows.length;
     for (const [n, row] of rows.entries()) {
       const strip = { ...band, y: band.y + n * (each + gapBetweenRows), h: each };

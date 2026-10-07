@@ -167,6 +167,8 @@ const BAND_SIZES = [30, 26, 23, 20];
 const POINT_SIZE = 22;
 /** How far a composed key point's words start from its region's left edge: the bullet's margin. */
 const BULLET_INDENT = 32;
+/** The gap between a composed scene's rows: a lane, room for an arrow's words beside it. */
+const COMPOSED_ROW_GAP = 44;
 /** A part's name in the key under a picture, its part not found: the size of a name in the margin. */
 const HOMELESS_NAME_SIZE = 20;
 /** The key under a picture: the gap above it, a bullet's room before each name, and the room between names. */
@@ -1275,7 +1277,36 @@ export function layoutBeat(
              * and only the version kept leaves anything behind.
              */
             const drawScene = (band: Rect) => {
-              const { elements: figures, boxes } = layoutScene(places, band, (authorId) => `${beat.id}__${authorId}`);
+              const { elements: figures, boxes } = layoutScene(
+                places,
+                band,
+                (authorId) => `${beat.id}__${authorId}`,
+                composition ? COMPOSED_ROW_GAP : undefined,
+              );
+              /**
+               * How many earlier arrows run alongside this one: they share an
+               * end and point the same way. On a composed board only those push
+               * it sideways — every earlier arrow did, and the pancreas's arrow
+               * into the lumen was pushed through the lumen's name (small
+               * intestine, 2026-10-07). A stacked board counts them all, as it
+               * always has.
+               */
+              const centre = (id: string) => {
+                const p = boxes.get(id);
+                return p ? { x: p.x + p.w / 2, y: p.y + p.h / 2 } : null;
+              };
+              const alongside = (step: Extract<Instruction, { do: 'connect' }>, before: number): number =>
+                sceneSteps.slice(0, before).filter((s) => {
+                  if (s.do !== 'connect') return false;
+                  const ends = [s.from, s.to];
+                  if (!ends.includes(step.from) && !ends.includes(step.to)) return false;
+                  const [a, b, c, d] = [centre(step.from), centre(step.to), centre(s.from), centre(s.to)];
+                  if (!a || !b || !c || !d) return false;
+                  const u = { x: b.x - a.x, y: b.y - a.y };
+                  const v = { x: d.x - c.x, y: d.y - c.y };
+                  const cos = (u.x * v.x + u.y * v.y) / ((Math.hypot(u.x, u.y) || 1) * (Math.hypot(v.x, v.y) || 1));
+                  return Math.abs(cos) > 0.9;
+                }).length;
               const out: Element[] = [...figures];
               const attributed: [number, string][] = [];
               const tied: Leash[] = [];
@@ -1292,7 +1323,7 @@ export function layoutBeat(
               let connectors = 0;
               sceneSteps.forEach((it, n) => {
                 if (it.do === 'connect') {
-                  const made = connectElements(it, boxes, idFor(beat.id, n), connectors);
+                  const made = connectElements(it, boxes, idFor(beat.id, n), composition ? alongside(it, n) : connectors);
                   // A label may move anywhere around the pair it joins, and no
                   // further: see connectionRegion.
                   const drawn = [it.from, it.to].map((end) => {
@@ -2468,6 +2499,7 @@ export function layoutBeat(
           { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: CANVAS_H - MAIN.y },
         ],
     leashes,
+    { parkFirst: composition !== null },
   );
 
   // A part can only be pointed at if its picture is on the board this beat.
