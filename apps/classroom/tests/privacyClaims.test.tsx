@@ -138,18 +138,15 @@ describe('the window both screens promise', () => {
   });
 
   it('is enforced by age alone, so "deleted after N days" is true of every answer', () => {
-    // The LMS lane's 0021 rewrites the purge to delete only what a server fold
-    // has already covered — and no fold exists yet, so from that migration on
-    // it deletes NOTHING. When that lands here, this fails, and the mic screen
-    // and /privacy must stop saying "deleted after 90 days" in the same change.
+    // The LMS lane's 0021 rewrote the purge to delete only what a server fold
+    // had marked as covered, and nothing wrote that mark, so from 0021 on it
+    // deleted NOTHING and this failed. 0062 (lam-one-brain Task 2b) deletes by
+    // age alone again; the server fold keeps a snapshot of what it learned
+    // (0061), so it no longer needs the old answers.
     //
-    // WHAT THIS CANNOT SEE: it reads this checkout's migrations only. 0021
-    // lives in the LMS worktree, and pushing it to the live database from
-    // there changes production without changing anything here, so this stays
-    // green while both screens become false. That gap is closed in the plan,
-    // not here: its step for the push says 0021 must first be amended to keep
-    // deleting by age (docs/handoff/2026-09-26-state-of-play.md, "Blocked on
-    // Aarav", step 14).
+    // WHAT THIS CANNOT SEE: it reads this checkout's migrations only. Pushing
+    // 0021 to the live database without 0062 makes both screens false while
+    // this stays green, so the push must take 0061 and 0062 with it.
     expect(purgeBody()).toMatch(/delete from public\.ledger_event where received_at < cutoff;/i);
     expect(purgeBody()).not.toMatch(/purge_safe_before/i);
   });

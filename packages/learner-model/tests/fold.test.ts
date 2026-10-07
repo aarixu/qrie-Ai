@@ -242,6 +242,30 @@ describe('foldSession', () => {
     expect(rebuilt.states.b.unassistedObservations).toBe(2);
   });
 
+  /**
+   * THE SERVER'S ORDER OF RECEIPT (lam-one-brain Task 2b). The server folds
+   * forward in the order it received evidence, so a batch of an older sitting
+   * that arrives late has an earlier sitting time than what is already folded.
+   * `orderAt` places it in the cursor by its receipt; `startedAt` still times it.
+   */
+  it('folds a late batch of an older sitting when its order of receipt is later', () => {
+    seq = 0;
+    const newer = foldSession(emptyModel(), S2, [answered(0)], index, params);
+    const late = { ...S1, orderAt: '2026-09-16T10:00:00.000Z' };
+    const m = foldSession(newer, late, [answered(0)], index, params);
+    expect(m.states.b.unassistedObservations).toBe(2);
+    expect(m.foldedThrough).toEqual({ at: late.orderAt, sessionId: 's1', seq: 1 });
+    // Timed by the sitting, not by its receipt.
+    expect(m.states.b.lastUnassistedSuccessAt).toBe('2026-09-14T10:00:00.000Z');
+  });
+
+  it('GUARD: without an order of receipt, the older sitting is behind the cursor and skipped', () => {
+    seq = 0;
+    const newer = foldSession(emptyModel(), S2, [answered(0)], index, params);
+    const m = foldSession(newer, S1, [answered(0)], index, params);
+    expect(m.states.b.unassistedObservations).toBe(1);
+  });
+
   it('reads two renderings of the same instant as the same instant', () => {
     seq = 0;
     const zForm = { id: 's1', startedAt: '2026-09-14T10:00:00.000Z' };

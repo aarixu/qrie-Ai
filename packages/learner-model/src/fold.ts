@@ -32,6 +32,14 @@ import {
 export interface FoldSession {
   id: string;
   startedAt: string;
+  /**
+   * Where this batch sits in the cursor's order, when that is not its
+   * sitting's start: the server folds forward in the order it RECEIVED
+   * evidence (packages/lms-brain think.ts), so a late batch of an older
+   * sitting is placed by its receipt and still timed by `startedAt`.
+   * Defaults to `startedAt`.
+   */
+  orderAt?: string;
 }
 
 /**
@@ -75,7 +83,7 @@ export function foldSession(
       : {};
 
   for (const event of events) {
-    const cursor: FoldCursor = { at: session.startedAt, sessionId: session.id, seq: event.seq };
+    const cursor: FoldCursor = { at: session.orderAt ?? session.startedAt, sessionId: session.id, seq: event.seq };
 
     /**
      * A `helped` BEHIND THE CURSOR STILL COUNTS AS HELP.
@@ -122,8 +130,9 @@ export function foldSession(
 }
 
 /**
- * Already folded. Ordered by the SESSION's start, then the session id, then the
- * sequence — never by a string compare of a device clock.
+ * Already folded. Ordered by the SESSION's start (or the batch's `orderAt`),
+ * then the session id, then the sequence — never by a string compare of a
+ * device clock.
  *
  * `Date.parse` rather than `<` on the strings: the device renders an instant as
  * `…T10:00:00.000Z` and PostgREST may render the same instant as

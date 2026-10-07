@@ -285,7 +285,9 @@ describe('one transaction per learner, under a lock (MF9)', () => {
       query: () => Promise.reject(new Error('think queried outside a transaction')),
       transaction: (fn) => db.transaction(fn),
     };
-    await expect(think(guarded, [riya])).resolves.toMatchObject({ students: 1 });
+    // A rebuild, so the run reads and writes everything (riya's snapshot
+    // already holds her ledger, and a fold forward would read nothing).
+    await expect(think(guarded, [riya], { rebuild: true })).resolves.toMatchObject({ students: 1 });
   });
 
   it('holds a per-learner advisory lock until the transaction ends (the lock SQL, run on PGlite)', async () => {

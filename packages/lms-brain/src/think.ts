@@ -6,6 +6,7 @@ import {
   isConfirmed,
   normaliseMisconception,
   type ConceptState,
+  type FoldCursor,
   type LearnerModel,
   type Misconception,
 } from '@ai-tutor/learner-model';
@@ -20,13 +21,29 @@ import { libraryIndex } from './graph.ts';
  * run in the browser, so there is one idea of what a child knows, not two.
  * Every field of the fold's ConceptState is written (0060).
  *
- * It rebuilds each child from their whole ledger rather than moving a cursor
- * forward. The fold is deterministic (replay.test.ts), so rebuilding and
- * folding onward agree; rebuilding is simply the version that cannot get the
- * cursor wrong, and at a school's scale it is cheap. learner_model still
- * records how far it read.
+ * IT FOLDS FORWARD FROM A SNAPSHOT (Task 2b, 0061). learner_model.snapshot
+ * holds the model built from everything the server received up to an hour
+ * before the last run (SNAPSHOT_LAG_SECONDS); each run reads only the events
+ * received after it, folds them on top and writes the result. Events are read
+ * in the server's ORDER OF RECEIPT — received_at to the millisecond, then the
+ * sitting, then seq — so evidence that arrives late is never behind the
+ * cursor, and folding forward lands where a rebuild over the same events
+ * lands. The snapshot stays an hour behind because a write that began
+ * earlier (so has an earlier received_at) can commit after a later one has
+ * been folded; that hour is folded again on every run. Because the snapshot
+ * keeps what the fold learned, the nightly purge can delete every answer
+ * older than 90 days (0062) without the model forgetting it. The snapshot is
+ * the fold's own model, so it keeps a wrong idea's wording as the phone sent
+ * it (only what is written to concept_state is stripped to the bank's); the
+ * learner reads their own row (0013) and no lms function reads learner_model.
  *
- * THE SERVER'S CLOCK (review MF3). A sitting is ordered and timed by its
+ * It REBUILDS from the whole ledger when there is no snapshot, when the
+ * snapshot is of another MODEL_VERSION, or when asked (`rebuild`). A change
+ * to the outcome graph or to the bank's labels reaches evidence already in
+ * the snapshot only through such a rebuild, and a rebuild knows only what the
+ * ledger still holds.
+ *
+ * THE SERVER'S CLOCK (review MF3). A sitting is timed by its
  * learning_session.received_at, never by the phone's started_at, and an
  * event's own `at` is pulled into [received_at - 7 days, received_at + 5
  * minutes]. The fold times the mastery rule's day apart and the review ladder
@@ -76,8 +93,14 @@ export interface LedgerRow {
   outcome_ids: string[] | null;
   topic_ref: string | null;
   payload: unknown;
-  /** learning_session.received_at, to the millisecond: the sitting's time. */
+  /** When the server received this event (ledger_event.received_at). */
+  received_at: string | Date;
+  /** received_at to the millisecond: this event's place in the order of receipt. */
+  order_at: string | Date;
+  /** learning_session.received_at to the millisecond, the sitting's time; order_at if the sitting has no row. */
   session_at: string | Date;
+  /** Received over SNAPSHOT_LAG_SECONDS ago, so the snapshot may cover it. */
+  settled: boolean;
   /** The lms.item this answer was to, if the bank holds it. */
   matched: boolean;
   item_ref: string | null;
@@ -124,24 +147,36 @@ const toEvent = (r: LedgerRow): LedgerEvent =>
     payload: bankPayload(r),
   }) as LedgerEvent;
 
+/** How far behind the newest evidence the snapshot stays (see the top of this file). */
+export const SNAPSHOT_LAG_SECONDS = 3600;
+
 /**
- * One learner's ledger, in the order the fold reads it: sittings by when the
- * server received them, then by id, then events by seq. Milliseconds, because
- * the fold's cursor compares sitting times as JavaScript dates; ordering on
- * the microseconds Postgres keeps could put two sittings in an order the fold
- * then reads as going backwards.
+ * One learner's ledger after `after` (all of it when null), in the order the
+ * fold reads it: by when the server received each event, to the millisecond,
+ * then by sitting, then by seq. Milliseconds, because the fold's cursor
+ * compares times as JavaScript dates; ordering on the microseconds Postgres
+ * keeps could put two batches in an order the fold then reads as going
+ * backwards. `after` is a cursor in that same order (a snapshot's
+ * foldedThrough).
  */
-export async function readLedger(tx: Tx, user: string): Promise<LedgerRow[]> {
+export async function readLedger(tx: Tx, user: string, after: FoldCursor | null = null): Promise<LedgerRow[]> {
   const { rows } = await tx.query<LedgerRow>(
     `select e.id, e.user_id, e.org_id, e.session_id, e.seq,
             least(greatest(e.at, e.received_at - interval '7 days'), e.received_at + interval '5 minutes') as at,
             e.kind, e.source, e.surface, e.outcome_ids, e.topic_ref, e.payload,
-            date_trunc('milliseconds', s.received_at) as session_at,
+            e.received_at,
+            date_trunc('milliseconds', e.received_at) as order_at,
+            date_trunc('milliseconds', coalesce(s.received_at, e.received_at)) as session_at,
+            date_trunc('milliseconds', e.received_at)
+              < date_trunc('milliseconds', now() - make_interval(secs => $5)) as settled,
             (hi.id is not null or ti.id is not null) as matched,
             coalesce(hi.library_ref, ti.library_ref) as item_ref,
             coalesce(hi.misconceptions, ti.misconceptions) as item_misconceptions
        from public.ledger_event e
-       join public.learning_session s on s.id = e.session_id
+       -- The sitting gives the time. An event whose sitting has no row is
+       -- folded at its own receipt rather than skipped and then left behind
+       -- the snapshot's cursor for good.
+       left join public.learning_session s on s.id = e.session_id
        -- The school's own work names its item by id; the guard keeps a
        -- malformed id from failing the cast and the whole learner with it.
        left join lms.item hi on hi.id = case
@@ -152,29 +187,44 @@ export async function readLedger(tx: Tx, user: string): Promise<LedgerRow[]> {
        left join lms.item ti on ti.library_ref = case
               when e.source in ('class', 'quiz', 'diagnostic') then e.payload ->> 'probeId' end
       where e.user_id = $1
-      order by date_trunc('milliseconds', s.received_at), e.session_id, e.seq`,
-    [user],
+        and ($2::timestamptz is null
+             or (date_trunc('milliseconds', e.received_at), e.session_id, e.seq)
+                > ($2::timestamptz, $3::uuid, $4::int))
+      order by date_trunc('milliseconds', e.received_at), e.session_id, e.seq`,
+    [user, after?.at ?? null, after?.sessionId ?? null, after?.seq ?? null, SNAPSHOT_LAG_SECONDS],
   );
   return rows;
 }
 
-/** One child's whole ledger, in the order the server received it, folded from nothing. */
-export function foldLedger(rows: readonly LedgerRow[], index: GraphIndex, params: ModelParams): LearnerModel {
-  let model = emptyModel();
+/**
+ * Ledger rows in readLedger's order, folded onto `start` (from nothing by
+ * default): one fold call per batch, a batch being the events of one sitting
+ * the server received in the same millisecond. Each batch is placed in the
+ * cursor by its receipt and timed by its sitting.
+ */
+export function foldLedger(
+  rows: readonly LedgerRow[],
+  index: GraphIndex,
+  params: ModelParams,
+  start: LearnerModel = emptyModel(),
+): LearnerModel {
+  let model = start;
   let i = 0;
   while (i < rows.length) {
     const session = rows[i].session_id;
-    const events: LedgerEvent[] = [];
+    const orderAt = iso(rows[i].order_at);
     const startedAt = iso(rows[i].session_at);
-    while (i < rows.length && rows[i].session_id === session) events.push(toEvent(rows[i++]));
-    model = foldSession(model, { id: session, startedAt }, events, index, params);
+    const events: LedgerEvent[] = [];
+    while (i < rows.length && rows[i].session_id === session && iso(rows[i].order_at) === orderAt) {
+      events.push(toEvent(rows[i++]));
+    }
+    model = foldSession(model, { id: session, startedAt, orderAt }, events, index, params);
   }
   return model;
 }
 
-/** The labels of wrong ideas this learner's answers took from the bank: the only text that is written. */
-function bankLabels(rows: readonly LedgerRow[]): Set<string> {
-  const labels = new Set<string>();
+/** The labels of wrong ideas these answers took from the bank, added to `labels`: the only text that is written. */
+function bankLabels(rows: readonly LedgerRow[], labels: Set<string> = new Set()): Set<string> {
   for (const r of rows) {
     const p = bankPayload(r) as { misconceptionId?: unknown };
     if (r.kind === 'answered' && r.matched && typeof p.misconceptionId === 'string') {
@@ -269,22 +319,58 @@ const INSERT_STATES = `insert into public.concept_state (org_id, user_id, outcom
   select $1, $2, x.outcome_id, ${COLUMNS.map(([, c]) => `x.${c}`).join(', ')}
     from jsonb_to_recordset($3::jsonb) as x(outcome_id text, ${COLUMNS.map(([, c, t]) => `${c} ${t}`).join(', ')})`;
 
+/** What learner_model.snapshot holds (0061). */
+interface Snapshot {
+  model: LearnerModel;
+  /** The normalised labels the bank gave this learner's wrong answers (bankLabels). */
+  bank: string[];
+}
+
+/** A snapshot this fold can build on: present, and of this model version. */
+function usableSnapshot(stored: unknown): Snapshot | null {
+  const s = stored as Partial<Snapshot> | null | undefined;
+  if (!s || typeof s !== 'object' || !s.model || s.model.version !== MODEL_VERSION || !Array.isArray(s.bank)) {
+    return null;
+  }
+  return s as Snapshot;
+}
+
+export interface ThinkOptions {
+  index?: GraphIndex;
+  params?: ModelParams;
+  /** Set the snapshot aside and fold the whole ledger again. */
+  rebuild?: boolean;
+}
+
 /**
  * One learner, inside a transaction the caller opened (it never opens its
- * own): lock them, read their ledger, fold it, replace their concept_state
- * and move their learner_model row. Returns the events read; a learner with
- * none is left as they were.
+ * own): lock them, read what the server received after their snapshot (the
+ * whole ledger when there is none, it is of another version, or `rebuild`),
+ * fold it on top, replace their concept_state and move their learner_model
+ * row, snapshot included. Returns the events read; a learner with nothing new
+ * is left as they were.
  */
-export async function thinkLearner(
-  tx: Tx,
-  user: string,
-  opts: { index?: GraphIndex; params?: ModelParams } = {},
-): Promise<number> {
+export async function thinkLearner(tx: Tx, user: string, opts: ThinkOptions = {}): Promise<number> {
   await tx.query(`select pg_advisory_xact_lock(hashtext($1::text))`, [user]);
-  const rows = await readLedger(tx, user);
+  const { rows: held } = await tx.query<{ snapshot: unknown }>(
+    `select snapshot from public.learner_model where user_id = $1`,
+    [user],
+  );
+  const snapshot = opts.rebuild ? null : usableSnapshot(held[0]?.snapshot);
+  const rows = await readLedger(tx, user, snapshot?.model.foldedThrough ?? null);
   if (rows.length === 0) return 0;
-  const model = foldLedger(rows, opts.index ?? libraryIndex(), opts.params ?? emptyParams());
-  const bank = bankLabels(rows);
+
+  const index = opts.index ?? libraryIndex();
+  const params = opts.params ?? emptyParams();
+  // The settled rows come first: `settled` is decided on the same millisecond
+  // readLedger orders by.
+  const settled = rows.filter((r) => r.settled);
+  const kept = foldLedger(settled, index, params, snapshot?.model ?? emptyModel());
+  const keptBank = bankLabels(settled, new Set(snapshot?.bank ?? []));
+  const next: Snapshot | null = settled.length > 0 ? { model: kept, bank: [...keptBank].sort() } : snapshot;
+  const recent = rows.slice(settled.length);
+  const model = foldLedger(recent, index, params, kept);
+  const bank = bankLabels(recent, new Set(keptBank));
   const last = rows[rows.length - 1];
   const states = Object.entries(model.states).map(([outcome, s]) => {
     const row: Record<string, unknown> = { outcome_id: outcome };
@@ -296,12 +382,18 @@ export async function thinkLearner(
   await tx.query(`delete from public.concept_state where user_id = $1`, [user]);
   if (states.length) await tx.query(INSERT_STATES, [last.org_id, user, JSON.stringify(states)]);
   await tx.query(
-    `insert into public.learner_model (user_id, org_id, folded_through_at, folded_through_seq, version, updated_at)
-     values ($1, $2, $3, $4, $5, now())
+    `insert into public.learner_model (user_id, org_id, folded_through_at, folded_through_seq, version, snapshot,
+                                       folded_through_received_at, folded_through_id, updated_at)
+     values ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, now())
      on conflict (user_id) do update set
        org_id = excluded.org_id, folded_through_at = excluded.folded_through_at,
-       folded_through_seq = excluded.folded_through_seq, version = excluded.version, updated_at = now()`,
-    [user, last.org_id, iso(last.session_at), last.seq, MODEL_VERSION],
+       folded_through_seq = excluded.folded_through_seq, version = excluded.version,
+       snapshot = excluded.snapshot, folded_through_received_at = excluded.folded_through_received_at,
+       folded_through_id = excluded.folded_through_id, updated_at = now()`,
+    [
+      user, last.org_id, iso(last.order_at), last.seq, MODEL_VERSION, next ? JSON.stringify(next) : null,
+      last.received_at, last.id,
+    ],
   );
   return rows.length;
 }
@@ -310,7 +402,7 @@ export async function thinkLearner(
 export async function think(
   db: Sql,
   userIds: readonly string[],
-  opts: { index?: GraphIndex; params?: ModelParams } = {},
+  opts: ThinkOptions = {},
 ): Promise<{ students: number; events: number }> {
   if (userIds.length === 0) return { students: 0, events: 0 };
   const index = opts.index ?? libraryIndex();
@@ -318,7 +410,9 @@ export async function think(
   let students = 0;
   let events = 0;
   for (const user of new Set(userIds)) {
-    const read = await db.transaction((tx) => thinkLearner(tx, user, { index, params }));
+    const read = await db.transaction((tx) =>
+      thinkLearner(tx, user, { index, params, rebuild: opts.rebuild }),
+    );
     if (read > 0) {
       students += 1;
       events += read;

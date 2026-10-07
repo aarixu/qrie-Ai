@@ -14,6 +14,7 @@ export {
   emptyConceptState,
   emptyModel,
   type ConceptState,
+  type FoldCursor,
   type LearnerModel,
 } from './types.ts';
 
@@ -23,7 +24,7 @@ export { evidenceSet, masteryView, unassistedEvidence, unassistedView } from './
 
 export { deriveRung } from './rung.ts';
 
-export { foldSession } from './fold.ts';
+export { foldSession, type FoldSession } from './fold.ts';
 
 // v4: the wrong ideas an outcome's answers showed, and which of them are
 // confirmed (2+ distinct items or 2+ sittings, not cleared since).

@@ -128,18 +128,23 @@ describe('the nightly purge (A3)', () => {
     return rows.length === 1;
   }
 
-  it('deletes nothing the fold has not covered, however old', async () => {
+  // 0021 made this purge delete only what a server fold had covered, and no
+  // fold wrote that mark, so it deleted nothing. 0062 restores Aarav's choice
+  // (a): every answer older than the window goes, by age alone, whatever
+  // learner_model says; the server's snapshot (0061) keeps what the fold
+  // learned from them (lam-one-brain Task 2b).
+  it('deletes an old event that no fold has covered (0062)', async () => {
     const student = await createUser(db);
     const event = await oldEvent(student, 200);
     await asService(db, (tx) => tx.query(`select public.purge_old_ledger(90)`));
-    expect(await stillThere(event)).toBe(true);
+    expect(await stillThere(event)).toBe(false);
   });
 
-  it('deletes an old event once the fold has covered it', async () => {
+  it('deletes an old event the fold has covered', async () => {
     const student = await createUser(db);
     const event = await oldEvent(student, 200);
     await db.query(
-      `insert into public.learner_model (user_id, org_id, purge_safe_before)
+      `insert into public.learner_model (user_id, org_id, folded_through_received_at)
        select $1, org_id, now() - interval '100 days' from public.membership where user_id = $1`,
       [student],
     );
@@ -151,7 +156,7 @@ describe('the nightly purge (A3)', () => {
     const student = await createUser(db);
     const event = await oldEvent(student, 10);
     await db.query(
-      `insert into public.learner_model (user_id, org_id, purge_safe_before)
+      `insert into public.learner_model (user_id, org_id, folded_through_received_at)
        select $1, org_id, now() from public.membership where user_id = $1`,
       [student],
     );

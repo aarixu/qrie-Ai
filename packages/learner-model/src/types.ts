@@ -182,8 +182,10 @@ export const MASTERY_SPACING_MS = 24 * 60 * 60 * 1000;
 /**
  * HOW FAR THE FOLD HAS CONSUMED A STUDENT'S HISTORY.
  *
- * `(learning_session.started_at, sessionId, seq)`, in that order. Three parts
- * and each earns its place:
+ * `(learning_session.started_at, sessionId, seq)`, in that order — or, where
+ * the server folds forward in its order of receipt, the batch's `orderAt`
+ * (fold.ts FoldSession) in place of the start. Three parts and each earns its
+ * place:
  *
  *   * `at` is the SESSION'S started_at — a server clock — and NOT the event's
  *     own `at`, which is the phone's. The ledger says so itself
