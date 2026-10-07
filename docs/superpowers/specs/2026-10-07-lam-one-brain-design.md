@@ -52,10 +52,12 @@ numbers the learner's decisions use.
 
 1. **Write.** Homework keeps `lms.submit_mcq` (already server-marked, server-timed). Tutor evidence goes through a
    new `public.record_evidence(...)` SECURITY DEFINER function: server `received_at = now()`, `at` and
-   `started_at` clamped to a window around receipt, source allow-listed (`class`, `quiz`, `diagnostic`,
-   `doubt`, `practice`), rung and payload checked, idempotent on event id. Direct `insert` on `ledger_event` and
-   `learning_session` is revoked from the `authenticated` role, so a child's token can no longer write rung-0
-   "correct" events or a 2099 clock.
+   `started_at` clamped to a window around receipt, source allow-listed (`class`, `quiz`, `diagnostic`, `doubt` only;
+   homework, test, practice and api are refused, because only the LMS functions write those), org and user taken
+   from the caller (never from input), rung and payload checked, idempotent on event id. Direct `insert` on `ledger_event` and
+   `learning_session` is then revoked from the `authenticated` role. A child's token can no longer forge a source,
+   a clock, a session, an org or another learner. **A tutor answer's correctness stays client-asserted** until the
+   server grades tutor asks itself; the results list that as C2 partial.
 2. **Think.** An `after insert` trigger on `ledger_event` puts the learner in `brain_queue`. A worker drains the
    queue: per learner, inside one transaction with an advisory lock, it rebuilds the model from that learner's
    whole ledger with the ONE fold (`packages/learner-model`, now version 4) and writes every model field to
@@ -105,9 +107,14 @@ numbers the learner's decisions use.
 - Late or out-of-order evidence: the server rebuild sorts the whole ledger, so nothing is lost there; the phone
   fold no longer silently drops an event behind its cursor, it rebuilds.
 - `think()` is one transaction per learner with `pg_advisory_xact_lock`, so overlapping runs are safe.
-- Retention stays disarmed (unchanged): the rebuild needs the whole ledger. Arming it needs a fold-forward
-  snapshot; that is recorded as deferred, not hidden.
+- Retention keeps its promise: the server keeps a snapshot of each learner's model and folds forward from a
+  watermark on server `received_at`, so `purge_old_ledger` goes back to deleting every answer older than 90 days
+  (Aarav's recorded choice (a)) without erasing what the model learned. A version bump rebuilds from what the
+  ledger still holds.
 - Empty server state reads "results not computed yet" when answers exist, never "no answers yet".
+
+**Proof scope (review SF13):** in this branch learner (a)'s tutor path is proven by acceptance tests only; the live
+demo covers (b) and (c).
 
 ## 7. What this branch does NOT do (and why)
 
