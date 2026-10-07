@@ -1,0 +1,149 @@
+import { importForSchool, Refused, resetPinForSchool, type AdminDeps } from '../../lms-import/src/admin.ts';
+import { newStaffPassword } from './password.ts';
+
+/**
+ * THE STAFF CONSOLE'S SERVICE CALLS, as the admin-api edge function serves
+ * them (supabase/functions/admin-api):
+ *
+ *   POST …/import        {code, students?, teachers?, commit?, acceptWarnings?, reason?, env?} → the import's answer
+ *   POST …/reset-pin     {code, loginId, reason, env}            → {loginId, displayName, pin}
+ *   POST …/staff-invite  {email, displayName, role, reason, env} → {userId, email, temporaryPassword}
+ *   POST …/user-block    {userId, blocked, reason, env}          → {userId, blocked}
+ *
+ * Each call first asks the database AS THE CALLER, with their own token:
+ * admin.api_gate, admin.staff_invite or admin.direct_user_block decide who may
+ * act (staff, role, a recent authenticator code, the environment, a reason).
+ * Only then does anything happen with the service role. Adding people and new
+ * PINs run the LMS lane's own code (tools/lms-import/src/admin.ts) for the
+ * school the gate named, with the member of staff as the actor.
+ *
+ * A refusal answers {error, code}; code is what the console's AdminError
+ * branches on.
+ */
+
+/** A refusal from the database through PostgREST: its message and SQLSTATE. */
+export class CallerError extends Error {
+  readonly sqlstate: string;
+  constructor(message: string, sqlstate: string) {
+    super(message);
+    this.sqlstate = sqlstate;
+  }
+}
+
+export const CALLER_FUNCTIONS = ['api_gate', 'staff_invite', 'direct_user_block'] as const;
+export type CallerFunction = (typeof CALLER_FUNCTIONS)[number];
+
+export interface AdminApiDeps {
+  /** One admin function, run as the caller (their Authorization header). */
+  asCaller(authorization: string, fn: CallerFunction, args: Record<string, unknown>): Promise<unknown>;
+  /** The LMS lane's service-role calls (the same shape lms-admin uses). */
+  lms: Pick<AdminDeps, 'rpc' | 'store' | 'auth'>;
+  /** The auth admin API, with the service role. */
+  authAdmin: {
+    createStaffUser(email: string, password: string): Promise<string>;
+    setBanned(userId: string, banned: boolean): Promise<void>;
+  };
+  password?: () => string;
+}
+
+export interface ApiRequest { method: string; path: string; authorization?: string; body: unknown }
+export interface ApiReply { status: number; body: unknown }
+
+const ROUTES = ['import', 'reset-pin', 'staff-invite', 'user-block'] as const;
+type Route = (typeof ROUTES)[number];
+
+const EMAIL = /^[^@\s]{1,64}@[^@\s]+\.[^@\s]{2,}$/;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const text = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
+
+const objectOf = (v: unknown): Record<string, unknown> => {
+  if (v && typeof v === 'object' && !Array.isArray(v)) return v as Record<string, unknown>;
+  throw new Refused(400, 'The request was not a JSON object.');
+};
+
+interface Gate { actor: string; orgId: string | null }
+
+const gate = async (deps: AdminApiDeps, auth: string, action: string, b: Record<string, unknown>, target = ''): Promise<Gate> =>
+  (await deps.asCaller(auth, 'api_gate', {
+    p_action: action, p_code: text(b.code), p_target: target, p_reason: text(b.reason), p_env: text(b.env),
+  })) as Gate;
+
+async function importRoute(deps: AdminApiDeps, auth: string, b: Record<string, unknown>) {
+  const commit = b.commit === true;
+  const g = await gate(deps, auth, commit ? 'people-import' : 'people-preview', b);
+  return importForSchool(deps.lms, g.orgId as string, g.actor, {
+    students: b.students, teachers: b.teachers, commit, acceptWarnings: b.acceptWarnings === true,
+  });
+}
+
+async function resetPinRoute(deps: AdminApiDeps, auth: string, b: Record<string, unknown>) {
+  const g = await gate(deps, auth, 'pin-reset', b, text(b.loginId));
+  return resetPinForSchool(deps.lms, g.orgId as string, g.actor, b.loginId);
+}
+
+async function staffInviteRoute(deps: AdminApiDeps, auth: string, b: Record<string, unknown>) {
+  const email = text(b.email).toLowerCase();
+  if (!EMAIL.test(email)) throw new Refused(400, 'Write an email address.');
+  await gate(deps, auth, 'staff-invite', b, email);
+  const password = (deps.password ?? newStaffPassword)();
+  const userId = await deps.authAdmin.createStaffUser(email, password);
+  await deps.asCaller(auth, 'staff_invite', {
+    p_user: userId, p_role: text(b.role), p_name: text(b.displayName), p_reason: text(b.reason), p_env: text(b.env),
+  });
+  return { userId, email, temporaryPassword: password };
+}
+
+async function userBlockRoute(deps: AdminApiDeps, auth: string, b: Record<string, unknown>) {
+  const userId = text(b.userId);
+  if (!UUID.test(userId)) throw new Refused(400, 'That is not a user ID.');
+  if (typeof b.blocked !== 'boolean') throw new Refused(400, 'Say whether to block or unblock.');
+  await deps.asCaller(auth, 'direct_user_block', {
+    p_user: userId, p_blocked: b.blocked, p_reason: text(b.reason), p_env: text(b.env),
+  });
+  try {
+    await deps.authAdmin.setBanned(userId, b.blocked);
+  } catch (e) {
+    console.error('admin-api', 'ban', e);
+    throw new Refused(502, 'Recorded, but the sign-in service did not confirm it. Press again; it is safe to repeat.');
+  }
+  return { userId, blocked: b.blocked };
+}
+
+const SIGN_IN_AGAIN = { status: 401, body: { error: 'Please sign in again.', code: 'not-allowed' } };
+export const SERVER_FAILED = 'Something went wrong on the server. Try again in a moment; the details are in the function log.';
+
+function refusal(route: Route, e: unknown): ApiReply {
+  if (e instanceof CallerError) {
+    if (e.sqlstate.startsWith('PGRST3')) return SIGN_IN_AGAIN;
+    if (e.sqlstate === '42501') {
+      return /authenticator code/i.test(e.message)
+        ? { status: 403, body: { error: 'Confirm with your authenticator code to continue.', code: 'needs-mfa' } }
+        : { status: 403, body: { error: 'You do not have access to this.', code: 'not-allowed' } };
+    }
+    if (/^this console is /i.test(e.message)) return { status: 409, body: { error: e.message, code: 'wrong-environment' } };
+    if (e.sqlstate === 'P0001') return { status: 400, body: { error: e.message, code: 'other' } };
+  }
+  if (e instanceof Refused) return { status: e.status, body: { error: e.message, code: 'other' } };
+  // The database's or the server's own words go to the log, not to the screen.
+  console.error('admin-api', route, e);
+  return { status: 500, body: { error: SERVER_FAILED, code: 'other' } };
+}
+
+export async function handleAdminApi(req: ApiRequest, deps: AdminApiDeps): Promise<ApiReply> {
+  const route = req.path.replace(/\/+$/, '').split('/').pop() as Route;
+  if (!ROUTES.includes(route)) return { status: 404, body: { error: 'There is no such call.', code: 'other' } };
+  if (req.method !== 'POST') return { status: 405, body: { error: 'POST only.', code: 'other' } };
+  const auth = req.authorization ?? '';
+  if (!/^Bearer \S+$/.test(auth)) return SIGN_IN_AGAIN;
+  try {
+    const b = objectOf(req.body);
+    const answer =
+      route === 'import' ? await importRoute(deps, auth, b)
+      : route === 'reset-pin' ? await resetPinRoute(deps, auth, b)
+      : route === 'staff-invite' ? await staffInviteRoute(deps, auth, b)
+      : await userBlockRoute(deps, auth, b);
+    return { status: 200, body: answer };
+  } catch (e) {
+    return refusal(route, e);
+  }
+}
