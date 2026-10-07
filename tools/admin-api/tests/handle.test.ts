@@ -3,95 +3,40 @@ import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { aal2, anonymousChild, fresh, makeStaff, setEnvironment, type Staff } from '../../../supabase/tests/admin-fixtures.ts';
 import { buildSchool, type School } from '../../../supabase/tests/fixtures.ts';
-import { asClaims, asService, freshDatabase, type JwtClaims } from '../../../supabase/tests/harness.ts';
-import { Refused } from '../../lms-import/src/admin.ts';
-import { pgliteStore } from '../../lms-import/src/pgliteStore.ts';
+import { freshDatabase } from '../../../supabase/tests/harness.ts';
 import { CallerError, handleAdminApi, SERVER_FAILED, type AdminApiDeps } from '../src/handle.ts';
+import { apiWorld, type ApiWorld } from './deps.ts';
+
+/**
+ * THE STAFF CONSOLE'S SERVICE CALLS (supabase/functions/admin-api). Written first.
+ *
+ * Over the real migrations, with stand-ins for the auth admin API (./deps.ts):
+ * every call asks the database as the caller first (admin.api_gate,
+ * admin.staff_invite, admin.direct_user_block), and nothing is created, reset
+ * or banned when the database says no. Refusals come back as {error, code}.
+ */
 
 let db: PGlite;
+let world: ApiWorld;
 let owner: Staff; let ops: Staff; let safety: Staff; let child: string; let s: School;
-const tokens: Record<string, () => JwtClaims> = {};
-const passwords = new Map<string, string>();
-const bans = new Map<string, boolean>();
-const rpcCalls: string[] = [];
-let banFailsOnce = false;
 
-function deps(): AdminApiDeps {
-  const base = pgliteStore(db);
-  return {
-    async asCaller(authorization, fn, args) {
-      const claims = tokens[authorization.replace(/^Bearer /, '')];
-      if (!claims) throw new CallerError('JWSError JWSInvalidSignature', 'PGRST301');
-      const names = Object.keys(args);
-      try {
-        return await asClaims(db, claims(), async (tx) =>
-          (await tx.query<{ v: unknown }>(
-            `select admin.${fn}(${names.map((n, i) => `${n} => $${i + 1}`).join(', ')}) as v`,
-            names.map((n) => args[n]),
-          )).rows[0]?.v ?? null);
-      } catch (e) {
-        throw new CallerError((e as Error).message, String((e as { code?: string }).code ?? ''));
-      }
-    },
-    lms: {
-      rpc: async (fn, args) => {
-        rpcCalls.push(fn);
-        const names = Object.keys(args);
-        return asService(db, async (tx) =>
-          (await tx.query<{ v: unknown }>(
-            `select lms.${fn}(${names.map((n, i) => `${n} => $${i + 1}`).join(', ')}) as v`,
-            names.map((n) => args[n]),
-          )).rows[0]?.v ?? null);
-      },
-      store: { ...base, async createAccount(a) { passwords.set(a.loginId, a.password); return base.createAccount(a); } },
-      auth: {
-        async setPassword(userId, password) {
-          const row = (await db.query<{ login_id: string }>(`select login_id from lms.account where user_id = $1`, [userId])).rows[0];
-          passwords.set(row.login_id, password);
-        },
-      },
-    },
-    authAdmin: {
-      async createStaffUser(email, password) {
-        if ((await db.query(`select 1 from auth.users where email = $1`, [email])).rows.length) {
-          throw new Refused(409, 'An account with that email already exists.');
-        }
-        const { rows } = await db.query<{ id: string }>(
-          `insert into auth.users (email, raw_app_meta_data) values ($1, '{"provisioned_by":"staff"}') returning id`, [email]);
-        passwords.set(email, password);
-        return rows[0].id;
-      },
-      async setBanned(userId, banned) {
-        if (banFailsOnce) { banFailsOnce = false; throw new Error('auth service 500'); }
-        bans.set(userId, banned);
-      },
-    },
-  };
-}
-
+const deps = () => world.deps();
 const post = (route: string, body: unknown, token?: string) =>
   handleAdminApi({ method: 'POST', path: `/functions/v1/admin-api/${route}`, authorization: token ? `Bearer ${token}` : undefined, body }, deps());
 
 beforeAll(async () => {
   db = await freshDatabase();
+  world = apiWorld(db);
   await setEnvironment(db);
   owner = await makeStaff(db, 'owner', 'Aarav'); ops = await makeStaff(db, 'ops', 'Ops person'); safety = await makeStaff(db, 'safety', 'Safety person');
   child = await anonymousChild(db);
   s = await buildSchool(db, 'API');
+  const { tokens } = world;
   tokens['owner'] = () => aal2(owner); tokens['owner-fresh'] = () => fresh(owner);
   tokens['ops'] = () => aal2(ops); tokens['ops-fresh'] = () => fresh(ops);
   tokens['safety-fresh'] = () => fresh(safety); tokens['child'] = () => ({ sub: child, aal: 'aal2', is_anonymous: true });
 });
 afterAll(async () => { await db.close(); });
-
-/*
- * THE STAFF CONSOLE'S SERVICE CALLS (supabase/functions/admin-api). Written first.
- *
- * Over the real migrations, with stand-ins for the auth admin API: every call
- * asks the database as the caller first (admin.api_gate, admin.staff_invite,
- * admin.direct_user_block), and nothing is created, reset or banned when the
- * database says no. Refusals come back as {error, code}.
- */
 
 const SHEET = 'grade,section,roll,name\n8,A,5,Asha Rao\n';
 type Reply = { status: number; body: Record<string, unknown> };
@@ -121,8 +66,8 @@ describe('who may call', () => {
     for (const [route, body] of asChild) {
       expect(await post(route, body, 'child'), route).toMatchObject({ status: 403, body: { code: 'not-allowed' } });
     }
-    expect(passwords.size).toBe(0);
-    expect(bans.size).toBe(0);
+    expect(world.passwords.size).toBe(0);
+    expect(world.bans.size).toBe(0);
     expect(await count(`select count(*)::int as n from auth.users where email is not null`)).toBe(0);
   });
 
@@ -137,7 +82,7 @@ describe('people', () => {
     const preview = await send('import', { code: 'API', students: SHEET }, 'ops');
     expect(preview.status).toBe(200);
     expect(preview.body.committed).toBe(false);
-    expect(passwords.size).toBe(0);
+    expect(world.passwords.size).toBe(0);
 
     const done = await send(
       'import',
@@ -148,7 +93,7 @@ describe('people', () => {
     const created = done.body.created as { loginId: string; pin: string }[];
     expect(created[0]).toMatchObject({ loginId: 'API-8A-5' });
     expect(created[0].pin).toMatch(/^\d{6}$/);
-    expect(created[0].pin).toBe(passwords.get('API-8A-5'));
+    expect(created[0].pin).toBe(world.passwords.get('API-8A-5'));
     expect((await lmsAudit('people-added')).map((r) => r.actor)).toEqual([ops.id]);
     expect(await adminAudit('people-import-requested')).toHaveLength(1);
   });
@@ -182,17 +127,17 @@ describe('people', () => {
 
 describe('new PINs', () => {
   it('a new PIN needs a code from the last 10 minutes; then the old PIN stops and its holder is signed out', async () => {
-    const old = passwords.get('API-8A-5');
+    const old = world.passwords.get('API-8A-5');
     const body = { code: 'API', loginId: 'api-8a-5', reason: 'parent called', env: 'TEST' };
     expect(await send('reset-pin', body, 'ops')).toMatchObject({ status: 403, body: { code: 'needs-mfa' } });
-    expect(passwords.get('API-8A-5')).toBe(old);
+    expect(world.passwords.get('API-8A-5')).toBe(old);
 
-    rpcCalls.length = 0;
+    world.rpcCalls.length = 0;
     const r = await send('reset-pin', body, 'ops-fresh');
     expect(r.status).toBe(200);
     expect(r.body).toMatchObject({ loginId: 'API-8A-5', displayName: 'Asha Rao' });
-    expect(r.body.pin).toBe(passwords.get('API-8A-5'));
-    expect(rpcCalls).toContain('end_sessions');
+    expect(r.body.pin).toBe(world.passwords.get('API-8A-5'));
+    expect(world.rpcCalls).toContain('end_sessions');
     expect((await lmsAudit('pin-reset')).at(-1)).toMatchObject({ actor: ops.id, target: 'API-8A-5' });
     expect(await adminAudit('pin-reset-requested')).toHaveLength(1);
   });
@@ -225,7 +170,7 @@ describe('staff invitations', () => {
     expect(r.body.email).toBe('new.person@example.com');
     const userId = r.body.userId as string;
     expect(r.body.temporaryPassword).toHaveLength(20);
-    expect(r.body.temporaryPassword).toBe(passwords.get('new.person@example.com'));
+    expect(r.body.temporaryPassword).toBe(world.passwords.get('new.person@example.com'));
     const made = (
       await db.query<{ p: string }>(`select raw_app_meta_data ->> 'provisioned_by' as p from auth.users where id = $1`, [userId])
     ).rows;
@@ -257,18 +202,18 @@ describe('blocking a direct user', () => {
     const r = await send('user-block', { userId: child, blocked: true, reason: 'scripted abuse', env: 'TEST' }, 'ops');
     expect(r).toEqual({ status: 200, body: { userId: child, blocked: true } });
     expect(await blocked()).toBe(1);
-    expect(bans.get(child)).toBe(true);
+    expect(world.bans.get(child)).toBe(true);
     const back = await send('user-block', { userId: child, blocked: false, reason: 'appeal upheld', env: 'TEST' }, 'ops');
     expect(back).toEqual({ status: 200, body: { userId: child, blocked: false } });
     expect(await blocked()).toBe(0);
-    expect(bans.get(child)).toBe(false);
+    expect(world.bans.get(child)).toBe(false);
   });
 
   it('a school account cannot be blocked here, and nothing is banned', async () => {
     const r = await send('user-block', { userId: s.kid8a, blocked: true, reason: 'scripted abuse', env: 'TEST' }, 'ops');
     expect(r.status).toBe(400);
     expect(r.body.error).toMatch(/belongs to a school/);
-    expect(bans.has(s.kid8a)).toBe(false);
+    expect(world.bans.has(s.kid8a)).toBe(false);
 
     const d = deps();
     const asked = vi.spyOn(d, 'asCaller');
@@ -281,14 +226,14 @@ describe('blocking a direct user', () => {
     const quiet = vi.spyOn(console, 'error').mockImplementation(() => {});
     try {
       const before = (await adminAudit('user-blocked')).length;
-      banFailsOnce = true;
+      world.failNextBan();
       const body = { userId: child, blocked: true, reason: 'scripted abuse', env: 'TEST' };
       const first = await send('user-block', body, 'ops');
       expect(first.status).toBe(502);
       expect(first.body.error).toMatch(/Recorded, but the sign-in service did not confirm it/);
       expect(await blocked()).toBe(1);
       expect((await send('user-block', body, 'ops')).status).toBe(200);
-      expect(bans.get(child)).toBe(true);
+      expect(world.bans.get(child)).toBe(true);
       expect((await adminAudit('user-blocked')).length).toBe(before + 2);
     } finally {
       quiet.mockRestore();

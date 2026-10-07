@@ -70,6 +70,8 @@ export interface StaffSetInput {
   displayName: string;
   active: boolean;
   reason: string;
+  /** The environment this console was built for (plan 1's M2). */
+  env: string;
 }
 
 export interface AdminClient {
@@ -152,6 +154,7 @@ export function createAdminClient(t: AdminTransport): AdminClient {
           p_name: i.displayName,
           p_active: i.active,
           p_reason: i.reason,
+          p_env: i.env,
         }),
       );
     },
