@@ -192,9 +192,21 @@ describe('300 seeded classes with a pie, a line chart and moving working', () =>
  *     alone: page-full 274, median 0.574. This is how much easier the gate is
  *     on short key points: 15 classes of 300;
  *   - both, as built: median 0.555, page-full in 286 classes, phone-readable 84.
+ *
+ * MEASURED AGAIN 2026-10-07, her lines drawn in Quicksand instead of Caveat
+ * (Aarav: "writing font ko normal kr do") at 0.9 of their old sizes (board-
+ * layout layout.ts, the sizes she writes at): 1400 pages (1347 before),
+ * median 0.551, page-full in 288 classes, phone-readable in 101, overlap in 1
+ * (seed 268: two connectors' words on an 18-unit run between the same two
+ * pictures; the stacked board has its own one, seed 266, so the guard above
+ * holds). phone-readable reads font size,
+ * and Quicksand's lowercase is half as tall again as Caveat's at the same size
+ * — the same 12 px floor is now a larger letter, and more lines meet it only
+ * just. At 1.0 of the old sizes: 1534 pages and a page's last point turned
+ * onto a page of its own; at 0.8: page-full 295, phone-readable 113.
  */
-const PAGE_FULL_CEILING = 286;
-const PHONE_READABLE_CEILING = 84;
+const PAGE_FULL_CEILING = 288;
+const PHONE_READABLE_CEILING = 101;
 const COVERAGE_FLOOR = 0.53;
 
 describe('300 seeded classes on a composed board', () => {

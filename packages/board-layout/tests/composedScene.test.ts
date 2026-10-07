@@ -36,7 +36,9 @@ describe('a composed scene', () => {
     ]);
     const arrow = made.elements.find((e) => e.kind === 'arrow') as Arrow;
     const words = made.elements.find((e) => e.kind === 'handwrite' && e.text === 'acidic chyme enters') as Hand;
-    expect(words.size ?? 26).toBeGreaterThanOrEqual(16.5);
+    // The floor arrow words are written at: 15 in Quicksand (2026-10-07), whose
+    // lowercase stands taller than Caveat's did at the 17 this used to hold.
+    expect(words.size ?? 26).toBeGreaterThanOrEqual(15);
     const mid = { x: (arrow.from.x + arrow.to.x) / 2, y: (arrow.from.y + arrow.to.y) / 2 };
     const b = boxOf(words);
     expect(Math.hypot(b.x + b.w / 2 - mid.x, b.y + b.h / 2 - mid.y)).toBeLessThanOrEqual(110);

@@ -97,8 +97,9 @@ describe('a figure with its key points beside it', () => {
       { do: 'write', text: 'Useful substances like glucose are reabsorbed' },
       { do: 'write', text: "Water is reabsorbed depending on the body's need" },
       { do: 'write', text: 'What remains becomes urine' },
-      // Two more, so the column still runs out with her handwriting measured
-      // as Caveat (2026-10-02): the four above now fit on one page.
+      // Two more, so the column still runs out whatever face her lines are
+      // measured in: under the narrow Caveat ruler (2026-10-02) the four above
+      // fitted on one page.
       { do: 'write', text: 'Urine flows from the collecting duct into the ureter' },
       { do: 'write', text: 'Each kidney holds about a million nephrons working together' },
       { do: 'caption', text: 'The nephron: the filtering unit of the kidney' },

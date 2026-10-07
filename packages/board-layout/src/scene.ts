@@ -365,11 +365,14 @@ export function connectElements(
     // close together leave a short arrow, and a label at full size then spills
     // across both of the pictures it was meant to be between.
     const run = Math.hypot(to.x - from.x, to.y - from.y);
-    // Sized by the sans ruler on purpose, not her handwriting's narrower one
-    // (lesson-format `handWidth`): measured narrower, a label grew up to 1.6x
-    // to fill the same run, and the taller words ran into the pictures either
-    // side of the arrow (300-class fuzz, 2026-10-02: overlaps 1 -> 3 classes).
-    const size = fitText(step.label, run, 30, 17);
+    // Sized by the sans ruler on purpose, not her own narrower one
+    // (lesson-format `handWidth`): measured narrower — Caveat's ruler was, when
+    // this was found — a label grew up to 1.6x to fill the same run, and the
+    // taller words ran into the pictures either side of the arrow (300-class
+    // fuzz, 2026-10-02: overlaps 1 -> 3 classes).
+    // 27 and 15: 0.9 of what they were in Caveat (layout.ts, the sizes she
+    // writes at).
+    const size = fitText(step.label, run, 27, 15);
     out.push({
       kind: 'handwrite',
       id: labelIdFor(id),

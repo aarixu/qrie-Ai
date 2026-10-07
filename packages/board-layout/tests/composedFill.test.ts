@@ -83,7 +83,7 @@ describe('a page of writing', () => {
     const page = (point: string) =>
       composed([{ do: 'say', text: 'One thing to remember.' }, { do: 'write', text: point }]).sheets[0].coverage;
     // Both are one line in a 450-wide column; how long the line is does not make the page fuller.
-    expect(page('Villi absorb food')).toBe(page('Villi absorb digested food into the blood'));
+    expect(page('Villi absorb food')).toBe(page('Villi absorb digested food into blood'));
   });
 
   it('still writes key points with no notes beside them from the left', () => {

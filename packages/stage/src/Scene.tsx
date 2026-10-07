@@ -22,6 +22,7 @@ import { animAt, staggerDelays, SEQUENCE_CAP_MS } from './stagger';
 import { drawOnMarkup } from './drawOn';
 import {
   graphicLabelSize,
+  handWidth,
   textWidth,
   fitText,
   titleSize,
@@ -97,12 +98,17 @@ const INK = '#3c3c3c';
  */
 const FONT_HAND = "'Quicksand Variable', 'Quicksand', 'Baloo 2', 'Segoe UI', system-ui, sans-serif";
 const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
-/** A real handwriting face, for the lines the tutor writes out rather than shows. */
-// 'Caveat Variable' is the family @fontsource-variable/caveat registers
-// (apps/classroom/src/fonts.ts); asking only for 'Caveat' fell through to the
-// system's script face on every board, and every writing mask was sized for a
-// font the child never saw (seventh review, 2026-09-29).
-const FONT_WRITE = "'Caveat Variable', 'Caveat', 'Segoe Script', 'Bradley Hand', cursive";
+/**
+ * The face for the lines she writes out rather than shows.
+ *
+ * It was Caveat, a handwriting face, until Aarav found it odd to read
+ * (2026-10-07): her lines are now the board's own face, drawn at weight 600,
+ * which is the face and weight `handWidth` in lesson-format is measured from.
+ * They still appear as she writes them; only the letters are no longer script.
+ */
+const FONT_WRITE = FONT_HAND;
+/** The weight her lines are drawn at, and measured at. */
+const WRITE_WEIGHT = 600;
 
 /** The ink and faces every toolkit tool draws with. */
 const THEME: ToolTheme = { ink: INK, tones: TONE_COLORS, fontHand: FONT_HAND, fontMono: FONT_MONO };
@@ -1065,17 +1071,15 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
   // per character ran short of the real thing, and the mask — which hides
   // everything past its own right edge — clipped the last word off the line.
   // A little over, because a mask that is too wide costs nothing and a mask
-  // that is too narrow eats words.
-  // Generously over: the shared ruler is tuned for a sans face and the
-  // tutor's hand is wider, and a mask that is too wide costs nothing while a
-  // mask that is too narrow eats the last word off the line.
+  // that is too narrow eats words; and only a little, because the nib travels
+  // the mask's width and should stay with the ink it is writing.
   const math = hasMath(el.text);
   // Typeset maths runs wider and taller than the plain characters the ruler
   // counts: KaTeX spaces operators and stacks fractions. So a maths line gets
   // a wider box, and a taller one when it has a fraction, root or power —
   // the writing mask clipped "…= 5x + 20" and hid a fraction's denominator
   // (seventh review, 2026-09-29).
-  const width = textWidth(el.text, size) * (math ? 1.9 : 1.3);
+  const width = math ? textWidth(el.text, size) * 1.9 : handWidth(el.text, size) * 1.1;
   const tall = math && /\\[dt]?frac|\\sqrt|\^|_/.test(el.text);
   const top = el.y - size * (tall ? 1.6 : 1);
   const height = size * (tall ? 2.8 : 1.8);
@@ -1110,7 +1114,7 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
             style={{
               fontFamily: FONT_WRITE,
               fontSize: size,
-              fontWeight: 600,
+              fontWeight: WRITE_WEIGHT,
               color,
               textAlign: 'center',
               whiteSpace: 'nowrap',
@@ -1126,7 +1130,7 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
           textAnchor="middle"
           fontFamily={FONT_WRITE}
           fontSize={size}
-          fontWeight={600}
+          fontWeight={WRITE_WEIGHT}
           fill={color}
           mask={`url(#${maskId})`}
         >

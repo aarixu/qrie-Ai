@@ -101,6 +101,34 @@ const DERIVE_LEAD = 44;
 const MAX_DERIVE_STEPS = 7;
 const DERIVE_STEP_MS = 1400;
 const WRITE_H = 62;
+/**
+ * THE SIZES SHE WRITES AT, SET FOR THE FACE SHE WRITES IN (2026-10-07).
+ *
+ * Every size below that a line of hers is written at was chosen for Caveat,
+ * a narrow handwriting face with small lowercase. Her lines are now drawn in
+ * Quicksand (Aarav: "writing font ko normal kr do"), which at the same size is
+ * about 1.32x as wide and has lowercase 1.5x as tall. Each size is now 0.9 of
+ * what it was, measured over the 300 seeded classes against 1.0 and 0.8:
+ *
+ *   - 1.0: composed pages 1347 -> 1534, and a page's last point and summary
+ *     turned onto a page of their own, 12% written on;
+ *   - 0.9: 1400 pages, page-full in 288 classes against 286 before,
+ *     phone-readable in 101 against 84, her lowercase about 11 px tall on a
+ *     phone held sideways against 7.9 px in Caveat;
+ *   - 0.8: 1335 pages, but phone-readable in 113 and page-full in 295.
+ *
+ * Phone-readable counts more classes than it did because it reads font size,
+ * and the same 12 px is now a much larger letter: it is held at 12 px, the
+ * floor the rest of the board's text already meets.
+ */
+const WIDE_SIZE = 32;
+const WIDE_MIN = 15;
+const WIDE_WRAP_BELOW = 25;
+const WIDE_WRAPPED_SIZE = 27;
+const COLUMN_SIZE = 24;
+/** The sizes a picture's margin names are written at, largest first. */
+const MARGIN_SIZES = [18, 16, 14, 13];
+const MARGIN_MIN = MARGIN_SIZES[MARGIN_SIZES.length - 1];
 const CARD_H = 128;
 /** The sizes a card's body may wrap at, largest first; see the card block. */
 const CARD_BODY_SIZES = [16, 15, 14, 13];
@@ -133,11 +161,11 @@ const COMPARE_MAX_W = 680;
  * A connector's words lifted above their row (the scene block): written no
  * larger than LANE_SIZE, LANE_CLEAR above the tallest thing they span, and —
  * when the row reached the top of its band — in a LANE that tall kept clear
- * above it. 42 holds a size-20 line (27 tall, `boxOf`) with its clearance
- * under it and the solver's breathing room over it.
+ * above it. 42 holds a line at LANE_SIZE (`boxOf`) with its clearance under
+ * it and the solver's breathing room over it.
  */
 const LANE = 42;
-const LANE_SIZE = 20;
+const LANE_SIZE = 18;
 const LANE_CLEAR = 8;
 /** A label's box with the room the solver wants round it (collide.ts BREATHING). */
 const padLabel = (r: Rect): Rect => ({ x: r.x - 6, y: r.y - 6, w: r.w + 12, h: r.h + 12 });
@@ -159,19 +187,19 @@ const BAND_GAP = 16;
 const POINT_GAP = 10;
 const MIN_FIGURE_H = 190;
 /** The sizes a band is written at, largest first. All its points share one. */
-const BAND_SIZES = [30, 26, 23, 20];
+const BAND_SIZES = [27, 23, 21, 18];
 /**
- * A key point on a composed page: smaller than a stacked board's 27, because
+ * A key point on a composed page: smaller than a stacked board's, because
  * the camera comes close to the region being taught (assemble frames it), and
  * the page has more to hold.
  */
-const POINT_SIZE = 22;
+const POINT_SIZE = 20;
 /** How far a composed key point's words start from its region's left edge: the bullet's margin. */
 const BULLET_INDENT = 32;
 /** The gap between a composed scene's rows: a lane, room for an arrow's words beside it. */
 const COMPOSED_ROW_GAP = 44;
 /** A part's name in the key under a picture, its part not found: the size of a name in the margin. */
-const HOMELESS_NAME_SIZE = 20;
+const HOMELESS_NAME_SIZE = 18;
 /** The key under a picture: the gap above it, a bullet's room before each name, and the room between names. */
 const KEY_GAP = 12;
 const KEY_DOT_W = 26;
@@ -377,8 +405,9 @@ function planBand(
  * The BREAKING is `wrapHand` in lesson-format, beside the width measurement it
  * is made of — this file used to carry its own copy that guessed half an em per
  * character, packed more onto a line than would fit, and ran text past the very
- * margin it was wrapping for. Every caller writes in her hand (a key point, a
- * picture's name), so it is measured as Caveat, not as the sans board text.
+ * margin it was wrapping for. Every caller is a line she writes (a key point, a
+ * picture's name), so it is measured with her ruler, `handWidth`, not the sans
+ * one the rest of the board's text uses.
  *
  * The six percent held back is the only part that belongs here: a board is not
  * a page, and text that reaches the edge of its column reads as though it ran
@@ -932,15 +961,15 @@ export function layoutBeat(
          * five into x equals fourteen minus y, what value do you get for x?"
          * came out at size 17 across the whole board — and the camera, framing
          * that one line and the work area under it, drew it a few pixels high on
-         * a phone. Below size 28 it is written on two or more lines at 30
-         * instead, and the block is as tall as those lines.
+         * a phone. Below WIDE_WRAP_BELOW it is written on two or more lines at
+         * WIDE_WRAPPED_SIZE instead, and the block is as tall as those lines.
          */
-        const wideFit = fitHand(item.text, WIDTH * 0.94, 36, 17);
-        const wideLines = wideFit >= 28 ? null : wrapText(item.text, WIDTH * 0.9, 30);
+        const wideFit = fitHand(item.text, WIDTH * 0.94, WIDE_SIZE, WIDE_MIN);
+        const wideLines = wideFit >= WIDE_WRAP_BELOW ? null : wrapText(item.text, WIDTH * 0.9, WIDE_WRAPPED_SIZE);
         blocks.push({
           kind: item.do,
           at: index,
-          height: wideLines ? wideLines.length * handLead(30) + 14 : WRITE_H,
+          height: wideLines ? wideLines.length * handLead(WIDE_WRAPPED_SIZE) + 14 : WRITE_H,
           // Written on the centreline when it has the board, and inside its
           // own column when it is sharing with a picture. In a column it
           // WRAPS rather than shrinking: a key point squeezed to fit one line
@@ -949,8 +978,8 @@ export function layoutBeat(
           place: (r) => {
             const narrow = composition !== null || r.w < WIDTH * 0.75;
             if (!narrow && wideLines) {
-              const lead = handLead(30);
-              const top = r.y + 30 * 0.9;
+              const lead = handLead(WIDE_WRAPPED_SIZE);
+              const top = r.y + WIDE_WRAPPED_SIZE * 0.9;
               return wideLines.map((line, n) => ({
                 kind: 'handwrite',
                 ...(n > 0 ? { after: afterLines(wideLines, n) } : {}),
@@ -958,11 +987,11 @@ export function layoutBeat(
                 x: r.x + r.w / 2,
                 y: top + n * lead,
                 text: line,
-                size: 30,
+                size: WIDE_WRAPPED_SIZE,
                 ...(item.tone ? { tone: item.tone } : {}),
               }));
             }
-            const size = narrow ? (composition ? POINT_SIZE : 27) : 36;
+            const size = narrow ? (composition ? POINT_SIZE : COLUMN_SIZE) : WIDE_SIZE;
             // On a composed page a key point is a bullet point (Aarav,
             // 2026-10-04): written from the left of its region, the bullet in
             // a margin of its own, and a wrapped line under the point's words
@@ -985,7 +1014,7 @@ export function layoutBeat(
               x: composition ? r.x + indent + handWidth(line, size) / 2 : r.x + r.w / 2,
               y: narrow ? top + n * lead : r.y + Math.min(WRITE_H, r.h) * 0.7,
               text: line,
-              size: narrow ? size : fitHand(item.text, r.w * 0.94, 36, 17),
+              size: narrow ? size : fitHand(item.text, r.w * 0.94, WIDE_SIZE, WIDE_MIN),
               ...(item.tone ? { tone: item.tone } : {}),
             }));
             if (!composition) return written;
@@ -1763,14 +1792,14 @@ export function layoutBeat(
       const middle = hostBox.x + hostBox.w / 2;
       for (const side of ['left', 'right'] as const) {
         const other = side === 'left' ? 'right' : 'left';
-        while (pileOf(side, 14) > figureH) {
+        while (pileOf(side, MARGIN_MIN) > figureH) {
           const movable = placedFor
             .filter(({ pending, box }) => box !== null && sideOf.get(pending) === side)
             .sort((a, b) => Math.abs(a.box!.x + a.box!.w / 2 - middle) - Math.abs(b.box!.x + b.box!.w / 2 - middle));
           const mover = movable[0];
           if (!mover) break;
           sideOf.set(mover.pending, other);
-          if (pileOf(other, 14) > figureH) {
+          if (pileOf(other, MARGIN_MIN) > figureH) {
             sideOf.set(mover.pending, side);
             break;
           }
@@ -1787,10 +1816,10 @@ export function layoutBeat(
      * smaller and have every name legible.
      */
     const sizeFor = (side: 'left' | 'right'): number => {
-      for (const size of [20, 18, 16, 14]) {
+      for (const size of MARGIN_SIZES) {
         if (pileOf(side, size) <= figureH) return size;
       }
-      return 14;
+      return MARGIN_MIN;
     };
     const sizes = { left: sizeFor('left'), right: sizeFor('right') };
 

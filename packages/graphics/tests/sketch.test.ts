@@ -32,6 +32,12 @@ describe('the pencilled sketch', () => {
     expect(body).not.toContain('induction');
   });
 
+  it('writes its word in the board face, not a handwriting face (Aarav, 2026-10-07)', () => {
+    const body = pencilGlyph('sluice').body;
+    expect(body).toContain(`font-family="'Quicksand Variable'`);
+    expect(body).not.toMatch(/Caveat|cursive/);
+  });
+
   it('draws strokes, never a filled blob', () => {
     // It has to read as pencil on a board, not as a shape someone printed.
     const body = pencilGlyph('sluice').body;

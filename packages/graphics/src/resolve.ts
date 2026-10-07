@@ -381,7 +381,9 @@ export function pencilGlyph(noun: string): Glyph {
     height: 100,
     body:
       strokes +
-      `<text x="50" y="94" text-anchor="middle" font-family="Caveat, cursive"` +
+      // The board's own face: the word is read, not admired, and a handwriting
+      // face was the one Aarav found odd to read (2026-10-07).
+      `<text x="50" y="94" text-anchor="middle" font-family="'Quicksand Variable', 'Quicksand', 'Baloo 2', sans-serif"` +
       ` font-size="${size}" fill="#4b4b4b">${escapeXml(label)}</text>`,
   };
 }

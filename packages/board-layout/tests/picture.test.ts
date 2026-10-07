@@ -64,8 +64,8 @@ describe('a picture keeps the board while its points go up the side', () => {
   it('wraps a long point onto more lines rather than shrinking it away', () => {
     // A key point squeezed to one line of a narrow column comes out too small
     // to read from a desk, which is the one thing a key point may not be.
-    // Long enough for her handwriting's own ruler (2026-10-02): measured as
-    // Caveat rather than as sans, the two short points above fit on one line.
+    // Long enough for any ruler her lines have had: measured as Caveat
+    // (2026-10-02), the two short points above fit on one line.
     const long = layoutBeat(
       beat([
         ...board.slice(0, 7),
