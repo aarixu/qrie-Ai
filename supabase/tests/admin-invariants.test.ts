@@ -38,6 +38,12 @@ describe('the admin schema', () => {
 
   it('lets a signed-in person call exactly the functions the panel uses, each of which checks for staff itself', async () => {
     expect(await callableBy('authenticated')).toEqual([
+      'admin.api_gate',
+      'admin.audit_list',
+      'admin.direct_user',
+      'admin.direct_user_block',
+      'admin.direct_user_find',
+      'admin.direct_users_summary',
       'admin.flag_list',
       'admin.flag_set',
       'admin.me',
@@ -62,7 +68,9 @@ describe('the admin schema', () => {
       'admin.school_weekly',
       'admin.set_caps',
       'admin.set_halt',
+      'admin.staff_invite',
       'admin.staff_list',
+      'admin.staff_roster',
       'admin.staff_set',
       'admin.today',
     ]);

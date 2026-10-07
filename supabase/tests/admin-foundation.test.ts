@@ -63,7 +63,7 @@ describe('who counts as staff', () => {
     const leaver = await makeStaff(db, 'ops', 'Leaver');
     expect((await me(aal2(leaver))).role).toBe('ops');
     await asClaims(db, fresh(owner), (tx) =>
-      tx.query(`select admin.staff_set($1, 'ops', 'Leaver', false, 'left the company')`, [leaver.id]),
+      tx.query(`select admin.staff_set($1, 'ops', 'Leaver', false, 'left the company', 'TEST')`, [leaver.id]),
     );
     await expect(me(aal2(leaver))).rejects.toThrow(/not allowed/);
   });
@@ -82,11 +82,11 @@ describe('the staff screen', () => {
     const hire = await createUser(db, { appMeta: { provisioned_by: 'staff' } });
     await expect(
       asClaims(db, aal2(owner, { amr: staleAmr() }), (tx) =>
-        tx.query(`select admin.staff_set($1, 'safety', 'Reviewer', true, 'new reviewer')`, [hire]),
+        tx.query(`select admin.staff_set($1, 'safety', 'Reviewer', true, 'new reviewer', 'TEST')`, [hire]),
       ),
     ).rejects.toThrow(/authenticator code/);
     await asClaims(db, fresh(owner), (tx) =>
-      tx.query(`select admin.staff_set($1, 'safety', 'Reviewer', true, 'new reviewer')`, [hire]),
+      tx.query(`select admin.staff_set($1, 'safety', 'Reviewer', true, 'new reviewer', 'TEST')`, [hire]),
     );
     expect((await me(aal2({ id: hire }))).role).toBe('safety');
   });
@@ -94,13 +94,13 @@ describe('the staff screen', () => {
   it('an anonymous account can never be staff', async () => {
     const child = await anonymousChild(db);
     await expect(
-      asClaims(db, fresh(owner), (tx) => tx.query(`select admin.staff_set($1, 'ops', 'Kid', true, 'not a kid account')`, [child])),
+      asClaims(db, fresh(owner), (tx) => tx.query(`select admin.staff_set($1, 'ops', 'Kid', true, 'not a kid account', 'TEST')`, [child])),
     ).rejects.toThrow(/anonymous/);
   });
 
   it('an owner cannot demote or deactivate themselves', async () => {
     await expect(
-      asClaims(db, fresh(owner), (tx) => tx.query(`select admin.staff_set($1, 'ops', 'Aarav', true, 'oops')`, [owner.id])),
+      asClaims(db, fresh(owner), (tx) => tx.query(`select admin.staff_set($1, 'ops', 'Aarav', true, 'oops', 'TEST')`, [owner.id])),
     ).rejects.toThrow(/yourself/);
   });
 
