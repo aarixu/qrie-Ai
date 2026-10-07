@@ -147,6 +147,12 @@ export function computeFrame(
   focus: readonly string[],
   aspect?: number,
   minW?: number,
+  /**
+   * Everything on the board at this moment (the beat's `show`), which the
+   * frame must not cut in half — see settle. Without it, only a page's titles
+   * are kept whole.
+   */
+  onBoard?: readonly string[],
 ): Rect {
   const board: Rect = { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h };
   const shape = (r: Rect, within: Rect = board): Rect =>
@@ -178,7 +184,7 @@ export function computeFrame(
     }
     const page = Math.floor((part.x + part.w / 2) / PAGE_STRIDE);
     const pageBox = { x: page * PAGE_STRIDE, y: 0, w: Math.min(CANVAS_W, board.w), h: board.h };
-    return wholeTitle(lesson, shape(zoom, pageBox), [part], (r) => shape(r, pageBox));
+    return settle(lesson, shape(zoom, pageBox), [part], onBoard, (r) => shape(r, pageBox));
   }
 
   /**
@@ -251,7 +257,7 @@ export function computeFrame(
     w: Math.min(CANVAS_W, board.w),
     h: board.h,
   };
-  return wholeTitle(lesson, shape(frame, pageRect), boxes, (r) => shape(r, pageRect));
+  return settle(lesson, shape(frame, pageRect), boxes, onBoard, (r) => shape(r, pageRect));
 }
 
 /** Part of `r` is in `f`, and part is not. */
@@ -261,27 +267,54 @@ const cutBy = (r: Rect, f: Rect): boolean => {
   return meets && !inside;
 };
 
+const holds = (f: Rect, r: Rect): boolean => r.x >= f.x - 0.5 && r.y >= f.y - 0.5 && r.x + r.w <= f.x + f.w + 0.5 && r.y + r.h <= f.y + f.h + 0.5;
+
+/** A mark, an arrow or a stroke may run off the edge of a frame; nothing else may be cut. */
+const MAY_BE_CUT: ReadonlySet<string> = new Set(['mark', 'arrow', 'pen']);
+
 /**
- * A TITLE IS SHOWN WHOLE, OR NOT AT ALL (small intestine, 2026-10-07).
+ * NOTHING ON THE BOARD IS CUT IN HALF (small intestine and human heart,
+ * 2026-10-07).
  *
- * A frame zoomed onto what is under a page's title is padded and shaped to the
- * screen, and that reached up into the header and cut the title at both edges:
- * "hemical Digestion in Small Intestin". So a frame that cuts a title is moved
- * down, its size kept, until the title is above it — when what it frames still
- * fits — and otherwise grown to hold the title (and the writing above it)
- * whole.
+ * A frame zoomed onto a line's writing is padded and shaped to the screen, and
+ * that reached into whatever stood beside it: a page's title cut at both edges
+ * ("hemical Digestion in Small Intestin"), the top of a diagram sliced off
+ * above the key point under it. So whatever the frame cuts — of what is on the
+ * board (`onBoard`; without it, a page's titles) — is either moved off, the
+ * frame shifted the least it can while everything it frames stays in it, or
+ * taken in whole, the frame grown round it. Writing is shown whole or not at
+ * all, and a demonstration with the point written under it is shown together.
  */
-function wholeTitle(lesson: Lesson, frame: Rect, framed: readonly Rect[], reshape: (r: Rect) => Rect): Rect {
-  const titles = lesson.elements.filter((el) => el.kind === 'title').map(boxOf);
-  const cut = titles.find((t) => cutBy(t, frame));
-  if (!cut) return frame;
-  const bottom = Math.max(...framed.map((b) => b.y + b.h));
-  const below = { ...frame, y: cut.y + cut.h + 2 };
-  if (below.y + below.h >= bottom && below.y + below.h <= lesson.canvas.h) return below;
-  // The title and whatever is written above it, across its width.
-  const header = lesson.elements
+function settle(
+  lesson: Lesson,
+  frame: Rect,
+  framed: readonly Rect[],
+  onBoard: readonly string[] | undefined,
+  reshape: (r: Rect) => Rect,
+): Rect {
+  const byId = new Map(lesson.elements.map((el) => [el.id, el]));
+  const there = onBoard
+    ? onBoard.map((id) => byId.get(id)).filter((el): el is NonNullable<typeof el> => el !== undefined)
+    : lesson.elements.filter((el) => el.kind === 'title');
+  // A frame round what is framed may cut what holds it — a card's border, a
+  // table's frame — and taking that in would zoom out from the very writing
+  // the line is about.
+  const whole = there
+    .filter((el) => !MAY_BE_CUT.has(el.kind))
     .map(boxOf)
-    .filter((b) => b.y + b.h <= cut.y + cut.h && b.x < cut.x + cut.w && cut.x < b.x + b.w)
-    .reduce(union, cut);
-  return reshape(union(frame, header));
+    .filter((b) => !framed.some((r) => holds(b, r)));
+  let f = frame;
+  for (let round = 0; round < 4; round += 1) {
+    const cut = whole.find((b) => cutBy(b, f));
+    if (!cut) return f;
+    const moves = [
+      { ...f, y: cut.y + cut.h + 2 },
+      { ...f, y: cut.y - f.h - 2 },
+      { ...f, x: cut.x + cut.w + 2 },
+      { ...f, x: cut.x - f.w - 2 },
+    ].filter((m) => m.y >= 0 && m.y + m.h <= lesson.canvas.h && framed.every((b) => holds(m, b)));
+    const nearest = moves.sort((a, b) => Math.hypot(a.x - f.x, a.y - f.y) - Math.hypot(b.x - f.x, b.y - f.y))[0];
+    f = nearest ?? reshape(union(f, cut));
+  }
+  return f;
 }

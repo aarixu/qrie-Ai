@@ -40,6 +40,15 @@ describe('the camera and a page title', () => {
     for (const id of ['liver', 'pancreas']) expect(cuts(boxOf(l.elements.find((e) => e.id === id)!), frame)).toBe(false);
   });
 
+  it('never cuts a diagram on the board when it frames the key point under it (human heart, 2026-10-07)', () => {
+    const diagram: Element = { kind: 'diagram', id: 'loops', x: 150, y: 110, w: 700, h: 300, src: 'x.svg', alt: 'loops', parts: [] };
+    const point: Element = { kind: 'handwrite', id: 'kp', x: 500, y: 470, text: 'Pulmonary loop: right ventricle to lungs', size: 22 };
+    const l = lesson([crumb, title, diagram, point]);
+    const frame = computeFrame(l, ['kp'], [], 16 / 9, 737, ['c', 't', 'loops', 'kp']);
+    expect(cuts(boxOf(diagram), frame)).toBe(false);
+    expect(cuts(boxOf(point), frame)).toBe(false);
+  });
+
   it('frames the page, not the title alone, on a line that has written only the title', () => {
     const l = lesson([crumb, title]);
     const frame = computeFrame(l, ['c', 't'], [], 16 / 9);

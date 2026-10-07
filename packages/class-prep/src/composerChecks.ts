@@ -246,7 +246,7 @@ export function composerChecks(lesson: Lesson, report: ComposerReport | undefine
     const before = new Set(overview.has(beat.id) && n > 0 ? lesson.beats[n - 1].show : []);
     const held = overview.has(beat.id) ? beat.frame.filter((id) => beat.show.includes(id) && !before.has(id)) : beat.frame;
     if (held.length === 0) return;
-    const frame = computeFrame(lesson, beat.frame, beat.focus ?? [], STAGE_ASPECT, PHONE_STAGE_W / MAX_UNIT_PX);
+    const frame = computeFrame(lesson, beat.frame, beat.focus ?? [], STAGE_ASPECT, PHONE_STAGE_W / MAX_UNIT_PX, beat.show);
     const scale = PHONE_STAGE_W / frame.w;
     let smallest: { px: number; words: string } | null = null;
     for (const id of held) {

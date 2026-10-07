@@ -480,7 +480,7 @@ function boardProblems(lesson: Lesson): GateProblem[] {
   // The shape every student sees: the stage is 16:9 on every screen (canvas C2).
   const aspect = STAGE_ASPECT;
   for (const beat of lesson.beats) {
-    const frame = computeFrame(lesson, beat.frame ?? beat.show, beat.focus ?? [], aspect);
+    const frame = computeFrame(lesson, beat.frame ?? beat.show, beat.focus ?? [], aspect, undefined, beat.show);
     for (const id of beat.show) {
       const el = byId.get(id);
       if (!el || seen.has(id)) continue;

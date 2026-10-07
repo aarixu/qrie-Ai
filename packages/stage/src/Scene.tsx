@@ -1614,7 +1614,7 @@ export function Scene({ lesson, visible, focus, wide = false, assets, frame }: S
   const { aspect, width, measured } = useMeasure(svgRef);
   const target = wide
     ? { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h }
-    : computeFrame(lesson, frame ?? visible, focus, aspect, width ? width / MAX_UNIT_PX : undefined);
+    : computeFrame(lesson, frame ?? visible, focus, aspect, width ? width / MAX_UNIT_PX : undefined, visible);
   const box = useCamera(target, measured);
 
   return (
