@@ -83,10 +83,10 @@ function Commit([string]$msg) {
 | S3 | New module `packages/admin-client/src/billing.ts`; one `export * from './billing.ts';` line in `index.ts`; one construction line in `apps/admin/src/lib/client.ts`. |
 | S4 | Adds only Billing routes and one sidebar group. |
 | S5 | The only plan that changes `public.app_config` (0060). |
-| S6 | Adds `finance` with a new migration (0056). |
+| S6 | Adds `finance` with a new migration (0056) that widens the role constraint; it widens `staff_set`'s literal only where 0047's body still has it, and never recreates the 5-argument `staff_set` that plan 2's 0054 drops (merge note 2). |
 | S7 | Calls `lms.set_licence` only from its own definer code (`billing.apply_licence`, 0058). Never edits 0041. |
 | S8 | 0056 to 0060. |
-| S9 | Plan-1 files changed: `admin-invariants.test.ts` (list), `router.tsx`, `sidebar-data.ts`, `admin-client/src/index.ts`, `lib/client.ts`, `docs/ops/admin-console.md` (new section 5), `apps/admin/README.md`. **Beyond S9, each needed by this plan's own scope and noted in its task:** `packages/admin-client/src/api.ts` (one line: `Me.role` gains `'finance'`, needed by S6), `tools/admin-alert/src/run.ts` and `.github/workflows/admin-alert.yml` (the hourly reconciliation request, deliverable 7; additive, optional when its token is unset). |
+| S9 | Plan-1 files changed: `admin-invariants.test.ts` (list), `router.tsx`, `sidebar-data.ts`, `admin-client/src/index.ts`, `lib/client.ts`, `docs/ops/admin-console.md` (new section 6; plan 2 takes section 5 and merges first), `apps/admin/README.md`. **Beyond S9, each needed by this plan's own scope and noted in its task:** `packages/admin-client/src/api.ts` (one line: `Me.role` gains `'finance'`, needed by S6), `tools/admin-alert/src/run.ts` and `.github/workflows/admin-alert.yml` (the hourly reconciliation request, deliverable 7; additive, optional when its token is unset). |
 
 ## Review Focus
 
@@ -136,7 +136,7 @@ function Commit([string]$msg) {
 | `apps/admin/src/features/billing/{money,model}.ts`, `write-dialog.tsx`, `use-load.ts` + `apps/admin/tests/billing-{money,model}.test.ts` | pure helpers and the shared dialog | 11 |
 | `apps/admin/src/features/billing/{index,invoices,invoice-detail,subscriptions,payments,webhooks,plans,settings,schools}.tsx`, `src/router.tsx`, `sidebar-data.ts`, `src/lib/client.ts` | the pages | 12 |
 | `apps/admin/src/features/billing/{invoice-print,school-billing-tab,school-page}.tsx` | print page and S2 | 13 |
-| `docs/ops/admin-console.md` (section 5), `apps/admin/README.md` | Aarav's steps and the runbook | 14 |
+| `docs/ops/admin-console.md` (section 6), `apps/admin/README.md` | Aarav's steps and the runbook | 14 |
 
 ---
 
@@ -171,8 +171,10 @@ export async function makeFinance(db: PGlite, name = 'finance person'): Promise<
 1. `finance is a role the staff table accepts, and an unknown role is not`: `makeFinance` succeeds; `insert ... role 'auditor'` rejects with a check violation.
 2. `a finance member reaches me() and is told their role`: as `aal2(finance)`, `select admin.me()` → `role: 'finance'`.
 3. `finance is refused Today, the switches, the relay and the stop`: `admin.today()`, `admin.flag_list()`, `admin.relay_status()`, `admin.set_halt(true,'test stop','TEST')` each reject with `not allowed` (spec section 3: finance may not touch switches; ruling R11).
-4. `the owner makes a finance member through staff_set with a fresh code`: `createUser({provisioned_by:'staff'})`, then as `fresh(owner)` `admin.staff_set(u,'finance','Accounts','true','new accountant')`; `platform_staff.role = 'finance'`.
-5. `staff_set still refuses a role that does not exist`: `admin.staff_set(u,'auditor',...)` rejects with `a role is owner, ops, safety or finance`.
+4. `the owner makes a finance member through staff_set with a fresh code`: `createUser({provisioned_by:'staff'})`, then as `fresh(owner)` `admin.staff_set(p_user => u, p_role => 'finance', p_name => 'Accounts', p_active => true, p_reason => 'new accountant')`; `platform_staff.role = 'finance'`.
+5. `staff_set still refuses a role that does not exist`: the same call with `p_role => 'auditor'` rejects with `/a role is owner, ops, safety or finance|there is no staff role called auditor/` (the first is 0047's body widened by 0056; the second is plan 2's 0054 body, which this file meets once plan 2 is merged).
+
+Both calls go through one helper in the test file, `staffSet(claims, args)`, which reads `select max(pronargs) from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'admin' and p.proname = 'staff_set'` and adds `p_env => 'TEST'` when it is 6 (plan 2's M2 signature), so the file passes on this branch alone and after plan 2 is merged. It never creates a 5-argument `staff_set` (seam S6).
 
 - [ ] **Step 2: Run and see them fail**
 
@@ -192,27 +194,32 @@ alter table admin.platform_staff drop constraint if exists platform_staff_role_c
 alter table admin.platform_staff add constraint platform_staff_role_check
   check (role in ('owner', 'ops', 'safety', 'finance'));
 
--- staff_set names the roles in a literal (0047). It is widened in place, in
--- whatever body it has when this runs (plan 2 may have replaced it), and the
--- migration stops if the literal is not there, so a changed body is noticed.
+-- 0047's staff_set names the roles in a literal; where that literal is in the
+-- body, it is widened in place. Plan 2's 0054 replaces staff_set (six
+-- arguments, with p_env) by a body that takes the roles from the check
+-- constraint above and names no role list, so there is nothing to widen and
+-- the constraint is all it needs. A body that names 'safety' in any other way
+-- stops the migration, so a role list this block does not recognise is
+-- noticed instead of silently left without finance.
 do $$
 declare
   f record;
   body text;
-  changed integer := 0;
+  seen integer := 0;
 begin
   for f in select p.oid from pg_proc p join pg_namespace n on n.oid = p.pronamespace
             where n.nspname = 'admin' and p.proname = 'staff_set' loop
+    seen := seen + 1;
     body := pg_get_functiondef(f.oid);
-    if position('(''owner'', ''ops'', ''safety'')' in body) = 0 then
-      raise exception 'admin.staff_set no longer lists its roles as (''owner'', ''ops'', ''safety''): add finance to it by hand';
+    if position('(''owner'', ''ops'', ''safety'')' in body) > 0 then
+      body := replace(body, '(''owner'', ''ops'', ''safety'')', '(''owner'', ''ops'', ''safety'', ''finance'')');
+      body := replace(body, 'a role is owner, ops or safety', 'a role is owner, ops, safety or finance');
+      execute body;
+    elsif position('''safety''' in body) > 0 then
+      raise exception 'admin.staff_set names its roles in a way 0056 does not recognise: add finance to it by hand';
     end if;
-    body := replace(body, '(''owner'', ''ops'', ''safety'')', '(''owner'', ''ops'', ''safety'', ''finance'')');
-    body := replace(body, 'a role is owner, ops or safety', 'a role is owner, ops, safety or finance');
-    execute body;
-    changed := changed + 1;
   end loop;
-  if changed = 0 then
+  if seen = 0 then
     raise exception 'admin.staff_set does not exist';
   end if;
 end
@@ -235,7 +242,7 @@ revoke all on function admin.me() from public, anon;
 grant execute on function admin.me() to authenticated;
 ```
 
-(`execute body` re-runs `create or replace` with the same signature, so the grants of 0047:364/371 stay as they are.)
+(`execute body` re-runs `create or replace` with the same signature, so the grants of 0047:364/371 stay as they are. After plan 2's 0054, no body has the literal and nothing is re-run: plan 2's `staff_set` and `staff_invite` catch the constraint's `check_violation`, so they accept `finance` from the widened constraint alone.)
 
 - [ ] **Step 4: Run and see them pass, then everything that reads staff**
 
@@ -282,7 +289,7 @@ Commit "feat: a finance role that reaches billing and nothing about children"
 3. `a plan has a lower-case code that is not pilot, 1 to 36 months, and a price in paise`: `pilot` → `pilot is a trial, not a plan that is sold`; `Standard` is stored as `standard`; months 0 → refused; price −1 → refused; ops → `not allowed`.
 
 *Accounts*
-4. `ops and finance set a school's billing account; safety and a child cannot`.
+4. `ops set a school's billing account; finance, safety and a child cannot` (spec section 3: finance reads billing, records offline payments and prints invoices; raising and sending links are ops').
 5. `a contact phone is 10 digits starting 6 to 9 and an email has an @; a school GSTIN matches its state`: `12345` → `a phone is 10 digits`; `x` → `that is not an email address`.
 
 *Raising*
@@ -598,9 +605,9 @@ Browser functions (each `security definer`, `set search_path = admin, billing, l
 | `admin.billing_settings_set(p_legal_name text, p_gstin text, p_state text, p_address text, p_sac text, p_gst_rate_bp integer, p_title text, p_reason text, p_env text) returns void` | owner + fresh code | env; reason; trims; `upper(p_gstin)`; GSTIN prefix = state (`the GSTIN's first two digits are its state code`); null GSTIN ⇒ rate 0 (`without a GSTIN the GST rate is 0`); rate 0..2800 (`a GST rate is 0 to 2800 basis points`); session on; update the one row; audit `billing-settings-set`, kind `setting`, id `seller`, details `{gstRateBp, sacCode, hasGstin}` |
 | `admin.billing_plans() returns jsonb` | owner, ops, finance | array of `{code, name, months, seatPricePaise, active}` ordered by `active desc, code` |
 | `admin.billing_plan_set(p_code text, p_name text, p_months integer, p_seat_price_paise bigint, p_active boolean, p_reason text, p_env text) returns void` | owner + fresh code | env; reason; `code := lower(btrim(p_code))`; `pilot` → `pilot is a trial, not a plan that is sold`; shape, months, price (`a price is 0 or more paise`); upsert on code (price change applies to subscriptions sold later: each subscription keeps `seat_price_paise`); audit `plan-set` with `{code, months, seatPricePaise, active}` |
-| `admin.billing_account_set(p_org uuid, p_legal_name text, p_gstin text, p_state text, p_address text, p_contact_name text, p_contact_email text, p_contact_phone text, p_reason text, p_env text) returns void` | owner, ops, finance | env; reason; school exists (`there is no such school`); shapes (`a phone is 10 digits starting 6 to 9`, `that is not an email address`, the GSTIN prefix rule); empty strings become null for gstin/email/phone; upsert (grace_days untouched); audit `billing-account-set`, kind `school`, id = school code, details `{hasGstin, hasEmail, hasPhone, stateCode}` |
-| `admin.billing_subscription_create(p_org uuid, p_plan text, p_seats integer, p_starts_on date, p_due_days integer, p_reason text, p_env text) returns jsonb` | owner, ops, finance | env; reason; account exists; plan active (`there is no plan called % that is on sale`); seats 1..100000; start not null; due days `coalesce(p_due_days, 15)` in 0..90; `ends_on := (p_starts_on + make_interval(months => plan.months))::date - 1`; overlap with a not-cancelled subscription of that org → refused; insert subscription; `billing.raise_invoice(org, sub, 'subscription', format('%s plan, %s seats, %s to %s', plan.name, seats, to_char(start,'DD Mon YYYY'), to_char(ends,'DD Mon YYYY')), seats, plan.seat_price_paise, lms.india_today() + due_days, me.user_id)`; audit `subscription-created` and `invoice-raised` (`{number, totalPaise}`); returns `{subscriptionId, invoiceId, number}` |
-| `admin.billing_invoice_raise(p_org uuid, p_description text, p_amount_paise bigint, p_due_days integer, p_reason text, p_env text) returns jsonb` | owner, ops, finance | env; reason; description 1..200; amount > 0; kind `other`, quantity 1, unit = amount; audit `invoice-raised`; returns `{invoiceId, number}` |
+| `admin.billing_account_set(p_org uuid, p_legal_name text, p_gstin text, p_state text, p_address text, p_contact_name text, p_contact_email text, p_contact_phone text, p_reason text, p_env text) returns void` | owner, ops | env; reason; school exists (`there is no such school`); shapes (`a phone is 10 digits starting 6 to 9`, `that is not an email address`, the GSTIN prefix rule); empty strings become null for gstin/email/phone; upsert (grace_days untouched); audit `billing-account-set`, kind `school`, id = school code, details `{hasGstin, hasEmail, hasPhone, stateCode}` |
+| `admin.billing_subscription_create(p_org uuid, p_plan text, p_seats integer, p_starts_on date, p_due_days integer, p_reason text, p_env text) returns jsonb` | owner, ops | env; reason; account exists; plan active (`there is no plan called % that is on sale`); seats 1..100000; start not null; due days `coalesce(p_due_days, 15)` in 0..90; `ends_on := (p_starts_on + make_interval(months => plan.months))::date - 1`; overlap with a not-cancelled subscription of that org → refused; insert subscription; `billing.raise_invoice(org, sub, 'subscription', format('%s plan, %s seats, %s to %s', plan.name, seats, to_char(start,'DD Mon YYYY'), to_char(ends,'DD Mon YYYY')), seats, plan.seat_price_paise, lms.india_today() + due_days, me.user_id)`; audit `subscription-created` and `invoice-raised` (`{number, totalPaise}`); returns `{subscriptionId, invoiceId, number}` |
+| `admin.billing_invoice_raise(p_org uuid, p_description text, p_amount_paise bigint, p_due_days integer, p_reason text, p_env text) returns jsonb` | owner, ops | env; reason; description 1..200; amount > 0; kind `other`, quantity 1, unit = amount; audit `invoice-raised`; returns `{invoiceId, number}` |
 | `admin.billing_subscriptions(p_org uuid default null) returns jsonb` | owner, ops, finance | array of `{id, orgId, schoolCode, schoolName, plan, planName, seats, startsOn, endsOn, seatPricePaise, invoiceId, invoiceNumber, invoiceStatus, licenceAppliedAt, cancelledAt}` newest first, limit 500 |
 | `admin.billing_invoices(p_org uuid default null, p_status text default null) returns jsonb` | owner, ops, finance | array of `{id, number, orgId, schoolCode, schoolName, kind, issuedOn, dueOn, totalPaise, paidPaise, status, openLink: {linkId, url, status} or null}` newest first, limit 500; `p_status` one of the four or null |
 | `admin.billing_invoice(p_invoice uuid) returns jsonb` | owner, ops, finance | one invoice with every column in camelCase, `seller`, `buyer`, `links: [{linkId, url, status, amountPaise, amountPaidPaise, expiresAt, createdAt}]`, `payments: [{id, source, amountPaise, receivedOn, reference, counted, notCountedWhy, recordedAs, refundedPaise}]`, `creditNotes: [{number, amountPaise, taxablePaise, taxPaise, issuedOn}]`; missing → `there is no such invoice` |
@@ -712,7 +719,7 @@ $$;
 
 `billing.payment_signal_on(p_org, p_day) returns jsonb` (stable): no account → grey `No billing account yet.`; `days := p_day - min(due_on)` over invoices with `status in ('unpaid','partly_paid') and due_on < p_day`; none → green `Nothing is overdue.`; `days <= 14` → amber; else red; reason `format('An invoice is %s day%s overdue.', days, case when days = 1 then '' else 's' end)`. A failed mandate is plan 7's (no mandate exists yet), so red here is only "more than 14 days".
 
-`admin.school_payment_signal(p_org uuid) returns jsonb`: `select billing.payment_signal_on(p_org, lms.india_today())`, `language sql stable security definer`; `revoke all ... from public, anon, authenticated;` and no grant (S1).
+`admin.school_payment_signal(p_org uuid) returns jsonb`: `select billing.payment_signal_on(p_org, lms.india_today())`, `language sql stable security definer`, `set search_path = admin, billing, lms, public` (plan 2's stub has `admin, public`; `create or replace` sets the new one); `revoke all ... from public, anon, authenticated;` and no grant (S1). Its reason for a school with no billing account is exactly plan 2's stub text, `No billing account yet.`, so plan 2's tests that read the stub (`admin-school-health.test.ts` test 2 and test 20) still pass after the merge.
 
 - [ ] **Step 4: Run and see them pass**
 
@@ -761,7 +768,7 @@ Commit "feat: offline payments, the licence follows the money, void with nothing
 *Payment links*
 1. `ops prepares a link: id from the invoice number, the amount still due, school and invoice in the notes, the billing contact as customer`: `admin.billing_link_prepare(inv, 'send', 'TEST')` as `aal2(ops)` → `{linkRowId, linkId: 'QRIE-26-27-0001', amountPaise: total, currency: 'INR', purpose: 'Qrie invoice QRIE/26-27/0001 for <school name>', customer: {name, phone, email}, notes: {school, invoice}, expiresAt, sendEmail: true, existing: false}`; a `payment_link` row in `creating`; `expiresAt` = 23:59:59 IST on `greatest(due_on, today) + 30`.
 2. `a second prepare while one is open answers with that link; after a failed one the next is attempt 2`: second call while `creating` → same `linkRowId` (`existing: false`, so billing-api retries with the same idempotency key); after `billing_link_created` → `existing: true, url`; after `billing_link_failed` → a new row with `link_id` ending `-2`.
-3. `no link without the contact's phone, for a void or paid invoice, or for safety`: `add the billing contact's phone first`, `this invoice is void`, `this invoice is already paid`, `not allowed`.
+3. `no link without the contact's phone, for a void or paid invoice, or for safety or finance`: `add the billing contact's phone first`, `this invoice is void`, `this invoice is already paid`, `not allowed` (safety and finance each).
 4. `link_created, link_failed and link_observed are the service role's alone`: as `fresh(owner)` each → permission denied (no execute grant).
 
 *Webhook events*
@@ -802,7 +809,7 @@ Rules the bodies follow:
 - `billing.advance_link(p_link, p_status, p_amount_paid)`: when `p_status` is null, only `amount_paid_paise := greatest(old, p_amount_paid)`; else update to `p_status` only if `link_rank(p_status) > link_rank(old.status)`; always `amount_paid_paise = greatest(...)`, `updated_at = now()`, `last_checked_at = now()`; returns whether status or amount changed.
 - `billing.apply_link_payment(p_link, p_order_id, p_amount, p_currency, p_reference, p_received_on, p_notes)`: if a payment with `cf_order_id = p_order_id` exists → `duplicate`. Else decide `why` (first that applies): invoice void → `the invoice was void`; `p_currency <> 'INR'` → `the currency is not INR`; `p_amount <> link.amount_paise` → `the amount is not the link's amount`; `p_notes ->> 'invoice'` present and ≠ invoice number → `the notes name another invoice`; `p_amount > total − paid` → `more than is still due`. Insert the payment (`source 'cashfree_link'`, `counted = why is null`, `recorded_as 'Cashfree'`, `reference = coalesce(p_reference, p_order_id)`, `received_on = coalesce(p_received_on, lms.india_today())`); if counted, `billing.settle(invoice, null, 'service', 'Cashfree')`; audit_as Cashfree `payment-received` or `payment-not-counted` (`{invoice number, amountPaise, why}`); return `counted` or `why`.
 - `billing.apply_link_event(p_value)`: link row by `p_value #>> '{link,linkId}'` `for update`; none → `('ignored', 'No invoice has this link.')`. If `order` is an object and `transactionStatus = 'SUCCESS'`: `r := apply_link_payment(link, orderId, (order->>'amountPaise')::bigint, link->>'currency', order->>'transactionId', (eventTime at IST)::date, link->'notes')`. Also a mismatch when `(link->>'amountPaise')::bigint <> link.amount_paise` (detail `the link's amount is not the one Qrie asked for`). `advance_link(link, link_status_of(link->>'status'), (link->>'amountPaidPaise')::bigint)`. Status `mismatch` with `r` as detail when `r` is not `counted`/`duplicate`, else `processed`.
-- `admin.billing_link_prepare(p_invoice, p_reason, p_env)`: `require_staff(array['ops','finance'])`; env; reason; invoice; void/paid messages; account phone null → `add the billing contact's phone first`; open link row: `creating` → return its payload again with `existing: false`; `active`/`partly_paid` → `{existing: true, linkId, url, amountPaise}`; else `attempt := coalesce(max(attempt), 0) + 1`, `link_id := replace(number, '/', '-') || case when attempt > 1 then '-' || attempt else '' end`, `amount := total − paid`, `expires_at := ((greatest(due_on, lms.india_today()) + 30)::timestamp + time '23:59:59') at time zone 'Asia/Kolkata'`; insert; audit `link-prepared`; return the payload in Step 1 test 1 (`expiresAt` as `to_char(expires_at at time zone 'Asia/Kolkata', 'YYYY-MM-DD"T"HH24:MI:SS"+05:30"')`, `sendEmail: contact_email is not null`).
+- `admin.billing_link_prepare(p_invoice, p_reason, p_env)`: `require_staff(array['ops'])`; env; reason; invoice; void/paid messages; account phone null → `add the billing contact's phone first`; open link row: `creating` → return its payload again with `existing: false`; `active`/`partly_paid` → `{existing: true, linkId, url, amountPaise}`; else `attempt := coalesce(max(attempt), 0) + 1`, `link_id := replace(number, '/', '-') || case when attempt > 1 then '-' || attempt else '' end`, `amount := total − paid`, `expires_at := ((greatest(due_on, lms.india_today()) + 30)::timestamp + time '23:59:59') at time zone 'Asia/Kolkata'`; insert; audit `link-prepared`; return the payload in Step 1 test 1 (`expiresAt` as `to_char(expires_at at time zone 'Asia/Kolkata', 'YYYY-MM-DD"T"HH24:MI:SS"+05:30"')`, `sendEmail: contact_email is not null`).
 - `admin.billing_link_created(p_link_id, p_cf_link_id, p_url, p_expires_at)`: row must be `creating` or `failed` (a lost answer found later), else no change; sets `cf_link_id, url, status 'active', expires_at = coalesce(p_expires_at, expires_at)`; `audit_service('link-created', 'invoice', number, '', {linkId})`.
 - `admin.billing_link_failed(p_link_id, p_why)`: only from `creating` to `failed`; `audit_service('link-failed', ..., left(p_why, 200))`.
 - `admin.billing_link_observed(p_link_id, p_value)`: for each element of `p_value -> 'orders'` with `status = 'PAID'`: `apply_link_payment(link, orderId, amountPaise, coalesce(currency, p_value->>'currency'), null, null, null)`; then `advance_link(link, link_status_of(p_value->>'status'), amountPaidPaise)`; returns `{changed, counted, mismatched}`.
@@ -1165,7 +1172,7 @@ Behaviour (every route: POST only (405), JSON object body (400), unknown route 4
 - **`/refund`** `{paymentId, amountPaise, reason, env}`: `prep = userRpc(auth, 'billing_refund_prepare', {p_payment, p_amount_paise, p_reason, p_env})`; `createRefund(prep.orderId, {refund_amount: rupeesFromPaise(prep.amountPaise), refund_id: prep.refundId, refund_note: prep.note, refund_speed: 'STANDARD'}, prep.refundRowId)`; then `serviceRpc('billing_refund_result', {p_refund_id, p_value: {status: refund_status, cfRefundId: cf_refund_id}})` → 200 `{status, creditNote}`. `CashfreeError` with status 400 to 499 → `billing_refund_result` with `{status: 'FAILED', detail: code}` and 502; status 0 or 5xx → leave it `requested` and 502 `Cashfree did not answer; the hourly check will find out what happened.`
 - **`/reconcile`** (no body needed): `reconcileToken` empty → 404; `bearerFrom(authorization)` (`packages/relay/src/auth.ts:33`) compared with the token by comparing `sha256Hex` of both (equal-length digests; not a timing oracle on the token) → mismatch 401 before any database call; pairing; `due = serviceRpc('billing_reconcile_due', {p_force: false})`; `!due.due` → 200 `{ran: false}`; for each link (at most 50): `observe` (and `creating` older than 10 minutes: `getLink` → 404 → `billing_link_failed('not at Cashfree')`, found → `billing_link_created` then `observe`); for each refund: `getRefund(orderId, refundId)` → `billing_refund_result`, and 404 on a `requested` refund older than 10 minutes → `FAILED` `not at Cashfree`; each item's failure is counted, not thrown; `serviceRpc('billing_reconcile_done', {p_value: {checked, changed, failed}})` → 200 `{ran: true, checked, changed, failed}`.
 
-Deno entry `supabase/functions/billing-api/index.ts` (`// @ts-nocheck`; header comment: the only caller of Cashfree, deploy with `--no-verify-jwt` because every route checks its caller (staff routes in the database through the caller's own token, `/reconcile` with its token), the secrets it reads, CORS, not yet run against a deployed project): reads `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `CASHFREE_CLIENT_ID`, `CASHFREE_CLIENT_SECRET`, `CASHFREE_ENV`, `CASHFREE_API_VERSION`, `BILLING_RECONCILE_TOKEN` (optional); 503 naming missing required ones; CORS as `lms-admin` (`*`, `authorization, content-type`, `POST, OPTIONS`; the calls carry a bearer token, not a cookie); `userRpc = (auth, fn, args) => adminRpc(URL, ANON)(auth, fn, args)`; `serviceRpc = (fn, args) => adminRpc(URL, SERVICE)('Bearer ' + SERVICE, fn, args)`; `cashfree = cashfreeHttp({...})`.
+Deno entry `supabase/functions/billing-api/index.ts` (`// @ts-nocheck`; header comment: the only caller of Cashfree, deploy with `--no-verify-jwt` because every route checks its caller (staff routes in the database through the caller's own token, `/reconcile` with its token), the secrets it reads, CORS, not yet run against a deployed project): reads `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_ORIGIN`, `CASHFREE_CLIENT_ID`, `CASHFREE_CLIENT_SECRET`, `CASHFREE_ENV`, `CASHFREE_API_VERSION`, `BILLING_RECONCILE_TOKEN` (optional); 503 naming missing required ones; CORS as plan 2's `admin-api`: `access-control-allow-origin` is the `ADMIN_ORIGIN` secret (the console's own address; the same secret plan 2's runbook sets for `admin-api`; missing → 503 naming it), `vary: origin`, `authorization, content-type`, `POST, OPTIONS` (`/reconcile` is called from a server, where CORS does not apply); `userRpc = (auth, fn, args) => adminRpc(URL, ANON)(auth, fn, args)`; `serviceRpc = (fn, args) => adminRpc(URL, SERVICE)('Bearer ' + SERVICE, fn, args)`; `cashfree = cashfreeHttp({...})`.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -1237,7 +1244,7 @@ Expected: FAIL (`../src/reconcile.ts` cannot be resolved); `run.test.ts` still p
 
 - [ ] **Step 3: Implement**
 
-`run.ts`: import `askReconcile`; `Env` gains the optional field; `runOnce` wraps the send loop in `try { ... } finally { if (env.BILLING_RECONCILE_TOKEN) reconcile = await askReconcile(env, fetchImpl); }`; `envFromProcess` reads the optional variable without throwing; the main block prints `reconcile: ran`, `reconcile: not due` or `reconcile: failed (<status>)`. Update the file's header comment to say it also asks `billing-api` to reconcile when that token is set.
+`run.ts`: import `askReconcile`; `Env` gains the optional field; `runOnce` wraps the send loop in `try { ... } finally { const token = env.BILLING_RECONCILE_TOKEN; if (token) reconcile = await askReconcile({ SUPABASE_URL: env.SUPABASE_URL, SUPABASE_ANON_KEY: env.SUPABASE_ANON_KEY, BILLING_RECONCILE_TOKEN: token }, fetchImpl); }` (a narrowed property does not narrow `env` itself, so passing `env` would not typecheck against `BILLING_RECONCILE_TOKEN: string`); `envFromProcess` reads the optional variable without throwing; the main block prints `reconcile: ran`, `reconcile: not due` or `reconcile: failed (<status>)`. Update the file's header comment to say it also asks `billing-api` to reconcile when that token is set.
 
 `admin-alert.yml`: add `BILLING_RECONCILE_TOKEN: ${{ secrets.BILLING_RECONCILE_TOKEN }}` to the step's `env`, and one header-comment line saying so (an unset secret is an empty string, which skips the request).
 
@@ -1371,7 +1378,7 @@ export function todayIst(now?: Date): string; // YYYY-MM-DD in Asia/Kolkata
 
 `use-load.ts`: `useLoad<T>(fn: () => Promise<T>)` → `{ data, error, loading, reload }`, where `error` is the `AdminError` message and `refused` is `error.code === 'not-allowed'`.
 
-Rights (ruling R9): owner all; ops `read, raise, sendLink`; finance `read, raise, sendLink, record`; safety nothing.
+Rights (ruling R9, spec section 3): owner all; ops `read, raise, sendLink`; finance `read, record`; safety nothing.
 
 Blast lines: void: `Invoice <n> is cancelled for good. Its number stays used. Its payment link is cancelled at Cashfree first. The licence does not change.`; refund: `<₹x> goes back to the payer through Cashfree. A credit note is issued when Cashfree confirms. The licence does not change; change it on the school's page if needed.`; payment: `<₹x> is recorded against <n>.` plus `This pays it in full and sets <school>'s licence to <seats> seats until <date>.` when it completes a subscription invoice, plus `It has an open payment link for <₹y>; if the school pays that too, the extra will need a refund.` when a link is open; link: `Cashfree makes a payment page for <₹x>.` plus ` Cashfree emails it to the billing contact.` when an email is set.
 
@@ -1475,7 +1482,7 @@ Commit "feat: billing pages in the console: overview, invoices, subscriptions, p
 **Interfaces:**
 - Produces: `export function SchoolBillingTab(props: { orgId: string; code: string })` (S2: exactly this name, file and props; plan 2's school page renders it); `SchoolBillingPage` (route `/billing/schools/$orgId`, frames the tab in `AdminPage` with the school's name); `InvoicePrint` (route `/billing/invoices/$invoiceId/print`).
 
-`SchoolBillingTab` loads `billing.school(orgId)` and shows: the state (`stateLabel`) and the payment signal (its level and reason); the licence (plan, seats used of seats, last day); the billing account (legal name, GSTIN, state, address, contact name, email and phone: one record, so the full contact is shown here and nowhere in a list) with Edit (owner, ops, finance) and Grace days (owner, guarded); subscriptions, invoices and payments for this school (the same row components as Task 12) with New subscription, Raise, Send link, Record a payment. States: loading, refused, error, and "No billing account yet. Set one up to raise an invoice." when `account` is null.
+`SchoolBillingTab` loads `billing.school(orgId)` and shows: the state (`stateLabel`) and the payment signal (its level and reason); the licence (plan, seats used of seats, last day); the billing account (legal name, GSTIN, state, address, contact name, email and phone: one record, so the full contact is shown here and nowhere in a list) with Edit (owner, ops) and Grace days (owner, guarded); subscriptions, invoices and payments for this school (the same row components as Task 12) with New subscription, Raise, Send link, Record a payment. States: loading, refused, error, and "No billing account yet. Set one up to raise an invoice." when `account` is null.
 
 `InvoicePrint` renders `printModel(detail)` on a white A4-width sheet: the title from settings ("Tax invoice" by default), number, issue and due dates, seller block (legal name, address, GSTIN or "Not registered under GST", state code), buyer block (legal name, address, GSTIN or "Unregistered", state code, school code), the line (description, SAC, quantity, rate in rupees and paise, taxable value), CGST and SGST at half the rate each or IGST at the rate, total in rupees and paise, the status, and the credit notes against it. A "Print or save as PDF" button calls `window.print()`. A `<style media='print'>` element in the page hides `[data-slot='sidebar']`, `header` and the button (the kit renders `data-slot='sidebar'`, `components/ui/sidebar.tsx:168`; the result in a real print preview is UNVERIFIED). Inline `<style>` is allowed by the CSP (`style-src 'self' 'unsafe-inline'`).
 
@@ -1499,7 +1506,7 @@ Commit "feat: a printable invoice and each school's billing tab"
 ### Task 14: Runbook, README, and the whole gate
 
 **Files:**
-- Modify: `docs/ops/admin-console.md` (new section `## 5. Billing with Cashfree (plan 3)`), `apps/admin/README.md` (one paragraph: the Billing pages, the print page, `SchoolBillingTab`)
+- Modify: `docs/ops/admin-console.md` (new section `## 6. Billing with Cashfree (plan 3)`; plan 2 appends its own section 5 on its branch and merges first, so this branch numbers its section 6 even though section 5 is absent here), `apps/admin/README.md` (one paragraph: the Billing pages, the print page, `SchoolBillingTab`)
 
 - [ ] **Step 1: Write the runbook section** with exactly the steps in "Aarav's steps" below, in that order, each with its command or dashboard path and its UNVERIFIED marks, plus: "Day to day" (overview every morning; Needs attention means a refund or a call; a red reconciliation tile means read `billing-api`'s logs), "If something goes wrong" (a payment stuck unpaid: Check with Cashfree on the invoice; Cashfree's dashboard Batch Resend; a leaked Cashfree secret: rotate in Cashfree, set the new one in Supabase secrets, keep the old one active until in-flight webhooks clear, per Cashfree's note), and "What billing will never do" (store card or bank details; delete an invoice; change a licence on a refund; charge a mandate before plan 7).
 
@@ -1536,12 +1543,16 @@ Then use superpowers:finishing-a-development-branch. Pushing, `supabase db push`
 ## Merge notes (plan 2 merges first, then this branch)
 
 1. **Migrations:** plan 2's 0052 to 0055 run before 0056 to 0060. 0058 replaces plan 2's `admin.school_payment_signal` stub (S1, same signature and grants), so plan 2's `school_health` reads the real signal.
-2. **0056 widens whatever `admin.staff_set` exists** by replacing the literal `('owner', 'ops', 'safety')`. If plan 2 rewrote `staff_set` without that literal, 0056 stops with `admin.staff_set no longer lists its roles as ...`: add `'finance'` to plan 2's check by hand in 0056's DO block, rerun the tests. Plan 2's staff page then adds `finance` to its one role constant (S6).
-3. **0056 replaces `admin.me()`** to admit finance. If plan 2 also changed `me()`, keep plan 2's body with `array['owner', 'ops', 'safety', 'finance']`.
-4. **`admin-invariants.test.ts`:** take the union of both lists, in C collation order.
-5. **`router.tsx`, `sidebar-data.ts`, `admin-client/src/index.ts`, `lib/client.ts`:** keep both sides' added lines.
-6. **`school-billing-tab.tsx`:** take this branch's file (S2). Plan 2's Billing tab passes `orgId` and `code`.
-7. After merging, run the whole gate (Task 14 Step 2) on the merged branch.
+2. **0056 and plan 2's `staff_set`.** Plan 2's 0054 drops the 5-argument `staff_set` and adds a 6-argument one (with `p_env`) that takes its roles from `platform_staff`'s check constraint and names no role list. 0056's DO block widens only a body that has the literal `('owner', 'ops', 'safety')` and leaves plan 2's body alone, so after the merge `finance` is accepted through the widened constraint with no hand edit, and no 5-argument `staff_set` comes back (S6). `admin-finance-role.test.ts` tests 4 and 5 call `staff_set` through a helper that adds `p_env => 'TEST'` when the function has six arguments, and accept either refusal sentence.
+3. **0056 replaces `admin.me()`** to admit finance. Plan 2 does not change `me()` (checked in its document), so nothing to reconcile.
+4. **`admin-invariants.test.ts`:** take the union of both lists, in C collation order (`_` sorts before letters: `admin.school_note_add` before `admin.school_notes`, `admin.billing_account_set` before `admin.billing_accounts`), and keep plan 2's last test, which pins three public functions (`alert_snapshot`, `app_config`, `audit_head`).
+5. **`router.tsx`, `sidebar-data.ts`, `admin-client/src/index.ts`, `lib/client.ts`, `admin-client/src/api.ts`, `apps/admin/README.md`:** keep both sides' added lines. In `sidebar-data.ts` both sides add `School` to the one `lucide-react` import: keep it once (a duplicate identifier does not compile). Put the Billing group after plan 2's "Schools and people" group (spec section 12's order: Today, Switches, Schools, Users, System, Staff and audit, Billing). In `api.ts` plan 2 changes `StaffSetInput` (M2) and this branch changes `Me.role`: keep both. `export *` from `billing.ts` and from plan 2's five modules must not export the same name (TypeScript refuses an ambiguous re-export); none of the names listed in either document collide, and `npm run typecheck` on the merged branch proves it.
+6. **`school-billing-tab.tsx`:** take this branch's file (S2; git reports an add/add conflict). Plan 2's Billing tab passes `orgId` and `code`.
+7. **Finance in plan 2's console (S6):** add `'finance'` to `STAFF_ROLES` in `apps/admin/src/features/staff/roles.ts` (plan 2's one role constant), so the Staff page can invite and set a finance member; plan 2's `staff.ts` types roster roles as plain strings, so the client needs no change. A finance member opening plan 2's pages (Schools, Users, System, Staff) is refused by the database and sees the refused state; they reach Billing.
+8. **The System page's Cashfree card** (plan 2's `admin.system_health().cashfree`) reads `billing.webhook_event`'s `received_at`, `signature_ok` and `status` (`'stored'` = not yet processed) and `admin.setting` `billing_reconciled_at`, with `to_regclass` so it says "not captured" before 0057 exists. Keep those three column names, that status value and that setting key in 0057 and 0059. After the merge, check once in a test or the PGlite REPL that `admin.system_health() -> 'cashfree' ->> 'captured'` is `true`.
+9. **Two write dialogs and two load hooks:** plan 2 has `components/write-dialog.tsx` and `lib/use-load.ts`; this branch has `features/billing/write-dialog.tsx` and `features/billing/use-load.ts`, because neither branch can import the other's. They do not collide. Folding billing's onto plan 2's is a follow-up, not part of the merge.
+10. **A suspended school takes no new imports (spec section 10).** Neither branch enforces it: plan 2's `admin.api_gate('people-import', ...)` refuses only an offboarded school, and the school admin's import is the LMS lane's. Plan 4 (app wiring) owns it, in its own migration: `api_gate` refuses `people-import` when `billing.state_for(org, lms.india_today())` is `suspended` or `ended`, and `lms-admin` does the same for the school admin.
+11. After merging, run the whole gate (Task 14 Step 2) on the merged branch.
 
 ## Aarav's steps (only he can do these)
 
@@ -1556,13 +1567,13 @@ Then use superpowers:finishing-a-development-branch. Pushing, `supabase db push`
    printf 'CASHFREE_CLIENT_ID=%s\nCASHFREE_CLIENT_SECRET=%s\nCASHFREE_ENV=sandbox\nCASHFREE_API_VERSION=2026-01-01\nBILLING_RECONCILE_TOKEN=%s\n' "<id>" "<secret>" "$(openssl rand -hex 24)" > /tmp/cf.env
    npx supabase secrets set --env-file /tmp/cf.env && rm /tmp/cf.env
    ```
-   Keep the same reconciliation token for step 9. The functions refuse sandbox keys against a database whose environment is `HOSTED`, so the sandbox run happens on a TEST or STAGING project, or the keys are production ones on HOSTED.
+   Keep the same reconciliation token for step 9. `billing-api` also reads `ADMIN_ORIGIN`, the console's address, which plan 2's runbook step already sets for `admin-api` (one secret serves both functions); if it is not set yet: `npx supabase secrets set ADMIN_ORIGIN=https://<the console's address>`. The functions refuse sandbox keys against a database whose environment is `HOSTED`, so the sandbox run happens on a TEST or STAGING project, or the keys are production ones on HOSTED.
 7. **Deploy the two functions:** `npx supabase functions deploy billing-api --no-verify-jwt` and `npx supabase functions deploy cashfree-webhook --no-verify-jwt`.
 8. **The two webhook URLs**, in Cashfree's sandbox dashboard: Payment Gateway → Developers → Webhooks: add `https://<project>.supabase.co/functions/v1/cashfree-webhook`, version `2025-01-01` or later (so Cashfree sends `x-idempotency-key`), events: payment links and refunds; and the **Subscriptions** webhook tab: the same URL (plan 7 uses it; until then its events are stored and ignored). Tab and event names in the dashboard are UNVERIFIED.
 9. **The reconciliation token in GitHub:** Settings → Secrets → Actions → `BILLING_RECONCILE_TOKEN` = the token from step 6.
 10. **Try everything in the sandbox:** raise an invoice for a demo school, Send link, pay it with Cashfree's sandbox test method, see the webhook log show `processed`, the invoice `paid` and the licence moved; raise another and let it be checked by "Check with Cashfree"; refund part of a payment with the refund note `SUCCESS` (Cashfree's sandbox simulation) and see the credit note; void an unpaid invoice with a link and see the link cancelled; wait an hour and see "Last reconciliation" update.
 11. **Go live:** production keys, `CASHFREE_ENV=production`, on the HOSTED project only; the production webhook URL in the production dashboard; one real Re 1 invoice to yourself, then refund it.
-12. **Decide later (no build needed now):** whether a refund should also shorten a licence (now: never automatically); whether proof scans of offline payments are needed (deferred, Ruling R10); counsel on what "ended" means for a school's data (spec section 10).
+12. **Decide later (no build needed now):** whether a finance member may stop the tutor (Ruling R11: now they may not, reading spec section 3's "nothing about switches" over its "a stop is open to every active staff member"; allowing it means widening `admin.set_halt`'s stop branch, a plan-1 function); whether `app_config` should tell the apps more than ok, grace and suspended (Ruling R5); whether a refund should also shorten a licence (now: never automatically); whether proof scans of offline payments are needed (deferred, Ruling R10); counsel on what "ended" means for a school's data (spec section 10).
 
 ## UNVERIFIED
 
@@ -1585,7 +1596,7 @@ Then use superpowers:finishing-a-development-branch. Pushing, `supabase db push`
 - **R6** `ended` begins 60 days after grace ends and acts like `suspended`. Cost: only a label until counsel decides what ending means for data.
 - **R7** One line per invoice; instalments are separate invoices; links never allow partial payments. Cost: a school paying in parts needs one invoice per part.
 - **R8** Recording an offline payment needs a fresh code (owner or finance), because it can set a licence. Cost: one more code prompt.
-- **R9** Ops may read billing, raise invoices and send links; finance also records offline payments; refunds, voids, plans, settings and grace days are the owner's with a fresh code; safety sees no billing. Cost: if ops should record payments, one role array changes.
+- **R9** Ops may read billing, raise invoices, set a school's billing account and send links; finance reads billing, records offline payments and prints invoices, and nothing else (spec section 3's "may" list for finance); refunds, voids, plans, settings and grace days are the owner's with a fresh code; safety sees no billing. Cost: if ops should record payments, or Aarav wants his accountant to raise invoices and send links too, one role array changes per function (a departure from spec section 3 he would decide).
 - **R10** Scans of offline payment proof are deferred (no Storage bucket in this plan). Cost: the proof stays in email or the bank statement; the reference number is recorded.
 - **R11** Finance cannot stop the tutor or see Today (spec section 3: nothing about switches or children), although section 3 also says a stop is open to every active staff member. Cost: one fewer person who can stop the tutor.
 - **R12** The webhook does not reject old timestamps (Cashfree recommends five minutes); replays are harmless because events are stored once and only move forward. Cost: a captured, validly signed event can be resent, and changes nothing.
@@ -1605,7 +1616,7 @@ Then use superpowers:finishing-a-development-branch. Pushing, `supabase db push`
 
 ## Self-review
 
-**Spec coverage.** Section 3 (finance role, who may refund and void): Tasks 1, 2 to 5, R9, R11. Section 6 (forged notifications, Cashfree keys, money by mistake, never-shown list): Tasks 4, 6 to 8, 11, 12, Review Focus 1, 2, 5. Section 7 (`billing.account, plan, subscription, invoice, payment, webhook_event, invoice_counter`): Task 2 (`number_counter` is the counter, with a series column for credit notes). Section 8 Billing row (plans, subscriptions, invoices, payment links, offline payments, refunds, the licence follows payment; `billing.*` states for the apps): Tasks 2 to 5, 12. Section 9 payment signal: Task 3 (S1). Section 10 in full: links (Task 4, 8), offline (Task 3), mandates (designed for, not built: `subscription.collection`, R7; plan 7), the licence follows the money (Task 3), grace, suspension, ended (Task 5), the webhook (Tasks 4, 7), invoices and tax (Tasks 2, 13), refunds and credit notes (Tasks 4, 8), billing pages (Tasks 12, 13; cost to serve and margin are plan 6, said on the Overview), Aarav's steps (Task 14). Section 14 roadmap row 3: all of it; plan 4 consumes `billing.state` and `billing.grace_until`; "new imports stop" when suspended is plan 4's (the LMS side reads the state).
+**Spec coverage.** Section 3 (finance role, who may refund and void): Tasks 1, 2 to 5, R9, R11. Section 6 (forged notifications, Cashfree keys, money by mistake, never-shown list): Tasks 4, 6 to 8, 11, 12, Review Focus 1, 2, 5. Section 7 (`billing.account, plan, subscription, invoice, payment, webhook_event, invoice_counter`): Task 2 (`number_counter` is the counter, with a series column for credit notes). Section 8 Billing row (plans, subscriptions, invoices, payment links, offline payments, refunds, the licence follows payment; `billing.*` states for the apps): Tasks 2 to 5, 12. Section 9 payment signal: Task 3 (S1); section 9's System page row for Cashfree is read by plan 2's `admin.system_health` from `billing.webhook_event` and `billing_reconciled_at` (merge note 8). Section 10 in full: links (Task 4, 8), offline (Task 3), mandates (designed for, not built: `subscription.collection`, R7; plan 7), the licence follows the money (Task 3), grace, suspension, ended (Task 5), the webhook (Tasks 4, 7), invoices and tax (Tasks 2, 13), refunds and credit notes (Tasks 4, 8), billing pages (Tasks 12, 13; cost to serve and margin are plan 6, said on the Overview), Aarav's steps (Task 14). Section 14 roadmap row 3: all of it; plan 4 consumes `billing.state` and `billing.grace_until`; "new imports stop" when suspended is plan 4's, for both the school admin's import and the console's (`admin.api_gate`; merge note 10).
 
 **Seams.** S1 to S9 each map to a task (table above); the three plan-1 files changed beyond S9 are named with their reason.
 
