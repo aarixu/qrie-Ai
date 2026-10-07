@@ -1,0 +1,16 @@
+﻿import { buildMeera, MOVES } from './meera.mjs';
+import { writeFileSync } from 'node:fs';
+const lesson = { subject:'{subject}', title:'{lesson title}', beatTopic:'{beat topic}', outcome:'{what this beat is for}', schoolChapter:'{their school chapter, if known}', transcriptSoFar:'{what the class has covered so far}', onScreen:['{board element ids}'] };
+const hi = buildMeera({ move:'ANSWER_NUDGE', student:{klass:10, language:'hi-en', namedMisconception:'{wrong idea, if known}', notes:['{memory note, e.g. interests}']}, lesson, surface:'voice', rung:undefined, because:'{one line from the conductor}', payload:{ question:'{prepared question}', expected:'{expected answer}', wrongIdeas:['{wrong idea}'] } });
+const en = buildMeera({ move:'ANSWER_NUDGE', student:{klass:10, language:'en'}, lesson, surface:'voice' });
+const idx = hi.indexOf('WHICH LANGUAGE YOU SPEAK');
+const idx2 = hi.indexOf('HOW TO SPEAK');
+const core = hi.slice(0, idx);
+const langHi = hi.slice(idx, idx2);
+const enIdx = en.indexOf('WHICH LANGUAGE YOU SPEAK'); const langEn = en.slice(enIdx, en.indexOf('HOW TO SPEAK'));
+const speak = hi.slice(idx2, hi.indexOf('THIS STUDENT'));
+const turnBlocks = hi.slice(hi.indexOf('THIS STUDENT'));
+let md = `# Meera: persona prompt, draft v2 (2026-10-07)\n\nWritten from the LAM brief for Aarav. Fixed core first (cacheable), then the per-turn blocks, then ONE move card chosen by the conductor, always last.\nTested on the real model (gemini-3.7-flash, Vertex): 38 situations x 5 draws. About 2,400 tokens for Hinglish, 2,250 for English.\n\n---\n\n## 1. The fixed core (every turn)\n\n\`\`\`\n${core.trim()}\n\`\`\`\n\n## 2. Language block (the student chose one)\n\n### Hinglish\n\n\`\`\`\n${langHi.trim()}\n\`\`\`\n\n### English\n\n\`\`\`\n${langEn.trim()}\n\`\`\`\n\n## 3. How she speaks (voice)\n\n\`\`\`\n${speak.trim()}\n\`\`\`\n\n## 4. Per-turn blocks, filled by the app (shown with placeholders)\n\n\`\`\`\n${turnBlocks.trim()}\n\`\`\`\n\n## 5. The moves (the conductor picks one per turn; she picks only the words)\n\n`;
+for (const [k, v] of Object.entries(MOVES)) md += `**${k}**: ${v}\n\n`;
+writeFileSync(process.argv[2], md);
+console.log('written', md.length, 'chars');
