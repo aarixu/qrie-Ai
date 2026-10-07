@@ -8,6 +8,10 @@
 #
 # It holds the public anon key and one long random token: no service-role key.
 # Safety and operations go to two different chats (tools/admin-alert/src/run.ts).
+# With the BILLING_RECONCILE_TOKEN secret set (a second random token, again no
+# service-role key), each run also asks billing-api to reconcile with Cashfree
+# (the database paces it to once an hour); an unset secret arrives as an empty
+# string, which skips that request.
 #
 # GitHub may delay a scheduled run by several minutes at busy times (the
 # checker gives each windowed alert three runs to land in, so a late run still
@@ -58,3 +62,4 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_OPS: ${{ secrets.TELEGRAM_CHAT_OPS }}
           TELEGRAM_CHAT_SAFETY: ${{ secrets.TELEGRAM_CHAT_SAFETY }}
+          BILLING_RECONCILE_TOKEN: ${{ secrets.BILLING_RECONCILE_TOKEN }}

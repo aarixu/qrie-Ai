@@ -1,11 +1,16 @@
 import { pathToFileURL } from 'node:url';
 import { evaluate, type Alert, type SnapshotAnswer } from './evaluate.ts';
+import { askReconcile, type ReconcileResult } from './reconcile.ts';
 
 /**
  * ONE CHECK. Reads the snapshot with the public anon key and one token, decides
  * whom to tell, and tells them on Telegram. It runs on a schedule outside the
  * project it watches (.github/workflows/admin-alert.yml), so it goes on when the
  * project does not. It holds no service-role key.
+ *
+ * When BILLING_RECONCILE_TOKEN is set, it also asks billing-api to reconcile
+ * with Cashfree (reconcile.ts), after the sends, whether or not they worked;
+ * the database paces that to once an hour.
  *
  * A failed send throws, so the scheduled job turns red and somebody sees it.
  */
@@ -16,6 +21,8 @@ export interface Env {
   TELEGRAM_BOT_TOKEN: string;
   TELEGRAM_CHAT_OPS: string;
   TELEGRAM_CHAT_SAFETY: string;
+  /** Optional: without it, billing-api is not asked to reconcile. */
+  BILLING_RECONCILE_TOKEN?: string;
 }
 
 export async function fetchSnapshot(env: Env, fetchImpl: typeof fetch = fetch): Promise<SnapshotAnswer | null> {
@@ -55,12 +62,23 @@ export async function runOnce(
   env: Env,
   nowMinutes: number,
   fetchImpl: typeof fetch = fetch,
-): Promise<{ sent: Alert[] }> {
+): Promise<{ sent: Alert[]; reconcile: ReconcileResult | null }> {
   const alerts = evaluate(await fetchSnapshot(env, fetchImpl), nowMinutes);
-  for (const a of alerts) {
-    await sendTelegram(env.TELEGRAM_BOT_TOKEN, a.channel === 'safety' ? env.TELEGRAM_CHAT_SAFETY : env.TELEGRAM_CHAT_OPS, a.text, fetchImpl);
+  let reconcile: ReconcileResult | null = null;
+  try {
+    for (const a of alerts) {
+      await sendTelegram(env.TELEGRAM_BOT_TOKEN, a.channel === 'safety' ? env.TELEGRAM_CHAT_SAFETY : env.TELEGRAM_CHAT_OPS, a.text, fetchImpl);
+    }
+  } finally {
+    const token = env.BILLING_RECONCILE_TOKEN;
+    if (token) {
+      reconcile = await askReconcile(
+        { SUPABASE_URL: env.SUPABASE_URL, SUPABASE_ANON_KEY: env.SUPABASE_ANON_KEY, BILLING_RECONCILE_TOKEN: token },
+        fetchImpl,
+      );
+    }
   }
-  return { sent: alerts };
+  return { sent: alerts, reconcile };
 }
 
 function envFromProcess(): Env {
@@ -76,10 +94,15 @@ function envFromProcess(): Env {
     TELEGRAM_BOT_TOKEN: get('TELEGRAM_BOT_TOKEN'),
     TELEGRAM_CHAT_OPS: get('TELEGRAM_CHAT_OPS'),
     TELEGRAM_CHAT_SAFETY: get('TELEGRAM_CHAT_SAFETY'),
+    // Optional; an unset GitHub secret arrives as an empty string, which skips it.
+    BILLING_RECONCILE_TOKEN: process.env.BILLING_RECONCILE_TOKEN ?? '',
   };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const { sent } = await runOnce(envFromProcess(), Math.floor(Date.now() / 60_000));
+  const { sent, reconcile } = await runOnce(envFromProcess(), Math.floor(Date.now() / 60_000));
   console.log(sent.length ? `sent ${sent.length}: ${sent.map((a) => a.key).join(', ')}` : 'nothing to send');
+  if (reconcile) {
+    console.log(reconcile.ok ? (reconcile.ran ? 'reconcile: ran' : 'reconcile: not due') : `reconcile: failed (${reconcile.status})`);
+  }
 }
