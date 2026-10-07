@@ -150,6 +150,31 @@ describe('addMarks', () => {
     for (const rule of marked.rules) expect(plain.rules.has(rule), rule).toBe(true);
   });
 
+  it('highlights the item of a list a later line talks about', () => {
+    const beat: ScriptBeat = {
+      id: 'b4',
+      topic: 'Why',
+      narration: '',
+      board: [
+        { do: 'say', text: 'Complete separation matters for three reasons.' },
+        {
+          do: 'list',
+          heading: 'Why complete separation matters',
+          items: [
+            { term: 'Pure oxygen supply', meaning: 'no mixing of blood' },
+            { term: 'High energy output', meaning: 'for active animals' },
+            { term: 'Constant temperature', meaning: 'whatever the weather' },
+          ],
+        },
+        { do: 'say', text: 'Birds and humans keep a constant body temperature in any weather.' },
+      ],
+    };
+    addMarks([beat], []);
+    const list = beat.board.find((s) => s.do === 'list') as { id?: string };
+    expect(list.id).toBeTruthy();
+    expect(marksIn(beat.board)).toEqual([expect.objectContaining({ target: `${list.id}#2`, mark: 'highlight' })]);
+  });
+
   it('lights a part of a diagram rather than circling it', () => {
     const heart: VisualBrief = { id: 'heart', medium: 'diagram', parts: ['left_ventricle'], brief: 'A heart.', alt: 'heart' };
     const beat: ScriptBeat = {

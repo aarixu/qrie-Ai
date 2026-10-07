@@ -144,6 +144,8 @@ export type Instruction =
       heading?: string;
       items: { term: string; meaning?: string }[];
       tone?: Tone;
+      /** Lets a later `annotate` mark item n with the target `<id>#<n>` (0-based). */
+      id?: string;
     }
   /** Steps with arrows between them. */
   | { do: 'flow'; steps: { label: string; note?: string }[]; tone?: Tone }

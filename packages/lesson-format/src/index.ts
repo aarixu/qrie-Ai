@@ -35,6 +35,7 @@ export {
   titleSize,
   TITLE_SIZE,
   listBoxHeight,
+  listItemBox,
   listItemText,
   LIST_HEADING_SIZE,
   LIST_ITEM_SIZE,

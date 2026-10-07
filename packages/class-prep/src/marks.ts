@@ -10,8 +10,9 @@ import type { VisualBrief } from './types.ts';
  * The prompt asks for marks and a model writes a few. So each line that does
  * not mark anything is given a mark on the thing it talks about, found by the
  * words they share: a part of a picture is circled (a diagram's part is lit),
- * a thing in the scene is circled, and a key point written on an earlier line
- * is underlined. Never what this same line has just placed or written — that
+ * a thing in the scene is circled, an item of a list is highlighted, and a key
+ * point written on an earlier line is underlined. Never what this same line has
+ * just placed or written — that
  * is new ink already — and never something marked on either of the two lines
  * before. A line with an ask keeps the ask last. Composed classes only.
  */
@@ -20,18 +21,28 @@ type Target =
   | { kind: 'part'; ref: string; part: string; words: string[]; line: number }
   | { kind: 'lit'; ref: string; part: string; words: string[]; line: number }
   | { kind: 'place'; id: string; words: string[]; line: number }
-  | { kind: 'write'; step: Extract<Instruction, { do: 'write' }>; words: string[]; line: number };
+  | { kind: 'write'; step: Extract<Instruction, { do: 'write' }>; words: string[]; line: number }
+  | { kind: 'item'; step: Extract<Instruction, { do: 'list' }>; n: number; words: string[]; line: number };
 
 const keyOf = (t: Target): string =>
-  t.kind === 'part' || t.kind === 'lit' ? `${t.ref}#${t.part}` : t.kind === 'place' ? t.id : `write:${t.step.text}`;
+  t.kind === 'part' || t.kind === 'lit'
+    ? `${t.ref}#${t.part}`
+    : t.kind === 'place'
+      ? t.id
+      : t.kind === 'item'
+        ? `item:${t.step.heading ?? ''}#${t.n}`
+        : `write:${t.step.text}`;
 
-/** Which kind wins a tie: a picture's part, then the scene, then writing. */
-const RANK: Record<Target['kind'], number> = { part: 0, lit: 0, place: 1, write: 2 };
+/** Which kind wins a tie: a picture's part, then the scene, then a list's item, then writing. */
+const RANK: Record<Target['kind'], number> = { part: 0, lit: 0, place: 1, item: 2, write: 3 };
 
 /** The thing an existing mark is on, keyed the way targets are. */
 function markedKey(step: Instruction, board: readonly Instruction[]): string | null {
   if (step.do === 'point') return `${step.ref}#${step.part}`;
   if (step.do !== 'annotate') return null;
+  const item = /^(.+)#(\d+)$/.exec(step.target);
+  const list = item ? board.find((s) => s.do === 'list' && s.id === item[1]) : undefined;
+  if (item && list) return `item:${(list as { heading?: string }).heading ?? ''}#${item[2]}`;
   if (step.target.includes('#')) return step.target;
   const written = board.find((s) => s.do === 'write' && s.id === step.target);
   return written ? `write:${(written as { text: string }).text}` : step.target;
@@ -92,6 +103,9 @@ export function addMarks(beats: ScriptBeat[], visuals: readonly VisualBrief[]): 
       for (const step of line.items) {
         if (step.do === 'place') targets.push({ kind: 'place', id: step.id, words: stemsOf(`${step.noun} ${step.label ?? ''}`), line: n });
         if (step.do === 'write') targets.push({ kind: 'write', step, words: stemsOf(step.text), line: n });
+        if (step.do === 'list') {
+          step.items.forEach((it, k) => targets.push({ kind: 'item', step, n: k, words: stemsOf(it.term), line: n }));
+        }
       }
     });
 
@@ -104,6 +118,15 @@ function markFor(t: Target, taken: Set<string>, beatId: string): Instruction {
   if (t.kind === 'part') return { do: 'annotate', target: `${t.ref}#${t.part}`, mark: 'circle' };
   if (t.kind === 'lit') return { do: 'point', ref: t.ref, part: t.part };
   if (t.kind === 'place') return { do: 'annotate', target: t.id, mark: 'circle' };
+  if (t.kind === 'item') {
+    if (!t.step.id) {
+      let n = 1;
+      while (taken.has(`${beatId}_list${n}`)) n += 1;
+      t.step.id = `${beatId}_list${n}`;
+      taken.add(t.step.id);
+    }
+    return { do: 'annotate', target: `${t.step.id}#${t.n}`, mark: 'highlight' };
+  }
   if (!t.step.id) {
     let n = 1;
     while (taken.has(`${beatId}_kp${n}`)) n += 1;

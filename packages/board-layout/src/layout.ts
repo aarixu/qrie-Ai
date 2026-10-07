@@ -16,6 +16,7 @@ import {
   wrapHand,
   wrapLines,
   listBoxHeight,
+  listItemBox,
   compileFunction,
   isToolName,
   toolAspect,
@@ -526,6 +527,8 @@ export function layoutBeat(
   const elements: Element[] = [];
   const show: string[] = [];
   const focus: string[] = [];
+  /** Each `point`, by the item it came from, so a composed board can light it on its own line. */
+  const pointAt: { at: number; ref: string }[] = [];
   const blocks: Block[] = [];
   /** Each element's region on a composed page; nothing on a stacked one. */
   const regions: Record<string, string> = {};
@@ -649,12 +652,15 @@ export function layoutBeat(
    * a later `annotate` can mark what she wrote (canvas C3).
    */
   const writtenAt = new Map<string, number>();
+  /** The item each list came from, by its `id`, so a later `annotate` can mark one of its items. */
+  const listAt = new Map<string, number>();
   let i = 0;
   while (i < items.length) {
     const item = items[i];
     const index = i;
     current = i;
     if ((item.do === 'write' || item.do === 'equation') && item.id) writtenAt.set(item.id, index);
+    if (item.do === 'list' && item.id) listAt.set(item.id, index);
 
     switch (item.do) {
       case 'title': {
@@ -1427,6 +1433,7 @@ export function layoutBeat(
       case 'point': {
         // Not a block: it moves no geometry, it only decides what is bright.
         focus.push(`${item.ref}#${item.part}`);
+        pointAt.push({ at: index, ref: `${item.ref}#${item.part}` });
         i += 1;
         break;
       }
@@ -2423,6 +2430,32 @@ export function layoutBeat(
       continue;
     }
 
+    // An item of a list she wrote: `<list id>#<n>`, its row highlighted.
+    const item = /^(.+)#(\d+)$/.exec(pending.step.target);
+    const listIndex = item ? listAt.get(item[1]) : undefined;
+    if (item && listIndex !== undefined) {
+      const list = elements.find(
+        (el): el is Extract<Element, { kind: 'list' }> =>
+          el.kind === 'list' && (byInstruction.get(listIndex) ?? []).includes(el.id),
+      );
+      const row = list ? listItemBox(list, Number(item[2])) : null;
+      if (!list || !row) continue;
+      current = pending.at;
+      regionNow = composition ? (regions[list.id] ?? null) : null;
+      emit({
+        kind: 'mark',
+        id: pending.id,
+        x: row.x - 2,
+        y: row.y - 2,
+        w: row.w + 4,
+        h: row.h + 4,
+        shape: pending.step.mark,
+        ...(pending.step.tone ? { tone: pending.step.tone } : {}),
+      });
+      bonds.push({ a: pending.id, b: list.id });
+      continue;
+    }
+
     const box = partBox(pending.step.target, elements);
     if (!box) continue;
     const { elementId } = splitPartRef(pending.step.target);
@@ -2584,7 +2617,18 @@ export function layoutBeat(
   return {
     elements: settled,
     laid: { show, focus: keptFocus },
-    steps: revealSteps(beat, byBoard, keptFocus),
+    steps: revealSteps(
+      beat,
+      byBoard,
+      keptFocus,
+      composition
+        ? new Map(
+            pointAt
+              .filter((p) => keptFocus.includes(p.ref))
+              .map((p) => [origin[p.at] ?? p.at, p.ref] as [number, string]),
+          )
+        : undefined,
+    ),
     bonds,
     leashes,
     pages: sheetsUsed,
@@ -2687,6 +2731,14 @@ function revealSteps(
   beat: ScriptBeat,
   byBoard: ReadonlyMap<number, string[]>,
   focus: readonly string[],
+  /**
+   * A composed board's points, by board instruction: each is lit on the line
+   * it comes under, rather than all of them together on the beat's last line
+   * (human heart, 2026-10-07: five parts of a diagram lit at once at the end,
+   * none while it was explained). Absent on a stacked board, which keeps the
+   * beat's emphasis on its last spoken moment.
+   */
+  lit?: ReadonlyMap<number, string>,
 ): RevealStep[] {
   const says = beat.board.filter((it) => it.do === 'say');
   const asks = beat.board.some((it) => it.do === 'ask');
@@ -2719,12 +2771,17 @@ function revealSteps(
   const add = (ids: readonly string[]): void => {
     for (const id of ids) if (!cumulative.includes(id)) cumulative.push(id);
   };
+  /** What the line being spoken lights (composed board only). */
+  let litNow: string[] = [];
   const flush = (): void => {
     if (narration === null) return;
-    steps.push({ narration, show: [...cumulative], focus: [] });
+    steps.push({ narration, show: [...cumulative], focus: [...litNow] });
+    litNow = [];
   };
 
   beat.board.forEach((item, n) => {
+    const lights = lit?.get(n);
+    if (lights !== undefined && heldAt === null && !litNow.includes(lights)) litNow.push(lights);
     if (item.do === 'say') {
       flush();
       narration = item.text;
@@ -2762,7 +2819,7 @@ function revealSteps(
     // planner's to make it over.
     let last = steps.length - 1;
     while (last > 0 && steps[last].narration.trim() === '') last -= 1;
-    steps[last].focus = [...focus];
+    if (!lit) steps[last].focus = [...focus];
   }
   return steps;
 }

@@ -326,6 +326,26 @@ export function listBoxHeight(
 }
 
 /**
+ * Where item `n` of a list is drawn: its row, from its first line to its last,
+ * across the text's width — by the same measure listBoxHeight uses, so a mark
+ * on an item lands on the item.
+ */
+export function listItemBox(
+  list: { x: number; y: number; w: number; heading?: string; items: readonly { term: string; meaning?: string }[]; size?: number },
+  n: number,
+): Rect | null {
+  if (n < 0 || n >= list.items.length) return null;
+  const size = list.size ?? LIST_ITEM_SIZE;
+  const lead = size * LIST_LINE_H;
+  let y = list.y + (list.heading ? LIST_HEADING_SIZE * LIST_LINE_H + LIST_HEADING_GAP : 0);
+  for (let k = 0; k < n; k += 1) {
+    y += wrapLines(`${k + 1}. ${listItemText(list.items[k])}`, list.w - LIST_INDENT, size).length * lead + LIST_ITEM_GAP;
+  }
+  const lines = wrapLines(`${n + 1}. ${listItemText(list.items[n])}`, list.w - LIST_INDENT, size).length;
+  return { x: list.x, y, w: list.w, h: lines * lead };
+}
+
+/**
  * The largest size at which this text still fits the width it is given.
  *
  * Anything that can be longer than its container must ASK rather than hope. A
