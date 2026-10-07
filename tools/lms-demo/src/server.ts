@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import http from 'node:http';
+import os from 'node:os';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
 import type { PGlite } from '@electric-sql/pglite';
@@ -32,11 +33,16 @@ import { addParentForAdmin, ImportRefused, importForAdmin, resetPinForAdmin } fr
  *
  * Every database call runs as `authenticated` with auth.uid() set to the
  * caller, so RLS decides what each person sees, as in production. It listens
- * on this machine only and answers pages served from this machine only.
+ * on this machine only — or, with `lan`, on the local network too, for the
+ * apps' Android builds on a phone on the same Wi-Fi — and answers only pages
+ * whose origin is this machine's or the apps' own (http://localhost, the
+ * Android WebView's).
  */
 
 export interface DemoServer {
   url: string;
+  /** With `lan`: the addresses a phone on the same network reaches it at; else none. */
+  lanUrls: string[];
   close(): Promise<void>;
 }
 
@@ -73,7 +79,9 @@ export function diskWork(dir: string): WorkStore {
 const SESSION_MS = 12 * 60 * 60 * 1000;
 const SIGNED_URL_MS = 10 * 60 * 1000;
 const MAX_BODY = 6 * 1024 * 1024;
-const LOCAL_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d{1,5})?$/;
+// This machine's pages (the Vite dev servers), and the Android builds' own
+// (https://localhost, their WebView's origin).
+const LOCAL_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d{1,5})?$|^https:\/\/localhost$/;
 
 // No parameter properties: node runs this file by stripping types only.
 class HttpError extends Error {
@@ -99,6 +107,8 @@ export async function startDemoServer(opts: {
   port?: number;
   work?: WorkStore;
   ai?: DemoAi;
+  /** Listen on the local network too (the phone apps); this machine only when absent. */
+  lan?: boolean;
 }): Promise<DemoServer> {
   const { db } = opts;
   const aiAsked = new Map<string, number[]>();
@@ -308,7 +318,7 @@ export async function startDemoServer(opts: {
       send(res, status, { error: status === 500 ? 'The demo server failed; see its console.' : (e as Error).message });
     });
   });
-  await new Promise<void>((resolve) => server.listen(opts.port ?? 0, '127.0.0.1', resolve));
+  await new Promise<void>((resolve) => server.listen(opts.port ?? 0, opts.lan ? '0.0.0.0' : '127.0.0.1', resolve));
 
   // What pg_cron does on the hosted project (0030): every half minute, hand
   // in the test attempts whose time has run out, then let the brain read them.
@@ -324,8 +334,15 @@ export async function startDemoServer(opts: {
     })().catch((e: unknown) => console.error('finalize_tests failed:', e));
   }, 30_000);
   const { port } = server.address() as AddressInfo;
+  const lanUrls = opts.lan
+    ? Object.values(os.networkInterfaces())
+        .flat()
+        .filter((a) => a && a.family === 'IPv4' && !a.internal)
+        .map((a) => `http://${a!.address}:${port}`)
+    : [];
   return {
     url: `http://127.0.0.1:${port}`,
+    lanUrls,
     close: () =>
       new Promise<void>((resolve) => {
         clearInterval(finalizer);

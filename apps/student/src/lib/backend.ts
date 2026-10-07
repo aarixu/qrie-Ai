@@ -1,8 +1,13 @@
 import { browserSession, demoBackend, friendlyError } from '@ai-tutor/lms-client'
+import { savedServer } from './server'
 
-/** The demo school today (`npm run demo`); the hosted project once `lms` is live there. */
+/**
+ * The demo school today (`npm run demo`); the hosted project once `lms` is
+ * live there. In the phone app, an address set on the sign-in screen comes
+ * first (lib/server.ts), then the one the app was built with.
+ */
 export const DEMO_URL =
-  import.meta.env.VITE_QRIE_DEMO_URL ?? 'http://127.0.0.1:54400'
+  savedServer() ?? import.meta.env.VITE_QRIE_DEMO_URL ?? 'http://127.0.0.1:54400'
 
 export const backend = demoBackend(DEMO_URL, browserSession('qrie-student'))
 export const api = backend.api

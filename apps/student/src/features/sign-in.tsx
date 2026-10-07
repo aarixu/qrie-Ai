@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Logo } from '@/assets/logo'
 import { useSignInSchool } from '@/lib/brand'
+import { DEMO_URL } from '@/lib/backend'
+import { ServerSetting } from '@/components/server-setting'
 
 export function SignIn() {
   const navigate = useNavigate()
@@ -100,6 +102,7 @@ export function SignIn() {
           Lost your slip? Ask your class teacher.
         </p>
       </form>
+      <ServerSetting current={DEMO_URL} />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useSearch } from '@tanstack/react-router'
-import { backend } from '@/lib/backend'
+import { backend, DEMO_URL } from '@/lib/backend'
 import { useSignInSchool } from '@/lib/brand'
 import {
   Card,
@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { AuthLayout } from '../auth-layout'
+import { ServerSetting } from '@/components/server-setting'
 import { UserAuthForm } from './components/user-auth-form'
 
 export function SignIn() {
@@ -31,6 +32,7 @@ export function SignIn() {
         </CardHeader>
         <CardContent>
           <UserAuthForm redirectTo={redirect} onLoginIdChange={setLoginId} />
+          <ServerSetting current={DEMO_URL} />
         </CardContent>
         <CardFooter>
           <p className='text-center text-sm text-muted-foreground'>

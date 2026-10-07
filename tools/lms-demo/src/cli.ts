@@ -8,9 +8,11 @@ import { vertexAiFromKey } from './ai.ts';
 import { diskWork, startDemoServer, type DemoAi } from './server.ts';
 
 /**
- * npm run demo [-- --reset] [-- --port 54400]
+ * npm run demo [-- --reset] [-- --port 54400] [-- --lan]
  *
  * Starts the demo school for the teacher app and the student app to share.
+ * --lan also listens on the local network, for the apps' Android builds on a
+ * phone on the same Wi-Fi; it prints the address to give them.
  * The first run builds it (about a minute: every migration, the whole
  * library, a month of homework) into tools/lms-demo/.demo-data/, and writes
  * the sign-in IDs and PINs to logins.md there. Later runs reuse it, so what
@@ -89,8 +91,17 @@ async function main(): Promise<void> {
     }
   }
 
-  const server = await startDemoServer({ db, port, work: diskWork(path.join(DATA, 'work')), ai });
+  const lan = process.argv.includes('--lan');
+  const server = await startDemoServer({ db, port, work: diskWork(path.join(DATA, 'work')), ai, lan });
   console.log(`\nDemo school running at ${server.url}`);
+  if (lan) {
+    console.log(
+      server.lanUrls.length
+        ? `On this Wi-Fi, the phone apps reach it at: ${server.lanUrls.join('  or  ')}`
+        : 'Asked for the local network, but this computer has no network address right now.',
+    );
+    console.log('If Windows asks whether Node.js may use private networks, allow it, or phones cannot connect.');
+  }
   console.log(
     ai
       ? 'Draft with AI: on, billed to the Google Cloud project in GOOGLE_SERVICE_ACCOUNT_JSON.'
