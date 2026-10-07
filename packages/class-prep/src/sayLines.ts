@@ -84,12 +84,12 @@ function stem(word: string): string {
   return word.replace(/(?:ies)$/, 'y').replace(/(?:ing|ed|es|s|ly)$/, '');
 }
 
-function stemsOf(text: string): string[] {
+export function stemsOf(text: string): string[] {
   return [...new Set(words(text).filter((w) => w.length >= 3 && !STOP.has(w)).map(stem))];
 }
 
 /** Two stems are one word when one starts the other, or they share four letters out of five. */
-function same(a: string, b: string): boolean {
+export function same(a: string, b: string): boolean {
   if (a === b) return true;
   const short = Math.min(a.length, b.length);
   if (short < 4) return false;

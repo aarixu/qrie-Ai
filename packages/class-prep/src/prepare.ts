@@ -37,6 +37,7 @@ import {
 import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
 import { mergeSpoken, splitNarrations } from './sayLines.ts';
+import { addMarks } from './marks.ts';
 import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck, type Undrawn } from './gate.ts';
 import type { ComposerReport, PageReport } from './composerChecks.ts';
 import { askAgainLater, type RepairRetry } from './notNow.ts';
@@ -1329,6 +1330,9 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     if (!opts.composed) return;
     const split = splitNarrations(plan.beats, plan.visuals);
     if (split > 0) issues.push(`Wrote ${split} beat(s) of the ${who} as lines: the planner gave each one narration and no line.`);
+    // And what each line talks about is marked as she says it (marks.ts).
+    const marked = addMarks(plan.beats, plan.visuals);
+    if (marked > 0) issues.push(`Marked ${marked} thing(s) in the ${who} as the lines talk about them.`);
   };
   asLines(blueprint, 'plan');
 
