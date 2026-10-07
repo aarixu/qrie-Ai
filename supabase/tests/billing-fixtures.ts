@@ -1,7 +1,7 @@
 import type { PGlite } from '@electric-sql/pglite';
 import { fresh } from './admin-fixtures.ts';
 import { buildSchool } from './fixtures.ts';
-import { asClaims, createUser, type JwtClaims } from './harness.ts';
+import { asClaims, asService, createUser, type JwtClaims } from './harness.ts';
 
 /** A finance member, made as makeStaff makes the others (admin-fixtures.ts), with the role plan 3 adds. */
 export async function makeFinance(db: PGlite, name = 'finance person'): Promise<{ id: string; role: 'finance' }> {
@@ -17,6 +17,18 @@ export async function makeFinance(db: PGlite, name = 'finance person'): Promise<
 export async function rpc<T>(db: PGlite, claims: JwtClaims, fn: string, args: Record<string, unknown>): Promise<T> {
   const names = Object.keys(args).filter((k) => args[k] !== undefined);
   return asClaims(db, claims, async (tx) => {
+    const { rows } = await tx.query<{ v: T }>(
+      `select admin.${fn}(${names.map((n, i) => `${n} => $${i + 1}${n === 'p_value' ? '::jsonb' : ''}`).join(', ')}) as v`,
+      names.map((n) => (n === 'p_value' ? JSON.stringify(args[n]) : args[n])),
+    );
+    return rows[0].v;
+  });
+}
+
+/** Calls admin.<fn> with named arguments as the service role, the way the two Edge Functions do. */
+export async function serviceRpc<T>(db: PGlite, fn: string, args: Record<string, unknown>): Promise<T> {
+  const names = Object.keys(args).filter((k) => args[k] !== undefined);
+  return asService(db, async (tx) => {
     const { rows } = await tx.query<{ v: T }>(
       `select admin.${fn}(${names.map((n, i) => `${n} => $${i + 1}${n === 'p_value' ? '::jsonb' : ''}`).join(', ')}) as v`,
       names.map((n) => (n === 'p_value' ? JSON.stringify(args[n]) : args[n])),
