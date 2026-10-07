@@ -98,3 +98,42 @@ It has no SQL box, no table editor, no "sign in as this child", and it cannot
 deploy, run a migration, or edit the distress rules. Those change in code, with a
 review, because each one reaches children. Supabase's own dashboard remains the
 emergency tool; keep its login behind a hardware key.
+
+## 5. Schools, users and the audit copy (plan 2): Aarav's steps
+
+Nothing in this section has been run against the hosted project yet.
+
+1. **Migrations 0052 to 0055.** After plan 1's, `npx supabase db push` applies
+   them. 0053 replaces `lms.audit_log` so a Qrie staff action shows as "Qrie
+   staff" in a school's activity log; 0055 chains every audit row written
+   before it.
+2. **Deploy the staff service.** `npx supabase functions deploy admin-api
+   --no-verify-jwt`, then `npx supabase secrets set
+   ADMIN_ORIGIN=https://<the console's address>`. Supabase gives the function
+   its URL and keys itself. Until it is deployed, adding people, new PINs,
+   staff invitations and blocks fail with an error ("Could not reach the admin
+   service." or "The admin service did not answer properly."; which one is
+   UNVERIFIED); everything else works.
+3. **Rebuild the console** with the same three values as before and publish it.
+4. **The audit copy.** It uses the alarm's secrets and the same
+   `ADMIN_ALERT_ENABLED` variable. Run the "Admin audit copy" workflow once by
+   hand: the ops chat gets "Audit log on DATE: N entries, chain intact, head …".
+   On a private repository it costs about 720 job-minutes a month. If the
+   alarm runs from a server instead, run
+   `node --experimental-strip-types tools/admin-alert/src/audit-copy.ts`
+   from the same cron every hour, with `AUDIT_HEADS_FILE` set to a file that
+   survives between runs.
+5. **A restore drill.** Restore the latest backup into a scratch Supabase
+   project, open a table to see it is there, delete the scratch project, then
+   on System press "Record a restore drill" with that day's date.
+   (UNVERIFIED: what the dashboard offers on your plan.)
+6. **Your backup safety reviewer.** Staff and audit, "Invite a person", role
+   safety. Phone them the temporary password; they sign in and set up an
+   authenticator; call them back, check it is them, press "Turn on". They then
+   change their password under "Your account".
+7. **The first check in a browser** (each was only tested on an in-process
+   database): open a school, search a person, give a test account a new PIN
+   (you will be asked for a fresh code), block and unblock a test direct user,
+   invite and turn on a test staff member, and look at System: jobs should say
+   "Succeeded" or "Never run", not "Not captured"; the migration level should be
+   0055 (0060 once billing, plan 3, is merged).
