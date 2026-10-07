@@ -12,7 +12,7 @@
 
 **Where to work:** worktree `C:/Users/Ashish Sharma/curie/.claude/worktrees/admin-schools`, branch `admin-schools`, cut from `admin` at `eb17436`. Every command below runs from that worktree's root. Plan 3 (billing) is built at the same time on its own branch from `admin`; the seams S1 to S9 below are the contract between the two.
 
-**Measured while writing this plan (2026-10-07, this worktree at `eb17436`).** The four migrations below were extracted from this document, applied on top of 0001 to 0051 in PGlite, and exercised by a throw-away test (deleted afterwards): the health card returned its nine signals and the label "Needs attention: no homework published in 14 days" for a school whose last homework was 15 days old; people search escaped `%`; disabling from the console left the same rows as `lms.mark_left` and the school admin's `restore_account` undid it; the school's own log named the actor "Qrie staff"; the gate, staff invite, role refusal, direct-user block and audit-log filters behaved as written; the chain verified intact and broke at the edited entry; `public.audit_head` gave exactly its eight keys to `anon`; `admin.system_health` read "not-captured" for the hosted-only tables. With the four files placed in `supabase/migrations`, `npx vitest run supabase/tests packages/lms-client tools/lms-import packages/admin-client` gave 54 files, 571 passed and 6 failed, the 6 being exactly the ones this plan changes on purpose (five `staff_set` tests of `admin-foundation.test.ts`, M2, and the grant list); with M2's `'TEST'` argument added, `admin-foundation.test.ts` passed 20 of 20. Everything was then removed: this branch holds only this document. The tests in this plan are not those throw-away checks; they are written first, in the tasks.
+**Measured while writing this plan (2026-10-07, this worktree at `eb17436`).** The four migrations below were extracted from this document, applied on top of 0001 to 0051 in PGlite, and exercised by a throw-away test (deleted afterwards): the health card returned its nine signals and the label "Needs attention: no homework published in 14 days" for a school whose last homework was 15 days old; people search escaped `%`; disabling from the console left the same rows as `lms.mark_left` and the school admin's `restore_account` undid it; the school's own log named the actor "Qrie staff"; the gate, staff invite, role refusal, direct-user block and audit-log filters behaved as written; the chain verified intact and broke at the edited entry; `public.audit_head` gave exactly its eight keys to `anon`; `admin.system_health` read "not-captured" for the hosted-only tables. With the four files placed in `supabase/migrations`, `npx vitest run supabase/tests packages/lms-client tools/lms-import packages/admin-client` gave 54 files, 571 passed and 6 failed, the 6 being exactly the ones this plan changes on purpose (five `staff_set` tests of `admin-foundation.test.ts`, M2, and the grant list); with M2's `'TEST'` argument added, `admin-foundation.test.ts` passed 20 of 20. Everything was then removed: this branch holds only this document. **Added after that run, by the wave's cross-check (2026-10-07):** the `cashfree` part of `admin.system_health` (0055) and the service-row actor in `admin.school_activity` (0053). The `cashfree` block was run alone on PGlite against a stand-in `billing.webhook_event` and gave the values in Task 5's test 7; the whole 0055 and 0053 with these lines have not been re-run (UNVERIFIED until Tasks 3 and 5). The tests in this plan are not those throw-away checks; they are written first, in the tasks.
 
 ---
 
@@ -54,7 +54,7 @@ function Commit([string]$subject) {
 | **S6** | The console's staff role list is ONE constant, `STAFF_ROLES` in `apps/admin/src/features/staff/roles.ts` (`['owner','ops','safety']`). In SQL, `staff_set` and `staff_invite` take the allowed roles from `platform_staff`'s own check constraint (they catch `check_violation`), so plan 3's migration that widens that constraint to `finance` needs no change here. **Plan 3 must not recreate the old 5-argument `admin.staff_set`** (0054 drops it for the 6-argument one with `p_env`). |
 | **S7** | The manual licence change is `admin.school_set_licence` (owner, fresh code, reason, env) wrapping `lms.set_licence` (0041:70). 0041 is not edited. |
 | **S8** | 0052 to 0055 only. |
-| **S9** | Plan 1 files are edited only where allowed: `admin-invariants.test.ts`, `router.tsx`, `sidebar-data.ts`, `admin-client/src/index.ts`, `lib/client.ts`, `docs/ops/admin-console.md`, `apps/admin/README.md`. Three further edits, each a named plan-1 follow-up with its test: **M2** (`staff_set` takes `p_env`, accepts only staff-made accounts: `admin-client/src/api.ts`, `admin-foundation.test.ts`, `api.test.ts`), **M4** (the ceiling screen, on the new System page, using plan 1's existing `setCaps`), and `components/command-menu.tsx` (Ctrl+K "jump to a school", which plan 1's own comment reserves for this plan). |
+| **S9** | Plan 1 files are edited only where allowed: `admin-invariants.test.ts`, `router.tsx`, `sidebar-data.ts`, `admin-client/src/index.ts`, `lib/client.ts`, `docs/ops/admin-console.md`, `apps/admin/README.md`. Three further edits, each a named plan-1 follow-up with its test: **M2** (`staff_set` takes `p_env`, accepts only staff-made accounts: `admin-client/src/api.ts`, `admin-foundation.test.ts`, `api.test.ts`), **M4** (the ceiling screen, on the new System page, using plan 1's existing `setCaps`), and `components/command-menu.tsx` (Ctrl+K "jump to a school", which plan 1's own comment reserves for this plan). Also `apps/admin/package.json` and `package-lock.json` (Task 10: five dependencies the copied kit files need; plan 3 adds none) and the LMS lane's `tools/lms-import/src/admin.ts` (Task 6, factored while its own test file stays unedited). |
 
 ## Review Focus
 
@@ -1146,7 +1146,10 @@ begin
           left join admin.platform_staff ps on ps.user_id = e.actor
          where e.org_id = org and (p_before is null or e.at < p_before)
         union all
-        select e.at, 'qrie'::text, 'Qrie staff: ' || e.actor_name, e.action, e.target_id, e.reason
+        select e.at, 'qrie'::text,
+               -- A service row (plan 1's audit_service; plan 3's "Cashfree") has no actor.
+               case when e.actor is null then e.actor_name else 'Qrie staff: ' || e.actor_name end,
+               e.action, e.target_id, e.reason
           from admin.audit_event e
          where ((e.target_kind = 'school' and e.target_id = sc)
                 or (e.target_kind = 'flag' and e.target_id like '% @ ' || sc))
@@ -2178,7 +2181,7 @@ Commit "feat: the second door to users, staff invitations with the authenticator
 
 **Interfaces:**
 - Consumes: `admin.audit_event`, `admin.audit_immutable`, `admin.alert_token`, `admin.alert_miss`, `admin.setting`, `public.relay_control`, `public.usage_event`, `cron.job` (harness and hosted), `cron.job_run_details` and `supabase_migrations.schema_migrations` (hosted; looked up with `to_regclass`).
-- Produces: `admin.audit_chain (seq bigint identity pk, event_id bigint unique -> admin.audit_event, prev_hash, hash, chained_at)`, insert-only like the log; `admin.audit_chain_head` (one row, locked by each append); trigger `audit_chain_append` after insert on `admin.audit_event`; `admin.audit_row_hash(prev, row)` = hex SHA-256 of `prev|id|at (UTC, microseconds)|actor|actor_role|actor_name|action|target_kind|target_id|reason|details::text|environment`, the first `prev` being 64 zeros; `admin.audit_verify() returns jsonb {entries, headSeq, headHash, intact, firstBreakSeq, unchained}`; `public.audit_head(p_token text, p_seqs bigint[] default '{}') returns jsonb` with exactly the keys `at, entries, headSeq, headHash, intact, firstBreakSeq, unchained, known` (`known` = `[{seq, hash|null}]` for at most 200 asked-for entries) or `{error:'not-allowed'}`; it records `admin.setting.audit_copy_last_seen`. `admin.system_health() returns jsonb {environment, generatedAt, relay: {halted, haltedReason, events5m, failures5m}, jobs: [{name, schedule, active, lastStatus, lastStartedAt, lastEndedAt}], alarm: {lastCheckMinutesAgo}, auditCopy: {lastCheckMinutesAgo}, migrations: {level}, restoreDrill: {on, daysAgo}, auditChain: {entries, intact, firstBreakSeq, unchained, head}}` (`head` = first 12 hex characters; `lastStatus` is pg_cron's status text, `never-run`, or `not-captured`; `level` is the highest applied version or `not-captured`; a missing `relay_control` row reads `halted: true`, as the relay's own claim treats it). `admin.restore_drill_set(p_on date, p_reason, p_env)`.
+- Produces: `admin.audit_chain (seq bigint identity pk, event_id bigint unique -> admin.audit_event, prev_hash, hash, chained_at)`, insert-only like the log; `admin.audit_chain_head` (one row, locked by each append); trigger `audit_chain_append` after insert on `admin.audit_event`; `admin.audit_row_hash(prev, row)` = hex SHA-256 of `prev|id|at (UTC, microseconds)|actor|actor_role|actor_name|action|target_kind|target_id|reason|details::text|environment`, the first `prev` being 64 zeros; `admin.audit_verify() returns jsonb {entries, headSeq, headHash, intact, firstBreakSeq, unchained}`; `public.audit_head(p_token text, p_seqs bigint[] default '{}') returns jsonb` with exactly the keys `at, entries, headSeq, headHash, intact, firstBreakSeq, unchained, known` (`known` = `[{seq, hash|null}]` for at most 200 asked-for entries) or `{error:'not-allowed'}`; it records `admin.setting.audit_copy_last_seen`. `admin.system_health() returns jsonb {environment, generatedAt, relay: {halted, haltedReason, events5m, failures5m}, jobs: [{name, schedule, active, lastStatus, lastStartedAt, lastEndedAt}], alarm: {lastCheckMinutesAgo}, auditCopy: {lastCheckMinutesAgo}, migrations: {level}, restoreDrill: {on, daysAgo}, auditChain: {entries, intact, firstBreakSeq, unchained, head}, cashfree: {captured, lastWebhookMinutesAgo, signatureFailures24h, unprocessed, reconciledMinutesAgo}}` (`head` = first 12 hex characters; `cashfree` is spec section 9's Cashfree row, read from plan 3's `billing.webhook_event` (`received_at`, `signature_ok`, `status = 'stored'` for not yet processed) and `admin.setting` `billing_reconciled_at` once they exist, found with `to_regclass`, and `captured: false` with nulls before then; `lastStatus` is pg_cron's status text, `never-run`, or `not-captured`; `level` is the highest applied version or `not-captured`; a missing `relay_control` row reads `halted: true`, as the relay's own claim treats it). `admin.restore_drill_set(p_on date, p_reason, p_env)`.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -2193,7 +2196,7 @@ Commit "feat: the second door to users, staff invitations with the authenticator
 7. **"audit_head answers a wrong or missing token like the alarm does, and counts the miss"**: `select admin.alert_token_set($1)` with a 40-character token (as owner); as `anon` (`set local role anon` in a transaction), `public.audit_head('wrong')` and `public.audit_head(null)` each give `{error:'not-allowed'}`; `admin.alert_miss` gained 2 rows.
 8. **"audit_head gives exactly the head, the counts, whether the chain holds, and the hashes asked for, with no row content, to a caller with no sign-in"**: as `anon`, `select public.audit_head($1, '{1,2,999}'::bigint[])`: `Object.keys(a).sort()` equals `['at','entries','firstBreakSeq','headHash','headSeq','intact','known','unchained']`; `known` equals `[{seq:1, hash:<chain seq 1 hash>}, {seq:2, hash:<…>}, {seq:999, hash:null}]`; `JSON.stringify(a)` does not contain `'a reason'` nor `'test-row'`; `admin.setting` has `audit_copy_last_seen`.
 
-`supabase/tests/admin-system.test.ts` (6 tests): setup `db`, `setEnvironment`, `owner`, `ops`, `safety`, `child = anonymousChild(db)`.
+`supabase/tests/admin-system.test.ts` (7 tests): setup `db`, `setEnvironment`, `owner`, `ops`, `safety`, `child = anonymousChild(db)`.
 
 1. **"is for staff; reads the relay and its failures in 5 minutes, and 'not-captured' where the platform tables are missing"**: a child and `aal1` reject `/not allowed/`; insert three `public.usage_event` rows for `child` (`relay 'llm', provider 'vertex'`, statuses 200, 503, 0); `admin.system_health()` as `aal2(safety)`: `relay` matches `{halted:false, events5m:3, failures5m:2}`; every `jobs[i].lastStatus` is `'not-captured'` and the names include `admin-revert-caps`, `lms-finalize-tests`, `purge-old-ledger`; `migrations.level` is `'not-captured'`; `restoreDrill.on` is null.
 2. **"reads each scheduled job's last run from cron.job_run_details when it exists"**: `addHostedStandIns(db)`; two runs for `admin-revert-caps`'s `jobid` (`select jobid from cron.job where jobname = 'admin-revert-caps'`), the later with status `'failed'`; that job reads `lastStatus 'failed'` with the later `lastStartedAt`; another job reads `'never-run'`.
@@ -2201,6 +2204,7 @@ Commit "feat: the second door to users, staff invitations with the authenticator
 4. **"shows when the alarm and the audit copy last checked"**: set `admin.setting` `alert_last_seen` to `(now() - interval '7 minutes')::text`; set an alarm token and call `public.audit_head(<token>)` as anon; `alarm.lastCheckMinutesAgo` is 7 and `auditCopy.lastCheckMinutesAgo` is 0.
 5. **"a restore drill date: owner or ops, with a reason, not in the future and not over a year ago"**: `aal2(ops)` `admin.restore_drill_set(lms.india_today() - 3, 'restored into a scratch project', 'TEST')`; `restoreDrill` equals `{on: <that date>, daysAgo: 3}`; tomorrow and `- 366` reject `/in the last year/`; `aal2(safety)` rejects `/not allowed/`; `'HOSTED'` rejects `/this console is TEST/`; an audit row `restore-drill-recorded` exists.
 6. **"shows the audit chain's state"**: `auditChain.intact` true, `entries > 0`, `head` has 12 hex characters.
+7. **"reads Cashfree's webhook health from billing's log once it exists, and says not captured before"** (spec section 9): in its own `const early = await freshDatabase({ through: '0055' })` (so the answer is the same before and after plan 3's 0057 is merged), `setEnvironment(early)`, an owner; `admin.system_health() -> 'cashfree'` as `aal2(owner)` equals `{captured:false, lastWebhookMinutesAgo:null, signatureFailures24h:null, unprocessed:null, reconciledMinutesAgo:null}`. Then, as the database owner, a stand-in with only the columns this function reads, named as plan 3's 0057 names them: `create schema if not exists billing; create table billing.webhook_event (id bigint generated always as identity primary key, received_at timestamptz not null, signature_ok boolean not null, status text not null)`; rows `(now() - interval '30 minutes', true, 'processed')`, `(now() - interval '5 minutes', true, 'stored')`, `(now() - interval '2 hours', false, 'signature_failed')`, `(now() - interval '30 hours', false, 'signature_failed')`; `admin.setting` `billing_reconciled_at` = `to_jsonb((now() - interval '70 minutes')::text)`. Now `cashfree` equals `{captured:true, lastWebhookMinutesAgo:5, signatureFailures24h:1, unprocessed:1, reconciledMinutesAgo:70}`. `early.close()`.
 
 `admin-invariants.test.ts`: add `admin.restore_drill_set` and `admin.system_health` to the `authenticated` list; in the last test change the name list to `('app_config', 'alert_snapshot', 'audit_head')`, the expectation to `['alert_snapshot', 'app_config', 'audit_head']`, and its title to "exposes only three functions to the public schema for the apps and the outside checkers".
 
@@ -2230,8 +2234,9 @@ Create `supabase/migrations/0055_admin_audit_chain_system.sql`:
 -- last run (pg_cron's cron.job_run_details, where it exists), when the alarm
 -- and the audit copy last checked, the migration level (the Supabase CLI's
 -- supabase_migrations.schema_migrations, where it exists), the last restore
--- drill (a date a person types) and the chain's state. What cannot be read
--- says 'not-captured'.
+-- drill (a date a person types), the chain's state, and Cashfree's webhook
+-- health from billing's log once plan 3 has made it. What cannot be read
+-- says 'not-captured' (for Cashfree: captured false).
 
 create table if not exists admin.audit_chain (
   seq bigint generated always as identity primary key,
@@ -2414,6 +2419,8 @@ declare
   drill date;
   alarm_seen text;
   copy_seen text;
+  reconciled_seen text;
+  cashfree jsonb;
   chain jsonb := admin.audit_verify();
 begin
   select c.halted, c.halted_reason into rc from public.relay_control c where c.id;
@@ -2449,6 +2456,25 @@ begin
   select (s.value #>> '{}')::date into drill from admin.setting s where s.key = 'restore_drill_on';
   select s.value #>> '{}' into alarm_seen from admin.setting s where s.key = 'alert_last_seen';
   select s.value #>> '{}' into copy_seen from admin.setting s where s.key = 'audit_copy_last_seen';
+  select s.value #>> '{}' into reconciled_seen from admin.setting s where s.key = 'billing_reconciled_at';
+  -- Cashfree (spec section 9): plan 3's webhook log, once its migration has
+  -- made it. Counts and minutes only; never a payload.
+  if to_regclass('billing.webhook_event') is null then
+    cashfree := jsonb_build_object('captured', false, 'lastWebhookMinutesAgo', null,
+                                   'signatureFailures24h', null, 'unprocessed', null);
+  else
+    execute $q$
+      select jsonb_build_object(
+        'captured', true,
+        'lastWebhookMinutesAgo', (select floor(extract(epoch from now() - max(w.received_at)) / 60)::int
+                                    from billing.webhook_event w where w.signature_ok),
+        'signatureFailures24h', (select count(*)::int from billing.webhook_event w
+                                  where not w.signature_ok and w.received_at > now() - interval '24 hours'),
+        'unprocessed', (select count(*)::int from billing.webhook_event w where w.status = 'stored'))
+    $q$ into cashfree;
+  end if;
+  cashfree := cashfree || jsonb_build_object('reconciledMinutesAgo',
+    case when reconciled_seen is null then null else floor(extract(epoch from now() - reconciled_seen::timestamptz) / 60)::int end);
   return jsonb_build_object(
     'environment', admin.environment(),
     'generatedAt', now(),
@@ -2464,7 +2490,8 @@ begin
     'restoreDrill', jsonb_build_object('on', to_char(drill, 'YYYY-MM-DD'), 'daysAgo', lms.india_today() - drill),
     'auditChain', jsonb_build_object('entries', chain -> 'entries', 'intact', chain -> 'intact',
                                      'firstBreakSeq', chain -> 'firstBreakSeq', 'unchained', chain -> 'unchained',
-                                     'head', left(chain ->> 'headHash', 12))
+                                     'head', left(chain ->> 'headHash', 12)),
+    'cashfree', cashfree
   );
 end;
 $$;
@@ -2510,7 +2537,7 @@ grant execute on function admin.restore_drill_set(date, text, text) to authentic
 - [ ] **Step 4: Run and see them pass**
 
 Run: `npx vitest run supabase/tests/admin-audit-chain.test.ts supabase/tests/admin-system.test.ts supabase/tests/admin-invariants.test.ts`
-Expected: PASS, 8 + 6 + 4 tests. If `select ... for update` on `audit_chain_head` is refused inside the trigger on PGlite, say so in the report and use `pg_advisory_xact_lock(hashtext('admin.audit_chain'))` followed by a fresh read of the newest `audit_chain` row instead: the tests are the same.
+Expected: PASS, 8 + 7 + 4 tests. If `select ... for update` on `audit_chain_head` is refused inside the trigger on PGlite, say so in the report and use `pg_advisory_xact_lock(hashtext('admin.audit_chain'))` followed by a fresh read of the newest `audit_chain` row instead: the tests are the same.
 
 - [ ] **Step 5: All admin database files, and the LMS ones**
 
@@ -3093,7 +3120,7 @@ Commit "feat: the staff service: people, new PINs, staff invitations and blocks,
   - `admin-api.ts`: `interface AdminApiCaller { post(route: string, body: Record<string, unknown>): Promise<unknown> }`; `readReply(status: number, body: unknown): unknown` (2xx returns the body; otherwise throws `AdminError(body.error or 'The admin service did not answer properly.', body.code if one of the four, else 'not-allowed' for 401 and 403, else 'other')`); `adminApiUrl(supabaseUrl) = <url without trailing slashes>/functions/v1/admin-api`; `fetchAdminApi(baseUrl, token: () => Promise<string | null>, fetchImpl = fetch): AdminApiCaller` (no token: throws `not-allowed` without fetching; a network failure: `AdminError('Could not reach the admin service.', 'other')`); `replyCaller(send: (route, body) => Promise<{status, body}>): AdminApiCaller`.
   - `schools.ts`: types `Level`, `SignalKey`, `Signal`, `Health`, `SchoolRow`, `SchoolDetail`, `PersonKind`, `PersonHit`, `PersonCard`, `ActivityRow`, `WeekRow`, `Contact`, `Note`, `SchoolNotes`, `SchoolExport`, `ImportResult`, `Write = {reason: string; env: string}`; `createSchoolsClient(t: AdminTransport, api: AdminApiCaller): SchoolsClient` with `index()`, `list()`, `health(code)`, `detail(code)`, `weekly(code, weeks?)`, `people(code, query)`, `person(code, loginId)`, `activity(code, before?)`, `notes(code)`, `create({code, name, board, yearLabel, startsOn, endsOn} & Write): Promise<string>`, `setLicence({code, plan, seats, validUntil} & Write)`, `setQuiet({code, until: string | null} & Write)`, `offboard({code, offboard: boolean} & Write)`, `exportSchool({code} & Write): Promise<SchoolExport>`, `disablePerson({code, loginId} & Write)`, `setContact({code, id?, name, role, phone?, email?} & Write): Promise<string>`, `removeContact({code, id} & Write)`, `addNote({code, kind, body} & Write): Promise<string>`, `importPeople({code, students?, teachers?, commit, acceptWarnings?, reason?, env?}): Promise<ImportResult>` (via `api.post('import', …)`), `resetPin({code, loginId} & Write): Promise<{loginId, displayName, pin}>` (via `api.post('reset-pin', …)`).
   - `users.ts`: `DirectSummary`, `DirectUser`; `createUsersClient(t, api): UsersClient` with `summary()`, `find(ref)`, `user(userId)`, `setBlocked({userId, blocked} & Write)` (via `api.post('user-block', …)`).
-  - `staff.ts`: `StaffStatus`, `FactorState`, `RosterRow`, `AuditRow` (`id: number`), `AuditFilter {actor?, action?, from?, to?, before?, limit?}`, `Invitation {userId, email, temporaryPassword}`; `createStaffClient(t, api): StaffClient` with `roster()`, `invite({email, displayName, role} & Write)` (via `api.post('staff-invite', …)`), `addExisting({userId, role, displayName} & Write)` (`admin.staff_invite` directly, for an `account-only` row), `auditList(filter)`.
+  - `staff.ts`: `StaffStatus`, `FactorState`, `RosterRow` (its `role` is `string | null`: the database's role constraint is the authority (seam S6), so plan 3's `finance` needs no change here), `AuditRow` (`id: number`), `AuditFilter {actor?, action?, from?, to?, before?, limit?}`, `Invitation {userId, email, temporaryPassword}`; `createStaffClient(t, api): StaffClient` with `roster()`, `invite({email, displayName, role} & Write)` (via `api.post('staff-invite', …)`), `addExisting({userId, role, displayName} & Write)` (`admin.staff_invite` directly, for an `account-only` row), `auditList(filter)`.
   - `system.ts`: `SystemHealth`, `JobRun`; `createSystemClient(t): SystemClient` with `health()`, `setRestoreDrill({on} & Write)`.
 - Conventions every module keeps: every call is wrapped so any failure becomes `toAdminError(e)` (as `api.ts` does); rows are mapped to camelCase; a `date` column is read as `String(v).slice(0, 10)` (PostgREST sends `2026-10-05`, the PGlite transport `2026-10-05T00:00:00.000Z`); a `bigint` id is `Number(v)`; an argument left `undefined` is omitted (the transport drops it, so the SQL default applies).
 
@@ -3647,6 +3674,7 @@ Two cards. **People in a school** (door 1): a `Select` of `schools.index()`; cho
 - **Alarm** and **Audit copy**: "last checked N minutes ago", red over 15 (alarm) or 90 (copy) minutes, grey "never" when null.
 - **Audit log**: "Intact, N entries, head ABCDEF123456" or, red, "Broken at entry N" / "N entries outside the chain".
 - **Migrations**: the level, or grey "not captured".
+- **Cashfree** (spec section 9): last webhook N minutes ago, signature failures in 24 hours (red when any), events not yet processed (amber when any), last reconciliation N minutes ago (red over 120); grey "Not captured: billing is not installed" when `captured` is false; grey "never" for a null time.
 - **Restore drill**: the date and "N days ago" (amber after 90 days, grey when never) and "Record a restore drill" for owner and ops (a date; `WriteDialog`, `blastRestoreDrill(on)` = "Records that a backup was restored and checked on DATE.").
 
 - [ ] **Step 3: Staff and audit (`/staff`, owner only)**
@@ -3738,7 +3766,7 @@ npx vitest run --exclude "tools/measure/**" --exclude "**/node_modules/**" *> "$
 Get-Content "$env:TEMP\qrie-plan2-suite.txt" -Tail 40
 ```
 
-Expected: typecheck clean; the build ends `No secret found in N built files.`; the full suite (7 to 15 minutes) passes with plan 1's 4,292 plus this plan's 135 new tests, and the same skips as before. A failure outside the files this plan touched: compare with Task 1's baseline before changing anything.
+Expected: typecheck clean; the build ends `No secret found in N built files.`; the full suite (7 to 15 minutes) passes with plan 1's 4,292 plus this plan's 136 new tests, and the same skips as before. A failure outside the files this plan touched: compare with Task 1's baseline before changing anything.
 
 - [ ] **Step 4: Browser check (UNVERIFIED until a real project exists)**
 
@@ -3805,7 +3833,7 @@ Only he can do these; the runbook section (Task 13) has the commands.
 
 ## Self-review
 
-**Spec coverage.** Section 9: the list (Task 2, 11), the page and its six tabs (Tasks 3, 11), the health card with all nine signals and the spec's thresholds (Task 2), the System page (Tasks 5, 12; Cashfree's rows are plan 3's). Section 8 rows "Schools and the LMS" (create, import, licence, per-school switches, pause, export, offboard; no delete: Tasks 3, 7, 11), "Users" (two doors, a person's card, PIN reset with the school admin first, disable as `mark_left`: Tasks 3, 4, 7, 11, 12), "Staff" (who, when, what they did; add and remove; roles: Tasks 4, 7, 12). Section 5.7 (invited inactive, authenticator, phone, activation: Tasks 4, 7, 12). Section 6 (the log copied off the platform: Tasks 5, 9; never shown or exported: the tests named in Review Focus 3). Section 7's plan-2 objects (`school_list`, `school_detail`, `school_health`, `school_note` (as `school_note`, `school_contact` and `school_profile.quiet_until`), `system_health`). Section 12 navigation (Task 10). Section 13 (licence in the teacher app via `lms.set_licence`; "Qrie staff" in the school's log; seat counts through the shared import). Plan 1's deferrals M2 (Task 4, 8) and M4 (Task 12).
+**Spec coverage.** Section 9: the list (Task 2, 11), the page and its six tabs (Tasks 3, 11), the health card with all nine signals and the spec's thresholds (Task 2), the System page (Tasks 5, 12; its Cashfree row reads plan 3's `billing.webhook_event` and `billing_reconciled_at` with `to_regclass`, so it shows "not captured" until plan 3 is merged). Section 8 rows "Schools and the LMS" (create, import, licence, per-school switches, pause, export, offboard; no delete: Tasks 3, 7, 11), "Users" (two doors, a person's card, PIN reset with the school admin first, disable as `mark_left`: Tasks 3, 4, 7, 11, 12), "Staff" (who, when, what they did; add and remove; roles: Tasks 4, 7, 12). Section 5.7 (invited inactive, authenticator, phone, activation: Tasks 4, 7, 12). Section 6 (the log copied off the platform: Tasks 5, 9; never shown or exported: the tests named in Review Focus 3). Section 7's plan-2 objects (`school_list`, `school_detail`, `school_health`, `school_note` (as `school_note`, `school_contact` and `school_profile.quiet_until`), `system_health`). Section 12 navigation (Task 10). Section 13 (licence in the teacher app via `lms.set_licence`; "Qrie staff" in the school's log; seat counts through the shared import). Plan 1's deferrals M2 (Task 4, 8) and M4 (Task 12).
 
 **Seams.** S1 first in 0052, internal, tested for signature and grants (Task 2 test 2). S2 stub file with the exact export and props (Task 11). S3 new modules only, `index.ts` export lines, `client.ts` construction lines (Tasks 8, 10). S4 own routes and nav only (Task 10). S5 `app_config` untouched. S6 one constant; SQL reads roles from the constraint (Tasks 4, 12). S7 `school_set_licence` over `lms.set_licence`; 0041 untouched. S8 0052 to 0055. S9 the allowed files, plus M2, M4 and the command menu, each named.
 
