@@ -150,7 +150,8 @@ function Preparing({ progress }: { progress: PrepProgress }) {
   );
 }
 
-function Board({ lesson, assets }: { lesson: Lesson; assets: Record<string, string> }) {
+/** The board and its controls, for a class already prepared — the lab's, or one played from a file (viewer). */
+export function Board({ lesson, assets }: { lesson: Lesson; assets: Record<string, string> }) {
   // Browser speech: the voice does not matter here, only that the board waits
   // for it the way it will wait for a real one.
   const tts = useMemo(() => createBrowserTts({ lang: 'en-IN' }), []);
