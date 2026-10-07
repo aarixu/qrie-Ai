@@ -177,7 +177,8 @@ export function computeFrame(
       zoom = { x: zoom.x - (zoom.w * (scale - 1)) / 2, y: zoom.y - (zoom.h * (scale - 1)) / 2, w: zoom.w * scale, h: zoom.h * scale };
     }
     const page = Math.floor((part.x + part.w / 2) / PAGE_STRIDE);
-    return shape(zoom, { x: page * PAGE_STRIDE, y: 0, w: Math.min(CANVAS_W, board.w), h: board.h });
+    const pageBox = { x: page * PAGE_STRIDE, y: 0, w: Math.min(CANVAS_W, board.w), h: board.h };
+    return wholeTitle(lesson, shape(zoom, pageBox), [part], (r) => shape(r, pageBox));
   }
 
   /**
@@ -250,5 +251,37 @@ export function computeFrame(
     w: Math.min(CANVAS_W, board.w),
     h: board.h,
   };
-  return shape(frame, pageRect);
+  return wholeTitle(lesson, shape(frame, pageRect), boxes, (r) => shape(r, pageRect));
+}
+
+/** Part of `r` is in `f`, and part is not. */
+const cutBy = (r: Rect, f: Rect): boolean => {
+  const meets = r.x < f.x + f.w && f.x < r.x + r.w && r.y < f.y + f.h && f.y < r.y + r.h;
+  const inside = r.x >= f.x && r.y >= f.y && r.x + r.w <= f.x + f.w && r.y + r.h <= f.y + f.h;
+  return meets && !inside;
+};
+
+/**
+ * A TITLE IS SHOWN WHOLE, OR NOT AT ALL (small intestine, 2026-10-07).
+ *
+ * A frame zoomed onto what is under a page's title is padded and shaped to the
+ * screen, and that reached up into the header and cut the title at both edges:
+ * "hemical Digestion in Small Intestin". So a frame that cuts a title is moved
+ * down, its size kept, until the title is above it — when what it frames still
+ * fits — and otherwise grown to hold the title (and the writing above it)
+ * whole.
+ */
+function wholeTitle(lesson: Lesson, frame: Rect, framed: readonly Rect[], reshape: (r: Rect) => Rect): Rect {
+  const titles = lesson.elements.filter((el) => el.kind === 'title').map(boxOf);
+  const cut = titles.find((t) => cutBy(t, frame));
+  if (!cut) return frame;
+  const bottom = Math.max(...framed.map((b) => b.y + b.h));
+  const below = { ...frame, y: cut.y + cut.h + 2 };
+  if (below.y + below.h >= bottom && below.y + below.h <= lesson.canvas.h) return below;
+  // The title and whatever is written above it, across its width.
+  const header = lesson.elements
+    .map(boxOf)
+    .filter((b) => b.y + b.h <= cut.y + cut.h && b.x < cut.x + cut.w && cut.x < b.x + b.w)
+    .reduce(union, cut);
+  return reshape(union(frame, header));
 }
