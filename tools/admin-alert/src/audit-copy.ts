@@ -19,8 +19,10 @@ import { sendTelegram, type Env } from './run.ts';
  * alarm does not read the audit head.
  *
  * What the hashes catch: a kept entry whose row, or whose hash, changed since
- * it was seen. They do not catch someone who can replace public.audit_head
- * itself (a database superuser) and makes it answer with the kept hashes.
+ * it was seen, except a change that only moves text across a '|' between two
+ * neighbouring fields (see 0055's header). They do not catch someone who can
+ * replace public.audit_head itself (a database superuser) and makes it answer
+ * with the kept hashes.
  *
  * Only sequence numbers, hashes and counts are kept or sent. It holds the
  * public anon key and the alarm's token, no service-role key.
