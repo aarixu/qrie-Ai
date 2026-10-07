@@ -32,7 +32,8 @@ import { demoLogoPng } from './logo.ts';
  *      ability model. A few hand in late; some do not hand in at all.
  *   5. PLANTED MISCONCEPTIONS. A handful of students answer EVERY question on
  *      one chapter wrong, picking the distractor whose misconception label
- *      names the error. They are returned as `planted` and written beside the
+ *      names the error, then practise that chapter and choose the same
+ *      wrong options again. They are returned as `planted` and written beside the
  *      logins, so that when the brain (L6) says who is stuck on what, it can
  *      be checked against a known answer instead of admired.
  *   7. One of each other kind of work — written work as a checklist, an
@@ -41,7 +42,8 @@ import { demoLogoPng } from './logo.ts';
  *      reaches the ledger: ticks and paper marks are not answers.
  *   6. The brain (packages/lms-brain) folds every student's answers into
  *      concept_state, as the demo server does after each hand-in. It is
- *      given the ledger only, never the planted list.
+ *      given the ledger only, never the planted list. It runs before step
+ *      12, whose practice goes to the children it finds.
  *
  * Only step 4's timestamps, and the dates in step 3, are written directly
  * (as the database owner); everything else goes through the real paths.
@@ -222,6 +224,8 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   ];
   const ability = new Map<string, number>();
   const planted: Planted[] = [];
+  // The wrong option each planted student chose on each question of their planted chapter.
+  const plantedChoices = new Map<string, { subject: string; chapter: string; choices: Map<string, number> }>();
 
   for (const c of classes) {
     const teacher = createLmsClient(pgliteTransport(db, c.teacher));
@@ -304,6 +308,11 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
         }
         const student = createLmsClient(pgliteTransport(db, r.studentUserId));
         const { submissionId } = await student.submitMcq(hw.id, answers);
+        if (plantedHere.has(r.studentUserId)) {
+          const mine = plantedChoices.get(r.studentUserId) ?? { subject: c.subject, chapter: plantedTopic!, choices: new Map() };
+          for (const it of hw.items) if (it.chapter === plantedTopic) mine.choices.set(it.id, answers[it.id]);
+          plantedChoices.set(r.studentUserId, mine);
+        }
 
         const late = !hw.current && rand() < 0.15;
         const handedAt = hw.current
@@ -350,15 +359,21 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   // and two teachers' to their classes; some children have opened them.
   await seedNotices(db, orgId);
 
+  // 5, again. A wrong idea a child really holds comes back: each planted
+  // student practises their planted chapter and chooses the same wrong option
+  // on every question of it they had in homework. One wrong answer is a slip
+  // (0063); the same one in a second sitting is what the brain confirms.
+  await seedPlantedPractice(db, plantedChoices);
+
+  // 6. The brain. It is given the ledger and nothing else — not `planted`.
+  await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
+
   // 12. Practice for some children (0040): Neha's, in 8A Mathematics, for the
   // children who show the class's most-shown misconception.
   await seedPracticeForSome(db);
 
   // 13. A parent (0045): the first child of 8A's mother, with her own sign-in.
   const parent = await seedParent(db, imported.created);
-
-  // 6. The brain. It is given the ledger and nothing else — not `planted`.
-  await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
 
   return {
     orgId,
@@ -636,6 +651,26 @@ async function seedPractice(db: PGlite, w: WorkSeed, classes: TaughtRow[]): Prom
         const p = 1 / (1 + Math.exp(-(1.4 * theta - it.difficulty + 0.5)));
         await kid.checkPracticeAnswer(session, q.itemId, w.rand() < p ? it.correctIndex : distractor(it, w.rand, false));
       }
+    }
+  }
+}
+
+/**
+ * Each planted student's round of practice on their planted chapter, through
+ * the student app's own calls: of the questions it offers (up to 20), those
+ * they had in homework, answered with the option they chose then. Uses none
+ * of the seed's random numbers, so nothing seeded after it moves.
+ */
+async function seedPlantedPractice(
+  db: PGlite,
+  plantedChoices: Map<string, { subject: string; chapter: string; choices: Map<string, number> }>,
+): Promise<void> {
+  for (const [user, { subject, chapter, choices }] of plantedChoices) {
+    const kid = createLmsClient(pgliteTransport(db, user));
+    const session = crypto.randomUUID();
+    for (const q of await kid.practiceQuestions(subject, chapter, 20)) {
+      const chosen = choices.get(q.itemId);
+      if (chosen !== undefined) await kid.checkPracticeAnswer(session, q.itemId, chosen);
     }
   }
 }

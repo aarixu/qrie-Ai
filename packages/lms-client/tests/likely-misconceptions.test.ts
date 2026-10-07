@@ -13,7 +13,9 @@ import { createLmsClient, pgliteTransport, type LmsClient } from '../src/index.t
  * Each wrong option of a library question was written to catch one mistake.
  * A class's page lists the mistakes the most of its children show now — on
  * the latest occasion each child met a question that can catch it, they
- * chose it — with who they are and the chapter. Next to each, the teacher
+ * chose it, and they have chosen it on two questions or in two hand-ins
+ * (0063: one wrong answer is a slip) — with who they are and the chapter.
+ * Next to each, the teacher
  * sends practice on that chapter to those children only (adjusting the list
  * first): only they see it, only they can hand it in, and only they count in
  * its hand-in numbers.
@@ -86,7 +88,7 @@ beforeAll(async () => {
   }
 
   // In the order written, which is not the order practice chooses them in.
-  q.seen = await item('probe-lmc-seen', DEFINE, ['', '']); // on closed work of the class: after those never set
+  q.seen = await item('probe-lmc-seen', DEFINE, [PQ, ZERO]); // on closed work of the class: after those never set
   q.a = await item('probe-lmc-a', DEFINE, [PQ, EVERY]);
   q.b = await item('probe-lmc-b', CLOSURE, [PQ, EVERY]);
   q.zero = await item('probe-lmc-zero', DEFINE, [ZERO, '']);
@@ -103,6 +105,9 @@ beforeAll(async () => {
   });
   await teacherA.setAssignmentItems(old, [q.seen]);
   await teacherA.publishAssignment(old);
+  // The first showing of the mistake each of them shows again below (0063: two or more).
+  for (const name of ['Riya', 'Isha', 'Tara']) await as[name].submitMcq(old, { [q.seen]: 1 });
+  await as.Kabir.submitMcq(old, { [q.seen]: 2 });
   await db.query(`update lms.assignment set due_at = now() - interval '3 days' where id = $1`, [old]);
   homework = await teacherA.createAssignment({
     sectionId: one.s8a, subjectId: one.maths, kind: 'homework', title: 'Rational numbers 1',
@@ -121,7 +126,7 @@ beforeAll(async () => {
 
   await as.Riya.submitMcq(homework, { [q.a]: 1, [q.b]: 0, [q.zero]: 0 });
   await as.Kabir.submitMcq(homework, { [q.a]: 1, [q.b]: 1, [q.zero]: 1 });
-  await as.Meera.submitMcq(homework, { [q.a]: 2, [q.b]: 0, [q.zero]: 0 });
+  await as.Meera.submitMcq(homework, { [q.a]: 2, [q.b]: 2, [q.zero]: 0 });
   await as.Dev.submitMcq(homework, { [q.a]: 0, [q.b]: 0, [q.zero]: 0 });
   await as.Isha.submitMcq(homework, { [q.a]: 1 });
   await as.Tara.submitMcq(homework, { [q.a]: 1 });

@@ -68,8 +68,9 @@ export function LikelyMisconceptions({ sectionId, subjectId }: ClassProps) {
       <CardHeader>
         <CardTitle>Likely misconceptions in this class</CardTitle>
         <CardDescription>
-          Each wrong option in Qrie’s questions was written to catch one mistake. A child is listed when they chose
-          it the last time they answered a question that catches it, in this class’s work. Most children first.
+          Each wrong option in Qrie’s questions was written to catch one mistake. A child is listed once they have
+          made the same mistake twice — on two questions or in two sittings, in homework or with Qrie’s tutor — until
+          they get it right again on their own. One slip is not listed. Most children first.
         </CardDescription>
       </CardHeader>
       <CardContent>
