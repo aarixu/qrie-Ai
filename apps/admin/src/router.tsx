@@ -1,5 +1,7 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import { AuthenticatedLayout } from '@/components/layout/authenticated-layout';
+import { Schools } from '@/features/schools';
+import { SchoolPage } from '@/features/schools/school-page';
 import { Switches } from '@/features/switches';
 import { SCHOOL_TABS, type SchoolTab } from '@/features/schools/school-tabs';
 import { Today } from '@/features/today';
@@ -11,14 +13,14 @@ const today = createRoute({ getParentRoute: () => root, path: '/', component: To
 const switches = createRoute({ getParentRoute: () => root, path: '/switches', component: Switches });
 
 // Plan 2: schools, users, the system page, staff and audit, your account.
-const schoolsList = createRoute({ getParentRoute: () => root, path: '/schools', component: () => null });
+const schoolsList = createRoute({ getParentRoute: () => root, path: '/schools', component: Schools });
 const schoolPage = createRoute({
   getParentRoute: () => root,
   path: '/schools/$code',
   validateSearch: (search: Record<string, unknown>): { tab: SchoolTab } => ({
     tab: SCHOOL_TABS.includes(search.tab as SchoolTab) ? (search.tab as SchoolTab) : 'overview',
   }),
-  component: () => null,
+  component: SchoolPage,
 });
 const usersPage = createRoute({ getParentRoute: () => root, path: '/users', component: () => null });
 const systemPage = createRoute({ getParentRoute: () => root, path: '/system', component: () => null });
