@@ -3,7 +3,7 @@ import type { AdminTransport } from './transport.ts';
 
 export interface Me {
   userId: string;
-  role: 'owner' | 'ops' | 'safety';
+  role: 'owner' | 'ops' | 'safety' | 'finance';
   displayName: string;
   environment: string;
 }
