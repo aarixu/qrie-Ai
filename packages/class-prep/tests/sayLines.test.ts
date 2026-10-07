@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Instruction, ScriptBeat } from '@ai-tutor/board-layout';
 import { SPOKEN_MS_PER_CHAR, toolDurationMs } from '@ai-tutor/lesson-format';
 import { sentencesOf, splitNarrations } from '../src/sayLines';
-import { prepareClass, type LlmAdapter } from '../src/prepare';
+import { parsePlan, prepareClass, type LlmAdapter } from '../src/prepare';
 import type { Blueprint, VisualBrief } from '../src/types';
 
 /**
@@ -207,6 +207,82 @@ describe('splitNarrations', () => {
     expect(splitNarrations([spoken, one], [])).toBe(0);
     expect(spoken.board).toEqual([{ do: 'say', text: 'Already a line.' }, { do: 'write', text: 'x' }]);
     expect(one.board).toEqual([{ do: 'write', text: 'y' }]);
+  });
+});
+
+/**
+ * A BOARD AND ITS LINES WRITTEN AS TWO LISTS (the small-intestine class of
+ * 2026-10-07). The planner put the board in `board` and every line — with its
+ * ask and some marks — in a separate `say` list. Only `board` was read, so
+ * nothing was said, every beat was dropped, and preparation failed: "lesson
+ * needs a non-empty beats array".
+ */
+describe('a plan whose lines are a list of their own', () => {
+  const PLAN = {
+    id: 'si',
+    title: 'Small intestine',
+    visuals: [{ id: 'villus', medium: 'picture', parts: ['epithelium', 'lacteal'], brief: 'One villus.', alt: 'A villus' }],
+    beats: [
+      {
+        id: 'b2',
+        topic: 'Complete digestion',
+        board: [
+          { do: 'title', text: 'Site of Complete Digestion' },
+          { do: 'flow', steps: [{ label: 'Carbohydrates' }, { label: 'Proteins' }, { label: 'Fats' }] },
+          { do: 'list', heading: 'Key digestive secretions', items: [{ term: 'Bile juice', meaning: 'emulsifies fat globules' }] },
+          { do: 'write', text: 'Small intestine is the site of complete digestion' },
+          { do: 'summary', text: 'Food turns into simple soluble molecules' },
+        ],
+        say: [
+          { do: 'say', text: 'This is the site of complete digestion of carbohydrates, proteins and fats.' },
+          { do: 'say', text: 'The liver sends bile juice, which breaks big fat globules into droplets.' },
+          { do: 'ask', question: 'Why must food be broken down before absorption?', expect: 'small molecules cross membranes', hint: 'Think of size.' },
+          { do: 'say', text: 'Once everything is simple and soluble, the intestine absorbs it.' },
+        ],
+      },
+      {
+        id: 'b3',
+        topic: 'Villi',
+        board: [
+          { do: 'title', text: 'Intestinal Villi' },
+          { do: 'picture', ref: 'villus' },
+          { do: 'label', target: 'villus#lacteal', text: 'Lacteal' },
+          { do: 'summary', text: 'Villi absorb food fast' },
+        ],
+        say: [
+          { do: 'say', text: 'Look at the thin outer layer of a villus.' },
+          { do: 'annotate', target: 'villus#epithelium', mark: 'circle' },
+          { do: 'say', text: 'In its centre sits a lacteal that takes in the fats.' },
+          { do: 'say', text: 'So villi absorb digested food very fast.' },
+        ],
+      },
+    ],
+  };
+
+  it('writes the lines and the board as one board, each line with what it talks about', () => {
+    const plan = parsePlan(JSON.stringify(PLAN))!;
+    const got = lines(plan.beats[0].board);
+    expect(got.map((l) => l.said)).toEqual(PLAN.beats[0].say.filter((s) => s.do === 'say').map((s) => (s as { text: string }).text));
+    expect(got[0].under).toContain('flow');
+    expect(got.find((l) => l.said.includes('bile'))!.under).toContain('list');
+    // The ask stays at the end of the line that sets it up.
+    const held = got.find((l) => l.under.includes('ask'))!;
+    expect(held.said).toContain('bile');
+    expect(held.under[held.under.length - 1]).toBe('ask');
+  });
+
+  it('puts a picture on the board no later than the first mark made on it', () => {
+    const plan = parsePlan(JSON.stringify(PLAN))!;
+    const board = plan.beats[1].board;
+    expect(board.findIndex((s) => s.do === 'picture')).toBeLessThan(board.findIndex((s) => s.do === 'annotate'));
+  });
+
+  it('prepares a class from it', async () => {
+    const planner: LlmAdapter = { complete: async () => JSON.stringify(PLAN) };
+    const artist: LlmAdapter = { complete: async () => '' };
+    const { lesson } = await prepareClass({ topic: 'Small intestine', klass: 10, planner, artist, composed: true });
+    expect(lesson.beats.length).toBeGreaterThanOrEqual(6);
+    expect(lesson.beats.some((b) => b.ask)).toBe(true);
   });
 });
 

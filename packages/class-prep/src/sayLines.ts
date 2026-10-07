@@ -265,8 +265,73 @@ export function splitNarrations(beats: ScriptBeat[], visuals: readonly VisualBri
     if (beat.board.some((step) => step.do === 'say')) continue;
     const sentences = sentencesOf(beat.narration ?? '');
     if (sentences.length < 2) continue;
+    beat.board = layOver(
+      beat.board,
+      sentences.map((text) => ({ text, own: [] })),
+      [],
+      briefs,
+    );
+    // Said once: the lines are what is spoken, and a narration left beside them
+    // is a second copy of every sentence in the repair prompt, never spoken.
+    beat.narration = '';
+    split += 1;
+  }
+  return split;
+}
+
+/**
+ * A BOARD AND ITS LINES WRITTEN AS TWO LISTS, MADE ONE (the small-intestine
+ * class of 2026-10-07).
+ *
+ * The planner put the board in `board` and every line — with its ask and some
+ * of its marks — in a separate list of its own. Only `board` was read, so
+ * nothing was said, every beat was dropped, and the class failed to prepare.
+ * Here the spoken list keeps its order and what it attaches to each line, and
+ * each board instruction goes under the line that talks about it, the way a
+ * narration's sentences are given theirs.
+ */
+export function mergeSpoken(board: Instruction[], spoken: readonly Instruction[], visuals: readonly VisualBrief[]): Instruction[] {
+  const lines: { text: string; own: Instruction[] }[] = [];
+  const before: Instruction[] = [];
+  for (const step of spoken) {
+    if (step.do === 'say') lines.push({ text: step.text, own: [] });
+    else if (lines.length > 0) lines[lines.length - 1].own.push(step);
+    else before.push(step);
+  }
+  if (lines.length === 0) return board;
+  return layOver(board, lines, before, new Map(visuals.map((v) => [v.id, v])));
+}
+
+/** The picture or diagram an instruction marks, names or lights, if any. */
+const markedRef = (step: Instruction): string | null => {
+  if (step.do === 'annotate' || step.do === 'label') return step.target.split('#')[0];
+  if (step.do === 'point' || step.do === 'sketch') return step.ref;
+  return null;
+};
+
+/**
+ * The board, its instructions each under a line: the core of both of the
+ * above. `own` is what a line itself brings (from a spoken list: its marks and
+ * its ask), written after what the board puts under it, its ask last.
+ */
+function layOver(
+  board: readonly Instruction[],
+  spokenLines: readonly { text: string; own: readonly Instruction[] }[],
+  beforeFirst: readonly Instruction[],
+  briefs: ReadonlyMap<string, VisualBrief>,
+): Instruction[] {
+    const sentences = spokenLines.map((l) => l.text);
     const said = sentences.map(stemsOf);
-    const asking = (n: number): boolean => sentences[n].trimEnd().endsWith('?');
+    const asking = (n: number): boolean =>
+      sentences[n].trimEnd().endsWith('?') || spokenLines[n].own.some((s) => s.do === 'ask');
+    /** The first line whose own marks touch each picture: it must be on the board by then. */
+    const firstMark = new Map<string, number>();
+    spokenLines.forEach((l, n) => {
+      for (const s of l.own) {
+        const ref = markedRef(s);
+        if (ref !== null && !firstMark.has(ref)) firstMark.set(ref, n);
+      }
+    });
 
     const last = sentences.length - 1;
     const range = (from: number, to: number): number[] =>
@@ -283,19 +348,19 @@ export function splitNarrations(beats: ScriptBeat[], visuals: readonly VisualBri
      */
     const heldAt = new Map<number, number>();
     let askFloor = 0;
-    beat.board.forEach((step, index) => {
+    board.forEach((step, index) => {
       if (step.do !== 'ask') return;
       const n = Math.max(bestFrom(stemsOf(step.question), said, askFloor, asking) ?? last, askFloor);
       heldAt.set(index, n);
       askFloor = Math.min(n + 1, last);
     });
 
-    const early: Instruction[] = [];
+    const early: Instruction[] = [...beforeFirst];
     const under: Instruction[][] = sentences.map(() => []);
     /** No thing goes under an earlier line than the thing before it. */
     let floor = 0;
 
-    beat.board.forEach((step, index) => {
+    board.forEach((step, index) => {
       if (step.do === 'title' && floor === 0 && under[0].length === 0) {
         early.push(step);
         return;
@@ -307,9 +372,11 @@ export function splitNarrations(beats: ScriptBeat[], visuals: readonly VisualBri
         floor = Math.min(held + 1, last);
         return;
       }
-      // And arrives no later than the line the next ask is held on.
+      // And arrives no later than the line the next ask is held on — nor, for
+      // a picture, than the first line that marks it.
       const nextAsk = [...heldAt].find(([at]) => at > index)?.[1];
-      const ceiling = nextAsk === undefined ? last : Math.max(nextAsk, floor);
+      const marked = 'ref' in step && typeof step.ref === 'string' ? firstMark.get(step.ref) : undefined;
+      const ceiling = Math.min(nextAsk === undefined ? last : Math.max(nextAsk, floor), marked ?? last);
       const stems = stemsOf(wordsOf(step, briefs));
       let n: number;
       if (step.do === 'summary') {
@@ -330,16 +397,18 @@ export function splitNarrations(beats: ScriptBeat[], visuals: readonly VisualBri
       }
       n = Math.min(Math.max(n, floor), ceiling);
       under[n].push(step);
-      floor = n;
+      floor = Math.max(floor, n);
     });
 
-    const lines = sentences.map((text, n) => ({ text, under: under[n] }));
+    const lines = sentences.map((text, n) => ({
+      text,
+      // What the board puts under the line, then what the line brings, its ask last.
+      under: [
+        ...under[n],
+        ...spokenLines[n].own.filter((s) => s.do !== 'ask'),
+        ...spokenLines[n].own.filter((s) => s.do === 'ask'),
+      ],
+    }));
     giveToolsTheirTime(lines);
-    beat.board = [...early, ...lines.flatMap(({ text, under: ink }) => [{ do: 'say' as const, text }, ...ink])];
-    // Said once: the lines are what is spoken, and a narration left beside them
-    // is a second copy of every sentence in the repair prompt, never spoken.
-    beat.narration = '';
-    split += 1;
-  }
-  return split;
+    return [...early, ...lines.flatMap(({ text, under: ink }) => [{ do: 'say' as const, text }, ...ink])];
 }

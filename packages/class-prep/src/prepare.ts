@@ -36,7 +36,7 @@ import {
 } from './prompts.ts';
 import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
-import { splitNarrations } from './sayLines.ts';
+import { mergeSpoken, splitNarrations } from './sayLines.ts';
 import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck, type Undrawn } from './gate.ts';
 import type { ComposerReport, PageReport } from './composerChecks.ts';
 import { askAgainLater, type RepairRetry } from './notNow.ts';
@@ -385,18 +385,27 @@ function withPlaceIds(board: Instruction[]): Instruction[] {
 function wellFormed(parsed: unknown): Blueprint | null {
   if (typeof parsed !== 'object' || parsed === null || !Array.isArray((parsed as { beats?: unknown }).beats)) return null;
   const plan = parsed as Blueprint;
+  if (!Array.isArray(plan.visuals)) plan.visuals = [];
+  const steps = (list: unknown): Instruction[] =>
+    (Array.isArray(list) ? list : []).map(wellFormedStep).filter((s): s is Instruction => s !== null);
   plan.beats = plan.beats
     .filter((b) => typeof b === 'object' && b !== null)
-    .map((b) => ({
-      ...b,
-      narration: typeof b.narration === 'string' ? b.narration : '',
-      board: withPlaceIds(
-        (Array.isArray(b.board) ? b.board : [])
-          .map(wellFormedStep)
-          .filter((s): s is Instruction => s !== null),
-      ),
-    }));
-  if (!Array.isArray(plan.visuals)) plan.visuals = [];
+    .map((b) => {
+      const { say, ...beat } = b as typeof b & { say?: unknown };
+      const board = steps(b.board);
+      // Its lines written as a list of their own beside the board (sayLines.ts,
+      // mergeSpoken): one board, each line with what it talks about.
+      const spoken = steps(say);
+      const merged =
+        spoken.some((s) => s.do === 'say') && !board.some((s) => s.do === 'say')
+          ? mergeSpoken(board, spoken, plan.visuals)
+          : board;
+      return {
+        ...beat,
+        narration: typeof b.narration === 'string' ? b.narration : '',
+        board: withPlaceIds(merged),
+      };
+    });
   return plan;
 }
 
