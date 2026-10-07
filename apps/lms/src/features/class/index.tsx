@@ -1,0 +1,515 @@
+import { Fragment, useState } from 'react'
+import { useQueries, useQuery } from '@tanstack/react-query'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { format } from 'date-fns'
+import { CalendarPlus, ChevronDown, Download, Plus } from 'lucide-react'
+import { toCsv } from '@ai-tutor/lms-client'
+import { downloadText } from '@/lib/download'
+import type { AssignmentSummary, ResultRow } from '@ai-tutor/lms-client'
+import { useIsNarrow } from '@/hooks/use-mobile'
+import { api } from '@/lib/backend'
+import { cn } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Loading, Page, Problem } from '@/components/layout/page'
+import { className } from '@/features/dashboard'
+import { EventDialog } from '@/features/events/event-dialog'
+import { UpcomingList } from '@/features/events/upcoming'
+import { WORK_KINDS, kindLabel } from '@/features/homework/kinds'
+import { ClassAnalytics } from './analytics'
+import { Attendance } from './attendance'
+import { Insights } from './insights'
+import { LikelyMisconceptions } from './misconceptions'
+import { PersonAvatar } from '@/components/person-avatar'
+import { usePhotos } from '@/lib/photos'
+
+type ClassPageProps = { sectionId: string; subjectId: string }
+
+export function ClassPage({ sectionId, subjectId }: ClassPageProps) {
+  const classes = useQuery({ queryKey: ['classes'], queryFn: api.myClasses })
+  const c = classes.data?.find(
+    (x) => x.sectionId === sectionId && x.subjectId === subjectId
+  )
+  const [eventOpen, setEventOpen] = useState(false)
+
+  return (
+    <Page
+      title={c ? `${className(c)} · ${c.subjectName}` : 'Class'}
+      description={c ? `${c.students} students` : undefined}
+      back={{ label: 'My classes', to: '/' }}
+      actions={
+        c && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>
+                <Plus /> Create <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end' className='w-64'>
+              {WORK_KINDS.map((k) => (
+                <DropdownMenuItem key={k.kind} asChild>
+                  <Link
+                    to='/classes/$sectionId/$subjectId/new'
+                    params={{ sectionId, subjectId }}
+                    search={{ kind: k.kind }}
+                    className='flex flex-col items-start gap-0'
+                  >
+                    <span className='font-medium'>{k.label}</span>
+                    <span className='text-xs text-muted-foreground'>{k.blurb}</span>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={() => setEventOpen(true)}>
+                <CalendarPlus /> Event (PTM, exam, trip…)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      }
+    >
+      {classes.isPending ? (
+        <Loading what='the class' />
+      ) : classes.isError ? (
+        <Problem error={classes.error} />
+      ) : !c ? (
+        <p className='text-muted-foreground'>
+          This is not one of your classes.
+        </p>
+      ) : (
+        <Tabs defaultValue='homework' className='space-y-4'>
+          {/* Seven tabs wrap onto a second row on a phone rather than push the page sideways. */}
+          <TabsList className='max-sm:h-auto max-sm:flex-wrap max-sm:justify-start'>
+            <TabsTrigger value='homework'>Classwork</TabsTrigger>
+            <TabsTrigger value='attendance'>Attendance</TabsTrigger>
+            <TabsTrigger value='upcoming'>Coming up</TabsTrigger>
+            <TabsTrigger value='analytics'>Analytics</TabsTrigger>
+            <TabsTrigger value='insights'>Insights</TabsTrigger>
+            <TabsTrigger value='grades'>Gradebook</TabsTrigger>
+            <TabsTrigger value='students'>Students</TabsTrigger>
+          </TabsList>
+          <TabsContent value='homework' className='space-y-4'>
+            <LikelyMisconceptions sectionId={sectionId} subjectId={subjectId} />
+            <HomeworkList sectionId={sectionId} subjectId={subjectId} />
+          </TabsContent>
+          <TabsContent value='attendance'>
+            <Attendance sectionId={sectionId} />
+          </TabsContent>
+          <TabsContent value='upcoming'>
+            <UpcomingList sectionId={sectionId} empty='Nothing coming up for this class. Use Create → Event to add one.' />
+          </TabsContent>
+          <TabsContent value='analytics'>
+            <ClassAnalytics sectionId={sectionId} subjectId={subjectId} />
+          </TabsContent>
+          <TabsContent value='insights'>
+            <Insights sectionId={sectionId} subjectId={subjectId} />
+          </TabsContent>
+          <TabsContent value='grades'>
+            <Gradebook sectionId={sectionId} subjectId={subjectId} />
+          </TabsContent>
+          <TabsContent value='students'>
+            <Roster sectionId={sectionId} />
+          </TabsContent>
+        </Tabs>
+      )}
+      {c && (
+        <EventDialog
+          open={eventOpen}
+          onOpenChange={setEventOpen}
+          audiences={[{ sectionId, label: `${className(c)} only` }]}
+        />
+      )}
+    </Page>
+  )
+}
+
+export function statusOf(a: AssignmentSummary): { label: string; tone: 'draft' | 'open' | 'closed' } {
+  if (!a.published) return { label: 'Draft', tone: 'draft' }
+  if (a.opensAt && new Date(a.opensAt) > new Date()) {
+    return { label: `Opens ${format(new Date(a.opensAt), 'd MMM')}`, tone: 'draft' }
+  }
+  return new Date(a.dueAt) > new Date()
+    ? { label: 'Open', tone: 'open' }
+    : { label: 'Closed', tone: 'closed' }
+}
+
+export function StatusBadge({ a }: { a: AssignmentSummary }) {
+  const s = statusOf(a)
+  return (
+    <Badge
+      variant={s.tone === 'open' ? 'default' : s.tone === 'draft' ? 'outline' : 'secondary'}
+    >
+      {s.label}
+    </Badge>
+  )
+}
+
+function useClassWork(sectionId: string, subjectId: string) {
+  return useQuery({
+    queryKey: ['class-assignments', sectionId, subjectId],
+    queryFn: () => api.classAssignments(sectionId, subjectId),
+  })
+}
+
+function HomeworkList({ sectionId, subjectId }: ClassPageProps) {
+  const navigate = useNavigate()
+  const work = useClassWork(sectionId, subjectId)
+  if (work.isPending) return <Loading what='homework' />
+  if (work.isError) return <Problem error={work.error} />
+  if (work.data.length === 0) {
+    return (
+      <p className='text-muted-foreground'>
+        Nothing set yet. Use Create to set homework, an assignment or a test.
+      </p>
+    )
+  }
+  const open = (a: AssignmentSummary) =>
+    a.published
+      ? navigate({ to: '/homework/$assignmentId', params: { assignmentId: a.id } })
+      : navigate({ to: '/homework/$assignmentId/edit', params: { assignmentId: a.id } })
+
+  return (
+    <div className='overflow-x-auto rounded-md border'>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Work</TableHead>
+            <TableHead>Kind</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Due</TableHead>
+            <TableHead>What students do</TableHead>
+            <TableHead className='w-48'>Handed in</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {work.data.map((a) => (
+            <TableRow
+              key={a.id}
+              className='cursor-pointer'
+              tabIndex={0}
+              onClick={() => open(a)}
+              onKeyDown={(e) => e.key === 'Enter' && open(a)}
+            >
+              <TableCell className='font-medium'>
+                {a.title}
+                {a.targeted && <ForSome a={a} className='ms-2' />}
+              </TableCell>
+              <TableCell>{kindLabel(a.kind)}</TableCell>
+              <TableCell>
+                <StatusBadge a={a} />
+              </TableCell>
+              <TableCell>{format(new Date(a.dueAt), 'd MMM, h:mm a')}</TableCell>
+              <TableCell className='text-sm text-muted-foreground'>{partsOf(a)}</TableCell>
+              <TableCell>
+                {a.published ? <Progress done={a.submitted} of={a.students} /> : '—'}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
+/** Work set for some children of the class only: how many it is for. */
+export function ForSome({ a, className }: { a: AssignmentSummary; className?: string }) {
+  return (
+    <Badge variant='outline' className={className}>
+      For {a.students} {a.students === 1 ? 'child' : 'children'}
+    </Badge>
+  )
+}
+
+/** What a piece of work asks of students, in a few words. */
+export function partsOf(a: AssignmentSummary): string {
+  const parts: string[] = []
+  if (a.answerTypes.includes('checklist')) parts.push(`${a.tasks} ${a.tasks === 1 ? 'task' : 'tasks'} in the notebook`)
+  if (a.answerTypes.includes('mcq')) {
+    parts.push(`${a.items} ${a.items === 1 ? 'question' : 'questions'}${a.timeLimitMinutes ? `, ${a.timeLimitMinutes} min` : ''}`)
+  }
+  if (a.answerTypes.includes('photo')) parts.push('photo')
+  if (a.answerTypes.includes('paper')) parts.push(`on paper, out of ${a.maxMarks ?? '?'}`)
+  return parts.join(' · ')
+}
+
+export function Progress({ done, of }: { done: number; of: number }) {
+  const pct = of ? Math.round((done / of) * 100) : 0
+  return (
+    <div className='flex items-center gap-2'>
+      <div className='h-2 flex-1 overflow-hidden rounded-full bg-muted'>
+        <div className='h-full bg-primary' style={{ width: `${pct}%` }} />
+      </div>
+      <span className='w-12 text-end text-xs tabular-nums text-muted-foreground'>
+        {done}/{of}
+      </span>
+    </div>
+  )
+}
+
+/**
+ * Every student against every published homework: the score of their latest
+ * attempt (the teacher's mark where one is given), late work flagged, and
+ * missing work shown as missing — the view a teacher uses to spot who is
+ * falling behind. A table from sm up; on a phone, a card per student listing
+ * each piece of work and its mark.
+ */
+export function Gradebook({ sectionId, subjectId }: ClassPageProps) {
+  const narrow = useIsNarrow()
+  const work = useClassWork(sectionId, subjectId)
+  const published = (work.data ?? [])
+    .filter((a) => a.published)
+    .sort((a, b) => a.dueAt.localeCompare(b.dueAt))
+  const results = useQueries({
+    queries: published.map((a) => ({
+      queryKey: ['results', a.id],
+      queryFn: () => api.assignmentResults(a.id),
+    })),
+  })
+  const photos = usePhotos(results.flatMap((r) => (r.data ?? []).map((x) => x.studentUserId)))
+  if (work.isPending || results.some((r) => r.isPending)) return <Loading what='the gradebook' />
+  const failed = work.error ?? results.find((r) => r.isError)?.error
+  if (failed) return <Problem error={failed} />
+  if (published.length === 0) {
+    return <p className='text-muted-foreground'>Nothing published yet, so nothing to grade.</p>
+  }
+
+  const byStudent = new Map<string, { row: ResultRow; cells: (ResultRow | undefined)[] }>()
+  results.forEach((r, col) => {
+    for (const row of r.data ?? []) {
+      const entry = byStudent.get(row.studentUserId) ?? { row, cells: [] }
+      entry.cells[col] = row
+      byStudent.set(row.studentUserId, entry)
+    }
+  })
+
+  const download = () => {
+    const header = ['Roll', 'Name', 'School ID', ...published.map((a) => a.title), 'Average']
+    const lines = [...byStudent.values()].map(({ row, cells }) => {
+      const avg = averageOf(cells)
+      return [
+        row.rollNumber ?? '',
+        row.displayName,
+        row.loginId,
+        ...published.map((a, i) => gradeText(cells[i], new Date(a.dueAt) < new Date(), notSetFor(a, cells[i]))),
+        avg === null ? '' : `${Math.round(avg * 100)}%`,
+      ]
+    })
+    downloadText(`gradebook-${sectionId.slice(0, 8)}.csv`, toCsv([header, ...lines]))
+  }
+  const averageText = (avg: number | null) => (avg === null ? '—' : `${Math.round(avg * 100)}%`)
+
+  return (
+    <div className='space-y-2'>
+    <div className='flex justify-end'>
+      <Button variant='outline' size='sm' onClick={download}>
+        <Download /> Download (CSV)
+      </Button>
+    </div>
+    {narrow ? (
+      <ul className='divide-y rounded-md border'>
+        {[...byStudent.values()].map(({ row, cells }) => {
+          const avg = averageOf(cells)
+          return (
+            <li key={row.studentUserId} data-student className='space-y-2 px-3 py-3'>
+              <div className='flex items-center gap-2'>
+                <span className='w-5 shrink-0 text-end text-sm text-muted-foreground tabular-nums'>{row.rollNumber}</span>
+                <PersonAvatar userId={row.studentUserId} name={row.displayName} photo={photos.get(row.studentUserId)} className='size-7' />
+                <span className='min-w-0 flex-1 truncate font-medium'>
+                  <StudentLink id={row.studentUserId} name={row.displayName} />
+                </span>
+                <span className={cn('shrink-0 text-sm font-medium tabular-nums', avg !== null && avg < 0.5 && 'text-destructive')}>
+                  Average {averageText(avg)}
+                </span>
+              </div>
+              <dl className='grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 ps-7 text-sm'>
+                {published.map((a, i) => (
+                  <Fragment key={a.id}>
+                    <dt className='truncate text-muted-foreground'>
+                      <Link to='/homework/$assignmentId' params={{ assignmentId: a.id }} className='hover:underline'>
+                        {a.title}
+                      </Link>
+                    </dt>
+                    <dd className='text-end'>
+                      <GradeCell r={cells[i]} past={new Date(a.dueAt) < new Date()} notSet={notSetFor(a, cells[i])} />
+                    </dd>
+                  </Fragment>
+                ))}
+              </dl>
+            </li>
+          )
+        })}
+      </ul>
+    ) : (
+    <div className='overflow-x-auto rounded-md border'>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className='sticky left-0 bg-background'>Student</TableHead>
+            {published.map((a) => (
+              <TableHead key={a.id} className='min-w-28 text-center'>
+                <Link
+                  to='/homework/$assignmentId'
+                  params={{ assignmentId: a.id }}
+                  className='hover:underline'
+                >
+                  {a.title}
+                </Link>
+              </TableHead>
+            ))}
+            <TableHead className='text-center'>Average</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {[...byStudent.values()].map(({ row, cells }) => {
+            const avg = averageOf(cells)
+            return (
+              <TableRow key={row.studentUserId}>
+                <TableCell className='sticky left-0 bg-background font-medium'>
+                  <span className='flex items-center gap-2'>
+                    <span className='w-5 text-end text-muted-foreground tabular-nums'>{row.rollNumber}</span>
+                    <PersonAvatar userId={row.studentUserId} name={row.displayName} photo={photos.get(row.studentUserId)} className='size-7' />
+                    <StudentLink id={row.studentUserId} name={row.displayName} />
+                  </span>
+                </TableCell>
+                {published.map((a, i) => (
+                  <TableCell key={a.id} className='text-center'>
+                    <GradeCell r={cells[i]} past={new Date(a.dueAt) < new Date()} notSet={notSetFor(a, cells[i])} />
+                  </TableCell>
+                ))}
+                <TableCell
+                  className={cn('text-center font-medium tabular-nums', avg !== null && avg < 0.5 && 'text-destructive')}
+                >
+                  {averageText(avg)}
+                </TableCell>
+              </TableRow>
+            )
+          })}
+        </TableBody>
+      </Table>
+    </div>
+    )}
+    </div>
+  )
+}
+
+/** A student's average over the work that has a score; null when none has. */
+function averageOf(cells: (ResultRow | undefined)[]): number | null {
+  const scores = cells.map(scoreOf).filter((s): s is number => s !== null)
+  return scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : null
+}
+
+/** The teacher's mark where given, else the machine's; a fraction of 1. */
+export function scoreOf(r: ResultRow | undefined): number | null {
+  if (!r) return null
+  if (r.paperScore !== null && r.paperMax) return r.paperScore / r.paperMax
+  if (r.teacherScore !== null && r.teacherMax) return r.teacherScore / r.teacherMax
+  if (r.machineTotal) return (r.machineCorrect ?? 0) / r.machineTotal
+  if (r.photoTeacherScore !== null && r.photoTeacherMax) return r.photoTeacherScore / r.photoTeacherMax
+  return null
+}
+
+/**
+ * Work set for only some children of the class (practice sent from "Likely
+ * misconceptions") has a result row for those children only: for anyone
+ * else it was never set, so it is not missing.
+ */
+function notSetFor(a: { targeted: boolean }, r: ResultRow | undefined): boolean {
+  return a.targeted && !r
+}
+
+/** A gradebook cell as words, for the CSV: the same reading as GradeCell. */
+function gradeText(r: ResultRow | undefined, past: boolean, notSet: boolean): string {
+  if (notSet) return 'Not set'
+  if (r?.teacherStatus === 'absent') return 'Absent'
+  if (r?.teacherStatus === 'not_done') return 'Not done'
+  if (!r || !r.submitted) return past ? 'Missing' : ''
+  const s = scoreOf(r)
+  const text = s !== null ? `${Math.round(s * 100)}%` : r.tasksTotal > 0 && r.tasksDone === r.tasksTotal ? 'Done' : 'To mark'
+  return r.late ? `${text} (late)` : text
+}
+
+function GradeCell({ r, past, notSet }: { r: ResultRow | undefined; past: boolean; notSet: boolean }) {
+  if (notSet) return <span className='text-muted-foreground'>Not set</span>
+  if (r?.teacherStatus === 'absent') return <span className='text-muted-foreground'>Absent</span>
+  if (r?.teacherStatus === 'not_done') return <span className='text-destructive'>Not done</span>
+  if (!r || !r.submitted) {
+    return past ? (
+      <span className='text-destructive'>Missing</span>
+    ) : (
+      <span className='text-muted-foreground'>—</span>
+    )
+  }
+  const s = scoreOf(r)
+  return (
+    <span className={cn('tabular-nums', s !== null && s < 0.5 && 'text-destructive')}>
+      {s !== null
+        ? `${Math.round(s * 100)}%`
+        : r.tasksTotal > 0 && r.tasksDone === r.tasksTotal
+          ? 'Done'
+          : 'To mark'}
+      {r.late && <span className='ms-1 text-xs text-orange-600'>late</span>}
+    </span>
+  )
+}
+
+function Roster({ sectionId }: { sectionId: string }) {
+  const roster = useQuery({
+    queryKey: ['roster', sectionId],
+    queryFn: () => api.classRoster(sectionId),
+  })
+  const photos = usePhotos((roster.data ?? []).map((s) => s.studentUserId))
+  if (roster.isPending) return <Loading what='the students' />
+  if (roster.isError) return <Problem error={roster.error} />
+  return (
+    <div className='overflow-x-auto rounded-md border'>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className='w-16'>Roll</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>School ID</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {roster.data.map((s) => (
+            <TableRow key={s.studentUserId}>
+              <TableCell className='tabular-nums'>{s.rollNumber ?? '—'}</TableCell>
+              <TableCell className='font-medium'>
+                <span className='flex items-center gap-3'>
+                  <PersonAvatar userId={s.studentUserId} name={s.displayName} photo={photos.get(s.studentUserId)} className='size-8' />
+                  <StudentLink id={s.studentUserId} name={s.displayName} />
+                </span>
+              </TableCell>
+              <TableCell className='font-mono text-sm'>{s.loginId}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
+/** A student's name, opening their report. */
+export function StudentLink({ id, name }: { id: string; name: string }) {
+  return (
+    <Link to='/students/$studentId' params={{ studentId: id }} className='hover:underline'>
+      {name}
+    </Link>
+  )
+}

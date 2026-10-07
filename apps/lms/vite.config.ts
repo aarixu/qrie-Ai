@@ -1,0 +1,26 @@
+import path from 'path'
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import { tanstackRouter } from '@tanstack/router-plugin/vite'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    tanstackRouter({
+      target: 'react',
+      autoCodeSplitting: true,
+    }),
+    react(),
+    tailwindcss(),
+  ],
+  // Not 5173: the classroom app has that one.
+  server: { port: 5180, strictPort: true },
+  resolve: {
+    alias: {
+      '@': path.resolve(import.meta.dirname, './src'),
+      '@ai-tutor/lms-client': path.resolve(import.meta.dirname, '../../packages/lms-client/src/index.ts'),
+      '@ai-tutor/lms-report': path.resolve(import.meta.dirname, '../../packages/lms-report/src/index.ts'),
+    },
+  },
+})

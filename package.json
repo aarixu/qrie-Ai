@@ -12,8 +12,13 @@
     "build:site": "node tools/bin/build-site.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p apps/lms/tsconfig.app.json --noEmit && tsc -p apps/student/tsconfig.app.json --noEmit",
     "style-card": "node tools/teacher-clone/src/style-card.ts",
+    "demo": "node tools/lms-demo/src/cli.ts",
+    "demo:all": "node tools/lms-demo/src/all.ts",
+    "founder": "node tools/lms-demo/src/founder-cli.ts",
+    "lms": "npm run dev --workspace @ai-tutor/lms",
+    "student": "npm run dev --workspace @ai-tutor/student",
     "app:sync": "npm run build && npm run --workspace @ai-tutor/classroom cap:sync",
     "app:android": "npm run app:sync && npm run --workspace @ai-tutor/classroom cap:android",
     "app:icons": "node tools/bin/make-app-icons.mjs && npm run --workspace @ai-tutor/classroom cap:assets",
@@ -26,6 +31,7 @@
     "model:metric": "node tools/bin/model-metric.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@iconify/json": "^2.2.522",
     "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^24.0.0",

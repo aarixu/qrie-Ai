@@ -31,6 +31,11 @@ export default defineConfig({
       '@ai-tutor/maths-check': pkg('maths-check'),
       '@ai-tutor/tutor-control': pkg('tutor-control'),
       '@ai-tutor/live-board': pkg('live-board'),
+      '@ai-tutor/lms-client': pkg('lms-client'),
+      '@ai-tutor/lms-brain': pkg('lms-brain'),
+      '@ai-tutor/lms-report': pkg('lms-report'),
+      // The teacher app's own alias (apps/lms uses @/ for its src).
+      '@': fileURLToPath(new URL('./apps/lms/src', import.meta.url)),
     },
   },
   test: {
@@ -56,6 +61,7 @@ export default defineConfig({
       'packages/*/tests/**/*.test.{ts,tsx}',
       'apps/*/tests/**/*.test.{ts,tsx}',
       'tools/*/tests/**/*.test.ts',
+      'supabase/tests/**/*.test.ts',
     ],
   },
 });

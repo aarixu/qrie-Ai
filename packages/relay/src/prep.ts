@@ -232,18 +232,23 @@ export function createSupabasePrepLocks(
   };
 
   /**
-   * The organisation take_prep_lock wants: the caller's membership, earliest
-   * created_at first — the SAME tie-break fill_org_id (0018) uses, written
-   * down there as a decision. Every user has a solo org from the 0005
-   * trigger, so an empty answer is a broken account, and the route fails
-   * closed rather than lock under a made-up org.
+   * The organisation take_prep_lock wants, asked of the database's own rule —
+   * 0021's org_of, which fill_org_id also uses: a school membership wins over
+   * a solo one. The relay used to keep its own copy (earliest membership
+   * first), and a copy is how two answers to one question start.
+   *
+   * DEPLOY ORDER: 0021 must be applied before a relay carrying this code is
+   * deployed. Without org_of the call fails, orgOf answers null, and every
+   * prep lock fails closed.
+   *
+   * org_of answers null for a user with no membership. Every self-signed-up
+   * user has a solo org and every school account a school one, so null is a
+   * broken account, and the route fails closed rather than lock under a
+   * made-up org.
    */
   const orgOf = async (userId: string): Promise<string | null> => {
-    const rows = await select(
-      `membership?user_id=eq.${encodeURIComponent(userId)}&select=org_id&order=created_at.asc&limit=1`,
-    );
-    const org = rows?.[0] as { org_id?: unknown } | undefined;
-    return typeof org?.org_id === 'string' ? org.org_id : null;
+    const org = await rpc('org_of', { p_user: userId });
+    return typeof org === 'string' ? org : null;
   };
 
   return {

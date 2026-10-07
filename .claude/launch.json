@@ -40,6 +40,24 @@
         "--strictPort"
       ],
       "port": 5174
+    },
+    {
+      "name": "lms-demo",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "demo"
+      ],
+      "port": 54400
+    },
+    {
+      "name": "lms",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "lms"
+      ],
+      "port": 5180
     }
   ]
 }
