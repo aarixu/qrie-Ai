@@ -52,7 +52,7 @@ export interface AdminReply {
 }
 
 // No parameter properties: node runs these files by stripping types only.
-class Refused extends Error {
+export class Refused extends Error {
   readonly status: number;
   constructor(status: number, message: string) {
     super(message);
@@ -74,11 +74,25 @@ async function adminSchool(deps: AdminDeps, caller: string, what: string): Promi
   return org;
 }
 
-async function importPeople(deps: AdminDeps, caller: string, req: Record<string, unknown>): Promise<ImportResponse> {
+function checkSheets(req: Record<string, unknown>): void {
   for (const k of ['students', 'teachers'] as const) {
     if (req[k] !== undefined && typeof req[k] !== 'string') throw new Refused(400, `${k} must be the text of a CSV.`);
   }
-  const org = await adminSchool(deps, caller, 'add people');
+}
+
+/**
+ * Adds people from the sheets to one school, with `actor` as the one who did
+ * it in the school's activity log. The school admin's calls (handleAdmin,
+ * below) and Qrie staff's (tools/admin-api) both come here once their own
+ * check has named the school.
+ */
+export async function importForSchool(
+  deps: Pick<AdminDeps, 'rpc' | 'store'>,
+  org: string,
+  actor: string,
+  req: Record<string, unknown>,
+): Promise<ImportResponse> {
+  checkSheets(req);
   const snapshot = (await deps.rpc('import_snapshot', { p_org: org })) as SchoolSnapshot | null;
   if (!snapshot) throw new Refused(409, 'The school has no academic year yet.');
   const preview = previewImport(snapshot, {
@@ -103,7 +117,7 @@ async function importPeople(deps: AdminDeps, caller: string, req: Record<string,
   if (result.created.length) {
     await deps.rpc('audit_by', {
       p_org: org,
-      p_actor: caller,
+      p_actor: actor,
       p_action: 'people-added',
       p_target: `${result.created.length} people`,
       p_details: { ids: result.created.map((c) => c.loginId) },
@@ -124,19 +138,35 @@ async function importPeople(deps: AdminDeps, caller: string, req: Record<string,
   };
 }
 
+async function importPeople(deps: AdminDeps, caller: string, req: Record<string, unknown>): Promise<ImportResponse> {
+  checkSheets(req);
+  const org = await adminSchool(deps, caller, 'add people');
+  return importForSchool(deps, org, caller, req);
+}
+
 type Holder = { userId: string; kind: AccountKind; displayName: string; leftAt: string | null };
 
-async function resetPin(deps: AdminDeps, caller: string, req: Record<string, unknown>) {
-  const org = await adminSchool(deps, caller, 'give out new PINs');
-  const id = typeof req.loginId === 'string' ? req.loginId.trim().toUpperCase() : '';
+/** A new PIN for one person of one school; the old one stops and its holder is signed out everywhere. */
+export async function resetPinForSchool(
+  deps: Pick<AdminDeps, 'rpc' | 'auth'>,
+  org: string,
+  actor: string,
+  loginId: unknown,
+): Promise<{ loginId: string; displayName: string; pin: string }> {
+  const id = typeof loginId === 'string' ? loginId.trim().toUpperCase() : '';
   const who = (await deps.rpc('account_by_login', { p_org: org, p_login: id })) as Holder | null;
   if (!who) throw new Refused(404, `There is no one in your school with the ID ${id || '(none)'}.`);
   const pin = newPin(who.kind);
   await deps.auth.setPassword(who.userId, pin);
   // Whoever held the old PIN is signed out everywhere.
   await deps.rpc('end_sessions', { p_user: who.userId });
-  await deps.rpc('audit_by', { p_org: org, p_actor: caller, p_action: 'pin-reset', p_target: id });
+  await deps.rpc('audit_by', { p_org: org, p_actor: actor, p_action: 'pin-reset', p_target: id });
   return { loginId: id, displayName: who.displayName, pin };
+}
+
+async function resetPin(deps: AdminDeps, caller: string, req: Record<string, unknown>) {
+  const org = await adminSchool(deps, caller, 'give out new PINs');
+  return resetPinForSchool(deps, org, caller, req.loginId);
 }
 
 async function addParent(deps: AdminDeps, caller: string, req: Record<string, unknown>) {
