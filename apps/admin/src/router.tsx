@@ -2,6 +2,7 @@ import { createRootRoute, createRoute, createRouter } from '@tanstack/react-rout
 import { AuthenticatedLayout } from '@/components/layout/authenticated-layout';
 import { BillingOverviewPage } from '@/features/billing';
 import { InvoiceDetailPage } from '@/features/billing/invoice-detail';
+import { InvoicePrint } from '@/features/billing/invoice-print';
 import { InvoicesPage } from '@/features/billing/invoices';
 import { PaymentsPage } from '@/features/billing/payments';
 import { PlansPage } from '@/features/billing/plans';
@@ -23,6 +24,7 @@ const switches = createRoute({ getParentRoute: () => root, path: '/switches', co
 const billingOverview = createRoute({ getParentRoute: () => root, path: '/billing', component: BillingOverviewPage });
 const billingInvoices = createRoute({ getParentRoute: () => root, path: '/billing/invoices', component: InvoicesPage });
 const billingInvoice = createRoute({ getParentRoute: () => root, path: '/billing/invoices/$invoiceId', component: InvoiceDetailPage });
+const billingInvoicePrint = createRoute({ getParentRoute: () => root, path: '/billing/invoices/$invoiceId/print', component: InvoicePrint });
 const billingSubscriptions = createRoute({ getParentRoute: () => root, path: '/billing/subscriptions', component: SubscriptionsPage });
 const billingPayments = createRoute({ getParentRoute: () => root, path: '/billing/payments', component: PaymentsPage });
 const billingSchools = createRoute({ getParentRoute: () => root, path: '/billing/schools', component: BillingSchoolsPage });
@@ -38,6 +40,7 @@ export const router = createRouter({
     billingOverview,
     billingInvoices,
     billingInvoice,
+    billingInvoicePrint,
     billingSubscriptions,
     billingPayments,
     billingSchools,

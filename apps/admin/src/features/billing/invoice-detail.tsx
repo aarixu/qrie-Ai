@@ -1,4 +1,5 @@
-import { useParams } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
+import { Printer } from 'lucide-react';
 import { useState } from 'react';
 import { billing } from '@/lib/client';
 import { useMe } from '@/lib/me';
@@ -13,7 +14,7 @@ import { useLoad } from './use-load.ts';
 
 const SOURCE = { cashfree_link: 'Cashfree link', bank_transfer: 'Bank transfer', cheque: 'Cheque' } as const;
 
-/** One invoice: its line and tax, its payment links, its payments and its credit notes. */
+/** One invoice: its line and tax, its payment links, its payments and its credit notes, and a way to its print page. */
 export function InvoiceDetailPage() {
   const { invoiceId } = useParams({ from: '/billing/invoices/$invoiceId' });
   const rights = billingRights(useMe().role);
@@ -34,6 +35,11 @@ export function InvoiceDetailPage() {
                 Record a payment
               </Button>
             )}
+            <Button variant='outline' size='sm' asChild>
+              <Link to='/billing/invoices/$invoiceId/print' params={{ invoiceId: d.id }}>
+                <Printer /> Print
+              </Link>
+            </Button>
           </div>
         )
       }
