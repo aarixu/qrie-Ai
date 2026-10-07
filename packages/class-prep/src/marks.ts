@@ -33,6 +33,9 @@ const keyOf = (t: Target): string =>
         ? `item:${t.step.heading ?? ''}#${t.n}`
         : `write:${t.step.text}`;
 
+/** Writing a line may put on the board's regions: a line with any of it is not given a mark. */
+const WRITING_NEW: ReadonlySet<string> = new Set(['write', 'list', 'note', 'card', 'summary', 'compare', 'caption', 'equation', 'derive']);
+
 /** Which kind wins a tie: a picture's part, then the scene, then a list's item, then writing. */
 const RANK: Record<Target['kind'], number> = { part: 0, lit: 0, place: 1, item: 2, write: 3 };
 
@@ -79,7 +82,12 @@ export function addMarks(beats: ScriptBeat[], visuals: readonly VisualBrief[]): 
       }
       const said = line.say ? stemsOf(line.say.text) : [];
       const recent = new Set([...(markedOn[n - 1] ?? []), ...(markedOn[n - 2] ?? [])]);
-      if (line.say && own.size === 0) {
+      // A line that writes something new is moving the board already, and its
+      // writing may run onto the beat's next page: a mark it was given on the
+      // first page took the camera back there, and the writing was never on
+      // screen (human heart, 2026-10-07).
+      const writes = line.items.some((s) => WRITING_NEW.has(s.do));
+      if (line.say && own.size === 0 && !writes) {
         let best: { t: Target; score: number } | null = null;
         for (const t of targets) {
           // What this line placed or wrote is new ink already; a part of a picture may be circled as it is named.

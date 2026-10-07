@@ -46,6 +46,7 @@ describe('addMarks', () => {
         { do: 'say', text: 'Its outer layer, the epithelium, is one cell thick.' },
         { do: 'label', target: 'villus#epithelium', text: 'Epithelium' },
         { do: 'say', text: 'In the centre runs the lacteal, which takes in fats.' },
+        { do: 'say', text: 'So remember what each part does.' },
         { do: 'write', text: 'Lacteal absorbs fats' },
       ],
     };
@@ -173,6 +174,24 @@ describe('addMarks', () => {
     const list = beat.board.find((s) => s.do === 'list') as { id?: string };
     expect(list.id).toBeTruthy();
     expect(marksIn(beat.board)).toEqual([expect.objectContaining({ target: `${list.id}#2`, mark: 'highlight' })]);
+  });
+
+  it('leaves a line that writes something new to its writing (human heart, 2026-10-07)', () => {
+    // Its key points ran onto the beat's second page, and a mark it was given on
+    // the picture took the camera back to the first: they were never on screen.
+    const beat: ScriptBeat = {
+      id: 'b2',
+      topic: 'Heart',
+      narration: '',
+      board: [
+        { do: 'say', text: 'Here is the heart.' },
+        { do: 'picture', ref: 'villus' },
+        { do: 'say', text: 'The lacteal sits in the centre.' },
+        { do: 'write', text: 'The lacteal takes in fats' },
+      ],
+    };
+    addMarks([beat], [VILLUS]);
+    expect(marksIn(beat.board)).toEqual([]);
   });
 
   it('lights a part of a diagram rather than circling it', () => {
