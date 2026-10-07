@@ -183,7 +183,13 @@ async function fetchGraphics(
       })),
     ]),
   );
-  const chosen = await pickIcons(topic, options, llm);
+  // The label each noun is written with, so "tube" labelled "Intestinal lumen"
+  // is not given a test tube (small intestine, 2026-10-07).
+  const labels: Record<string, string[]> = {};
+  for (const el of lesson.elements) {
+    if (el.kind === 'graphic' && el.label) labels[el.noun] = [...(labels[el.noun] ?? []), el.label];
+  }
+  const chosen = await pickIcons(topic, options, llm, labels);
 
   /**
    * The picked glyph, or null when this noun has no picture worth using —

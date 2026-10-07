@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { iconPickerUser, pickIcons, type IconOption } from '../src/icons';
+import { ICON_PICKER_SYSTEM, iconPickerUser, pickIcons, type IconOption } from '../src/icons';
 import type { LlmAdapter } from '../src/prepare';
 
 const options: Record<string, IconOption[]> = {
@@ -112,5 +112,33 @@ describe('the two nulls mean opposite things', () => {
       says('{"tank":{"icon":"noto:potable-water","set":"noto"}}'),
     );
     expect(chosen.tank).toEqual({ icon: 'potable-water', set: 'noto', deliberate: true });
+  });
+});
+
+/**
+ * THE LABEL SAYS WHAT THE PICTURE MUST SHOW (small intestine, 2026-10-07): the
+ * noun "tube", labelled "Intestinal lumen", was given a test tube — the picker
+ * saw only the bare word.
+ */
+describe('a word with its label on the board', () => {
+  it('shows the picker the label beside the word', () => {
+    const user = iconPickerUser('Small intestine', { tube: [{ icon: 'test-tube', set: 'noto' }] }, { tube: ['Intestinal lumen'] });
+    expect(user).toContain('- "tube" (labelled "Intestinal lumen"): noto:test-tube');
+  });
+
+  it('passes the labels on to the model', async () => {
+    let asked = '';
+    const llm: LlmAdapter = {
+      complete: async (_s: string, u: string) => {
+        asked = u;
+        return '{"tube":{"icon":null,"set":null}}';
+      },
+    };
+    await pickIcons('Small intestine', { tube: [{ icon: 'test-tube', set: 'noto' }] }, llm, { tube: ['Intestinal lumen'] });
+    expect(asked).toContain('labelled "Intestinal lumen"');
+  });
+
+  it('tells the model a name that only contains the word is a different thing', () => {
+    expect(ICON_PICKER_SYSTEM).toContain('test-tube for "tube"');
   });
 });
