@@ -1,10 +1,14 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import { AuthenticatedLayout } from '@/components/layout/authenticated-layout';
+import { Account } from '@/features/account';
 import { Schools } from '@/features/schools';
 import { SchoolPage } from '@/features/schools/school-page';
 import { Switches } from '@/features/switches';
 import { SCHOOL_TABS, type SchoolTab } from '@/features/schools/school-tabs';
+import { StaffPage } from '@/features/staff';
+import { System } from '@/features/system';
 import { Today } from '@/features/today';
+import { Users } from '@/features/users';
 
 // Code-based routes: the console has a handful of pages, so there is no generated tree.
 // Each later plan adds its pages here and to components/layout/data/sidebar-data.ts.
@@ -22,10 +26,10 @@ const schoolPage = createRoute({
   }),
   component: SchoolPage,
 });
-const usersPage = createRoute({ getParentRoute: () => root, path: '/users', component: () => null });
-const systemPage = createRoute({ getParentRoute: () => root, path: '/system', component: () => null });
-const staffPage = createRoute({ getParentRoute: () => root, path: '/staff', component: () => null });
-const accountPage = createRoute({ getParentRoute: () => root, path: '/account', component: () => null });
+const usersPage = createRoute({ getParentRoute: () => root, path: '/users', component: Users });
+const systemPage = createRoute({ getParentRoute: () => root, path: '/system', component: System });
+const staffPage = createRoute({ getParentRoute: () => root, path: '/staff', component: StaffPage });
+const accountPage = createRoute({ getParentRoute: () => root, path: '/account', component: Account });
 
 export const router = createRouter({
   routeTree: root.addChildren([today, switches, schoolsList, schoolPage, usersPage, systemPage, staffPage, accountPage]),

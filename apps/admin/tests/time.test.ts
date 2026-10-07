@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, academicYear, istTime, istToday } from '../src/lib/time.ts';
+import { addDays, academicYear, istStamp, istTime, istToday } from '../src/lib/time.ts';
 
 /** Days and times as India reads them, on the schools pages. Written first. */
 
@@ -25,5 +25,10 @@ describe('India time', () => {
     expect(academicYear('2026-10-07')).toEqual({ label: '2026-27', startsOn: '2026-04-01', endsOn: '2027-03-31' });
     expect(academicYear('2027-02-10')).toEqual({ label: '2026-27', startsOn: '2026-04-01', endsOn: '2027-03-31' });
     expect(academicYear('2099-04-01')).toEqual({ label: '2099-00', startsOn: '2099-04-01', endsOn: '2100-03-31' });
+  });
+
+  it("istStamp is India's date and time to the second, in an order that sorts", () => {
+    expect(istStamp('2026-10-07T08:35:09.123456+00:00')).toBe('2026-10-07 14:05:09');
+    expect(istStamp('2026-10-07T18:30:00Z')).toBe('2026-10-08 00:00:00');
   });
 });

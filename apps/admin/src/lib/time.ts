@@ -19,6 +19,10 @@ export function istTime(at: string): string {
   });
 }
 
+/** A moment as India reads it, to the second and sortable: "2026-10-07 14:05:09". */
+export const istStamp = (at: string): string =>
+  new Date(Date.parse(at) + 330 * 60_000).toISOString().slice(0, 19).replace('T', ' ');
+
 /** A YYYY-MM-DD date moved by whole days. */
 export const addDays = (isoDate: string, days: number): string =>
   new Date(Date.parse(`${isoDate}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);

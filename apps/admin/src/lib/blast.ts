@@ -67,6 +67,11 @@ export function blastInvite(name: string, role: string): string {
   return `${name} gets a sign-in for Qrie control as ${role}. It stays switched off until you turn it on after they set up an authenticator.`;
 }
 
+/** An account made for staff that was never put on the list (a half-finished invitation). */
+export function blastAddExisting(name: string, role: string): string {
+  return `${name} joins the staff list as ${role}, switched off. Turn them on after they have set up an authenticator and you have spoken to them.`;
+}
+
 export function blastStaff(name: string, role: string, active: boolean, wasActive: boolean): string {
   if (active && !wasActive) return `${name} can use Qrie control as ${role} from their next click. Only do this after you have spoken to them.`;
   if (!active && wasActive) return `${name} loses access on their next click.`;

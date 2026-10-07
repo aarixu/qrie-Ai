@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blastCeiling, blastLicence, blastOffboard, blastResetPin } from '../src/lib/blast.ts';
+import { blastAddExisting, blastCeiling, blastLicence, blastOffboard, blastResetPin } from '../src/lib/blast.ts';
 
 /** What a write will do, said before it is confirmed. Written first. */
 
@@ -43,5 +43,11 @@ describe('blast-radius lines', () => {
     expect(cut).toMatch(/already 3000 units/);
     expect(cut).toMatch(/takes no new work/);
     expect(cut).toMatch(/stop the tutor first/);
+  });
+
+  it('adding an account already made for staff says it joins the list switched off until it is turned on', () => {
+    expect(blastAddExisting('Meena', 'safety')).toBe(
+      'Meena joins the staff list as safety, switched off. Turn them on after they have set up an authenticator and you have spoken to them.',
+    );
   });
 });
