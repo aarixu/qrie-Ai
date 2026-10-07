@@ -52,6 +52,12 @@ describe('the planner for a composed board', () => {
     expect(text).toContain('A board with no picture, scene, flow, chart, working or comparison');
   });
 
+  it('asks before it shows, and names a placed thing as its label does (small intestine, 2026-10-07)', () => {
+    const text = plannerSystemFor(true);
+    expect(text).toContain('Ask before you show');
+    expect(text).toContain('A placed "noun" names the same thing as its label');
+  });
+
   it('asks for every beat as lines, never as one narration (small intestine, 2026-10-06)', () => {
     const text = plannerSystemFor(true);
     expect(text).toContain('Every beat is written as {"do":"say"} lines');

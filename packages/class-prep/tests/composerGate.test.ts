@@ -133,6 +133,49 @@ describe('page-full', () => {
   });
 });
 
+/**
+ * ASK BEFORE YOU SHOW (small intestine, 2026-10-07): the opening asked "Which
+ * organ receives this food next?" with "Small intestine" already written under
+ * its picture, and a later ask "Which vessel absorbs fatty acids?" was held
+ * beside the label "Lacteal".
+ */
+describe('answer-shown', () => {
+  const asking = (written: Element[]): Lesson =>
+    lessonOf(
+      [{ kind: 'title', id: 'b1_0', x: 500, y: 72, text: 'Digestion' }, ...written],
+      [
+        {
+          id: 'b1_2',
+          topic: 't',
+          narration: 'Which organ receives this food next?',
+          show: ['b1_0', ...written.map((e) => e.id)],
+          ask: {
+            question: 'Which organ receives this food next?',
+            expect: 'The small intestine receives it.',
+            whyProbe: { askedAs: 'open', options: [{ text: 'the small intestine', correct: true, why: 'It finishes digestion.' }, { text: 'the liver', why: 'Food never enters it.' }] },
+          },
+        },
+      ],
+    );
+  const answerRule = (lesson: Lesson) =>
+    gateLesson(lesson, { mathsCheck: noMaths, composer: { pages: [], overview: [] } }).filter((p) => p.rule === 'answer-shown');
+
+  it('names an ask held while its answer is written on its page', () => {
+    const found = answerRule(asking([{ kind: 'graphic', id: 'b1__intestine', x: 250, y: 220, w: 100, h: 100, noun: 'intestine', label: 'Small intestine (site of complete digestion)' }]));
+    expect(found).toEqual([expect.objectContaining({ where: 'b1_2' })]);
+    expect(found[0].message).toMatch(/Ask before you show/);
+  });
+
+  it('passes an ask whose answer the board does not name yet', () => {
+    expect(answerRule(asking([{ kind: 'graphic', id: 'b1__stomach', x: 250, y: 100, w: 100, h: 100, noun: 'stomach', label: 'Stomach' }]))).toEqual([]);
+  });
+
+  it('is silent on a class that is not composed', () => {
+    const lesson = asking([{ kind: 'handwrite', id: 'b1_3', x: 300, y: 300, text: 'Small intestine', size: 22 }]);
+    expect(gateLesson(lesson, { mathsCheck: noMaths }).some((p) => p.rule === 'answer-shown')).toBe(false);
+  });
+});
+
 describe('phone-readable', () => {
   const WIDE: Element = { kind: 'box', id: 'w', x: 40, y: 100, w: 920, h: 450, label: '' };
   const SMALL: Element = { kind: 'handwrite', id: 's', x: 500, y: 300, text: 'Lacteal', size: 12 };

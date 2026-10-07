@@ -647,6 +647,14 @@ columns of writing: the notes (a "list") in one, three to five key points in the
 other, and the summary. Most subtopics have something to show; when this one
 does, give the board that demonstration instead.
 
+Ask before you show. Nothing on the board while she asks may give the answer
+away — no picture's name, label, key point or list item that says it. What
+answers the question is placed or written after a say that follows the ask.
+
+A placed "noun" names the same thing as its label, as concretely as the subject
+allows: an organ by its organ's name ("duodenum", "liver"), never by its shape
+("tube", "bag"). A picture the library does not have is drawn to order.
+
 Every beat is written as {"do":"say"} lines with the board between them: a line,
 then what she writes while saying it, then the next line.
 Leave "narration" empty. A beat with no line arrives on the board all at once,

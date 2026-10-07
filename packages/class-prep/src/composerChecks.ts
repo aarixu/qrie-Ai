@@ -2,6 +2,7 @@ import { ARRANGEMENTS, type ArrangementName, type SheetReport } from '@ai-tutor/
 import { LIST_ITEM_SIZE, NOTE_FONT, STAGE_ASPECT, type Element, type Lesson } from '@ai-tutor/lesson-format';
 import { computeFrame, MAX_UNIT_PX } from '../../stage/src/frame.ts';
 import type { GateProblem } from './gate.ts';
+import { same, stemsOf } from './sayLines.ts';
 
 /**
  * What assemble reports about one page of a composed class (board composer):
@@ -113,7 +114,56 @@ function writingOf(el: Element): { size: number; words: string } | null {
 }
 
 /**
- * The three rules a composed class is held to (board composer).
+ * ASK BEFORE YOU SHOW (small intestine, 2026-10-07).
+ *
+ * The opening asked "Which organ receives this food next?" with "Small
+ * intestine" already written under its picture; a later ask about which vessel
+ * takes in fats was held beside the label "Lacteal". The answer — the correct
+ * option of the ask's probe, or what it expects — less every word of the
+ * question itself, is looked for in the writing on the ask's own page at the
+ * moment it is held (names on pictures included). One to four words of it, all
+ * there, is the answer on the board.
+ */
+function answerShown(lesson: Lesson): GateProblem[] {
+  const byId = new Map(lesson.elements.map((el) => [el.id, el]));
+  const inkOf = (el: Element): string => {
+    const parts: string[] = [];
+    if ('text' in el && typeof el.text === 'string') parts.push(el.text);
+    if ('label' in el && typeof el.label === 'string') parts.push(el.label);
+    if (el.kind === 'list') parts.push(el.heading ?? '', ...el.items.map((i) => `${i.term} ${i.meaning ?? ''}`));
+    return parts.join(' ');
+  };
+  const problems: GateProblem[] = [];
+  for (const beat of lesson.beats) {
+    if (!beat.ask) continue;
+    const where = plannerOf(beat.id);
+    const answer = beat.ask.whyProbe?.options.find((o) => o.correct)?.text ?? beat.ask.expect ?? '';
+    const asked = stemsOf(beat.ask.question);
+    const key = stemsOf(answer).filter((w) => !asked.some((q) => same(q, w)));
+    if (key.length === 0 || key.length > 4) continue;
+    const onPage = beat.show
+      .filter((id) => id === where || id.startsWith(`${where}_`))
+      .map((id) => byId.get(id))
+      .filter((el): el is Element => el !== undefined);
+    const shown = onPage.find((el) => {
+      const ink = stemsOf(inkOf(el));
+      return key.every((k) => ink.some((w) => same(w, k)));
+    });
+    if (!shown) continue;
+    problems.push({
+      rule: 'answer-shown',
+      where: beat.id,
+      message:
+        `Beat "${where}": the class asks "${beat.ask.question}" while its answer is already on the board ` +
+        `("${inkOf(shown).slice(0, 40)}"). Ask before you show: put the place, label, write or list that names ` +
+        `it after a say that FOLLOWS the ask, or ask about something the board does not name yet.`,
+    });
+  }
+  return problems;
+}
+
+/**
+ * The four rules a composed class is held to (board composer).
  *
  * page-full       the class leaves no page under PAGE_FULL written on, and a
  *                 subtopic with a main demonstration has its notes, its key
@@ -125,6 +175,8 @@ function writingOf(el: Element): { size: number; words: string } | null {
  * one-main        every beat is one composed page: none was laid out as a
  *                 stack because it held two main demonstrations, or names on
  *                 something that is not a picture.
+ * answer-shown    no ask is held while its answer is written on its page
+ *                 (answerShown, above).
  *
  * A class that is not composed has no report, and no rule runs.
  */
@@ -183,6 +235,8 @@ export function composerChecks(lesson: Lesson, report: ComposerReport | undefine
         `working or a comparison) also needs ${missing.join(', ')}.`,
     });
   }
+
+  problems.push(...answerShown(lesson));
 
   const overview = new Set(report.overview);
   const byId = new Map(lesson.elements.map((el) => [el.id, el]));
