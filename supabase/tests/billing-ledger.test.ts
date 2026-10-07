@@ -2,7 +2,7 @@
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { aal2, anonymousChild, fresh, makeStaff, setEnvironment, type Staff } from './admin-fixtures.ts';
-import { billedSchool, CONTACT, makeFinance, readyPlan, readySeller, rpc, SELLER, subscribe } from './billing-fixtures.ts';
+import { billedSchool, CONTACT, makeFinance, rpc, SELLER, subscribe } from './billing-fixtures.ts';
 import { asClaims, freshDatabase, type JwtClaims } from './harness.ts';
 
 /**
