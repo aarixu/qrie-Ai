@@ -43,14 +43,17 @@ describe('the admin schema', () => {
       'admin.billing_invoice_raise',
       'admin.billing_invoice_void',
       'admin.billing_invoices',
+      'admin.billing_link_prepare',
       'admin.billing_payment_record',
       'admin.billing_payments',
       'admin.billing_plan_set',
       'admin.billing_plans',
+      'admin.billing_refund_prepare',
       'admin.billing_settings',
       'admin.billing_settings_set',
       'admin.billing_subscription_create',
       'admin.billing_subscriptions',
+      'admin.billing_webhook_log',
       'admin.flag_list',
       'admin.flag_set',
       'admin.me',
@@ -68,6 +71,14 @@ describe('the admin schema', () => {
     expect(service).toEqual(
       expect.arrayContaining([
         'admin.alert_token_set',
+        'admin.billing_link_created',
+        'admin.billing_link_failed',
+        'admin.billing_link_observed',
+        'admin.billing_reconcile_done',
+        'admin.billing_reconcile_due',
+        'admin.billing_refund_result',
+        'admin.billing_signature_failed',
+        'admin.billing_webhook_ingest',
         'admin.bootstrap_owner',
         'admin.bootstrap_status',
         'admin.revert_caps',
@@ -75,7 +86,21 @@ describe('the admin schema', () => {
       ]),
     );
     const signedIn = await callableBy('authenticated');
-    for (const fn of ['admin.alert_token_set', 'admin.bootstrap_owner', 'admin.bootstrap_status', 'admin.revert_caps', 'admin.set_environment']) {
+    for (const fn of [
+      'admin.alert_token_set',
+      'admin.billing_link_created',
+      'admin.billing_link_failed',
+      'admin.billing_link_observed',
+      'admin.billing_reconcile_done',
+      'admin.billing_reconcile_due',
+      'admin.billing_refund_result',
+      'admin.billing_signature_failed',
+      'admin.billing_webhook_ingest',
+      'admin.bootstrap_owner',
+      'admin.bootstrap_status',
+      'admin.revert_caps',
+      'admin.set_environment',
+    ]) {
       expect(signedIn).not.toContain(fn);
     }
   });
