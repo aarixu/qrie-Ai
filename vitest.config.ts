@@ -56,7 +56,16 @@ export default defineConfig({
      * that genuinely hangs still fails, thirty seconds later.
      */
     testTimeout: 30_000,
-    hookTimeout: 30_000,
+    /**
+     * TWO MINUTES FOR A HOOK.
+     *
+     * Every PGlite suite builds a whole Postgres in `beforeAll` (all the
+     * migrations, then a school or two). Alone that takes seconds; in the full
+     * suite on 2026-10-07 seven of those hooks ran past thirty seconds and the
+     * files went red with no real failure (supabase/tests/hook-budget.test.ts
+     * names them). A hook that genuinely hangs still fails, two minutes later.
+     */
+    hookTimeout: 120_000,
     include: [
       'packages/*/tests/**/*.test.{ts,tsx}',
       'apps/*/tests/**/*.test.{ts,tsx}',
