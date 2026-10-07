@@ -5,6 +5,8 @@ export type {
   Element,
   ElementKind,
   ImagePart,
+  Credit,
+  VideoSource,
   Beat,
   Fill,
   Lesson,

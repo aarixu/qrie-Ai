@@ -1,5 +1,5 @@
 import type { ScriptBeat } from '@ai-tutor/board-layout';
-import type { ImagePart, Lesson } from '@ai-tutor/lesson-format';
+import type { Credit, ImagePart, Lesson } from '@ai-tutor/lesson-format';
 import type { TutorLanguage } from './prompts.ts';
 import type { ReviewProblem } from './review.ts';
 import type { GateProblem } from './gate.ts';
@@ -186,6 +186,12 @@ export interface Replay {
   parts: Record<string, ImagePart[]>;
   shapes: Record<string, number>;
   language: TutorLanguage;
+  /**
+   * The credit of each picture found on the web, by brief id: laid out again,
+   * the class must still say whose work it shows. Absent on a replay made
+   * before credits travelled with the class.
+   */
+  credits?: Record<string, Credit>;
 }
 
 /** Progress, so a student waiting a minute sees something happening. */

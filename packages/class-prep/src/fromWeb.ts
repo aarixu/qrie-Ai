@@ -1,3 +1,4 @@
+import type { Credit, VideoSource } from '@ai-tutor/lesson-format';
 import {
   PART_FINDER_SYSTEM,
   imageAspect,
@@ -64,6 +65,17 @@ export interface WebCandidate {
    * the account it was served to.
    */
   license?: string;
+  /** Who made it, for the credit a CC BY licence asks for. */
+  author?: string;
+  /** Where the licence's own terms are, for the same credit. */
+  licenseUrl?: string;
+  /** The page that describes the file — the place a credit links to. */
+  page?: string;
+  /**
+   * For a video: the sources to play once its still, at `url`, has been
+   * looked at and passed.
+   */
+  video?: VideoSource[];
 }
 
 export interface WebImageAdapter {
@@ -71,13 +83,35 @@ export interface WebImageAdapter {
   search(query: string, limit: number): Promise<readonly WebCandidate[]>;
   /** One image as a `data:` URL, or null if it could not be had. */
   fetch(url: string): Promise<string | null>;
+  /**
+   * Videos matching a query, best first, each as its still with `video` set.
+   * Optional: a search with no videos is a search for stills.
+   */
+  searchVideo?(query: string, limit: number): Promise<readonly WebCandidate[]>;
 }
+
+export type { Credit };
 
 /** A found picture, with where it came from so the class can credit it. */
 export interface FoundPicture extends PictureResult {
   /** The page the image was found on, when the search said. */
   source: string | null;
   license: string | null;
+  /** Everything a credit needs, when the search reported a licence. */
+  credit: Credit | null;
+  /** When what was found is a loop: the sources to play over `src`, its still. */
+  video?: VideoSource[];
+}
+
+/** The credit a candidate carries, or null when it has no licence to name. */
+export function creditOf(c: WebCandidate): Credit | null {
+  if (!c.license) return null;
+  return {
+    ...(c.author ? { author: c.author } : {}),
+    license: c.license,
+    ...(c.licenseUrl ? { licenseUrl: c.licenseUrl } : {}),
+    ...(c.page ? { page: c.page } : {}),
+  };
 }
 
 /**
@@ -184,7 +218,8 @@ Answer with JSON and nothing else:
 {"saw":"<what the picture actually shows, in a few words>",
  "right":true|false,
  "text":true|false,
- "count":<how many of the subject are in it>}
+ "count":<how many of the subject are in it>,
+ "safe":true|false}
 
 - "right" is true ONLY if the picture shows the subject the lesson asked for.
   Not something related to it, not something that shares its name, not a
@@ -198,6 +233,11 @@ Answer with JSON and nothing else:
 - "count" is how many separate instances of the subject are in the picture.
   She teaches on ONE: with two, every mark she makes lands on one of them and
   the student does not know which.
+- "safe" is true ONLY if a class of school children, aged 11 to 18, may be
+  shown it. False for blood, a wound or injury, surgery, an autopsy or a dead
+  body, an organ cut out of a body, nudity, violence or a weapon, or anything
+  meant to frighten. A model, a drawing, or a clean photograph of a living
+  thing, a place or an object is fine.
 
 Say what you actually see in "saw" even when it is not what was asked for.`;
 
@@ -213,6 +253,8 @@ export interface Verdict {
   right: boolean;
   hasText: boolean;
   count: number;
+  /** Whether a class of children may be shown it. Absent is a no. */
+  safe: boolean;
   /** What the model said it saw, for a prep report to quote. */
   saw: string;
 }
@@ -225,7 +267,7 @@ export interface Verdict {
  * an unverified web image on a child's board, so it fails closed.
  */
 export function parseVerdict(raw: string): Verdict {
-  const no: Verdict = { right: false, hasText: false, count: 0, saw: '' };
+  const no: Verdict = { right: false, hasText: false, count: 0, safe: false, saw: '' };
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw.replace(/^\s*```(?:json)?\s*|\s*```\s*$/g, ''));
@@ -240,6 +282,9 @@ export function parseVerdict(raw: string): Verdict {
     // Absent is one, not zero: a model that answered the two questions that
     // matter and left this one out has not thereby failed the picture.
     count: typeof o.count === 'number' ? o.count : 1,
+    // Unlike the count, NOT given the benefit of the doubt: a reply that did
+    // not say a picture is fit for a class has not said it.
+    safe: o.safe === true,
     saw: typeof o.saw === 'string' ? o.saw : '',
   };
 }
@@ -247,6 +292,7 @@ export function parseVerdict(raw: string): Verdict {
 /** Why a candidate was turned down, in words a prep report can print. */
 export function refusalFor(v: Verdict): string | null {
   if (!v.right) return v.saw ? `it is ${v.saw}` : 'it is not the subject';
+  if (!v.safe) return v.saw ? `it is not for a school child (${v.saw})` : 'it is not for a school child';
   if (v.hasText) return 'it has words printed on it';
   if (v.count >= 2) return `it has ${v.count} of the subject in it`;
   return null;
@@ -263,10 +309,29 @@ export interface FindOptions {
   tries?: number;
   /** How many results to ask the search for — more, to filter by licence from. */
   searchLimit?: number;
+  /** How long one look may take before it counts as a refusal. */
+  lookTimeoutMs?: number;
 }
 
 export const DEFAULT_TRIES = 3;
 export const DEFAULT_SEARCH_LIMIT = 12;
+/**
+ * A minute. A vision call has been seen to hang for more than five (board
+ * composer, 2026-10-06), and the class waits on this rung: a look that has
+ * not answered by now is a refusal, and the ladder moves on.
+ */
+export const LOOK_TIMEOUT_MS = 60_000;
+
+const NO_ANSWER = 'the check did not answer in time';
+
+/** A promise that settles, or a rejection with NO_ANSWER after `ms`. */
+function within<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const late = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(NO_ANSWER)), ms);
+  });
+  return Promise.race([promise, late]).finally(() => clearTimeout(timer));
+}
 
 export interface Search {
   found: FoundPicture | null;
@@ -287,14 +352,57 @@ export async function findOnTheWeb(
   eyes: VisionAdapter,
   options: FindOptions = {},
 ): Promise<Search> {
+  /**
+   * A PICTURE OF SOMETHING MOVING, MOVING (Aarav, 2026-10-07: "images ya
+   * videos ya kuch or jo bhi ho").
+   *
+   * When the lesson is the movement itself — a heart pumping, a person
+   * running — a short silent loop is looked for first, each judged by its
+   * still exactly as a photograph is. Never for a picture with parts to point
+   * at: nothing in a loop holds still to be circled. No loop passing, the
+   * still photograph is looked for as always.
+   */
+  const limit = options.searchLimit ?? DEFAULT_SEARCH_LIMIT;
+  if (brief.motion && brief.parts.length === 0 && web.searchVideo) {
+    const loops = await firstThatPasses(
+      brief,
+      () => web.searchVideo!(searchQuery(brief), limit),
+      'the video search could not be reached',
+      web,
+      eyes,
+      options,
+    );
+    if (loops.found) return loops;
+    const stills = await firstThatPasses(
+      brief,
+      () => web.search(searchQuery(brief), limit),
+      'the image search could not be reached',
+      web,
+      eyes,
+      options,
+    );
+    return { found: stills.found, refusals: [...loops.refusals.map((r) => `a video: ${r}`), ...stills.refusals] };
+  }
+  return firstThatPasses(brief, () => web.search(searchQuery(brief), limit), 'the image search could not be reached', web, eyes, options);
+}
+
+/** The best-ranked of a search's results that the eyes pass, or why none did. */
+async function firstThatPasses(
+  brief: PictureBrief,
+  searching: () => Promise<readonly WebCandidate[]>,
+  unreachable: string,
+  web: WebImageAdapter,
+  eyes: VisionAdapter,
+  options: FindOptions,
+): Promise<Search> {
   const tries = options.tries ?? DEFAULT_TRIES;
   const refusals: string[] = [];
 
   let candidates: readonly WebCandidate[];
   try {
-    candidates = await web.search(searchQuery(brief), options.searchLimit ?? DEFAULT_SEARCH_LIMIT);
+    candidates = await searching();
   } catch {
-    return { found: null, refusals: ['the image search could not be reached'] };
+    return { found: null, refusals: [unreachable] };
   }
 
   const usable = candidates.filter((c) => c.url && mayReuse(c.license));
@@ -307,33 +415,53 @@ export async function findOnTheWeb(
     return { found: null, refusals };
   }
 
+  /**
+   * THE BEST FEW, LOOKED AT TOGETHER.
+   *
+   * One after another, three refusals and the generation behind them took
+   * six minutes for one picture (board composer, 2026-10-06). The looks do
+   * not depend on each other, so up to `tries` are downloaded and looked at
+   * at once, and the best-ranked that passes is kept. A wave whose downloads
+   * failed spent no looks, and the next candidates take their places.
+   */
+  const lookMs = options.lookTimeoutMs ?? LOOK_TIMEOUT_MS;
   let looked = 0;
-  for (const candidate of usable) {
-    if (looked >= tries) break;
+  let next = 0;
+  while (looked < tries && next < usable.length) {
+    const wave = usable.slice(next, next + (tries - looked));
+    next += wave.length;
 
-    let src: string | null = null;
-    try {
-      src = await web.fetch(candidate.url);
-    } catch {
-      src = null;
-    }
-    // A download that failed cost no vision call, so it does not spend a try:
-    // a dead link is not the search being wrong about the picture.
-    if (!src || !src.startsWith('data:image/')) continue;
+    const seen = await Promise.all(
+      wave.map(async (candidate) => {
+        let src: string | null = null;
+        try {
+          src = await web.fetch(candidate.url);
+        } catch {
+          src = null;
+        }
+        // A download that failed cost no vision call, so it does not spend a
+        // try: a dead link is not the search being wrong about the picture.
+        if (!src || !src.startsWith('data:image/')) return null;
 
-    looked += 1;
-    let verdict: Verdict;
-    try {
-      verdict = parseVerdict(await eyes.look(src, VERIFIER_SYSTEM, verifierUser(brief)));
-    } catch {
-      verdict = { right: false, hasText: false, count: 0, saw: '' };
-    }
+        try {
+          const verdict = parseVerdict(await within(eyes.look(src, VERIFIER_SYSTEM, verifierUser(brief)), lookMs));
+          return { candidate, src, refusal: refusalFor(verdict) };
+        } catch (error) {
+          const late = error instanceof Error && error.message === NO_ANSWER;
+          return { candidate, src, refusal: late ? NO_ANSWER : 'it is not the subject' };
+        }
+      }),
+    );
 
-    const refusal = refusalFor(verdict);
-    if (refusal) {
-      refusals.push(refusal);
-      continue;
+    let kept: { candidate: WebCandidate; src: string } | null = null;
+    for (const look of seen) {
+      if (!look) continue;
+      looked += 1;
+      if (look.refusal !== null) refusals.push(look.refusal);
+      else if (!kept) kept = look;
     }
+    if (!kept) continue;
+    const { candidate, src } = kept;
 
     // It is the right picture. Now find out where its parts are — the same
     // second look a generated picture gets, and for the same reason: layout
@@ -343,7 +471,7 @@ export async function findOnTheWeb(
     if (brief.parts.length > 0) {
       try {
         parts = parseParts(
-          await eyes.look(src, PART_FINDER_SYSTEM, partFinderUser(brief.parts)),
+          await within(eyes.look(src, PART_FINDER_SYSTEM, partFinderUser(brief.parts)), lookMs),
           brief.parts,
         );
       } catch {
@@ -360,6 +488,8 @@ export async function findOnTheWeb(
         faults: [],
         source: candidate.source ?? null,
         license: candidate.license ?? null,
+        credit: creditOf(candidate),
+        ...(candidate.video ? { video: candidate.video } : {}),
       },
       refusals,
     };

@@ -279,9 +279,12 @@ Like this — the words and the drawing arriving together:
   {"do":"say","text":"Water falls the whole way on its own."}
   {"do":"connect","from":"top","to":"tap","label":"water falls","tone":"accent"}
 
-Use everyday nouns. A picture library is searched for each one; anything it
-lacks is drawn as a pencilled circle with the word inside, so prefer the
-concrete word — place a "leaf", not "photosynthesis".
+Use everyday nouns for real things. Each is shown as a real photograph of it
+when one is found — a person running, a heart model, a bus, a leaf — checked
+against the lesson, and as a small drawing only when none is. So prefer the
+concrete word — place a "leaf", not "photosynthesis". In the opening, place the
+real example you ask about, as it looks in life (the student running for the
+bus), so the class starts on something real, never on a cartoon.
 
 ### Writing things down. Use this whenever you name more than two of anything.
 
@@ -653,7 +656,8 @@ answers the question is placed or written after a say that follows the ask.
 
 A placed "noun" names the same thing as its label, as concretely as the subject
 allows: an organ by its organ's name ("duodenum", "liver"), never by its shape
-("tube", "bag"). A picture the library does not have is drawn to order.
+("tube", "bag"). It is shown as a real photograph of that thing when one is
+found, and drawn only when none is.
 
 Every beat is written as {"do":"say"} lines with the board between them: a line,
 then what she writes while saying it, then the next line.

@@ -8,6 +8,7 @@ import {
   mathPlain,
   samplePoints,
   splitPartRef,
+  type Credit,
   type Element,
   type InkName,
   type Lesson,
@@ -656,8 +657,58 @@ function renderImage(el: Extract<Element, { kind: 'image' }>, asset?: string): R
           {el.label}
         </text>
       )}
+      {el.credit && renderCredit(el.credit, { x: el.x, y: el.y, w: el.w, h: el.h })}
     </>
   );
+}
+
+/** The longest an author's name runs in a credit on the board; the rest is an ellipsis. */
+const CREDIT_AUTHOR_MAX = 28;
+
+/** "A. Person · CC BY-SA 4.0": who made it, and the licence it is shown under. */
+export function creditLine(credit: Credit): string {
+  const author = credit.author?.trim();
+  const short = author && author.length > CREDIT_AUTHOR_MAX ? `${author.slice(0, CREDIT_AUTHOR_MAX - 1).trimEnd()}…` : author;
+  return short ? `${short} · ${credit.license}` : credit.license;
+}
+
+/**
+ * A FOUND PICTURE'S CREDIT, WRITTEN ON ITS FOOT (2026-10-07).
+ *
+ * CC BY and CC BY-SA ask for the author and the licence to be shown with the
+ * work. Small, in the picture's bottom-right corner on a pale strip so it
+ * reads over any photograph — where a museum label or a textbook's photo
+ * credit goes, and out of the way of anything she writes beside it. The full
+ * credit, with its links, stays on the element for a credits list.
+ */
+function renderCredit(credit: Credit, r: Rect): ReactElement {
+  const line = creditLine(credit);
+  const size = Math.max(6, Math.min(11, r.w * 0.028));
+  const w = Math.min(r.w, textWidth(line, size) + size);
+  const h = size * 1.5;
+  return (
+    <g className="stage-credit">
+      <rect x={r.x + r.w - w} y={r.y + r.h - h} width={w} height={h} fill="#fff" fillOpacity={0.72} />
+      <text x={r.x + r.w - size / 2} y={r.y + r.h - h * 0.3} textAnchor="end" fontFamily={FONT_HAND} fontSize={size} fill={TONE_COLORS.neutral}>
+        {line}
+      </text>
+    </g>
+  );
+}
+
+/**
+ * Where a photograph of a placed thing is drawn inside its square.
+ *
+ * At its own shape, as wide or as tall as the square allows, and standing on
+ * the square's foot: a scene's things share a baseline and her name for each
+ * is written under it, so a wide photograph floating mid-square would leave
+ * a gap between the thing and its name.
+ */
+function photoRect(el: Extract<Element, { kind: 'graphic' }>): Rect {
+  const aspect = el.aspect ?? 1;
+  const w = aspect >= el.w / el.h ? el.w : el.h * aspect;
+  const h = w / aspect;
+  return { x: el.x + (el.w - w) / 2, y: el.y + el.h - h, w, h };
 }
 
 /** model3d renders as a labelled placeholder panel; the real 3D viewport mounts over it in the app. */
@@ -1170,6 +1221,50 @@ function renderGraphic(
   const beside = el.labelSide === 'beside';
   const labelSize = el.label ? graphicLabelSize(el.w, el.label, beside ? 'beside' : 'below') : 26;
   const labelY = beside ? el.y + el.h / 2 : el.y + el.h + 26;
+
+  // A photograph: handed in live as a data: URL, or a saved file the element
+  // points at. Never inlined as markup — those bytes are not SVG.
+  const photo = svg?.startsWith('data:image/') ? svg : svg === undefined ? el.src : undefined;
+  if (photo !== undefined) {
+    const r = photoRect(el);
+    const clipId = `photo-${el.id}`;
+    return (
+      <>
+        <g {...animAt(isNew, 'stage-pop', 0)}>
+          <clipPath id={clipId}>
+            <rect x={r.x} y={r.y} width={r.w} height={r.h} rx={8} />
+          </clipPath>
+          <image
+            href={photo}
+            x={r.x}
+            y={r.y}
+            width={r.w}
+            height={r.h}
+            preserveAspectRatio="xMidYMid slice"
+            clipPath={`url(#${clipId})`}
+            aria-label={el.label ?? el.noun}
+          />
+          <rect x={r.x} y={r.y} width={r.w} height={r.h} rx={8} fill="none" stroke={INK} strokeOpacity={0.14} strokeWidth={1.5} />
+          {el.credit && renderCredit(el.credit, r)}
+        </g>
+        {el.label && (
+          <text
+            x={beside ? el.x + el.w + BESIDE_GAP : el.x + el.w / 2}
+            y={labelY}
+            textAnchor={beside ? 'start' : 'middle'}
+            dominantBaseline={beside ? 'middle' : undefined}
+            fontFamily={FONT_WRITE}
+            fontSize={labelSize}
+            fill={color}
+            {...HALO}
+            {...animAt(isNew, 'stage-pop', INK_MS)}
+          >
+            {el.label}
+          </text>
+        )}
+      </>
+    );
+  }
 
   if (svg === undefined) {
     return (

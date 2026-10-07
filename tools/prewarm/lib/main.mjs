@@ -64,7 +64,9 @@ import { createRelayClient, priceCalls } from './relayAdapters.mjs';
 // found here is a named handoff to phase E, never an edit.
 import {
   createCommonsSearch,
+  dressNounPhotos,
   drawMissingIcons,
+  findNounPhotos,
   pickIcons,
   prepareClass,
   rekeep,
@@ -260,10 +262,10 @@ function loadIconSets() {
  * chooses which meaning of a word the lesson wants, drawMissingIcons draws
  * the nouns nothing depicts, the pencilled circle is the last resort.
  */
-async function dressNouns(lesson, topic, picker, iconArtist) {
+async function dressNouns(lesson, topic, picker, iconArtist, covered = new Set()) {
   const nouns = [
     ...new Set(lesson.elements.filter((el) => el.kind === 'graphic').map((el) => el.noun)),
-  ];
+  ].filter((noun) => !covered.has(noun));
   if (nouns.length === 0) return {};
 
   const sets = loadIconSets();
@@ -304,7 +306,7 @@ async function dressNouns(lesson, topic, picker, iconArtist) {
 
   const assets = {};
   for (const el of lesson.elements) {
-    if (el.kind !== 'graphic') continue;
+    if (el.kind !== 'graphic' || covered.has(el.noun)) continue;
     const custom = drawn[el.noun];
     if (custom) {
       assets[el.id] = custom;
@@ -341,6 +343,22 @@ const metaFor = (row) => ({
  * pending set and buy it again next run.
  */
 async function dressAndKeep(made, row, client, keepRefused, writeOut) {
+  // A real thing is a real photograph first (Aarav, 2026-10-07), as in the
+  // app's liveClass.ts: the nouns a checked, openly licensed photograph was
+  // found for skip the icons.
+  let photos = new Map();
+  try {
+    photos = await findNounPhotos(
+      made.lesson,
+      row.topic.title,
+      createCommonsSearch({ thumbWidth: 500 }),
+      client.vision(VISION_MODEL),
+    );
+  } catch {
+    // Icons for every noun, as before.
+  }
+  const photoAssets = dressNounPhotos(made.lesson, photos);
+
   let graphics = {};
   try {
     graphics = await dressNouns(
@@ -348,6 +366,7 @@ async function dressAndKeep(made, row, client, keepRefused, writeOut) {
       row.topic.title,
       patient(client.llm(PICKER_MODEL, { json: true })),
       patient(client.llm(ARTIST_MODEL)),
+      new Set(photos.keys()),
     );
   } catch (e) {
     console.warn(
@@ -355,7 +374,7 @@ async function dressAndKeep(made, row, client, keepRefused, writeOut) {
         ' anyway, as the app does',
     );
   }
-  Object.assign(made.assets, graphics);
+  Object.assign(made.assets, graphics, photoAssets);
 
   const meta = metaFor(row);
   const saved = saveable(made, meta);

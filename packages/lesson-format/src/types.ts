@@ -50,6 +50,39 @@ export interface ImagePart {
 }
 
 /**
+ * WHO MADE A PICTURE THAT CAME FROM THE WEB, AND UNDER WHAT LICENCE.
+ *
+ * Aarav's rule (2026-10-07): a real thing on the board is a real photograph,
+ * found where its licence lets a school build on it — public domain, CC0, CC
+ * BY, CC BY-SA. The last two ask for the author and the licence to be shown
+ * with the work, so the credit travels on the element it is drawn as and the
+ * board writes it beside the picture. The links are https web pages, never
+ * anything else: a saved class is data from a store, and a credit's link is
+ * one a student can follow.
+ */
+/**
+ * ONE WAY TO PLAY A MOVING PICTURE: a silent loop found on the web, for a
+ * picture whose lesson is the movement itself (Aarav, 2026-10-07: "images ya
+ * videos ya kuch or jo bhi ho"). An https address and its video type; the
+ * board tries each in turn and keeps the still where none plays.
+ */
+export interface VideoSource {
+  src: string;
+  /** "video/webm" or "video/mp4", as the browser is told before it fetches. */
+  type: string;
+}
+
+export interface Credit {
+  author?: string;
+  /** As the source names it, e.g. "CC BY-SA 4.0". */
+  license: string;
+  /** Where the licence's own terms are. */
+  licenseUrl?: string;
+  /** The page that describes the work. */
+  page?: string;
+}
+
+/**
  * THE PRE-AUTHORED JUDGEMENT LAYER of an ask — never a visible option list.
  *
  * The pedagogy rule stands: as a rule the on-screen ask shows NO options,
@@ -224,6 +257,15 @@ export type Element =
       alt: string;
       label?: string;
       parts?: ImagePart[];
+      /** Present when the picture was found on the web rather than made. */
+      credit?: Credit;
+      /**
+       * The picture, moving: a silent loop played in place of the still once
+       * it can play. `src` stays the still — what is drawn first, and what is
+       * left where no source plays. A moving picture has no `parts`: nothing
+       * holds still to be pointed at.
+       */
+      video?: VideoSource[];
     }
   /**
    * A generated SVG diagram whose named parts the tutor can point at.
@@ -377,6 +419,18 @@ export type Element =
        * the collision solver and the renderer all read the same one.
        */
       labelSide?: 'below' | 'beside';
+      /**
+       * A PHOTOGRAPH OF THE THING, when one was found (2026-10-07).
+       *
+       * A placed noun used to be an icon or a drawn one; a real thing is now a
+       * real photograph first. Live, the photograph is handed in as an asset
+       * like an icon is; once the class is saved it is a file this points at.
+       * `aspect` is its width over its height, so it is drawn at its own shape
+       * inside the element's square, and `credit` is shown with it.
+       */
+      src?: string;
+      aspect?: number;
+      credit?: Credit;
     }
   /**
    * A teacher's mark on top of something already on the board.

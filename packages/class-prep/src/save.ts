@@ -405,10 +405,31 @@ export function saveable(prep: Prepared, meta: SaveMeta): SavedClass | null {
   // their own or none at all, never these.
   delete (doc as { fill?: unknown }).fill;
 
+  /**
+   * A PLACED THING'S PHOTOGRAPH, ONE FILE HOWEVER OFTEN IT IS PLACED (2026-10-07).
+   *
+   * A real thing on a scene is a photograph now, handed in by element id like
+   * an icon. The same noun placed in three beats is three elements and one
+   * photograph: written once, under a name of its own — a placed thing's id
+   * carries the planner's words, which the store's file names may not — and
+   * pointed at by each element that shows it.
+   */
+  const photoPaths = new Map<string, string>();
+
   for (const el of doc.elements) {
     const asset = prep.assets[el.id];
     if (!asset) continue;
     const drawn = DATA_URL.exec(asset);
+    if (drawn && el.kind === 'graphic') {
+      let path = photoPaths.get(asset);
+      if (!path) {
+        path = `generated/photo_${photoPaths.size + 1}.${extensionFor(drawn[1])}`;
+        photoPaths.set(asset, path);
+        files.push({ path, body: drawn[2], encoding: 'base64' });
+      }
+      el.src = `/${id}/${path}`;
+      continue;
+    }
     if (drawn) {
       const path = `generated/${el.id}.${extensionFor(drawn[1])}`;
       files.push({ path, body: drawn[2], encoding: 'base64' });
@@ -421,7 +442,7 @@ export function saveable(prep: Prepared, meta: SaveMeta): SavedClass | null {
     // Everything else is markup, and markup is INLINED into the page rather
     // than loaded as an image — that is what lets a diagram's parts light up
     // from inside. One file for all of it, keyed by element id, because a
-    // graphic has no `src` of its own to name a file after.
+    // graphic drawn as an icon has no `src` of its own to name a file after.
     inline[el.id] = asset;
   }
 

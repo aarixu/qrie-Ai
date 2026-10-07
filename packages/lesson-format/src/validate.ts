@@ -31,6 +31,35 @@ const isPoint = (v: unknown): v is Point => isObj(v) && isNum(v.x) && isNum(v.y)
 /** An ink, when there is one, is a colour the board has (types.ts, INK_NAMES). */
 const isInk = (v: unknown): boolean => v === undefined || (INK_NAMES as readonly unknown[]).includes(v);
 
+/** The longest a credit's words may run: a credit, not a paragraph. */
+const CREDIT_MAX = 200;
+const isWebPage = (v: unknown): boolean => typeof v === 'string' && /^https:\/\/[^\s"'<>]+$/.test(v) && v.length <= 600;
+
+/** What is wrong with a credit, if anything (types.ts, Credit). */
+function creditErrors(v: unknown): string | null {
+  if (!isObj(v)) return 'credit must be an object';
+  if (!isStr(v.license) || v.license.length > CREDIT_MAX) return 'credit needs its licence';
+  if (v.author !== undefined && (typeof v.author !== 'string' || v.author.length > CREDIT_MAX)) {
+    return 'credit author must be a short string';
+  }
+  for (const key of ['licenseUrl', 'page'] as const) {
+    if (v[key] !== undefined && !isWebPage(v[key])) return `credit ${key} must be an https web page`;
+  }
+  return null;
+}
+
+/** What is wrong with a moving picture's sources, if anything (types.ts, VideoSource). */
+function videoErrors(v: unknown): string | null {
+  if (!Array.isArray(v) || v.length === 0 || v.length > 4) return 'video must list one to four sources';
+  for (const source of v) {
+    if (!isObj(source) || !isWebPage(source.src)) return 'a video source must be an https address';
+    if (typeof source.type !== 'string' || !/^video\/(webm|mp4)(;[^<>]{0,60})?$/.test(source.type)) {
+      return 'a video source must name a webm or mp4 type';
+    }
+  }
+  return null;
+}
+
 /** Fields required per element kind, beyond `kind` and `id`. */
 function elementErrors(el: Record<string, unknown>, path: string): string[] {
   const errs: string[] = [];
@@ -95,11 +124,16 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
       need(isStr(el.text), 'formula needs non-empty text');
       if (el.after !== undefined) need(isNum(el.after) && el.after >= 0, 'formula after must be a non-negative number');
       break;
-    case 'image':
+    case 'image': {
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'image needs numeric x,y,w,h');
       need(isStr(el.src), 'image needs src');
       need(isStr(el.alt), 'image needs alt text');
+      const wrong = el.credit === undefined ? null : creditErrors(el.credit);
+      need(wrong === null, wrong ?? '');
+      const moving = el.video === undefined ? null : videoErrors(el.video);
+      need(moving === null, moving ?? '');
       break;
+    }
     case 'diagram':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'diagram needs numeric x,y,w,h');
       need(isStr(el.src), 'diagram needs src');
@@ -178,10 +212,15 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
       need(isStr(el.text), 'handwrite needs non-empty text');
       optionalNumber('size');
       break;
-    case 'graphic':
+    case 'graphic': {
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'graphic needs numeric x,y,w,h');
       need(isStr(el.noun), 'graphic needs a noun');
+      need(el.src === undefined || isStr(el.src), 'graphic src must be a path');
+      need(el.aspect === undefined || (isNum(el.aspect) && el.aspect > 0), 'graphic aspect must be a positive number');
+      const wrong = el.credit === undefined ? null : creditErrors(el.credit);
+      need(wrong === null, wrong ?? '');
       break;
+    }
     case 'mark':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'mark needs numeric x,y,w,h');
       need(

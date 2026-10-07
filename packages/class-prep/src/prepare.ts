@@ -16,6 +16,7 @@ import {
   type Beat,
   type Element,
   type ImagePart,
+  type Credit,
   type Lesson,
   type WhyProbe,
   type WorkedExample,
@@ -38,6 +39,7 @@ import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
 import { mergeSpoken, splitNarrations } from './sayLines.ts';
 import { addMarks } from './marks.ts';
+import { creditPictures } from './credits.ts';
 import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck, type Undrawn } from './gate.ts';
 import type { ComposerReport, PageReport } from './composerChecks.ts';
 import { askAgainLater, type RepairRetry } from './notNow.ts';
@@ -1419,6 +1421,8 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * keeps the report beside the lesson.
    */
   const sources = new Map<string, string>();
+  /** Each found picture's credit, by brief id, for the board to show beside it. */
+  const foundCredits = new Map<string, Credit>();
 
   say('checking', 'Checking the class holds together…', 0.15);
   const first = assemble(blueprint, promised, pictureParts, pictureShapes, language);
@@ -1944,6 +1948,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           // person who has to answer a takedown.
           sources.set(brief.id, found.license ? `${found.source} (${found.license})` : found.source);
         }
+        if (found?.credit) foundCredits.set(brief.id, found.credit);
         finished += 1;
         say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.65 * finished) / Math.max(1, total));
         if (made) pictureParts.set(brief.id, made.parts);
@@ -2106,6 +2111,8 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     }
   }
   for (const problem of keepGate) issues.push(`Fails the keep gate, so it is not kept: ${problem.message}`);
+  // Whose work each found picture is, on the picture itself (credits.ts).
+  final = creditPictures(final, assets, Object.fromEntries(foundCredits));
 
   const report: PrepReport = {
     topic,
@@ -2125,6 +2132,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     parts: Object.fromEntries([...pictureParts].map(([id, ps]) => [id, [...ps]])),
     shapes: Object.fromEntries(pictureShapes),
     language,
+    ...(foundCredits.size > 0 ? { credits: Object.fromEntries(foundCredits) } : {}),
   };
   return { lesson: final, assets, report, replay };
 }
@@ -2168,7 +2176,7 @@ export function rekeep(
   for (const [copy, original] of Object.entries(laid.aliases)) if (assets[original]) assets[copy] = assets[original];
   return {
     made: {
-      lesson: checked.lesson as Lesson,
+      lesson: creditPictures(checked.lesson as Lesson, assets, r.credits ?? {}),
       assets,
       report: {
         ...made.report,

@@ -58,6 +58,17 @@ describe('the planner for a composed board', () => {
     expect(text).toContain('A placed "noun" names the same thing as its label');
   });
 
+  it('tells the planner a placed thing is shown as a real photograph, and to open on the real example (2026-10-07)', () => {
+    // The heart class opened on a drawn cartoon of a runner: "wikimedia se ya
+    // kahin aur se ek achha image yahan lga skte the".
+    for (const text of [PLANNER_SYSTEM, plannerSystemFor(true)]) {
+      expect(text).toMatch(/real photograph/);
+      expect(text).not.toMatch(/pencilled circle with the word inside/);
+    }
+    expect(plannerSystemFor(true)).not.toContain('A picture the library does not have is drawn to order');
+    expect(PLANNER_SYSTEM).toMatch(/opening[^.]*real example/i);
+  });
+
   it('asks for every beat as lines, never as one narration (small intestine, 2026-10-06)', () => {
     const text = plannerSystemFor(true);
     expect(text).toContain('Every beat is written as {"do":"say"} lines');

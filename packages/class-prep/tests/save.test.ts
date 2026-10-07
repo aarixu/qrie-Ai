@@ -133,7 +133,7 @@ describe('what gets written', () => {
   });
 
   it('keeps the inline artwork keyed by element id, drawings and icons alike', () => {
-    // A graphic has no src of its own — it exists only as an entry in the
+    // An icon graphic has no src of its own — it exists only as an entry in the
     // asset map — so a per-file convention would lose it.
     const inline = JSON.parse(file('assets.json')!.body) as Record<string, string>;
     expect(Object.keys(inline).sort()).toEqual(['cycle', 'g1']);
@@ -144,6 +144,42 @@ describe('what gets written', () => {
     const original = lesson();
     saveable({ lesson: original, assets: assets(), report: clean }, meta);
     expect((original.elements[0] as { src: string }).src).toBe('generated/lungs.png');
+  });
+});
+
+describe("a placed thing's photograph (2026-10-07)", () => {
+  const jpeg = 'data:image/jpeg;base64,/9j/4AAQ';
+  const withPhotos = (): Lesson => {
+    const doc = lesson();
+    doc.elements.push(
+      { kind: 'graphic', id: 'b1__runner one', x: 0, y: 0, w: 40, h: 40, noun: 'runner', aspect: 1.5 },
+      { kind: 'graphic', id: 'b2__runner', x: 0, y: 0, w: 40, h: 40, noun: 'runner', aspect: 1.5 },
+    );
+    return doc;
+  };
+  const saved = () =>
+    saveable(
+      { lesson: withPhotos(), assets: { ...assets(), 'b1__runner one': jpeg, b2__runner: jpeg }, report: clean },
+      meta,
+    )!;
+
+  it('is written once however many times the thing is placed, under a name the store accepts', () => {
+    const photos = saved().files.filter((f) => f.path.startsWith('generated/photo'));
+    expect(photos).toHaveLength(1);
+    expect(photos[0].path).toMatch(/^generated\/[a-zA-Z0-9_-]+\.jpg$/);
+    expect(photos[0].body).toBe('/9j/4AAQ');
+  });
+
+  it('is pointed at by every element that shows it, and kept out of the inline markup', () => {
+    const s = saved();
+    const doc = JSON.parse(s.files.find((f) => f.path === 'lesson.json')!.body) as Lesson;
+    const photo = s.files.find((f) => f.path.startsWith('generated/photo'))!.path;
+    for (const id of ['b1__runner one', 'b2__runner']) {
+      const el = doc.elements.find((e) => e.id === id) as { src?: string };
+      expect(el.src).toBe(`/class10-science-life-processes-respiration/${photo}`);
+    }
+    const inline = JSON.parse(s.files.find((f) => f.path === 'assets.json')!.body) as Record<string, string>;
+    expect(Object.keys(inline).sort()).toEqual(['cycle', 'g1']);
   });
 });
 

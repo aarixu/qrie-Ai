@@ -32,6 +32,12 @@ export interface PictureBrief {
   brief: string;
   /** The parts the lesson intends to mark. May be empty. */
   parts: readonly string[];
+  /**
+   * The lesson is the movement itself — a heart pumping, a person running —
+   * so a short silent loop is looked for before a still (fromWeb.ts). Only
+   * honoured with no parts: nothing in a loop holds still to be pointed at.
+   */
+  motion?: boolean;
 }
 
 export interface PictureResult {

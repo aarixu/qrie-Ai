@@ -56,3 +56,5 @@ export {
 export type { ComposerReport, PageReport } from './composerChecks.ts';
 export * from './fromWeb.ts';
 export * from './commons.ts';
+export * from './nounPhotos.ts';
+export * from './credits.ts';
