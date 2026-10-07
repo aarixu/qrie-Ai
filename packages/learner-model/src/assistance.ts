@@ -27,17 +27,20 @@ import { atLeastANudge, deriveRung } from './rung.ts';
 export const defaultCredit = (rung: AssistanceRung): number => Math.max(0.1, 1 - rung / 10);
 
 /**
- * One ask, however the surface happens to name it. The same rule as fold.ts's
- * private `askKey`, restated here because 3.7's projections read the raw
- * ledger rather than the fold — if the two ever disagree, an answer and its
- * help stop finding each other, so any change there must land here too.
+ * One ask, however the surface happens to name it. The fold and 3.7's
+ * projections both call this one function — if they ever disagreed, an answer
+ * and its help would stop finding each other.
+ *
+ * `itemId` is the school's (homework, tests, practice); only an answer carries
+ * it, so it never matches a `helped` row, and the school gives no help to match.
  */
 export function askKey(
   beatId: string | undefined,
   probeId: string | undefined,
   ids: readonly string[],
+  itemId?: string,
 ): string {
-  return beatId ?? probeId ?? ids.join(',');
+  return beatId ?? probeId ?? itemId ?? ids.join(',');
 }
 
 /**
@@ -73,12 +76,13 @@ export function eachAnswerWithRung(
     if (event.kind !== 'answered') continue;
     const payload = event.payload as AnsweredPayload;
     const help = helpBySession.get(event.sessionId) ?? {};
-    const key = askKey(payload.beatId, payload.probeId, event.outcomeIds);
+    const key = askKey(payload.beatId, payload.probeId, event.outcomeIds, payload.itemId);
     // The fold's rule exactly, including B4's "a second attempt is at least a
     // nudge" — the two must agree about which answers were cold.
     const rung = atLeastANudge(
       deriveRung([(help[key] ?? 0) as AssistanceRung], payload.assistanceRung),
       payload.attempt,
+      event.source,
     );
     visit(event, payload, rung);
   }

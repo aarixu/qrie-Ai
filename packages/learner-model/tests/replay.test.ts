@@ -183,6 +183,14 @@ describe('replay', () => {
    * `b` was never taught: its first answer opens box 0, and each cold right
    * answer after that climbs, once a session and only when due (box 1, due two days on). No belief moved.
    */
+  /**
+   * And a fourth time on 2026-10-07, deliberately (MODEL_VERSION 4, the one-brain
+   * plan's Task 1). Changed fields: `version` 3 -> 4, and a new `misconceptions`
+   * on every state. `a`'s day-2 cold miss chose option 2 of beat B4, which names
+   * no idea, so it is kept as `option:beat:/B4#2` — one item, one sitting, a
+   * slip and not confirmed. `b` was never answered wrong: `{}`. Nothing else
+   * moved: every belief, count, date and box is byte for byte what it was.
+   */
   it('reproduces the known state byte for byte', () => {
     // The invariant the old fixture violated, asserted here so a future fold
     // cannot quietly reintroduce it: a node is observed once per event that
@@ -218,6 +226,18 @@ describe('replay', () => {
           nextReviewAt: '2026-09-16T10:00:00.000Z',
           retrievalCount: 1,
           retrievalAccuracy: 0,
+          misconceptions: {
+            'option:beat:/B4#2': {
+              label: null,
+              count: 1,
+              items: ['beat:/B4'],
+              sittings: ['s2'],
+              firstAt: '2026-09-15T10:00:00.000Z',
+              lastAt: '2026-09-15T10:00:00.000Z',
+              clearedAt: null,
+              clearing: [],
+            },
+          },
         },
         b: {
           outcomeId: 'b',
@@ -248,11 +268,12 @@ describe('replay', () => {
           nextReviewAt: '2026-09-17T10:00:00.000Z',
           retrievalCount: 2,
           retrievalAccuracy: 1,
+          misconceptions: {},
         },
       },
       foldedThrough: { at: '2026-09-15T10:00:00.000Z', sessionId: 's2', seq: 2 },
       helpInFlight: { sessionId: 's2', byAsk: {} },
-      version: 3,
+      version: 4,
     });
   });
 });

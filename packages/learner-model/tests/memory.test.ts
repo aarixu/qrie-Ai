@@ -94,7 +94,8 @@ describe('the review ladder', () => {
   });
 
   it('is a version bump that migrates, never wipes', () => {
-    expect(MODEL_VERSION).toBe(3);
+    // 3 was this bump (F1-F3); later bumps keep migrating a v2 model the same way.
+    expect(MODEL_VERSION).toBeGreaterThanOrEqual(3);
     const { box: _b, lastExposedAt: _e, lastRetrievedAt: _r, ...v2 } = emptyConceptState('a');
     const migrated = migrateModel({ version: 2, foldedThrough: null, helpInFlight: null, states: { a: { ...v2, mastery: 0.8 } } });
     expect(migrated.states.a.mastery).toBe(0.8);

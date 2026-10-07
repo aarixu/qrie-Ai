@@ -25,6 +25,19 @@ export { deriveRung } from './rung.ts';
 
 export { foldSession } from './fold.ts';
 
+// v4: the wrong ideas an outcome's answers showed, and which of them are
+// confirmed (2+ distinct items or 2+ sittings, not cleared since).
+export {
+  CLEARING_RIGHTS,
+  MISCONCEPTION_LIMITS,
+  SIMILAR_LABELS,
+  confirmedMisconceptions,
+  isConfirmed,
+  normaliseMisconception,
+  similarMisconceptions,
+  type Misconception,
+} from './misconception.ts';
+
 export { migrateModel } from './migrate.ts';
 
 export { MAX_REVIEWS, nextActivity, type NextActivity, type NextInput } from './next.ts';

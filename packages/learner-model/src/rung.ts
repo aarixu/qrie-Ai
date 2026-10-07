@@ -1,4 +1,4 @@
-import type { AssistanceRung } from '@ai-tutor/ledger';
+import type { AssistanceRung, EventSource } from '@ai-tutor/ledger';
 
 /**
  * WHICH RUNG WAS REALLY IN FORCE WHEN THIS ANSWER WAS GIVEN.
@@ -40,9 +40,20 @@ export function deriveRung(
  * not any surface filed a `helped` row for it. So `attempt > 1` raises the rung
  * to at least 1. The same direction as `deriveRung`: when unsure, call it help.
  *
+ * THE TUTOR'S RULE, NOT THE SCHOOL'S (v4). On the school's sources `attempt`
+ * is never a try at one question: the LMS's submit (0024, 0030) writes it on
+ * homework and tests as the number of the whole HAND-IN, a new sitting in
+ * which nobody helped; practice (0031) writes none, and nothing writes 'api'
+ * today. Any other source, including one this code does not know, keeps the
+ * rule: when unsure, call it help.
+ *
  * Shared by the fold and by `eachAnswerWithRung`, so the model and the
  * projections cannot disagree about which answers were cold.
  */
-export function atLeastANudge(rung: AssistanceRung, attempt: number): AssistanceRung {
+export function atLeastANudge(rung: AssistanceRung, attempt: number, source?: EventSource): AssistanceRung {
+  if (source !== undefined && SCHOOL_SOURCES.has(source)) return rung;
   return attempt > 1 && rung < 1 ? 1 : rung;
 }
+
+/** Sources the LMS writes, where `attempt` numbers a hand-in (see `atLeastANudge`). */
+const SCHOOL_SOURCES: ReadonlySet<EventSource> = new Set<EventSource>(['homework', 'test', 'practice', 'api']);

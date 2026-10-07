@@ -102,7 +102,8 @@ const toEvent = (row: EventRow): LedgerEvent =>
  * retrieval counts) are driven since MODEL_VERSION 3 and compared like any
  * other, and so is `masteredAt` (a date, compared as text like the ladder's
  * dates); `memoryStrength` is still undriven and costs one comparison of a
- * default against a default. `coldWins` is a record and is not compared here.
+ * default against a default. `coldWins` and `misconceptions` (v4) are records
+ * and are not compared here.
  */
 const FIELDS: readonly (keyof ConceptState)[] = [
   'mastery',

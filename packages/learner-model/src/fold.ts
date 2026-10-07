@@ -15,8 +15,9 @@ import type {
   HelpedPayload,
   LedgerEvent,
 } from '@ai-tutor/ledger';
-import { defaultCredit } from './assistance.ts';
+import { askKey, defaultCredit } from './assistance.ts';
 import { recordColdWin, stampMastery } from './mastered.ts';
+import { recordColdRight, recordWrongIdea } from './misconception.ts';
 import { atLeastANudge, deriveRung } from './rung.ts';
 import {
   MODEL_VERSION,
@@ -140,27 +141,22 @@ function behindCursor(done: FoldCursor | null, now: FoldCursor): boolean {
   return now.seq <= done.seq;
 }
 
-/** One ask, however the surface happens to name it. */
-function askKey(
-  beatId: string | undefined,
-  probeId: string | undefined,
-  ids: readonly string[],
-): string {
-  return beatId ?? probeId ?? ids.join(',');
-}
-
 /**
  * WHICH ITEM AN ANSWER WAS TO, for B8's "two distinct items".
  *
- * A probe id names one bank question wherever it is asked. A beat id is only
+ * A probe id names one bank question wherever it is asked. A school item id
+ * (`lms.item`, on homework, tests and practice) names one question of the
+ * school's bank; without it every homework answer on an outcome was one item,
+ * and homework alone could never earn `masteredAt`. A beat id is only
  * unique inside its lesson — "b3_4" exists in many classes — so it is qualified
- * by the event's `topicRef` where there is one. An answer with neither falls
- * back to the ask key's outcome list, so all such answers on one outcome are
- * ONE item: they can never make up the two distinct items on their own, which
- * is the safe direction to be wrong in.
+ * by the event's `topicRef` where there is one. An answer with none of these
+ * falls back to the ask key's outcome list, so all such answers on one outcome
+ * are ONE item: they can never make up the two distinct items on their own,
+ * which is the safe direction to be wrong in.
  */
 function itemKey(event: LedgerEvent, payload: AnsweredPayload): string {
   if (payload.probeId) return `probe:${payload.probeId}`;
+  if (payload.itemId) return `item:${payload.itemId}`;
   if (payload.beatId) return `beat:${event.topicRef ?? ''}/${payload.beatId}`;
   return `outcomes:${event.outcomeIds.join(',')}`;
 }
@@ -216,10 +212,11 @@ function foldAnswer(
   // free topic or a brought file has no map outcomes at all.
   if (event.outcomeIds.length === 0) return model;
 
-  const key = askKey(payload.beatId, payload.probeId, event.outcomeIds);
+  const key = askKey(payload.beatId, payload.probeId, event.outcomeIds, payload.itemId);
   const rung = atLeastANudge(
     deriveRung([(help[key] ?? 0) as AssistanceRung], payload.assistanceRung),
     payload.attempt,
+    event.source,
   );
   const unassisted = rung === 0;
 
@@ -358,6 +355,21 @@ function foldAnswer(
       lastPracticedAt: event.at,
     };
 
+    /**
+     * THE WRONG IDEA AN ANSWER SHOWED (v4, misconception.ts), at any rung:
+     * a wrong answer with help in hand still shows what the child believes.
+     * On the session clock, like `masteredAt`.
+     */
+    if (!payload.correct) {
+      updated.misconceptions = recordWrongIdea(prev.misconceptions ?? {}, {
+        label: payload.misconceptionId,
+        itemKey: itemKey(event, payload),
+        chosenIndex: typeof payload.chosenIndex === 'number' ? payload.chosenIndex : null,
+        sessionId: session.id,
+        at: session.startedAt,
+      });
+    }
+
     if (unassisted) {
       const moved = applyEvidence({ [nodeId]: prev.unassistedMastery }, index, answer, { params });
       updated.unassistedMastery = moved[nodeId] ?? prev.unassistedMastery;
@@ -365,9 +377,11 @@ function foldAnswer(
       if (payload.correct) {
         updated.lastUnassistedSuccessAt = event.at;
         // Right after being shown it, in this same session, is listening,
-        // not remembering: no cold win toward `masteredAt` (F1-F3).
+        // not remembering: no cold win toward `masteredAt` (F1-F3), and no
+        // step toward clearing a wrong idea either.
         if (!exposedThisSession(prev, session.startedAt)) {
           updated.coldWins = recordColdWin(prev.coldWins, itemKey(event, payload), session.startedAt);
+          updated.misconceptions = recordColdRight(prev.misconceptions ?? {}, itemKey(event, payload), session.startedAt);
         }
       }
       // B8, on the session clock: the stamp and the spacing read the same time.

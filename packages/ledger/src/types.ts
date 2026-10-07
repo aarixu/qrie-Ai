@@ -156,6 +156,12 @@ export interface AskedPayload {
 export interface AnsweredPayload {
   probeId?: string;
   beatId?: string;
+  /**
+   * The school's question (`lms.item.id`), written by the LMS's own functions
+   * on homework, tests and practice (0024, 0030, 0031). The learner model reads
+   * it as the item an answer was to.
+   */
+  itemId?: string;
   /** null is a skip, which is weak evidence AGAINST rather than no evidence. */
   chosenIndex?: number | null;
   correct: boolean;

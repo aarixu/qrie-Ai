@@ -1,4 +1,5 @@
 import { PRIOR } from '@ai-tutor/knowledge-graph';
+import type { Misconception } from './misconception.ts';
 
 /**
  * WHAT WE BELIEVE ABOUT ONE OUTCOME, FOR ONE STUDENT.
@@ -105,7 +106,8 @@ export interface ConceptState {
   /**
    * THE COLD RIGHT ANSWERS THE MASTERY RULE NEEDS, AND NO MORE.
    *
-   * Per item (probe id, else beat id — the fold's ask key), the session time of
+   * Per item (`itemKey` in fold.ts: probe id, else school item id, else beat
+   * id), the session time of
    * its first and latest right answer at rung 0. The rule asks whether ANY two
    * distinct items are a day apart, and the widest such pair always uses one of
    * the two items with the earliest first win and one of the two with the latest
@@ -132,6 +134,17 @@ export interface ConceptState {
   nextReviewAt: string | null;
   retrievalCount: number;
   retrievalAccuracy: number;
+
+  /**
+   * THE WRONG IDEAS THIS OUTCOME'S ANSWERS SHOWED (v4, misconception.ts).
+   *
+   * Every wrong answer that names an idea (its label) or, failing that, a wrong
+   * option on an item, is kept here with the items and sittings it came up in.
+   * One is a slip; `confirmedMisconceptions` returns those shown on two
+   * distinct items or in two sittings, and two later cold right answers on
+   * distinct items clear one. Bounded by `MISCONCEPTION_LIMITS`.
+   */
+  misconceptions: Record<string, Misconception>;
 }
 
 /**
@@ -151,8 +164,14 @@ export interface ConceptState {
  * `lastRetrievedAt`, and `nextReviewAt` / `retrievalCount` /
  * `retrievalAccuracy` now driven. A migrated v2 model starts every outcome
  * with no box, so its reviews begin at the next time each one is met.
+ *
+ * 4 (2026-10-07): misconceptions enter the model (`misconceptions`); a school
+ * item id (`itemId`) is an item for the mastery rule's distinct items; the
+ * second-attempt nudge is kept to the tutor's own sources, because a homework
+ * `attempt` numbers a whole new hand-in. A migrated v3 model starts every
+ * outcome with no misconceptions until a rebuild from the ledger fills them.
  */
-export const MODEL_VERSION = 3;
+export const MODEL_VERSION = 4;
 
 /** B8's line: unassisted belief at or above this, on spaced distinct items. */
 export const MASTERY_LINE = 0.8;
@@ -235,6 +254,7 @@ export const emptyConceptState = (outcomeId: string): ConceptState => ({
   nextReviewAt: null,
   retrievalCount: 0,
   retrievalAccuracy: 0,
+  misconceptions: {},
 });
 
 export const emptyModel = (): LearnerModel => ({
