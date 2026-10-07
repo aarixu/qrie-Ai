@@ -343,7 +343,10 @@ begin
     me := admin.require_staff();
     raise exception 'there is no such action';
   end if;
-  if p_action in ('pin-reset', 'staff-invite') then
+  -- A committed import makes sign-ins and answers with their PINs, as a new PIN
+  -- does: both hand out a credential, so both want a code from the last 10
+  -- minutes (R3; spec section 6's stolen session).
+  if p_action in ('people-import', 'pin-reset', 'staff-invite') then
     perform admin.require_fresh_mfa(10);
   end if;
   if p_action <> 'people-preview' then
@@ -356,6 +359,19 @@ begin
     if p_action = 'people-import'
        and exists (select 1 from admin.school_profile p where p.org_id = org and p.offboarded_at is not null) then
       raise exception 'this school is offboarded; bring it back before adding people';
+    end if;
+    -- A teacher's or a school admin's sign-in opens other people's children's
+    -- work, which ops may not see (spec section 3), so here only the owner
+    -- hands one out (R22). For an import, admin-api passes p_target
+    -- 'teachers' whenever the request carries a teachers sheet, the only sheet
+    -- that makes teachers and school admins; for a new PIN, p_target is the
+    -- login ID.
+    if (p_action = 'people-import' and p_target = 'teachers')
+       or (p_action = 'pin-reset' and exists (
+             select 1 from lms.account a
+              where a.org_id = org and a.login_id = upper(btrim(coalesce(p_target, '')))
+                and a.kind in ('teacher', 'admin'))) then
+      perform admin.require_staff(array[]::text[]);
     end if;
   end if;
   if p_action = 'people-import' then

@@ -6,8 +6,8 @@ import { ShownOnce } from './shown-once';
 
 /**
  * A new PIN for one person (through admin-api, the LMS lane's own code; owner
- * and ops, with a fresh code). The old PIN stops at once; the new one is shown
- * here once.
+ * and ops, with a fresh code; a teacher's or a school admin's is the owner's,
+ * R22). The old PIN stops at once; the new one is shown here once.
  */
 export function ResetPin({
   code,

@@ -70,9 +70,13 @@ const gate = async (deps: AdminApiDeps, auth: string, action: string, b: Record<
 
 async function importRoute(deps: AdminApiDeps, auth: string, b: Record<string, unknown>) {
   const commit = b.commit === true;
-  const g = await gate(deps, auth, commit ? 'people-import' : 'people-preview', b);
+  // The teachers sheet is the only one that makes teachers and school admins;
+  // the gate lets only the owner commit one (R22). Whatever is not passed on
+  // as a teachers sheet here is never read as one below.
+  const teachersSent = b.teachers !== undefined && b.teachers !== '';
+  const g = await gate(deps, auth, commit ? 'people-import' : 'people-preview', b, teachersSent ? 'teachers' : '');
   return importForSchool(deps.lms, g.orgId as string, g.actor, {
-    students: b.students, teachers: b.teachers, commit, acceptWarnings: b.acceptWarnings === true,
+    students: b.students, teachers: teachersSent ? b.teachers : undefined, commit, acceptWarnings: b.acceptWarnings === true,
   });
 }
 

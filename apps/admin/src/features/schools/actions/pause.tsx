@@ -23,11 +23,11 @@ export function PauseTutor({
     <WriteDialog
       open={open}
       onOpenChange={onOpenChange}
-      title={enabled ? `Turn the tutor back on at ${code}?` : `Pause the tutor at ${code}?`}
+      title={enabled ? `Turn ${code}'s tutor switch back on?` : `Turn ${code}'s tutor switch off?`}
       blast={blastPause(code, enabled)}
       guarded
       destructive={!enabled}
-      confirmLabel={enabled ? 'Turn it on' : 'Pause the tutor'}
+      confirmLabel={enabled ? 'Turn it on' : 'Turn it off'}
       onConfirm={(w) => admin.flagSet({ key: 'tutor.enabled', scope: 'school', scopeId: code, value: enabled, ...w })}
       onDone={onDone}
     />

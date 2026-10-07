@@ -2,7 +2,7 @@ import { useNavigate, useParams, useSearch as useRouteSearch } from '@tanstack/r
 import { useState } from 'react';
 import { admin, schools } from '@/lib/client';
 import { useMe } from '@/lib/me';
-import { canOperate, isOwner } from '@/lib/roles';
+import { canOperate, canSetFlag, isOwner } from '@/lib/roles';
 import { useLoad } from '@/lib/use-load';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -57,9 +57,9 @@ export function SchoolPage() {
           <Button variant='outline' onClick={() => setDoing('import')} disabled={ready.offboardedAt !== null}>
             Add people
           </Button>
-          {tutorOn !== null && (
+          {tutorOn !== null && canSetFlag(me.role, 'tutor.enabled', tutorOn === false) && (
             <Button variant='outline' onClick={() => setDoing('pause')}>
-              {tutorOn === false ? 'Turn the tutor back on' : 'Pause the tutor'}
+              {tutorOn === false ? 'Turn the tutor switch back on' : 'Turn the tutor switch off'}
             </Button>
           )}
         </>

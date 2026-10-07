@@ -2,6 +2,8 @@ import type { ImportResult } from '@ai-tutor/admin-client';
 import { useEffect, useState } from 'react';
 import { blastImport } from '@/lib/blast';
 import { schools } from '@/lib/client';
+import { useMe } from '@/lib/me';
+import { canAddTeachers } from '@/lib/roles';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -14,8 +16,9 @@ import { ShownOnce } from './shown-once';
 
 /**
  * Add people from the school's sheets (CSV), as the school admin's import
- * does, through admin-api and the LMS lane's own code (owner and ops). First
- * a check, which changes nothing; then the commit, which makes the sign-ins
+ * does, through admin-api and the LMS lane's own code (owner and ops; the
+ * teachers sheet is the owner's, R22). First a check, which changes nothing;
+ * then the commit, which wants a fresh authenticator code, makes the sign-ins
  * and shows their PINs once.
  */
 export function ImportPeople({
@@ -29,6 +32,8 @@ export function ImportPeople({
   onOpenChange(open: boolean): void;
   onDone(): void;
 }) {
+  const me = useMe();
+  const teachersAllowed = canAddTeachers(me.role);
   const [students, setStudents] = useState<string | undefined>();
   const [teachers, setTeachers] = useState<string | undefined>();
   const [checked, setChecked] = useState<ImportResult | null>(null);
@@ -83,10 +88,16 @@ export function ImportPeople({
               <Label htmlFor='import-students'>Students sheet</Label>
               <Input id='import-students' type='file' accept='.csv,text/csv' onChange={(e) => void read(setStudents)(e)} />
             </div>
-            <div className='space-y-1'>
-              <Label htmlFor='import-teachers'>Teachers sheet</Label>
-              <Input id='import-teachers' type='file' accept='.csv,text/csv' onChange={(e) => void read(setTeachers)(e)} />
-            </div>
+            {teachersAllowed ? (
+              <div className='space-y-1'>
+                <Label htmlFor='import-teachers'>Teachers sheet</Label>
+                <Input id='import-teachers' type='file' accept='.csv,text/csv' onChange={(e) => void read(setTeachers)(e)} />
+              </div>
+            ) : (
+              <p className='text-sm text-muted-foreground'>
+                Teachers and school admins are added by the owner, or by the school admin in the teacher app.
+              </p>
+            )}
           </div>
           {error && (
             <Alert variant='destructive'>
@@ -139,6 +150,7 @@ export function ImportPeople({
         onOpenChange={setCommitting}
         title={`Add ${newPeople} ${newPeople === 1 ? 'person' : 'people'} to ${code}?`}
         blast={blastImport(code, newPeople)}
+        guarded
         confirmLabel='Add them'
         onConfirm={async (w) => {
           const done = await schools.importPeople({ code, students, teachers, commit: true, acceptWarnings: accepted, ...w });

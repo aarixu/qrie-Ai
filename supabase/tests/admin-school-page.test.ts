@@ -110,7 +110,7 @@ describe('school actions', () => {
     });
   });
 
-  it('offboarding pauses the tutor for that school only; bringing it back leaves the tutor paused', async () => {
+  it("offboarding sets that school's tutor switch off and no other school's; bringing it back leaves the switch off", async () => {
     await buildSchool(db, 'OFF1');
     const off = (claims: JwtClaims, yes: boolean, reason = 'contract ended') =>
       call(claims, `admin.school_offboard('OFF1', $1, $2, 'TEST')`, [yes, reason]);
@@ -137,6 +137,35 @@ describe('school actions', () => {
     expect(await offboardedAt()).toBeNull();
     expect(await tutorOn('OFF1')).toBe('false');
     expect((await auditRows('school-brought-back')).at(-1)).toMatchObject({ target_id: 'OFF1', reason: 'they renewed' });
+  });
+
+  it('turning the tutor back on is the owner\'s: ops may switch it off, at a school or everywhere, but not on (spec section 3)', async () => {
+    await buildSchool(db, 'RES1');
+    const setTutor = (claims: JwtClaims, scope: 'school' | 'global', on: boolean) =>
+      call(claims, `admin.flag_set('tutor.enabled', $1, $2, $3::jsonb, 'a reason', 'TEST')`, [
+        scope,
+        scope === 'school' ? 'RES1' : '',
+        JSON.stringify(on),
+      ]);
+    const tutorAt = async (code: string | null) =>
+      (await db.query<{ v: string }>(`select public.app_config($1) ->> 'tutor.enabled' as v`, [code])).rows[0].v;
+
+    await setTutor(fresh(ops), 'school', false);
+    expect(await tutorAt('RES1')).toBe('false');
+    await expect(setTutor(fresh(ops), 'school', true)).rejects.toThrow(/not allowed/);
+    expect(await tutorAt('RES1')).toBe('false');
+    await setTutor(fresh(owner), 'school', true);
+    expect(await tutorAt('RES1')).toBe('true');
+
+    await expect(setTutor(fresh(ops), 'global', true)).rejects.toThrow(/not allowed/);
+    expect(await tutorAt(null)).toBe('true');
+    await setTutor(fresh(ops), 'global', false);
+    expect(await tutorAt(null)).toBe('false');
+    await expect(setTutor(fresh(ops), 'global', true)).rejects.toThrow(/not allowed/);
+    await setTutor(fresh(owner), 'global', true);
+    expect(await tutorAt(null)).toBe('true');
+    // Any other switch is still ops' to set.
+    await call(aal2(ops), `admin.flag_set('banner.message', 'global', '', '"Classes pause 6 to 7 pm"'::jsonb, 'maintenance', 'TEST')`);
   });
 
   it("the export is the owner's with a fresh code: people with IDs and classes, parents by ID with their children's IDs, work with hand-in counts; never a PIN, an answer or a parent's name", async () => {

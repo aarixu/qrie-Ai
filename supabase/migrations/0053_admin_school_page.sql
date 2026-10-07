@@ -7,11 +7,14 @@
 -- shown only on that parent's own card.
 --
 -- Doing: create a school, set its licence (owner, fresh code; lms.set_licence
--- does the writing), a holiday, offboarding (never a delete: the tutor is
--- paused for the school and nothing is removed), an export of its register,
--- contacts and notes, and disabling one person exactly as the school admin's
--- lms.mark_left does (0034), so the school admin's lms.restore_account brings
--- them back.
+-- does the writing), a holiday, offboarding (never a delete: a mark, the
+-- school's tutor.enabled switch set to false, and nothing removed; the
+-- console's import refuses the school, but no app reads tutor.enabled yet
+-- (plan 4) and the school admin's own import is unchanged), an export of its
+-- register, contacts and notes, and disabling one person exactly as the
+-- school admin's lms.mark_left does (0034), so the school admin's
+-- lms.restore_account brings them back. admin.flag_set is replaced here so
+-- that only the owner sets tutor.enabled to true (spec section 3).
 --
 -- Every write checks the environment, takes a reason, and writes one audit
 -- row with ids only. Actions on a school's own data also land in the school's
@@ -427,6 +430,59 @@ begin
   end if;
   perform admin.audit(me, case when p_offboard then 'school-offboarded' else 'school-brought-back' end,
     'school', sc, p_reason, '{}'::jsonb);
+end;
+$$;
+
+-- Plan 1's admin.flag_set (0050), replaced with one rule more: setting
+-- tutor.enabled to true, at a school or everywhere, is the owner's. Spec
+-- section 3 lets ops stop the tutor but not resume it. Everything else is
+-- 0050's body unchanged; the grants stay as 0050 set them.
+create or replace function admin.flag_set(p_key text, p_scope text, p_scope_id text, p_value jsonb, p_reason text, p_env text)
+returns void
+language plpgsql volatile security definer
+set search_path = admin, public
+as $$
+declare
+  me admin.platform_staff := admin.require_staff(array['ops']);
+  def admin.flag_def;
+  before jsonb;
+  sid text := coalesce(p_scope_id, '');
+begin
+  select d.* into def from admin.flag_def d where d.key = p_key;
+  if def.key is null then
+    raise exception 'there is no switch called %', coalesce(p_key, '(nothing)');
+  end if;
+  if p_key = 'tutor.enabled' and p_value = 'true'::jsonb then
+    perform admin.require_staff(array[]::text[]);
+  end if;
+  if def.guarded then
+    perform admin.require_fresh_mfa(10);
+  end if;
+  perform admin.check_environment(p_env);
+  if p_scope not in ('global', 'school') or (p_scope = 'school' and not def.school_scoped) then
+    raise exception 'this switch cannot be set for %', coalesce(p_scope, '(nothing)');
+  end if;
+  if p_scope = 'global' then
+    sid := '';
+  elsif not exists (select 1 from lms.school s where s.code = upper(sid)) then
+    raise exception 'there is no school with the code %', sid;
+  else
+    sid := upper(sid);
+  end if;
+  if not admin.flag_valid(def.kind, p_value) then
+    raise exception 'the value does not suit this switch (%)', def.kind;
+  end if;
+  if char_length(btrim(coalesce(p_reason, ''))) < 3 then
+    raise exception 'say why, in a few words';
+  end if;
+  select v.value into before from admin.app_flag v where v.key = p_key and v.scope = p_scope and v.scope_id = sid;
+  perform set_config('admin.session', 'on', true);
+  insert into admin.app_flag (key, scope, scope_id, value, updated_by)
+  values (p_key, p_scope, sid, p_value, me.user_id)
+  on conflict (key, scope, scope_id) do update
+    set value = excluded.value, updated_at = now(), updated_by = excluded.updated_by;
+  perform admin.audit(me, 'flag-set', 'flag', p_key || case when sid = '' then '' else ' @ ' || sid end, p_reason,
+    jsonb_build_object('before', before, 'after', p_value));
 end;
 $$;
 

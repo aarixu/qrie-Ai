@@ -3,23 +3,36 @@
  * action, shown at the top of every write dialog. Pure, so the wording that
  * matters (who is affected, what stops, what can be undone) is tested.
  */
+import { SWITCH_NOT_READ } from './confirm.ts';
 
 export function blastLicence(code: string, plan: string, seats: number, until: string, seatsUsed: number): string {
   const line = `${code}'s licence becomes ${plan}, ${seats} seats, until ${until}. The school admin sees it at once.`;
   return seats < seatsUsed ? `${line} ${seatsUsed} seats are in use: the school cannot add students until some leave.` : line;
 }
 
+/**
+ * Offboarding is a mark plus the school's tutor switch off (0053). admin-api's
+ * gate refuses staff imports for the school; the school admin's own import in
+ * the teacher app does not look at the mark.
+ */
 export function blastOffboard(code: string, offboard: boolean): string {
   return offboard
-    ? `${code} is offboarded: the tutor pauses for its children and no one can be added. Nothing is deleted: homework, marks and sign-ins stay.`
-    : `${code} is no longer offboarded. Its tutor switch stays off until someone turns it on.`;
+    ? `${code} is marked offboarded and its tutor switch is set off. Qrie staff cannot add people to it, but its school admin still can` +
+        ` in the teacher app, and no app reads the tutor switch yet (plan 4), so the tutor keeps working there until then.` +
+        ' Nothing is deleted: homework, marks and sign-ins stay.'
+    : `${code} is no longer marked offboarded. Its tutor switch stays off until the owner turns it on.`;
 }
 
 /** `enabled` is the tutor.enabled value being set for the school. */
 export function blastPause(code: string, enabled: boolean): string {
   return enabled
-    ? `The tutor is offered again at ${code}.`
-    : `The tutor pauses for every child at ${code}. Homework, marks and the teacher app carry on.`;
+    ? `${code}'s tutor switch is set on. ${SWITCH_NOT_READ}.`
+    : `${code}'s tutor switch is set off. ${SWITCH_NOT_READ}, so the tutor keeps working at ${code} until then.`;
+}
+
+/** Any other switch set for one school. */
+export function blastSchoolSwitch(code: string): string {
+  return `Saved for ${code}. ${SWITCH_NOT_READ}.`;
 }
 
 export function blastDisable(code: string, loginId: string, kind: string): string {

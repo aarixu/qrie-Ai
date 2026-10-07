@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blastAddExisting, blastCeiling, blastLicence, blastOffboard, blastResetPin } from '../src/lib/blast.ts';
+import { blastAddExisting, blastCeiling, blastLicence, blastOffboard, blastPause, blastResetPin, blastSchoolSwitch } from '../src/lib/blast.ts';
 
 /** What a write will do, said before it is confirmed. Written first. */
 
@@ -14,14 +14,23 @@ describe('blast-radius lines', () => {
     );
   });
 
-  it('offboarding says the tutor pauses and nothing is deleted; bringing back says the tutor stays paused', () => {
+  it('offboarding says what really happens today: a mark, the switch off, no app reads it yet, the school admin can still add people, nothing deleted', () => {
     const off = blastOffboard('KV22', true);
-    expect(off).toContain('KV22');
-    expect(off).toMatch(/tutor pauses/);
-    expect(off).toMatch(/Nothing is deleted/);
-    const back = blastOffboard('KV22', false);
-    expect(back).toContain('KV22');
-    expect(back).toMatch(/tutor switch stays off/);
+    expect(off).toBe(
+      'KV22 is marked offboarded and its tutor switch is set off. Qrie staff cannot add people to it, but its school admin still can' +
+        ' in the teacher app, and no app reads the tutor switch yet (plan 4), so the tutor keeps working there until then.' +
+        ' Nothing is deleted: homework, marks and sign-ins stay.',
+    );
+    expect(off).not.toMatch(/tutor pauses|no one can be added/);
+    expect(blastOffboard('KV22', false)).toBe('KV22 is no longer marked offboarded. Its tutor switch stays off until the owner turns it on.');
+  });
+
+  it('the tutor switch for one school says no app reads it yet, in both directions', () => {
+    expect(blastPause('KV22', false)).toBe(
+      "KV22's tutor switch is set off. No app reads this switch yet (plan 4), so the tutor keeps working at KV22 until then.",
+    );
+    expect(blastPause('KV22', true)).toBe("KV22's tutor switch is set on. No app reads this switch yet (plan 4).");
+    expect(blastSchoolSwitch('KV22')).toBe('Saved for KV22. No app reads this switch yet (plan 4).');
   });
 
   it('a new PIN says the old one stops at once and to ask the school admin first', () => {

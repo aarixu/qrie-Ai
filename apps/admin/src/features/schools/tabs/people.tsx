@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { schools } from '@/lib/client';
 import { failed, type Loaded } from '@/lib/load-state';
 import { useMe } from '@/lib/me';
-import { canOperate } from '@/lib/roles';
+import { canGivePin, canOperate } from '@/lib/roles';
 import { useLoad } from '@/lib/use-load';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -118,6 +118,7 @@ export function PeopleTab({ detail }: { detail: SchoolDetail }) {
 }
 
 function PersonSheet({ code, loginId, onChanged }: { code: string; loginId: string; onChanged(): void }) {
+  const me = useMe();
   const { view, reload } = useLoad(() => schools.person(code, loginId), [code, loginId]);
   const [pin, setPin] = useState(false);
   const [leaving, setLeaving] = useState(false);
@@ -132,10 +133,17 @@ function PersonSheet({ code, loginId, onChanged }: { code: string; loginId: stri
           {(p) => (
             <>
               <PersonFields p={p} />
+              {!canGivePin(me.role, p.kind) && (
+                <p className='text-sm text-muted-foreground'>
+                  A teacher or a school admin gets a new PIN from the owner, or from the school admin in the teacher app.
+                </p>
+              )}
               <div className='flex flex-wrap gap-2'>
-                <Button variant='outline' onClick={() => setPin(true)} disabled={p.leftOn !== null}>
-                  Give a new PIN
-                </Button>
+                {canGivePin(me.role, p.kind) && (
+                  <Button variant='outline' onClick={() => setPin(true)} disabled={p.leftOn !== null}>
+                    Give a new PIN
+                  </Button>
+                )}
                 <Button variant='destructive' onClick={() => setLeaving(true)} disabled={p.leftOn !== null}>
                   Mark as left
                 </Button>

@@ -133,7 +133,9 @@ describe('writing', () => {
     const c = opsClient();
     const preview = await c.importPeople({ code: 'CLI', students: SHEET, commit: false });
     expect(preview.committed).toBe(false);
-    const done = await c.importPeople({ code: 'CLI', students: SHEET, commit: true, acceptWarnings: true, reason: 'term starts', env: 'TEST' });
+    const commit = { code: 'CLI', students: SHEET, commit: true, acceptWarnings: true, reason: 'term starts', env: 'TEST' };
+    expect(await codeOf(c.importPeople(commit))).toBe('needs-mfa');
+    const done = await as(fresh(ops), 'ops-fresh').importPeople(commit);
     expect(done.committed).toBe(true);
     expect(done.created[0].pin).toMatch(/^\d{6}$/);
     const reset = { code: 'CLI', loginId: 'CLI-8A-5', reason: 'parent called', env: 'TEST' };

@@ -203,14 +203,32 @@ describe('the gate admin-api asks first', () => {
     await expect(gate(aal2(ops), 'people-preview', 'NOPE', '', '', '')).rejects.toThrow(/no school with the code NOPE/);
   });
 
-  it('people-import: a reason and the environment, logged as requested, and refused for an offboarded school', async () => {
-    await gate(aal2(ops), 'people-import', 'USR', '', 'term starts', 'TEST');
+  it('people-import: a fresh code, a reason and the environment, logged as requested, and refused for an offboarded school', async () => {
+    // Every committed row is a new sign-in whose PIN comes back in the answer (R3).
+    await expect(gate(aal2(ops), 'people-import', 'USR', '', 'term starts', 'TEST')).rejects.toThrow(/authenticator code/);
+    await gate(fresh(ops), 'people-import', 'USR', '', 'term starts', 'TEST');
     expect((await auditRows('people-import-requested')).at(-1)).toMatchObject({ target_kind: 'school', target_id: 'USR', reason: 'term starts' });
-    await expect(gate(aal2(ops), 'people-import', 'USR', '', '', 'TEST')).rejects.toThrow(/say why/);
-    await expect(gate(aal2(ops), 'people-import', 'USR', '', 'term starts', 'HOSTED')).rejects.toThrow(/this console is TEST/);
+    await expect(gate(fresh(ops), 'people-import', 'USR', '', '', 'TEST')).rejects.toThrow(/say why/);
+    await expect(gate(fresh(ops), 'people-import', 'USR', '', 'term starts', 'HOSTED')).rejects.toThrow(/this console is TEST/);
     const o = await buildSchool(db, 'USR2');
     await db.query(`insert into admin.school_profile (org_id, offboarded_at) values ($1, now())`, [o.org]);
-    await expect(gate(aal2(ops), 'people-import', 'USR2', '', 'term starts', 'TEST')).rejects.toThrow(/offboarded/);
+    await expect(gate(fresh(ops), 'people-import', 'USR2', '', 'term starts', 'TEST')).rejects.toThrow(/offboarded/);
+  });
+
+  it("a teacher's or a school admin's sign-in is handed out here by the owner only, since ops may not see a child's words (R22)", async () => {
+    const before = await auditCount();
+    for (const login of ['usr-t1', 'USR-A1']) {
+      await expect(gate(fresh(ops), 'pin-reset', 'USR', login, 'forgot it', 'TEST'), login).rejects.toThrow(/not allowed/);
+    }
+    await expect(gate(fresh(ops), 'people-import', 'USR', 'teachers', 'new staff', 'TEST')).rejects.toThrow(/not allowed/);
+    expect(await auditCount()).toBe(before);
+    // Checking a teachers sheet makes no sign-in, so ops may still do it.
+    expect(await gate(aal2(ops), 'people-preview', 'USR', 'teachers', '', '')).toEqual({ actor: ops.id, orgId: s.org });
+
+    expect(await gate(fresh(owner), 'pin-reset', 'USR', 'USR-T1', 'forgot it', 'TEST')).toEqual({ actor: owner.id, orgId: s.org });
+    expect(await gate(fresh(owner), 'pin-reset', 'USR', 'USR-A1', 'forgot it', 'TEST')).toEqual({ actor: owner.id, orgId: s.org });
+    expect(await gate(fresh(owner), 'people-import', 'USR', 'teachers', 'new staff', 'TEST')).toEqual({ actor: owner.id, orgId: s.org });
+    await expect(gate(aal2(owner), 'people-import', 'USR', 'teachers', 'new staff', 'TEST')).rejects.toThrow(/authenticator code/);
   });
 
   it('pin-reset: a fresh code, and the ID in the audit details', async () => {

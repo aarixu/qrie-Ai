@@ -84,11 +84,13 @@ describe('people', () => {
     expect(preview.body.committed).toBe(false);
     expect(world.passwords.size).toBe(0);
 
-    const done = await send(
-      'import',
-      { code: 'API', students: SHEET, commit: true, acceptWarnings: true, reason: 'term starts', env: 'TEST' },
-      'ops',
-    );
+    // A commit hands out PINs, so it wants a code from the last 10 minutes, as a new PIN does (R3).
+    const commit = { code: 'API', students: SHEET, commit: true, acceptWarnings: true, reason: 'term starts', env: 'TEST' };
+    expect(await send('import', commit, 'ops')).toMatchObject({ status: 403, body: { code: 'needs-mfa' } });
+    expect(world.passwords.size).toBe(0);
+    expect(await count(`select count(*)::int as n from lms.account where login_id = 'API-8A-5'`)).toBe(0);
+
+    const done = await send('import', commit, 'ops-fresh');
     expect(done.status).toBe(200);
     const created = done.body.created as { loginId: string; pin: string }[];
     expect(created[0]).toMatchObject({ loginId: 'API-8A-5' });
@@ -101,11 +103,11 @@ describe('people', () => {
   it('a commit without a reason, or for the wrong environment, creates nobody', async () => {
     const accounts = await count(`select count(*)::int as n from lms.account`);
     const body = { code: 'API', students: 'grade,section,roll,name\n8,A,6,Ravi Rao\n', commit: true, acceptWarnings: true };
-    const noReason = await send('import', { ...body, reason: '', env: 'TEST' }, 'ops');
+    const noReason = await send('import', { ...body, reason: '', env: 'TEST' }, 'ops-fresh');
     expect(noReason.status).toBe(400);
     expect(noReason.body.code).toBe('other');
     expect(noReason.body.error).toMatch(/say why/);
-    expect(await send('import', { ...body, reason: 'term starts', env: 'HOSTED' }, 'ops')).toMatchObject({
+    expect(await send('import', { ...body, reason: 'term starts', env: 'HOSTED' }, 'ops-fresh')).toMatchObject({
       status: 409,
       body: { code: 'wrong-environment' },
     });
@@ -118,10 +120,34 @@ describe('people', () => {
     const r = await send(
       'import',
       { code: 'API2', students: SHEET, commit: true, acceptWarnings: true, reason: 'term starts', env: 'TEST' },
-      'ops',
+      'ops-fresh',
     );
     expect(r.status).toBe(400);
     expect(r.body.error).toMatch(/offboarded/);
+  });
+
+  it('a teachers sheet is added by the owner only: ops get not-allowed and nobody is made (R22)', async () => {
+    const teachers = 'name,role,teaches\nNew Admin,admin,\nNew Teacher,teacher,8A Mathematics\n';
+    const accounts = await count(`select count(*)::int as n from lms.account`);
+    const body = { code: 'API', teachers, commit: true, acceptWarnings: true, reason: 'new staff', env: 'TEST' };
+
+    const checked = await send('import', { code: 'API', teachers }, 'ops');
+    expect(checked.status).toBe(200);
+    expect(checked.body.committed).toBe(false);
+
+    const refused = await send('import', body, 'ops-fresh');
+    expect(refused).toMatchObject({ status: 403, body: { code: 'not-allowed' } });
+    // A teachers sheet beside a students sheet is refused whole.
+    expect(await send('import', { ...body, students: 'grade,section,roll,name\n8,A,9,Mira Das\n' }, 'ops-fresh')).toMatchObject({
+      status: 403,
+      body: { code: 'not-allowed' },
+    });
+    expect(await count(`select count(*)::int as n from lms.account`)).toBe(accounts);
+
+    const done = await send('import', body, 'owner-fresh');
+    expect(done.status).toBe(200);
+    const created = done.body.created as { kind: string; pin: string }[];
+    expect(created.map((c) => c.kind).sort()).toEqual(['admin', 'teacher']);
   });
 });
 
@@ -140,6 +166,17 @@ describe('new PINs', () => {
     expect(world.rpcCalls).toContain('end_sessions');
     expect((await lmsAudit('pin-reset')).at(-1)).toMatchObject({ actor: ops.id, target: 'API-8A-5' });
     expect(await adminAudit('pin-reset-requested')).toHaveLength(1);
+  });
+
+  it("a teacher's or a school admin's new PIN is the owner's: ops get not-allowed and the old PIN keeps working (R22)", async () => {
+    for (const loginId of ['API-T1', 'api-a1']) {
+      const body = { code: 'API', loginId, reason: 'forgot it', env: 'TEST' };
+      expect(await send('reset-pin', body, 'ops-fresh'), loginId).toMatchObject({ status: 403, body: { code: 'not-allowed' } });
+      expect(world.passwords.has(loginId.toUpperCase())).toBe(false);
+      const r = await send('reset-pin', body, 'owner-fresh');
+      expect(r.status).toBe(200);
+      expect(r.body.pin).toBe(world.passwords.get(loginId.toUpperCase()));
+    }
   });
 
   it("a new PIN for an unknown ID is a 404, and the request is in the platform's log", async () => {

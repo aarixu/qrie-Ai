@@ -1,9 +1,9 @@
-import type { FlagRow } from '@ai-tutor/admin-client';
+import type { FlagRow, Me } from '@ai-tutor/admin-client';
 import { useState } from 'react';
-import { blastPause } from '@/lib/blast';
+import { blastPause, blastSchoolSwitch } from '@/lib/blast';
 import { admin } from '@/lib/client';
 import { useMe } from '@/lib/me';
-import { canOperate } from '@/lib/roles';
+import { canOperate, canSetFlag } from '@/lib/roles';
 import { useLoad } from '@/lib/use-load';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -77,7 +77,7 @@ export function SwitchesTab({ code, onChanged }: { code: string; onChanged(): vo
                         </TableCell>
                         <TableCell className='text-end align-top'>
                           {canOperate(me.role) ? (
-                            <Editor row={r} onPropose={(value) => setPending({ row: r, value })} />
+                            <Editor row={r} role={me.role} onPropose={(value) => setPending({ row: r, value })} />
                           ) : (
                             <span className='text-sm text-muted-foreground'>Owner and ops only</span>
                           )}
@@ -99,7 +99,7 @@ export function SwitchesTab({ code, onChanged }: { code: string; onChanged(): vo
           pending
             ? pending.row.def.key === 'tutor.enabled'
               ? blastPause(code, pending.value === true)
-              : `Every app at ${code} follows the new value.`
+              : blastSchoolSwitch(code)
             : ''
         }
         guarded={pending?.row.def.guarded ?? false}
@@ -117,10 +117,14 @@ export function SwitchesTab({ code, onChanged }: { code: string; onChanged(): vo
   );
 }
 
-function Editor({ row, onPropose }: { row: Row; onPropose(value: unknown): void }) {
+function Editor({ row, role, onPropose }: { row: Row; role: Me['role']; onPropose(value: unknown): void }) {
   const current = row.mine === undefined ? row.global : row.mine;
   const [text, setText] = useState(typeof current === 'string' ? current : '');
   if (row.def.kind === 'bool') {
+    // An off switch that only the owner may turn on (tutor.enabled) stays put for everyone else.
+    if (current !== true && !canSetFlag(role, row.def.key, true)) {
+      return <span className='text-sm text-muted-foreground'>Off. The owner turns it on.</span>;
+    }
     return <Switch checked={current === true} onCheckedChange={(on) => onPropose(on)} aria-label={`${row.def.key} at this school`} />;
   }
   return (
