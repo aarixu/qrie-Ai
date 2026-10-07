@@ -1638,7 +1638,10 @@ export function Scene({ lesson, visible, focus, wide = false, assets, frame }: S
             key={el.id}
             el={el}
             isNew={prev === null || !prev.has(el.id)}
-            dimmed={dimming && !focusSet.has(el.id)}
+            // What this line has just written stays at full strength under a
+            // light on a part: a key point written beside the lit loop of a
+            // diagram came out at 40% (human heart, 2026-10-07).
+            dimmed={dimming && !focusSet.has(el.id) && !(prev !== null && !prev.has(el.id))}
             focused={dimming && focusSet.has(el.id)}
             svg={assets?.[el.id]}
             litParts={partsByElement.get(el.id)}
