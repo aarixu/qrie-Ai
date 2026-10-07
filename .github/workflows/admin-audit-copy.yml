@@ -1,0 +1,61 @@
+# THE AUDIT LOG'S COPY KEPT OUTSIDE.
+#
+# Once an hour, from outside the Supabase project, it asks public.audit_head
+# (migration 0055) for the audit chain's head and the hashes of entries it saw
+# before, and tells both Telegram chats if any changed. Once a day it posts
+# the head to the ops chat. The heads it keeps are a small JSON file carried
+# from run to run in the Actions cache (tools/admin-alert/src/audit-copy.ts).
+# Only sequence numbers, hashes and counts: no row of the log leaves.
+#
+# The same secrets as admin-alert.yml, and switched off the same way until the
+# repository variable ADMIN_ALERT_ENABLED is 'true'. COST: 24 runs a day, about
+# 720 job-minutes a month on a private repository. GitHub evicts a cache entry
+# not used for 7 days (UNVERIFIED here, from GitHub's documentation); a lost
+# cache starts the kept heads afresh, and the daily lines stay in the chat.
+name: Admin audit copy
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: admin-audit-copy
+  cancel-in-progress: false
+
+jobs:
+  copy:
+    if: ${{ vars.ADMIN_ALERT_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: tools/admin-alert
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/cache/restore@v4
+        with:
+          path: audit-heads.json
+          key: audit-heads-${{ github.run_id }}
+          restore-keys: audit-heads-
+      - name: Compare and keep
+        run: node --experimental-strip-types tools/admin-alert/src/audit-copy.ts
+        env:
+          AUDIT_HEADS_FILE: audit-heads.json
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          ALERT_TOKEN: ${{ secrets.ALERT_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_OPS: ${{ secrets.TELEGRAM_CHAT_OPS }}
+          TELEGRAM_CHAT_SAFETY: ${{ secrets.TELEGRAM_CHAT_SAFETY }}
+      - uses: actions/cache/save@v4
+        if: always() && hashFiles('audit-heads.json') != ''
+        with:
+          path: audit-heads.json
+          key: audit-heads-${{ github.run_id }}
