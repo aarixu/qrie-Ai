@@ -10,6 +10,18 @@ import { sendTelegram, type Env } from './run.ts';
  * head. A changed, missing or broken entry is told to both chats; once a day
  * the head is told to the ops chat, so the chat history is a second copy.
  *
+ * A run that cannot read the head (no answer, or the token refused) keeps the
+ * heads as they were and counts itself in the file; the second blind run in a
+ * row tells the ops chat, and so does every 24th after it while it lasts
+ * (about once a day at one run an hour), and the first run that reads again
+ * says so. Run from the command line, a blind run also exits non-zero, so the
+ * scheduled job turns red. Nothing else watches this checker: the five-minute
+ * alarm does not read the audit head.
+ *
+ * What the hashes catch: a kept entry whose row, or whose hash, changed since
+ * it was seen. They do not catch someone who can replace public.audit_head
+ * itself (a database superuser) and makes it answer with the kept hashes.
+ *
  * Only sequence numbers, hashes and counts are kept or sent. It holds the
  * public anon key and the alarm's token, no service-role key.
  */
@@ -30,6 +42,23 @@ export interface KnownHead {
   hash: string;
   /** The India date it was first seen, YYYY-MM-DD. */
   seenOn: string;
+}
+
+/** What the file carries from run to run. An older file that is only the list of heads is read as such. */
+export interface Kept {
+  heads: KnownHead[];
+  /** Blind runs in a row, up to this one; 0 after a run that read the head. */
+  blindRuns: number;
+}
+
+/** The ops chat is told on this many blind runs in a row, */
+export const BLIND_TELL_AFTER = 2;
+/** and again every this many runs while it lasts (about a day at one run an hour). */
+export const BLIND_TELL_EVERY = 24;
+
+export function blindLine(runs: number): string | null {
+  if (runs < BLIND_TELL_AFTER || (runs - BLIND_TELL_AFTER) % BLIND_TELL_EVERY !== 0) return null;
+  return `The audit log's outside copy could not read the database on its last ${runs} runs, so nothing has been compared since. Check the alarm's token and the audit head function.`;
 }
 
 export const istDate = (now: Date): string => new Date(now.getTime() + 330 * 60_000).toISOString().slice(0, 10);
@@ -87,16 +116,24 @@ export async function fetchAuditHead(env: Env, seqs: number[], fetchImpl: typeof
   }
 }
 
-const parse = (text: string | null): KnownHead[] => {
+const headsOf = (v: unknown): KnownHead[] =>
+  Array.isArray(v)
+    ? v.filter((k): k is KnownHead => typeof k?.seq === 'number' && typeof k?.hash === 'string' && typeof k?.seenOn === 'string')
+    : [];
+
+const parse = (text: string | null): Kept => {
   try {
     const v = JSON.parse(text ?? '[]') as unknown;
-    return Array.isArray(v)
-      ? v.filter((k): k is KnownHead => typeof k?.seq === 'number' && typeof k?.hash === 'string' && typeof k?.seenOn === 'string')
-      : [];
+    if (Array.isArray(v)) return { heads: headsOf(v), blindRuns: 0 };
+    const o = (v ?? {}) as { heads?: unknown; blindRuns?: unknown };
+    const runs = typeof o.blindRuns === 'number' && Number.isInteger(o.blindRuns) && o.blindRuns > 0 ? o.blindRuns : 0;
+    return { heads: headsOf(o.heads), blindRuns: runs };
   } catch {
-    return [];
+    return { heads: [], blindRuns: 0 };
   }
 };
+
+const keep = (k: Kept): string => JSON.stringify(k);
 
 export async function runAuditCopy(
   env: Env,
@@ -104,10 +141,23 @@ export async function runAuditCopy(
   store: { read(): Promise<string | null>; write(text: string): Promise<void> },
   fetchImpl: typeof fetch = fetch,
 ): Promise<{ sent: string[]; blind: boolean }> {
-  const known = parse(await store.read());
+  const kept = parse(await store.read());
+  const known = kept.heads;
   const answer = await fetchAuditHead(env, known.map((k) => k.seq), fetchImpl);
-  if (!answer) return { sent: [], blind: true };
+  if (!answer) {
+    const runs = kept.blindRuns + 1;
+    // The count is written before anything is sent, so a failed send cannot lose it.
+    await store.write(keep({ heads: known, blindRuns: runs }));
+    const line = blindLine(runs);
+    if (line) await sendTelegram(env.TELEGRAM_BOT_TOKEN, env.TELEGRAM_CHAT_OPS, line, fetchImpl);
+    return { sent: line ? [line] : [], blind: true };
+  }
   const sent: string[] = [];
+  if (kept.blindRuns >= BLIND_TELL_AFTER) {
+    const back = `The audit log's outside copy reads the database again, after ${kept.blindRuns} blind runs.`;
+    await sendTelegram(env.TELEGRAM_BOT_TOKEN, env.TELEGRAM_CHAT_OPS, back, fetchImpl);
+    sent.push(back);
+  }
   for (const p of problemsWith(known, answer)) {
     await sendTelegram(env.TELEGRAM_BOT_TOKEN, env.TELEGRAM_CHAT_OPS, p, fetchImpl);
     await sendTelegram(env.TELEGRAM_BOT_TOKEN, env.TELEGRAM_CHAT_SAFETY, p, fetchImpl);
@@ -118,7 +168,7 @@ export async function runAuditCopy(
     await sendTelegram(env.TELEGRAM_BOT_TOKEN, env.TELEGRAM_CHAT_OPS, line, fetchImpl);
     sent.push(line);
   }
-  await store.write(JSON.stringify(keepHeads(known, answer, now)));
+  await store.write(keep({ heads: keepHeads(known, answer, now), blindRuns: 0 }));
   return { sent, blind: false };
 }
 
@@ -138,5 +188,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     write: (text: string) => fs.writeFile(file, text, 'utf8'),
   };
   const r = await runAuditCopy(env, new Date(), store);
-  console.log(r.blind ? 'could not read the audit head; nothing kept' : r.sent.length ? `sent ${r.sent.length}` : 'nothing to send');
+  console.log(r.blind ? 'could not read the audit head; heads kept as they were' : r.sent.length ? `sent ${r.sent.length}` : 'nothing to send');
+  // A blind run fails the scheduled job, so it shows red as well as in the chat.
+  if (r.blind) process.exitCode = 1;
 }

@@ -4,11 +4,18 @@
 -- A database superuser can switch off the audit log's triggers (0047). So
 -- each audit row also gets an entry in admin.audit_chain whose hash covers the
 -- row and the entry before it, and admin.audit_verify recomputes the chain: a
--- row changed or deleted behind the triggers breaks it at that entry. A
--- superuser who rewrites the whole chain consistently is caught from outside:
--- the copy checker (tools/admin-alert/src/audit-copy.ts) keeps the hashes of
--- entries it has seen and asks public.audit_head for them again each hour.
--- Only sequence numbers, hashes and counts leave the database that way.
+-- row changed or deleted behind the triggers breaks it at that entry, unless
+-- the change only moves text across a '|' between two neighbouring fields
+-- (the fields are joined with '|' unescaped; a deferred review finding). The
+-- copy checker (tools/admin-alert/src/audit-copy.ts) keeps the hashes of
+-- entries it has seen and asks public.audit_head for them again each hour, so
+-- a chain rewritten consistently from some entry on is seen from outside at
+-- the first kept entry it covers. It is not seen if public.audit_head itself
+-- is replaced to answer with the kept hashes, which a superuser can also do.
+-- audit_verify re-hashes the whole chain on every call, one row lookup per
+-- entry; whether that stays inside the anon role's statement timeout as the
+-- log grows is UNVERIFIED. Only sequence numbers, hashes and counts leave the
+-- database this way.
 --
 -- admin.system_health is the System page: the relay, each scheduled job's
 -- last run (pg_cron's cron.job_run_details, where it exists), when the alarm

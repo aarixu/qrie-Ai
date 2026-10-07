@@ -1,14 +1,24 @@
+// @vitest-environment node
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { keepHeads, runAuditCopy, type HeadAnswer, type KnownHead } from '../src/audit-copy.ts';
 import type { Env } from '../src/run.ts';
+
+const SCRIPT = fileURLToPath(new URL('../src/audit-copy.ts', import.meta.url));
 
 /**
  * THE AUDIT LOG'S COPY KEPT OFF THE PLATFORM. Written first.
  *
  * A fake database answers public.audit_head from a chain held here; a fake
  * Telegram records each message. Pins: what is kept from run to run, what is
- * told to which chat, that a blind read changes nothing, and that no message
- * carries anything but counts, entry numbers and a short hash prefix.
+ * told to which chat, that a blind read keeps the heads and counts itself and
+ * is told after two in a row (and fails the job from the command line), and
+ * that no message carries anything but counts, entry numbers and a short hash
+ * prefix.
  */
 
 const env: Env = {
@@ -86,7 +96,8 @@ const run = (w: World, now: Date) =>
     },
     fetchFor(w),
   );
-const kept = (w: World) => JSON.parse(w.file ?? '[]') as KnownHead[];
+const kept = (w: World) => (JSON.parse(w.file ?? '{"heads":[]}') as { heads: KnownHead[] }).heads;
+const blindRuns = (w: World) => (JSON.parse(w.file ?? '{}') as { blindRuns?: number }).blindRuns;
 
 describe('each hour', () => {
   it("a first run keeps the head and posts the day's line to the ops chat", async () => {
@@ -138,17 +149,85 @@ describe('each hour', () => {
     ]);
   });
 
-  it('a blind or refused read sends nothing and leaves the file as it was', async () => {
-    const w = world(5);
-    w.file = JSON.stringify([{ seq: 2, hash: hx(2), seenOn: '2026-10-06' }]);
-    const before = w.file;
+  it('one blind or refused read sends nothing and keeps the heads as they were, counting the blind run', async () => {
     for (const next of ['reject', 'refuse'] as const) {
+      const w = world(5);
+      w.file = JSON.stringify([{ seq: 2, hash: hx(2), seenOn: '2026-10-06' }]);
       w.next = next;
       const r = await run(w, T0);
       expect(r).toEqual({ sent: [], blind: true });
       expect(w.sent).toEqual([]);
-      expect(w.file).toBe(before);
-      expect(w.writes).toBe(0);
+      expect(kept(w)).toEqual([{ seq: 2, hash: hx(2), seenOn: '2026-10-06' }]);
+      expect(blindRuns(w)).toBe(1);
+    }
+  });
+
+  it('two blind runs in a row tell the ops chat, again every 24 runs while it lasts, and the first run that reads again says so', async () => {
+    const w = world(5);
+    await run(w, T0);
+    w.sent.length = 0;
+    w.next = 'reject';
+    const told: number[] = [];
+    for (let n = 1; n <= 30; n++) {
+      const before = w.sent.length;
+      await run(w, hoursLater(n));
+      if (w.sent.length > before) told.push(n);
+    }
+    expect(told).toEqual([2, 26]);
+    expect(w.sent[0]).toEqual({
+      chat: 'ops-chat',
+      text: "The audit log's outside copy could not read the database on its last 2 runs, so nothing has been compared since. Check the alarm's token and the audit head function.",
+    });
+    expect(w.sent.every((s) => s.chat === 'ops-chat')).toBe(true);
+    expect(blindRuns(w)).toBe(30);
+    expect(kept(w).map((k) => k.seq)).toEqual([5]);
+
+    w.sent.length = 0;
+    w.next = 'answer';
+    w.chain.set(6, hx(6));
+    const back = await run(w, hoursLater(31));
+    expect(back.blind).toBe(false);
+    expect(w.sent).toContainEqual({ chat: 'ops-chat', text: "The audit log's outside copy reads the database again, after 30 blind runs." });
+    expect(blindRuns(w)).toBe(0);
+    expect(kept(w).map((k) => k.seq)).toEqual([5, 6]);
+  });
+
+  it('one blind run between good ones says nothing, then or after', async () => {
+    const w = world(5);
+    await run(w, T0);
+    w.sent.length = 0;
+    w.next = 'refuse';
+    await run(w, hoursLater(1));
+    w.next = 'answer';
+    await run(w, hoursLater(2));
+    expect(w.sent).toEqual([]);
+    expect(blindRuns(w)).toBe(0);
+  });
+
+  it('run from the command line, a blind run exits non-zero so the scheduled job turns red, and keeps its count in the file', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'audit-copy-'));
+    try {
+      const file = join(dir, 'heads.json');
+      writeFileSync(file, JSON.stringify([{ seq: 2, hash: hx(2), seenOn: '2026-10-06' }]));
+      const r = spawnSync(process.execPath, ['--experimental-strip-types', '--no-warnings', SCRIPT], {
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          AUDIT_HEADS_FILE: file,
+          // Nothing listens on port 9 here, so the read fails at once.
+          SUPABASE_URL: 'http://127.0.0.1:9',
+          SUPABASE_ANON_KEY: 'anon-key',
+          ALERT_TOKEN: 'token',
+          TELEGRAM_BOT_TOKEN: '123:bot',
+          TELEGRAM_CHAT_OPS: 'ops',
+          TELEGRAM_CHAT_SAFETY: 'safety',
+        },
+      });
+      expect(r.status).toBe(1);
+      expect(r.stdout).toMatch(/could not read the audit head/);
+      expect(JSON.parse(readFileSync(file, 'utf8'))).toEqual({ heads: [{ seq: 2, hash: hx(2), seenOn: '2026-10-06' }], blindRuns: 1 });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
     }
   });
 });

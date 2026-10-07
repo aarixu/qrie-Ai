@@ -7,6 +7,11 @@
 # from run to run in the Actions cache (tools/admin-alert/src/audit-copy.ts).
 # Only sequence numbers, hashes and counts: no row of the log leaves.
 #
+# A run that cannot read the head fails this job (red in Actions) and counts
+# itself in the same file, which the save step below keeps even after a
+# failure; the second blind run in a row, and every 24th after it, tells the
+# ops chat. The five-minute alarm does not watch this job.
+#
 # The same secrets as admin-alert.yml, and switched off the same way until the
 # repository variable ADMIN_ALERT_ENABLED is 'true'. COST: 24 runs a day, about
 # 720 job-minutes a month on a private repository. GitHub evicts a cache entry
