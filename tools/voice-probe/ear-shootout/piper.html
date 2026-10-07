@@ -37,6 +37,7 @@
   .att .t { font-size: 15px; word-break: break-word; margin: 0 0 4px; }
   .att .t.hid { color: var(--soft); font-style: italic; }
   .att .m { font-size: 12px; color: var(--soft); margin-bottom: 8px; }
+  button.replay { width: 100%; margin-bottom: 8px; }
   .rate { display: flex; gap: 8px; }
   .rate button { flex: 1; min-height: 44px; }
   .rate button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -50,7 +51,7 @@
 <body>
 <main>
   <h1>Voice compare</h1>
-  <p class="lede"><b>Piper</b> (phone ke andar bani, free) aur teen <b>Gemini</b> awaazein (3.1 jo abhi app mein hai, 3.8 Flash, 3.8 Flash-Lite) ek hi line par. Gemini ki awaazein pehle se bani hain (list wali lines), Piper abhi phone par banta hai. <b>Blind</b> mode mein naam chhupe rahte hain, rating ke baad dikhte hain.</p>
+  <p class="lede"><b>Piper</b> (phone ke andar bani, free) aur teen <b>Gemini</b> awaazein (3.1 jo pehle app mein thi, 3.8 Flash, aur 3.8 Flash-Lite jo ab app ki default hai) ek hi line par. Gemini ki awaazein pehle se bani hain (list wali lines), Piper abhi phone par banta hai. <b>Blind</b> mode mein naam chhupe rahte hain, rating ke baad dikhte hain.</p>
   <div id="env">checking...</div>
 
   <h2>1. Line chuno</h2>
@@ -64,9 +65,9 @@
 
   <h2>2. Gemini (pehle se bani)</h2>
   <div class="row">
-    <button class="go g31" data-g="g31">🔊 Gemini 3.1 Flash (abhi app mein)</button>
+    <button class="go g31" data-g="g31">🔊 Gemini 3.1 Flash (pehle wali, ab fallback)</button>
     <button class="go g38" data-g="g38">🔊 Gemini 3.8 Flash</button>
-    <button class="go g38l" data-g="g38l">🔊 Gemini 3.8 Flash-Lite</button>
+    <button class="go g38l" data-g="g38l">🔊 Gemini 3.8 Flash-Lite (ab app mein)</button>
   </div>
 
   <h2>3. Piper (phone par banta hai)</h2>
@@ -136,7 +137,7 @@ const LINES = [
   ['G2', "Let's do this step by step. First, what do we already know about the triangle?"],
   ['G3', 'Your answer is almost right. Think again about where the oxygen comes from.'],
 ];
-const GEM = { g31: 'Gemini 3.1 Flash (abhi app mein)', g38: 'Gemini 3.8 Flash', g38l: 'Gemini 3.8 Flash-Lite' };
+const GEM = { g31: 'Gemini 3.1 Flash (pehle wali, ab fallback)', g38: 'Gemini 3.8 Flash', g38l: 'Gemini 3.8 Flash-Lite (ab app mein)' };
 for (const [g, label] of GROUPS) {
   const og = document.createElement('optgroup'); og.label = label;
   for (const [id, text] of LINES.filter(([i]) => i[0] === g)) { const o = document.createElement('option'); o.value = id; o.textContent = id + ': ' + text; og.append(o); }
@@ -205,9 +206,10 @@ async function playGemini(key, opts = {}) {
   const id = $('line').value;
   await ctx().resume().catch(() => {});
   if (!opts.silent) setStatus(GEM[key] + ' load ho rahi hai...');
-  const rec = { engine: GEM[key], lineId: id, text: lineText(id), blind: !!opts.blind, blindNo: opts.blindNo, rating: '', error: '', info: '' };
+  const rec = { engine: GEM[key], lineId: id, text: lineText(id), blind: !!opts.blind, blindNo: opts.blindNo, run: opts.run, rating: '', error: '', info: '' };
   try {
     const c = await geminiClip(key, id);
+    rec.buf = c.buf;
     rec.info = (c.meta ? 'audio ' + c.meta.seconds.toFixed(1) + ' s · banane mein ' + (c.meta.ms / 1000).toFixed(1) + ' s · ₹' + c.meta.rupees.toFixed(2) : '') + ' · clip load ' + c.loadMs + ' ms';
     rec.audioSecs = c.meta?.seconds; rec.rupees = c.meta?.rupees;
     addResult(rec);
@@ -220,10 +222,11 @@ async function playPiper(opts = {}) {
   const custom = customText();
   const id = custom ? 'custom' : $('line').value, text = custom || lineText($('line').value);
   await ctx().resume().catch(() => {});
-  const rec = { engine: 'Piper ' + loadedVoice, lineId: id, text, blind: !!opts.blind, blindNo: opts.blindNo, rating: '', error: '', info: '' };
+  const rec = { engine: 'Piper ' + loadedVoice, lineId: id, text, blind: !!opts.blind, blindNo: opts.blindNo, run: opts.run, rating: '', error: '', info: '' };
   try {
     if (!opts.silent) setStatus('Piper awaaz bana raha hai...');
     const r = await piperClip(text);
+    rec.buf = r.buf;
     rec.info = 'audio ' + r.audioSecs.toFixed(1) + ' s · bani ' + (r.synthMs / 1000).toFixed(2) + ' s mein (RTF ' + r.rtf.toFixed(2) + ') · ₹0';
     rec.audioSecs = r.audioSecs; rec.rupees = 0;
     addResult(rec);
@@ -246,18 +249,20 @@ async function blind() {
   for (let i = sources.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [sources[i], sources[j]] = [sources[j], sources[i]]; }
   $('bBlind').disabled = true;
   const me = {}; blindRun = me;
+  const run = ++blindCounter;
   for (let i = 0; i < sources.length; i++) {
     if (blindRun !== me) break;
-    setStatus('Clip ' + (i + 1) + ' / ' + sources.length + ' (naam chhupa hai). Sunne ke baad neeche rate karo.');
-    if (sources[i] === 'piper') await playPiper({ blind: true, silent: true, blindNo: i + 1 });
-    else await playGemini(sources[i], { blind: true, silent: true, blindNo: i + 1 });
+    setStatus('Clip ' + (i + 1) + ' / ' + sources.length + ' bajh rahi hai (naam chhupa hai). Sab sunne ke baad neeche rate karo.');
+    if (sources[i] === 'piper') await playPiper({ blind: true, silent: true, blindNo: i + 1, run });
+    else await playGemini(sources[i], { blind: true, silent: true, blindNo: i + 1, run });
     await new Promise((r) => setTimeout(r, 500));
   }
-  setStatus('sab clips ho gaye. neeche ✓ / ~ / ✗ do, naam rating ke baad dikhega.');
+  setStatus('sab ' + sources.length + ' clips ho gayin. neeche Clip 1, 2, 3... usi order mein hain jis order mein suni. Har card par ▶ se dobara suno, phir ✓ / ~ / ✗ do. Naam rating ke baad dikhega.');
   if (!session) setStatus($('status').textContent + '\n(Piper load nahi tha, isliye usme shamil nahi.)');
   $('bBlind').disabled = false;
 }
 let blindRun = null;
+let blindCounter = 0;
 $('bBlind').addEventListener('click', blind);
 
 // ---------------------------------------------------------------- Piper: load a voice, speed test
@@ -317,7 +322,17 @@ $('bSpeed').addEventListener('click', speedTest);
 // ---------------------------------------------------------------- the list, the score, the copy text
 function render() {
   const log = $('log'); log.replaceChildren();
-  [...results].reverse().forEach((r) => {
+  // Newest first, EXCEPT a blind run, whose clips stay together in the order they were heard
+  // (Clip 1, 2, 3...): showing them newest-first put the last clip heard on top, so "the first
+  // one I heard" was the bottom card and a rating could land on the wrong clip.
+  const seenRuns = new Set(), ordered = [];
+  for (const r of [...results].reverse()) {
+    if (!r.run) { ordered.push(r); continue; }
+    if (seenRuns.has(r.run)) continue;
+    seenRuns.add(r.run);
+    ordered.push(...results.filter((x) => x.run === r.run).sort((a, b) => (a.blindNo ?? 0) - (b.blindNo ?? 0)));
+  }
+  ordered.forEach((r) => {
     const box = document.createElement('div'); box.className = 'att';
     const hidden = r.blind && !r.rating && !r.error;
     const t = document.createElement('div'); t.className = 't' + (hidden ? ' hid' : '');
@@ -325,6 +340,11 @@ function render() {
     const txt = document.createElement('div'); txt.className = 'm'; txt.textContent = r.text;
     const m = document.createElement('div'); m.className = 'm'; m.textContent = r.error ? 'error: ' + r.error : (hidden ? '' : r.info);
     box.append(t, txt, m);
+    if (r.buf) {
+      const rp = document.createElement('button'); rp.className = 'replay'; rp.textContent = '▶ dobara suno';
+      rp.addEventListener('click', async () => { await ctx().resume().catch(() => {}); play(r.buf); });
+      box.append(rp);
+    }
     if (!r.error) {
       const rate = document.createElement('div'); rate.className = 'rate';
       for (const [val, label, cls] of [['good', '✓ achha', ''], ['half', '~ chalega', 'half'], ['bad', '✗ kharab', 'bad']]) {
