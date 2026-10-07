@@ -24,14 +24,36 @@ import { HOST, LOCATION, type VertexOptions } from './vertex.ts';
  *   reach `canplay` until ~240 KB had arrived — so this shape is only for
  *   clients that predate the PCM player.
  *
- * COST: $1/M input tokens, $20/M audio output tokens; the three runs billed
- * 169-187 audio tokens for 5.5-5.8 s, ~32 tokens a second, about Rs 0.06 per
- * second of speech (roughly 1.4x aura-2). Aarav has set the Rs 5 ceiling aside
- * until the tutor is built (2026-09-28).
+ * WHICH MODEL, AND WHAT IT COSTS (Aarav, 2026-10-07: "3.8 Flash-Lite ko default
+ * kar do"). Since 2026-09-28 the voice was gemini-3.1-flash-tts-preview. Measured
+ * on 2026-10-07 by tools/voice-probe/tts-compare-samples.mjs, 21 tutor lines on
+ * each of three models, rupees at list prices (USD 1 = Rs 88) per minute of speech:
+ *
+ *   gemini-3.1-flash-tts-preview  $1 in / $20 out per 1M tokens   Rs 2.83
+ *   gemini-3.8-flash-tts          $0.50 in / $9 out               Rs 1.20
+ *   gemini-3.8-flash-lite-tts     $0.50 in / $6 out               Rs 0.81
+ *
+ * All three bill 25 audio tokens a second (24.2-25.0 measured; the 32 this file
+ * used to carry was wrong). The 3.8 prices run until 31 Dec 2026 and are double
+ * from 1 Jan 2027 (Google's pricing pages, read 2026-10-06). Flash-Lite streams
+ * the same bare 24 kHz PCM as 3.1 (`audio/l16; rate=24000`, no WAV header per
+ * chunk), the first chunk about 1.1 s after the request and a 6 s line finished
+ * in about 2.2 s (tools/voice-probe/tts-38-stream-probe.mjs). It is a PREVIEW
+ * model, so every line it cannot speak is spoken by 3.1 instead, below.
  */
 
-/** The model record-class and `@ai-tutor/voice` already use. */
-export const VERTEX_SPEECH_MODEL = 'gemini-3.1-flash-tts-preview';
+/** The voice model, since 2026-10-07. */
+export const VERTEX_SPEECH_MODEL = 'gemini-3.8-flash-lite-tts';
+
+/**
+ * What speaks a line the default model could not (a preview model can be
+ * withdrawn, rate-limited or down). The model record-class and
+ * `@ai-tutor/voice` use, with the request shape `speechPrompt` builds.
+ */
+export const VERTEX_SPEECH_FALLBACK_MODEL = 'gemini-3.1-flash-tts-preview';
+
+/** 3.8 takes its delivery as `speech_metadata` and its voice as `voiceConfig.voice`; 3.1 takes both in the text and `prebuiltVoiceConfig`. */
+const takesSpeechMetadata = (model: string): boolean => /^gemini-3\.8-/.test(model);
 
 /**
  * The persona's own voice (`TUTOR.speechVoiceName` in packages/persona) —
@@ -127,13 +149,34 @@ export function maxSpeechBytes(text: string): number {
 /**
  * Audio tokens for audio Vertex sent, when its own count never arrived: a
  * line the cap or the student ended stops before the final event that
- * carries `usageMetadata`. ~32 audio tokens a second (measured, and the
- * price row's note in tools/sql/model_price.sql). An ESTIMATE, so a report
+ * carries `usageMetadata`. 25 audio tokens a second: Google's own figure and
+ * what Vertex billed on 63 clips on 2026-10-07 (3.1 Flash 25.0, 3.8 Flash 24.2,
+ * 3.8 Flash-Lite 24.3; this said 32 until then). An ESTIMATE, so a report
  * can tell it apart only by the missing prompt count.
  */
-export const estimatedSpeechTokens = (audioBytes: number): number => Math.round((audioBytes / 48_000) * 32);
+export const estimatedSpeechTokens = (audioBytes: number): number => Math.round((audioBytes / 48_000) * 25);
 
-export function speechRequestBody(text: string, lang: SpeechLanguage): string {
+/**
+ * HOW 3.8 IS TOLD HOW TO SOUND. It treats the text as the transcript and nothing
+ * else (a director's note in it would be read aloud), so the delivery rides in
+ * `speech_metadata.style` on the text part. These are the notes the 21 clips
+ * Aarav listened to were rendered with (tts-compare-samples.mjs), one wording
+ * for both languages: no other wording has been heard, so none ships.
+ */
+export const SPEECH_STYLE =
+  'Meera, a school teacher taking a live class and talking to one student. Clear, confident and natural, friendly but matter-of-fact, no sing-song, no breathiness. A normal conversational pace, with no long pauses. Indian accent: Delhi schoolteacher English, and Hinglish with Hindi words said as a native Hindi speaker says them.';
+
+export function speechRequestBody(text: string, lang: SpeechLanguage, model: string = VERTEX_SPEECH_MODEL): string {
+  if (takesSpeechMetadata(model)) {
+    return JSON.stringify({
+      contents: [{ role: 'user', parts: [{ text: text.trim(), speech_metadata: { style: SPEECH_STYLE } }] }],
+      generationConfig: {
+        responseModalities: ['AUDIO'],
+        // The language is detected from the text; there is no hint to give.
+        speechConfig: { voiceConfig: { voice: VERTEX_SPEECH_VOICE } },
+      },
+    });
+  }
   return JSON.stringify({
     contents: [{ role: 'user', parts: [{ text: speechPrompt(text, lang) }] }],
     generationConfig: {
@@ -147,10 +190,14 @@ export function speechRequestBody(text: string, lang: SpeechLanguage): string {
   });
 }
 
-export function vertexSpeechStreamUrl(projectId: string, location: string = LOCATION): string {
+export function vertexSpeechStreamUrl(
+  projectId: string,
+  location: string = LOCATION,
+  model: string = VERTEX_SPEECH_MODEL,
+): string {
   return (
     `${HOST}/v1/projects/${projectId}/locations/${location}` +
-    `/publishers/google/models/${VERTEX_SPEECH_MODEL}:streamGenerateContent?alt=sse`
+    `/publishers/google/models/${model}:streamGenerateContent?alt=sse`
   );
 }
 
@@ -162,12 +209,17 @@ export interface SpeechCall {
 }
 
 /** Mints the Google token and builds the streamed request. Throws only on auth. */
-export async function vertexSpeechCall(text: string, lang: SpeechLanguage, options: VertexOptions): Promise<SpeechCall> {
+export async function vertexSpeechCall(
+  text: string,
+  lang: SpeechLanguage,
+  options: VertexOptions,
+  model: string = VERTEX_SPEECH_MODEL,
+): Promise<SpeechCall> {
   const token = await options.tokens.token();
   return {
-    url: vertexSpeechStreamUrl(options.tokens.projectId, options.location ?? LOCATION),
+    url: vertexSpeechStreamUrl(options.tokens.projectId, options.location ?? LOCATION, model),
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-    body: speechRequestBody(text, lang),
+    body: speechRequestBody(text, lang, model),
   };
 }
 
@@ -375,6 +427,10 @@ export function sseToPcm(
 export interface VertexSpeech {
   response: RelayResponse;
   status: number;
+  /** The model that answered, which is the one whose price the usage row must carry. */
+  model: string;
+  /** On a failure: nothing was spoken, so another model may be asked without paying twice. */
+  retryable?: boolean;
   promptTokens?: number;
   outputTokens?: number;
 }
@@ -383,11 +439,21 @@ export interface SpeakOptions {
   /** `pcm` answers raw PCM for the Web Audio player; `wav` (default) a playable file. */
   format?: 'pcm' | 'wav';
   lang?: SpeechLanguage;
+  /** Force one model and no fallback. Left out, the default model is tried and 3.1 stands behind it. */
+  model?: string;
 }
 
 /**
  * One line, spoken on Vertex and COLLECTED before answering — the old-client
  * path, and the one retry when a stream refuses to start.
+ *
+ * THE DEFAULT MODEL FIRST, THEN 3.1. A line the default (a preview model) could
+ * not speak is spoken by VERTEX_SPEECH_FALLBACK_MODEL, so a withdrawn or
+ * rate-limited preview never leaves the room on the browser's robot voice. Only
+ * when the first attempt produced NO audio: one that already sent audio is billed
+ * for it, and speaking the line again would book it twice. `model` forces one
+ * model and no fallback (the listening tools). The answer names the model that
+ * really spoke the line, which is what the usage row must carry.
  *
  * Never throws: every failure is an OpenAI-shaped error body with a status,
  * which is what the other relays answer and what the browser already reads.
@@ -400,14 +466,34 @@ export async function speakOnVertex(
   options: VertexOptions,
   speak: SpeakOptions = {},
 ): Promise<VertexSpeech> {
+  const first = await speakWith(speak.model ?? VERTEX_SPEECH_MODEL, text, options, speak);
+  if (first.status === 200 || speak.model !== undefined || !first.retryable) return first;
+  // What the first attempt cost (input tokens at most: it made no audio) is not booked
+  // when the second succeeds; at about 50 tokens that is under a hundredth of a paisa.
+  return speakWith(VERTEX_SPEECH_FALLBACK_MODEL, text, options, speak);
+}
+
+async function speakWith(
+  model: string,
+  text: string,
+  options: VertexOptions,
+  speak: SpeakOptions,
+): Promise<VertexSpeech> {
   const doFetch = options.fetch ?? globalThis.fetch;
-  const failed = (status: number, message: string): VertexSpeech => ({ status, response: fail(status, message) });
+  /** `retryable`: nothing was spoken, so asking another model costs nothing twice. */
+  const failed = (status: number, message: string, retryable = true): VertexSpeech => ({
+    status,
+    response: fail(status, message),
+    model,
+    retryable,
+  });
 
   let call: SpeechCall;
   try {
-    call = await vertexSpeechCall(text, speak.lang ?? 'en', options);
+    call = await vertexSpeechCall(text, speak.lang ?? 'en', options, model);
   } catch (e) {
-    return failed(502, `Google auth failed: ${(e as Error).message}`);
+    // The same credential serves the other model: asking it would fail the same way.
+    return failed(502, `Google auth failed: ${(e as Error).message}`, false);
   }
 
   const chunks: Uint8Array[] = [];
@@ -480,7 +566,8 @@ export async function speakOnVertex(
     // voice says the WHOLE line rather than the child hearing half a
     // sentence (sixth review, 2026-09-29).
     return {
-      ...failed(502, `Vertex speech could not be reached: ${(e as Error).message}`),
+      // Retryable only if no audio came first: the audio that did is billed to this attempt.
+      ...failed(502, `Vertex speech could not be reached: ${(e as Error).message}`, size === 0),
       ...(promptTokens !== undefined ? { promptTokens } : {}),
       ...(size > 0 ? { outputTokens: outputTokens ?? estimatedSpeechTokens(size) } : {}),
     };
@@ -511,6 +598,7 @@ export async function speakOnVertex(
       headers: { 'content-type': pcmOnly ? PCM_CONTENT_TYPE : 'audio/wav' },
       body: { kind: 'bytes', value: pcmOnly ? pcm.slice(0, pcm.byteLength - (pcm.byteLength % 2)) : pcmToWav(pcm, pcmFormatOf(mimeType)) },
     },
+    model,
     ...tokens,
   };
 }

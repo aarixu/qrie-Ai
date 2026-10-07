@@ -22,10 +22,10 @@ describe('parsing tools/sql/model_price.sql', () => {
     expect(parsed.rate).toBe(95.6);
     expect(parsed.checked).toBe('2026-09-13');
     // 4 Gemini models x 3 units, plus the deliberate zero image row, plus the
-    // two Vertex TTS rows (the speech fallback), plus the two OpenRouter
-    // speech rows. Counting exactly is the point: a row the parser drops is a
-    // price apply-prices would silently never apply.
-    expect(parsed.rows).toHaveLength(16);
+    // four Vertex TTS rows (3.8 Flash-Lite, her voice, and 3.1 underneath it),
+    // plus the two OpenRouter speech rows. Counting exactly is the point: a row
+    // the parser drops is a price apply-prices would silently never apply.
+    expect(parsed.rows).toHaveLength(18);
   });
 
   it('prices the Vertex speech fallback per audio token', () => {
@@ -33,6 +33,15 @@ describe('parsing tools/sql/model_price.sql', () => {
       (r) => r.provider === 'vertex' && r.model === 'gemini-3.1-flash-tts-preview' && r.unit === 'output_token',
     );
     expect(tts?.inrPerUnit).toBeCloseTo((20 / 1e6) * 95.6, 12);
+  });
+
+  it('prices her voice, Gemini 3.8 Flash-Lite, per text token and per audio token', () => {
+    const rows = parseModelPriceSql(REAL).rows.filter((r) => r.provider === 'vertex' && r.model === 'gemini-3.8-flash-lite-tts');
+    const unit = (u: string) => rows.find((r) => r.unit === u);
+    expect(unit('prompt_token')?.inrPerUnit).toBeCloseTo((0.5 / 1e6) * 95.6, 12);
+    expect(unit('output_token')?.inrPerUnit).toBeCloseTo((6 / 1e6) * 95.6, 12);
+    // The price doubles on 1 Jan 2027; the row says so, so nobody trusts it past then.
+    expect(unit('output_token')?.note).toMatch(/2027-01-01/);
   });
 
   it('evaluates the psql arithmetic to rupees per unit', () => {

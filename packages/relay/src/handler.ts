@@ -541,7 +541,8 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
       const lang = asked.lang === 'hi-en' ? 'hi-en' : 'en';
       const collected = async (format: 'pcm' | 'wav'): Promise<RelayResponse> => {
         const spoken = await speakOnVertex(text, vertex, { format, lang });
-        note(usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, spoken));
+        // The model that really spoke it: 3.1 when the default could not.
+        note(usageFromVertexSpeech(base, spoken.model, spoken));
         return spoken.response;
       };
       if (asked.format !== 'pcm') return collected('wav');

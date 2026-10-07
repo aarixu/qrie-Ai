@@ -7,6 +7,7 @@ import { createMemoryUsage } from '../src/usage';
 import type { RelayRequest, RelayResponse } from '../src/relays';
 import {
   PCM_CONTENT_TYPE,
+  VERTEX_SPEECH_FALLBACK_MODEL,
   VERTEX_SPEECH_MODEL,
   VERTEX_SPEECH_VOICE,
   pcmToWav,
@@ -100,11 +101,16 @@ describe('speakOnVertex', () => {
     );
     expect((seen[0].init.headers as Record<string, string>).authorization).toBe('Bearer tok');
     const sent = JSON.parse(String(seen[0].init.body));
-    expect(sent.contents[0].parts[0].text.trimEnd().endsWith('Now substitute y.')).toBe(true);
+    // 3.8 takes the transcript as the text and nothing else: a director's note in
+    // the text would be read aloud. The delivery rides in `speech_metadata`.
+    expect(sent.contents[0].parts[0].text).toBe('Now substitute y.');
+    expect(sent.contents[0].parts[0].speech_metadata.style).toContain('Meera');
     expect(sent.generationConfig.responseModalities).toEqual(['AUDIO']);
-    expect(sent.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName).toBe(VERTEX_SPEECH_VOICE);
+    expect(sent.generationConfig.speechConfig.voiceConfig.voice).toBe(VERTEX_SPEECH_VOICE);
+    expect(sent.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig).toBeUndefined();
 
     expect(out.status).toBe(200);
+    expect(out.model).toBe(VERTEX_SPEECH_MODEL);
     expect(out.response.headers['content-type']).toBe('audio/wav');
     const wav = bytesOf(out.response);
     expect([...wav.slice(44)]).toEqual([1, 2, 3, 4]);
@@ -159,6 +165,162 @@ describe('speakOnVertex', () => {
 
   it('speaks in the persona voice, so a fallback line is still Meera', () => {
     expect(VERTEX_SPEECH_VOICE).toBe(TUTOR.speechVoiceName);
+  });
+});
+
+/**
+ * THE VOICE MOVED TO GEMINI 3.8 FLASH-LITE (Aarav, 2026-10-07), WITH 3.1 UNDERNEATH.
+ *
+ * Measured the same day on 21 tutor lines per model: 3.1 Flash TTS Rs 2.83 a
+ * minute of speech, 3.8 Flash Rs 1.20, 3.8 Flash-Lite Rs 0.81 (25 audio tokens a
+ * second on all three), and 3.8 Flash-Lite streams the same bare 24 kHz PCM, the
+ * first chunk landing about 1.1 s after the request. 3.8 is a PREVIEW model, so a
+ * line it cannot speak is spoken by 3.1 rather than falling to the browser's
+ * robot voice, and the booking names the model that really spoke it.
+ */
+describe('the voice model: 3.8 Flash-Lite, with 3.1 underneath', () => {
+  const stream3 = (pcm = new Uint8Array([5, 5])) => vertexStream(sse([audioEvent(pcm), usageEvent]));
+  const refuses = (status: number) => new Response(JSON.stringify({ error: { message: 'model unavailable' } }), { status });
+  const modelOf = (url: string) => (url.includes(VERTEX_SPEECH_FALLBACK_MODEL) ? 'fallback' : url.includes(VERTEX_SPEECH_MODEL) ? 'primary' : '?');
+
+  it('names the models', () => {
+    expect(VERTEX_SPEECH_MODEL).toBe('gemini-3.8-flash-lite-tts');
+    expect(VERTEX_SPEECH_FALLBACK_MODEL).toBe('gemini-3.1-flash-tts-preview');
+  });
+
+  it('puts the delivery in speech_metadata, the same words Aarav heard when he chose this model', () => {
+    const hi = JSON.parse(speechRequestBody('Chalo, heart ko dekhte hain.', 'hi-en')).contents[0].parts[0];
+    expect(hi.text).toBe('Chalo, heart ko dekhte hain.');
+    expect(hi.speech_metadata.style).toMatch(/normal conversational pace/i);
+    expect(hi.speech_metadata.style).toContain('Hinglish');
+    expect(hi.speech_metadata.style).toContain('Delhi schoolteacher English');
+    // One style for both languages: it is exactly what tools/voice-probe/tts-compare-samples.mjs
+    // rendered for the clips he listened to, and no other wording has been heard.
+    const en = JSON.parse(speechRequestBody('Let us look at the heart.', 'en')).contents[0].parts[0];
+    expect(en.speech_metadata.style).toBe(hi.speech_metadata.style);
+    // Never a director's note inside the transcript, which 3.8 would read aloud.
+    expect(en.text).toBe('Let us look at the heart.');
+    expect(en.text).not.toContain(SPEECH_PREAMBLE);
+  });
+
+  it('still builds the 3.1 request for the fallback: its prompt in the text, its voice field', () => {
+    const sent = JSON.parse(speechRequestBody('Hi.', 'en', VERTEX_SPEECH_FALLBACK_MODEL));
+    expect(sent.contents[0].parts[0].text.startsWith(SPEECH_PREAMBLE)).toBe(true);
+    expect(sent.contents[0].parts[0].speech_metadata).toBeUndefined();
+    expect(sent.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName).toBe(VERTEX_SPEECH_VOICE);
+    expect(sent.generationConfig.maxOutputTokens).toBeUndefined();
+  });
+
+  it('speaks on 3.8 and calls nothing else when 3.8 answers', async () => {
+    const urls: string[] = [];
+    const out = await speakOnVertex('hi', {
+      tokens,
+      fetch: (async (url: string) => (urls.push(url), stream3())) as unknown as typeof fetch,
+    });
+    expect(urls.map(modelOf)).toEqual(['primary']);
+    expect(out.status).toBe(200);
+    expect(out.model).toBe(VERTEX_SPEECH_MODEL);
+  });
+
+  it.each([404, 429, 500, 503])('speaks the line on 3.1 when 3.8 answers %i, so the room never falls silent', async (status) => {
+    const calls: { which: string; body: string }[] = [];
+    const out = await speakOnVertex('Now substitute y.', {
+      tokens,
+      fetch: (async (url: string, init: RequestInit) => {
+        calls.push({ which: modelOf(url), body: String(init.body) });
+        return modelOf(url) === 'primary' ? refuses(status) : stream3(new Uint8Array([8, 8]));
+      }) as unknown as typeof fetch,
+    });
+    expect(calls.map((c) => c.which)).toEqual(['primary', 'fallback']);
+    // The second request is the 3.1 shape, not the 3.8 one it would misread.
+    const sent = JSON.parse(calls[1].body);
+    expect(sent.contents[0].parts[0].text.startsWith(SPEECH_PREAMBLE)).toBe(true);
+    expect(sent.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName).toBe(VERTEX_SPEECH_VOICE);
+    expect(out.status).toBe(200);
+    expect(out.model).toBe(VERTEX_SPEECH_FALLBACK_MODEL);
+    expect([...bytesOf(out.response).slice(44)]).toEqual([8, 8]);
+  });
+
+  it('speaks on 3.1 too when 3.8 answers 200 with no audio in it', async () => {
+    const calls: string[] = [];
+    const out = await speakOnVertex('hi', {
+      tokens,
+      fetch: (async (url: string) => (calls.push(modelOf(url)), modelOf(url) === 'primary' ? vertexStream(sse([{ candidates: [] }])) : stream3())) as unknown as typeof fetch,
+    });
+    expect(calls).toEqual(['primary', 'fallback']);
+    expect(out.status).toBe(200);
+    expect(out.model).toBe(VERTEX_SPEECH_FALLBACK_MODEL);
+  });
+
+  it('does not fall back after 3.8 already billed audio, which would book the line twice', async () => {
+    let pulls = 0;
+    const calls: string[] = [];
+    const out = await speakOnVertex(
+      'Hello there, class.',
+      {
+        tokens,
+        fetch: (async (url: string) => {
+          calls.push(modelOf(url));
+          pulls = 0;
+          return new Response(
+            new ReadableStream<Uint8Array>({
+              pull(c) {
+                pulls += 1;
+                if (pulls === 1) c.enqueue(new TextEncoder().encode(sse([audioEvent(new Uint8Array(48_000).fill(1))])));
+                else c.error(new DOMException('timed out', 'TimeoutError'));
+              },
+            }),
+            { status: 200 },
+          );
+        }) as unknown as typeof fetch,
+      },
+      { format: 'pcm' },
+    );
+    expect(calls).toEqual(['primary']);
+    expect(out.status).toBe(502);
+    expect(out.model).toBe(VERTEX_SPEECH_MODEL);
+  });
+
+  it('answers with the last refusal when both models refuse', async () => {
+    const calls: string[] = [];
+    const out = await speakOnVertex('hi', {
+      tokens,
+      fetch: (async (url: string) => (calls.push(modelOf(url)), refuses(modelOf(url) === 'primary' ? 404 : 503))) as unknown as typeof fetch,
+    });
+    expect(calls).toEqual(['primary', 'fallback']);
+    expect(out.status).toBe(503);
+    expect(out.model).toBe(VERTEX_SPEECH_FALLBACK_MODEL);
+  });
+
+  it('does not retry when the Google credential itself cannot be minted', async () => {
+    const out = await speakOnVertex('hi', { tokens: { token: async () => Promise.reject(new Error('bad key')), projectId: 'p' } });
+    expect(out.status).toBe(502);
+  });
+
+  it('lets a caller force one model, with no fallback (the listening tools)', async () => {
+    const calls: string[] = [];
+    const out = await speakOnVertex(
+      'hi',
+      { tokens, fetch: (async (url: string) => (calls.push(modelOf(url)), refuses(503))) as unknown as typeof fetch },
+      { model: VERTEX_SPEECH_FALLBACK_MODEL },
+    );
+    expect(calls).toEqual(['fallback']);
+    expect(out.model).toBe(VERTEX_SPEECH_FALLBACK_MODEL);
+  });
+
+  it('books a collected line under the model that really spoke it', async () => {
+    const usage = createMemoryUsage();
+    const { deps: d } = deps({
+      usage,
+      vertex: {
+        tokens,
+        fetch: (async (url: string) => (modelOf(url) === 'primary' ? refuses(503) : stream3())) as unknown as typeof fetch,
+      },
+    });
+    const out = await handleRelay(req(), d);
+    expect(out.status).toBe(200);
+    expect(usage.events).toContainEqual(expect.objectContaining({ relay: 'speech', provider: 'vertex', model: VERTEX_SPEECH_FALLBACK_MODEL, status: 200 }));
+    expect(usage.events.filter((e) => e.model === VERTEX_SPEECH_MODEL && e.status === 200)).toHaveLength(0);
   });
 });
 
@@ -219,8 +381,8 @@ describe('the speech relay speaks on Vertex (Aarav, 2026-09-28: no OpenRouter fo
     expect(from.headers.authorization).toBe('Bearer tok');
     expect(from.contentType).toBe(PCM_CONTENT_TYPE);
     const sent = JSON.parse(String(from.body));
-    expect(sent.contents[0].parts[0].text).toContain('hello there');
-    expect(sent.contents[0].parts[0].text).toContain('Hinglish');
+    expect(sent.contents[0].parts[0].text).toBe('hello there');
+    expect(sent.contents[0].parts[0].speech_metadata.style).toContain('Hinglish');
 
     // The host pipes Vertex's SSE through the transform; its flush books usage.
     const pcm = await pipe(sse([audioEvent(new Uint8Array([1, 2, 3, 4])), usageEvent]), from.transform!());
@@ -367,8 +529,8 @@ describe('speech a child never has to put in a URL (#2)', () => {
     const { usage, deps: d } = deps({ vertex: vertexDeps() });
     const from = streamOf(await handleRelay(post({ text: 'Hi Ishaan!', lang: 'hi-en', format: 'pcm' }), d));
     const sent = JSON.parse(String(from.body));
-    expect(sent.contents[0].parts[0].text).toContain('Hi Ishaan!');
-    expect(sent.contents[0].parts[0].text).toContain('Hinglish');
+    expect(sent.contents[0].parts[0].text).toBe('Hi Ishaan!');
+    expect(sent.contents[0].parts[0].speech_metadata.style).toContain('Hinglish');
     await pipe(sse([audioEvent(new Uint8Array([1, 2])), usageEvent]), from.transform!());
     // The session comes from the header, as on every other relay.
     expect(usage.events).toContainEqual(expect.objectContaining({ relay: 'speech', sessionId: 'sess-9' }));
@@ -422,7 +584,8 @@ describe('what one line may cost (#1)', () => {
       { format: 'pcm' },
     );
     expect(out.status).toBe(502);
-    expect(out.outputTokens).toBe(32);
+    // One second of audio at 25 audio tokens a second (measured 2026-10-07: 25.0 on 3.1, 24.2 on 3.8 Flash, 24.3 on 3.8 Flash-Lite).
+    expect(out.outputTokens).toBe(25);
   });
 
   it('gives a digit the time its spoken words take (third review #11)', () => {
@@ -439,7 +602,7 @@ describe('what one line may cost (#1)', () => {
     );
     expect(out.status).toBe(200);
     expect(bytesOf(out.response).byteLength).toBe(4 * 48_000);
-    expect(out.outputTokens).toBe(Math.round(((4 * 48_000 + 1000) / 48_000) * 32));
+    expect(out.outputTokens).toBe(Math.round(((4 * 48_000 + 1000) / 48_000) * 25));
   });
 
   it('ends the stream, in whole samples, once a line has carried its budget, and books it once', async () => {
