@@ -130,9 +130,14 @@ function forPGlite(sql: string): string {
   return sql.replace(/create extension if not exists pg_cron\s*;/gi, '-- pg_cron: stood in for by the harness shim');
 }
 
+/** One migration's SQL as the harness runs it, with pg_cron stood in for. */
+export function migrationSql(file: string): string {
+  return forPGlite(fs.readFileSync(path.join(MIGRATIONS_DIR, file), 'utf8'));
+}
+
 async function apply(db: PGlite, files: readonly string[]): Promise<void> {
   for (const file of files) {
-    const sql = forPGlite(fs.readFileSync(path.join(MIGRATIONS_DIR, file), 'utf8'));
+    const sql = migrationSql(file);
     try {
       await db.exec(sql);
     } catch (error) {

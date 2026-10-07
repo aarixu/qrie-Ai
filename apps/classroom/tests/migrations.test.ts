@@ -468,16 +468,15 @@ describe('the learner model migration', () => {
   it('keeps the model version in step with the code that writes it', () => {
     // The same drift check the day budget has, for the same reason: two places
     // hold this number and only one of them is tested by anything else.
-    const inSql = /version integer not null default (\d+)/i.exec(sql);
-    expect(inSql).not.toBeNull();
-    // 2026-09-29: the code moved to version 2 (help discounted by rung, B4/B8)
-    // while the SQL default stays 1 — migrations are the LMS lane's, and
-    // learner_model has 0 rows because nothing on the server writes it yet.
-    // The code may run AHEAD of the column default, never behind it; the LMS
-    // lane owes `alter table public.learner_model alter column version set
-    // default 2` before the server fold (L6) writes a row. Put this back to
-    // toBe when that migration lands.
-    expect(MODEL_VERSION).toBeGreaterThanOrEqual(Number(inSql![1]));
+    // 0013 created the column at default 1; 0060 moved the default to the
+    // version the server fold writes (lam-one-brain Task 2). The newest one is
+    // the one in force, and it must be exactly the code's.
+    expect(/version integer not null default (\d+)/i.exec(sql)).not.toBeNull();
+    const latest = /alter table public\.learner_model alter column version set default (\d+)/i.exec(
+      sqlOf('0060_lam_concept_state_v4.sql'),
+    );
+    expect(latest).not.toBeNull();
+    expect(Number(latest![1])).toBe(MODEL_VERSION);
   });
 });
 
