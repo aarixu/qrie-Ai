@@ -12,6 +12,7 @@ import { subjectHue } from '@/lib/palette'
 import { usePhoto } from '@/lib/photos'
 import { NoticesOnHome } from './notices'
 import { chapterTitle } from './progress'
+import { PickedForYouCard } from './learn/picked-card'
 
 export function kindLabel(a: Pick<MyAssignment, 'kind'>): string {
   return a.kind === 'test' ? 'Test' : a.kind === 'assignment' ? 'Assignment' : 'Homework'
@@ -112,7 +113,7 @@ export function Home() {
       </section>
 
       <NoticesOnHome />
-      <PractiseNow />
+      <PickedForYouCard fallback={<PractiseNow />} />
       <ComingUp />
     </div>
   )
@@ -149,7 +150,10 @@ function Stat({
   )
 }
 
-/** The chapter the child is weakest in that has questions to practise (lms.practice_chapters). */
+/**
+ * Before the child's answers pick anything (PickedForYouCard): the chapter
+ * they are weakest in that has questions to practise (lms.practice_chapters).
+ */
 function PractiseNow() {
   const chapters = useQuery({ queryKey: ['practice-chapters'], queryFn: api.practiceChapters })
   const open = (chapters.data ?? []).filter((c) => c.questions > 0)

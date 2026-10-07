@@ -9,11 +9,13 @@ import { subjectHue } from '@/lib/palette'
 import { MasteryInfo } from '@/components/mastery-info'
 import { SubjectBadge } from '@/components/subject-icon'
 import { chapterTitle, standingOf } from '../progress'
+import { PickedForYouCard } from './picked-card'
 
 /**
  * Learn: every chapter of the child's subjects. A chapter opens for practice
  * once the school has approved its questions (lms.practice_chapters); the
- * AI tutor joins here later.
+ * AI tutor joins here later. Above the chapters, the round picked from the
+ * child's own answers in the subject shown (PickedForYouCard).
  */
 export function Learn() {
   const chapters = useQuery({ queryKey: ['practice-chapters'], queryFn: api.practiceChapters })
@@ -68,6 +70,7 @@ export function Learn() {
               </button>
             ))}
           </div>
+          {current && <PickedForYouCard key={current} subject={current} />}
           {ready === 0 ? (
             <p className='rounded-xl bg-muted p-3 text-sm text-muted-foreground'>
               No chapter is open for practice yet. Your teacher opens chapters by approving their questions.

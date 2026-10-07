@@ -2,23 +2,27 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { Check, Lightbulb, RotateCcw, X } from 'lucide-react'
-import type { PracticeResult } from '@ai-tutor/lms-client'
+import type { PracticeForMe, PracticeQuestion, PracticeResult } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { uuid } from '@/lib/uuid'
 import { Button } from '@/components/ui/button'
 import { chapterTitle } from '../progress'
+import { ROUND, pickedRound } from './picked-card'
 
-const ROUND = 5
 const LETTERS = 'ABCDEF'
+const PICKED = 'Picked for you'
 
 /**
- * One practice round on a chapter: a few questions, one at a time, each
- * marked the moment it is tapped (lms.check_practice_answer) with the right
- * answer shown and, for a wrong one, the mistake it usually means. One
- * session per round, so the brain reads the round as one sitting.
+ * One practice round: a few questions, one at a time, each marked the moment
+ * it is tapped (lms.check_practice_answer) with the right answer shown and,
+ * for a wrong one, the mistake it usually means. One session per round, so
+ * the brain reads the round as one sitting. With a chapter, the chapter's
+ * questions in a random order (lms.practice_questions); without one, the
+ * round picked from the child's own answers, in `subject` or in all
+ * (lms.practice_for_me).
  */
-export function Practice({ subject, chapter }: { subject: string; chapter: string }) {
+export function Practice({ subject, chapter }: { subject?: string; chapter?: string }) {
   const queryClient = useQueryClient()
   const [round, setRound] = useState(1)
   const [session, setSession] = useState(uuid)
@@ -26,9 +30,13 @@ export function Practice({ subject, chapter }: { subject: string; chapter: strin
   const [chosen, setChosen] = useState<number | null>(null)
   const [results, setResults] = useState<PracticeResult[]>([])
 
-  const questions = useQuery({
-    queryKey: ['practice-questions', subject, chapter, round],
-    queryFn: () => api.practiceQuestions(subject, chapter, ROUND),
+  const questions = useQuery<(PracticeQuestion & Partial<PracticeForMe>)[]>({
+    ...(subject && chapter
+      ? {
+          queryKey: ['practice-questions', subject, chapter, round],
+          queryFn: () => api.practiceQuestions(subject, chapter, ROUND),
+        }
+      : pickedRound(subject, round)),
     staleTime: Infinity,
     gcTime: 0,
   })
@@ -49,7 +57,7 @@ export function Practice({ subject, chapter }: { subject: string; chapter: strin
     return (
       <div className='space-y-4 text-center'>
         <div className='flex justify-start'>{exit}</div>
-        <p className='font-medium'>No questions to practise in this chapter right now.</p>
+        <p className='font-medium'>No questions to practise {chapter ? 'in this chapter ' : ''}right now.</p>
         <p className='text-sm text-muted-foreground'>
           Questions that are on homework or a test still open are kept back until it closes.
         </p>
@@ -67,7 +75,7 @@ export function Practice({ subject, chapter }: { subject: string; chapter: strin
       <Summary
         right={right}
         total={qs.length}
-        chapter={chapter}
+        heading={chapter ? chapterTitle(chapter) : PICKED}
         onAgain={() => {
           setRound((n) => n + 1)
           setSession(uuid())
@@ -110,7 +118,7 @@ export function Practice({ subject, chapter }: { subject: string; chapter: strin
         </div>
       </div>
       <p className='mt-4 text-xs text-muted-foreground'>
-        {subject} · {chapterTitle(chapter)} · {index + 1} of {qs.length}
+        {q.subject ?? subject} · {chapter ? chapterTitle(chapter) : (q.outcomeTitle ?? PICKED)} · {index + 1} of {qs.length}
       </p>
       <h1 className='mt-1 text-lg leading-snug font-semibold whitespace-pre-line'>{q.stem}</h1>
 
@@ -180,11 +188,11 @@ export function Practice({ subject, chapter }: { subject: string; chapter: strin
   )
 }
 
-function Summary({ right, total, chapter, onAgain }: { right: number; total: number; chapter: string; onAgain: () => void }) {
+function Summary({ right, total, heading, onAgain }: { right: number; total: number; heading: string; onAgain: () => void }) {
   const share = right / total
   const [title, line] =
     share === 1
-      ? ['Perfect!', 'Every one right. You know this chapter.']
+      ? ['Perfect!', heading === PICKED ? 'Every one right.' : 'Every one right. You know this chapter.']
       : share >= 0.6
         ? ['Well done!', 'Most of them right. One more round will make it stick.']
         : ['Good try!', 'Every wrong answer shows you what to look at again. Try another round.']
@@ -203,7 +211,7 @@ function Summary({ right, total, chapter, onAgain }: { right: number; total: num
       </div>
       <h1 className='mt-6 text-2xl font-bold'>{title}</h1>
       <p className='mt-1 text-muted-foreground'>{line}</p>
-      <p className='mt-1 text-sm text-muted-foreground'>{chapterTitle(chapter)}</p>
+      <p className='mt-1 text-sm text-muted-foreground'>{heading}</p>
       <div className='mt-8 w-full space-y-2'>
         <Button className='h-12 w-full text-base' onClick={onAgain}>
           <RotateCcw /> Practise again

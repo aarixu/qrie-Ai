@@ -787,6 +787,21 @@ export interface PracticeQuestion {
   options: string[];
 }
 
+/** Why lms.practice_for_me (0064) put a question where it is, most telling first. */
+export type PracticeReason = 'misconception' | 'review' | 'weak' | 'new' | 'more';
+
+/** A practice question picked from the child's own evidence (0064): stem and options, never the answer. */
+export interface PracticeForMe extends PracticeQuestion {
+  subject: string;
+  chapter: string;
+  /** The outcome it was picked for: its due one, else its weakest for this child. */
+  outcomeId: string;
+  outcomeTitle: string;
+  reason: PracticeReason;
+  /** With 'misconception': the label of the option that catches the child's wrong idea, in the bank's words. */
+  watchOut: string | null;
+}
+
 export interface PracticeResult {
   correct: boolean;
   correctIndex: number;
@@ -1137,6 +1152,13 @@ export function createLmsClient(t: Transport) {
     practiceChapters: () => rows<PracticeChapter>('practice_chapters'),
     practiceQuestions: (subject: string, chapter: string, count?: number) =>
       rows<PracticeQuestion>('practice_questions', { p_subject: subject, p_chapter: chapter, p_count: count }),
+    /**
+     * Up to `count` (at most 20) practice questions of one subject, or of all when `subject` is null,
+     * ranked by the child's own evidence: a confirmed wrong idea, a due review, their weakest
+     * outcomes alone, then what is new to them, then the rest (0064).
+     */
+    practiceForMe: (subject: string | null, count?: number) =>
+      rows<PracticeForMe>('practice_for_me', { p_subject: subject, p_count: count }),
     /** Marks one practice answer at once; the session id is the device's, one per round. */
     async checkPracticeAnswer(sessionId: string, itemId: string, chosenIndex: number): Promise<PracticeResult> {
       const [r] = await rows<PracticeResult>('check_practice_answer', {

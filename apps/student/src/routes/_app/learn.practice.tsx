@@ -13,12 +13,14 @@ export const Route = createFileRoute('/_app/learn/practice')({
     subject: typeof s.subject === 'string' && SUBJECT.test(s.subject) ? s.subject : undefined,
     chapter: typeof s.chapter === 'string' && CHAPTER.test(s.chapter) ? s.chapter : undefined,
   }),
+  // A chapter needs its subject. With no chapter the round is the one picked
+  // from the child's own answers, in the subject or in all of them.
   beforeLoad: ({ search }) => {
-    if (!search.subject || !search.chapter) throw redirect({ to: '/learn' })
+    if (search.chapter && !search.subject) throw redirect({ to: '/learn' })
   },
   component: function PracticeRoute() {
     const { subject, chapter } = Route.useSearch()
     // The same page for another chapter starts a fresh round.
-    return <Practice key={`${subject}/${chapter}`} subject={subject!} chapter={chapter!} />
+    return <Practice key={`${subject ?? ''}/${chapter ?? ''}`} subject={subject} chapter={chapter} />
   },
 })
