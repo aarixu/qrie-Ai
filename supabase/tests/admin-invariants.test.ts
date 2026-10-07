@@ -39,16 +39,20 @@ describe('the admin schema', () => {
   it('lets a signed-in person call exactly the functions the panel uses, each of which checks for staff itself', async () => {
     expect(await callableBy('authenticated')).toEqual([
       'admin.billing_account_set',
+      'admin.billing_accounts',
+      'admin.billing_grace_set',
       'admin.billing_invoice',
       'admin.billing_invoice_raise',
       'admin.billing_invoice_void',
       'admin.billing_invoices',
       'admin.billing_link_prepare',
+      'admin.billing_overview',
       'admin.billing_payment_record',
       'admin.billing_payments',
       'admin.billing_plan_set',
       'admin.billing_plans',
       'admin.billing_refund_prepare',
+      'admin.billing_school',
       'admin.billing_settings',
       'admin.billing_settings_set',
       'admin.billing_subscription_create',
@@ -71,6 +75,7 @@ describe('the admin schema', () => {
     expect(service).toEqual(
       expect.arrayContaining([
         'admin.alert_token_set',
+        'admin.billing_compute_states',
         'admin.billing_link_created',
         'admin.billing_link_failed',
         'admin.billing_link_observed',
@@ -88,6 +93,7 @@ describe('the admin schema', () => {
     const signedIn = await callableBy('authenticated');
     for (const fn of [
       'admin.alert_token_set',
+      'admin.billing_compute_states',
       'admin.billing_link_created',
       'admin.billing_link_failed',
       'admin.billing_link_observed',
