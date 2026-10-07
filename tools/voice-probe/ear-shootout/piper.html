@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Voice compare</title>
+<style>
+  :root { --bg: #fbfaf7; --ink: #1d1b16; --soft: #6b665c; --line: #e3ded2; --card: #fff; --accent: #2f6f4e; --blue: #2b5fa8; --warn: #b4531a; --bad: #b3261e; --violet: #6a4aa8; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #17160f; --ink: #f1eee6; --soft: #a39d8f; --line: #34312a; --card: #1f1d15; --accent: #6fcf9f; --blue: #7fb0ee; --warn: #e6975c; --bad: #ff8a80; --violet: #b79cf0; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px 16px 90px; }
+  h1 { font-size: 21px; margin: 0 0 4px; }
+  h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 26px 0 8px; }
+  p.lede { color: var(--soft); margin: 0 0 12px; font-size: 15px; }
+  #env { font-size: 13px; color: var(--soft); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin-bottom: 12px; }
+  label { display: flex; flex-direction: column; font-size: 13px; color: var(--soft); gap: 4px; margin-bottom: 10px; }
+  label.chk { flex-direction: row; align-items: center; gap: 8px; font-size: 14px; }
+  select, textarea { font: inherit; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); width: 100%; }
+  textarea { min-height: 60px; }
+  button { font: inherit; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; min-height: 44px; padding: 8px 18px; }
+  .row { display: grid; gap: 8px; margin: 8px 0; }
+  button.go { color: #fff; border: 0; font-size: 16px; min-height: 50px; }
+  button.go.g31 { background: #7a7468; }
+  button.go.g38 { background: var(--blue); }
+  button.go.g38l { background: var(--violet); }
+  button.go.piper { background: var(--accent); }
+  button.go.blind { background: var(--warn); }
+  button.go.load { background: var(--blue); }
+  button:disabled { opacity: .5; }
+  #status { color: var(--soft); font-size: 14px; min-height: 22px; white-space: pre-line; }
+  #cost { font-size: 13px; color: var(--soft); background: var(--card); border: 1px dashed var(--line); border-radius: 10px; padding: 8px 10px; white-space: pre-line; }
+  #bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin: 6px 0 10px; }
+  #bar > div { height: 100%; width: 0; background: var(--blue); }
+  .att { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+  .att .t { font-size: 15px; word-break: break-word; margin: 0 0 4px; }
+  .att .t.hid { color: var(--soft); font-style: italic; }
+  .att .m { font-size: 12px; color: var(--soft); margin-bottom: 8px; }
+  .rate { display: flex; gap: 8px; }
+  .rate button { flex: 1; min-height: 44px; }
+  .rate button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .rate button.on.half { background: var(--warn); border-color: var(--warn); }
+  .rate button.on.bad { background: var(--bad); border-color: var(--bad); }
+  pre { font: 12px/1.45 ui-monospace, monospace; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; margin: 0; }
+  #out { height: 160px; font: 12px/1.4 ui-monospace, monospace; }
+  #score { font-size: 14px; white-space: pre-line; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Voice compare</h1>
+  <p class="lede"><b>Piper</b> (phone ke andar bani, free) aur teen <b>Gemini</b> awaazein (3.1 jo abhi app mein hai, 3.8 Flash, 3.8 Flash-Lite) ek hi line par. Gemini ki awaazein pehle se bani hain (list wali lines), Piper abhi phone par banta hai. <b>Blind</b> mode mein naam chhupe rahte hain, rating ke baad dikhte hain.</p>
+  <div id="env">checking...</div>
+
+  <h2>1. Line chuno</h2>
+  <label>Line
+    <select id="line"></select>
+  </label>
+  <label>Ya apni line (sirf Piper ke liye; Hindi awaaz ke liye Devanagari mein)
+    <textarea id="custom" placeholder="जैसे: अच्छा सोचा! तो बताओ, cell के अंदर glucose कहाँ टूटता है?"></textarea>
+  </label>
+  <div id="cost">-</div>
+
+  <h2>2. Gemini (pehle se bani)</h2>
+  <div class="row">
+    <button class="go g31" data-g="g31">🔊 Gemini 3.1 Flash (abhi app mein)</button>
+    <button class="go g38" data-g="g38">🔊 Gemini 3.8 Flash</button>
+    <button class="go g38l" data-g="g38l">🔊 Gemini 3.8 Flash-Lite</button>
+  </div>
+
+  <h2>3. Piper (phone par banta hai)</h2>
+  <label>Piper awaaz
+    <select id="voice">
+      <option value="hi_IN-pratham-medium">Hindi: pratham (60 MB)</option>
+      <option value="hi_IN-priyamvada-medium">Hindi: priyamvada (60 MB)</option>
+      <option value="hi_IN-rohan-medium">Hindi: rohan (60 MB)</option>
+      <option value="en_US-lessac-medium">English (US): lessac</option>
+      <option value="en_US-amy-medium">English (US): amy</option>
+      <option value="en_GB-alba-medium">English (UK): alba</option>
+    </select>
+  </label>
+  <div class="row">
+    <button id="bLoad" class="go load">⬇ Piper awaaz load karo</button>
+    <button id="bSay" class="go piper" disabled>🔊 Piper se bajao</button>
+  </div>
+  <div id="bar"><div></div></div>
+
+  <h2>4. Blind test</h2>
+  <div class="row">
+    <button id="bBlind" class="go blind">🎧 Blind: sab ek ke baad ek, naam chhupa ke</button>
+  </div>
+  <div id="status"></div>
+
+  <h2>Score</h2>
+  <div id="score">abhi koi nahi</div>
+
+  <h2>Suni hui awaazein</h2>
+  <div id="log"></div>
+
+  <h2>Piper ki speed</h2>
+  <div class="row"><button id="bSpeed" class="go piper" disabled>⏱ Piper speed test (2 round)</button></div>
+  <pre id="speed">abhi koi nahi</pre>
+
+  <h2>Mujhe bhejne ke liye</h2>
+  <button id="copy">Results copy karo</button>
+  <textarea id="out" readonly placeholder="yahan results aayenge"></textarea>
+
+  <h2>Library ka log</h2>
+  <pre id="lib">-</pre>
+</main>
+<script type="module" src="./piper/entry.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const GROUPS = [
+  ['A', 'A. Chhote jawab (Devanagari)'], ['B', 'B. Tutor ki normal line (Devanagari)'], ['C', 'C. Maths (Devanagari)'],
+  ['D', 'D. Science ke shabd (Devanagari)'], ['E', 'E. Lambi line (Devanagari)'], ['F', 'F. Roman Hinglish'], ['G', 'G. English'],
+];
+const LINES = [
+  ['A1', 'बिल्कुल सही!'], ['A2', 'कोई बात नहीं, फिर से कोशिश करो।'], ['A3', 'ठीक है, चलो आगे बढ़ते हैं।'], ['A4', 'अच्छा सवाल पूछा तुमने।'],
+  ['B1', 'अच्छा सोचा! अब बताओ, cell के अंदर glucose सबसे पहले कहाँ टूटता है?'],
+  ['B2', 'चलो इसे step by step देखते हैं। पहले ये बताओ, हमें त्रिभुज के बारे में क्या पता है?'],
+  ['B3', 'तुम्हारा answer लगभग सही है। बस एक चीज़ पर दोबारा सोचो: oxygen कहाँ से आती है?'],
+  ['C1', 'x का square जमा y का square बराबर z का square होता है। तो x की value कैसे निकालेंगे?'],
+  ['C2', 'कार्बन का atomic number 6 है और mass number 12। तो neutrons कितने हुए?'],
+  ['C3', '250 को 5 से भाग दो, तो 50 आता है। अब 50 में 2 और जोड़ो।'],
+  ['C4', 'त्रिभुज ABC में angle B नब्बे डिग्री है, तो hypotenuse कौन सी side है?'],
+  ['D1', 'Mitochondria को cell का powerhouse कहते हैं, क्योंकि यहीं ATP बनता है।'],
+  ['D2', 'Photosynthesis में पौधे carbon dioxide और पानी से glucose बनाते हैं।'],
+  ['D3', 'Reflex action में brain नहीं, spinal cord फ़ैसला लेता है।'],
+  ['E1', 'आज हम respiration पढ़ेंगे। जब हम साँस लेते हैं, तो oxygen हमारे blood के ज़रिए हर cell तक पहुँचती है, और वहाँ glucose से energy निकलती है। इसी energy से हम चलते, सोचते और खेलते हैं।'],
+  ['F1', 'Achha socha! Toh batao, cell ke andar glucose sabse pehle kahan tootta hai?'],
+  ['F2', 'Mujhe lagta hai tum sahi raaste par ho. Ek kaam karo, pehle x ki value nikalo.'],
+  ['F3', 'Pata nahi? Koi baat nahi, ek hint lete hain.'],
+  ['G1', 'Good thinking. So where in the cell does the glucose start breaking down?'],
+  ['G2', "Let's do this step by step. First, what do we already know about the triangle?"],
+  ['G3', 'Your answer is almost right. Think again about where the oxygen comes from.'],
+];
+const GEM = { g31: 'Gemini 3.1 Flash (abhi app mein)', g38: 'Gemini 3.8 Flash', g38l: 'Gemini 3.8 Flash-Lite' };
+for (const [g, label] of GROUPS) {
+  const og = document.createElement('optgroup'); og.label = label;
+  for (const [id, text] of LINES.filter(([i]) => i[0] === g)) { const o = document.createElement('option'); o.value = id; o.textContent = id + ': ' + text; og.append(o); }
+  $('line').append(og);
+}
+$('line').value = 'B1';
+
+const results = [], speedRows = [], lib = [];
+let session = null, loadedVoice = '', loadInfo = null, audioCtx = null, samples = null, playing = null;
+const libLog = (m) => { lib.push(String(m)); if (lib.length > 40) lib.shift(); $('lib').textContent = lib.join('\n'); };
+const setStatus = (s) => { $('status').textContent = s; };
+const ctx = () => (audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)());
+const lineText = (id) => LINES.find(([i]) => i === id)[1];
+const customText = () => $('custom').value.trim();
+
+function envLine() {
+  const ua = navigator.userAgent, bits = [];
+  bits.push(/iPhone|iPad/.test(ua) ? 'iPhone/iPad' : /Android/.test(ua) ? 'Android' : /Windows/.test(ua) ? 'Windows' : /Mac/.test(ua) ? 'Mac' : 'device?');
+  bits.push(/Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Firefox|FxiOS/.test(ua) ? 'Firefox' : /Safari/.test(ua) ? 'Safari' : 'browser?');
+  bits.push('cores: ' + (navigator.hardwareConcurrency ?? '?'));
+  bits.push('RAM: ' + (navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '?'));
+  bits.push('Gemini clips: ' + (samples ? 'ready' : 'NAHI'));
+  return bits.join(' · ');
+}
+$('env').textContent = envLine();
+window.addEventListener('error', (e) => libLog('ERROR ' + e.message));
+window.addEventListener('unhandledrejection', (e) => libLog('REJECTED ' + (e.reason?.message || e.reason)));
+const piperReady = new Promise((res) => { if (window.PiperTts) res(); else window.addEventListener('piper-ready', () => res(), { once: true }); });
+piperReady.then(() => libLog('piper bundle load ho gaya'));
+
+fetch('tts-samples/index.json').then((r) => r.json()).then((j) => { samples = j; $('env').textContent = envLine(); showCost(); }).catch((e) => { libLog('index.json nahi mila: ' + e); showCost(); });
+function showCost() {
+  if (!samples) { $('cost').textContent = 'Gemini clips ka data nahi mila.'; return; }
+  const r = samples.results[$('line').value];
+  if (!r) { $('cost').textContent = '-'; return; }
+  const part = (k) => (r[k] && !r[k].error ? GEM[k] + ': ' + r[k].seconds.toFixed(1) + ' s, ₹' + r[k].rupees.toFixed(2) : GEM[k] + ': nahi bani');
+  $('cost').textContent = 'Is line ka kharcha (naapa hua):\n' + part('g31') + '\n' + part('g38') + '\n' + part('g38l') + '\nPiper: ₹0 (phone par)';
+}
+$('line').addEventListener('change', showCost);
+$('custom').addEventListener('input', () => { const c = !!customText(); document.querySelectorAll('button[data-g]').forEach((b) => { b.disabled = c; }); });
+
+// ---------------------------------------------------------------- the clips (Gemini) and Piper, as one thing that can be played
+function stopAll() { if (playing) { try { playing.stop(); } catch {} playing = null; } }
+function play(buf) {
+  return new Promise((resolve) => { stopAll(); const s = ctx().createBufferSource(); s.buffer = buf; s.connect(ctx().destination); s.onended = () => { if (playing === s) playing = null; resolve(); }; playing = s; s.start(); });
+}
+async function geminiClip(key, lineId) {
+  const t0 = performance.now();
+  const res = await fetch('tts-samples/' + key + '/' + lineId + '.mp3');
+  if (!res.ok) throw new Error('clip nahi mili (' + res.status + ')');
+  const buf = await ctx().decodeAudioData(await res.arrayBuffer());
+  return { buf, loadMs: Math.round(performance.now() - t0), meta: samples?.results?.[lineId]?.[key] };
+}
+async function piperClip(text) {
+  if (!session) throw new Error('pehle Piper awaaz load karo');
+  const t0 = performance.now();
+  const blob = await session.predict(text);
+  const synthMs = performance.now() - t0;
+  const buf = await ctx().decodeAudioData(await blob.arrayBuffer());
+  return { buf, synthMs, audioSecs: buf.duration, rtf: synthMs / 1000 / buf.duration };
+}
+
+function addResult(rec) { results.push(rec); render(); return rec; }
+
+async function playGemini(key, opts = {}) {
+  const id = $('line').value;
+  await ctx().resume().catch(() => {});
+  if (!opts.silent) setStatus(GEM[key] + ' load ho rahi hai...');
+  const rec = { engine: GEM[key], lineId: id, text: lineText(id), blind: !!opts.blind, blindNo: opts.blindNo, rating: '', error: '', info: '' };
+  try {
+    const c = await geminiClip(key, id);
+    rec.info = (c.meta ? 'audio ' + c.meta.seconds.toFixed(1) + ' s · banane mein ' + (c.meta.ms / 1000).toFixed(1) + ' s · ₹' + c.meta.rupees.toFixed(2) : '') + ' · clip load ' + c.loadMs + ' ms';
+    rec.audioSecs = c.meta?.seconds; rec.rupees = c.meta?.rupees;
+    addResult(rec);
+    if (!opts.silent) setStatus('bol rahi hai: ' + (opts.blind ? '(naam chhupa hai)' : GEM[key]));
+    await play(c.buf);
+  } catch (e) { rec.error = String(e.message || e); addResult(rec); setStatus('nahi chala: ' + rec.error); }
+  return rec;
+}
+async function playPiper(opts = {}) {
+  const custom = customText();
+  const id = custom ? 'custom' : $('line').value, text = custom || lineText($('line').value);
+  await ctx().resume().catch(() => {});
+  const rec = { engine: 'Piper ' + loadedVoice, lineId: id, text, blind: !!opts.blind, blindNo: opts.blindNo, rating: '', error: '', info: '' };
+  try {
+    if (!opts.silent) setStatus('Piper awaaz bana raha hai...');
+    const r = await piperClip(text);
+    rec.info = 'audio ' + r.audioSecs.toFixed(1) + ' s · bani ' + (r.synthMs / 1000).toFixed(2) + ' s mein (RTF ' + r.rtf.toFixed(2) + ') · ₹0';
+    rec.audioSecs = r.audioSecs; rec.rupees = 0;
+    addResult(rec);
+    if (!opts.silent) setStatus('bol rahi hai: ' + (opts.blind ? '(naam chhupa hai)' : rec.engine));
+    await play(r.buf);
+  } catch (e) { rec.error = String(e.message || e); addResult(rec); setStatus('nahi chala: ' + rec.error); libLog('PIPER FAILED ' + (e.stack || e)); }
+  return rec;
+}
+
+document.querySelectorAll('button[data-g]').forEach((b) => b.addEventListener('click', () => playGemini(b.dataset.g)));
+$('bSay').addEventListener('click', () => playPiper());
+
+// ---------------------------------------------------------------- blind: every available voice on the chosen line, in a random order, names hidden
+async function blind() {
+  if (customText()) { setStatus('blind test sirf list wali lines par chalta hai. apni line wala box khaali karo.'); return; }
+  await ctx().resume().catch(() => {});
+  const id = $('line').value;
+  const sources = ['g31', 'g38', 'g38l'].filter((k) => samples?.results?.[id]?.[k] && !samples.results[id][k].error);
+  if (session) sources.push('piper');
+  for (let i = sources.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [sources[i], sources[j]] = [sources[j], sources[i]]; }
+  $('bBlind').disabled = true;
+  const me = {}; blindRun = me;
+  for (let i = 0; i < sources.length; i++) {
+    if (blindRun !== me) break;
+    setStatus('Clip ' + (i + 1) + ' / ' + sources.length + ' (naam chhupa hai). Sunne ke baad neeche rate karo.');
+    if (sources[i] === 'piper') await playPiper({ blind: true, silent: true, blindNo: i + 1 });
+    else await playGemini(sources[i], { blind: true, silent: true, blindNo: i + 1 });
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  setStatus('sab clips ho gaye. neeche ✓ / ~ / ✗ do, naam rating ke baad dikhega.');
+  if (!session) setStatus($('status').textContent + '\n(Piper load nahi tha, isliye usme shamil nahi.)');
+  $('bBlind').disabled = false;
+}
+let blindRun = null;
+$('bBlind').addEventListener('click', blind);
+
+// ---------------------------------------------------------------- Piper: load a voice, speed test
+async function loadVoice() {
+  await piperReady;
+  const id = $('voice').value;
+  $('bLoad').disabled = true; $('bSay').disabled = true; $('bSpeed').disabled = true;
+  setStatus('Piper load ho raha hai: ' + id + '\n(pehli baar ~60 MB utarta hai, baad mein phone mein save rehta hai)');
+  const bytes = {}; const t0 = performance.now();
+  const progress = (p) => {
+    if (!p || String(p.url).startsWith('tts://')) return;
+    bytes[p.url] = { loaded: p.loaded, total: p.total };
+    const loaded = Object.values(bytes).reduce((a, b) => a + b.loaded, 0), total = Object.values(bytes).reduce((a, b) => a + b.total, 0);
+    $('bar').firstElementChild.style.width = total ? Math.round((loaded / total) * 100) + '%' : '30%';
+    setStatus('Piper download: ' + (loaded / 1048576).toFixed(1) + ' / ' + (total / 1048576).toFixed(1) + ' MB');
+  };
+  try {
+    const T = window.PiperTts.TtsSession;
+    T._instance = null;   // the library keeps one session and would ignore a different voice
+    session = await T.create({ voiceId: id, progress, logger: libLog });
+    const ms = Math.round(performance.now() - t0), mb = Object.values(bytes).reduce((a, b) => a + b.loaded, 0) / 1048576;
+    loadedVoice = id; loadInfo = { id, ms, mb };
+    $('bar').firstElementChild.style.width = '100%';
+    setStatus('Piper taiyar: ' + id + '\nload mein ' + (ms / 1000).toFixed(1) + ' s (download ' + mb.toFixed(1) + ' MB' + (mb < 1 ? ', pehle se phone mein save tha' : '') + ')');
+    $('bSay').disabled = false; $('bSpeed').disabled = false; summary();
+  } catch (e) { setStatus('Piper load nahi hua: ' + (e.message || e)); libLog('LOAD FAILED ' + (e.stack || e)); }
+  $('bLoad').disabled = false;
+}
+$('bLoad').addEventListener('click', loadVoice);
+
+const median = (a) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : NaN; };
+async function speedTest() {
+  if (!session) return;
+  await ctx().resume().catch(() => {});
+  $('bSay').disabled = true; $('bSpeed').disabled = true; speedRows.length = 0;
+  const lines = LINES.filter(([i]) => (loadedVoice.startsWith('hi') ? 'ABCDE'.includes(i[0]) : i[0] === 'G'));
+  try {
+    for (let round = 1; round <= 2; round++) for (const [id, text] of lines) {
+      setStatus('Piper speed test: round ' + round + ' · ' + id);
+      const r = await piperClip(text);
+      speedRows.push({ round, id, chars: text.length, audioSecs: r.audioSecs, synthMs: r.synthMs, rtf: r.rtf });
+      drawSpeed(); await new Promise((res) => setTimeout(res, 30));
+    }
+    setStatus('Piper speed test ho gaya.');
+  } catch (e) { setStatus('speed test fail: ' + (e.message || e)); libLog('SPEED FAILED ' + (e.stack || e)); }
+  $('bSay').disabled = false; $('bSpeed').disabled = false; summary();
+}
+function drawSpeed() {
+  const lines = ['voice: ' + loadedVoice, 'round line chars  audio    bana     RTF'];
+  for (const r of speedRows) lines.push(String(r.round).padStart(3) + '   ' + r.id.padEnd(4) + String(r.chars).padStart(5) + '  ' + r.audioSecs.toFixed(1).padStart(5) + 's ' + (r.synthMs / 1000).toFixed(2).padStart(6) + 's  ' + r.rtf.toFixed(2).padStart(5));
+  const warm = speedRows.filter((r) => r.round === 2);
+  if (warm.length) lines.push('', 'round 2 (garam) median RTF: ' + median(warm.map((r) => r.rtf)).toFixed(2), 'RTF 1.0 se kam = awaaz bolne se tez bani.');
+  $('speed').textContent = lines.join('\n');
+}
+$('bSpeed').addEventListener('click', speedTest);
+
+// ---------------------------------------------------------------- the list, the score, the copy text
+function render() {
+  const log = $('log'); log.replaceChildren();
+  [...results].reverse().forEach((r) => {
+    const box = document.createElement('div'); box.className = 'att';
+    const hidden = r.blind && !r.rating && !r.error;
+    const t = document.createElement('div'); t.className = 't' + (hidden ? ' hid' : '');
+    t.textContent = (r.blind ? 'Clip ' + (r.blindNo ?? '?') + ' · ' : '') + (hidden ? 'naam rating ke baad dikhega' : r.engine) + ' · ' + r.lineId;
+    const txt = document.createElement('div'); txt.className = 'm'; txt.textContent = r.text;
+    const m = document.createElement('div'); m.className = 'm'; m.textContent = r.error ? 'error: ' + r.error : (hidden ? '' : r.info);
+    box.append(t, txt, m);
+    if (!r.error) {
+      const rate = document.createElement('div'); rate.className = 'rate';
+      for (const [val, label, cls] of [['good', '✓ achha', ''], ['half', '~ chalega', 'half'], ['bad', '✗ kharab', 'bad']]) {
+        const b = document.createElement('button'); b.textContent = label;
+        if (r.rating === val) { b.classList.add('on'); if (cls) b.classList.add(cls); }
+        b.addEventListener('click', () => { r.rating = val; render(); });
+        rate.append(b);
+      }
+      box.append(rate);
+    }
+    log.append(box);
+  });
+  summary();
+}
+function summary() {
+  const by = {};
+  for (const r of results) if (r.rating) (by[r.engine] ??= { good: 0, half: 0, bad: 0 })[r.rating] += 1;
+  const lines = Object.entries(by).map(([k, v]) => { const n = v.good + v.half + v.bad; return k + ': ✓' + v.good + ' ~' + v.half + ' ✗' + v.bad + ' (' + n + ')'; });
+  $('score').textContent = lines.join('\n') || 'abhi koi nahi';
+  const rows = results.map((r) => '[' + (r.rating || '?') + '] ' + r.engine + ' | ' + r.lineId + (r.blind ? ' | blind' : '') + (r.error ? ' | err ' + r.error : ' | ' + r.info));
+  const warm = speedRows.filter((r) => r.round === 2);
+  $('out').value = [$('env').textContent, loadInfo ? 'Piper load: ' + loadInfo.id + ' ' + (loadInfo.ms / 1000).toFixed(1) + ' s, ' + loadInfo.mb.toFixed(1) + ' MB downloaded' : '', warm.length ? 'Piper speed test round 2 median RTF ' + median(warm.map((r) => r.rtf)).toFixed(2) + ' (' + loadedVoice + ')' : '', ...lines, ...rows].filter(Boolean).join('\n');
+}
+$('copy').addEventListener('click', async () => {
+  summary();
+  try { await navigator.clipboard.writeText($('out').value); setStatus('copy ho gaya, chat mein paste karo.'); }
+  catch { $('out').select(); setStatus('neeche wala text select kar ke copy karo.'); }
+});
+render();
+</script>
+</body>
+</html>
