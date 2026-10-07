@@ -73,8 +73,9 @@ time they are done.
 - **Stop the tutor** is one tap for anyone on staff. **Resume** is the owner's,
   with a fresh authenticator code. The big red tile "Tutor: Stopped" stays until
   somebody resumes.
-- **Switches** are the remote switches the apps read. A guarded one asks for a
-  fresh code. A switch nobody has set uses the safe default built into each app.
+- **Switches** are the remote switches the apps are to read; no app reads them
+  yet (plan 4 wires them). A guarded one asks for a fresh code. A switch nobody
+  has set uses its safe default.
 - Every change is in the audit log with who did it and why. The log cannot be
   edited, even with the service-role key.
 
@@ -122,7 +123,11 @@ Nothing in this section has been run against the hosted project yet.
    alarm runs from a server instead, run
    `node --experimental-strip-types tools/admin-alert/src/audit-copy.ts`
    from the same cron every hour, with `AUDIT_HEADS_FILE` set to a file that
-   survives between runs.
+   survives between runs. If it cannot read the database, that run fails (red
+   in Actions; the script exits 1), and from the second such run in a row the
+   ops chat gets "The audit log's outside copy could not read the database
+   …", again every 24 runs while it lasts. The five-minute alarm does not
+   watch this job.
 5. **A restore drill.** Restore the latest backup into a scratch Supabase
    project, open a table to see it is there, delete the scratch project, then
    on System press "Record a restore drill" with that day's date.
@@ -133,7 +138,13 @@ Nothing in this section has been run against the hosted project yet.
    change their password under "Your account".
 7. **The first check in a browser** (each was only tested on an in-process
    database): open a school, search a person, give a test account a new PIN
-   (you will be asked for a fresh code), block and unblock a test direct user,
-   invite and turn on a test staff member, and look at System: jobs should say
-   "Succeeded" or "Never run", not "Not captured"; the migration level should be
-   0055 (0060 once billing, plan 3, is merged).
+   and add a test person (each asks for a fresh code), block and unblock a test
+   direct user, invite and turn on a test staff member, and look at System:
+   jobs should say "Succeeded" or "Never run", not "Not captured"; the
+   migration level should be 0055 (0060 once billing, plan 3, is merged).
+8. **What the switches do today.** No app reads a switch yet (plan 4 wires
+   them), so "Turn the tutor switch off" and "Offboard" record your decision
+   but do not stop the tutor for anyone; to stop it now, use "Stop the tutor"
+   on System. An offboarded school's own admin can still add people in the
+   teacher app. Only you (the owner) can turn a tutor switch back on; a
+   teacher's or a school admin's new PIN, and a teachers sheet, are yours too.
