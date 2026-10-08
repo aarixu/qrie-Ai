@@ -12,7 +12,7 @@
 
 alter table public.learner_model
   -- {"model": <the whole LearnerModel, packages/learner-model types.ts>,
-  --  "bank": [<normalised wrong-idea labels taken from lms.item>]}. The
+  --  "bank": {<normalised wrong-idea label>: <lms.item's wording of it>}}. The
   -- model's foldedThrough is where the snapshot reaches, in think()'s order
   -- of receipt. It covers only what was received over an hour before the run
   -- that wrote it, so a write that began earlier and committed later is still

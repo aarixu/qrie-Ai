@@ -1,4 +1,6 @@
 // @vitest-environment node
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { freshDatabase, migrationFiles } from './harness';
 
@@ -18,6 +20,19 @@ describe('the migration harness', () => {
     expect(files.length).toBeGreaterThanOrEqual(20);
     expect(files[0]).toBe('0001_student_state.sql');
     expect([...files].sort()).toEqual(files);
+  });
+
+  it('gives every migration its own number, and runs every .sql file there', () => {
+    // The Supabase CLI keys a migration by its number: of two files with one
+    // number, the second fails `db push` or is taken as applied and skipped.
+    // Two lanes numbering from the same free slot meet here at merge.
+    const all = fs
+      .readdirSync(fileURLToPath(new URL('../migrations/', import.meta.url)))
+      .filter((f) => f.endsWith('.sql'));
+    expect(all.sort()).toEqual(migrationFiles());
+    const byNumber = new Map<string, string[]>();
+    for (const f of all) byNumber.set(f.slice(0, 4), [...(byNumber.get(f.slice(0, 4)) ?? []), f]);
+    expect([...byNumber.values()].filter((files) => files.length > 1)).toEqual([]);
   });
 
   it('applies all of them to a fresh Postgres without error', async () => {

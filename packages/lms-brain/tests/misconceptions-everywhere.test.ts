@@ -197,10 +197,11 @@ describe('once the brain has read it: homework and the tutor alike', () => {
     expect(kabirs).toMatchObject({ chapter: 'rational-numbers', times: 2 });
   });
 
-  it("puts tutor-only ideas on the class's likely list, and a slip on none", async () => {
+  it("puts tutor-only ideas the bank names on the class's likely list, and a slip on none", async () => {
+    // An idea with no bank wording stays on the child's own lists only: under
+    // one stock label, unrelated ideas of different children would read as one
+    // shared idea with practice that targets none of them (review M1).
     expect(await likely()).toEqual([
-      [FROM_TUTOR, ['Meera']],
-      [SAME, ['Isha']],
       [ADDS, ['Meera']],
       [NEGATIVE, ['Dev']],
       [ZERO, ['Kabir']],

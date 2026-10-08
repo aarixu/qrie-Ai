@@ -264,3 +264,37 @@ describe('who may ask', () => {
     expect(await as(one.kid8a).practiceForMe('Science', 5)).toEqual([]);
   });
 });
+
+describe('a test the child has not had back (review M1)', () => {
+  it('names no wrong idea it showed until the results are out, as their own report does', async () => {
+    // Asha shows ZERO on both questions of a test, and on nothing else.
+    const asha = await seat(db, one.org, 'student', 'PFM-106', 'Asha');
+    await enrolIn8a(asha, '6');
+    const t1 = await bankItem('probe-pfm-t1', DEFINE, ZERO);
+    const t2 = await bankItem('probe-pfm-t2', DEFINE, ZERO);
+    await teacher.approveItem(t1);
+    await teacher.approveItem(t2);
+    const test = await teacher.createAssignment({
+      sectionId: one.s8a, subjectId: one.maths, kind: 'test', title: 'Unit test',
+      dueAt: new Date(Date.now() + DAY).toISOString(), timeLimitMinutes: 10, answerTypes: ['mcq'],
+    });
+    await teacher.setAssignmentItems(test, [t1, t2]);
+    await teacher.publishAssignment(test);
+    await as(asha).startTest(test);
+    await as(asha).submitMcq(test, { [t1]: 1, [t2]: 1 });
+    await think(db, [asha]);
+    // The brain holds it; the teacher sees it on her report, she does not.
+    expect((await teacher.studentMistakes(asha)).map((m) => m.label)).toEqual([ZERO]);
+    expect(await as(asha).studentMistakes(asha)).toEqual([]);
+
+    const before = await as(asha).practiceForMe('Mathematics', 20);
+    expect(before.length).toBeGreaterThan(0);
+    for (const r of before) expect(r).toMatchObject({ watchOut: null });
+    for (const r of before) expect(r.reason).not.toBe('misconception');
+
+    await db.query(`update lms.assignment set results_released_at = now() where id = $1`, [test]);
+    const after = await as(asha).practiceForMe('Mathematics', 3);
+    expect(new Set(ids(after))).toEqual(new Set(zeroItems()));
+    for (const r of after) expect(r).toMatchObject({ reason: 'misconception', watchOut: ZERO });
+  });
+});
