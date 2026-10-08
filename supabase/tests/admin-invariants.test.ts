@@ -86,6 +86,8 @@ describe('the admin schema', () => {
       'admin.school_people',
       'admin.school_person',
       'admin.school_person_disable',
+      'admin.school_privacy_list',
+      'admin.school_privacy_set',
       'admin.school_quiet_set',
       'admin.school_set_licence',
       'admin.school_weekly',
