@@ -115,7 +115,7 @@ describe('a composed page', () => {
 
   it('writes key points smaller than a stacked board, because the camera comes close', () => {
     const made = composed([{ do: 'say', text: 'One.' }, { do: 'write', text: 'Villi are tiny fingers' }]);
-    // 20, against a stacked board's 24 (both 0.9 of their Caveat sizes, 2026-10-07).
+    // 19, against a stacked board's 24 (layout.ts POINT_SIZE, 2026-10-08).
     expect(made.elements.filter((e) => e.kind === 'handwrite').map((e) => (e as { size?: number }).size)).toEqual([19]);
   });
 

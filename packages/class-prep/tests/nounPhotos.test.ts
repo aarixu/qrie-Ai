@@ -77,6 +77,17 @@ describe('finding a photograph for each placed thing', () => {
     expect(photos.size).toBe(0);
   });
 
+  it('stops waiting at its deadline, keeping what it found, so the icons are not held up (review, 2026-10-08)', async () => {
+    const web: WebImageAdapter = {
+      search: async (q) => (q === 'lungs' ? new Promise<never>(() => {}) : [openly(`${q}.jpg`)]),
+      fetch: async () => PNG,
+    };
+    const started = Date.now();
+    const photos = await findNounPhotos(lesson([graphic('a', 'runner'), graphic('b', 'lungs')]), 't', web, { look: async () => yes }, { deadlineMs: 60 });
+    expect(Date.now() - started).toBeLessThan(1500);
+    expect([...photos.keys()]).toEqual(['runner']);
+  }, 3000);
+
   it('has nothing to do on a board with no placed things', async () => {
     const web = { search: vi.fn(), fetch: vi.fn() };
     expect((await findNounPhotos(lesson([]), 't', web as never, { look: vi.fn() })).size).toBe(0);

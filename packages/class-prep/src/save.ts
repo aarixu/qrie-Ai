@@ -415,6 +415,22 @@ export function saveable(prep: Prepared, meta: SaveMeta): SavedClass | null {
    * pointed at by each element that shows it.
    */
   const photoPaths = new Map<string, string>();
+  // Every name a picture is written under by its own id, so a photograph is
+  // never given one of them: a picture briefed as "photo_1" is a real id.
+  const taken = new Set<string>();
+  for (const el of doc.elements) {
+    const drawn = el.kind === 'graphic' ? null : DATA_URL.exec(prep.assets[el.id] ?? '');
+    if (drawn) taken.add(`generated/${el.id}.${extensionFor(drawn[1])}`);
+  }
+  const photoPathFor = (extension: string): string => {
+    for (let n = photoPaths.size + 1; ; n += 1) {
+      const path = `generated/photo_${n}.${extension}`;
+      if (!taken.has(path)) {
+        taken.add(path);
+        return path;
+      }
+    }
+  };
 
   for (const el of doc.elements) {
     const asset = prep.assets[el.id];
@@ -423,7 +439,7 @@ export function saveable(prep: Prepared, meta: SaveMeta): SavedClass | null {
     if (drawn && el.kind === 'graphic') {
       let path = photoPaths.get(asset);
       if (!path) {
-        path = `generated/photo_${photoPaths.size + 1}.${extensionFor(drawn[1])}`;
+        path = photoPathFor(extensionFor(drawn[1]));
         photoPaths.set(asset, path);
         files.push({ path, body: drawn[2], encoding: 'base64' });
       }

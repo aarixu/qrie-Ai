@@ -1,3 +1,6 @@
+// @vitest-environment node
+// As a script asks (the prewarm runner): a page asks with no header of its own,
+// and commonsBrowser.test.ts says so.
 import { describe, expect, it, vi } from 'vitest';
 import { THUMB_WIDTH, candidatesFrom, createCommonsSearch, videoCandidatesFrom } from '../src/commons';
 import { mayReuse } from '../src/fromWeb';
@@ -149,6 +152,15 @@ describe('finding photographs a school may show (2026-10-07)', () => {
     expect(c.page).toBe('https://commons.wikimedia.org/wiki/File:Kidney.jpg');
   });
 
+  it('refuses a file Commons marks as needing a person\'s or a brand\'s consent (review, 2026-10-08)', () => {
+    // A paid app is commercial use: an identifiable person's photograph marked
+    // "personality" needs their consent for that, whatever its licence says.
+    for (const value of ['personality', 'trademarked', 'personality|trademarked']) {
+      const got = candidatesFrom(body([page({ imageinfo: { extmetadata: { License: { value: 'cc-by-sa-4.0' }, LicenseShortName: { value: 'CC BY-SA 4.0' }, Restrictions: { value } } } })]));
+      expect(got.every((c) => !mayReuse(c.license)), value).toBe(true);
+    }
+  });
+
   it('never offers a file whose own name says it is not for a child', () => {
     for (const title of [
       'File:Human heart male adult autopsy.jpg',
@@ -239,10 +251,22 @@ describe('the request it builds', () => {
       }) as never,
     });
     await search.search('a kidney', 12);
-    const agent = new Headers(inits[0]?.headers).get('Api-User-Agent') ?? '';
+    const agent = new Headers(inits[0]?.headers).get('User-Agent') ?? '';
     expect(agent).toMatch(/^QRIE/);
     expect(agent).toContain('https://');
     expect(agent).not.toContain('@');
+  });
+
+  it('says who is asking when it downloads a file too (review, 2026-10-08)', async () => {
+    const inits: RequestInit[] = [];
+    const search = createCommonsSearch({
+      fetch: (async (_url: string, init: RequestInit) => {
+        inits.push(init);
+        return { ok: false } as Response;
+      }) as never,
+    });
+    await search.fetch('https://upload.wikimedia.org/x.jpg');
+    expect(new Headers(inits[0]?.headers).get('User-Agent') ?? '').toMatch(/^QRIE/);
   });
 
   it('gives up on a search or a file that does not answer, rather than holding the class', async () => {
@@ -344,13 +368,39 @@ describe('a moving picture on Commons (2026-10-07)', () => {
     ],
   });
 
-  it('offers its still to be looked at, and its small transcodes to be played, best first', () => {
+  it('offers its still to be looked at, and its small transcodes to be played, lightest that reads first', () => {
+    // A <source> list plays the first the browser can, whatever the line: so
+    // the one a phone on mobile data can afford comes first (review, 2026-10-08).
     const [c] = videoCandidatesFrom(body([video()]));
     expect(c.url).toContain('500px--Heart.webm.jpg');
-    expect(c.video?.map((v) => v.src.split('.').slice(-3).join('.'))).toEqual(['480p.vp9.webm', '240p.vp9.webm']);
+    expect(c.video?.map((v) => v.src.split('.').slice(-3).join('.'))).toEqual(['240p.vp9.webm', '480p.vp9.webm']);
     expect(c.video?.every((v) => v.type === 'video/webm')).toBe(true);
     expect(c.license).toBe('CC BY-SA 4.0');
     expect(c.author).toBe('Someone');
+    const withAll = videoCandidatesFrom(
+      body([video({ videoinfo: { derivatives: ['480p.vp9.webm', '240p.vp9.webm', '360p.vp9.webm'].map(derivative) } })]),
+    );
+    expect(withAll[0].video?.map((v) => v.src.split('.').slice(-3).join('.'))).toEqual(['360p.vp9.webm', '240p.vp9.webm', '480p.vp9.webm']);
+  });
+
+  it('offers frames from its middle to be looked at too, not only the still it opens on (review, 2026-10-08)', () => {
+    // One frame passed is not a clip passed: a bypass operation can open on
+    // green drapes. A third and two thirds of the way in, at 28.9 seconds.
+    const [c] = videoCandidatesFrom(body([video()]));
+    expect(c.frames).toEqual([
+      'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Heart.webm/500px-seek%3D9.6-Heart.webm.jpg',
+      'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Heart.webm/500px-seek%3D19.3-Heart.webm.jpg',
+    ]);
+  });
+
+  it('offers no clip whose middle cannot be looked at', () => {
+    expect(videoCandidatesFrom(body([video({ videoinfo: { thumburl: 'https://thumb.wikimedia.org/odd/still.jpg' } })]))).toEqual([]);
+  });
+
+  it('never offers a clip whose name says it shows an operation', () => {
+    for (const title of ['File:Beating heart mitral valve repair, bypass.webm', 'File:Heart awaiting transplant.webm', 'File:Biopsy needle.webm']) {
+      expect(videoCandidatesFrom(body([video({ title })])), title).toEqual([]);
+    }
   });
 
   it('never offers the original, which can run to sixty megabytes, nor a codec a browser cannot play', () => {
@@ -359,8 +409,9 @@ describe('a moving picture on Commons (2026-10-07)', () => {
     expect(c.video?.some((v) => v.src.endsWith('.mov'))).toBe(false);
   });
 
-  it('keeps a loop short enough to watch while she talks', () => {
+  it('keeps a loop short enough to watch while she talks, and to check', () => {
     expect(videoCandidatesFrom(body([video({ videoinfo: { duration: 1 } })]))).toEqual([]);
+    expect(videoCandidatesFrom(body([video({ videoinfo: { duration: 45 } })]))).toEqual([]);
     expect(videoCandidatesFrom(body([video({ videoinfo: { duration: 400 } })]))).toEqual([]);
   });
 

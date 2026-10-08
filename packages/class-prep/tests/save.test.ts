@@ -170,6 +170,17 @@ describe("a placed thing's photograph (2026-10-07)", () => {
     expect(photos[0].body).toBe('/9j/4AAQ');
   });
 
+  it('never takes the file name of a picture already called photo_1 (review, 2026-10-08)', () => {
+    const doc = withPhotos();
+    doc.elements.unshift({ kind: 'image', id: 'photo_1', x: 0, y: 0, w: 100, h: 100, src: 'generated/photo_1.jpg', alt: 'a photo' });
+    const s = saveable({ lesson: doc, assets: { ...assets(), photo_1: jpeg.replace('/9j/4AAQ', '/9j/OTHER'), 'b1__runner one': jpeg, b2__runner: jpeg }, report: clean }, meta)!;
+    const paths = s.files.map((f) => f.path);
+    expect(new Set(paths).size).toBe(paths.length);
+    const out = JSON.parse(s.files.find((f) => f.path === 'lesson.json')!.body) as Lesson;
+    const srcOf = (id: string) => (out.elements.find((e) => e.id === id) as { src?: string }).src;
+    expect(srcOf('b2__runner')).not.toBe(srcOf('photo_1'));
+  });
+
   it('is pointed at by every element that shows it, and kept out of the inline markup', () => {
     const s = saved();
     const doc = JSON.parse(s.files.find((f) => f.path === 'lesson.json')!.body) as Lesson;

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Lesson } from '@ai-tutor/lesson-format';
-import { Scene, computeVisible } from '@ai-tutor/stage';
+import { CreditsList, Scene, computeVisible } from '@ai-tutor/stage';
 import { usePlayer, createBrowserTts } from '@ai-tutor/player';
 import type { PrepProgress, PrepReport } from '@ai-tutor/class-prep';
 import { prepareLiveClass } from '../lib/liveClass';
@@ -192,6 +192,8 @@ export function Board({ lesson, assets }: { lesson: Lesson; assets: Record<strin
           {player.beatIndex + 1}/{lesson.beats.length}
         </code>
       </div>
+
+      <CreditsList lesson={lesson} style={{ margin: '6px 0' }} />
 
       <p style={S.caption}>{player.caption}</p>
       <p style={S.muted}>

@@ -17,12 +17,20 @@ import type { VisionAdapter } from './picture.ts';
  * and not on their sum. Never throws; a noun the web could not answer is
  * simply not in the result.
  */
+/**
+ * How long the photographs may hold the icons up, in all. The icons for the
+ * nouns left over wait on this, and on a slow route to Wikimedia a search
+ * alone has taken fifty seconds (2026-10-08): past this, the nouns still being
+ * looked for keep their icons.
+ */
+export const NOUN_PHOTO_DEADLINE_MS = 45_000;
+
 export async function findNounPhotos(
   lesson: Lesson,
   topic: string,
   web: WebImageAdapter,
   eyes: VisionAdapter,
-  options: FindOptions = {},
+  options: FindOptions & { deadlineMs?: number } = {},
 ): Promise<Map<string, FoundPicture>> {
   const labelOf = new Map<string, string>();
   for (const el of lesson.elements) {
@@ -31,7 +39,11 @@ export async function findNounPhotos(
   }
 
   const found = new Map<string, FoundPicture>();
-  await Promise.all(
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<void>((resolve) => {
+    timer = setTimeout(resolve, options.deadlineMs ?? NOUN_PHOTO_DEADLINE_MS);
+  });
+  const looking = Promise.all(
     [...labelOf].map(async ([noun, label]) => {
       try {
         const { found: photo } = await findOnTheWeb(
@@ -55,7 +67,11 @@ export async function findNounPhotos(
       }
     }),
   );
-  return found;
+  await Promise.race([looking, deadline]);
+  clearTimeout(timer);
+  // A copy: a search still running past the deadline must not add a photograph
+  // to a map whose nouns have already gone on to their icons.
+  return new Map(found);
 }
 
 /**

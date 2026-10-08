@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { boxOf, fitHand, handWidth, textWidth, wrapHand } from '../src/index';
+import { boxOf, fitHand, fitText, graphicLabelSize, handWidth, textWidth, wrapHand } from '../src/index';
 
 /**
  * THE RULER FOR WHAT SHE WRITES (2026-10-07).
@@ -50,6 +50,17 @@ describe('the ruler for her lines', () => {
   it('is what boxOf measures a handwrite with', () => {
     const line = 'Evaporation causes cooling';
     expect(boxOf({ kind: 'handwrite', id: 'h', x: 500, y: 300, text: line, size: 30 }).w).toBeCloseTo(handWidth(line, 30));
+  });
+
+  it('measures a picture\'s name, drawn in her face, never narrower than it is drawn (review, 2026-10-08)', () => {
+    // Capitals in Quicksand run wider than the sans ruler's 0.58 an em: "DNA"
+    // and "ATP" were drawn about 15% wider than the box the camera framed.
+    for (const label of ['DNA', 'ATP', 'MRNA WAVE', 'Working muscles']) {
+      const g = { kind: 'graphic' as const, id: 'g', x: 0, y: 0, w: 40, h: 40, noun: 'x', label };
+      const size = graphicLabelSize(40, label);
+      expect(boxOf(g).w, label).toBeGreaterThanOrEqual(handWidth(label, size) - 1e-9);
+      expect(size, label).toBeLessThanOrEqual(fitText(label, 40 * 1.8, 26, 14));
+    }
   });
 
   it('wraps and fits by the same measure', () => {

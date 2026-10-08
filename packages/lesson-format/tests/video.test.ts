@@ -33,6 +33,12 @@ describe('a moving picture', () => {
     expect(validateLesson(lessonWith([{ ...webm, src: 'http://example.org/a.webm' }])).ok).toBe(false);
   });
 
+  it('plays only from where the class finds its loops, Wikimedia\'s file host (review, 2026-10-08)', () => {
+    // A saved class is data from a store: a loop it names autoplays on every
+    // student's board, so it may come only from the one place they are found.
+    expect(validateLesson(lessonWith([{ ...webm, src: 'https://example.org/a.webm' }])).ok).toBe(false);
+  });
+
   it('names a video type the board can play', () => {
     expect(validateLesson(lessonWith([{ ...webm, type: 'text/html' }])).ok).toBe(false);
     expect(validateLesson(lessonWith([{ src: webm.src }])).ok).toBe(false);

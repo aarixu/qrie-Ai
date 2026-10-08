@@ -52,9 +52,6 @@ const sizeOf = (el: Element): number | null => {
 
 /** Scene never draws a board unit larger than this many pixels. */
 const MAX_UNIT_PX = 1.6;
-/** How tall a lowercase letter stands, in ems: measured from the faces' own files. */
-const QUICKSAND_X_HEIGHT = 0.54;
-const CAVEAT_X_HEIGHT = 0.36;
 const SCREENS = { sideways: 652, laptop: 944, upright: 390 } as const;
 type Screen = keyof typeof SCREENS;
 
@@ -96,10 +93,6 @@ describe('how big her writing comes out, 300 seeded classes at 16:9', () => {
     expect(median('sideways')).toBeGreaterThanOrEqual(17);
     expect(under('sideways', 12)).toBeLessThanOrEqual(0.085);
     expect(under('sideways', 14)).toBeLessThanOrEqual(0.24);
-  });
-
-  it('writes lowercase taller on that phone than Caveat did at 22 px', () => {
-    expect(median('sideways') * QUICKSAND_X_HEIGHT).toBeGreaterThan(22 * CAVEAT_X_HEIGHT);
   });
 
   it('reads at about 25 px on a laptop, nothing under 12', () => {

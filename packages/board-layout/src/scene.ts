@@ -1,7 +1,7 @@
 import {
   fitText,
   graphicLabelSize,
-  textWidth,
+  graphicLabelWidth,
   BESIDE_GAP,
   type Element,
   type Rect,
@@ -145,7 +145,7 @@ export function layoutScene(
   const spanAt = (q: PlaceStep, k: number) => {
     const size = natural(q) * k;
     if (!q.label) return size;
-    const write = textWidth(q.label, graphicLabelSize(size, q.label, labelSide));
+    const write = graphicLabelWidth(q.label, graphicLabelSize(size, q.label, labelSide));
     return labelSide === 'beside' ? size + BESIDE_GAP + write : Math.max(size, write);
   };
 

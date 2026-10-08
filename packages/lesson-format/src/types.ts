@@ -50,21 +50,11 @@ export interface ImagePart {
 }
 
 /**
- * WHO MADE A PICTURE THAT CAME FROM THE WEB, AND UNDER WHAT LICENCE.
- *
- * Aarav's rule (2026-10-07): a real thing on the board is a real photograph,
- * found where its licence lets a school build on it — public domain, CC0, CC
- * BY, CC BY-SA. The last two ask for the author and the licence to be shown
- * with the work, so the credit travels on the element it is drawn as and the
- * board writes it beside the picture. The links are https web pages, never
- * anything else: a saved class is data from a store, and a credit's link is
- * one a student can follow.
- */
-/**
  * ONE WAY TO PLAY A MOVING PICTURE: a silent loop found on the web, for a
  * picture whose lesson is the movement itself (Aarav, 2026-10-07: "images ya
- * videos ya kuch or jo bhi ho"). An https address and its video type; the
- * board tries each in turn and keeps the still where none plays.
+ * videos ya kuch or jo bhi ho"). An https address on Wikimedia's file host
+ * (validate.ts) and its video type; the board tries each in turn and keeps
+ * the still where none plays.
  */
 export interface VideoSource {
   src: string;
@@ -72,6 +62,18 @@ export interface VideoSource {
   type: string;
 }
 
+/**
+ * WHO MADE A PICTURE THAT CAME FROM THE WEB, AND UNDER WHAT LICENCE.
+ *
+ * Aarav's rule (2026-10-07): a real thing on the board is a real photograph,
+ * found where its licence lets a school build on it — public domain, CC0, CC
+ * BY, CC BY-SA. The last two ask for the author and the licence to be shown
+ * with the work, so the credit travels on the element it is drawn as: the
+ * board writes it on the picture's foot, and the class lists it with its links
+ * under the board (stage CreditsList). The links are https web pages, never
+ * anything else: a saved class is data from a store, and a credit's link is
+ * one a student can follow.
+ */
 export interface Credit {
   author?: string;
   /** As the source names it, e.g. "CC BY-SA 4.0". */

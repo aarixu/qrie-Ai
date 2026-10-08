@@ -49,11 +49,11 @@ export const THUMB_WIDTH = 960;
 const PROPS = 'url|extmetadata|size|mime';
 
 /**
- * Who is asking. Wikimedia limits a client that does not say so to ten
- * requests a minute (API rate limits, 2026), and a page of placed things is
- * more searches than that. A browser may not set User-Agent, so the header
- * Wikimedia reads from a browser is Api-User-Agent; it is the one the API's
- * CORS reply allows. A web address to reach the project, no personal one.
+ * Who is asking, from a script. Wikimedia limits a client that does not say
+ * so to ten requests a minute (API rate limits, 2026), and a page of placed
+ * things is more searches than that. A browser is already identified by its
+ * own User-Agent and allowed 200 a minute, so a page sends nothing of its own
+ * (agentHeaders). A web address to reach the project, no personal one.
  */
 export const AGENT = 'QRIE-classroom/0.1 (https://qrie-canvas-demo.vercel.app)';
 
@@ -80,7 +80,7 @@ const OPEN_CODE = /^(?:pd|cc0|cc-zero|cc-by(?:-sa)?-\d(?:\.\d)?(?:-[a-z]+)?)$/i;
  * reproduction" is a chapter of the syllabus.
  */
 const NOT_FOR_A_CHILD =
-  /autops|cadaver|corpse|dissect|surgery|surgical|wound|\bgore\b|injur|\bnude\b|naked|porn|execution|gunshot|bodycam|murder|massacre|tortur|lynch/i;
+  /autops|cadaver|corpse|dissect|surgery|surgical|wound|\bgore\b|injur|\bnude\b|naked|porn|execution|gunshot|bodycam|murder|massacre|tortur|lynch|transplant|bypass|incision|biopsy|endoscop|laparoscop|in.situ|ex.vivo/i;
 
 /** One page of the search's reply: its title, and its place in the ranking. */
 interface CommonsPage {
@@ -169,19 +169,42 @@ function rankedPages(body: unknown): CommonsPage[] {
 }
 
 /**
- * The transcodes a board can play, smallest that still reads first-ish: 480p
- * is sharp in the box a picture gets, 360p and 240p are there for a slow line.
- * VP9 WebM only. The original can run to sixty megabytes, and Commons' .mov
- * transcodes are MPEG-4 Part 2 ("mp4v"), which no current browser plays.
+ * The transcodes a board can play, in the order it tries them. A <source>
+ * list plays the first one the browser CAN play, whatever the line — it never
+ * picks by bandwidth — so the order is the choice: 360p first, sharp enough
+ * for the box a picture gets and light enough for a phone on mobile data,
+ * then 240p, and 480p only when neither was made. VP9 WebM only. The original
+ * can run to sixty megabytes, and Commons' .mov transcodes are MPEG-4 Part 2
+ * ("mp4v"), which no current browser plays.
  */
-const PLAYABLE = ['480p.vp9.webm', '360p.vp9.webm', '240p.vp9.webm'] as const;
+const PLAYABLE = ['360p.vp9.webm', '240p.vp9.webm', '480p.vp9.webm'] as const;
 
 /**
  * How long a loop may run, in seconds. Long enough to show the movement and
- * short enough to sit beside what she is saying: a two-minute documentary is
- * a different thing from a picture that moves.
+ * short enough to sit beside what she is saying — and to be checked: a few
+ * frames looked at say more about thirty seconds than about ninety (review,
+ * 2026-10-08).
  */
-export const VIDEO_SECONDS = { min: 2, max: 90 } as const;
+export const VIDEO_SECONDS = { min: 2, max: 30 } as const;
+
+/**
+ * Stills from a clip's middle, to be looked at as well as the one it opens on.
+ *
+ * One frame passed is not a clip passed: a bypass operation can open on green
+ * drapes (review, 2026-10-08). Commons draws any moment of a video as a
+ * thumbnail when its name asks for one — "500px-seek=9.6-Heart.webm.jpg" for
+ * 9.6 seconds in, fetched and checked 2026-10-08 — so the default still's
+ * address, "500px--Heart.webm.jpg", is rewritten for a third and two thirds
+ * of the way through. An address that is not that shape gives no frames, and
+ * a clip with no frames to look at is not offered.
+ */
+function framesOf(still: string, seconds: number): string[] {
+  const [address] = still.split('?');
+  const shape = /^(.*\/)(\d+)px--([^/]+)$/.exec(address);
+  if (!shape) return [];
+  const [, folder, width, name] = shape;
+  return [1 / 3, 2 / 3].map((at) => `${folder}${width}px-seek%3D${Number((seconds * at).toFixed(1))}-${name}`);
+}
 
 /**
  * The videos a search found, best first: each as its still (to be looked at,
@@ -200,7 +223,9 @@ export function videoCandidatesFrom(body: unknown): WebCandidate[] {
       if (found?.src) video.push({ src: found.src, type: 'video/webm' });
     }
     if (video.length === 0) continue;
-    out.push({ ...described(info.thumburl, info), video });
+    const frames = framesOf(info.thumburl, seconds);
+    if (frames.length === 0) continue;
+    out.push({ ...described(info.thumburl, info), video, frames });
   }
   return out;
 }
@@ -211,7 +236,12 @@ function described(url: string, info: CommonsImageInfo): WebCandidate {
   // The name people read, kept only when the code behind it is one this may
   // build on: without it, `mayReuse` sees no licence and refuses the file.
   const code = plain(meta.License);
-  const licence = code && OPEN_CODE.test(code) ? (plain(meta.LicenseShortName) ?? plain(meta.UsageTerms)) : undefined;
+  // And never a file Commons marks as needing someone's consent for use beyond
+  // its licence: an identifiable person ("personality") or a brand
+  // ("trademarked"). A paid app is commercial use (review, 2026-10-08).
+  const consent = /personality|trademark/i.test(plain(meta.Restrictions) ?? '');
+  const licence =
+    code && OPEN_CODE.test(code) && !consent ? (plain(meta.LicenseShortName) ?? plain(meta.UsageTerms)) : undefined;
   const artist = plain(meta.Artist);
   const terms = plain(meta.LicenseUrl);
 
@@ -245,10 +275,18 @@ export interface CommonsOptions {
   thumbWidth?: number;
 }
 
-/** The headers that say who is asking; User-Agent only where a page may set it. */
+/**
+ * The headers that say who is asking: User-Agent from a script, and nothing
+ * from a page.
+ *
+ * Any header a page adds makes each search two round trips, a CORS preflight
+ * and then the search. Measured on 2026-10-08 on a slow route to Wikimedia:
+ * 20-35 seconds a search with Api-User-Agent, 3.5-9 seconds without it, and
+ * the browser's own User-Agent already identifies the page.
+ */
 function agentHeaders(): Record<string, string> {
   const inAPage = typeof document !== 'undefined';
-  return inAPage ? { 'Api-User-Agent': AGENT } : { 'Api-User-Agent': AGENT, 'User-Agent': AGENT };
+  return inAPage ? {} : { 'User-Agent': AGENT, 'Api-User-Agent': AGENT };
 }
 
 /**
@@ -334,7 +372,9 @@ export function createCommonsSearch(options: CommonsOptions = {}): WebImageAdapt
     },
 
     async fetch(url) {
-      const response = await doFetch(url, { signal: AbortSignal.timeout(FILE_TIMEOUT_MS) });
+      // From a script, say who is asking here too: upload.wikimedia.org holds
+      // file downloads to the same User-Agent policy as the API.
+      const response = await doFetch(url, { headers: agentHeaders(), signal: AbortSignal.timeout(FILE_TIMEOUT_MS) });
       if (!response.ok) return null;
 
       const type = response.headers.get('content-type') ?? 'image/jpeg';

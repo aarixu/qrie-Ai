@@ -401,7 +401,22 @@ export function graphicLabelSize(
 ): number {
   // Beneath, a label must not dominate the picture it names. Beside, it has
   // the rest of the row and only needs to be legible.
-  return fitText(label, iconW * (side === 'beside' ? 3.5 : 1.8), 26, 14);
+  const room = iconW * (side === 'beside' ? 3.5 : 1.8);
+  // Fitted by both rulers and the smaller kept (graphicLabelWidth): never
+  // larger than the sans ruler alone made it, so no layout grows from this.
+  return Math.min(fitText(label, room, 26, 14), fitHand(label, room, 26, 14));
+}
+
+/**
+ * How wide a picture's name is drawn.
+ *
+ * It is written in her face (Quicksand), whose capitals run wider than the
+ * sans ruler's 0.58 an em — "DNA" was drawn a quarter wider than the box the
+ * camera and the overlap check measured (review, 2026-10-08) — and whose
+ * lowercase runs narrower. So both, and the wider: never under what is drawn.
+ */
+export function graphicLabelWidth(label: string, size: number): number {
+  return Math.max(textWidth(label, size), handWidth(label, size));
 }
 
 /**
@@ -484,10 +499,10 @@ export function boxOf(el: Element): Rect {
     case 'graphic': {
       if (!el.label) return { x: el.x, y: el.y, w: el.w, h: el.h };
       if (el.labelSide === 'beside') {
-        const labelW = textWidth(el.label, graphicLabelSize(el.w, el.label, 'beside'));
+        const labelW = graphicLabelWidth(el.label, graphicLabelSize(el.w, el.label, 'beside'));
         return { x: el.x, y: el.y, w: el.w + BESIDE_GAP + labelW, h: el.h };
       }
-      const labelW = textWidth(el.label, graphicLabelSize(el.w, el.label));
+      const labelW = graphicLabelWidth(el.label, graphicLabelSize(el.w, el.label));
       const w = Math.max(el.w, labelW);
       return { x: el.x + el.w / 2 - w / 2, y: el.y, w, h: el.h + 34 };
     }

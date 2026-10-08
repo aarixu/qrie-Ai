@@ -688,11 +688,17 @@ function renderImage(el: Extract<Element, { kind: 'image' }>, asset?: string): R
 /** The longest an author's name runs in a credit on the board; the rest is an ellipsis. */
 const CREDIT_AUTHOR_MAX = 28;
 
-/** "A. Person · CC BY-SA 4.0": who made it, and the licence it is shown under. */
-export function creditLine(credit: Credit): string {
+/**
+ * "A. Person · CC BY-SA 4.0": who made it, and the licence it is shown under,
+ * in at most `room` characters. The author gives way first; the licence is
+ * the part that must be read.
+ */
+export function creditLine(credit: Credit, room = Infinity): string {
+  const cut = (text: string, max: number): string => (text.length <= max ? text : `${text.slice(0, Math.max(1, max - 1)).trimEnd()}…`);
+  const licence = cut(credit.license, room);
   const author = credit.author?.trim();
-  const short = author && author.length > CREDIT_AUTHOR_MAX ? `${author.slice(0, CREDIT_AUTHOR_MAX - 1).trimEnd()}…` : author;
-  return short ? `${short} · ${credit.license}` : credit.license;
+  const left = Math.min(CREDIT_AUTHOR_MAX, room - licence.length - 3);
+  return author && left >= 4 ? `${cut(author, left)} · ${licence}` : licence;
 }
 
 /**
@@ -702,11 +708,16 @@ export function creditLine(credit: Credit): string {
  * work. Small, in the picture's bottom-right corner on a pale strip so it
  * reads over any photograph — where a museum label or a textbook's photo
  * credit goes, and out of the way of anything she writes beside it. The full
- * credit, with its links, stays on the element for a credits list.
+ * credit, with its links, is listed under the board (CreditsList).
+ *
+ * Never under 8 units, and never wider than the picture: a placed thing's
+ * photograph is a hundred-odd units across, and at 6 its credit could not be
+ * read, while a long one ran past the strip onto its neighbours (review,
+ * 2026-10-08).
  */
 function renderCredit(credit: Credit, r: Rect): ReactElement {
-  const line = creditLine(credit);
-  const size = Math.max(6, Math.min(11, r.w * 0.028));
+  const size = Math.max(8, Math.min(11, r.w * 0.028));
+  const line = creditLine(credit, Math.floor((r.w - size) / (size * 0.58)));
   const w = Math.min(r.w, textWidth(line, size) + size);
   const h = size * 1.5;
   return (
@@ -1263,7 +1274,9 @@ function renderGraphic(
             y={r.y}
             width={r.w}
             height={r.h}
-            preserveAspectRatio="xMidYMid slice"
+            // Cut to its own shape only when its shape is known: a photograph
+            // of unknown shape is drawn whole inside the square.
+            preserveAspectRatio={el.aspect ? 'xMidYMid slice' : 'xMidYMid meet'}
             clipPath={`url(#${clipId})`}
             aria-label={el.label ?? el.noun}
           />

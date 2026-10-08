@@ -44,7 +44,8 @@ describe('a placed thing with a photograph', () => {
     const host = render([runner], { g: JPEG });
     const image = within(host, 'g').querySelector('image');
     expect(image?.getAttribute('href')).toBe(JPEG);
-    expect(within(host, 'g').innerHTML).not.toContain('base64,/9j/4AAQ</g>');
+    // Its bytes appear once, in that href, and nowhere as markup or text.
+    expect(within(host, 'g').innerHTML.split('base64,').length - 1).toBe(1);
     expect(texts(host, 'g')).toContain('Working muscles');
   });
 
@@ -56,6 +57,13 @@ describe('a placed thing with a photograph', () => {
     expect(Number(image.getAttribute('y')) + Number(image.getAttribute('height'))).toBeCloseTo(220);
   });
 
+  it('draws a photograph of unknown shape whole, not cut to a square (review, 2026-10-08)', () => {
+    const { aspect: _unknown, ...shapeless } = runner as Extract<Element, { kind: 'graphic' }>;
+    const image = within(render([shapeless], { g: JPEG }), 'g').querySelector('image')!;
+    expect(image.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet');
+    expect(within(render([runner], { g: JPEG }), 'g').querySelector('image')!.getAttribute('preserveAspectRatio')).toBe('xMidYMid slice');
+  });
+
   it('draws the saved file when the class was kept', () => {
     const host = render([{ ...runner, src: '/c/generated/photo_runner.jpg' }]);
     expect(within(host, 'g').querySelector('image')?.getAttribute('href')).toBe('/c/generated/photo_runner.jpg');
@@ -63,6 +71,17 @@ describe('a placed thing with a photograph', () => {
 
   it('says whose photograph it is', () => {
     expect(texts(render([runner], { g: JPEG }), 'g').join(' ')).toContain('A. Person · CC BY-SA 4.0');
+  });
+
+  it('writes the credit large enough to read and no wider than the photograph (review, 2026-10-08)', () => {
+    const long = { ...runner, credit: { author: 'Photographer with a rather long name', license: 'CC BY-SA 4.0' } };
+    const host = render([long], { g: JPEG });
+    const credit = [...within(host, 'g').querySelectorAll('text')].find((t) => (t.textContent ?? '').includes('CC BY-SA'))!;
+    expect(Number(credit.getAttribute('font-size'))).toBeGreaterThanOrEqual(8);
+    const size = Number(credit.getAttribute('font-size'));
+    // Measured as the board measures sans text, a line that fits the photo's 120.
+    expect((credit.textContent ?? '').length * size * 0.58).toBeLessThanOrEqual(120);
+    expect(credit.textContent).toContain('…');
   });
 
   it('still draws an icon as an icon', () => {

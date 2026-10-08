@@ -51,6 +51,7 @@ export {
   mathPlain,
   writeMs,
   graphicLabelSize,
+  graphicLabelWidth,
   BESIDE_GAP,
   flowHeight,
   FLOW_STEP_H,

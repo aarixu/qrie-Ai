@@ -76,6 +76,11 @@ export interface WebCandidate {
    * looked at and passed.
    */
   video?: VideoSource[];
+  /**
+   * For a video: stills from its middle, each of which must pass too — one
+   * frame passed is not a clip passed (review, 2026-10-08).
+   */
+  frames?: string[];
 }
 
 export interface WebImageAdapter {
@@ -106,13 +111,44 @@ export interface FoundPicture extends PictureResult {
 /** The credit a candidate carries, or null when it has no licence to name. */
 export function creditOf(c: WebCandidate): Credit | null {
   if (!c.license) return null;
+  const author = c.author ? shortened(c.author, CREDIT_AUTHOR_MAX) : undefined;
+  const licenseUrl = webPage(c.licenseUrl);
+  const page = webPage(c.page);
   return {
-    ...(c.author ? { author: c.author } : {}),
-    license: c.license,
-    ...(c.licenseUrl ? { licenseUrl: c.licenseUrl } : {}),
-    ...(c.page ? { page: c.page } : {}),
+    ...(author ? { author } : {}),
+    license: shortened(c.license, CREDIT_LICENCE_MAX),
+    ...(licenseUrl ? { licenseUrl } : {}),
+    ...(page ? { page } : {}),
   };
 }
+
+/**
+ * A CREDIT THE CLASS FORMAT WILL KEEP (review, 2026-10-08).
+ *
+ * Commons' Artist text runs to any length and its LicenseUrl is sometimes
+ * http or protocol-relative ("//creativecommons.org/…"). The format keeps a
+ * credit's words under 200 characters and its links as https pages under 600
+ * (lesson-format validate.ts), and a credit it refuses makes the keep fail —
+ * so the next student pays to prepare the same class again. Made to fit
+ * here, where it is made.
+ */
+const CREDIT_AUTHOR_MAX = 120;
+const CREDIT_LICENCE_MAX = 80;
+const LINK_MAX = 600;
+
+const shortened = (text: string, max: number): string =>
+  text.length <= max ? text : `${text.slice(0, max - 1).trimEnd()}…`;
+
+/** An https web page, from what a source wrote; undefined when it is not one. */
+function webPage(link: string | undefined): string | undefined {
+  if (!link) return undefined;
+  const https = link.trim().replace(/^\/\//, 'https://').replace(/^http:\/\//i, 'https://');
+  return https.length <= LINK_MAX && /^https:\/\/[^\s"'<>]+$/.test(https) ? https : undefined;
+}
+
+/** The loop sources the class format keeps: https, under its length. */
+export const keepableVideo = (sources: readonly VideoSource[] | undefined): VideoSource[] =>
+  (sources ?? []).filter((s) => s.src.length <= LINK_MAX && /^https:\/\/[^\s"'<>]+$/.test(s.src));
 
 /**
  * Licences that allow a picture to be reused in a served lesson.
@@ -405,7 +441,11 @@ async function firstThatPasses(
     return { found: null, refusals: [unreachable] };
   }
 
-  const usable = candidates.filter((c) => c.url && mayReuse(c.license));
+  // A loop keeps only the sources the class format keeps, and a loop left with
+  // none is no loop at all.
+  const usable = candidates
+    .map((c) => (c.video ? { ...c, video: keepableVideo(c.video) } : c))
+    .filter((c) => c.url && mayReuse(c.license) && (c.video === undefined || c.video.length > 0));
   if (usable.length === 0) {
     refusals.push(
       candidates.length === 0
@@ -425,6 +465,35 @@ async function firstThatPasses(
    * failed spent no looks, and the next candidates take their places.
    */
   const lookMs = options.lookTimeoutMs ?? LOOK_TIMEOUT_MS;
+
+  /**
+   * Why a clip's middle fails, or null when every frame from it passes: the
+   * right subject, and fit for a class of children. A frame that cannot be
+   * fetched or looked at fails the clip — a part of it nobody saw is a part
+   * that might show anything. Printed text and a second subject are allowed
+   * here: a caption over a moment, or two hearts in one frame, are not reasons
+   * to refuse a clip whose still already passed on them.
+   */
+  const framesRefusal = async (frames: readonly string[]): Promise<string | null> => {
+    const verdicts = await Promise.all(
+      frames.map(async (frame) => {
+        try {
+          const still = await web.fetch(frame);
+          if (!still || !still.startsWith('data:image/')) return null;
+          return parseVerdict(await within(eyes.look(still, VERIFIER_SYSTEM, verifierUser(brief)), lookMs));
+        } catch {
+          return null;
+        }
+      }),
+    );
+    for (const v of verdicts) {
+      if (!v) return 'a frame from its middle could not be looked at';
+      if (!v.safe) return v.saw ? `a frame in it is not for a school child (${v.saw})` : 'a frame in it is not for a school child';
+      if (!v.right) return v.saw ? `a frame in it is ${v.saw}` : 'a frame in it is not the subject';
+    }
+    return null;
+  };
+
   let looked = 0;
   let next = 0;
   while (looked < tries && next < usable.length) {
@@ -445,7 +514,10 @@ async function firstThatPasses(
 
         try {
           const verdict = parseVerdict(await within(eyes.look(src, VERIFIER_SYSTEM, verifierUser(brief)), lookMs));
-          return { candidate, src, refusal: refusalFor(verdict) };
+          const refusal = refusalFor(verdict);
+          if (refusal !== null || !candidate.frames?.length) return { candidate, src, refusal };
+          // A clip: every frame looked at from its middle must pass as well.
+          return { candidate, src, refusal: await framesRefusal(candidate.frames) };
         } catch (error) {
           const late = error instanceof Error && error.message === NO_ANSWER;
           return { candidate, src, refusal: late ? NO_ANSWER : 'it is not the subject' };

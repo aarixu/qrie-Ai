@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
+import { validateLesson } from '@ai-tutor/lesson-format';
 import {
+  creditOf,
   DEFAULT_TRIES,
   findOnTheWeb,
   mayReuse,
@@ -96,6 +98,60 @@ describe('what may be reused', () => {
 });
 
 // ================================================================ verdicts ==
+
+describe('a credit, as the class format will keep it (review, 2026-10-08)', () => {
+  // Commons' Artist text has no length limit and its LicenseUrl is sometimes
+  // http or protocol-relative; a credit the format refuses makes the keep fail,
+  // and the next student pays to prepare the same class again.
+  it('shortens a long author, and keeps every link an https web page', () => {
+    const credit = creditOf(
+      openly({
+        author: 'Photograph by '.repeat(40),
+        licenseUrl: '//creativecommons.org/licenses/by-sa/4.0',
+        page: 'http://commons.wikimedia.org/wiki/File:K.jpg',
+      }),
+    )!;
+    expect(credit.author!.length).toBeLessThanOrEqual(120);
+    expect(credit.author!.endsWith('…')).toBe(true);
+    expect(credit.licenseUrl).toBe('https://creativecommons.org/licenses/by-sa/4.0');
+    expect(credit.page).toBe('https://commons.wikimedia.org/wiki/File:K.jpg');
+  });
+
+  it('drops a link that is not a web page, or too long to keep', () => {
+    const credit = creditOf(openly({ licenseUrl: 'javascript:alert(1)', page: `https://x.org/${'a'.repeat(700)}` }))!;
+    expect(credit.licenseUrl).toBeUndefined();
+    expect(credit.page).toBeUndefined();
+  });
+
+  it('keeps only the loop sources the format will keep', async () => {
+    const loop = [
+      { src: `https://upload.wikimedia.org/${'a'.repeat(700)}.webm`, type: 'video/webm' },
+      { src: 'https://upload.wikimedia.org/x/Heart.webm.360p.vp9.webm', type: 'video/webm' },
+    ];
+    const web = { ...webOf([openly()]), searchVideo: async () => [openly({ url: 'poster', video: loop })] };
+    const { found } = await findOnTheWeb({ ...brief, parts: [], motion: true }, web, eyesSaying(yes));
+    expect(found?.video).toEqual([loop[1]]);
+  });
+
+  it('makes a class the format accepts, however the source wrote its credit', async () => {
+    const plan: Blueprint = {
+      id: 'demo',
+      title: 'The Kidney',
+      beats: [{ id: 'b1', topic: 'the kidney', narration: 'This is a kidney.', board: [{ do: 'picture', ref: 'kidney' }] }],
+      visuals: [{ id: 'kidney', medium: 'picture', parts: [], brief: brief.brief, alt: brief.alt }],
+    };
+    const result = await prepareClass({
+      topic: 'The Kidney',
+      klass: 10,
+      planner: { complete: async () => JSON.stringify(plan) },
+      artist: { complete: async () => '<svg/>' },
+      eyes: eyesSaying(yes),
+      web: webOf([openly({ author: 'x'.repeat(500), licenseUrl: 'http://creativecommons.org/licenses/by/4.0' })]),
+    });
+    const checked = validateLesson(result.lesson);
+    expect(checked.ok, checked.ok ? '' : checked.errors.join('; ')).toBe(true);
+  });
+});
 
 describe('reading a verdict', () => {
   it('takes a clean yes', () => {
@@ -392,6 +448,37 @@ describe('findOnTheWeb', () => {
       expect(refusals).toEqual(['a video: it is a surgery']);
     });
 
+    it('refuses a loop whose middle is not for a school child, though its still was (review, 2026-10-08)', async () => {
+      const frames = ['https://x/seek-a.jpg', 'https://x/seek-b.jpg'];
+      const web = {
+        search: vi.fn(async () => [openly({ url: 'still' })]),
+        searchVideo: vi.fn(async () => [openly({ url: 'poster', video: loop, frames })]),
+        fetch: async (url: string) => `${PNG}#${url}`,
+      };
+      const eyes = {
+        look: vi.fn(async (src: string, system: string) =>
+          system !== VERIFIER_SYSTEM
+            ? '{}'
+            : src.endsWith('seek-b.jpg')
+              ? JSON.stringify({ right: true, text: false, count: 1, safe: false, saw: 'an open chest' })
+              : yes,
+        ),
+      };
+      const { found, refusals } = await findOnTheWeb(moving, web, eyes);
+      expect(found?.video).toBeUndefined();
+      expect(refusals[0]).toMatch(/^a video: .*not for a school child/);
+      expect(eyes.look.mock.calls.map((c) => String(c[0]).split('#')[1])).toEqual(
+        expect.arrayContaining(['poster', 'https://x/seek-a.jpg', 'https://x/seek-b.jpg']),
+      );
+    });
+
+    it('plays a loop whose every frame looked at passes', async () => {
+      const frames = ['https://x/seek-a.jpg', 'https://x/seek-b.jpg'];
+      const web = { ...webWithVideo([]), searchVideo: async () => [openly({ url: 'poster', video: loop, frames })] };
+      const { found } = await findOnTheWeb(moving, web, eyesSaying(yes));
+      expect(found?.video).toEqual(loop);
+    });
+
     it('never looks for a loop of a picture whose parts are to be pointed at', async () => {
       const web = webWithVideo([openly({ url: 'poster', video: loop })]);
       await findOnTheWeb({ ...moving, parts: ['cortex'] }, web, eyesSaying(yes, boxes));
@@ -494,6 +581,31 @@ describe('the ladder inside prepareClass', () => {
     expect(picture && 'video' in picture ? picture.video : undefined).toEqual(loop);
     expect(picture && 'credit' in picture ? picture.credit?.license : undefined).toBe('CC BY-SA 4.0');
     expect(result.replay?.videos).toEqual({ kidney: loop });
+  });
+
+  it('credits the found picture, and plays its loop, in the room the first student is already watching (review, 2026-10-08)', async () => {
+    // A caller that opens the room on the draft keeps showing the draft; the
+    // dressed copy returned at the end goes to be kept, never on screen.
+    const loop = [{ src: 'https://upload.wikimedia.org/x/Heart.webm.360p.vp9.webm', type: 'video/webm' }];
+    const moving: Blueprint = {
+      ...plan,
+      visuals: [{ id: 'kidney', medium: 'picture', motion: true, parts: [], brief: 'a human heart beating', alt: 'a heart beating' }],
+    };
+    let draft: { elements: Array<{ id: string; kind: string; credit?: unknown; video?: unknown }> } | null = null;
+    await prepareClass({
+      topic: 'The Heart',
+      klass: 10,
+      planner: { complete: async () => JSON.stringify(moving) },
+      artist,
+      eyes: eyesSaying(yes),
+      web: { ...webOf([openly()]), searchVideo: async () => [openly({ url: 'poster', video: loop })] },
+      onDraft: (d) => {
+        draft = d.lesson as never;
+      },
+    });
+    const shown = draft!.elements.find((el) => el.kind === 'image' && el.id === 'kidney');
+    expect(shown?.credit).toEqual({ license: 'CC BY-SA 4.0' });
+    expect(shown?.video).toEqual(loop);
   });
 
   it('never asks for a loop the plan did not mark as moving, whatever it wrote', async () => {

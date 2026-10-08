@@ -48,11 +48,20 @@ function creditErrors(v: unknown): string | null {
   return null;
 }
 
+/**
+ * Where a loop may play from: Wikimedia's file host, the one place the class
+ * finds its loops (class-prep commons.ts). A saved class is data from a store,
+ * and a loop it names autoplays on every student's board (review, 2026-10-08).
+ * A new source of loops is added here, on purpose.
+ */
+const VIDEO_HOST = /^https:\/\/upload\.wikimedia\.org\//;
+
 /** What is wrong with a moving picture's sources, if anything (types.ts, VideoSource). */
 function videoErrors(v: unknown): string | null {
   if (!Array.isArray(v) || v.length === 0 || v.length > 4) return 'video must list one to four sources';
   for (const source of v) {
     if (!isObj(source) || !isWebPage(source.src)) return 'a video source must be an https address';
+    if (!VIDEO_HOST.test(source.src as string)) return 'a video source must be on upload.wikimedia.org';
     if (typeof source.type !== 'string' || !/^video\/(webm|mp4)(;[^<>]{0,60})?$/.test(source.type)) {
       return 'a video source must name a webm or mp4 type';
     }
@@ -215,7 +224,7 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
     case 'graphic': {
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'graphic needs numeric x,y,w,h');
       need(isStr(el.noun), 'graphic needs a noun');
-      need(el.src === undefined || isStr(el.src), 'graphic src must be a path');
+      need(el.src === undefined || isStr(el.src), 'graphic src must be a non-empty string');
       need(el.aspect === undefined || (isNum(el.aspect) && el.aspect > 0), 'graphic aspect must be a positive number');
       const wrong = el.credit === undefined ? null : creditErrors(el.credit);
       need(wrong === null, wrong ?? '');

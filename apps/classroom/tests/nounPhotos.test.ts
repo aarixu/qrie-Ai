@@ -65,14 +65,24 @@ describe('a placed thing on a live class', () => {
   });
 
   it('dresses the draft the student is already watching, too', async () => {
+    // As prepareClass does: the draft and the result share ONE assets record,
+    // the one the room is drawing from.
     const final = lessonWithARunner();
     const draft = lessonWithARunner();
+    const assets: Record<string, string> = {};
+    let watched: Record<string, string> | null = null;
     prepared.fn.mockImplementation(async (opts: { onDraft?: (d: unknown) => void }) => {
-      opts.onDraft?.({ lesson: draft, assets: {} });
-      return { lesson: final, assets: {}, report: { topic: 'T', totalMs: 1, planMs: 1, visualsMs: 1, issues: [], visuals: [] } };
+      opts.onDraft?.({ lesson: draft, assets });
+      return { lesson: final, assets, report: { topic: 'T', totalMs: 1, planMs: 1, visualsMs: 1, issues: [], visuals: [] } };
     });
-    await prepareLiveClass({ topic: 'The Human Heart', klass: 10, minutes: 3, web }, () => {}, { onDraft: () => {}, onArt: () => {} });
+    await prepareLiveClass({ topic: 'The Human Heart', klass: 10, minutes: 3, web }, () => {}, {
+      onDraft: (d) => {
+        watched = d.assets;
+      },
+      onArt: () => {},
+    });
     expect((draft.elements[0] as { credit?: unknown }).credit).toBeDefined();
+    expect(watched!.b1__body).toBe(PNG);
   });
 
   it('looks for none when the search is turned off', async () => {

@@ -1878,6 +1878,20 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * gets exactly the behaviour it had before, at the end.
    */
   opts.onDraft?.({ lesson, assets });
+  /**
+   * The copy on screen. A found picture's credit and loop are put on it IN
+   * PLACE as the picture lands (below): the room is holding these element
+   * objects and keeps showing them, while the dressed copy returned at the end
+   * goes to be kept and is never on screen (review, 2026-10-08).
+   */
+  const onScreen = lesson;
+  const dressOnScreen = (id: string, extras: { credit?: Credit; video?: VideoSource[] }): void => {
+    for (const el of onScreen.elements) {
+      if (el.kind !== 'image' || (el.id !== id && aliases[el.id] !== id)) continue;
+      if (extras.credit) el.credit = extras.credit;
+      if (extras.video) el.video = extras.video;
+    }
+  };
 
   const t1 = Date.now();
   const total = blueprint.visuals.length;
@@ -1961,6 +1975,12 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         }
         if (found?.credit) foundCredits.set(brief.id, found.credit);
         if (found?.video) foundVideos.set(brief.id, found.video);
+        if (found) {
+          dressOnScreen(brief.id, {
+            ...(found.credit ? { credit: found.credit } : {}),
+            ...(found.video ? { video: found.video } : {}),
+          });
+        }
         finished += 1;
         say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.65 * finished) / Math.max(1, total));
         if (made) pictureParts.set(brief.id, made.parts);
