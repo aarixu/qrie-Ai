@@ -27,6 +27,10 @@ import type { ReportDraft, ReportOutcome } from '../ui/ReportSheet';
  * transcript of a child's worst moment sitting in localStorage is not
  * something this product should own.
  *
+ * ONE THING ABOUT A DISTRESS FLAG DOES LEAVE (plan 5): lib/distressCapture.ts
+ * sends each new one's category, time and direction to the server, never the
+ * words and never the lesson, and nothing during a trial.
+ *
  * A REPORT is different, and is the student's own act: they press a button,
  * they choose to send it, and only then does anything leave the device. That
  * is what the store review is asking for — not surveillance, a way out.
@@ -48,6 +52,11 @@ export interface Flag {
   at: string;
   /** The lesson it happened in, when there was one. */
   lessonId?: string;
+  /**
+   * Set only when the tutor's own line was flagged; absent means the child's
+   * words. Read by lib/distressCapture.ts.
+   */
+  direction?: 'to-student';
   /**
    * For a report only, and only because the student typed it themselves.
    * Nothing the safety screen matched is ever stored.

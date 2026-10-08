@@ -14,6 +14,7 @@ import { settingsStore, isOnboarded } from './stores/settings';
 import { watchTheme } from './lib/theme';
 import { profileStore, saveDiagnostic, hasDiagnostic } from './stores/profile';
 import { flagStore, replayUnsent, unsentReports } from './stores/flags';
+import { startDistressCapture } from './lib/distressCapture';
 import { preferencesStore } from './stores/preferences';
 import { useStore } from './stores/localStore';
 import { loadDiagnosticDataFor } from './lib/diagnosticData';
@@ -593,6 +594,8 @@ const BASENAME = isNative()
 export default function App() {
   useAppearance();
   useReportReplay();
+  // Plan 5: each new distress flag goes to the server, never the words.
+  useEffect(() => startDistressCapture(), []);
   return (
     <Router basename={BASENAME}>
       <Boundaried>
