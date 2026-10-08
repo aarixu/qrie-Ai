@@ -17,9 +17,12 @@ import { loadOutcomes, think } from '../src/index.ts';
  * outcome whose spaced review is due, then their weakest outcomes on their
  * own, then what they have not met, then the rest; a question they have not
  * practised before goes ahead of one they have, and only then is the order
- * random. And practice shows the answer the moment it is tapped, so a second
- * answer to the same practice question is filed as helped (rung 1) and does
- * not raise what they can do on their own.
+ * random. An outcome is weak until it is Strong in the student app's own
+ * words (standingOf: FEW_ANSWERS answers alone, STRONG or more alone). And
+ * practice shows the answer the moment it is tapped, as a closed homework's
+ * review does, so an answer to a question the child has met before in
+ * practice or on homework is filed as helped (rung 1) and does not raise what
+ * they can do on their own.
  */
 
 const DEFINE = 'class8-mathematics-rational-numbers-define-rational-number';
@@ -32,6 +35,7 @@ let one: School;
 let teacher: LmsClient;
 let flipped: string; // Kabir: Riya's answers the other way round
 let fresh: string; // Meera: no answers at all
+let twice: string; // Dev: two closure questions right in practice, nothing else
 const item: Record<string, string> = {};
 
 async function bankItem(ref: string, outcome: string, label: string): Promise<string> {
@@ -64,8 +68,10 @@ beforeAll(async () => {
   teacher = as(one.teacherA);
   flipped = await seat(db, one.org, 'student', 'PFM-103', 'Kabir');
   fresh = await seat(db, one.org, 'student', 'PFM-104', 'Meera');
+  twice = await seat(db, one.org, 'student', 'PFM-105', 'Dev');
   await enrolIn8a(flipped, '3');
   await enrolIn8a(fresh, '4');
+  await enrolIn8a(twice, '5');
 
   item.z1 = await bankItem('probe-pfm-z1', DEFINE, ZERO);
   item.z2 = await bankItem('probe-pfm-z2', DEFINE, ZERO);
@@ -81,15 +87,18 @@ beforeAll(async () => {
     sectionId: one.s8a, subjectId: one.maths, kind: 'homework', title: 'Rational numbers',
     dueAt: new Date(Date.now() + DAY).toISOString(), answerTypes: ['mcq'],
   });
-  await teacher.setAssignmentItems(hw, [item.z1, item.z2, item.c1, item.c2]);
+  await teacher.setAssignmentItems(hw, [item.z1, item.z2, item.c1, item.c2, item.c3]);
   await teacher.publishAssignment(hw);
-  // Riya: the zero idea on both questions that catch it, closure right twice.
-  await as(one.kid8a).submitMcq(hw, { [item.z1]: 1, [item.z2]: 1, [item.c1]: 0, [item.c2]: 0 });
-  // Kabir: the other way round — defining right twice, closure wrong twice (different options).
-  await as(flipped).submitMcq(hw, { [item.z1]: 0, [item.z2]: 0, [item.c1]: 1, [item.c2]: 2 });
-  // The homework closes, so its questions may be practised.
+  // Riya: the zero idea on both questions that catch it, closure right three times.
+  await as(one.kid8a).submitMcq(hw, { [item.z1]: 1, [item.z2]: 1, [item.c1]: 0, [item.c2]: 0, [item.c3]: 0 });
+  // Kabir: the other way round — defining right twice, closure wrong three times (different options).
+  await as(flipped).submitMcq(hw, { [item.z1]: 0, [item.z2]: 0, [item.c1]: 1, [item.c2]: 2, [item.c3]: 1 });
+  // The homework closes, so its questions may be practised (and its review shows the answers).
   await db.query(`update lms.assignment set due_at = now() - interval '1 hour' where id = $1`, [hw]);
-  await think(db, [one.kid8a, flipped]);
+  // Dev: two closure questions right in practice, the first time he meets them.
+  await as(twice).checkPracticeAnswer(crypto.randomUUID(), item.c1, 0);
+  await as(twice).checkPracticeAnswer(crypto.randomUUID(), item.c2, 0);
+  await think(db, [one.kid8a, flipped, twice]);
 });
 afterAll(async () => {
   await db.close();
@@ -139,6 +148,20 @@ describe('the same questions, answered the other way round', () => {
     const rows = await as(fresh).practiceForMe('Mathematics', 20);
     expect(rows).toHaveLength(8);
     for (const r of rows) expect(r).toMatchObject({ reason: 'new', watchOut: null });
+  });
+});
+
+describe('an outcome is weak until the app calls it Strong', () => {
+  it('two right answers alone are not yet Strong: that outcome comes before what is new', async () => {
+    const { rows: cs } = await db.query<{ unassisted_observations: number }>(
+      `select unassisted_observations from public.concept_state where user_id = $1 and outcome_id = $2`,
+      [twice, CLOSURE],
+    );
+    expect(cs[0].unassisted_observations).toBe(2);
+    const rows = await as(twice).practiceForMe('Mathematics', 20);
+    expect(new Set(ids(rows).slice(0, 4))).toEqual(new Set(onClosure()));
+    for (const r of rows.slice(0, 4)) expect(r).toMatchObject({ reason: 'weak', outcomeId: CLOSURE });
+    for (const r of rows.slice(4)) expect(r).toMatchObject({ reason: 'new', outcomeId: DEFINE });
   });
 });
 
@@ -196,6 +219,16 @@ describe('practice after the answer was shown (SF14)', () => {
     expect(await rungs(fresh, item.d1)).toEqual([0, 1]);
     expect(again.unassisted_observations).toBe(1);
     expect(again.unassisted_mastery).toBeCloseTo(first.unassisted_mastery, 6);
+  });
+
+  it('a question met on a closed homework, whose review shows the answer, is helped in practice', async () => {
+    const before = await unassisted(one.kid8a, CLOSURE);
+    expect((await as(one.kid8a).checkPracticeAnswer(crypto.randomUUID(), item.c1, 0)).correct).toBe(true);
+    await think(db, [one.kid8a]);
+    expect(await rungs(one.kid8a, item.c1)).toEqual([1]);
+    const after = await unassisted(one.kid8a, CLOSURE);
+    expect(after.unassisted_observations).toBe(before.unassisted_observations);
+    expect(after.unassisted_mastery).toBeCloseTo(before.unassisted_mastery, 6);
   });
 
   it("another child's practice of the question does not make it seen for this one", async () => {

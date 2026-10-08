@@ -1,4 +1,5 @@
-import type { PracticeForMe } from '@ai-tutor/lms-client'
+import type { BrainStatus, PracticeForMe } from '@ai-tutor/lms-client'
+import { chaptersEmptyText } from '../standing'
 
 /**
  * The lines on the "Picked for you" card, from a round lms.practice_for_me
@@ -22,4 +23,20 @@ export function pickedForYou(rows: readonly PracticeForMe[]): string[] {
     )
   }
   return lines
+}
+
+/**
+ * What the "Picked for you" card shows: the picked round to open, with its
+ * lines (pickedForYou); else, while the brain has not read answers the
+ * server holds (lms.brain_status, 0065), the chapter list's words for that
+ * (chaptersEmptyText), with nothing to open; else nothing.
+ */
+export function pickedCard(
+  rows: readonly PracticeForMe[],
+  status: BrainStatus | null | undefined
+): { open: boolean; lines: string[] } | null {
+  const lines = pickedForYou(rows)
+  if (lines.length > 0) return { open: true, lines }
+  if (status?.waitingSince) return { open: false, lines: [chaptersEmptyText(status)] }
+  return null
 }

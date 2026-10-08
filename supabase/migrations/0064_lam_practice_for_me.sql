@@ -5,7 +5,10 @@
 -- order, whatever the child has shown, and lms.check_practice_answer (0031)
 -- files every practice answer as given alone (assistanceRung 0) although it
 -- returns the right option with every answer, so the second time a child
--- meets a practice question they have been shown its answer.
+-- meets a practice question they have been shown its answer. The same holds
+-- for a question they met on homework: practice holds a homework's questions
+-- only once it is past due (lms.practice_pool, 0034), and from then on the
+-- child's review shows its right answers (lms.my_review, 0029).
 --
 -- 1. lms.practice_for_me(p_subject, p_count): the questions the child may
 --    practise (lms.practice_pool, 0034), of one subject or of all when
@@ -18,21 +21,24 @@
 --                       label in the bank's words;
 --      'review'         one of its outcomes is due for spaced review
 --                       (concept_state.box set and next_review_at passed);
---      'weak'           an outcome they have answered and are not strong on
---                       alone: no answer given alone yet, or unassisted
---                       mastery under 0.7 (the student app's "Strong" line,
---                       apps/student/src/components/mastery-info.tsx STRONG);
+--      'weak'           an outcome they have answered and the student app
+--                       does not call Strong (apps/student/src/features/
+--                       standing.ts standingOf): under 3 answers given alone
+--                       (FEW_ANSWERS), or unassisted mastery under 0.7
+--                       (STRONG; both in components/mastery-info.tsx);
 --      'new'            an outcome they have not answered;
 --      'more'           the rest.
 --    Within a reason, the weaker outcome alone first (help-only counts as
 --    nothing alone; a new outcome as 0.5), then a question they have not
---    practised before, then a random order. A question's outcome is its due
+--    answered before (in practice or on homework, as 2. below), then a
+--    random order. A question's outcome is its due
 --    one, else its weakest. Stem and options only, as practice_questions:
 --    never the answer.
 -- 2. lms.check_practice_answer: as 0031, except that an answer to a question
---    the child has answered in practice before is filed at assistanceRung 1
---    (a nudge, not cold), so the fold does not count it toward what they can
---    do alone (packages/learner-model rung.ts: rung 0 only is unassisted).
+--    the child has answered before, in practice or on homework (or a test,
+--    which practice never holds), is filed at assistanceRung 1 (a nudge, not
+--    cold), so the fold does not count it toward what they can do alone
+--    (packages/learner-model rung.ts: rung 0 only is unassisted).
 
 create or replace function lms.practice_for_me(p_subject text default null, p_count integer default 5)
 returns table (
@@ -48,10 +54,10 @@ as $$
       from me cross join lateral lms.brain_misconceptions(me.id) b
      where lms.misconception_key(b.label) <> ''
   ),
-  practised as (
+  met as (
     select distinct le.payload ->> 'itemId' as item
       from me join public.ledger_event le on le.user_id = me.id
-     where le.source = 'practice' and le.kind = 'answered'
+     where le.source in ('homework', 'test', 'practice') and le.kind = 'answered'
   ),
   pool as (
     select p.item_id, p.subject, p.chapter
@@ -60,8 +66,8 @@ as $$
   ),
   facts as (
     select i.id, i.stem, i.options, pool.subject, pool.chapter,
-           w.label as watch_out, o.outcome_id, o.due, o.observed, o.alone,
-           exists (select 1 from practised x where x.item = i.id::text) as practised
+           w.label as watch_out, o.outcome_id, o.due, o.observed, o.alone, o.strong,
+           exists (select 1 from met x where x.item = i.id::text) as met
       from pool
       join lms.item i on i.id = pool.item_id
       left join lateral (
@@ -78,7 +84,8 @@ as $$
         select x.oid as outcome_id,
                coalesce(cs.box is not null and cs.next_review_at <= now(), false) as due,
                coalesce(cs.answer_observations, 0) > 0 as observed,
-               case when cs.unassisted_observations > 0 then cs.unassisted_mastery::float8 end as alone
+               case when cs.unassisted_observations > 0 then cs.unassisted_mastery::float8 end as alone,
+               coalesce(cs.unassisted_observations >= 3 and cs.unassisted_mastery >= 0.7, false) as strong
           from unnest(i.outcome_ids) as x(oid)
           left join public.concept_state cs on cs.user_id = (select id from me) and cs.outcome_id = x.oid
          order by coalesce(cs.box is not null and cs.next_review_at <= now(), false) desc,
@@ -94,7 +101,7 @@ as $$
            case
              when f.watch_out is not null then 'misconception'
              when f.due then 'review'
-             when f.observed and coalesce(f.alone, 0) < 0.7 then 'weak'
+             when f.observed and not f.strong then 'weak'
              when not f.observed then 'new'
              else 'more'
            end as why
@@ -105,7 +112,7 @@ as $$
     left join lms.outcome oc on oc.id = r.outcome_id
    order by array_position(array['misconception', 'review', 'weak', 'new', 'more'], r.why),
             case when not r.observed then 0.5 else coalesce(r.alone, 0) end,
-            r.practised,
+            r.met,
             random()
    limit least(greatest(coalesce(p_count, 5), 1), 20);
 $$;
@@ -113,7 +120,7 @@ $$;
 revoke all on function lms.practice_for_me(text, integer) from public, anon;
 grant execute on function lms.practice_for_me(text, integer) to authenticated, service_role;
 
--- 0031's, with an answer to a question already practised filed as helped.
+-- 0031's, with an answer to a question already answered (2. above) filed as helped.
 create or replace function lms.check_practice_answer(p_session uuid, p_item uuid, p_chosen integer)
 returns table (correct boolean, correct_index smallint, misconception text)
 language plpgsql volatile security definer
@@ -150,11 +157,12 @@ begin
   else
     update public.learning_session set ended_at = now() where id = p_session;
   end if;
-  -- Every practice answer was answered with the right option shown, so this
-  -- child has seen this question's answer if they have practised it before.
+  -- Practice shows the right option with every answer, and a past-due
+  -- homework's review shows its right answers, so this child has been shown
+  -- this question's answer if they have answered it before in either.
   shown_before := exists (
     select 1 from public.ledger_event le
-     where le.user_id = me and le.source = 'practice' and le.kind = 'answered'
+     where le.user_id = me and le.source in ('homework', 'test', 'practice') and le.kind = 'answered'
        and le.payload ->> 'itemId' = it.id::text
   );
   right_answer := p_chosen = it.correct_index;

@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import { ChevronRight, Target } from 'lucide-react'
+import { ChevronRight, Hourglass, Target } from 'lucide-react'
 import { api } from '@/lib/backend'
-import { pickedForYou } from './picked'
+import { useAuthStore } from '@/stores/auth-store'
+import { pickedCard, pickedForYou } from './picked'
 
 /** Questions in a practice round. */
 export const ROUND = 5
@@ -22,13 +23,32 @@ export const pickedRound = (subject: string | undefined, round: number) => ({
  * "Picked for you": the round lms.practice_for_me (0064) starts now, of one
  * subject or of all, said in a child's words (pickedForYou). It opens that
  * round. When the child's answers picked nothing (no answers yet, or strong
- * on everything open) it shows `fallback` instead.
+ * on everything open) it says the answers are being checked while the brain
+ * has not read them (lms.brain_status, 0065), and shows `fallback` otherwise
+ * (pickedCard), as it does when the round cannot be fetched.
  */
 export function PickedForYouCard({ subject, fallback = null }: { subject?: string; fallback?: React.ReactNode }) {
-  const picked = useQuery(pickedRound(subject, 1))
-  const lines = pickedForYou(picked.data ?? [])
+  const me = useAuthStore((s) => s.me)
+  const picked = useQuery({ ...pickedRound(subject, 1), staleTime: 0 })
+  const nothing = picked.isSuccess && pickedForYou(picked.data).length === 0
+  const status = useQuery({
+    queryKey: ['brain-status', me?.userId],
+    queryFn: () => api.brainStatus(me!.userId),
+    enabled: nothing && !!me,
+  })
   if (picked.isPending) return null
-  if (lines.length === 0) return <>{fallback}</>
+  if (picked.isError) return <>{fallback}</>
+  if (nothing && status.fetchStatus === 'fetching' && status.data === undefined) return null
+  const card = pickedCard(picked.data, status.data)
+  if (!card) return <>{fallback}</>
+  if (!card.open) {
+    return (
+      <div className='flex items-center gap-3 rounded-2xl bg-muted p-4 text-sm text-muted-foreground'>
+        <Hourglass className='size-5 shrink-0' />
+        <p>{card.lines[0]}</p>
+      </div>
+    )
+  }
   return (
     <Link
       to='/learn/practice'
@@ -40,7 +60,7 @@ export function PickedForYouCard({ subject, fallback = null }: { subject?: strin
       </div>
       <div className='min-w-0 flex-1'>
         <p className='text-xs opacity-80'>Picked for you{subject ? ` · ${subject}` : ''}</p>
-        {lines.map((line) => (
+        {card.lines.map((line) => (
           <p key={line} className='font-semibold'>
             {line}
           </p>
