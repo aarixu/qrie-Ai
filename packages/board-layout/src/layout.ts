@@ -108,7 +108,8 @@ const WRITE_H = 62;
  * a narrow handwriting face with small lowercase. Her lines are now drawn in
  * Quicksand (Aarav: "writing font ko normal kr do"), which at the same size is
  * about 1.32x as wide and has lowercase 1.5x as tall. Each size is now 0.9 of
- * what it was, measured over the 300 seeded classes against 1.0 and 0.8:
+ * what it was (a composed key point a little less: see POINT_SIZE), measured
+ * over the 300 seeded classes against 1.0 and 0.8:
  *
  *   - 1.0: composed pages 1347 -> 1534, and a page's last point and summary
  *     turned onto a page of their own, 12% written on;
@@ -192,8 +193,15 @@ const BAND_SIZES = [27, 23, 21, 18];
  * A key point on a composed page: smaller than a stacked board's, because
  * the camera comes close to the region being taught (assemble frames it), and
  * the page has more to hold.
+ *
+ * 19, not the 20 that 0.9 of its Caveat size would be (2026-10-08): at 20 the
+ * composer demo's first page sent its last point and its summary onto a page
+ * of their own, 12% written on — the empty page this composer exists to
+ * prevent. At 19 its three pages are 69%, 64% and 60%; over the 300 seeded
+ * classes, page-full 291 and phone-readable 105 against 288 and 101. At 18,
+ * 294 and 111 for the same three pages.
  */
-const POINT_SIZE = 20;
+const POINT_SIZE = 19;
 /** How far a composed key point's words start from its region's left edge: the bullet's margin. */
 const BULLET_INDENT = 32;
 /** The gap between a composed scene's rows: a lane, room for an arrow's words beside it. */

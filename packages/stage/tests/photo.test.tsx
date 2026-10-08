@@ -73,6 +73,43 @@ describe('a placed thing with a photograph', () => {
   });
 });
 
+describe('a picture of something moving (2026-10-07)', () => {
+  const loop = [
+    { src: 'https://upload.wikimedia.org/x/Heart.webm.480p.vp9.webm', type: 'video/webm' },
+    { src: 'https://upload.wikimedia.org/x/Heart.webm.240p.vp9.webm', type: 'video/webm' },
+  ];
+  const beating: Element = {
+    kind: 'image', id: 'p', x: 100, y: 100, w: 400, h: 300, src: 'generated/p.jpg', alt: 'a heart beating', credit, video: loop,
+  };
+
+  it('plays its loop silently over its still, in the picture\'s own box', () => {
+    const host = render([beating], { p: JPEG });
+    const video = within(host, 'p').querySelector('video') as HTMLVideoElement | null;
+    expect(video).not.toBeNull();
+    expect(video!.muted).toBe(true);
+    expect(video!.loop).toBe(true);
+    expect(video!.hasAttribute('autoplay')).toBe(true);
+    expect(video!.hasAttribute('playsinline')).toBe(true);
+    expect(video!.getAttribute('poster')).toBe(JPEG);
+    expect([...video!.querySelectorAll('source')].map((s) => [s.getAttribute('src'), s.getAttribute('type')])).toEqual(
+      loop.map((s) => [s.src, s.type]),
+    );
+    const box = video!.closest('foreignObject')!;
+    expect([box.getAttribute('x'), box.getAttribute('y'), box.getAttribute('width'), box.getAttribute('height')]).toEqual(['100', '100', '400', '300']);
+  });
+
+  it('keeps the still drawn, for wherever the loop cannot play, and its credit on top', () => {
+    const host = render([beating], { p: JPEG });
+    expect(within(host, 'p').querySelector('image')?.getAttribute('href')).toBe(JPEG);
+    expect(texts(host, 'p').join(' ')).toContain('A. Person · CC BY-SA 4.0');
+  });
+
+  it('plays nothing for a picture that does not move', () => {
+    const { video: _none, ...still } = beating as Extract<Element, { kind: 'image' }>;
+    expect(within(render([still], { p: JPEG }), 'p').querySelector('video')).toBeNull();
+  });
+});
+
 describe('a picture from the web', () => {
   it('says whose it is, and a made picture says nothing', () => {
     const found: Element = { kind: 'image', id: 'p', x: 100, y: 100, w: 400, h: 300, src: 'generated/p.jpg', alt: 'a heart', credit };

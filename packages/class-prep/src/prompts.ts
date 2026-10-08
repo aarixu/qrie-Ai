@@ -381,6 +381,12 @@ and she circles the parts.
   where each named part sits, what connects to what. For a picture, the
   SUBJECT: what it is, how it is cut or posed, what must be visible. Never ask
   for text inside either — the board writes its own labels.
+- \`"motion":true\` on a picture whose lesson IS the movement — a heart
+  pumping, a person running, a pendulum swinging, lava flowing. A short silent
+  video of the real thing is found for it and plays on the board while she
+  talks. Give such a picture no parts (\`"parts":[]\`): nothing in a moving
+  picture holds still to be circled. If its parts must be named too, they go on
+  a separate still picture or diagram.
 
 A picture belongs to the THING it shows, not to a budget. When a lesson moves
 from one subject to a genuinely different one — epithelial tissue to connective

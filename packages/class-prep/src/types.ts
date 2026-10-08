@@ -1,5 +1,5 @@
 import type { ScriptBeat } from '@ai-tutor/board-layout';
-import type { Credit, ImagePart, Lesson } from '@ai-tutor/lesson-format';
+import type { Credit, ImagePart, Lesson, VideoSource } from '@ai-tutor/lesson-format';
 import type { TutorLanguage } from './prompts.ts';
 import type { ReviewProblem } from './review.ts';
 import type { GateProblem } from './gate.ts';
@@ -27,6 +27,12 @@ export interface VisualBrief {
    * Absent means diagram, so every lesson written before this stays valid.
    */
   medium?: 'diagram' | 'picture';
+  /**
+   * A picture whose lesson IS the movement — a heart pumping, a person
+   * running: a short silent loop of the real thing is looked for first and
+   * played over its still (fromWeb.ts). Only with no parts.
+   */
+  motion?: boolean;
   /**
    * The parts a tutor will point at.
    *
@@ -192,6 +198,8 @@ export interface Replay {
    * before credits travelled with the class.
    */
   credits?: Record<string, Credit>;
+  /** The loop each moving picture plays, by brief id, for the same reason. */
+  videos?: Record<string, VideoSource[]>;
 }
 
 /** Progress, so a student waiting a minute sees something happening. */

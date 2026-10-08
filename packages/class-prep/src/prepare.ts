@@ -18,6 +18,7 @@ import {
   type ImagePart,
   type Credit,
   type Lesson,
+  type VideoSource,
   type WhyProbe,
   type WorkedExample,
 } from '@ai-tutor/lesson-format';
@@ -39,7 +40,7 @@ import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
 import { mergeSpoken, splitNarrations } from './sayLines.ts';
 import { addMarks } from './marks.ts';
-import { creditPictures } from './credits.ts';
+import { dressFoundPictures } from './credits.ts';
 import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck, type Undrawn } from './gate.ts';
 import type { ComposerReport, PageReport } from './composerChecks.ts';
 import { askAgainLater, type RepairRetry } from './notNow.ts';
@@ -1423,6 +1424,8 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const sources = new Map<string, string>();
   /** Each found picture's credit, by brief id, for the board to show beside it. */
   const foundCredits = new Map<string, Credit>();
+  /** Each found loop, by brief id, for a moving picture to play over its still. */
+  const foundVideos = new Map<string, VideoSource[]>();
 
   say('checking', 'Checking the class holds together…', 0.15);
   const first = assemble(blueprint, promised, pictureParts, pictureShapes, language);
@@ -1915,7 +1918,15 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       const started = Date.now();
 
       if (wantsPicture) {
-        const want = { id: brief.id, alt: brief.alt, brief: brief.brief, parts: brief.parts };
+        // A loop is looked for only when the plan said, in so many words, that
+        // the lesson is the movement: `true`, not anything a planner wrote.
+        const want = {
+          id: brief.id,
+          alt: brief.alt,
+          brief: brief.brief,
+          parts: brief.parts,
+          ...(brief.motion === true ? { motion: true } : {}),
+        };
         const looking = eyes ?? { look: async () => '{}' };
 
         /**
@@ -1949,6 +1960,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           sources.set(brief.id, found.license ? `${found.source} (${found.license})` : found.source);
         }
         if (found?.credit) foundCredits.set(brief.id, found.credit);
+        if (found?.video) foundVideos.set(brief.id, found.video);
         finished += 1;
         say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.65 * finished) / Math.max(1, total));
         if (made) pictureParts.set(brief.id, made.parts);
@@ -2112,7 +2124,10 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   }
   for (const problem of keepGate) issues.push(`Fails the keep gate, so it is not kept: ${problem.message}`);
   // Whose work each found picture is, on the picture itself (credits.ts).
-  final = creditPictures(final, assets, Object.fromEntries(foundCredits));
+  final = dressFoundPictures(final, assets, {
+    credits: Object.fromEntries(foundCredits),
+    videos: Object.fromEntries(foundVideos),
+  });
 
   const report: PrepReport = {
     topic,
@@ -2133,6 +2148,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     shapes: Object.fromEntries(pictureShapes),
     language,
     ...(foundCredits.size > 0 ? { credits: Object.fromEntries(foundCredits) } : {}),
+    ...(foundVideos.size > 0 ? { videos: Object.fromEntries(foundVideos) } : {}),
   };
   return { lesson: final, assets, report, replay };
 }
@@ -2176,7 +2192,7 @@ export function rekeep(
   for (const [copy, original] of Object.entries(laid.aliases)) if (assets[original]) assets[copy] = assets[original];
   return {
     made: {
-      lesson: creditPictures(checked.lesson as Lesson, assets, r.credits ?? {}),
+      lesson: dressFoundPictures(checked.lesson as Lesson, assets, { credits: r.credits, videos: r.videos }),
       assets,
       report: {
         ...made.report,

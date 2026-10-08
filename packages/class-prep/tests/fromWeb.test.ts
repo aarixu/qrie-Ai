@@ -476,6 +476,40 @@ describe('the ladder inside prepareClass', () => {
     expect(result.replay?.credits).toEqual({ kidney: picture && 'credit' in picture ? picture.credit : null });
   });
 
+  it('plays a found loop on a picture the plan says moves, and keeps it to lay out again (2026-10-07)', async () => {
+    const loop = [{ src: 'https://upload.wikimedia.org/x/Heart.webm.480p.vp9.webm', type: 'video/webm' }];
+    const moving: Blueprint = {
+      ...plan,
+      visuals: [{ id: 'kidney', medium: 'picture', motion: true, parts: [], brief: 'a human heart beating', alt: 'a heart beating' }],
+    };
+    const result = await prepareClass({
+      topic: 'The Heart',
+      klass: 10,
+      planner: { complete: async () => JSON.stringify(moving) },
+      artist,
+      eyes: eyesSaying(yes),
+      web: { ...webOf([openly()]), searchVideo: async () => [openly({ url: 'poster', video: loop })] },
+    });
+    const picture = result.lesson.elements.find((el) => el.kind === 'image' && el.id === 'kidney');
+    expect(picture && 'video' in picture ? picture.video : undefined).toEqual(loop);
+    expect(picture && 'credit' in picture ? picture.credit?.license : undefined).toBe('CC BY-SA 4.0');
+    expect(result.replay?.videos).toEqual({ kidney: loop });
+  });
+
+  it('never asks for a loop the plan did not mark as moving, whatever it wrote', async () => {
+    const searchVideo = vi.fn(async () => []);
+    const loose = { ...plan, visuals: [{ ...plan.visuals[0], parts: [], motion: 'yes' }] } as unknown as Blueprint;
+    await prepareClass({
+      topic: 'The Kidney',
+      klass: 10,
+      planner: { complete: async () => JSON.stringify(loose) },
+      artist,
+      eyes: eyesSaying(yes),
+      web: { ...webOf([openly()]), searchVideo },
+    });
+    expect(searchVideo).not.toHaveBeenCalled();
+  });
+
   it('puts no credit on a picture that was made, not found', async () => {
     const result = await prepareClass({
       topic: 'The Kidney',

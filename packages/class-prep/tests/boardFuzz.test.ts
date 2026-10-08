@@ -204,9 +204,14 @@ describe('300 seeded classes with a pie, a line chart and moving working', () =>
  * — the same 12 px floor is now a larger letter, and more lines meet it only
  * just. At 1.0 of the old sizes: 1534 pages and a page's last point turned
  * onto a page of its own; at 0.8: page-full 295, phone-readable 113.
+ *
+ * AND 2026-10-08, a composed key point at 19 rather than 20 (layout.ts
+ * POINT_SIZE: at 20 the composer demo's first page turned its last point and
+ * summary onto a page 12% written on): 1373 pages, median 0.548, page-full
+ * in 291, phone-readable in 105, overlap in 1 (the same seed).
  */
-const PAGE_FULL_CEILING = 288;
-const PHONE_READABLE_CEILING = 101;
+const PAGE_FULL_CEILING = 291;
+const PHONE_READABLE_CEILING = 105;
 const COVERAGE_FLOOR = 0.53;
 
 describe('300 seeded classes on a composed board', () => {

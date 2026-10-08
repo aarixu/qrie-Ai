@@ -69,6 +69,13 @@ describe('the planner for a composed board', () => {
     expect(PLANNER_SYSTEM).toMatch(/opening[^.]*real example/i);
   });
 
+  it('tells the planner a picture of something moving may move, and then has no parts (2026-10-07)', () => {
+    // "images ya videos ya kuch or jo bhi ho": a loop is looked for only for a
+    // picture the plan marks, and a loop holds nothing still to be circled.
+    expect(PLANNER_SYSTEM).toContain('"motion":true');
+    expect(PLANNER_SYSTEM).toMatch(/"motion":true[^]*no parts/);
+  });
+
   it('asks for every beat as lines, never as one narration (small intestine, 2026-10-06)', () => {
     const text = plannerSystemFor(true);
     expect(text).toContain('Every beat is written as {"do":"say"} lines');

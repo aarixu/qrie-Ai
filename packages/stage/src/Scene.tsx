@@ -652,6 +652,29 @@ function renderImage(el: Extract<Element, { kind: 'image' }>, asset?: string): R
           the way a chart pinned up there does — a border would make it a
           panel dropped onto the lesson instead of part of it. */}
       <image href={asset ?? el.src} x={el.x} y={el.y} width={el.w} height={el.h} preserveAspectRatio="xMidYMid meet" aria-label={el.alt} />
+      {/* A PICTURE OF SOMETHING MOVING, MOVING (2026-10-07). Its loop plays
+          over its still, in the same box: silent, so a browser lets it start
+          on its own, and inline, so a phone does not take it full-screen. The
+          still stays drawn underneath and is the poster, so a browser that
+          plays none of the sources shows the picture the class was built on. */}
+      {el.video && el.video.length > 0 && (
+        <foreignObject x={el.x} y={el.y} width={el.w} height={el.h}>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={asset ?? el.src}
+            aria-label={el.alt}
+            style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+          >
+            {el.video.map((source) => (
+              <source key={source.src} src={source.src} type={source.type} />
+            ))}
+          </video>
+        </foreignObject>
+      )}
       {el.label && (
         <text x={el.x + el.w / 2} y={el.y + el.h + 20} textAnchor="middle" fontFamily={FONT_HAND} fontSize={14.5} fill={color} fillOpacity={0.7}>
           {el.label}
