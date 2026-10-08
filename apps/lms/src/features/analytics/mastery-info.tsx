@@ -5,11 +5,12 @@ import { GETTING_THERE, SECURE, band, pct } from './charts'
 
 /**
  * "What is mastery?": the small (i) beside every Mastery label, opening the
- * same few sentences wherever it is. They say what the report card's
- * footnote says (packages/lms-report, card.ts), and only what the brain does:
+ * same few sentences wherever it is. They say only what the brain does:
  * packages/lms-brain folds the ledger, and the ledger holds the answers
  * students give in the app — a teacher's mark, a test on paper, photos and
- * ticks never reach it.
+ * ticks never reach it. Every Mastery figure in this app is the one from
+ * answers given on their own (lms.* unassisted_mastery, 0065); "with help"
+ * beside it is assisted_performance.
  */
 export function MasteryInfo({ className }: { className?: string }) {
   return (
@@ -30,8 +31,12 @@ export function MasteryInfo({ className }: { className?: string }) {
       <PopoverContent align='start' className='w-80 max-w-[calc(100vw-2rem)] space-y-2 text-sm leading-relaxed font-normal'>
         <p className='font-semibold'>What is mastery?</p>
         <p>
-          Qrie’s learning model’s estimate of how well a student knows each topic, worked out from every answer
-          they give in the app — homework, tests and practice. It is not a mark.
+          Qrie’s learning model’s estimate of how well a student can do each topic on their own, worked out from
+          every answer they give in the app — homework, tests and practice. It is not a mark.
+        </p>
+        <p>
+          On their own counts only answers given without a hint. With help, shown beside it where there is any, is
+          how they do after hints. High with help and low on their own means they can follow it, not yet do it alone.
         </p>
         <p>
           A right answer raises it and a wrong one lowers it, for the topic the question checks and for topics
@@ -41,7 +46,7 @@ export function MasteryInfo({ className }: { className?: string }) {
         <p className='text-muted-foreground'>
           {band(SECURE).label} is {pct(SECURE)} or more, {band(GETTING_THERE).label} {Math.round(GETTING_THERE * 100)}–
           {pct(SECURE)}, {band(0).label} under {pct(GETTING_THERE)}. For a subject, a class or the school it is
-          the average of these estimates.
+          the average of these estimates over the topics answered on their own.
         </p>
       </PopoverContent>
     </Popover>

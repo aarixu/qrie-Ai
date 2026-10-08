@@ -40,7 +40,7 @@ export const GETTING_THERE = 0.4
  * probability; these bands are only how it is shown.
  */
 export function band(m: number | null | undefined): { label: string; colour: string; text: string } {
-  if (m === null || m === undefined) return { label: 'No answers yet', colour: 'var(--muted-foreground)', text: 'text-muted-foreground' }
+  if (m === null || m === undefined) return { label: 'Nothing on their own yet', colour: 'var(--muted-foreground)', text: 'text-muted-foreground' }
   if (m < GETTING_THERE) return { label: 'Needs help', colour: '#dc2626', text: 'text-red-600' }
   if (m < SECURE) return { label: 'Getting there', colour: '#d97706', text: 'text-amber-600' }
   return { label: 'Secure', colour: '#16a34a', text: 'text-green-600' }

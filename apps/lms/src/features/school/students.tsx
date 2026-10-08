@@ -34,11 +34,11 @@ type BandFilter = 'all' | 'help' | 'there' | 'secure' | 'none'
 
 function inBand(s: SchoolStudent, f: BandFilter): boolean {
   if (f === 'all') return true
-  if (f === 'none') return s.mastery === null
-  if (s.mastery === null) return false
-  if (f === 'help') return s.mastery < 0.4
-  if (f === 'there') return s.mastery >= 0.4 && s.mastery < 0.7
-  return s.mastery >= 0.7
+  if (f === 'none') return s.unassistedMastery === null
+  if (s.unassistedMastery === null) return false
+  if (f === 'help') return s.unassistedMastery < 0.4
+  if (f === 'there') return s.unassistedMastery >= 0.4 && s.unassistedMastery < 0.7
+  return s.unassistedMastery >= 0.7
 }
 
 /** Every student in the school as a card, by class (lms.school_students). */
@@ -119,7 +119,7 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
             <SelectItem value='help'>Needs help</SelectItem>
             <SelectItem value='there'>Getting there</SelectItem>
             <SelectItem value='secure'>Secure</SelectItem>
-            <SelectItem value='none'>No answers yet</SelectItem>
+            <SelectItem value='none'>Nothing on their own yet</SelectItem>
           </SelectContent>
         </Select>
         <MasteryInfo className='self-center' />
@@ -148,7 +148,7 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
 }
 
 function StudentCard({ s, photo }: { s: SchoolStudent; photo: string | undefined }) {
-  const b = band(s.mastery)
+  const b = band(s.unassistedMastery)
   const classHue = hueFor(s.className)
   return (
     <Link
@@ -187,7 +187,7 @@ function StudentCard({ s, photo }: { s: SchoolStudent; photo: string | undefined
           <div className='grid grid-cols-3 gap-2 text-center'>
             <Stat label='Handed in' value={pct(s.handinRate)} colour={MEASURE.handin} bad={(s.handinRate ?? 1) < 0.6} />
             <Stat label='Average' value={pct(s.averageScore)} colour={MEASURE.average} bad={(s.averageScore ?? 1) < 0.5} />
-            <Stat label='Mastery' value={pct(s.mastery)} colour={b.colour} />
+            <Stat label='Mastery' value={pct(s.unassistedMastery)} colour={b.colour} />
           </div>
           <div className='flex items-center justify-between text-xs'>
             <span className={cn('font-medium', b.text)}>{b.label}</span>

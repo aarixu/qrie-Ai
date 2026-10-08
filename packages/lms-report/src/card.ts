@@ -80,8 +80,9 @@ const MAX_CHAPTER_BARS = 15;
 const MAX_MISTAKES = 5;
 const MAX_RECENT = 10;
 
+/** Every Mastery figure on the card is the one from answers given on their own (lms.* unassisted_mastery, 0065). */
 const FOOTNOTE =
-  "Mastery is Qrie's learning model's belief from every answer the student gave — not a mark.";
+  "Mastery is Qrie's learning model's belief from the answers the student gave on their own — not a mark.";
 
 // --- Text -------------------------------------------------------------------
 
@@ -188,7 +189,7 @@ interface Word {
 }
 
 function masteryBand(m: number | null): Word {
-  if (m === null) return { word: 'No answers yet', colour: MUTED };
+  if (m === null) return { word: 'Nothing alone yet', colour: MUTED };
   if (m < 0.4) return { word: 'Needs help', colour: RED };
   if (m < 0.7) return { word: 'Getting there', colour: AMBER };
   return { word: 'Secure', colour: GREEN };
@@ -473,7 +474,7 @@ function kpis(s: Sheet, subjects: StudentSubject[], attendance: ReportData['atte
   const handin = due > 0 ? handed / due : null;
   const marked = subjects.filter((x) => x.averageScore !== null).length;
   const average = mean(subjects.map((x) => x.averageScore));
-  const mastery = mean(subjects.map((x) => x.mastery));
+  const mastery = mean(subjects.map((x) => x.unassistedMastery));
   const band = masteryBand(mastery);
   const chapters = sum(subjects.map((x) => x.chaptersSeen));
   const practised = subjects.filter((x) => x.chaptersSeen > 0).length;
@@ -575,8 +576,8 @@ function subjectsTable(s: Sheet, subjects: StudentSubject[]): void {
       bar(doc, cols[2].x + 13, y + 2.7, 22, 2.2, sub.handedIn / sub.workDue, palette.accent);
     } else put(doc, '—', cols[2].x, base, { size: 8.5, colour: MUTED });
     put(doc, pct(sub.averageScore), cols[3].x, base, { size: 8.5, maxWidth: cols[3].w });
-    const band = masteryBand(sub.mastery);
-    const w = put(doc, pct(sub.mastery), cols[4].x, base, { size: 8.5, bold: true, colour: band.colour });
+    const band = masteryBand(sub.unassistedMastery);
+    const w = put(doc, pct(sub.unassistedMastery), cols[4].x, base, { size: 8.5, bold: true, colour: band.colour });
     put(doc, band.word, cols[4].x + w + 2, base, { size: 7.5, colour: band.colour, maxWidth: cols[4].w - w - 2 });
   });
 }
@@ -686,7 +687,10 @@ function markBelow(scores: number[], i: number): boolean {
 
 /** Bars that run past the page continue on the next, under the title again. */
 function chaptersChart(s: Sheet, chapters: StudentChapter[]): void {
-  const shown = [...chapters].sort((a, b) => a.mastery - b.mastery).slice(0, MAX_CHAPTER_BARS);
+  // Nothing alone yet counts as the weakest.
+  const shown = [...chapters]
+    .sort((a, b) => (a.unassistedMastery ?? -1) - (b.unassistedMastery ?? -1))
+    .slice(0, MAX_CHAPTER_BARS);
   const more = chapters.length - shown.length;
   const [rowH, noteH] = [6.5, 6];
   const title = 'Chapter by chapter';
@@ -706,12 +710,12 @@ function chaptersChart(s: Sheet, chapters: StudentChapter[]): void {
       heading(s, `${title} (continued)`, undefined, need);
     }
     const base = s.y + 4.3;
-    const band = masteryBand(c.mastery);
+    const band = masteryBand(c.unassistedMastery);
     const subjectW = Math.min(30, widthOf(doc, c.subject, { size: 6.5 }));
     put(doc, chapterWords(c.chapter), MARGIN, base, { size: 8, maxWidth: 74 - subjectW - 3 });
     put(doc, c.subject, labelEnd, base, { size: 6.5, colour: FAINT, align: 'right', maxWidth: 30 });
-    bar(doc, trackX, s.y + 1.7, trackW, 3.2, c.mastery, band.colour);
-    put(doc, pct(c.mastery), valueEnd, base, { size: 8, bold: true, colour: band.colour, align: 'right' });
+    bar(doc, trackX, s.y + 1.7, trackW, 3.2, c.unassistedMastery, band.colour);
+    put(doc, pct(c.unassistedMastery), valueEnd, base, { size: 8, bold: true, colour: band.colour, align: 'right' });
     put(doc, band.word, valueEnd + 1.5, base, { size: 7, colour: band.colour, maxWidth: 18.5 });
     s.y += rowH;
   });

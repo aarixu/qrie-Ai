@@ -384,8 +384,22 @@ export interface SubmissionPhoto {
   photoPosition: number;
 }
 
-/** What the brain believes about one student in one chapter (0027). */
-export interface ChapterStanding {
+/**
+ * What a child does alone beside what they do with help (0065), over the
+ * outcomes a row covers. The brain's `mastery` counts an answer given after
+ * hints, at a discount; these keep the two apart.
+ */
+export interface OnTheirOwn {
+  /** Mean belief from answers given alone, 0-1, over the outcomes answered alone; null when none was. */
+  unassistedMastery: number | null;
+  /** How many answers were given alone. */
+  unassistedObservations: number;
+  /** Mean performance with help, 0-1, over the outcomes answered with help; null when none was. */
+  assistedPerformance: number | null;
+}
+
+/** What the brain believes about one student in one chapter (0027, 0065). */
+export interface ChapterStanding extends OnTheirOwn {
   studentUserId: string;
   displayName: string;
   rollNumber: string | null;
@@ -394,9 +408,8 @@ export interface ChapterStanding {
   /** Outcomes in the chapter the student has answered questions on. */
   outcomesSeen: number;
   answers: number;
-  /** Mean belief over those outcomes, 0-1. */
+  /** Mean belief over those outcomes, 0-1, help included. */
   mastery: number;
-  unassistedMastery: number;
 }
 
 /** A misconception a student's own wrong answers point to (0027). */
@@ -449,7 +462,7 @@ export interface NewPractice {
   questions?: number;
 }
 
-export interface MyChapter {
+export interface MyChapter extends OnTheirOwn {
   grade: number;
   subject: string;
   chapter: string;
@@ -473,7 +486,7 @@ export interface StudentCard {
 }
 
 /** One subject of a student's class, over work due so far. */
-export interface StudentSubject {
+export interface StudentSubject extends OnTheirOwn {
   subjectId: string;
   subjectName: string;
   teacherName: string | null;
@@ -500,12 +513,32 @@ export interface TimelineRow {
   score: number | null;
 }
 
-export interface StudentChapter {
+export interface StudentChapter extends OnTheirOwn {
   subject: string;
   chapter: string;
   outcomesSeen: number;
   answers: number;
   mastery: number;
+}
+
+/** Whether the brain has read a child's answers yet (0065). */
+export interface BrainStatus {
+  /** When the server received their last answer; null when they have none. */
+  lastAnswerAt: string | null;
+  /** When the server received the oldest event the brain has not read; null when none waits. */
+  waitingSince: string | null;
+  /** When the brain last wrote their model; null when it never has. */
+  updatedAt: string | null;
+}
+
+/** Whether the brain has read the answers of a class's children yet (0065). */
+export interface ClassBrainStatus {
+  /** When the brain last wrote any of their models; null when it never has. */
+  updatedAt: string | null;
+  /** When the server received the oldest event of theirs the brain has not read; null when none waits. */
+  waitingSince: string | null;
+  /** How many of them have an event the brain has not read. */
+  studentsWaiting: number;
 }
 
 export interface StudentMistake {
@@ -517,7 +550,7 @@ export interface StudentMistake {
 
 // --- The school portal (0031): the admin only ---
 
-export interface SchoolOverview {
+export interface SchoolOverview extends OnTheirOwn {
   schoolName: string;
   students: number;
   teachers: number;
@@ -530,7 +563,7 @@ export interface SchoolOverview {
   mastery: number | null;
 }
 
-export interface SchoolClass {
+export interface SchoolClass extends OnTheirOwn {
   sectionId: string;
   subjectId: string;
   className: string;
@@ -545,7 +578,7 @@ export interface SchoolClass {
   mastery: number | null;
 }
 
-export interface SchoolStudent {
+export interface SchoolStudent extends OnTheirOwn {
   userId: string;
   displayName: string;
   loginId: string;
@@ -772,7 +805,7 @@ export interface TrendPoint {
 
 // --- Learn (0031): chapter-wise practice ---
 
-export interface PracticeChapter {
+export interface PracticeChapter extends OnTheirOwn {
   subjectName: string;
   chapter: string;
   /** Approved questions the student may practise now. */
@@ -969,6 +1002,10 @@ export function createLmsClient(t: Transport) {
     needsAttention: () => rows<NeedsAttention>('needs_attention'),
     classInsights: (sectionId: string, subjectId: string) =>
       rows<ChapterStanding>('class_insights', { p_section: sectionId, p_subject: subjectId }),
+    /** Whether the brain has read the class's children's answers yet. Its teachers and the admin. */
+    async classBrainStatus(sectionId: string, subjectId: string): Promise<ClassBrainStatus | null> {
+      return (await rows<ClassBrainStatus>('class_brain_status', { p_section: sectionId, p_subject: subjectId }))[0] ?? null;
+    },
     classMisconceptions: (sectionId: string, subjectId: string) =>
       rows<ShownMisconception>('class_misconceptions', { p_section: sectionId, p_subject: subjectId }),
     /** The misconceptions children of the class show now, most children first. Its teachers and the admin. */
@@ -1002,6 +1039,10 @@ export function createLmsClient(t: Transport) {
     studentSubjects: (studentUserId: string) => rows<StudentSubject>('student_subjects', { p_student: studentUserId }),
     studentTimeline: (studentUserId: string) => rows<TimelineRow>('student_timeline', { p_student: studentUserId }),
     studentChapters: (studentUserId: string) => rows<StudentChapter>('student_chapters', { p_student: studentUserId }),
+    /** Whether the brain has read the child's answers yet. Whoever may see the child. */
+    async brainStatus(studentUserId: string): Promise<BrainStatus | null> {
+      return (await rows<BrainStatus>('brain_status', { p_student: studentUserId }))[0] ?? null;
+    },
     studentMistakes: (studentUserId: string) =>
       rows<StudentMistake>('student_misconceptions', { p_student: studentUserId }),
     /** This year's remark on the child's report card, and whether the caller may write it. */

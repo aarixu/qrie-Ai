@@ -8,7 +8,7 @@ import { loadOutcomes, think } from '../src/index.ts';
 
 /**
  * WHAT A CHILD CAN DO ON THEIR OWN, SHOWN FIRST (lam-one-brain Task 3; truth
- * test D08, D26; migration 0063).
+ * test D08, D26; migration 0065).
  *
  * concept_state.mastery counts an answer given after hints (at a discount),
  * so a child carried by help reads as knowing it. Every report the school
@@ -25,6 +25,7 @@ let db: PGlite;
 let one: School;
 let helped: string; // 30 right answers, every one on the tutor's rung 7; none alone
 let waiting: string; // handed in homework the brain has not read yet
+let mixed: string; // one outcome answered alone, another only with help
 let teacher: LmsClient;
 let hw: string;
 let items: string[];
@@ -70,8 +71,10 @@ beforeAll(async () => {
   one = await buildSchool(db, 'UNA');
   helped = await seat(db, one.org, 'student', 'UNA-103', 'Kabir');
   waiting = await seat(db, one.org, 'student', 'UNA-104', 'Meera');
+  mixed = await seat(db, one.org, 'student', 'UNA-105', 'Asha');
   await enrolIn8a(helped, '3');
   await enrolIn8a(waiting, '4');
+  await enrolIn8a(mixed, '5');
 
   items = [];
   for (const [n, outcome] of [DEFINE, DEFINE, CLOSURE].entries()) {
@@ -101,7 +104,14 @@ beforeAll(async () => {
   for (let s = 0; s < 3; s++) {
     await tutorSitting(helped, Array.from({ length: 10 }, () => ({ outcome: DEFINE, rung: 7, correct: true })));
   }
-  await think(db, [one.kid8a, helped]);
+  // Asha: two cold rights on one outcome, two helped rights on the other, one chapter.
+  await tutorSitting(mixed, [
+    { outcome: DEFINE, rung: 0, correct: true },
+    { outcome: DEFINE, rung: 0, correct: true },
+    { outcome: CLOSURE, rung: 7, correct: true },
+    { outcome: CLOSURE, rung: 7, correct: true },
+  ]);
+  await think(db, [one.kid8a, helped, mixed]);
   // Meera hands in after the brain ran.
   await createLmsClient(pgliteTransport(db, waiting)).submitMcq(hw, { [items[0]]: 0, [items[1]]: 1, [items[2]]: 0 });
 });
@@ -154,6 +164,23 @@ describe('a child carried by help does not read as knowing it', () => {
     expect(riya.unassistedObservations).toBe(3);
     expect(riya.unassistedMastery).toBeCloseTo(t.unassisted!, 6);
     expect(riya.assistedPerformance).toBeNull();
+  });
+
+  it('a chapter answered partly alone: the figure alone is over what was answered alone, the help figure over what had help', async () => {
+    const { rows } = await db.query<{ outcome_id: string; unassisted_mastery: number; assisted_performance: number }>(
+      `select outcome_id, unassisted_mastery, assisted_performance from public.concept_state
+        where user_id = $1 and answer_observations > 0`,
+      [mixed],
+    );
+    const define = rows.find((r) => r.outcome_id === DEFINE)!;
+    const closure = rows.find((r) => r.outcome_id === CLOSURE)!;
+    const asha = (await teacher.classInsights(one.s8a, one.maths)).find((r) => r.studentUserId === mixed)!;
+    expect(asha).toMatchObject({ unassistedObservations: 2, answers: 4, outcomesSeen: 2 });
+    expect(asha.unassistedMastery).toBeCloseTo(define.unassisted_mastery, 6);
+    expect(asha.assistedPerformance).toBeCloseTo(closure.assisted_performance, 6);
+    const [mine] = await createLmsClient(pgliteTransport(db, mixed)).myProgress();
+    expect(mine.unassistedMastery).toBeCloseTo(define.unassisted_mastery, 6);
+    expect(mine.assistedPerformance).toBeCloseTo(closure.assisted_performance, 6);
   });
 
   it("the child's report, for the teacher and for the child, carries the same three figures", async () => {

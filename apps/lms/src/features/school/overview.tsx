@@ -103,8 +103,8 @@ export function SchoolOverviewPage() {
             <Kpi
               label='Mastery'
               icon={Brain}
-              value={pct(o.mastery)}
-              hint={`${band(o.mastery).label} — from every answer`}
+              value={pct(o.unassistedMastery)}
+              hint={`${band(o.unassistedMastery).label} — on their own`}
               info={<MasteryInfo />}
             />
             <Kpi
@@ -143,7 +143,7 @@ export function SchoolOverviewPage() {
             </ChartCard>
             <ChartCard
               title='Where students stand'
-              description='Mastery is Qrie’s estimate, from every answer a student gives, of how well they know each chapter — not a mark. Secure is 70% or more, Getting there 40–70%, Needs help under 40%.'
+              description='Mastery is Qrie’s estimate, from every answer a student gives, of how well they can do each chapter on their own — not a mark. Secure is 70% or more, Getting there 40–70%, Needs help under 40%.'
               info={<MasteryInfo />}
             >
               {students.isPending ? <Loading what='the students' /> : students.isError ? <Problem error={students.error} /> : <Bands rows={students.data} />}
@@ -180,8 +180,8 @@ export function SchoolOverviewPage() {
 
 export function atRisk(rows: SchoolStudent[]): SchoolStudent[] {
   return rows
-    .filter((s) => (s.handinRate !== null && s.handinRate < 0.6) || (s.mastery !== null && s.mastery < 0.4))
-    .sort((a, b) => (a.handinRate ?? 1) + (a.mastery ?? 1) - ((b.handinRate ?? 1) + (b.mastery ?? 1)))
+    .filter((s) => (s.handinRate !== null && s.handinRate < 0.6) || (s.unassistedMastery !== null && s.unassistedMastery < 0.4))
+    .sort((a, b) => (a.handinRate ?? 1) + (a.unassistedMastery ?? 1) - ((b.handinRate ?? 1) + (b.unassistedMastery ?? 1)))
 }
 
 function AtRiskList({ rows }: { rows: SchoolStudent[] }) {
@@ -207,7 +207,7 @@ function AtRiskList({ rows }: { rows: SchoolStudent[] }) {
               <span className={(s.handinRate ?? 1) < 0.6 ? 'text-destructive' : 'text-muted-foreground'}>
                 {pct(s.handinRate)} handed in
               </span>
-              <span className={band(s.mastery).text}>{pct(s.mastery)} mastery</span>
+              <span className={band(s.unassistedMastery).text}>{pct(s.unassistedMastery)} mastery</span>
             </span>
           </Link>
         </li>
@@ -218,10 +218,10 @@ function AtRiskList({ rows }: { rows: SchoolStudent[] }) {
 
 function Bands({ rows }: { rows: SchoolStudent[] }) {
   const groups = [
-    { name: 'Secure', colour: '#16a34a', n: rows.filter((r) => r.mastery !== null && r.mastery >= 0.7).length },
-    { name: 'Getting there', colour: '#d97706', n: rows.filter((r) => r.mastery !== null && r.mastery >= 0.4 && r.mastery < 0.7).length },
-    { name: 'Needs help', colour: '#dc2626', n: rows.filter((r) => r.mastery !== null && r.mastery < 0.4).length },
-    { name: 'No answers yet', colour: '#94a3b8', n: rows.filter((r) => r.mastery === null).length },
+    { name: 'Secure', colour: '#16a34a', n: rows.filter((r) => r.unassistedMastery !== null && r.unassistedMastery >= 0.7).length },
+    { name: 'Getting there', colour: '#d97706', n: rows.filter((r) => r.unassistedMastery !== null && r.unassistedMastery >= 0.4 && r.unassistedMastery < 0.7).length },
+    { name: 'Needs help', colour: '#dc2626', n: rows.filter((r) => r.unassistedMastery !== null && r.unassistedMastery < 0.4).length },
+    { name: 'Nothing on their own yet', colour: '#94a3b8', n: rows.filter((r) => r.unassistedMastery === null).length },
   ].filter((g) => g.n > 0)
   return (
     <div>

@@ -63,7 +63,7 @@ export function SchoolClassesPage() {
             </TableHeader>
             <TableBody>
               {classes.data.map((c) => {
-                const b = band(c.mastery)
+                const b = band(c.unassistedMastery)
                 return (
                   <TableRow key={`${c.sectionId}-${c.subjectId}`} className='cursor-pointer' onClick={() => setOpen(c)}>
                     <TableCell className='font-medium'>{c.className}</TableCell>
@@ -87,7 +87,7 @@ export function SchoolClassesPage() {
                     <TableCell className={cn('text-center tabular-nums', (c.averageScore ?? 1) < 0.5 && 'text-destructive')}>
                       {pct(c.averageScore)}
                     </TableCell>
-                    <TableCell className={cn('text-sm font-medium', b.text)}>{c.mastery === null ? b.label : `${pct(c.mastery)} · ${b.label}`}</TableCell>
+                    <TableCell className={cn('text-sm font-medium', b.text)}>{c.unassistedMastery === null ? b.label : `${pct(c.unassistedMastery)} · ${b.label}`}</TableCell>
                     <TableCell>
                       <ChevronRight className='size-4 text-muted-foreground' />
                     </TableCell>

@@ -117,11 +117,11 @@ export function StudentReport({ studentId }: { studentId: string }) {
         <div className='space-y-6'>
           <ProfileHeader
             card={s}
-            ring={band(mean((subjects.data ?? []).map((x) => x.mastery))).colour}
+            ring={band(mean((subjects.data ?? []).map((x) => x.unassistedMastery))).colour}
             ringNote={
               subjects.data && (
                 <>
-                  Ring colour: mastery, {band(mean(subjects.data.map((x) => x.mastery))).label}
+                  Ring colour: mastery, {band(mean(subjects.data.map((x) => x.unassistedMastery))).label}
                   <MasteryInfo />
                 </>
               )
@@ -153,8 +153,11 @@ export function StudentReport({ studentId }: { studentId: string }) {
                 <Kpi
                   label='Mastery'
                   icon={Brain}
-                  value={pct(mean(subjects.data.map((x) => x.mastery)))}
-                  hint={band(mean(subjects.data.map((x) => x.mastery))).label}
+                  value={pct(mean(subjects.data.map((x) => x.unassistedMastery)))}
+                  hint={withHelp(
+                    band(mean(subjects.data.map((x) => x.unassistedMastery))).label,
+                    mean(subjects.data.map((x) => x.assistedPerformance))
+                  )}
                   info={<MasteryInfo />}
                 />
                 <Kpi
@@ -185,7 +188,7 @@ export function StudentReport({ studentId }: { studentId: string }) {
             </ChartCard>
             <ChartCard
               title='Chapter by chapter'
-              description='What Qrie’s learning model believes, from every answer — not the marks.'
+              description='What Qrie’s learning model believes they can do on their own, from every answer — not the marks.'
               info={<MasteryInfo />}
             >
               {chapters.isPending ? (
@@ -194,7 +197,7 @@ export function StudentReport({ studentId }: { studentId: string }) {
                 <Problem error={chapters.error} />
               ) : (
                 <MasteryBars
-                  rows={chapters.data.map((c) => ({ label: `${chapterTitle(c.chapter)}`, mastery: c.mastery }))}
+                  rows={chapters.data.map((c) => ({ label: `${chapterTitle(c.chapter)}`, mastery: c.unassistedMastery }))}
                 />
               )}
             </ChartCard>
@@ -246,6 +249,11 @@ export function StudentReport({ studentId }: { studentId: string }) {
   )
 }
 
+/** A band's word, and how they do with help beside it when they had any. */
+function withHelp(label: string, help: number | null): string {
+  return help === null ? label : `${label} · with help ${pct(help)}`
+}
+
 function SubjectTable({ subjects }: { subjects: StudentSubject[] }) {
   if (subjects.length === 0) return <p className='text-muted-foreground'>No subjects to show.</p>
   return (
@@ -266,7 +274,7 @@ function SubjectTable({ subjects }: { subjects: StudentSubject[] }) {
         </TableHeader>
         <TableBody>
           {subjects.map((x) => {
-            const b = band(x.mastery)
+            const b = band(x.unassistedMastery)
             return (
               <TableRow key={x.subjectId}>
                 <TableCell className='font-medium'>{x.subjectName}</TableCell>
@@ -286,8 +294,11 @@ function SubjectTable({ subjects }: { subjects: StudentSubject[] }) {
                 </TableCell>
                 <TableCell>
                   <span className={cn('text-sm font-medium', b.text)}>
-                    {x.mastery === null ? b.label : `${pct(x.mastery)} · ${b.label}`}
+                    {x.unassistedMastery === null ? b.label : `${pct(x.unassistedMastery)} · ${b.label}`}
                   </span>
+                  {x.assistedPerformance !== null && (
+                    <span className='ms-2 text-xs text-muted-foreground tabular-nums'>with help {pct(x.assistedPerformance)}</span>
+                  )}
                 </TableCell>
               </TableRow>
             )

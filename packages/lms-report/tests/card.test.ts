@@ -114,8 +114,12 @@ const subjects: StudentSubject[] = [
     handedIn: 3,
     handinRate: 0.75,
     averageScore: 0.62,
-    mastery: 0.55,
+    // The blend with help in it is higher; the card shows the figure alone (0065).
+    mastery: 0.9,
     chaptersSeen: 2,
+    unassistedMastery: 0.55,
+    unassistedObservations: 6,
+    assistedPerformance: 0.95,
   },
   {
     subjectId: 'sub-sci',
@@ -125,21 +129,45 @@ const subjects: StudentSubject[] = [
     handedIn: 2,
     handinRate: 1,
     averageScore: 0.9,
-    mastery: 0.81,
+    mastery: 0.95,
     chaptersSeen: 1,
+    unassistedMastery: 0.81,
+    unassistedObservations: 4,
+    assistedPerformance: null,
   },
 ];
 
 const chapters: StudentChapter[] = [
-  { subject: 'Mathematics', chapter: 'rational-numbers', outcomesSeen: 3, answers: 12, mastery: 0.3 },
+  {
+    subject: 'Mathematics',
+    chapter: 'rational-numbers',
+    outcomesSeen: 3,
+    answers: 12,
+    mastery: 0.85,
+    unassistedMastery: 0.3,
+    unassistedObservations: 5,
+    assistedPerformance: 0.9,
+  },
   {
     subject: 'Mathematics',
     chapter: 'linear-equations-in-one-variable',
     outcomesSeen: 2,
     answers: 9,
     mastery: 0.75,
+    unassistedMastery: 0.75,
+    unassistedObservations: 9,
+    assistedPerformance: null,
   },
-  { subject: 'Science', chapter: 'crop-production-and-management', outcomesSeen: 2, answers: 6, mastery: 0.82 },
+  {
+    subject: 'Science',
+    chapter: 'crop-production-and-management',
+    outcomesSeen: 2,
+    answers: 6,
+    mastery: 0.82,
+    unassistedMastery: 0.82,
+    unassistedObservations: 6,
+    assistedPerformance: null,
+  },
 ];
 
 function row(over: Partial<TimelineRow> & Pick<TimelineRow, 'title' | 'dueAt'>): TimelineRow {
@@ -349,11 +377,14 @@ describe('reportCardPdf', () => {
       averageScore: null,
       mastery: null,
       chaptersSeen: 0,
+      unassistedMastery: null,
+      unassistedObservations: 0,
+      assistedPerformance: null,
     }));
     const { pages } = await readPdf(bytesOf([{ ...riya, subjects: empty, chapters: [], timeline: [] }]));
     expect(after(pages[0], 'Work handed in')).toEqual(['—']);
     expect(after(pages[0], 'Average mark')).toEqual(['—']);
-    expect(after(pages[0], 'Mastery', 2)).toEqual(['—', 'No answers yet']);
+    expect(after(pages[0], 'Mastery', 2)).toEqual(['—', 'Nothing alone yet']);
     expect(after(pages[0], 'Chapters practised')).toEqual(['0']);
     expect(pages.flat()).toContain('Nothing marked yet.');
     expect(pages.flat()).toContain('No answers yet.');
@@ -422,6 +453,9 @@ describe('reportCardPdf', () => {
       outcomesSeen: 1,
       answers: 3,
       mastery: (i % 10) / 10,
+      unassistedMastery: (i % 10) / 10,
+      unassistedObservations: 3,
+      assistedPerformance: null,
     }));
     const { pages } = await readPdf(bytesOf([{ ...riya, chapters: thirty }]));
     const text = pages.flat();
@@ -439,6 +473,9 @@ describe('reportCardPdf', () => {
       outcomesSeen: 1,
       answers: 3,
       mastery: i / 20,
+      unassistedMastery: i / 20,
+      unassistedObservations: 3,
+      assistedPerformance: null,
     }));
     const { pages } = await readPdf(bytesOf([{ ...riya, chapters: fifteen }]));
     const bars = pages.map((p) => p.filter((s) => /^Chapter \d+$/.test(s)).length);
@@ -522,7 +559,7 @@ describe('reportCardPdf', () => {
     for (const p of pages) {
       expect(p.join(' ')).toMatch(/Page \d+ of \d+/);
       expect(p).toContain(
-        "Mastery is Qrie's learning model's belief from every answer the student gave — not a mark.",
+        "Mastery is Qrie's learning model's belief from the answers the student gave on their own — not a mark.",
       );
       expect(p).toContain('Generated 27 Sep 2026');
     }

@@ -94,7 +94,7 @@ export function Learn() {
 }
 
 function ChapterRow({ c, n }: { c: PracticeChapter; n: number }) {
-  const s = standingOf(c.mastery, c.answers)
+  const s = standingOf(c)
   const inner = (
     <div className={cn('flex items-center gap-3 rounded-xl border bg-card p-3', c.questions === 0 && 'opacity-60')}>
       <div
@@ -110,7 +110,7 @@ function ChapterRow({ c, n }: { c: PracticeChapter; n: number }) {
             <div className='mt-1 h-1.5 overflow-hidden rounded-full bg-muted'>
               <div
                 className={cn('h-full rounded-full', s.bar)}
-                style={{ width: `${Math.max(4, Math.round((c.mastery ?? 0) * 100))}%` }}
+                style={{ width: `${Math.max(4, Math.round((s.value ?? 0) * 100))}%` }}
               />
             </div>
             <p className='mt-1 text-xs text-muted-foreground'>

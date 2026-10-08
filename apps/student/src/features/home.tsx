@@ -12,6 +12,7 @@ import { subjectHue } from '@/lib/palette'
 import { usePhoto } from '@/lib/photos'
 import { NoticesOnHome } from './notices'
 import { chapterTitle } from './progress'
+import { weakestAlone } from './standing'
 import { PickedForYouCard } from './learn/picked-card'
 
 export function kindLabel(a: Pick<MyAssignment, 'kind'>): string {
@@ -152,13 +153,13 @@ function Stat({
 
 /**
  * Before the child's answers pick anything (PickedForYouCard): the chapter
- * they are weakest in that has questions to practise (lms.practice_chapters).
+ * they are weakest in on their own that has questions to practise
+ * (lms.practice_chapters, weakestAlone).
  */
 function PractiseNow() {
   const chapters = useQuery({ queryKey: ['practice-chapters'], queryFn: api.practiceChapters })
-  const open = (chapters.data ?? []).filter((c) => c.questions > 0)
-  if (open.length === 0) return null
-  const pick = [...open].sort((a, b) => (a.mastery ?? 0.5) - (b.mastery ?? 0.5))[0]
+  const pick = weakestAlone(chapters.data ?? [])
+  if (!pick) return null
   return (
     <Link
       to='/learn/practice'

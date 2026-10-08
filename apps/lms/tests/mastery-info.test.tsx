@@ -7,8 +7,9 @@ import { MasteryInfo } from '@/features/analytics/mastery-info'
 /**
  * "What is mastery?" beside every Mastery figure in the teacher app and the
  * school portal. What it says has to be true of how the brain works the
- * figure out (packages/lms-brain folds only the answers in the ledger), and
- * of the bands the figures are coloured by (band in charts.tsx).
+ * figure out (packages/lms-brain folds only the answers in the ledger), of
+ * the bands the figures are coloured by (band in charts.tsx), and of which
+ * figure is shown: the one from answers given on their own (0065).
  */
 
 const roots: Root[] = []
@@ -44,12 +45,21 @@ describe('what is mastery', () => {
   it('opens a few plain sentences: the learning model’s estimate from every answer, not a mark', async () => {
     const text = await open()
     expect(text).toContain('What is mastery?')
-    expect(text).toMatch(/Qrie’s learning model’s estimate of how well a student knows each topic/)
+    expect(text).toMatch(/Qrie’s learning model’s estimate of how well a student can do each topic on their own/)
     expect(text).toMatch(/every answer they give in the app — homework, tests and practice/)
     expect(text).toContain('It is not a mark.')
     // Ticks, paper marks and a teacher's own mark never reach the ledger
     // (tools/lms-demo/src/seed.ts step 7; lms.set_teacher_mark writes none).
     expect(text).toContain('Marks teachers give, tests on paper, photos of notebook work and ticked tasks do not change it.')
+  })
+
+  it('says the figure is on their own, with help kept beside it', async () => {
+    const text = await open()
+    expect(text).toContain('On their own counts only answers given without a hint.')
+    expect(text).toContain(
+      'With help, shown beside it where there is any, is how they do after hints. High with help and low on their own means they can follow it, not yet do it alone.'
+    )
+    expect(text).toContain('the average of these estimates over the topics answered on their own')
   })
 
   it('names the same bands every Mastery figure is coloured by', async () => {

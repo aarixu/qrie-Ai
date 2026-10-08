@@ -6,7 +6,8 @@ import { FEW_ANSWERS, GETTING_THERE, MasteryInfo, STRONG } from '../src/componen
 /**
  * The student app's "what do these mean?" beside its chapter standings: in
  * a child's words, true of how the learning model works the standing out,
- * and naming the same lines standingOf (features/progress.tsx) draws.
+ * and naming the same lines standingOf (features/standing.ts) draws: from
+ * what the child does on their own, with help kept apart.
  */
 
 const roots: Root[] = []
@@ -38,9 +39,10 @@ describe('what the chapter words mean', () => {
     await act(async () => button.click())
     expect(button.getAttribute('aria-expanded')).toBe('true')
     const text = host.textContent ?? ''
-    expect(text).toContain('How sure Qrie is that you know each chapter.')
+    expect(text).toContain('How sure Qrie is that you can do each chapter on your own.')
     expect(text).toContain('every answer you give in the app — homework, tests and practice')
     expect(text).toContain('It is not a mark: your teacher’s marks do not change it.')
+    expect(text).toContain('An answer you give after a hint counts as with help, not as on your own.')
   })
 
   it('names the lines the words are drawn at', async () => {
@@ -48,10 +50,11 @@ describe('what the chapter words mean', () => {
     await act(async () => button.click())
     const text = host.textContent ?? ''
     expect([STRONG, GETTING_THERE, FEW_ANSWERS]).toEqual([0.7, 0.4, 3])
-    expect(text).toContain('Strong: 70% or more.')
+    expect(text).toContain('Strong: 70% or more on your own.')
+    expect(text).toContain('Getting there (with help): 70% or more with hints, not yet on your own.')
     expect(text).toContain('Getting there: 40–70%.')
     expect(text).toContain('Needs practice: under 40%.')
-    expect(text).toContain('Just started: only a few answers in that chapter so far.')
+    expect(text).toContain('Just started: fewer than 3 answers on your own in that chapter so far.')
   })
 
   it('closes on Escape, on a tap outside, and on the button again', async () => {

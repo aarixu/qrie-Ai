@@ -8,8 +8,8 @@ import { MasteryInfo } from '@/features/analytics/mastery-info'
 
 /**
  * One class in graphs: work by work (lms.class_trend) and, chapter by
- * chapter, the class's mean belief from the learning model
- * (lms.class_insights).
+ * chapter, the class's mean belief from the learning model on their own
+ * (lms.class_insights, 0065), over the children who answered alone.
  */
 export function ClassAnalytics({ sectionId, subjectId }: { sectionId: string; subjectId: string }) {
   const trend = useQuery({
@@ -31,7 +31,11 @@ export function ClassAnalytics({ sectionId, subjectId }: { sectionId: string; su
   const avg = scored.length ? scored.reduce((n, p) => n + p.averageScore!, 0) / scored.length : null
 
   const chapters = new Map<string, number[]>()
-  for (const r of standing.data ?? []) chapters.set(r.chapter, [...(chapters.get(r.chapter) ?? []), r.mastery])
+  for (const r of standing.data ?? []) {
+    const own = chapters.get(r.chapter) ?? []
+    if (r.unassistedMastery !== null) own.push(r.unassistedMastery)
+    chapters.set(r.chapter, own)
+  }
 
   return (
     <div className='space-y-4'>
@@ -45,14 +49,14 @@ export function ClassAnalytics({ sectionId, subjectId }: { sectionId: string; su
         <ChartCard title='Work by work' description='Average score and share handed in, oldest first.'>
           <TrendChart points={trend.data} />
         </ChartCard>
-        <ChartCard title='Chapter by chapter' description='The class’s mean belief from the learning model.' info={<MasteryInfo />}>
+        <ChartCard title='Chapter by chapter' description='The class’s mean belief from the learning model, on their own.' info={<MasteryInfo />}>
           {standing.isError ? (
             <Problem error={standing.error} />
           ) : (
             <MasteryBars
               rows={[...chapters.entries()].map(([ch, ms]) => ({
                 label: chapterTitle(ch),
-                mastery: ms.reduce((a, b) => a + b, 0) / ms.length,
+                mastery: ms.length ? ms.reduce((a, b) => a + b, 0) / ms.length : null,
               }))}
             />
           )}

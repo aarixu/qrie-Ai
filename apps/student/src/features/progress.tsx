@@ -5,21 +5,16 @@ import type { StudentSubject, TimelineRow } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth-store'
-import { FEW_ANSWERS, GETTING_THERE, MasteryInfo, STRONG } from '@/components/mastery-info'
+import { MasteryInfo } from '@/components/mastery-info'
 import { SubjectBadge } from '@/components/subject-icon'
 import { MyReportCard } from './report-card'
+import { chaptersEmptyText, standingOf } from './standing'
+
+export { standingOf }
 
 export const chapterTitle = (slug: string) => {
   const words = slug.replace(/-/g, ' ')
   return words.charAt(0).toUpperCase() + words.slice(1)
-}
-
-/** Words for a child, not a number: the model's belief is a guide, not a grade. MasteryInfo says what they mean. */
-export function standingOf(mastery: number | null, answers: number): { word: string; tone: string; bar: string } {
-  if (mastery === null || answers < FEW_ANSWERS) return { word: 'Just started', tone: 'bg-muted text-muted-foreground', bar: 'bg-slate-400' }
-  if (mastery >= STRONG) return { word: 'Strong', tone: 'bg-green-600/15 text-green-700', bar: 'bg-green-600' }
-  if (mastery >= GETTING_THERE) return { word: 'Getting there', tone: 'bg-amber-500/15 text-amber-700', bar: 'bg-amber-500' }
-  return { word: 'Needs practice', tone: 'bg-red-500/15 text-red-700', bar: 'bg-red-500' }
 }
 
 const pct = (x: number | null) => (x === null ? '—' : `${Math.round(x * 100)}%`)
@@ -173,7 +168,7 @@ function Marks({ rows, title }: { rows: TimelineRow[]; title: string }) {
 }
 
 function SubjectCard({ s }: { s: StudentSubject }) {
-  const st = standingOf(s.mastery, s.chaptersSeen > 0 ? FEW_ANSWERS : 0)
+  const st = standingOf(s)
   return (
     <div className='rounded-2xl border bg-card p-3'>
       <div className='flex items-center gap-3'>
@@ -211,22 +206,31 @@ function SubjectCard({ s }: { s: StudentSubject }) {
 }
 
 /**
- * The child's standing per chapter, from every answer they have given: their
- * own (lms.my_progress), or a parent's child's (lms.student_chapters).
+ * The child's standing per chapter, from what they did on their own
+ * (standingOf): their own (lms.my_progress), or a parent's child's
+ * (lms.student_chapters). With no chapter yet, it says whether the brain is
+ * still reading their answers (lms.brain_status).
  */
 function Chapters({ child }: { child?: ChildShown }) {
+  const me = useAuthStore((s) => s.me)
+  const studentId = child?.userId ?? me?.userId
   const mine = useQuery({
     queryKey: ['my-progress', child?.userId],
     queryFn: () => (child ? api.studentChapters(child.userId) : api.myProgress()),
   })
+  const empty = mine.data?.length === 0
+  const status = useQuery({
+    queryKey: ['brain-status', studentId],
+    queryFn: () => api.brainStatus(studentId!),
+    enabled: empty && !!studentId,
+  })
   if (mine.isPending) return null
   if (mine.isError) return <p className='text-sm text-destructive'>{say(mine.error)}</p>
   if (mine.data.length === 0) {
+    if (status.fetchStatus === 'fetching' && status.data === undefined) return null
     return (
       <p className='rounded-xl bg-muted p-3 text-sm text-muted-foreground'>
-        {child
-          ? `When ${child.displayName} hands in work or practises in Learn, their chapters show up here.`
-          : 'Hand in work or practise in Learn, and your chapters show up here.'}
+        {chaptersEmptyText(status.data, child?.displayName)}
       </p>
     )
   }
@@ -249,7 +253,7 @@ function Chapters({ child }: { child?: ChildShown }) {
               {mine.data
                 .filter((c) => c.subject === subject)
                 .map((c) => {
-                  const s = standingOf(c.mastery, c.answers)
+                  const s = standingOf(c)
                   return (
                     <li key={c.chapter} className='text-sm'>
                       <div className='flex items-center justify-between gap-2'>
@@ -257,7 +261,7 @@ function Chapters({ child }: { child?: ChildShown }) {
                         <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-xs font-medium', s.tone)}>{s.word}</span>
                       </div>
                       <div className='mt-1 h-1.5 overflow-hidden rounded-full bg-muted'>
-                        <div className={cn('h-full rounded-full', s.bar)} style={{ width: `${Math.max(4, Math.round(c.mastery * 100))}%` }} />
+                        <div className={cn('h-full rounded-full', s.bar)} style={{ width: `${Math.max(4, Math.round((s.value ?? 0) * 100))}%` }} />
                       </div>
                     </li>
                   )
