@@ -8,6 +8,11 @@
  * rule with no window fires on every run: an unread unsafe report, and a
  * checker that cannot reach the database, stay loud until somebody acts.
  *
+ * A distress flag (plan 5) also has no window: it speaks to the safety chat on
+ * every run while the database counts a flag received in the last 15 minutes,
+ * so one flag speaks on the runs of its first 15 minutes (three, when runs
+ * are 5 minutes apart) and then the count falls to zero.
+ *
  * Messages carry counts and ages and nothing that names a school, a lesson, a
  * child or a word of what a child wrote. Safety and operations go to different
  * chats, with different people. A checker that cannot see goes to both, because
@@ -24,6 +29,8 @@ export interface Snapshot {
   pendingClasses: number;
   relayEvents5m: number;
   relayFailures5m: number;
+  /** Distress flags received in the last 15 minutes (0065). Absent from a database before 0065. */
+  distressFlags15m?: number;
 }
 
 /** What the database answers: the snapshot, or `{ error }` for a refused token. */
@@ -78,6 +85,15 @@ export function evaluate(answer: SnapshotAnswer | null, nowMinutes: number): Ale
       channel: 'safety',
       key: 'old-report',
       text: `Qrie safety: ${answer.newReports} report(s) unread, the oldest ${answer.oldestNewReportMinutes} min.`,
+    });
+  }
+
+  const distress = answer.distressFlags15m ?? 0;
+  if (distress > 0) {
+    out.push({
+      channel: 'safety',
+      key: 'distress-flag',
+      text: `Qrie safety: ${distress} distress flag(s) in the last 15 minutes. No words are kept. Open the Safety page.`,
     });
   }
 

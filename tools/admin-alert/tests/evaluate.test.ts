@@ -43,6 +43,26 @@ describe('safety', () => {
     expect(keys(evaluate(old, START))).toEqual(['old-report']);
     expect(evaluate(old, NOT_DUE)).toEqual([]);
   });
+
+  it('speaks to the safety chat while a distress flag is under 15 minutes old, and to nobody else', () => {
+    const s = { ...quiet, distressFlags15m: 2 };
+    for (const t of [START, NOT_DUE]) {
+      expect(evaluate(s, t)).toEqual([
+        {
+          channel: 'safety',
+          key: 'distress-flag',
+          text: 'Qrie safety: 2 distress flag(s) in the last 15 minutes. No words are kept. Open the Safety page.',
+        },
+      ]);
+    }
+    expect(evaluate({ ...quiet, distressFlags15m: 0 }, START)).toEqual([]);
+  });
+
+  it('is quiet when the database does not send the count', () => {
+    const older: Snapshot = { ...quiet };
+    delete older.distressFlags15m;
+    expect(evaluate(older, START)).toEqual([]);
+  });
 });
 
 describe('operations', () => {
@@ -91,7 +111,7 @@ describe('the checker itself', () => {
 
 describe('what a message may carry', () => {
   it('never names a school, a lesson, a child or a note, whatever the numbers', () => {
-    const worst = { ...quiet, halted: true, unsafeNewReports: 3, newReports: 5, oldestNewReportMinutes: 500, unitsToday: 99999, relayEvents5m: 100, relayFailures5m: 100 };
+    const worst = { ...quiet, halted: true, unsafeNewReports: 3, newReports: 5, oldestNewReportMinutes: 500, unitsToday: 99999, relayEvents5m: 100, relayFailures5m: 100, distressFlags15m: 2 };
     const text = [...evaluate(worst, START), ...evaluate(null, START)].map((a) => a.text).join(' ');
     expect(text.length).toBeGreaterThan(0);
     expect(text).not.toMatch(/school|lesson|student|child|note|class\b/i);
