@@ -23,7 +23,8 @@ type RpcAnswer = { data: unknown; error: { message: string } | null };
 
 /** The part of a supabase-js client this needs; keeps supabase-js out of the package. */
 export interface RpcClient {
-  schema(name: 'lms'): {
+  /** 'lms' for every call here; 'public' for app_config, which the backend reads (backend.ts). */
+  schema(name: 'lms' | 'public'): {
     rpc(
       fn: string,
       args?: Record<string, unknown>,

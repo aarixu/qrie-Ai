@@ -1,3 +1,4 @@
+import type { SchoolBilling } from './app-config.ts';
 import type { QuestionDraft } from './drafts.ts';
 import type { Transport } from './transport.ts';
 
@@ -1057,6 +1058,10 @@ export function createLmsClient(t: Transport) {
     async schoolLicence(): Promise<SchoolLicence> {
       const [r] = await rows<SchoolLicence>('school_licence');
       return r ?? { plan: null, seats: null, seatsUsed: 0, validUntil: null, daysLeft: null };
+    },
+    /** The school admin's licence and invoice state (lms.school_billing, 0064). The admin only. */
+    async schoolBilling(): Promise<SchoolBilling> {
+      return (await t.value('school_billing')) as SchoolBilling;
     },
     /** A class's list for one day (YYYY-MM-DD), each child's mark or null. Its teachers and the admin. */
     attendanceSheet: (sectionId: string, onDate: string) =>
