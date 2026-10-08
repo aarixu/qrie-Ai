@@ -33,8 +33,8 @@ const entry = (id: number, over: Partial<AuditRow> = {}): AuditRow => ({
 });
 
 describe('staff', () => {
-  it('STAFF_ROLES is owner, ops and safety: the one list of roles in the console', () => {
-    expect(STAFF_ROLES).toEqual(['owner', 'ops', 'safety']);
+  it('STAFF_ROLES is owner, ops, safety and finance: the one list of roles in the console', () => {
+    expect(STAFF_ROLES).toEqual(['owner', 'ops', 'safety', 'finance']);
   });
 
   it('every status and authenticator state has words', () => {

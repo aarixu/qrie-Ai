@@ -40,6 +40,27 @@ describe('the admin schema', () => {
     expect(await callableBy('authenticated')).toEqual([
       'admin.api_gate',
       'admin.audit_list',
+      'admin.billing_account_set',
+      'admin.billing_accounts',
+      'admin.billing_grace_set',
+      'admin.billing_invoice',
+      'admin.billing_invoice_raise',
+      'admin.billing_invoice_void',
+      'admin.billing_invoices',
+      'admin.billing_link_prepare',
+      'admin.billing_overview',
+      'admin.billing_payment_record',
+      'admin.billing_payment_reverse',
+      'admin.billing_payments',
+      'admin.billing_plan_set',
+      'admin.billing_plans',
+      'admin.billing_refund_prepare',
+      'admin.billing_school',
+      'admin.billing_settings',
+      'admin.billing_settings_set',
+      'admin.billing_subscription_create',
+      'admin.billing_subscriptions',
+      'admin.billing_webhook_log',
       'admin.direct_user',
       'admin.direct_user_block',
       'admin.direct_user_find',
@@ -83,6 +104,15 @@ describe('the admin schema', () => {
     expect(service).toEqual(
       expect.arrayContaining([
         'admin.alert_token_set',
+        'admin.billing_compute_states',
+        'admin.billing_link_created',
+        'admin.billing_link_failed',
+        'admin.billing_link_observed',
+        'admin.billing_reconcile_done',
+        'admin.billing_reconcile_due',
+        'admin.billing_refund_result',
+        'admin.billing_signature_failed',
+        'admin.billing_webhook_ingest',
         'admin.bootstrap_owner',
         'admin.bootstrap_status',
         'admin.revert_caps',
@@ -90,7 +120,22 @@ describe('the admin schema', () => {
       ]),
     );
     const signedIn = await callableBy('authenticated');
-    for (const fn of ['admin.alert_token_set', 'admin.bootstrap_owner', 'admin.bootstrap_status', 'admin.revert_caps', 'admin.set_environment']) {
+    for (const fn of [
+      'admin.alert_token_set',
+      'admin.billing_compute_states',
+      'admin.billing_link_created',
+      'admin.billing_link_failed',
+      'admin.billing_link_observed',
+      'admin.billing_reconcile_done',
+      'admin.billing_reconcile_due',
+      'admin.billing_refund_result',
+      'admin.billing_signature_failed',
+      'admin.billing_webhook_ingest',
+      'admin.bootstrap_owner',
+      'admin.bootstrap_status',
+      'admin.revert_caps',
+      'admin.set_environment',
+    ]) {
       expect(signedIn).not.toContain(fn);
     }
   });

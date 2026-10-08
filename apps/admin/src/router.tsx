@@ -1,6 +1,17 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import { AuthenticatedLayout } from '@/components/layout/authenticated-layout';
 import { Account } from '@/features/account';
+import { BillingOverviewPage } from '@/features/billing';
+import { InvoiceDetailPage } from '@/features/billing/invoice-detail';
+import { InvoicePrint } from '@/features/billing/invoice-print';
+import { InvoicesPage } from '@/features/billing/invoices';
+import { PaymentsPage } from '@/features/billing/payments';
+import { PlansPage } from '@/features/billing/plans';
+import { SchoolBillingPage } from '@/features/billing/school-page';
+import { BillingSchoolsPage } from '@/features/billing/schools';
+import { SettingsPage } from '@/features/billing/settings';
+import { SubscriptionsPage } from '@/features/billing/subscriptions';
+import { WebhooksPage } from '@/features/billing/webhooks';
 import { Schools } from '@/features/schools';
 import { SchoolPage } from '@/features/schools/school-page';
 import { Switches } from '@/features/switches';
@@ -31,8 +42,41 @@ const systemPage = createRoute({ getParentRoute: () => root, path: '/system', co
 const staffPage = createRoute({ getParentRoute: () => root, path: '/staff', component: StaffPage });
 const accountPage = createRoute({ getParentRoute: () => root, path: '/account', component: Account });
 
+// Billing (plan 3).
+const billingOverview = createRoute({ getParentRoute: () => root, path: '/billing', component: BillingOverviewPage });
+const billingInvoices = createRoute({ getParentRoute: () => root, path: '/billing/invoices', component: InvoicesPage });
+const billingInvoice = createRoute({ getParentRoute: () => root, path: '/billing/invoices/$invoiceId', component: InvoiceDetailPage });
+const billingInvoicePrint = createRoute({ getParentRoute: () => root, path: '/billing/invoices/$invoiceId/print', component: InvoicePrint });
+const billingSubscriptions = createRoute({ getParentRoute: () => root, path: '/billing/subscriptions', component: SubscriptionsPage });
+const billingPayments = createRoute({ getParentRoute: () => root, path: '/billing/payments', component: PaymentsPage });
+const billingSchools = createRoute({ getParentRoute: () => root, path: '/billing/schools', component: BillingSchoolsPage });
+const billingSchool = createRoute({ getParentRoute: () => root, path: '/billing/schools/$orgId', component: SchoolBillingPage });
+const billingWebhooks = createRoute({ getParentRoute: () => root, path: '/billing/webhooks', component: WebhooksPage });
+const billingPlans = createRoute({ getParentRoute: () => root, path: '/billing/plans', component: PlansPage });
+const billingSettings = createRoute({ getParentRoute: () => root, path: '/billing/settings', component: SettingsPage });
+
 export const router = createRouter({
-  routeTree: root.addChildren([today, switches, schoolsList, schoolPage, usersPage, systemPage, staffPage, accountPage]),
+  routeTree: root.addChildren([
+    today,
+    switches,
+    schoolsList,
+    schoolPage,
+    usersPage,
+    systemPage,
+    staffPage,
+    accountPage,
+    billingOverview,
+    billingInvoices,
+    billingInvoice,
+    billingInvoicePrint,
+    billingSubscriptions,
+    billingPayments,
+    billingSchools,
+    billingSchool,
+    billingWebhooks,
+    billingPlans,
+    billingSettings,
+  ]),
 });
 
 declare module '@tanstack/react-router' {

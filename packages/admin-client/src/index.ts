@@ -3,6 +3,7 @@ export * from './errors.ts';
 export * from './gate.ts';
 export * from './transport.ts';
 export * from './admin-api.ts';
+export * from './billing.ts';
 export * from './schools.ts';
 export * from './staff.ts';
 export * from './system.ts';

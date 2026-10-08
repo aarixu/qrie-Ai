@@ -1,6 +1,8 @@
 import {
   adminApiUrl,
+  billingApiFetch,
   createAdminClient,
+  createBillingClient,
   createSchoolsClient,
   createStaffClient,
   createSystemClient,
@@ -24,3 +26,12 @@ export const schools = createSchoolsClient(rpc, api);
 export const users = createUsersClient(rpc, api);
 export const staff = createStaffClient(rpc, api);
 export const system = createSystemClient(rpc);
+
+/** Billing: the admin.billing_* functions, and billing-api (the only caller of Cashfree) with the session's token. */
+export const billing = createBillingClient(
+  rpc,
+  billingApiFetch({
+    functionsUrl: `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/billing-api`,
+    accessToken: async () => (await supabase.auth.getSession()).data.session?.access_token ?? null,
+  }),
+);

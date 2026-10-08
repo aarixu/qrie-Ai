@@ -3,7 +3,7 @@ import type { AdminTransport } from './transport.ts';
 
 export interface Me {
   userId: string;
-  role: 'owner' | 'ops' | 'safety';
+  role: 'owner' | 'ops' | 'safety' | 'finance';
   displayName: string;
   environment: string;
 }
@@ -66,7 +66,7 @@ export interface FlagSetInput {
 
 export interface StaffSetInput {
   userId: string;
-  role: 'owner' | 'ops' | 'safety';
+  role: Me['role'];
   displayName: string;
   active: boolean;
   reason: string;
