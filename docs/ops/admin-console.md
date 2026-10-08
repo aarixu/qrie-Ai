@@ -193,7 +193,9 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
     move; raise another, pay it, and use "Check with Cashfree" on it; refund part
     of a payment and see the refund's status, and the credit note once Cashfree
     reports `SUCCESS`; void an unpaid invoice that has a link and see the link
-    cancelled; wait an hour and see "Last reconciliation" update. Cashfree's
+    cancelled; record a part payment by hand on an invoice that has a link and
+    see the link cancelled at Cashfree, then Send link and see a new link for
+    what stays due; wait an hour and see "Last reconciliation" update. Cashfree's
     sandbox sets a refund's status from words in its refund note (`SUCCESS`,
     `FAILED`, `PENDING`, `ACTIVE`), but billing writes the note itself
     (`Refund for <invoice number>`), so what the sandbox does with that note is
