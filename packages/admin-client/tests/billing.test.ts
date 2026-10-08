@@ -156,6 +156,24 @@ describe('billing-api', () => {
     ]);
   });
 
+  it('a payment by hand on an invoice with an open link goes to billing-api /record, which cancels the link first', async () => {
+    const answer = { paymentId: 'p', invoiceStatus: 'partly_paid', licenceSet: false, linksCancelled: 1 };
+    const { sent, fetchImpl } = recordingFetch(200, answer);
+    const api = billingApiFetch({ functionsUrl: FUNCTIONS, accessToken: async () => 'session-token', fetchImpl });
+    const input = {
+      invoiceId: 'inv',
+      source: 'cheque' as const,
+      amountPaise: 500,
+      receivedOn: '2026-10-08',
+      reference: 'CHQ 1',
+      reason: 'paid by cheque',
+      env: 'TEST',
+    };
+    expect(await as(fresh(finance), api).paymentRecordCancellingLink(input)).toEqual(answer);
+    expect(sent.map((s) => [s.url, s.body])).toEqual([[`${FUNCTIONS}/record`, input]]);
+    expect(sent[0].headers).toMatchObject({ authorization: 'Bearer session-token' });
+  });
+
   it('billing-api refusals are typed: not-allowed, needs-mfa, wrong-environment and other', async () => {
     const cases: [number, string, string][] = [
       [403, 'not allowed', 'not-allowed'],

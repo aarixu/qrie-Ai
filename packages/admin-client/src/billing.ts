@@ -10,8 +10,10 @@ import type { AdminTransport } from './transport.ts';
  *     reach Cashfree (settings, plans, accounts, subscriptions, invoices,
  *     offline payments, grace days);
  *   - billing-api (supabase/functions/billing-api), the only caller of
- *     Cashfree, for a payment link, a check, a void and a refund. It asks the
- *     database as the signed-in staff member, with their session's token.
+ *     Cashfree, for a payment link, a check, a void, a refund, and an offline
+ *     payment on an invoice whose payment link is open (the link is cancelled
+ *     at Cashfree first). It asks the database as the signed-in staff member,
+ *     with their session's token.
  * Every failure of either arrives as an AdminError, sorted by toAdminError.
  * Money is whole paise; days are YYYY-MM-DD.
  */
@@ -255,7 +257,18 @@ export interface AccountSetInput {
 
 /** billing-api, as the console reaches it. */
 export interface BillingApi {
-  post(route: 'link' | 'check' | 'void' | 'refund', body: Record<string, unknown>): Promise<unknown>;
+  post(route: 'link' | 'check' | 'void' | 'record' | 'refund', body: Record<string, unknown>): Promise<unknown>;
+}
+
+/** A bank transfer or cheque, as finance or the owner records it. */
+export interface PaymentRecordInput {
+  invoiceId: string;
+  source: 'bank_transfer' | 'cheque';
+  amountPaise: number;
+  receivedOn: string;
+  reference: string;
+  reason: string;
+  env: string;
 }
 
 /**
@@ -318,15 +331,12 @@ export interface BillingClient {
   invoices(f?: { orgId?: string; status?: InvoiceStatus }): Promise<InvoiceRow[]>;
   invoice(id: string): Promise<InvoiceDetail>;
   payments(orgId?: string): Promise<PaymentRow[]>;
-  paymentRecord(i: {
-    invoiceId: string;
-    source: 'bank_transfer' | 'cheque';
-    amountPaise: number;
-    receivedOn: string;
-    reference: string;
-    reason: string;
-    env: string;
-  }): Promise<{ paymentId: string; invoiceStatus: InvoiceStatus; licenceSet: boolean }>;
+  /** For an invoice with no open payment link: straight to the database, which refuses while a link is open. */
+  paymentRecord(i: PaymentRecordInput): Promise<{ paymentId: string; invoiceStatus: InvoiceStatus; licenceSet: boolean }>;
+  /** For an invoice with an open payment link: billing-api cancels the link at Cashfree, then records the payment. */
+  paymentRecordCancellingLink(
+    i: PaymentRecordInput,
+  ): Promise<{ paymentId: string; invoiceStatus: InvoiceStatus; licenceSet: boolean; linksCancelled: number }>;
   webhookLog(problemsOnly?: boolean): Promise<WebhookRow[]>;
   sendLink(i: { invoiceId: string; reason: string; env: string }): Promise<{ linkId: string; url: string; existing: boolean }>;
   checkLink(invoiceId: string): Promise<{ checked: number; changed: number }>;
@@ -427,6 +437,18 @@ export function createBillingClient(t: AdminTransport, api: BillingApi): Billing
         p_reason: i.reason,
         p_env: i.env,
       }),
+    paymentRecordCancellingLink: (i) =>
+      guard(async () =>
+        (await api.post('record', {
+          invoiceId: i.invoiceId,
+          source: i.source,
+          amountPaise: i.amountPaise,
+          receivedOn: i.receivedOn,
+          reference: i.reference,
+          reason: i.reason,
+          env: i.env,
+        })) as { paymentId: string; invoiceStatus: InvoiceStatus; licenceSet: boolean; linksCancelled: number },
+      ),
     webhookLog: (problemsOnly) =>
       guard(async () => list<WebhookRow>(await t.value('billing_webhook_log', { p_problems: problemsOnly }))),
     sendLink: (i) =>

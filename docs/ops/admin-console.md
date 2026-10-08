@@ -233,7 +233,16 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
 - **Money by bank transfer or cheque:** Payments, Record a payment (owner or
   finance, fresh code). Paying a subscription invoice in full sets the school's
   licence to its seats and period. Nothing else in billing sets a licence, and a
-  late payment for an older period never shortens one.
+  late payment for an older period never shortens one. If the invoice has an
+  open payment link, recording goes through `billing-api`, which cancels the
+  link at Cashfree first, so the school cannot pay the same money twice; if
+  Cashfree says the link was already paid, nothing is recorded by hand and the
+  link's payment is recorded instead ("Money arrived on this invoice's payment
+  link; nothing was recorded by hand"). After a part payment, Send link makes a
+  new link for what stays due. The database refuses a payment by hand while a
+  link is open, whoever asks. If the school still pays an old, cancelled link,
+  that payment is stored, listed as not counted and refundable, and counted
+  under Needs attention.
 - **When a licence ends** the school has its grace days (14 by default, 14 to 30
   per school, set by the owner), then it is suspended: the apps are told the
   tutor is off, and homework is kept. Sixty days after grace ends it reads

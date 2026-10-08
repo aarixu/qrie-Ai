@@ -121,7 +121,10 @@ describe('the billing model', () => {
       links: [{ linkId: 'L', url: 'https://x', status: 'active', amountPaise: 2_360_000, amountPaidPaise: 0, unrecordedPaise: 0, expiresAt: 'x', createdAt: 'x' }],
     };
     expect(paymentBlast(withLink, 2_360_000)).toBe(
-      '₹23,600.00 is recorded against QRIE/26-27/0001. This pays it in full. It has an open payment link for ₹23,600.00; if the school pays that too, the extra will need a refund.',
+      '₹23,600.00 is recorded against QRIE/26-27/0001. This pays it in full. Its payment link for ₹23,600.00 is cancelled at Cashfree first, so the school cannot pay it as well.',
+    );
+    expect(paymentBlast(withLink, 1_000_000)).toBe(
+      '₹10,000.00 is recorded against QRIE/26-27/0001. ₹13,600.00 stays due. Its payment link for ₹23,600.00 is cancelled at Cashfree first, so the school cannot pay it as well; send a new link for what stays due.',
     );
     expect(linkBlast(row, true)).toBe('Cashfree makes a payment page for ₹23,600.00. Cashfree emails it to the billing contact.');
     expect(linkBlast({ ...row, paidPaise: 360_000 }, false)).toBe('Cashfree makes a payment page for ₹20,000.00.');

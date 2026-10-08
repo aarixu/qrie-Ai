@@ -5,7 +5,8 @@
 --    or the owner with a fresh authenticator code, because it can set a
 --    licence (ruling R8). It is counted at once; its reference (a UTR or a
 --    cheque number) is kept on the payment and only its SHA-256 goes into the
---    audit log.
+--    audit log. It is never recorded while the invoice has an open payment
+--    link: billing-api's /record cancels the link at Cashfree first (R27).
 -- 2. Settling: an invoice's paid amount is the sum of its counted payments;
 --    its status moves unpaid -> partly_paid -> paid and never back (0057's
 --    guard). The day it becomes paid is India's day.
@@ -145,8 +146,14 @@ $$;
 -- Recording a payment by hand: finance or the owner, with a fresh code
 -- ---------------------------------------------------------------------------
 
+-- Never while the invoice has an open payment link, so a school cannot pay
+-- the same money twice (once by hand, once through the link): billing-api's
+-- /record asks with p_commit false, which makes every check below and
+-- answers the open links, cancels them at Cashfree, then asks again with
+-- p_commit true (ruling R27). The console calls it directly, with p_commit
+-- left true, when the invoice has no open link.
 create or replace function admin.billing_payment_record(p_invoice uuid, p_source text, p_amount_paise bigint,
-  p_received_on date, p_reference text, p_reason text, p_env text)
+  p_received_on date, p_reference text, p_reason text, p_env text, p_commit boolean default true)
 returns jsonb
 language plpgsql volatile security definer
 set search_path = admin, billing, lms, public
@@ -155,6 +162,7 @@ declare
   me admin.platform_staff := admin.require_staff(array['finance']);
   ref text := btrim(coalesce(p_reference, ''));
   inv billing.invoice;
+  open_links text[];
   pay_id uuid;
   r jsonb;
 begin
@@ -191,6 +199,19 @@ begin
   end if;
   if billing.unrecorded_paise(inv.id) > 0 then
     raise exception 'Cashfree reports money on this invoice''s payment link that is not recorded yet; check with Cashfree first';
+  end if;
+  if exists (select 1 from billing.payment p
+              where p.invoice_id = inv.id and p.source = p_source and p.reference = ref) then
+    raise exception 'this reference is already recorded for this invoice';
+  end if;
+  select array_agg(l.link_id order by l.attempt) into open_links
+    from billing.payment_link l
+   where l.invoice_id = inv.id and l.status in ('creating', 'active', 'partly_paid');
+  if not coalesce(p_commit, true) then
+    return jsonb_build_object('openLinks', to_jsonb(coalesce(open_links, '{}'::text[])), 'recorded', false);
+  end if;
+  if coalesce(array_length(open_links, 1), 0) > 0 then
+    raise exception 'this invoice''s payment link is still open: record the payment from the invoice again, which cancels the link at Cashfree first';
   end if;
   perform set_config('admin.session', 'on', true);
   begin
@@ -316,10 +337,10 @@ revoke all on function billing.payment_signal_on(uuid, date) from public, anon, 
 -- S1: internal, reached only by other definer functions (plan 2's school_health).
 revoke all on function admin.school_payment_signal(uuid) from public, anon, authenticated;
 
-revoke all on function admin.billing_payment_record(uuid, text, bigint, date, text, text, text) from public, anon;
+revoke all on function admin.billing_payment_record(uuid, text, bigint, date, text, text, text, boolean) from public, anon;
 revoke all on function admin.billing_payments(uuid) from public, anon;
 revoke all on function admin.billing_invoice_void(uuid, text, text, boolean) from public, anon;
 
-grant execute on function admin.billing_payment_record(uuid, text, bigint, date, text, text, text) to authenticated;
+grant execute on function admin.billing_payment_record(uuid, text, bigint, date, text, text, text, boolean) to authenticated;
 grant execute on function admin.billing_payments(uuid) to authenticated;
 grant execute on function admin.billing_invoice_void(uuid, text, text, boolean) to authenticated;

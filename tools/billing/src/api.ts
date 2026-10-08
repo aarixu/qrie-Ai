@@ -18,6 +18,9 @@ import { sha256Hex } from './signature.ts';
  *   /check    {invoiceId}               reads the invoice's open links at Cashfree, and any
  *                                       link with money no stored payment accounts for
  *   /void     {invoiceId, reason, env}  cancels open links at Cashfree, then voids
+ *   /record   {invoiceId, source, amountPaise, receivedOn, reference, reason, env}
+ *                                       a payment by hand: cancels open links at Cashfree, then
+ *                                       records it (a school never pays the same money twice)
  *   /refund   {paymentId, amountPaise, reason, env}
  *   /reconcile                          the outside checker's, with its own token
  *
@@ -57,7 +60,7 @@ class Refusal extends Error {
   }
 }
 
-const ROUTES = ['link', 'check', 'void', 'refund', 'reconcile'] as const;
+const ROUTES = ['link', 'check', 'void', 'record', 'refund', 'reconcile'] as const;
 type Route = (typeof ROUTES)[number];
 
 /** A link younger than this may still be on its way to Cashfree. */
@@ -246,13 +249,15 @@ async function check(deps: BillingApiDeps, auth: string, body: Record<string, un
   return { status: 200, body: { checked, changed } };
 }
 
-async function voidInvoice(deps: BillingApiDeps, auth: string, body: Record<string, unknown>): Promise<Answer> {
-  const invoiceId = need(body, 'invoiceId');
-  await staffMe(deps, auth);
-  const args = { p_invoice: invoiceId, p_reason: text(body.reason), p_env: text(body.env) };
-  // Every check the void makes, the fresh code included, before Cashfree is asked anything.
-  const plan = (await deps.userRpc(auth, 'billing_invoice_void', { ...args, p_commit: false })) as { openLinks: string[] };
-  for (const linkId of plan.openLinks) {
+/**
+ * Closes an invoice's open links at Cashfree before a void or a payment by
+ * hand, and records what Cashfree says of each. 'paid' as soon as one turns
+ * out to have money on it (that payment is recorded and nothing more is
+ * done); otherwise the number of links Cashfree cancelled.
+ */
+async function closeLinks(deps: BillingApiDeps, openLinks: string[]): Promise<{ paid: true } | { paid: false; cancelled: number }> {
+  let cancelled = 0;
+  for (const linkId of openLinks) {
     let cf: CashfreeLink;
     try {
       cf = await deps.cashfree.getLink(linkId);
@@ -263,19 +268,69 @@ async function voidInvoice(deps: BillingApiDeps, auth: string, body: Record<stri
       }
       throw e;
     }
+    if (cf.link_status === 'ACTIVE') {
+      try {
+        const after = await deps.cashfree.cancelLink(linkId);
+        // Cashfree cancels only an ACTIVE link and answered 200, so it is cancelled.
+        cf = { ...cf, link_status: after.link_status && after.link_status !== 'ACTIVE' ? after.link_status : 'CANCELLED' };
+        cancelled += 1;
+      } catch (e) {
+        if (!(e instanceof CashfreeError && e.status >= 400 && e.status < 500)) throw e;
+        // Refused: the link may have been paid between the read and the cancel. Read it again.
+        const now = await deps.cashfree.getLink(linkId);
+        if (now.link_status === 'ACTIVE') throw e;
+        cf = now;
+      }
+    }
     if (cf.link_status === 'PAID' || cf.link_status === 'PARTIALLY_PAID') {
       await record(deps, linkId, true, cf);
-      return fail(409, 'Money arrived on this link; the invoice was not voided. Refund it from Payments if needed.');
-    }
-    if (cf.link_status === 'ACTIVE') {
-      const after = await deps.cashfree.cancelLink(linkId);
-      // Cashfree cancels only an ACTIVE link and answered 200, so it is cancelled.
-      cf = { ...cf, link_status: after.link_status && after.link_status !== 'ACTIVE' ? after.link_status : 'CANCELLED' };
+      return { paid: true };
     }
     await record(deps, linkId, true, cf);
   }
+  return { paid: false, cancelled };
+}
+
+async function voidInvoice(deps: BillingApiDeps, auth: string, body: Record<string, unknown>): Promise<Answer> {
+  const invoiceId = need(body, 'invoiceId');
+  await staffMe(deps, auth);
+  const args = { p_invoice: invoiceId, p_reason: text(body.reason), p_env: text(body.env) };
+  // Every check the void makes, the fresh code included, before Cashfree is asked anything.
+  const plan = (await deps.userRpc(auth, 'billing_invoice_void', { ...args, p_commit: false })) as { openLinks: string[] };
+  if ((await closeLinks(deps, plan.openLinks)).paid) {
+    return fail(409, 'Money arrived on this link; the invoice was not voided. Refund it from Payments if needed.');
+  }
   await deps.userRpc(auth, 'billing_invoice_void', { ...args, p_commit: true });
   return { status: 200, body: { voided: true } };
+}
+
+async function recordPayment(deps: BillingApiDeps, auth: string, body: Record<string, unknown>): Promise<Answer> {
+  const invoiceId = need(body, 'invoiceId');
+  const amountPaise = body.amountPaise;
+  if (typeof amountPaise !== 'number' || !Number.isSafeInteger(amountPaise) || amountPaise <= 0) {
+    throw new Refusal(fail(400, 'amountPaise is a whole number of paise above zero'));
+  }
+  await staffMe(deps, auth);
+  const args = {
+    p_invoice: invoiceId,
+    p_source: text(body.source),
+    p_amount_paise: amountPaise,
+    p_received_on: text(body.receivedOn),
+    p_reference: text(body.reference),
+    p_reason: text(body.reason),
+    p_env: text(body.env),
+  };
+  // Every check the payment makes, the fresh code included, before Cashfree is asked anything.
+  const plan = (await deps.userRpc(auth, 'billing_payment_record', { ...args, p_commit: false })) as { openLinks: string[] };
+  const closed = await closeLinks(deps, plan.openLinks);
+  if (closed.paid) {
+    return fail(
+      409,
+      "Money arrived on this invoice's payment link; nothing was recorded by hand. Look at the invoice again before recording a payment.",
+    );
+  }
+  const done = (await deps.userRpc(auth, 'billing_payment_record', { ...args, p_commit: true })) as Record<string, unknown>;
+  return { status: 200, body: { ...done, linksCancelled: closed.cancelled } };
 }
 
 async function refund(deps: BillingApiDeps, auth: string, body: Record<string, unknown>): Promise<Answer> {
@@ -378,6 +433,7 @@ export async function handleBillingApi(req: BillingApiRequest, deps: BillingApiD
     if (route === 'link') return await link(deps, auth, b);
     if (route === 'check') return await check(deps, auth, b);
     if (route === 'void') return await voidInvoice(deps, auth, b);
+    if (route === 'record') return await recordPayment(deps, auth, b);
     return await refund(deps, auth, b);
   } catch (e) {
     return answerFor(e);

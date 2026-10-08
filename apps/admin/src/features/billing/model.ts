@@ -99,7 +99,9 @@ export function paymentBlast(i: InvoiceDetail, amountPaise: number, sub?: { seat
   }
   const open = i.links.find((l) => ['creating', 'active', 'partly_paid'].includes(l.status));
   if (open) {
-    parts.push(`It has an open payment link for ${formatPaise(open.amountPaise)}; if the school pays that too, the extra will need a refund.`);
+    parts.push(
+      `Its payment link for ${formatPaise(open.amountPaise)} is cancelled at Cashfree first, so the school cannot pay it as well${left > 0 ? '; send a new link for what stays due.' : '.'}`,
+    );
   }
   return parts.join(' ');
 }

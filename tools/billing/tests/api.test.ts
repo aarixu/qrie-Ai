@@ -2,7 +2,7 @@
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { aal2, anonymousChild, fresh, makeStaff, setEnvironment, type Staff } from '../../../supabase/tests/admin-fixtures.ts';
-import { billedSchool, readyPlan, readySeller, rpc, serviceRpc, subscribe } from '../../../supabase/tests/billing-fixtures.ts';
+import { billedSchool, makeFinance, readyPlan, readySeller, rpc, serviceRpc, subscribe } from '../../../supabase/tests/billing-fixtures.ts';
 import { freshDatabase, type JwtClaims } from '../../../supabase/tests/harness.ts';
 import { handleBillingApi, type BillingApiDeps } from '../src/api.ts';
 import { RpcError } from '../src/rest.ts';
@@ -23,6 +23,7 @@ let db: PGlite;
 let owner: Staff;
 let ops: Staff;
 let safety: Staff;
+let finance: { id: string; role: 'finance' };
 let child: string;
 let abc: { org: string; code: string };
 const WEBHOOK_URL = 'https://p.supabase.co/functions/v1/cashfree-webhook';
@@ -34,6 +35,7 @@ beforeAll(async () => {
   owner = await makeStaff(db, 'owner', 'Aarav');
   ops = await makeStaff(db, 'ops');
   safety = await makeStaff(db, 'safety');
+  finance = await makeFinance(db, 'Accounts');
   child = await anonymousChild(db);
   await readySeller(db, owner);
   await readyPlan(db, owner);
@@ -50,6 +52,8 @@ const TOKENS: Record<string, () => JwtClaims> = {
   'owner-aal1': () => ({ sub: owner.id, aal: 'aal1' }),
   ops: () => aal2(ops),
   safety: () => aal2(safety),
+  'finance-fresh': () => fresh(finance),
+  'finance-stale': () => aal2(finance),
   child: () => ({ sub: child, aal: 'aal2', is_anonymous: true }),
 };
 
@@ -259,6 +263,95 @@ describe('/check and /void', () => {
     cf.calls.length = 0;
     const out = await call(deps(cf), 'void', 'owner-stale', { invoiceId: inv.invoiceId, reason: 'raised twice', env: 'TEST' });
     expect(out).toEqual({ status: 403, body: { error: 'confirm with your authenticator code first' } });
+    expect(cf.calls).toEqual([]);
+    expect(await invoiceStatus(inv.invoiceId)).toBe('unpaid');
+  });
+});
+
+describe('/record', () => {
+  const MONEY_ON_LINK =
+    "Money arrived on this invoice's payment link; nothing was recorded by hand. Look at the invoice again before recording a payment.";
+  const recordBody = (invoiceId: string, amountPaise: unknown, reference: string) => ({
+    invoiceId,
+    source: 'bank_transfer',
+    amountPaise,
+    receivedOn: new Date().toISOString().slice(0, 10),
+    reference,
+    reason: 'paid by transfer',
+    env: 'TEST',
+  });
+  const handPayments = async (invoiceId: string) =>
+    (
+      await one<{ n: number }>(`select count(*)::int as n from billing.payment where invoice_id = $1 and source <> 'cashfree_link'`, [
+        invoiceId,
+      ])
+    ).n;
+
+  it('/record cancels the open link at Cashfree, then records the payment by hand; the next /link is for what stays due', async () => {
+    const inv = await raise(100_000);
+    const cf = fakeCashfree();
+    const linkId = await sentLink(cf, inv.invoiceId);
+    const out = await call(deps(cf), 'record', 'finance-fresh', recordBody(inv.invoiceId, 50_000, 'UTR-REC-1'));
+    expect(out.status).toBe(200);
+    expect(out.body).toMatchObject({ invoiceStatus: 'partly_paid', licenceSet: false, linksCancelled: 1 });
+    expect(cf.links.get(linkId)?.link_status).toBe('CANCELLED');
+    expect((await linkRow(linkId)).status).toBe('cancelled');
+    expect(await invoiceStatus(inv.invoiceId)).toBe('partly_paid');
+    const again = await call(deps(cf), 'link', 'ops', { invoiceId: inv.invoiceId, reason: 'the rest', env: 'TEST' });
+    expect(again.body).toMatchObject({ linkId: `${linkId}-2`, existing: false });
+    const made = cf.calls.filter((c) => c.method === 'createLink').at(-1)?.args[0] as { link_amount: number };
+    expect(made.link_amount).toBe(680);
+  });
+
+  it('/record with no open link records it without asking Cashfree', async () => {
+    const inv = await raise(10_000);
+    const cf = fakeCashfree();
+    const out = await call(deps(cf), 'record', 'finance-fresh', recordBody(inv.invoiceId, 11_800, 'UTR-REC-2'));
+    expect(out).toMatchObject({ status: 200, body: { invoiceStatus: 'paid', linksCancelled: 0 } });
+    expect(cf.calls).toEqual([]);
+  });
+
+  it('/record when money already arrived on the link records that payment and nothing by hand', async () => {
+    const inv = await raise(20_000);
+    const cf = fakeCashfree();
+    const linkId = await sentLink(cf, inv.invoiceId);
+    cf.pay(linkId, 'CF_before_record', 23_600);
+    const out = await call(deps(cf), 'record', 'finance-fresh', recordBody(inv.invoiceId, 23_600, 'UTR-REC-3'));
+    expect(out).toEqual({ status: 409, body: { error: MONEY_ON_LINK } });
+    expect(await invoiceStatus(inv.invoiceId)).toBe('paid');
+    expect(await handPayments(inv.invoiceId)).toBe(0);
+    expect(cf.calls.filter((c) => c.method === 'cancelLink')).toEqual([]);
+  });
+
+  it('/record when the school pays between the read and the cancel records that payment and nothing by hand', async () => {
+    const inv = await raise(25_000);
+    const cf = fakeCashfree();
+    await sentLink(cf, inv.invoiceId);
+    const cancel = cf.api.cancelLink;
+    cf.api.cancelLink = async (id) => {
+      cf.pay(id, 'CF_paid_in_between', 29_500);
+      return cancel(id);
+    };
+    const out = await call(deps(cf), 'record', 'finance-fresh', recordBody(inv.invoiceId, 29_500, 'UTR-REC-4'));
+    expect(out).toEqual({ status: 409, body: { error: MONEY_ON_LINK } });
+    expect(await invoiceStatus(inv.invoiceId)).toBe('paid');
+    expect(await handPayments(inv.invoiceId)).toBe(0);
+  });
+
+  it('/record without a fresh code, by ops, or without a whole amount asks Cashfree nothing', async () => {
+    const inv = await raise(30_000);
+    const cf = fakeCashfree();
+    await sentLink(cf, inv.invoiceId);
+    cf.calls.length = 0;
+    expect(await call(deps(cf), 'record', 'finance-stale', recordBody(inv.invoiceId, 1000, 'UTR-REC-5'))).toEqual({
+      status: 403,
+      body: { error: 'confirm with your authenticator code first' },
+    });
+    expect((await call(deps(cf), 'record', 'ops', recordBody(inv.invoiceId, 1000, 'UTR-REC-5'))).status).toBe(403);
+    expect(await call(deps(cf), 'record', 'finance-fresh', recordBody(inv.invoiceId, '1000', 'UTR-REC-5'))).toEqual({
+      status: 400,
+      body: { error: 'amountPaise is a whole number of paise above zero' },
+    });
     expect(cf.calls).toEqual([]);
     expect(await invoiceStatus(inv.invoiceId)).toBe('unpaid');
   });

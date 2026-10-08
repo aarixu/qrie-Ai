@@ -209,8 +209,19 @@ export function RecordPaymentDialog({ invoiceId, orgId, onClose }: { invoiceId?:
       onConfirm={async ({ env, reason }) => {
         if (!d) throw new Error('Choose an invoice.');
         if (!parsed.ok) throw new Error(parsed.error);
-        const r = await billing.paymentRecord({ invoiceId: d.id, source, amountPaise: parsed.paise, receivedOn, reference, reason, env });
-        toast.success(r.licenceSet ? `Recorded. ${d.number} is paid and the licence is set.` : `Recorded. ${d.number} is ${r.invoiceStatus.replace('_', ' ')}.`);
+        const input = { invoiceId: d.id, source, amountPaise: parsed.paise, receivedOn, reference, reason, env };
+        // With a payment link open, billing-api cancels it at Cashfree before the payment is recorded.
+        let cancelled = 0;
+        let r: { invoiceStatus: string; licenceSet: boolean };
+        if (d.openLink) {
+          const answer = await billing.paymentRecordCancellingLink(input);
+          cancelled = answer.linksCancelled;
+          r = answer;
+        } else {
+          r = await billing.paymentRecord(input);
+        }
+        const said = r.licenceSet ? `Recorded. ${d.number} is paid and the licence is set.` : `Recorded. ${d.number} is ${r.invoiceStatus.replace('_', ' ')}.`;
+        toast.success(cancelled > 0 ? `${said} Its payment link was cancelled at Cashfree.` : said);
       }}
     >
       <div className='grid gap-3 sm:grid-cols-2'>
@@ -318,7 +329,7 @@ export function InvoiceActions({
   }
   return (
     <div className='flex flex-wrap justify-end gap-1'>
-      {invoice.openLink?.url && (
+      {open && invoice.openLink?.url && (
         <Button size='sm' variant='ghost' onClick={() => void copy(invoice.openLink!.url!)}>
           <Copy /> Copy link
         </Button>

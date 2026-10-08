@@ -555,3 +555,75 @@ describe('money Cashfree reports that no stored payment accounts for', () => {
     expect(await invoiceStatus(inv.invoiceId)).toBe('unpaid');
   });
 });
+
+describe('a payment by hand and an open payment link', () => {
+  const byHand = (invoiceId: string, amountPaise: number, reference: string, commit?: boolean) =>
+    rpc<{ openLinks?: string[]; recorded?: boolean; invoiceStatus?: string }>(db, fresh(finance), 'billing_payment_record', {
+      p_invoice: invoiceId,
+      p_source: 'bank_transfer',
+      p_amount_paise: amountPaise,
+      p_received_on: new Date().toISOString().slice(0, 10),
+      p_reference: reference,
+      p_reason: 'paid by transfer',
+      p_env: 'TEST',
+      p_commit: commit,
+    });
+  const paid = async (id: string) =>
+    (await one<{ paid_paise: string }>(`select paid_paise::text from billing.invoice where id = $1`, [id])).paid_paise;
+  let inv: { invoiceId: string; number: string };
+  let old: Prepared;
+
+  it('is refused while the invoice has an open link; a dry run checks everything else and names the links to cancel first', async () => {
+    inv = await raise(abc.org, 100_000);
+    old = await openLink(inv.invoiceId);
+    await expect(byHand(inv.invoiceId, 50_000, 'UTR-OPEN-1')).rejects.toThrow(
+      /this invoice's payment link is still open: record the payment from the invoice again, which cancels the link at Cashfree first/,
+    );
+    expect(await byHand(inv.invoiceId, 50_000, 'UTR-OPEN-1', false)).toEqual({ openLinks: [old.linkId], recorded: false });
+    expect(await count(`select count(*)::int as n from billing.payment where invoice_id = $1`, [inv.invoiceId])).toBe(0);
+    await expect(byHand(inv.invoiceId, 118_001, 'UTR-OPEN-1', false)).rejects.toThrow(/that is more than the 118000 paise still due/);
+    await expect(
+      rpc(db, aal2(finance), 'billing_payment_record', {
+        p_invoice: inv.invoiceId,
+        p_source: 'bank_transfer',
+        p_amount_paise: 50_000,
+        p_received_on: new Date().toISOString().slice(0, 10),
+        p_reference: 'UTR-OPEN-1',
+        p_reason: 'paid by transfer',
+        p_env: 'TEST',
+        p_commit: false,
+      }),
+    ).rejects.toThrow(/confirm with your authenticator code first/);
+    expect(await linkStatus(old.linkId)).toBe('active');
+  });
+
+  it('once the link is cancelled the payment is recorded, and the next link is for what stays due', async () => {
+    await service('billing_link_observed', {
+      p_link_id: old.linkId,
+      p_value: { status: 'CANCELLED', amountPaidPaise: 0, currency: 'INR', orders: [] },
+    });
+    expect(await linkStatus(old.linkId)).toBe('cancelled');
+    expect(await byHand(inv.invoiceId, 50_000, 'UTR-OPEN-1')).toMatchObject({ invoiceStatus: 'partly_paid' });
+    const next = await prepare(aal2(ops), inv.invoiceId);
+    expect(next).toMatchObject({ existing: false, linkId: `${old.linkId}-2`, amountPaise: 68_000 });
+    // A dry run names a duplicate reference before Cashfree is asked anything.
+    await expect(byHand(inv.invoiceId, 1000, 'UTR-OPEN-1', false)).rejects.toThrow(/this reference is already recorded for this invoice/);
+  });
+
+  it('money paid later on the cancelled old link is stored, not counted, flagged and refundable: never lost', async () => {
+    const before = (await rpc<{ attention: { notCounted: number } }>(db, aal2(finance), 'billing_overview', {})).attention.notCounted;
+    expect(
+      await ingest('paid-old-link', linkEvent({ linkId: old.linkId, invoice: inv.number, amountPaise: 118_000, orderId: 'CF_old_link' })),
+    ).toEqual({ duplicate: false, status: 'mismatch' });
+    const p = await one<{ id: string; counted: boolean; not_counted_why: string }>(
+      `select id, counted, not_counted_why from billing.payment where cf_order_id = 'CF_old_link'`,
+    );
+    expect(p).toMatchObject({ counted: false, not_counted_why: 'more than is still due' });
+    expect(await paid(inv.invoiceId)).toBe('50000');
+    expect(await invoiceStatus(inv.invoiceId)).toBe('partly_paid');
+    expect(await linkStatus(old.linkId)).toBe('paid');
+    const list = await rpc<{ id: string; refundable: boolean }[]>(db, aal2(finance), 'billing_payments', {});
+    expect(list.find((x) => x.id === p.id)?.refundable).toBe(true);
+    expect((await rpc<{ attention: { notCounted: number } }>(db, aal2(finance), 'billing_overview', {})).attention.notCounted - before).toBe(1);
+  });
+});

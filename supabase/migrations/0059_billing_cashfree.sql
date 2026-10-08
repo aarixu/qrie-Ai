@@ -4,10 +4,11 @@
 -- Two Edge Functions hold Cashfree's keys (tools/billing, supabase/functions):
 -- billing-api, the only caller of Cashfree, and cashfree-webhook. Neither
 -- decides anything here: billing-api asks the database as the staff member
--- (admin.billing_link_prepare, admin.billing_refund_prepare, the void in
--- 0058) and records what Cashfree answered through the service-role-only
--- functions below; cashfree-webhook checks Cashfree's signature on the raw
--- body and hands a whitelisted extract to admin.billing_webhook_ingest.
+-- (admin.billing_link_prepare, admin.billing_refund_prepare, the void and
+-- the payment by hand in 0058) and records what Cashfree answered through
+-- the service-role-only functions below; cashfree-webhook checks Cashfree's
+-- signature on the raw body and hands a whitelisted extract to
+-- admin.billing_webhook_ingest.
 --
 -- 1. LINKS. One open link per invoice. Its id is the invoice number with '/'
 --    turned into '-', plus '-<attempt>' from the second attempt on (ruling
