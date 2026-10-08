@@ -65,12 +65,13 @@ describe('the finance role', () => {
     expect(rows[0].m.role).toBe('finance');
   });
 
-  it('finance is refused Today, the switches, the relay and the stop', async () => {
+  // The stop itself is open to finance since 0061 (the owner's ruling on spec
+  // section 3): admin-wave1-merge.test.ts pins it.
+  it('finance is refused Today, the switches and the relay', async () => {
     for (const sql of [
       `select admin.today()`,
       `select admin.flag_list()`,
       `select admin.relay_status()`,
-      `select admin.set_halt(true, 'test stop', 'TEST')`,
     ]) {
       await expect(call(aal2(finance), sql)).rejects.toThrow(/not allowed/);
     }

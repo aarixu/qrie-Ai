@@ -141,7 +141,8 @@ Nothing in this section has been run against the hosted project yet.
    and add a test person (each asks for a fresh code), block and unblock a test
    direct user, invite and turn on a test staff member, and look at System:
    jobs should say "Succeeded" or "Never run", not "Not captured"; the
-   migration level should be 0055 (0060 once billing, plan 3, is merged).
+   migration level should be 0061 (plan 2's 0052 to 0055, billing's 0056 to
+   0060, and 0061, which joins the two).
 8. **What the switches do today.** No app reads a switch yet (plan 4 wires
    them), so "Turn the tutor switch off" and "Offboard" record your decision
    but do not stop the tutor for anyone; to stop it now, use "Stop the tutor"
@@ -168,8 +169,11 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
   subscriptions, sends payment links.
 - **Finance:** reads billing, records money received by hand (with a fresh code,
   because a payment can set a licence), prints invoices. Nothing about children,
-  switches or Today. A finance member is added like any staff member, with the
-  role `finance`.
+  switches or Today. Like everyone on staff, a finance member may stop the
+  tutor (0061: your ruling on spec section 3), but cannot resume it; the stop
+  button is on Today and System, which finance cannot open, so for now that
+  stop has no button of its own in the console. A finance member is added like
+  any staff member, with the role `finance`.
 - **Safety:** no billing.
 
 ### Setup, once (Aarav's steps, in this order)
@@ -254,10 +258,9 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
 11. **Go live:** production keys and `CASHFREE_ENV=production`, set the same way
     as step 6, on the HOSTED project only; the production webhook URL in the
     production dashboard; one real Re 1 invoice to yourself, then refund it.
-12. **Decide later (no build needed now):** whether a finance member may stop the
-    tutor (now they may not, reading spec section 3's "nothing about switches"
-    over its "a stop is open to every active staff member"; allowing it means
-    widening `admin.set_halt`'s stop branch, a plan-1 function); whether
+12. **Decide later (no build needed now):** where a finance member's stop
+    button goes (decided: finance may stop, 0061; the button is on Today and
+    System, which finance cannot open); whether
     `app_config` should tell the apps more than ok, grace and suspended; whether
     a refund should also shorten a licence (now: never automatically); whether
     scans of offline payment proof are needed (deferred; the reference number is
