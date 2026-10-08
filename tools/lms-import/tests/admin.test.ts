@@ -1,6 +1,7 @@
 // @vitest-environment node
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { setLicence } from '../../../supabase/tests/admin-school-fixtures.ts';
 import { buildSchool, seat, type School } from '../../../supabase/tests/fixtures.ts';
 import { asService, freshDatabase } from '../../../supabase/tests/harness.ts';
 import { handleAdmin, type AdminDeps } from '../src/admin.ts';
@@ -165,5 +166,37 @@ describe("a parent's sign-in", () => {
     expect(await call('/add-parent', { studentLoginId: 'HOS-101', displayName: 'Asha Rao' }, 'teacher-token')).toMatchObject({ status: 403 });
     const parents = await db.query(`select count(*)::int n from lms.account where kind = 'parent'`);
     expect(parents.rows[0]).toEqual({ n: 2 });
+  });
+});
+
+describe('a school that may not import', () => {
+  // The sentences of migration 0063 (admin.import_refusal).
+  const LAPSED =
+    "This school's licence has ended and its grace period is over, so no new people can be added until it is renewed.";
+  const OFFBOARDED = 'This school is offboarded from Qrie, so no new people can be added.';
+  const SHEET = 'grade,section,roll,name\n8,A,5,Asha Rao\n';
+  const accounts = async (org: string) =>
+    (await db.query<{ n: number }>(`select count(*)::int as n from lms.account where org_id = $1`, [org])).rows[0].n;
+
+  it('the admin of a suspended school is told why when checking a sheet, and nobody is made', async () => {
+    const su = await buildSchool(db, 'HSU');
+    tokens['hsu-admin'] = su.admin;
+    await setLicence(db, 'HSU', 100, -20);
+    const before = await accounts(su.org);
+    rpcCalls.length = 0;
+    expect(await call('/import', { students: SHEET }, 'hsu-admin')).toEqual({ status: 409, body: { error: LAPSED } });
+    expect(
+      await call('/import', { students: SHEET, commit: true, acceptWarnings: true }, 'hsu-admin'),
+    ).toEqual({ status: 409, body: { error: LAPSED } });
+    expect(await accounts(su.org)).toBe(before);
+    expect(rpcCalls).toContain('import_refusal');
+    expect(rpcCalls).not.toContain('import_snapshot');
+  });
+
+  it('the admin of an offboarded school is told why', async () => {
+    const off = await buildSchool(db, 'HOF');
+    tokens['hof-admin'] = off.admin;
+    await db.query(`insert into admin.school_profile (org_id, offboarded_at) values ($1, now())`, [off.org]);
+    expect(await call('/import', { students: SHEET }, 'hof-admin')).toEqual({ status: 409, body: { error: OFFBOARDED } });
   });
 });

@@ -45,6 +45,12 @@ export interface ImportStore {
     studentUserId: string,
   ): Promise<{ sectionId: string; grade: number; name: string } | null>;
   enrol(orgId: string, yearId: string, sectionId: string, studentUserId: string, roll: string): Promise<void>;
+  /**
+   * lms.import_refusal for this school (0063): null when people may be added,
+   * else the sentence why not. Optional: only the hosted store (supabaseStore)
+   * has it; the PGlite store, used by the demo seed and tests, does not.
+   */
+  mayImport?(orgId: string): Promise<string | null>;
 }
 
 export interface CreatedAccount {
@@ -73,6 +79,11 @@ export async function applyPlan(
   pin: (kind: AccountKind) => string = newPin,
 ): Promise<ImportResult> {
   const org = await store.ensureSchool(plan.school);
+  // Offboarded, suspended or ended, or the school's privacy decision not yet
+  // made (0063, admin.import_refusal): stop before anyone is created. The
+  // school row itself may already exist (ensureSchool), which holds no child.
+  const refusal = store.mayImport ? await store.mayImport(org) : null;
+  if (refusal) throw new Error(refusal);
   const year = await store.ensureYear(org, plan.school.year);
 
   const subjects = new Map<string, string>();

@@ -60,7 +60,11 @@ export async function importForAdmin(db: PGlite, caller: string, request: Import
   if (request.importKey !== undefined && (typeof request.importKey !== 'string' || !KEY.test(request.importKey))) {
     throw new ImportRefused(400, 'That import key is not one this server gives meaning to.');
   }
-  await adminOrg(db, caller, 'add people');
+  const org = await adminOrg(db, caller, 'add people');
+  // Offboarded, suspended or ended, and later the school's privacy decision
+  // (0063, lms.import_refusal): asked before anything is read.
+  const refusal = (await db.query<{ r: string | null }>(`select lms.import_refusal($1) as r`, [org])).rows[0]?.r;
+  if (refusal) throw new ImportRefused(409, refusal);
 
   const now = Date.now();
   for (const [k, v] of kept) if (v.until < now) kept.delete(k);

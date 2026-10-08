@@ -84,7 +84,9 @@ function checkSheets(req: Record<string, unknown>): void {
  * Adds people from the sheets to one school, with `actor` as the one who did
  * it in the school's activity log. The school admin's calls (handleAdmin,
  * below) and Qrie staff's (tools/admin-api) both come here once their own
- * check has named the school.
+ * check has named the school. Before any sheet is read it asks
+ * lms.import_refusal (0063) whether the school may take people, and refuses
+ * with that sentence (409) when it may not.
  */
 export async function importForSchool(
   deps: Pick<AdminDeps, 'rpc' | 'store'>,
@@ -93,6 +95,11 @@ export async function importForSchool(
   req: Record<string, unknown>,
 ): Promise<ImportResponse> {
   checkSheets(req);
+  // Offboarded, suspended or ended, and later the school's privacy decision
+  // (0063, admin.import_refusal): asked before anything is read, for the
+  // school admin's calls and staff's alike.
+  const refusal = await deps.rpc('import_refusal', { p_org: org });
+  if (typeof refusal === 'string' && refusal) throw new Refused(409, refusal);
   const snapshot = (await deps.rpc('import_snapshot', { p_org: org })) as SchoolSnapshot | null;
   if (!snapshot) throw new Refused(409, 'The school has no academic year yet.');
   const preview = previewImport(snapshot, {
