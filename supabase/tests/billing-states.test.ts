@@ -154,6 +154,7 @@ describe('what the apps read', () => {
       'tutor.only_prepared': false,
       'tutor.compose_live_classes': false,
       'contest.entries_open': true,
+      'contest.daily_limit': 2000,
       'app.min_version.classroom': '0.0.0',
       'app.min_version.student': '0.0.0',
       'app.min_version.lms': '0.0.0',
