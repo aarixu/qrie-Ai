@@ -70,6 +70,7 @@ describe('the admin schema', () => {
       'admin.me',
       'admin.relay_status',
       'admin.restore_drill_set',
+      'admin.safety_capture_set',
       'admin.school_activity',
       'admin.school_contact_remove',
       'admin.school_contact_set',
