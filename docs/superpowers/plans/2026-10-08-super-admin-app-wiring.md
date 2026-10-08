@@ -31,6 +31,7 @@
 **Imports.**
 - Plan 2's gate refuses `people-import` for an offboarded school with `'this school is offboarded; bring it back before adding people'` (`supabase/migrations/0054_admin_users_staff.sql:359-362`), raised as P0001; `tools/admin-api/src/handle.ts` turns P0001 into `400 {error: message}` (`handle.ts` `refusal()`); tests match `/offboarded/` (`supabase/tests/admin-users-staff.test.ts:206-216`, `tools/admin-api/tests/handle.test.ts:117-127`). The gate's grants: `0054:434, 444`.
 - One shared import, `importForSchool(deps, org, actor, req)` (`tools/lms-import/src/admin.ts:89-139`), is called by the school admin's hosted path (`handleAdmin` through `importPeople`, `admin.ts:141-145`, served by `supabase/functions/lms-admin/index.ts`) and by staff (`tools/admin-api/src/handle.ts` `importRoute`). Its `deps.rpc(fn, args)` runs `lms.<fn>` with the service role (`lms-admin/index.ts` `rpc`, `profile: 'lms'`; tests bind it to PGlite, `tools/lms-import/tests/admin.test.ts:33-44`, `tools/admin-api/tests/deps.ts`). The demo school's admin import is separate code, `importForAdmin(db, caller, request)` (`tools/lms-demo/src/import.ts:55-110`), over the same SQL (`lms.admin_school`, `lms.import_snapshot`). No SQL function writes the people: the store does (`tools/lms-import/src/apply.ts`), so the refusal is asked before the snapshot.
+- **A third path writes people to the hosted project: the founder's laptop CLI** (`tools/lms-import/src/cli.ts:42-112`, `--apply` with `SUPABASE_SERVICE_ROLE_KEY`), which calls `applyPlan(plan, supabaseStore(url, key))` directly (`cli.ts:90`) and creates the school itself when it is new (`supabaseStore.ts:70-82` `ensureSchool`). It goes through neither `importForSchool` nor `api_gate`. `applyPlan` (`apply.ts:70-140`) is shared by all three hosted paths (lms-admin and admin-api reach it through `importForSchool` with `supabaseStore`, `lms-admin/index.ts:45`, `admin-api/index.ts:57`); `ImportStore` is `apply.ts:35-48`. The cross-check of 2026-10-08 found this path; Task 4 closes it (ruling R24).
 - `lms.admin_school`, `lms.import_snapshot` and the other 0046 helpers are service-role only (`supabase/migrations/0046_lms_admin_service.sql:148-162`); `supabase/tests/lms-invariants.test.ts:59-97` lists the lms functions that must stay closed to `authenticated`.
 
 **The tutor's admission.**
@@ -80,7 +81,7 @@ function Commit([string]$msg) {
 | Seam | This plan |
 |---|---|
 | T1 | 0062, 0063, 0064. |
-| T2 | Creates `admin.import_refusal(p_org uuid) returns text` (internal) and the stub `admin.privacy_import_refusal(p_org uuid) returns text` returning NULL (internal, `set search_path = admin, public`), in 0063. `admin.api_gate('people-import')` and both LMS-lane import paths (`importForSchool` for lms-admin and admin-api, `importForAdmin` for the demo) ask it; the sentence is shown. |
+| T2 | Creates `admin.import_refusal(p_org uuid) returns text` (internal) and the stub `admin.privacy_import_refusal(p_org uuid) returns text` returning NULL (internal, `set search_path = admin, public`), in 0063. `admin.api_gate('people-import')` and every LMS-lane import path (`importForSchool` for lms-admin and admin-api, `importForAdmin` for the demo, and the founder's CLI through `applyPlan`'s new `store.mayImport` check, R24) ask it; the sentence is shown. |
 | T3 | The only plan that changes `public.claim_relay` (0064). |
 | T4 | Does not change `public.app_config`. Adds `public.my_app_config()`, which calls it. |
 | T5 | No relay TypeScript. The refusal reuses `halted` (R1); a distinct reason is merge note 6. |
@@ -125,6 +126,7 @@ function Commit([string]$msg) {
 - Student: `src/lib/build.ts` (`STUDENT_BUILD`), `src/lib/app-config.tsx` (`useStudentAppConfig`, `AppGate`), `src/components/app-notices.tsx` (`AppNotices`).
 - Teacher: `src/lib/build.ts` (`LMS_BUILD`), `src/lib/app-config.tsx` (`useLmsAppConfig`, `AppGate`), `src/components/app-notices.tsx` (`AppNotices`), `src/features/school/billing-notice.tsx` (`useSchoolBilling`, `BillingNotice`).
 - Landing: `landing/lib/contest-config.ts` (`entriesOpenFrom`, `problemForCode`), `landing/lib/use-entries.ts` (`useEntriesOpen`).
+- Imports: `tools/lms-import/src/apply.ts` `ImportStore.mayImport?(orgId): Promise<string | null>` (asked by `applyPlan` after `ensureSchool`), implemented by `supabaseStore` (R24).
 - Console: `packages/admin-client/src/api.ts` (`StopStatus`, `AdminClient.stopStatus()`, `FlagRow.kind` gains `'version' | 'count'`, `Today.contest.entriesOpen`); `apps/admin/src/lib/nav.ts` (`navFor`, `homeFor`, `showsHeaderStop`); `apps/admin/src/lib/app-readers.ts` (`FIRST_BUILD`, `APP_READERS`); `apps/admin/src/lib/flag-values.ts` (`flagValueProblem`); `apps/admin/src/components/header-stop.tsx` (`HeaderStop`); `apps/admin/src/features/apps/index.tsx` (`AppsPage`, route `/apps`).
 - The nav type (T7), exactly:
 
@@ -150,7 +152,7 @@ type BaseNavItem = {
 | `supabase/tests/admin-today.test.ts`, `billing-states.test.ts` (modify) | the pin moves from 0020's text to the row; the new key | 2 |
 | `supabase/migrations/0063_app_imports.sql` | `privacy_import_refusal` stub, `import_refusal`, `lms.import_refusal`, `api_gate` | 3 |
 | `supabase/tests/app-imports.test.ts`; `lms-invariants.test.ts` (modify) | the above | 3 |
-| `tools/lms-import/src/admin.ts`, `tools/lms-demo/src/import.ts` (modify) + `tools/lms-import/tests/admin.test.ts`, `tools/admin-api/tests/handle.test.ts`, `tools/lms-demo/tests/app-wiring.test.ts` | both import paths ask first | 4 |
+| `tools/lms-import/src/admin.ts`, `tools/lms-import/src/apply.ts`, `tools/lms-import/src/supabaseStore.ts`, `tools/lms-demo/src/import.ts` (modify) + `tools/lms-import/tests/admin.test.ts`, `tools/lms-import/tests/apply.test.ts`, `tools/lms-import/tests/supabaseStore.test.ts`, `tools/admin-api/tests/handle.test.ts`, `tools/lms-demo/tests/app-wiring.test.ts` | every import path asks first (the CLI through `applyPlan`) | 4 |
 | `supabase/migrations/0064_app_admission_reads.sql` | `tutor_enabled_for`, `claim_relay`, `my_app_config`, `lms.school_billing`, `admin.stop_status` | 5 |
 | `supabase/tests/app-tutor.test.ts`, `supabase/tests/app-reads.test.ts`; `admin-invariants.test.ts` (modify) | the above | 5 |
 | `packages/lms-client/src/app-config.ts`, `index.ts`, `api.ts`, `backend.ts`, `transport.ts` (modify); `tools/lms-demo/src/server.ts` (modify) + `packages/lms-client/tests/app-config.test.ts`, `backend-hosted.test.ts` (modify), `tools/lms-demo/tests/app-wiring.test.ts` | the shared reader for the school apps | 6 |
@@ -438,11 +440,11 @@ Commit "feat: no new people for an offboarded, suspended or ended school, one se
 
 ---
 
-### Task 4: Both import paths ask first
+### Task 4: Every import path asks first
 
 **Files:**
-- Modify: `tools/lms-import/src/admin.ts`, `tools/lms-demo/src/import.ts`
-- Test: `tools/lms-import/tests/admin.test.ts`, `tools/admin-api/tests/handle.test.ts`; create `tools/lms-demo/tests/app-wiring.test.ts`
+- Modify: `tools/lms-import/src/admin.ts`, `tools/lms-import/src/apply.ts` (`ImportStore.mayImport?`, one check in `applyPlan`), `tools/lms-import/src/supabaseStore.ts` (`mayImport`), `tools/lms-demo/src/import.ts`
+- Test: `tools/lms-import/tests/admin.test.ts`, `tools/lms-import/tests/apply.test.ts`, `tools/lms-import/tests/supabaseStore.test.ts`, `tools/admin-api/tests/handle.test.ts`; create `tools/lms-demo/tests/app-wiring.test.ts`
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -456,10 +458,17 @@ Commit "feat: no new people for an offboarded, suspended or ended school, one se
 `tools/lms-demo/tests/app-wiring.test.ts` (new, `// @vitest-environment node`; `db = await openDemoDatabase()` from `../src/database.ts`, `buildSchool` from `../../../supabase/tests/fixtures.ts`):
 4. `the demo admin of a suspended school is refused before anything is read`: `setLicence(db, 'DSU', 100, -20)`; `importForAdmin(db, school.admin, { students: SHEET })` rejects with an `ImportRefused` whose `status` is 409 and `message` is `LAPSED`.
 
+`tools/lms-import/tests/apply.test.ts` (the founder's CLI path, R24), a new `describe('a store that says the school may not import')`:
+5. `applyPlan stops after naming the school and before anyone is made`: `store = { ...pgliteStore(db), mayImport: async () => LAPSED }`; `applyPlan(plan(), store)` rejects with exactly `LAPSED`; `count('lms.account where org_id = <the DPS org>')` is unchanged and no `auth.users` row was added; with `mayImport: async () => null` the same plan applies as before.
+6. `a store without mayImport imports as before` (the demo seed and the PGlite tests): `applyPlan(plan(), pgliteStore(db))` resolves (the existing tests in this file already pass through it).
+
+`tools/lms-import/tests/supabaseStore.test.ts`, a new `describe('supabaseStore.mayImport')`:
+7. `asks lms.import_refusal with the service role and answers its sentence or null`: with `fakeFetch` answering `json(LAPSED)`: the one call is `POST https://x.supabase.co/rest/v1/rpc/import_refusal`, headers `content-profile: lms`, `apikey` and `authorization: Bearer <KEY>`, body `{"p_org":"org-1"}`, and the answer is `LAPSED`; answering `json(null)` → `null`; answering status 500 → rejects (the import stops rather than going on unasked).
+
 - [ ] **Step 2: Run and see them fail**
 
-Run: `npx vitest run tools/lms-import/tests/admin.test.ts tools/admin-api/tests/handle.test.ts tools/lms-demo/tests/app-wiring.test.ts`
-Expected: FAIL: the hosted admin's check returns 200 with a preview; staff preview returns 200; the demo import resolves.
+Run: `npx vitest run tools/lms-import/tests/admin.test.ts tools/lms-import/tests/apply.test.ts tools/lms-import/tests/supabaseStore.test.ts tools/admin-api/tests/handle.test.ts tools/lms-demo/tests/app-wiring.test.ts`
+Expected: FAIL: the hosted admin's check returns 200 with a preview; staff preview returns 200; the demo import resolves; `applyPlan` with a refusing store creates the accounts (test 5); `store.mayImport is not a function` (test 7).
 
 - [ ] **Step 3: Implement**
 
@@ -482,16 +491,39 @@ Extend the docblock of `importForSchool` with one sentence saying so.
   if (refusal) throw new ImportRefused(409, refusal);
 ```
 
+`tools/lms-import/src/apply.ts` (the founder's CLI, `cli.ts:90`, has no other door, R24): `ImportStore` gains
+
+```ts
+  /**
+   * lms.import_refusal for this school (0063): null when people may be added,
+   * else the sentence why not. Optional: only the hosted store (supabaseStore)
+   * has it; the PGlite store, used by the demo seed and tests, does not.
+   */
+  mayImport?(orgId: string): Promise<string | null>;
+```
+
+and `applyPlan` asks it directly after `const org = await store.ensureSchool(plan.school);`, before the year, sections or any person:
+
+```ts
+  // Offboarded, suspended or ended, or the school's privacy decision not yet
+  // made (0063, admin.import_refusal): stop before anyone is created. The
+  // school row itself may already exist (ensureSchool), which holds no child.
+  const refusal = store.mayImport ? await store.mayImport(org) : null;
+  if (refusal) throw new Error(refusal);
+```
+
+`tools/lms-import/src/supabaseStore.ts`: `mayImport: async (orgId) => { const r = await call('/rest/v1/rpc/import_refusal', { method: 'POST', profile: 'lms', body: { p_org: orgId } }); return typeof r === 'string' && r ? r : null; }`. The CLI needs no change: its existing catch prints `Import stopped: <the sentence>` and exits 1 (`cli.ts:91-95`). On the hosted lms-admin and admin-api paths this is a second ask after `importForSchool`'s own (one more call per commit); it changes nothing there.
+
 - [ ] **Step 4: Run and see them pass**
 
 Run: `npx vitest run tools/lms-import tools/admin-api tools/lms-demo/tests/app-wiring.test.ts packages/admin-client`
-Expected: PASS (2 + 1 + 1 new; the rest unchanged).
+Expected: PASS (2 + 3 + 1 + 1 new; the rest unchanged, `cli.test.ts` included).
 
 - [ ] **Step 5: Commit**
 
 ```powershell
-git add tools/lms-import/src/admin.ts tools/lms-demo/src/import.ts tools/lms-import/tests/admin.test.ts tools/admin-api/tests/handle.test.ts tools/lms-demo/tests/app-wiring.test.ts
-Commit "feat: the school admin's import, staff's and the demo's each ask whether the school may import, and show why not"
+git add tools/lms-import/src/admin.ts tools/lms-import/src/apply.ts tools/lms-import/src/supabaseStore.ts tools/lms-demo/src/import.ts tools/lms-import/tests/admin.test.ts tools/lms-import/tests/apply.test.ts tools/lms-import/tests/supabaseStore.test.ts tools/admin-api/tests/handle.test.ts tools/lms-demo/tests/app-wiring.test.ts
+Commit "feat: every import path asks whether the school may import (the school admin's, staff's, the demo's and the founder's CLI), and shows why not"
 ```
 
 ---
@@ -791,8 +823,8 @@ Commit "feat: the school apps read app_config through their backend, hosted or d
 `apps/classroom/tests/appConfigGate.test.tsx` (render with `createRoot` as `prototypeGate.test.tsx:63-80` does):
 1. `with the defaults it shows the app and nothing else`: children text present; no `[role="status"]`.
 2. `a banner sits above the app, as plain text, in its tone`: `applyAppConfig({ 'banner.message': '<b>Back</b> at 7', 'banner.tone': 'warning' })` → a `[role="status"]` whose `textContent` is `'<b>Back</b> at 7'` (no `<b>` element) and `data-tone="warning"`; children still present.
-3. `an older build is asked to update and shown nothing else`: `applyAppConfig({ 'app.min_version.classroom': '9.0.0' })` → text `Time to update Qrie` and a button `Reload`; children absent. `'9.0'` (malformed) → children present.
-4. `the tutor switched off shows the pause notice instead of the app`: `applyAppConfig({ 'tutor.enabled': false })` → text `The tutor is switched off for now`; children absent; with a banner set too, the banner shows above it.
+3. `an older build is asked to update and shown nothing else but the helplines`: `applyAppConfig({ 'app.min_version.classroom': '9.0.0' })` → text `Time to update Qrie` and a button `Reload`; children absent; `a[href="tel:14416"]` and `a[href="tel:1098"]` present. `'9.0'` (malformed) → children present.
+4. `the tutor switched off shows the pause notice, with the helplines, instead of the app`: `applyAppConfig({ 'tutor.enabled': false })` → text `The tutor is switched off for now`; children absent; the two `tel:` links of test 3 present (a child in distress who opens a paused app still reaches a person); with a banner set too, the banner shows above it.
 
 - [ ] **Step 2: Run and see them fail**
 
@@ -846,7 +878,8 @@ export async function readMyAppConfig(): Promise<unknown> {
 ```
 
 `apps/classroom/src/ui/AppConfigGate.tsx`: `AppConfigGate({ children })` using `useAppConfig()`:
-- below the minimum (`isBelowMinimum(CLASSROOM_BUILD, c.minVersion)`): a full-screen card, title `Time to update Qrie`, body `This version of the app is too old to use. Please update it, then open it again.`, a `Reload` button (`window.location.reload()`); nothing else.
+- below the minimum (`isBelowMinimum(CLASSROOM_BUILD, c.minVersion)`): a full-screen card, title `Time to update Qrie`, body `This version of the app is too old to use. Please update it, then open it again.`, a `Reload` button (`window.location.reload()`), and the helpline line (below); nothing else.
+- the helpline line, on both full-screen cards: `If you need to talk to someone now:` then `tel:` links `Tele-MANAS {HELPLINES.telemanas}` and `Childline {HELPLINES.childline}`, with `HELPLINES` imported from `@ai-tutor/safety` exactly as `src/screens/Help.tsx:2, 69-74` does (no new dependency). The app's report replay (`useReportReplay`, `App.tsx:595`) stays above the gate, so a report already waiting on the phone is still sent while the card shows.
 - otherwise a banner when `c.bannerMessage !== ''`: `<div role="status" data-tone={c.bannerTone}>{c.bannerMessage}</div>` (text only, never HTML), styled like `ui/RefusalNotice.tsx` (warning tone uses its amber colours, info its neutral ones);
 - then, when `!c.tutorEnabled`, a full-screen card, title `The tutor is switched off for now`, body `Classes are paused at the moment. Please come back later; nothing you have done is lost.` instead of the children; else the children.
 
@@ -1118,7 +1151,7 @@ Commit "feat: the console's client reads the stop's state for every role, the co
 - [ ] **Step 1: Write the failing tests**
 
 `apps/admin/tests/confirm.test.ts`, replace the `'what a switch change will touch'` describe (`:30-50`) with exact lines (no "plan 4" anywhere):
-1. `tutor.enabled`: `false` → `'The database refuses new tutor classes for every child, at a school or not, except at a school whose own switch is on; the tutor app shows them a pause notice. Reports still go through.'`; `true` → `'Children can take tutor classes again, except at a school whose own switch is off or whose licence is suspended.'`
+1. `tutor.enabled`: `false` → `'The database refuses new tutor classes for every child, at a school or not, except at a school whose own switch is on; the tutor app shows them a pause notice with the helplines. A report already waiting on a phone is still delivered.'`; `true` → `'Children can take tutor classes again, except at a school whose own switch is off or whose licence is suspended.'`
 2. `tutor.only_prepared`: `true` → `'The tutor app lets children open only classes that are already prepared, and prepares no new one. Only the app obeys this: the relay does not check it.'`; `false` → `'The tutor app lets children open any topic again, which prepares a new class when none exists (and costs money).'`
 3. `tutor.compose_live_classes` (either) → `'Saved, but nothing changes for children: no screen in this build reads it until the board composer is merged.'`
 4. `contest.entries_open`: `false` → `'The contest form says entries are closed, and the database refuses new entries. An entry already made can still be corrected.'`; `true` → `'The contest form takes new entries again, up to the daily limit.'`; `contest.daily_limit` `500` → `'The database takes at most 500 new contest entries in one India day; after that, the form says entries are full until midnight.'`
@@ -1271,7 +1304,7 @@ school whose tutor switch is off or that is suspended (children see the relay's
 "Qrie is having a rest" sentence until their app refreshes, and can still send
 a report), a new contest entry when entries are closed or the day's limit
 (India's day) is reached, and new people at an offboarded, suspended or ended
-school (the school admin and staff are told why).
+school (the school admin, staff and the founder's import tool are told why).
 
 ### What you do (Aarav's steps)
 
@@ -1334,9 +1367,9 @@ Commit "docs: runbook section 7, the apps obey the console; the switches' old li
 
 ## Merge notes
 
-1. **Order (wave 2):** this branch merges into `admin` first, then plan 5's `admin-safety`. Migrations run 0062 to 0064, then 0065 to 0069; plan 5's `admin.privacy_import_refusal` replaces this plan's stub with `create or replace` (same signature), and `admin.import_refusal` then refuses an undecided school with no change here (this plan's test 4 of `app-imports.test.ts` recreates the stub at its end; after plan 5, that test's "good school → null" needs plan 5's decided state for its school, which plan 5's fixtures provide or the test sets).
+1. **Order (wave 2):** this branch merges into `admin` first, then plan 5's `admin-safety`. Migrations run 0062 to 0064, then 0065 to 0069 (and the merge's own 0070, plan 5's merge note 4); plan 5's 0066 replaces this plan's 0063 stub `admin.privacy_import_refusal` with `create or replace` (same signature; the ACL, including this plan's revoke from `service_role`, is kept by `create or replace`), and `admin.import_refusal` then refuses an undecided school with no change here. Plan 5's gate answers NULL except on HOSTED and STAGING databases (its ruling R13), and every test here runs on `setEnvironment`'s `TEST`, so `app-imports.test.ts` (including test 4, which swaps the function and recreates the stub inside its own database) and Task 4's tests pass unchanged after the merge.
 2. **Shared files (T8):** `admin-invariants.test.ts` takes the union of both lists in C collation order (this plan adds `admin.stop_status` and `my_app_config`); `router.tsx`, `sidebar-data.ts` keep both sides' routes and items (Apps under Control; plan 5's Safety, Classes, Privacy groups with their `roles`); `docs/ops/admin-console.md` keeps section 7 then plan 5's section 8.
-3. **The nav type (T7):** keep one `roles?: Me['role'][]` declaration in `types.ts`; plan 5's items need no other change, since `navFor` already filters.
+3. **The nav type (T7):** keep one `roles?: Me['role'][]` declaration in `types.ts` (this plan's comment); plan 5's items need no other change, since `navFor` already filters. `apps/admin/tests/nav.test.ts` does change at the merge: plan 5's group `Safety and privacy` (Safety owner, safety; Classes owner, ops, safety; Privacy owner, ops) makes test 2 (ops) also see Classes and Privacy, and test 3 (safety) exactly `['Today', 'Schools', 'Switches', 'Apps', 'System', 'Your account', 'Safety', 'Classes']`; finance (test 4) is unchanged.
 4. **With the live tutor branches (`phase3-completion`, `voice-stt-tts`):** `apps/classroom/src/lib/prototype.ts` conflicts on the gate's line: take this branch's `export let PROTOTYPE_ONLY_PREPARED = true;`, `setOnlyPrepared` and docblock, and drop the live branch's "OFF SINCE 2026-09-29" block (the console's `tutor.only_prepared`, safe default `false`, now says the same, and is what `app_config` returns when nothing is set). `App.tsx` and `main.tsx` take this branch's hook-in lines beside theirs. `package.json` takes `0.1.0`. No relay file changes in this plan. Deploy the relay only from the merged branch, with `743c05a`, `1dcfcfe`, `18733af`.
 5. **With `board-composer`:** its `composed: ask.composed ?? COMPOSE_LIVE_CLASSES` (`apps/classroom/src/lib/liveClass.ts:449` there) becomes `?? getAppConfig().composeLiveClasses`, the constant is deleted, and `describeFlagChange('tutor.compose_live_classes', …)` and `APP_READERS` change to say what the composer does (same merge).
 6. **A distinct refusal reason later:** when the relay can be changed with the live tutor merged, a `school-off` reason (its own sentence, report exemption) needs `packages/relay/src/gate.ts` `REFUSALS` and the exemption list, `apps/classroom/src/lib/refusal.ts`, and a new migration replacing `claim_relay`'s `'halted'` for this case. Not before: the deployed relay reads any unknown reason as a rate limit.
@@ -1386,10 +1419,12 @@ Commit "docs: runbook section 7, the apps obey the console; the switches' old li
 - **R21** The banner shows in the tutor, student and teacher apps, not on the contest site. Cost: a visitor to the contest site does not see a platform notice.
 - **R22** The console's switch lines and the Apps page come from one module (`lib/app-readers.ts` and `describeFlagChange`). Cost: a new reader or switch must be added there by hand; a test checks every registered key is listed.
 - **R23** A minimum build stored before 0062 that is not a version stays as it is; every app ignores it. Cost: the Switches page shows the odd value until someone sets a proper one.
+- **R24** The founder's CLI (`tools/lms-import/src/cli.ts --apply`) is a third import path with the service role; `applyPlan` asks the store's optional `mayImport` (hosted store only) right after naming the school, so it refuses an offboarded, suspended, ended or (with plan 5) privacy-undecided school before anyone is created. Cost: a brand-new school run through the CLI on a HOSTED database keeps its school row (no people) until its privacy decision is recorded and the CLI is run again; the PGlite store has no `mayImport`, so the demo seed and the PGlite tests are unchanged.
+- **R25** The tutor app's two full-screen cards (old build, tutor off) carry the helplines from `@ai-tutor/safety`, because they replace every screen, Help included. Cost: none known.
 
 ## Self-review
 
-**Spec coverage.** Section 4 ("the apps depend on the panel only through `public.app_config`, with a built-in default if it cannot be read; the panel being down never turns a feature on"): Tasks 6 to 10 (each app's defaults and last-good rule, tested), R3, R4. Section 8 Tutor row (banner and pause notice, `tutor.only_prepared` replacing the compile-time constant, `tutor.compose_live_classes`, minimum build): Task 7, R6, R7; "stop and resume, the ceiling" are plan 1's. Student app row (banner, minimum build, a school's suspension notice): Task 8; "a report button and helpline" are plan 5's. Landing and contest row (entries today and the daily limit; open or close entries; the limit as a row): Tasks 2, 10, 12 (Today's tile), R8 to R11; "purge date" is plan 5's. Section 10 "new imports stop" when suspended (and plan 3's merge note 10): Tasks 3, 4. Section 13 ("licence ends on…", "invoice due", grace and suspension for the school admin): Tasks 5, 9 ("pay the link from inside the teacher app" is later, as the spec says). Section 14 plan-4 row (the four apps read `app_config`; the contest limit as a row; grace or suspension banner in the teacher and student apps): Tasks 2, 6 to 10, R14. The task's console follow-ups: true lines (Task 12), M13 (Tasks 2, 6, 7, 12), the role sidebar (Task 13, T7), finance's stop and landing (Tasks 5, 11, 13, R19, R20), the Apps page (Task 12). Runbook section 7 and the merge warning (Task 14, merge notes 4 to 6).
+**Spec coverage.** Section 4 ("the apps depend on the panel only through `public.app_config`, with a built-in default if it cannot be read; the panel being down never turns a feature on"): Tasks 6 to 10 (each app's defaults and last-good rule, tested), R3, R4. Section 8 Tutor row (banner and pause notice, `tutor.only_prepared` replacing the compile-time constant, `tutor.compose_live_classes`, minimum build): Task 7, R6, R7; "stop and resume, the ceiling" are plan 1's. Student app row (banner, minimum build, a school's suspension notice): Task 8; "a report button and helpline" are plan 5's. Landing and contest row (entries today and the daily limit; open or close entries; the limit as a row): Tasks 2, 10, 12 (Today's tile), R8 to R11; "purge date" is plan 5's. Section 10 "new imports stop" when suspended (and plan 3's merge note 10): Tasks 3, 4 (all four import paths, R24). Not delivered here: the Student app row's "See: sign-ins per school" (a count for the console; left to plan 6's visualiser, which reads the same tables). Section 13 ("licence ends on…", "invoice due", grace and suspension for the school admin): Tasks 5, 9 ("pay the link from inside the teacher app" is later, as the spec says). Section 14 plan-4 row (the four apps read `app_config`; the contest limit as a row; grace or suspension banner in the teacher and student apps): Tasks 2, 6 to 10, R14. The task's console follow-ups: true lines (Task 12), M13 (Tasks 2, 6, 7, 12), the role sidebar (Task 13, T7), finance's stop and landing (Tasks 5, 11, 13, R19, R20), the Apps page (Task 12). Runbook section 7 and the merge warning (Task 14, merge notes 4 to 6).
 
 **Seams.** T1 to T11 each map to a task in the Seams table; T4 holds (no `app_config` change), T5 holds (no relay TypeScript), T11 holds (the four recreated functions are copied from their latest definitions, cited).
 
