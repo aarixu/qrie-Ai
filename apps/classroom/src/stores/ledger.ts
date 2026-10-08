@@ -77,8 +77,10 @@ function read(): Outbox {
  *
  * Only APPENDED events are folded. A drain removes acknowledged rows and hands
  * this the same outbox minus them; nothing there is new, so nothing is folded
- * twice. `foldSession`'s cursor would catch a repeat anyway, and this is the
- * cheaper half of that guarantee.
+ * twice. The fold's cursor catches a repeat of the sitting in progress too;
+ * for any other sitting this filter is the whole guarantee, because the store
+ * places a sitting where it arrived (`placeOnArrival`, learnerModel.ts) and a
+ * re-appended older sitting would land ahead of the cursor.
  *
  * It never throws into the caller. A class in progress must not stop because a
  * derived cache could not be updated: the ledger is the record, this is a view

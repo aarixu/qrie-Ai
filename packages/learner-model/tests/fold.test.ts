@@ -254,7 +254,9 @@ describe('foldSession', () => {
     const late = { ...S1, orderAt: '2026-09-16T10:00:00.000Z' };
     const m = foldSession(newer, late, [answered(0)], index, params);
     expect(m.states.b.unassistedObservations).toBe(2);
-    expect(m.foldedThrough).toEqual({ at: late.orderAt, sessionId: 's1', seq: 1 });
+    // Seq 0 of this place was never folded here (this file's seq counter is
+    // shared, and gave it to the s2 answer), so the cursor says so (Task 8).
+    expect(m.foldedThrough).toEqual({ at: late.orderAt, sessionId: 's1', seq: 1, gaps: [[0, 0]] });
     // Timed by the sitting, not by its receipt.
     expect(m.states.b.lastUnassistedSuccessAt).toBe('2026-09-14T10:00:00.000Z');
   });
@@ -449,18 +451,20 @@ describe('foldSession', () => {
   });
 
   /**
-   * IF THIS EVER PASSES WITH THE ORDER SHUFFLED, `seq` IS DECORATIVE. The
+   * IF THIS EVER PASSES WITH THE ORDER SWAPPED, `seq` IS DECORATIVE. The
    * counters replay in packages/ledger commutes and says so in its header; the
-   * learner model must not.
+   * learner model must not. The order is `seq`'s, not the list's: a batch is
+   * folded by seq however it is listed (Task 8), so the swap is made in seq.
    */
   it('is NOT order-independent within a session', () => {
     seq = 0;
-    const h = helped(4);
-    const ans = answered(0);
-    const inOrder = foldSession(emptyModel(), S1, [h, ans], index, params);
-    const reversed = foldSession(emptyModel(), S1, [ans, h], index, params);
+    const helpFirst = [helped(4), answered(0)];
+    seq = 0;
+    const answerFirst = [answered(0), helped(4)];
+    const inOrder = foldSession(emptyModel(), S1, helpFirst, index, params);
+    const swapped = foldSession(emptyModel(), S1, answerFirst, index, params);
     expect(inOrder.states.b.unassistedObservations).not.toBe(
-      reversed.states.b.unassistedObservations,
+      swapped.states.b.unassistedObservations,
     );
   });
 });

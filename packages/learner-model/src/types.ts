@@ -183,9 +183,9 @@ export const MASTERY_SPACING_MS = 24 * 60 * 60 * 1000;
  * HOW FAR THE FOLD HAS CONSUMED A STUDENT'S HISTORY.
  *
  * `(learning_session.started_at, sessionId, seq)`, in that order — or, where
- * the server folds forward in its order of receipt, the batch's `orderAt`
- * (fold.ts FoldSession) in place of the start. Three parts and each earns its
- * place:
+ * the server folds forward in its order of receipt or the phone places a
+ * sitting where it arrived (`placeOnArrival`), the batch's `orderAt` (fold.ts
+ * FoldSession) in place of the start. Three parts and each earns its place:
  *
  *   * `at` is the SESSION'S started_at — a server clock — and NOT the event's
  *     own `at`, which is the phone's. The ledger says so itself
@@ -198,18 +198,33 @@ export const MASTERY_SPACING_MS = 24 * 60 * 60 * 1000;
  *   * `sessionId` breaks a tie between two sittings that began in the same
  *     millisecond, which `seq` cannot: `seq` restarts at 0 per session.
  *   * `seq` orders within one session, which is the only thing it can do.
+ *
+ * `gaps` (lam-one-brain Task 8): the seqs at this same place (`at` and
+ * `sessionId`) below `seq` that were never folded — the ones skipped when the
+ * place was first reached past seq 0, or jumped over between two folded
+ * events. A seq inside a gap that arrives later is folded then, not taken for
+ * a repeat. Absent when there are none; at most `MAX_CURSOR_GAPS` ranges are
+ * kept, the lowest dropped first, and a seq in a dropped range reads as a
+ * repeat.
  */
 export interface FoldCursor {
   at: string;
   sessionId: string;
   seq: number;
+  gaps?: [number, number][];
 }
+
+/** How many seq ranges a cursor remembers as never folded (`FoldCursor.gaps`). */
+export const MAX_CURSOR_GAPS = 32;
 
 export interface LearnerModel {
   states: Record<string, ConceptState>;
   /**
    * Makes a fold both incremental AND idempotent: an event at or behind this is
-   * skipped, so a retried request cannot count one quiz twice.
+   * skipped, so a retried request cannot count one quiz twice — except a seq
+   * in one of its `gaps`, which was never folded and is folded when it comes.
+   * A skip at another place is reported (`foldSessionReport`), because there a
+   * repeat cannot be told from evidence that came late.
    */
   foldedThrough: FoldCursor | null;
   /**
@@ -224,6 +239,8 @@ export interface LearnerModel {
    * correct.
    *
    * Dropped when a different session starts: help is a fact about one sitting.
+   * Kept when a batch of another sitting folds nothing (all of it behind the
+   * cursor): a redelivered older sitting is not a sitting starting.
    */
   helpInFlight: { sessionId: string; byAsk: Record<string, number> } | null;
   version: number;

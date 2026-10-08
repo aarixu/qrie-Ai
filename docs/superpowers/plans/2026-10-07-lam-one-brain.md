@@ -269,3 +269,17 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   tests and `tools/bin/ledger-live-test.mjs` (they insert directly, which still works until the revoke). Rollout
   order: push 0067 before deploying a classroom build with this drain (until then its calls are kept and retried),
   then 7b after the build is live.
+
+## Task 8 as built (2026-10-08)
+
+- `foldSessionReport` (packages/learner-model `fold.ts`) is `foldSession` plus a report: `skipped` (behind the cursor at
+  another place, not folded, because a repeat cannot be told from a late event there), `outOfOrder` (a seq the cursor
+  knows its place skipped, `FoldCursor.gaps`, folded when it arrives) and `needsRebuild` when either is non-zero. A batch
+  is folded in seq order however it is listed. `foldHistory` folds a whole history in order (sittings by start, then
+  id). A batch of another sitting that folds nothing leaves `helpInFlight` alone (the redelivered-old-sitting bug).
+- The phone places a sitting where it arrived (`placeOnArrival`; spec section 6, "the phone clock only orders events
+  inside one sitting"), so a clock set back or fixed after 2099 no longer skips later sittings.
+- The classroom store (`apps/classroom/src/lib/learnerModel.ts`) keeps a `needsRebuild` flag in storage and rebuilds
+  from `rebuildFromLedger` with the outbox's unsent events; it takes the rebuild only when it accounts for everything
+  the device holds, else retries at most every 10 minutes. Limit, stated in the code: one page of the server ledger
+  (1,000) and its 90 days, so a longer history keeps the flag set. Task 11 replaces this base with the server's model.

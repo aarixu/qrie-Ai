@@ -1,10 +1,10 @@
 import {
-  emptyModel,
-  foldSession,
+  foldHistory,
   type ConceptState,
+  type FoldSession,
   type LearnerModel,
 } from '@ai-tutor/learner-model';
-import type { LedgerEvent } from '@ai-tutor/ledger';
+import type { LearningSession, LedgerEvent } from '@ai-tutor/ledger';
 import { currentIndex, currentParams } from './graphContext';
 import { supabase } from './supabase';
 
@@ -21,9 +21,15 @@ import { supabase } from './supabase';
  * student select their own rows and nobody else's, so this needs no special
  * access and proves the same thing a support tool would.
  *
- * The order is `(learning_session.started_at, seq)`, the same total order
- * `foldSession` documents, so a rebuild here and a rebuild in the Edge Function
- * are the same computation on the same input.
+ * The order is `(learning_session.started_at, id, seq)`, `foldHistory`'s:
+ * sittings by start, two that began in the same millisecond by id, events by
+ * seq. The server's fold (packages/lms-brain think.ts) orders by its own
+ * receipt instead, so the two agree on what was folded and may differ in the
+ * order a late sitting was folded in.
+ *
+ * Given the outbox (`pending`), it folds the events the server has not had yet
+ * too: that is the device's whole ledger, which the model store rebuilds from
+ * when its fold reports `needsRebuild` (learnerModel.ts, lam-one-brain Task 8).
  */
 
 /**
@@ -42,17 +48,21 @@ export interface FieldDiff {
 
 export interface Rebuild {
   model: LearnerModel;
+  /** Sittings read from the server. */
   sessions: number;
+  /** Events read from the server, plus the `unsent` ones. */
   events: number;
   /** Where the stored model and the rebuild disagree. Empty is the good case. */
   diffs: FieldDiff[];
   /** Events on the server whose sitting row is missing, so nothing folded them. */
   orphanedEvents: number;
+  /** Outbox events the server did not have yet, folded with its rows. */
+  unsent: number;
   /** Outcomes the rebuild produced that the stored model never had, and vice versa. */
   onlyStored: string[];
   onlyRebuilt: string[];
   /**
-   * The folded events, in the (started_at, seq) order they were folded — what
+   * The folded events, in the (started_at, id, seq) order they were folded — what
    * the 3.7 projections (assistance score, hint abuse, wheel-spinning) read.
    * The same rows as the fold, never a second query that could drift from it;
    * orphans are excluded here exactly as they were excluded there.
@@ -137,7 +147,13 @@ const same = (a: unknown, b: unknown): boolean => {
   return (a ?? null) === (b ?? null);
 };
 
-export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild | string> {
+/** The device's events not yet acknowledged, and its open sitting (the outbox). */
+export interface Unsent {
+  session: LearningSession | null;
+  events: readonly LedgerEvent[];
+}
+
+export async function rebuildFromLedger(stored: LearnerModel, unsent?: Unsent): Promise<Rebuild | string> {
   const db = supabase();
   if (!db) return 'No cloud configured — there is no ledger to rebuild from.';
 
@@ -177,13 +193,6 @@ export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild |
   const sessions = (sessionRows ?? []) as SessionRow[];
   const events = (eventRows ?? []) as EventRow[];
 
-  const bySession = new Map<string, LedgerEvent[]>();
-  for (const row of events) {
-    const list = bySession.get(row.session_id) ?? [];
-    list.push(toEvent(row));
-    bySession.set(row.session_id, list);
-  }
-
   /**
    * EVENTS WHOSE SITTING IS MISSING ARE COUNTED, NOT DROPPED.
    *
@@ -197,19 +206,32 @@ export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild |
    * fold it against, and silently skipping it would show up below as the
    * model's fault.
    */
-  const known = new Set(sessions.map((row) => row.id));
+  const sittings: FoldSession[] = sessions.map((row) => ({ id: row.id, startedAt: row.started_at }));
+  const known = new Set(sittings.map((s) => s.id));
   const orphanedEvents = events.filter((row) => !known.has(row.session_id)).length;
+  const ledger: LedgerEvent[] = events.map(toEvent);
 
-  const params = currentParams();
-  let model = emptyModel();
-  const folded: LedgerEvent[] = [];
-  for (const session of sessions) {
-    const own = bySession.get(session.id);
-    if (!own || own.length === 0) continue;
-    own.sort((a, b) => a.seq - b.seq);
-    model = foldSession(model, { id: session.id, startedAt: session.started_at }, own, index, params);
-    folded.push(...own);
+  /**
+   * THE OUTBOX'S UNSENT EVENTS ARE PART OF THE DEVICE'S LEDGER. Each one the
+   * server does not hold yet is folded with its rows. Its sitting is the
+   * outbox's open one, or the server's, or — for an older sitting still
+   * waiting to be sent — placed at its first event's time, the same stand-in
+   * record_evidence (0067) uses for a sitting it was not told about.
+   */
+  const onServer = new Set(ledger.map((e) => e.id));
+  const fresh = (unsent?.events ?? []).filter((e) => !onServer.has(e.id));
+  if (unsent?.session && !known.has(unsent.session.id) && fresh.some((e) => e.sessionId === unsent.session!.id)) {
+    sittings.push({ id: unsent.session.id, startedAt: unsent.session.startedAt });
+    known.add(unsent.session.id);
   }
+  for (const e of fresh) {
+    if (known.has(e.sessionId)) continue;
+    const first = fresh.filter((x) => x.sessionId === e.sessionId).sort((a, b) => a.seq - b.seq)[0];
+    sittings.push({ id: e.sessionId, startedAt: first.at });
+    known.add(e.sessionId);
+  }
+
+  const { model, folded } = foldHistory(sittings, [...ledger, ...fresh], index, currentParams());
 
   const diffs: FieldDiff[] = [];
   for (const [id, rebuilt] of Object.entries(model.states)) {
@@ -232,9 +254,10 @@ export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild |
   return {
     model,
     sessions: sessions.length,
-    events: events.length,
+    events: events.length + fresh.length,
     diffs,
     orphanedEvents,
+    unsent: fresh.length,
     onlyStored: [...storedIds].filter((id) => !rebuiltIds.has(id)),
     onlyRebuilt: [...rebuiltIds].filter((id) => !storedIds.has(id)),
     ledger: folded,

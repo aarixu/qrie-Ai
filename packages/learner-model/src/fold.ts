@@ -20,6 +20,7 @@ import { recordColdWin, stampMastery } from './mastered.ts';
 import { recordColdRight, recordWrongIdea } from './misconception.ts';
 import { atLeastANudge, deriveRung } from './rung.ts';
 import {
+  MAX_CURSOR_GAPS,
   MODEL_VERSION,
   emptyConceptState,
   emptyModel,
@@ -28,18 +29,44 @@ import {
   type LearnerModel,
 } from './types.ts';
 
-/** The sitting these events belong to. `startedAt` is Postgres's clock. */
+/**
+ * The sitting these events belong to. `startedAt` times it: the server passes
+ * its own clock (packages/lms-brain think.ts), the phone its own start.
+ */
 export interface FoldSession {
   id: string;
   startedAt: string;
   /**
    * Where this batch sits in the cursor's order, when that is not its
    * sitting's start: the server folds forward in the order it RECEIVED
-   * evidence (packages/lms-brain think.ts), so a late batch of an older
-   * sitting is placed by its receipt and still timed by `startedAt`.
+   * evidence (packages/lms-brain think.ts), and the phone in the order its
+   * sittings reached it (`placeOnArrival`), so a late batch of an older
+   * sitting is placed by its arrival and still timed by `startedAt`.
    * Defaults to `startedAt`.
    */
   orderAt?: string;
+}
+
+/** What one fold call did, beside the model it made. */
+export interface FoldReport {
+  model: LearnerModel;
+  /**
+   * The model is not the in-order fold of everything it has been given: an
+   * event was skipped behind the cursor at another place (`skipped`) or folded
+   * after later ones (`outOfOrder`). The caller folds the history again in
+   * order (`foldHistory`); the classroom's model store does
+   * (apps/classroom/src/lib/learnerModel.ts).
+   */
+  needsRebuild: boolean;
+  /**
+   * Events behind the cursor at another place — an older sitting, or an
+   * earlier receipt — and NOT folded: there a repeat of something folded
+   * cannot be told from something that came late, and folding a repeat would
+   * count it twice.
+   */
+  skipped: number;
+  /** Events in one of the cursor's `gaps` — skipped by their sitting, then arrived — folded now, after later ones. */
+  outOfOrder: number;
 }
 
 /**
@@ -55,7 +82,8 @@ export interface FoldSession {
  * always rebuild the same model, which is what makes a session replayable and
  * these rows a record rather than a log.
  *
- * `events` must belong to `session` and be ordered by `seq` ascending.
+ * `events` must belong to `session`; they are folded in `seq` order whatever
+ * order they are listed in. This is `foldSessionReport` without the report.
  */
 export function foldSession(
   model: LearnerModel,
@@ -64,6 +92,25 @@ export function foldSession(
   index: GraphIndex,
   params: ModelParams,
 ): LearnerModel {
+  return foldSessionReport(model, session, events, index, params).model;
+}
+
+/**
+ * `foldSession`, saying what it could not fold in order (lam-one-brain Task 8).
+ *
+ * An event behind the cursor used to be skipped with nothing said: an older
+ * sitting delivered after a newer one, an answer delivered after its
+ * successor. Now a seq the cursor knows was never folded (`FoldCursor.gaps`)
+ * is folded when it arrives, a skip at another place is counted, and either
+ * sets `needsRebuild`.
+ */
+export function foldSessionReport(
+  model: LearnerModel,
+  session: FoldSession,
+  events: readonly LedgerEvent[],
+  index: GraphIndex,
+  params: ModelParams,
+): FoldReport {
   /**
    * A MODEL FROM A DIFFERENT SHAPE IS NOT FOLDED INTO, IT IS REBUILT.
    *
@@ -82,9 +129,14 @@ export function foldSession(
       ? { ...next.helpInFlight.byAsk }
       : {};
 
-  for (const event of events) {
-    const cursor: FoldCursor = { at: session.orderAt ?? session.startedAt, sessionId: session.id, seq: event.seq };
+  const at = session.orderAt ?? session.startedAt;
+  // By seq, whatever order the list came in: the rung is a fact about what came before.
+  const ordered = [...events].sort((a, b) => a.seq - b.seq);
+  let folded = 0;
+  let skipped = 0;
+  let outOfOrder = 0;
 
+  for (const event of ordered) {
     /**
      * A `helped` BEHIND THE CURSOR STILL COUNTS AS HELP.
      *
@@ -100,7 +152,12 @@ export function foldSession(
       help[key] = Math.max(help[key] ?? 0, payload.rung);
     }
 
-    if (behindCursor(next.foldedThrough, cursor)) continue;
+    const place = placeOf(next.foldedThrough, at, session.id, event.seq);
+    if (place === 'repeat') continue;
+    if (place === 'behind') {
+      skipped += 1;
+      continue;
+    }
 
     switch (event.kind) {
       case 'answered':
@@ -123,16 +180,34 @@ export function foldSession(
         break;
     }
 
-    next = { ...next, foldedThrough: cursor };
+    folded += 1;
+    if (place === 'gap') {
+      outOfOrder += 1;
+      next = { ...next, foldedThrough: fillGap(next.foldedThrough!, event.seq) };
+    } else {
+      next = { ...next, foldedThrough: advance(next.foldedThrough, at, session.id, event.seq) };
+    }
   }
 
-  return { ...next, helpInFlight: { sessionId: session.id, byAsk: help } };
+  /**
+   * A BATCH OF ANOTHER SITTING THAT FOLDED NOTHING LEAVES THE LIVE SITTING'S
+   * HELP WHERE IT IS. A redelivered older sitting is all behind the cursor;
+   * writing its help here wiped the help the sitting in progress had been
+   * given, and that sitting's next answer then read as cold (truth test L04).
+   */
+  const keepsHelp = folded === 0 && next.helpInFlight !== null && next.helpInFlight.sessionId !== session.id;
+  return {
+    model: keepsHelp ? next : { ...next, helpInFlight: { sessionId: session.id, byAsk: help } },
+    needsRebuild: skipped > 0 || outOfOrder > 0,
+    skipped,
+    outOfOrder,
+  };
 }
 
 /**
- * Already folded. Ordered by the SESSION's start (or the batch's `orderAt`),
- * then the session id, then the sequence — never by a string compare of a
- * device clock.
+ * WHERE AN EVENT FALLS AGAINST THE CURSOR. Ordered by the SESSION's start (or
+ * the batch's `orderAt`), then the session id, then the sequence — never by a
+ * string compare of a device clock.
  *
  * `Date.parse` rather than `<` on the strings: the device renders an instant as
  * `…T10:00:00.000Z` and PostgREST may render the same instant as
@@ -140,14 +215,122 @@ export function foldSession(
  * form like `+05:30` sorts later still while being four and a half hours
  * earlier. One implementation on two runtimes is the whole design; they must
  * agree about which events are new.
+ *
+ * `repeat` and `gap` are both at or behind the cursor at its own place; a gap
+ * is a seq that place skipped. `behind` is at another, earlier place.
  */
-function behindCursor(done: FoldCursor | null, now: FoldCursor): boolean {
-  if (!done) return false;
+function placeOf(
+  done: FoldCursor | null,
+  at: string,
+  sessionId: string,
+  seq: number,
+): 'ahead' | 'repeat' | 'gap' | 'behind' {
+  if (!done) return 'ahead';
   const a = Date.parse(done.at);
-  const b = Date.parse(now.at);
-  if (b !== a) return b < a;
-  if (now.sessionId !== done.sessionId) return now.sessionId < done.sessionId;
-  return now.seq <= done.seq;
+  const b = Date.parse(at);
+  if (b !== a) return b > a ? 'ahead' : 'behind';
+  if (sessionId !== done.sessionId) return sessionId > done.sessionId ? 'ahead' : 'behind';
+  if (seq > done.seq) return 'ahead';
+  return (done.gaps ?? []).some(([lo, hi]) => seq >= lo && seq <= hi) ? 'gap' : 'repeat';
+}
+
+/** The cursor moved to `seq` at this place, remembering any seqs it jumped over. */
+function advance(done: FoldCursor | null, at: string, sessionId: string, seq: number): FoldCursor {
+  const samePlace = done !== null && Date.parse(done.at) === Date.parse(at) && done.sessionId === sessionId;
+  const gaps: [number, number][] = samePlace ? [...(done.gaps ?? [])] : [];
+  const from = samePlace ? done.seq + 1 : 0;
+  if (seq > from) gaps.push([from, seq - 1]);
+  return withGaps({ at, sessionId, seq }, gaps);
+}
+
+/** `seq`, inside one of the cursor's gaps, has now been folded. */
+function fillGap(done: FoldCursor, seq: number): FoldCursor {
+  const gaps: [number, number][] = [];
+  for (const [lo, hi] of done.gaps ?? []) {
+    if (seq < lo || seq > hi) {
+      gaps.push([lo, hi]);
+      continue;
+    }
+    if (lo < seq) gaps.push([lo, seq - 1]);
+    if (seq < hi) gaps.push([seq + 1, hi]);
+  }
+  return withGaps({ at: done.at, sessionId: done.sessionId, seq: done.seq }, gaps);
+}
+
+/** Gaps only when there are some, and the newest `MAX_CURSOR_GAPS` of them. */
+function withGaps(cursor: FoldCursor, gaps: [number, number][]): FoldCursor {
+  return gaps.length > 0 ? { ...cursor, gaps: gaps.slice(-MAX_CURSOR_GAPS) } : cursor;
+}
+
+/**
+ * WHERE THE PHONE PUTS A SITTING: where it arrived (lam-one-brain Task 8; spec
+ * section 6, "the phone clock only orders events inside one sitting").
+ *
+ * The phone folds its own events as they happen, so the order they reach its
+ * fold is the order they happened in. Its sittings' starts are its own clock,
+ * and a clock set back a month — or one fixed after reading 2099 — put every
+ * later sitting behind the cursor, where it was skipped (truth test L03). So a
+ * sitting the cursor is already in keeps its place, and any other is placed
+ * after everything folded when its own start is not already later. Timing —
+ * the mastery rule's day apart, the review ladder — still reads `startedAt`.
+ *
+ * Only for evidence the caller knows is new to this model, as the classroom's
+ * store does: a repeat placed this way would be ahead of the cursor and
+ * counted twice.
+ */
+export function placeOnArrival(model: LearnerModel, session: FoldSession): FoldSession {
+  const done = model.foldedThrough;
+  if (!done) return session;
+  if (done.sessionId === session.id) return { ...session, orderAt: done.at };
+  const last = Date.parse(done.at);
+  if (Date.parse(session.orderAt ?? session.startedAt) > last) return session;
+  return { ...session, orderAt: new Date(last + 1).toISOString() };
+}
+
+/** What `foldHistory` folded. */
+export interface History {
+  model: LearnerModel;
+  /** The events folded, in the order they were folded. */
+  folded: LedgerEvent[];
+  /** Events whose sitting was not among those given, so nothing folded them. */
+  orphaned: number;
+}
+
+/**
+ * A WHOLE HISTORY, FOLDED IN ORDER FROM NOTHING: sittings by start, then id
+ * (two that began in the same millisecond keep one order however they were
+ * listed), each sitting's events by seq. What a caller does when a fold
+ * reports `needsRebuild`, and the order the classroom's ledger rebuild reads.
+ */
+export function foldHistory(
+  sittings: readonly FoldSession[],
+  events: readonly LedgerEvent[],
+  index: GraphIndex,
+  params: ModelParams,
+): History {
+  const bySession = new Map<string, LedgerEvent[]>();
+  for (const e of events) {
+    const list = bySession.get(e.sessionId) ?? [];
+    list.push(e);
+    bySession.set(e.sessionId, list);
+  }
+  const known = new Set(sittings.map((s) => s.id));
+  const orphaned = events.filter((e) => !known.has(e.sessionId)).length;
+  const order = [...sittings].sort(
+    (x, y) => Date.parse(x.startedAt) - Date.parse(y.startedAt) || (x.id < y.id ? -1 : x.id > y.id ? 1 : 0),
+  );
+  let model = emptyModel();
+  const folded: LedgerEvent[] = [];
+  for (const sitting of order) {
+    const own = bySession.get(sitting.id);
+    if (!own || own.length === 0) continue;
+    // A sitting listed twice is folded once.
+    bySession.delete(sitting.id);
+    const sorted = [...own].sort((a, b) => a.seq - b.seq);
+    model = foldSession(model, { id: sitting.id, startedAt: sitting.startedAt }, sorted, index, params);
+    folded.push(...sorted);
+  }
+  return { model, folded, orphaned };
 }
 
 /**

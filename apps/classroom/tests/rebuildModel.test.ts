@@ -203,6 +203,74 @@ describe('rebuildFromLedger', () => {
     expect(out.onlyRebuilt).toEqual([]);
   });
 
+  /**
+   * THE DEVICE'S WHOLE LEDGER (lam-one-brain Task 8): the server's rows and
+   * the outbox's unsent events, which the model store folds again when its
+   * fold reports `needsRebuild`.
+   */
+  it('folds the outbox events the server does not hold yet, once', async () => {
+    eventsResult.data = [ROWS[0], ROWS[1], ROWS[2]];
+    const toEvent = (r: (typeof ROWS)[number]) =>
+      ({
+        id: r.id,
+        sessionId: r.session_id,
+        seq: r.seq,
+        at: r.at,
+        kind: r.kind,
+        source: r.source,
+        surface: r.surface,
+        outcomeIds: r.outcome_ids,
+        payload: r.payload,
+      }) as unknown as LedgerEvent;
+    // Two of these the server already has; one it does not.
+    const out = await rebuildFromLedger(deviceModel(), {
+      session: { id: S2.id, source: 'quiz', startedAt: S2.started_at },
+      events: [ROWS[1], ROWS[2], ROWS[3]].map(toEvent),
+    });
+    if (typeof out === 'string') throw new Error(out);
+    expect(out.unsent).toBe(1);
+    expect(out.events).toBe(4);
+    expect(out.diffs).toEqual([]);
+    expect(out.ledger.map((e) => e.id)).toEqual(['s1-e0', 's1-e1', 's2-e0', 's2-e1']);
+  });
+
+  it("places an unsent sitting the server has not heard of: the outbox's own, else at its first event", async () => {
+    sessionsResult.data = [S1];
+    eventsResult.data = [ROWS[0], ROWS[1]];
+    const S0 = { id: 's0', startedAt: '2026-09-13T10:00:00.000Z' };
+    const early = {
+      id: 's0-e0',
+      sessionId: S0.id,
+      seq: 0,
+      at: S0.startedAt,
+      kind: 'answered',
+      source: 'quiz',
+      surface: 'tap',
+      outcomeIds: ['a'],
+      payload: answeredPayload(false),
+    } as unknown as LedgerEvent;
+    const late = { ...early, id: 's3-e0', sessionId: 's3', at: '2026-09-20T10:00:00.000Z' } as LedgerEvent;
+    const out = await rebuildFromLedger(deviceModel(), {
+      session: { id: 's3', source: 'quiz', startedAt: '2026-09-20T09:00:00.000Z' },
+      events: [late, early],
+    });
+    if (typeof out === 'string') throw new Error(out);
+    expect(out.ledger.map((e) => e.id)).toEqual(['s0-e0', 's1-e0', 's1-e1', 's3-e0']);
+    expect(out.model.foldedThrough).toEqual({ at: '2026-09-20T09:00:00.000Z', sessionId: 's3', seq: 0 });
+  });
+
+  it('folds two sittings that began in the same millisecond in one order, whichever the server returned', async () => {
+    const twin = { id: 's0', started_at: S1.started_at };
+    eventsResult.data = [...ROWS, row(twin.id, 0, S1.started_at, 'answered', ['b'], answeredPayload(false))];
+    sessionsResult.data = [S1, twin, S2];
+    const one = await rebuildFromLedger(deviceModel());
+    sessionsResult.data = [twin, S1, S2];
+    const other = await rebuildFromLedger(deviceModel());
+    if (typeof one === 'string' || typeof other === 'string') throw new Error('read failed');
+    expect(other.model).toEqual(one.model);
+    expect(one.ledger.map((e) => e.id)).toEqual(['s0-e0', 's1-e0', 's1-e1', 's2-e0', 's2-e1']);
+  });
+
   it('hands back the database error as a sentence, not a throw', async () => {
     sessionsResult.data = null;
     sessionsResult.error = { message: 'permission denied' };

@@ -1,15 +1,17 @@
 import type { Mastery } from '@ai-tutor/knowledge-graph';
 import {
   emptyModel,
-  foldSession,
+  foldSessionReport,
   migrateModel,
   MODEL_VERSION,
   masteryView,
+  placeOnArrival,
   unassistedView,
   type LearnerModel,
 } from '@ai-tutor/learner-model';
 import type { LearningSession, LedgerEvent } from '@ai-tutor/ledger';
 import { createLocalStore } from '../stores/localStore';
+import type { Rebuild } from './rebuildModel';
 
 /**
  * THE DEVICE'S COPY OF WHAT WE BELIEVE ABOUT THIS STUDENT.
@@ -18,18 +20,22 @@ import { createLocalStore } from '../stores/localStore';
  * written, so belief and the record cannot come apart. One call site, because
  * two would eventually disagree and the disagreement would be invisible.
  *
- * AUTHORITATIVE ONLY UNTIL THERE IS A SERVER FOLD, WHICH THERE IS NOT YET. The
- * design has this same reducer running in the Edge Function over the ledger in
- * `(started_at, seq)` order, with the server winning any disagreement. Until
- * that lands this is the only model there is, and its cursor is in the DEVICE's
- * clock — `Outbox.session.startedAt` is stamped by `stores/ledger.ts`, not by
- * Postgres.
+ * A SITTING GOES WHERE IT ARRIVED (lam-one-brain Task 8). A sitting's start
+ * is the DEVICE's clock — `Outbox.session.startedAt` is stamped by
+ * `stores/ledger.ts`, not by Postgres — and a clock set back, or fixed after
+ * reading 2099, put every later sitting behind the cursor, where it was
+ * skipped. The fold now places each sitting where it reached this store
+ * (`placeOnArrival`): the phone's clock times what happens inside a sitting
+ * and no longer orders sittings. When the fold still reports that its model
+ * is not the in-order fold of what it was given (`needsRebuild`), the store
+ * folds its ledger again in order (`rebuildFromLedger`, with the outbox).
  *
- * That is safe precisely because there is nothing to disagree with yet. It
- * stops being safe the moment a server model exists, so when that arrives it
- * must REBUILD FROM ZERO rather than continue this cursor: the two clocks are
- * not the same clock, and a cursor carried across them would silently skip
- * whatever fell between them.
+ * The server folds the same ledger in its own order of receipt
+ * (packages/lms-brain think.ts), and this device does not read that model
+ * yet. When it does, it must take the server's model and fold only its own
+ * unsent events on top rather than continue this cursor: the two orders are
+ * not the same order, and a cursor carried across them would skip whatever
+ * fell between them.
  */
 const modelStore = createLocalStore<LearnerModel>('ai-tutor:learner-model', emptyModel());
 
@@ -170,18 +176,109 @@ async function bringForward(): Promise<void> {
     .catch(() => null);
   // Another fold already brought it forward while the ledger was being read.
   if (modelStore.get() !== stored) return;
-  // Whole: every outcome the device holds is there, with at least as much
-  // evidence — an outcome with some events never synced is a short read too
-  // (second review, 2026-09-29).
-  const whole =
+  if (accountsFor(rebuilt, stored)) take(rebuilt);
+  else modelStore.set(migrateModel(stored));
+}
+
+/**
+ * Whole: every outcome the device holds is there, with at least as much
+ * evidence — an outcome with some events never synced is a short read too
+ * (second review, 2026-09-29).
+ */
+function accountsFor(rebuilt: Rebuild | string | null, stored: LearnerModel): rebuilt is Rebuild {
+  return (
     rebuilt !== null &&
     typeof rebuilt !== 'string' &&
     rebuilt.events > 0 &&
     rebuilt.onlyStored.length === 0 &&
     Object.entries(stored.states ?? {}).every(
       ([id, st]) => (rebuilt.model.states[id]?.observations ?? 0) >= (st?.observations ?? 0),
-    );
-  modelStore.set(whole ? rebuilt.model : migrateModel(stored));
+    )
+  );
+}
+
+/**
+ * The events the last rebuild this store took had folded, and how many it has
+ * taken. A fold that was already waiting when a rebuild was taken skips those
+ * events: placed where they arrived, they would be ahead of the rebuilt cursor
+ * whenever their sitting is not the last one the rebuild folded, and counted
+ * twice. A fold asked for after the rebuild was taken is not filtered.
+ */
+let rebuiltIds: ReadonlySet<string> = new Set();
+let rebuildsTaken = 0;
+
+function take(rebuilt: Rebuild): void {
+  modelStore.set(rebuilt.model);
+  rebuiltIds = new Set(rebuilt.ledger.map((e) => e.id));
+  rebuildsTaken += 1;
+}
+
+/**
+ * THE FOLD SAID THIS MODEL IS NOT THE IN-ORDER FOLD OF WHAT IT WAS GIVEN
+ * (`needsRebuild`): an event was folded after later ones, or skipped behind
+ * the cursor. Kept in storage until a rebuild is taken, so a reload, an
+ * offline class or a short read does not forget it. While it is set every fold
+ * tries the rebuild again, at most once per `REBUILD_RETRY_MS` after a read
+ * that could not be taken.
+ *
+ * What it cannot reach: a rebuild reads one page of the server's ledger
+ * (`rebuildFromLedger`, 1,000 sittings and 1,000 events) and the server keeps
+ * 90 days of it, so a history longer than either is never taken — the
+ * accounts-for test refuses it — and the flag stays set, saying so.
+ */
+const REBUILD_KEY = 'ai-tutor:learner-model-rebuild';
+const REBUILD_RETRY_MS = 10 * 60 * 1000;
+
+export const rebuildWanted = (): boolean => {
+  try {
+    return localStorage.getItem(REBUILD_KEY) === '1';
+  } catch {
+    return false;
+  }
+};
+
+const wantRebuild = (on: boolean): void => {
+  try {
+    if (on) localStorage.setItem(REBUILD_KEY, '1');
+    else localStorage.removeItem(REBUILD_KEY);
+  } catch {
+    // A locked-down WebView. The next report asks again.
+  }
+};
+
+let rebuilding = false;
+let retryAt = 0;
+
+async function rebuildInOrder(): Promise<void> {
+  if (rebuilding || Date.now() < retryAt) return;
+  rebuilding = true;
+  try {
+    const stored = modelStore.get();
+    // The outbox is read for its unsent events only; stores/ledger.ts imports
+    // this file, so it is reached at run time rather than at load.
+    const { ledgerOutbox } = await import('../stores/ledger');
+    const { session, pending } = ledgerOutbox.get();
+    const rebuilt = await import('./rebuildModel')
+      .then((m) => m.rebuildFromLedger(stored, { session, events: pending }))
+      .catch(() => null);
+    // A fold landed while the ledger was read, so this is a rebuild of less
+    // than the store now holds. The flag stays; the next fold asks again.
+    if (modelStore.get() !== stored) return;
+    if (!accountsFor(rebuilt, stored)) {
+      retryAt = Date.now() + REBUILD_RETRY_MS;
+      return;
+    }
+    take(rebuilt);
+    wantRebuild(false);
+    // Everything recorded is in the model now, whatever was missed before.
+    try {
+      localStorage.removeItem(UNFOLDED_KEY);
+    } catch {
+      // The count is a diagnostic, not the record.
+    }
+  } finally {
+    rebuilding = false;
+  }
 }
 
 export function recordLocally(
@@ -189,6 +286,7 @@ export function recordLocally(
   events: readonly LedgerEvent[],
 ): Promise<void> {
   if (events.length === 0) return Promise.resolve();
+  const asked = rebuildsTaken;
   const done = import('./graphContext')
     .then(async ({ currentIndex, currentParams }) => {
       const index = currentIndex();
@@ -200,18 +298,26 @@ export function recordLocally(
         return;
       }
       await bringForward();
-      // Brought forward again at the fold itself: a sync that wrote an older
-      // model while the ledger was being read must not reach foldSession,
-      // which would start it from empty (second review, 2026-09-29).
-      modelStore.set(
-        foldSession(
-          migrateModel(modelStore.get()),
-          { id: session.id, startedAt: session.startedAt },
-          events,
+      const fresh = rebuildsTaken === asked ? events : events.filter((e) => !rebuiltIds.has(e.id));
+      if (fresh.length > 0) {
+        // Brought forward again at the fold itself: a sync that wrote an older
+        // model while the ledger was being read must not reach the fold,
+        // which would start it from empty (second review, 2026-09-29).
+        const base = migrateModel(modelStore.get());
+        const report = foldSessionReport(
+          base,
+          placeOnArrival(base, { id: session.id, startedAt: session.startedAt }),
+          fresh,
           index,
           currentParams(),
-        ),
-      );
+        );
+        modelStore.set(report.model);
+        if (report.skipped > 0) missed(report.skipped);
+        if (report.needsRebuild) wantRebuild(true);
+      }
+      // A rebuild that cannot run leaves the flag set; what was just folded
+      // was folded, so it is not counted as missed below.
+      if (rebuildWanted()) await rebuildInOrder().catch(() => undefined);
     })
     .catch(() => {
       // A class still runs. The ledger has the events either way and a server
