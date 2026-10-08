@@ -31,8 +31,16 @@ export function checkWrite(c: WriteCheck): WriteVerdict {
   return { ok: true, env: expected, reason };
 }
 
-/** The blast-radius line shown before a switch changes. */
+/** Nothing in apps/, packages/ or supabase/functions reads public.app_config yet; plan 4 wires the apps to it. */
+export const SWITCH_NOT_READ = 'No app reads this switch yet (plan 4)';
+
+/** The blast-radius line shown before a switch changes: that no app reads it yet, then what it will do once they do. */
 export function describeFlagChange(key: string, value: unknown): string {
+  const effect = flagEffect(key, value);
+  return `${SWITCH_NOT_READ}. Once the apps read it: ${effect.charAt(0).toLowerCase()}${effect.slice(1)}`;
+}
+
+function flagEffect(key: string, value: unknown): string {
   switch (key) {
     case 'tutor.enabled':
       return value === false

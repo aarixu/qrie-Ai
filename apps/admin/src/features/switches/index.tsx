@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { admin } from '@/lib/client';
 import { checkWrite, describeFlagChange } from '@/lib/confirm';
 import { useMe } from '@/lib/me';
+import { canSetFlag } from '@/lib/roles';
 import { useGuarded } from '@/lib/stepup';
 import { EXPECTED_ENV } from '@/lib/supabase';
 import {
@@ -38,7 +39,8 @@ interface Pending {
 }
 
 /**
- * The remote switches every app reads. Only the global value is edited here; a
+ * The remote switches the apps are to read (none does yet: plan 4 wires them to
+ * public.app_config). Only the global value is edited here; a
  * school's own value is shown, and is set from that school's page (plan 2).
  * Touching a control changes nothing by itself: it opens a confirmation that says
  * what every app will do, and asks for this change's own reason and the typed
@@ -46,6 +48,7 @@ interface Pending {
  * guarded one asks for a fresh authenticator code.
  */
 export function Switches() {
+  const me = useMe();
   const [rows, setRows] = useState<FlagRow[]>([]);
   const [pending, setPending] = useState<Pending | null>(null);
 
@@ -104,11 +107,18 @@ export function Switches() {
                     )}
                   </TableCell>
                   <TableCell className='text-end align-top'>
-                    <Editor
-                      kind={g.def.kind}
-                      value={g.global ? g.global.value : g.def.safeDefault}
-                      onPropose={(v) => setPending({ group: g, value: v })}
-                    />
+                    {g.def.kind === 'bool' &&
+                    (g.global ? g.global.value : g.def.safeDefault) !== true &&
+                    !canSetFlag(me.role, g.key, true) ? (
+                      // tutor.enabled: ops may switch it off, only the owner on (admin.flag_set, 0053).
+                      <span className='text-sm text-muted-foreground'>Off. The owner turns it on.</span>
+                    ) : (
+                      <Editor
+                        kind={g.def.kind}
+                        value={g.global ? g.global.value : g.def.safeDefault}
+                        onPropose={(v) => setPending({ group: g, value: v })}
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

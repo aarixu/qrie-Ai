@@ -28,20 +28,23 @@ describe('a write from the console', () => {
 });
 
 describe('what a switch change will touch, said before it happens', () => {
+  // No app reads public.app_config yet (plan 4), so every line says so first.
+  const later = (effect: string) => `No app reads this switch yet (plan 4). Once the apps read it: ${effect}`;
+
   it('pausing the tutor names everybody it reaches', () => {
-    expect(describeFlagChange('tutor.enabled', false)).toBe("The tutor pauses for every child at every school until it is switched back on.");
+    expect(describeFlagChange('tutor.enabled', false)).toBe(later('the tutor pauses for every child at every school until it is switched back on.'));
   });
 
   it('a banner says where it appears, and removing it says so', () => {
-    expect(describeFlagChange('banner.message', 'Back at 7 pm')).toBe('Every app shows this notice at the top: "Back at 7 pm".');
-    expect(describeFlagChange('banner.message', '')).toBe('The notice is removed from every app.');
+    expect(describeFlagChange('banner.message', 'Back at 7 pm')).toBe(later('every app shows this notice at the top: "Back at 7 pm".'));
+    expect(describeFlagChange('banner.message', '')).toBe(later('the notice is removed from every app.'));
   });
 
   it('closing the contest says what stops', () => {
-    expect(describeFlagChange('contest.entries_open', false)).toBe('The contest form stops taking entries.');
+    expect(describeFlagChange('contest.entries_open', false)).toBe(later('the contest form stops taking entries.'));
   });
 
   it('any other switch still says it reaches every app that reads it', () => {
-    expect(describeFlagChange('app.min_version.lms', '2.0.0')).toBe('Every app that reads app.min_version.lms follows the new value: "2.0.0".');
+    expect(describeFlagChange('app.min_version.lms', '2.0.0')).toBe(later('every app that reads app.min_version.lms follows the new value: "2.0.0".'));
   });
 });
