@@ -109,8 +109,11 @@ numbers the learner's decisions use.
 - `think()` is one transaction per learner with `pg_advisory_xact_lock`, so overlapping runs are safe.
 - Retention keeps its promise: the server keeps a snapshot of each learner's model and folds forward from a
   watermark on server `received_at`, so `purge_old_ledger` goes back to deleting every answer older than 90 days
-  (Aarav's recorded choice (a)) without erasing what the model learned. A version bump rebuilds from what the
-  ledger still holds.
+  (Aarav's recorded choice (a)) without erasing what the model learned, for every answer the snapshot already
+  holds. The snapshot stays an hour behind and `think()` runs straight after a hand-in, so a settle pass
+  (`settleDue` in `packages/lms-brain`) thinks every learner whose snapshot is behind their settled evidence; it
+  must run before the cutoff (the Task 9 brain function, ahead of the nightly purge). A version bump rebuilds
+  from what the ledger still holds.
 - Empty server state reads "results not computed yet" when answers exist, never "no answers yet".
 
 **Proof scope (review SF13):** in this branch learner (a)'s tutor path is proven by acceptance tests only; the live

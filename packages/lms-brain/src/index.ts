@@ -6,6 +6,7 @@ export {
   foldLedger,
   jsonbTextBytes,
   readLedger,
+  settleDue,
   think,
   thinkLearner,
   writableMisconceptions,

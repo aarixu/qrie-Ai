@@ -7,7 +7,8 @@
 -- those answers had taught. So learner_model now keeps the model itself:
 -- packages/lms-brain/src/think.ts folds forward from this snapshot, reading
 -- only the events the server received after it, and rebuilds from the ledger
--- only when the snapshot is missing or of another model version.
+-- only when the snapshot is missing or of another model version. The purge
+-- keeps its promise only for answers the snapshot holds (settleDue, think.ts).
 
 alter table public.learner_model
   -- {"model": <the whole LearnerModel, packages/learner-model types.ts>,

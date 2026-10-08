@@ -30,12 +30,20 @@ import { libraryIndex } from './graph.ts';
  * cursor, and folding forward lands where a rebuild over the same events
  * lands. The snapshot stays an hour behind because a write that began
  * earlier (so has an earlier received_at) can commit after a later one has
- * been folded; that hour is folded again on every run. Because the snapshot
- * keeps what the fold learned, the nightly purge can delete every answer
- * older than 90 days (0062) without the model forgetting it. The snapshot is
- * the fold's own model, so it keeps a wrong idea's wording as the phone sent
- * it (only what is written to concept_state is stripped to the bank's); the
- * learner reads their own row (0013) and no lms function reads learner_model.
+ * been folded; that hour is folded again on every run. The snapshot keeps
+ * what the fold learned, so the nightly purge (0062) can delete an answer
+ * older than 90 days without the model forgetting it ONCE THE SNAPSHOT HOLDS
+ * IT, which takes a run over an hour after the answer arrived. A run straight
+ * after a hand-in is too soon for that hand-in, so `settleDue` thinks every
+ * learner whose snapshot is behind their settled evidence; it has to run
+ * between that hour and the purge's cutoff. Nothing on the hosted project
+ * runs think() or settleDue yet (Task 9's brain function is to), and an
+ * answer the snapshot does not hold when the purge deletes it is lost to the
+ * model. The snapshot is the fold's own model, so it keeps a wrong idea's
+ * wording as the phone sent it (only what is written to concept_state is
+ * replaced by the bank's); the learner reads their own row (0013), and the
+ * lms functions read only learner_model's cursor and updated_at, never
+ * learner_model.snapshot.
  *
  * It REBUILDS from the whole ledger when there is no snapshot, when the
  * snapshot is of another MODEL_VERSION, or when asked (`rebuild`). A change
@@ -396,6 +404,36 @@ export async function thinkLearner(tx: Tx, user: string, opts: ThinkOptions = {}
     ],
   );
   return rows.length;
+}
+
+/**
+ * THE SETTLE PASS. think() runs straight after a hand-in, when the hand-in is
+ * still inside the hour the snapshot stays behind, so concept_state holds it
+ * and the snapshot does not; nothing thinks that learner again until they
+ * answer again. Once the purge deletes such an answer the snapshot never
+ * holds it, and the model forgets it. This thinks every learner with an
+ * answer received over SNAPSHOT_LAG_SECONDS ago that their snapshot does not
+ * hold (none, one of another version, or one whose cursor is behind it),
+ * learners the brain never read included, so their snapshots take it.
+ * It must run between an answer's first hour and the purge's cutoff.
+ */
+export async function settleDue(db: Sql, opts: ThinkOptions = {}): Promise<{ students: number; events: number }> {
+  const { rows } = await db.query<{ user_id: string }>(
+    `select distinct e.user_id
+       from public.ledger_event e
+       left join public.learner_model lm on lm.user_id = e.user_id
+      where date_trunc('milliseconds', e.received_at)
+              < date_trunc('milliseconds', now() - make_interval(secs => $1))
+        and (jsonb_typeof(lm.snapshot #> '{model,foldedThrough}') is distinct from 'object'
+             or lm.snapshot #>> '{model,version}' is distinct from $2::text
+             or (date_trunc('milliseconds', e.received_at), e.session_id, e.seq)
+                > ((lm.snapshot #>> '{model,foldedThrough,at}')::timestamptz,
+                   (lm.snapshot #>> '{model,foldedThrough,sessionId}')::uuid,
+                   (lm.snapshot #>> '{model,foldedThrough,seq}')::int))
+      order by e.user_id`,
+    [SNAPSHOT_LAG_SECONDS, String(MODEL_VERSION)],
+  );
+  return think(db, rows.map((r) => r.user_id), opts);
 }
 
 /** Each learner in their own transaction, one after another. */

@@ -235,3 +235,13 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
 ### Small notes
 
 - Add Task 0 (SF5 timeouts and baseline ids) before Task 1. Add Task 6b (MF13 M1 gate) after Task 6; M2 starts only when it passes. Split Task 7 into 7a (RPC + ledgerSync) and 7b (revoke), with 7b last in M2. Move Task 10 to the end of M2, after Task 11, with reduced scope (SF9). Task 9 stays in M2. Nits: cite 0027/0031/0042; attempt>=2 rule only for tutor sources; think never writes purge_safe_before; statement-level trigger.
+
+---
+
+## Review fixes after M1 (2026-10-08)
+
+- **Settle pass (Task 9 must call it).** `think()` runs straight after a hand-in, inside the hour the snapshot
+  stays behind, so that hand-in reaches concept_state but not the snapshot, and nothing thinks the learner again
+  until they answer again. `settleDue(db)` (`packages/lms-brain/src/think.ts`) thinks every learner with an answer
+  received over the lag ago that their snapshot does not hold. Task 9's brain function runs it on its schedule,
+  well before the nightly `purge_old_ledger`; until then the purge can delete an answer the snapshot never held.

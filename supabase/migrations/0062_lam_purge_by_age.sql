@@ -6,11 +6,15 @@
 -- /privacy, which promise "deleted after 90 days", were untrue
 -- (apps/classroom/tests/privacyClaims.test.tsx).
 --
--- The fold no longer needs the old answers: think() keeps a snapshot of each
--- learner's model and folds forward from it (0061), so deleting an answer
--- loses nothing the model learned from it. The fold has the whole window to
--- read an event; what it has not read by then is deleted all the same. A new
--- model version rebuilds from what the ledger still holds.
+-- think() keeps a snapshot of each learner's model and folds forward from it
+-- (0061), so deleting an answer the snapshot already holds loses nothing the
+-- model learned from it. The snapshot takes an answer only on a run over an
+-- hour after the answer arrived; think() runs straight after a hand-in, so
+-- packages/lms-brain settleDue has to think those learners again before the
+-- cutoff. Nothing on the hosted project runs think() or settleDue yet
+-- (lam-one-brain Task 9 is to), and an answer the snapshot does not hold by
+-- the cutoff is deleted all the same: the model then forgets it. A new model
+-- version rebuilds from what the ledger still holds.
 --
 -- The body is 0007's.
 
