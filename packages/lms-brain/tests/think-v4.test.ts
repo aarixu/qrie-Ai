@@ -356,7 +356,7 @@ describe('what is written of the wrong ideas stays inside 0060’s size line (SF
   const full: Record<string, Misconception> = Object.fromEntries(
     Array.from({ length: 20 }, (_, n) => [normaliseMisconception(label(n)), idea(n)]),
   );
-  const bank = new Set(Object.values(full).map((m) => normaliseMisconception(m.label!)));
+  const bank = new Map(Object.values(full).map((m) => [normaliseMisconception(m.label!), m.label!]));
 
   it('measures a record exactly as Postgres prints it', async () => {
     const { rows } = await db.query<{ n: number }>(`select octet_length($1::jsonb::text)::int as n`, [
@@ -386,8 +386,16 @@ describe('what is written of the wrong ideas stays inside 0060’s size line (SF
   it('keeps text only for labels the bank gave', () => {
     const one = Object.fromEntries(Object.entries(full).slice(0, 2));
     const [first, second] = Object.keys(one);
-    const out = writableMisconceptions(one, new Set([first]));
+    const out = writableMisconceptions(one, new Map([[first, full[first].label!]]));
     expect(out[first].label).toBe(full[first].label);
     expect(out[second].label).toBeNull();
+  });
+
+  it("writes the bank's wording, not the label the fold saw first", () => {
+    const decorated: Record<string, Misconception> = {
+      [normaliseMisconception('Adds the numerators')]: { ...idea(1), label: '!!! ADDS the NUMERATORS <> 🙂' },
+    };
+    const out = writableMisconceptions(decorated, new Map([['adds the numerators', 'Adds the numerators']]));
+    expect(Object.values(out)[0].label).toBe('Adds the numerators');
   });
 });

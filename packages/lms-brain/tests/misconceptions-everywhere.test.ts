@@ -282,3 +282,20 @@ describe('the pieces underneath', () => {
     }
   });
 });
+
+describe("the bank's own words, however the phone dressed them", () => {
+  it("writes the bank's wording when the phone's first label only differs in case and symbols", async () => {
+    // A forged or modified client names the bank's idea first, decorated, on a
+    // question the bank does not hold; then the bank's own question shows it.
+    const tara = await seat(db, one.org, 'student', 'MIS-107', 'Tara');
+    await enrolIn8a(tara, '7');
+    await tutorMisses(tara, [
+      { outcome: CLOSURE, probe: 'phone-only-9', label: '<<!!! ADDS the Numerators -- and the DENOMINATORS 🙂 !!!>>' },
+      { outcome: CLOSURE, probe: 'probe-mis-a2' },
+    ]);
+    await think(db, [tara]);
+    const hers = (await teacher.classMisconceptions(one.s8a, one.maths)).filter((m) => m.displayName === 'Tara');
+    expect(hers.map((m) => m.label)).toEqual([ADDS]);
+    expect(await labelsOf(teacher, tara)).toEqual([ADDS]);
+  });
+});

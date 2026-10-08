@@ -1,5 +1,6 @@
 import { emptyParams, type GraphIndex, type ModelParams } from '@ai-tutor/knowledge-graph';
 import {
+  MISCONCEPTION_LIMITS,
   MODEL_VERSION,
   emptyModel,
   foldSession,
@@ -231,12 +232,17 @@ export function foldLedger(
   return model;
 }
 
-/** The labels of wrong ideas these answers took from the bank, added to `labels`: the only text that is written. */
-function bankLabels(rows: readonly LedgerRow[], labels: Set<string> = new Set()): Set<string> {
+/**
+ * The labels of wrong ideas these answers took from the bank, added to
+ * `labels`: each idea's id (normaliseMisconception) to the bank's wording, cut
+ * as the fold cuts a label. The only text that is written.
+ */
+function bankLabels(rows: readonly LedgerRow[], labels: Map<string, string> = new Map()): Map<string, string> {
   for (const r of rows) {
     const p = bankPayload(r) as { misconceptionId?: unknown };
     if (r.kind === 'answered' && r.matched && typeof p.misconceptionId === 'string') {
-      labels.add(normaliseMisconception(p.misconceptionId));
+      const id = normaliseMisconception(p.misconceptionId);
+      if (id !== '' && !labels.has(id)) labels.set(id, p.misconceptionId.slice(0, MISCONCEPTION_LIMITS.label));
     }
   }
   return labels;
@@ -270,19 +276,22 @@ export function jsonbTextBytes(value: unknown): number {
 }
 
 /**
- * One outcome's wrong ideas as they are written: text only where the bank
- * gave it, and inside 0060's size line, dropping first what tells a teacher
+ * One outcome's wrong ideas as they are written: the bank's own wording where
+ * the idea's label is one the bank gave (`bank`: id to wording), never the
+ * label as the fold first saw it, which may be the phone's; no text
+ * otherwise; and inside 0060's size line, dropping first what tells a teacher
  * least — a slip or a cleared idea before a standing confirmed one, then the
  * longest unseen, then the least shown (the order the fold itself evicts in).
  */
 export function writableMisconceptions(
   ideas: Record<string, Misconception>,
-  bank: ReadonlySet<string>,
+  bank: ReadonlyMap<string, string>,
   maxBytes: number = MISCONCEPTIONS_MAX_BYTES,
 ): Record<string, Misconception> {
   const out: Record<string, Misconception> = {};
   for (const [id, m] of Object.entries(ideas ?? {})) {
-    out[id] = m.label !== null && bank.has(normaliseMisconception(m.label)) ? m : { ...m, label: null };
+    const wording = m.label === null ? undefined : bank.get(normaliseMisconception(m.label));
+    out[id] = { ...m, label: wording ?? null };
   }
   if (jsonbTextBytes(out) <= maxBytes) return out;
   const order = Object.entries(out).sort(
@@ -330,14 +339,14 @@ const INSERT_STATES = `insert into public.concept_state (org_id, user_id, outcom
 /** What learner_model.snapshot holds (0061). */
 interface Snapshot {
   model: LearnerModel;
-  /** The normalised labels the bank gave this learner's wrong answers (bankLabels). */
-  bank: string[];
+  /** Each wrong-idea label the bank gave this learner's answers: its id to the bank's wording (bankLabels). */
+  bank: Record<string, string>;
 }
 
 /** A snapshot this fold can build on: present, and of this model version. */
 function usableSnapshot(stored: unknown): Snapshot | null {
   const s = stored as Partial<Snapshot> | null | undefined;
-  if (!s || typeof s !== 'object' || !s.model || s.model.version !== MODEL_VERSION || !Array.isArray(s.bank)) {
+  if (!s || typeof s !== 'object' || !s.model || s.model.version !== MODEL_VERSION || !s.bank || typeof s.bank !== 'object' || Array.isArray(s.bank)) {
     return null;
   }
   return s as Snapshot;
@@ -374,11 +383,12 @@ export async function thinkLearner(tx: Tx, user: string, opts: ThinkOptions = {}
   // readLedger orders by.
   const settled = rows.filter((r) => r.settled);
   const kept = foldLedger(settled, index, params, snapshot?.model ?? emptyModel());
-  const keptBank = bankLabels(settled, new Set(snapshot?.bank ?? []));
-  const next: Snapshot | null = settled.length > 0 ? { model: kept, bank: [...keptBank].sort() } : snapshot;
+  const keptBank = bankLabels(settled, new Map(Object.entries(snapshot?.bank ?? {})));
+  const next: Snapshot | null =
+    settled.length > 0 ? { model: kept, bank: Object.fromEntries([...keptBank].sort(([a], [b]) => (a < b ? -1 : 1))) } : snapshot;
   const recent = rows.slice(settled.length);
   const model = foldLedger(recent, index, params, kept);
-  const bank = bankLabels(recent, new Set(keptBank));
+  const bank = bankLabels(recent, new Map(keptBank));
   const last = rows[rows.length - 1];
   const states = Object.entries(model.states).map(([outcome, s]) => {
     const row: Record<string, unknown> = { outcome_id: outcome };
