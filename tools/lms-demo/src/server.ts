@@ -140,6 +140,11 @@ export async function startDemoServer(opts: {
     });
 
   async function handle(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
+    // On every answer: the browser is not to guess its type, frame it, or
+    // send this address on to another site.
+    res.setHeader('x-content-type-options', 'nosniff');
+    res.setHeader('x-frame-options', 'DENY');
+    res.setHeader('referrer-policy', 'no-referrer');
     const origin = req.headers.origin;
     if (origin !== undefined) {
       if (!LOCAL_ORIGIN.test(origin)) throw new HttpError(403, 'This demo only answers pages served from this machine.');
@@ -267,6 +272,8 @@ export async function startDemoServer(opts: {
         throw new HttpError(415, 'Only photos (JPEG, PNG or WebP) can be handed in.');
       }
       if (body.length > bucket.file_size_limit) throw new HttpError(413, 'That photo is too large (5 MB at most).');
+      // The type a phone declares is only a claim: the first bytes must agree.
+      if (photoTypeOf(body) !== type) throw new HttpError(415, 'That file is not a photo (JPEG, PNG or WebP).');
       if (await work.has(name)) throw new HttpError(409, 'A photo with that name is already handed in.');
       try {
         await asUser(me, (tx) =>
@@ -303,7 +310,13 @@ export async function startDemoServer(opts: {
       const s = signed.get(file[1]);
       const f = s && s.until > Date.now() ? await work.get(s.name) : null;
       if (!f) throw new HttpError(404, 'That address has expired.');
-      res.writeHead(200, { 'content-type': f.type, 'cache-control': 'no-store', 'content-length': f.bytes.length });
+      // Served so that nothing in it can run, even opened on its own.
+      res.writeHead(200, {
+        'content-type': f.type,
+        'content-security-policy': "default-src 'none'; sandbox",
+        'cache-control': 'no-store',
+        'content-length': f.bytes.length,
+      });
       res.end(f.bytes);
       return;
     }
@@ -349,6 +362,14 @@ export async function startDemoServer(opts: {
         server.close(() => resolve());
       }),
   };
+}
+
+/** A photo's type from its first bytes: JPEG, PNG or WebP; null for anything else. */
+function photoTypeOf(b: Buffer): string | null {
+  if (b.length >= 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'image/jpeg';
+  if (b.length >= 8 && b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return 'image/png';
+  if (b.length >= 12 && b.toString('latin1', 0, 4) === 'RIFF' && b.toString('latin1', 8, 12) === 'WEBP') return 'image/webp';
+  return null;
 }
 
 function send(res: http.ServerResponse, status: number, body?: unknown): void {
