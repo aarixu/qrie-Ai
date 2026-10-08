@@ -79,3 +79,22 @@ export async function setReport(db: PGlite, id: string, sql: string, params: unk
     await tx.query(`update public.student_report set ${sql} where id = $1`, [id, ...params]);
   });
 }
+
+/**
+ * A kept class: a prepared_class row and its files in the `classes` bucket at
+ * <id>/<file>, as the relay's keepClass leaves them. Written as the database owner.
+ */
+export async function classRow(
+  db: PGlite,
+  id: string,
+  over: Partial<{ status: 'pending' | 'published' | 'retracted'; topicRef: string; files: string[] }> = {},
+): Promise<void> {
+  await db.query(
+    `insert into public.prepared_class (id, topic_ref, title, subtitle, klass, subject, review_status)
+     values ($1, $2, $3, 'A subtitle', 8, 'science', $4)`,
+    [id, over.topicRef ?? `topic/${id}`, `Title of ${id}`, over.status ?? 'published'],
+  );
+  for (const file of over.files ?? ['manifest.json']) {
+    await db.query(`insert into storage.objects (bucket_id, name) values ('classes', $1)`, [`${id}/${file}`]);
+  }
+}
