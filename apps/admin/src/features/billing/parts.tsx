@@ -486,7 +486,7 @@ export function PaymentTable({
                 {!p.counted && <div className='text-xs text-destructive'>Not counted: {p.notCountedWhy}</div>}
                 {p.reversedAt && (
                   <div className='text-xs text-muted-foreground'>
-                    Reversed by {p.reversedAs} on {formatDay(p.reversedAt.slice(0, 10))}; not counted
+                    Reversed by {p.reversedAs} on {formatDay(todayIst(new Date(p.reversedAt)))}; not counted
                   </div>
                 )}
               </TableCell>

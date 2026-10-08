@@ -156,7 +156,7 @@ export function InvoiceDetailPage() {
                         <TableCell className='font-mono text-xs'>{p.reference}</TableCell>
                         <TableCell className='whitespace-normal'>
                           {p.reversedAt
-                            ? `No: reversed by ${p.reversedAs} on ${formatDay(p.reversedAt.slice(0, 10))}`
+                            ? `No: reversed by ${p.reversedAs} on ${formatDay(todayIst(new Date(p.reversedAt)))}`
                             : p.counted
                               ? 'Yes'
                               : `No: ${p.notCountedWhy}`}

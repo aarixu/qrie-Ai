@@ -243,8 +243,9 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
   link; nothing was recorded by hand"). After a part payment, Send link makes a
   new link for what stays due. The database refuses a payment by hand while a
   link is open, whoever asks. If the school still pays an old, cancelled link,
-  that payment is stored, listed as not counted and refundable, and counted
-  under Needs attention.
+  that payment is stored too; when it is more than is still due (as after a
+  part payment) it is listed as not counted and refundable, and counted under
+  Needs attention.
 - **When a licence ends** the school has its grace days (14 by default, 14 to 30
   per school, set by the owner), then it is suspended: the apps are told the
   tutor is off, and homework is kept. Sixty days after grace ends it reads
@@ -312,7 +313,7 @@ It never stores card or bank details (Cashfree's pages collect them); never
 deletes an invoice or a payment, or changes an issued invoice's number, amounts
 or tax, or a recorded payment's amount or reference, even with hand-written
 SQL (the one change a payment takes is being marked reversed, once, which the
-owner does from Payments); never
-changes a licence on a refund or a reversal (change it on the school's page if
-needed); and never charges a mandate before plan 7.
+owner does from Payments); never changes a licence on a refund or a reversal
+(change it on the school's page if needed); and never charges a mandate before
+plan 7.
 No child appears anywhere in billing.
