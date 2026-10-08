@@ -70,7 +70,7 @@ export async function markAttendance(db: PGlite, s: School, student: string, day
   );
 }
 
-/** A tutor sitting at this school (the report button lives in the tutor). */
+/** A tutor sitting at this school (the tutor has a report button; the student app has one too, plan 5). */
 export async function tutorSession(db: PGlite, org: string, user: string): Promise<string> {
   const id = crypto.randomUUID();
   await db.query(

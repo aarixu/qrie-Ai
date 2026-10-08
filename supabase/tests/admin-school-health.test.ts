@@ -223,7 +223,7 @@ describe('safety', () => {
     await tutorSession(db, s.org, s.kid8a);
     expect(signalOf(await h('SAF0'), 'safety')).toMatchObject({
       level: 'grey',
-      reason: 'Nobody at this school has used the tutor, where the report button is.',
+      reason: 'No unread reports, and nobody at this school has used the tutor yet.',
     });
     expect(signalOf(await h('SAFG'), 'safety')).toMatchObject({ level: 'green', reason: 'No unread reports.' });
   });

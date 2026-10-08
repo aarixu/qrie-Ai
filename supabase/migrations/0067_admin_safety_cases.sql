@@ -567,3 +567,97 @@ grant execute on function admin.case_close(uuid, text, text, text) to authentica
 grant execute on function admin.cases(boolean) to authenticated;
 grant execute on function admin.case_detail(uuid) to authenticated;
 grant execute on function admin.read_log_list(integer) to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- 6. A student's report from the student app (Task 7 of plan 5).
+--
+-- The Help sheet in apps/student files into the same queue as the tutor's
+-- report button, through keep_student_report: the place in the app travels in
+-- lesson_id as 'student-app/<place>', the homework's id in beat_id. A retry
+-- with the same `at` is the same report (0019's key), and is answered before
+-- the daily cap, so a retry of the tenth report is not refused as an eleventh.
+-- Students only, who have not left; a note of at most 500 characters (scrubbed
+-- on the phone); at most 10 a day (ruling R25).
+-- ---------------------------------------------------------------------------
+create or replace function lms.report_problem(
+  p_kind text, p_note text, p_where text, p_item uuid, p_platform text, p_release text, p_at timestamptz
+)
+returns uuid
+language plpgsql volatile security definer
+set search_path = public, lms
+as $$
+declare
+  me lms.account;
+  lesson text;
+  stamp timestamptz := coalesce(p_at, now());
+  kept uuid;
+  sent_today integer;
+begin
+  select a.* into me from lms.account a
+   where a.user_id = auth.uid() and a.left_at is null and a.kind = 'student';
+  if me.user_id is null then
+    raise exception 'only a student can send a report from here';
+  end if;
+  if p_kind is null or p_kind not in ('wrong', 'rude', 'unsafe', 'other') then
+    raise exception 'a report is wrong, rude, unsafe or other';
+  end if;
+  if p_where is null or p_where not in ('home', 'work', 'homework', 'learn', 'practice', 'progress', 'notices') then
+    raise exception 'say where in the app this happened';
+  end if;
+  if char_length(coalesce(p_note, '')) > 500 then
+    raise exception 'a report is at most 500 characters';
+  end if;
+  if p_platform is null or p_platform not in ('web', 'android') then
+    raise exception 'say whether this is the web app or the Android app';
+  end if;
+  lesson := 'student-app/' || p_where;
+  select r.id into kept from public.student_report r
+   where r.user_id = me.user_id and r.lesson_id = lesson
+     and coalesce(r.beat_id, '') = coalesce(p_item::text, '') and r.at = stamp;
+  if kept is not null then
+    return kept;
+  end if;
+  select count(*)::int into sent_today from public.student_report r
+   where r.user_id = me.user_id and r.lesson_id like 'student-app/%'
+     and r.received_at >= (lms.india_today()::timestamp at time zone 'Asia/Kolkata');
+  if sent_today >= 10 then
+    raise exception 'You have sent 10 reports today. Please tell a teacher, or call Childline on 1098 if you need help now.';
+  end if;
+  select k.report_id into kept
+    from public.keep_student_report(me.user_id, p_kind, coalesce(p_note, ''), lesson, null, p_item::text, null, null,
+                                    nullif(left(btrim(coalesce(p_release, '')), 100), ''), p_platform, stamp) k;
+  return kept;
+end;
+$$;
+revoke all on function lms.report_problem(text, text, text, uuid, text, text, timestamptz) from public, anon;
+grant execute on function lms.report_problem(text, text, text, uuid, text, text, timestamptz) to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- 7. The health card's grey safety sentence (0052) said the tutor is where the
+-- report button is. The student app has one now, so the sentence changes; the
+-- signal itself (grey while nobody at the school has used the tutor) does not.
+-- create or replace with the same signature keeps the function's grants.
+-- ---------------------------------------------------------------------------
+do $$
+declare
+  f record;
+  body text;
+  seen integer := 0;
+  old_line constant text := 'Nobody at this school has used the tutor, where the report button is.';
+  new_line constant text := 'No unread reports, and nobody at this school has used the tutor yet.';
+begin
+  for f in select p.oid from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+            where n.nspname = 'admin' and p.proname = 'school_health_for' loop
+    seen := seen + 1;
+    body := pg_get_functiondef(f.oid);
+    if position(old_line in body) > 0 then
+      execute replace(body, old_line, new_line);
+    elsif position(new_line in body) = 0 then
+      raise exception 'admin.school_health_for no longer says what 0067 expects: change its grey safety sentence by hand';
+    end if;
+  end loop;
+  if seen = 0 then
+    raise exception 'admin.school_health_for does not exist';
+  end if;
+end
+$$;
