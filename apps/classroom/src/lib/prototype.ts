@@ -15,12 +15,24 @@ import { useState } from 'react';
  * and hiding it would hide how much of the course exists (Syllabus.tsx says
  * this in its own docblock) — but only a prepared topic is tappable.
  *
- * ONE FLAG TURNS IT OFF. When billing is back, set PROTOTYPE_ONLY_PREPARED to
- * false and every screen goes back to preparing classes live; nothing else has
- * to be remembered or unpicked. That is the whole reason it is a constant and
- * not a scattering of conditions.
+ * ONE FLAG TURNS IT OFF. When PROTOTYPE_ONLY_PREPARED is false every screen
+ * goes back to preparing classes live; nothing else has to be remembered or
+ * unpicked. That is the whole reason it is one name and not a scattering of
+ * conditions.
+ *
+ * SET FROM QRIE CONTROL. The value is the console's `tutor.only_prepared`
+ * switch, applied by lib/appConfig.ts when the app reads public.my_app_config.
+ * It is `true` until a read succeeds, and stays at the last value read when a
+ * later read fails, so an app that cannot reach the console never starts
+ * preparing new classes on its own. Screens read it at render; App subscribes
+ * to the config so they re-render when it changes.
  */
-export const PROTOTYPE_ONLY_PREPARED = true;
+export let PROTOTYPE_ONLY_PREPARED = true;
+
+/** Called by lib/appConfig.ts only. */
+export function setOnlyPrepared(on: boolean): void {
+  PROTOTYPE_ONLY_PREPARED = on;
+}
 
 /**
  * WHETHER A TOPIC CAN BE OPENED — and 'loading' is not 'no'.

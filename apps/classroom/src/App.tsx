@@ -26,6 +26,8 @@ import { isTrialPath, isTrialSession, mayPersist } from './lib/workspace';
 import type { QuizOutcome } from './lib/quiz';
 import type { PlanChange } from './lib/adaptPlan';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
+import { useAppConfig } from './lib/appConfig';
+import { AppConfigGate } from './ui/AppConfigGate';
 
 /**
  * EVERY SCREEN BUT THE OPENING ONES, LOADED WHEN IT IS ASKED FOR.
@@ -593,10 +595,12 @@ const BASENAME = isNative()
 export default function App() {
   useAppearance();
   useReportReplay();
+  useAppConfig(); // so every screen re-renders when tutor.only_prepared changes (screens read PROTOTYPE_ONLY_PREPARED at render)
   return (
     <Router basename={BASENAME}>
       <Boundaried>
         <Suspense fallback={<Splash />}>
+        <AppConfigGate>
         <Gate>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -643,6 +647,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Gate>
+        </AppConfigGate>
         </Suspense>
       </Boundaried>
     </Router>

@@ -6,6 +6,8 @@ import './fonts';
 import './index.css';
 import App from './App';
 import { startAccountSync } from './lib/account';
+import { startAppConfig } from './lib/appConfig';
+import { readMyAppConfig } from './lib/appConfigRead';
 import { drainLedger, startLedgerDrain } from './lib/ledgerSync';
 import { ensureIdentity } from './lib/relay';
 import { nudgeIfDue, watchScheduleForNative } from './lib/reminders';
@@ -112,6 +114,11 @@ if (import.meta.env.PROD && !isNative() && 'serviceWorker' in navigator) {
 // configured this is a no-op and the app stays exactly the local-only app it
 // has always been - nothing is gated behind signing in.
 startAccountSync();
+
+// What Qrie control says (banner, tutor switches, minimum build): read now,
+// every five minutes, and on return to the app. A failed read keeps the
+// last good values, or the safe defaults (lib/appConfig.ts).
+startAppConfig(readMyAppConfig);
 
 /**
  * Drain the interaction ledger whenever this phone has signal.
