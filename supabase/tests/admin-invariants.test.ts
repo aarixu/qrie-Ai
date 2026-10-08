@@ -94,6 +94,7 @@ describe('the admin schema', () => {
       'admin.staff_list',
       'admin.staff_roster',
       'admin.staff_set',
+      'admin.stop_status',
       'admin.system_health',
       'admin.today',
     ]);
@@ -140,12 +141,12 @@ describe('the admin schema', () => {
     }
   });
 
-  it('exposes only three functions to the public schema for the apps and the outside checkers', async () => {
+  it('exposes only four functions to the public schema for the apps and the outside checkers', async () => {
     const { rows } = await db.query<{ fn: string }>(
       `select p.proname as fn from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-        where n.nspname = 'public' and p.proname in ('app_config', 'alert_snapshot', 'audit_head')
+        where n.nspname = 'public' and p.proname in ('app_config', 'alert_snapshot', 'audit_head', 'my_app_config')
           and has_function_privilege('anon', p.oid, 'execute') order by 1`,
     );
-    expect(rows.map((r) => r.fn)).toEqual(['alert_snapshot', 'app_config', 'audit_head']);
+    expect(rows.map((r) => r.fn)).toEqual(['alert_snapshot', 'app_config', 'audit_head', 'my_app_config']);
   });
 });
