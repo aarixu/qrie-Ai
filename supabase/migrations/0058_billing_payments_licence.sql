@@ -189,6 +189,9 @@ begin
   if p_amount_paise > inv.total_paise - inv.paid_paise then
     raise exception 'that is more than the % paise still due', inv.total_paise - inv.paid_paise;
   end if;
+  if billing.unrecorded_paise(inv.id) > 0 then
+    raise exception 'Cashfree reports money on this invoice''s payment link that is not recorded yet; check with Cashfree first';
+  end if;
   perform set_config('admin.session', 'on', true);
   begin
     insert into billing.payment (org_id, invoice_id, source, amount_paise, currency, received_on, reference, counted,
@@ -277,6 +280,9 @@ begin
   end if;
   if inv.paid_paise > 0 then
     raise exception 'an invoice with money on it cannot be void';
+  end if;
+  if billing.unrecorded_paise(inv.id) > 0 then
+    raise exception 'Cashfree reports money on this invoice''s payment link that is not recorded yet; check with Cashfree first';
   end if;
   select array_agg(l.link_id order by l.attempt) into open_links
     from billing.payment_link l

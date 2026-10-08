@@ -3,7 +3,7 @@ import { billing } from '@/lib/client';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AdminPage } from '@/components/admin-page';
-import type { Tone } from './model.ts';
+import { attentionSummary, type Tone } from './model.ts';
 import { formatPaise } from './money.ts';
 import { ReadState } from './parts.tsx';
 import { useLoad } from './use-load.ts';
@@ -27,7 +27,7 @@ const ago = (m: number | null) => (m === null ? 'never' : m < 60 ? `${m} min ago
 /** The tiles, from counts and sums only: no school is named here. */
 export function overviewTiles(o: Overview): Tile[] {
   const a = o.attention;
-  const needs = a.notCounted + a.webhookProblems24h + a.signatureFailures24h;
+  const needs = attentionSummary(a);
   return [
     { label: 'Collected this month', value: formatPaise(o.collectedThisMonthPaise), detail: 'Counted payments received since the 1st.', tone: 'grey' },
     { label: 'Outstanding', value: formatPaise(o.outstandingPaise), detail: 'Still due on unpaid and part-paid invoices.', tone: 'grey' },
@@ -51,9 +51,9 @@ export function overviewTiles(o: Overview): Tile[] {
     },
     {
       label: 'Needs attention',
-      value: String(needs),
-      detail: `${a.notCounted} payments not counted · ${a.webhookProblems24h} webhook problems · ${a.signatureFailures24h} signature failures (24 h)`,
-      tone: needs > 0 ? 'bad' : 'ok',
+      value: String(needs.count),
+      detail: needs.detail,
+      tone: needs.count > 0 ? 'bad' : 'ok',
     },
     { label: 'Last webhook', value: ago(a.lastWebhookMinutesAgo), detail: `${a.openLinks} payment links open.`, tone: 'grey' },
     {

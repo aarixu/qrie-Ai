@@ -359,6 +359,23 @@ begin
 end;
 $$;
 
+-- What Cashfree says was paid on one link beyond the payments stored for it,
+-- counted or not: money that arrived but that no payment row accounts for.
+create or replace function billing.link_unrecorded(p_link uuid) returns bigint language sql stable
+set search_path = billing, public
+as $$
+  select greatest(l.amount_paid_paise
+                  - coalesce((select sum(p.amount_paise) from billing.payment p where p.link_id = l.id), 0), 0)::bigint
+    from billing.payment_link l where l.id = p_link
+$$;
+
+-- The same, over every link of one invoice.
+create or replace function billing.unrecorded_paise(p_invoice uuid) returns bigint language sql stable
+set search_path = billing, public
+as $$
+  select coalesce(sum(billing.link_unrecorded(l.id)), 0)::bigint from billing.payment_link l where l.invoice_id = p_invoice
+$$;
+
 -- Every write takes a typed reason.
 create or replace function billing.need_reason(p_reason text) returns void language plpgsql immutable as $$
 begin
@@ -769,6 +786,7 @@ begin
                  'schoolName', sch.display_name, 'kind', i.kind,
                  'issuedOn', to_char(i.issued_on, 'YYYY-MM-DD'), 'dueOn', to_char(i.due_on, 'YYYY-MM-DD'),
                  'totalPaise', i.total_paise, 'paidPaise', i.paid_paise, 'status', i.status,
+                 'unrecordedPaise', billing.unrecorded_paise(i.id),
                  'openLink', (select jsonb_build_object('linkId', l.link_id, 'url', l.url, 'status', l.status)
                                 from billing.payment_link l
                                where l.invoice_id = i.id and l.status in ('creating', 'active', 'partly_paid')
@@ -807,6 +825,7 @@ begin
     'issuedOn', to_char(i.issued_on, 'YYYY-MM-DD'), 'dueOn', to_char(i.due_on, 'YYYY-MM-DD'),
     'seller', i.seller, 'buyer', i.buyer, 'status', i.status, 'paidPaise', i.paid_paise,
     'paidOn', to_char(i.paid_on, 'YYYY-MM-DD'), 'voidedAt', i.voided_at, 'createdAt', i.created_at,
+    'unrecordedPaise', billing.unrecorded_paise(i.id),
     'openLink', (select jsonb_build_object('linkId', l.link_id, 'url', l.url, 'status', l.status)
                    from billing.payment_link l
                   where l.invoice_id = i.id and l.status in ('creating', 'active', 'partly_paid')
@@ -814,6 +833,7 @@ begin
     'links', coalesce((
       select jsonb_agg(jsonb_build_object('linkId', l.link_id, 'url', l.url, 'status', l.status,
                                           'amountPaise', l.amount_paise, 'amountPaidPaise', l.amount_paid_paise,
+                                          'unrecordedPaise', billing.link_unrecorded(l.id),
                                           'expiresAt', l.expires_at, 'createdAt', l.created_at)
                        order by l.attempt)
         from billing.payment_link l where l.invoice_id = i.id), '[]'::jsonb),
@@ -851,6 +871,8 @@ revoke all on function billing.format_number(text, text, integer) from public, a
 revoke all on function billing.gst_split(bigint, integer, text, text) from public, anon, authenticated, service_role;
 revoke all on function billing.seller_ready() from public, anon, authenticated, service_role;
 revoke all on function billing.need_reason(text) from public, anon, authenticated, service_role;
+revoke all on function billing.link_unrecorded(uuid) from public, anon, authenticated, service_role;
+revoke all on function billing.unrecorded_paise(uuid) from public, anon, authenticated, service_role;
 revoke all on function billing.raise_invoice(uuid, uuid, text, text, integer, bigint, date, uuid)
   from public, anon, authenticated, service_role;
 

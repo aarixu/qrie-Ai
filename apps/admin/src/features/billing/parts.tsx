@@ -323,12 +323,12 @@ export function InvoiceActions({
           <Copy /> Copy link
         </Button>
       )}
-      {rights.sendLink && open && !invoice.openLink && (
+      {rights.sendLink && open && !invoice.openLink && invoice.unrecordedPaise === 0 && (
         <Button size='sm' variant='outline' onClick={() => setAction({ kind: 'link', invoice })}>
           Send link
         </Button>
       )}
-      {rights.sendLink && invoice.openLink && (
+      {rights.sendLink && (invoice.openLink || invoice.unrecordedPaise > 0) && (
         <Button size='sm' variant='outline' disabled={checking} onClick={() => void check()}>
           {checking ? 'Checking…' : 'Check with Cashfree'}
         </Button>
@@ -389,7 +389,12 @@ export function InvoiceTable({
               <TableCell>
                 <ToneBadge tone={t.tone}>{t.label}</ToneBadge>
               </TableCell>
-              <TableCell className='text-xs text-muted-foreground'>{r.openLink ? r.openLink.status.replace('_', ' ') : '—'}</TableCell>
+              <TableCell className='whitespace-normal text-xs text-muted-foreground'>
+                {r.openLink ? r.openLink.status.replace('_', ' ') : '—'}
+                {r.unrecordedPaise > 0 && (
+                  <div className='text-destructive'>Cashfree reports {formatPaise(r.unrecordedPaise)} paid that is not recorded</div>
+                )}
+              </TableCell>
               <TableCell>
                 <InvoiceActions invoice={r} rights={rights} onChanged={onChanged} />
               </TableCell>

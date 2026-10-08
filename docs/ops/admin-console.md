@@ -216,9 +216,10 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
 
 - **Billing overview every morning.** "Needs attention" adds up payments that
   arrived but were not counted (their amount, currency or invoice did not match
-  the link: each one means a refund or a call to the school), webhook problems
-  and signature failures in the last 24 hours. "Overdue" is red when any invoice
-  is past its due day.
+  the link, or more was paid than was still due: each one means a refund or a
+  call to the school), payment links Cashfree says were paid but for which no
+  payment is recorded yet, webhook problems and signature failures in the last
+  24 hours. "Overdue" is red when any invoice is past its due day.
 - **A red "Last reconciliation"** (more than 2 hours ago) means the hourly check
   is not getting through. Read the latest "Admin alert" run's log, which ends
   `reconcile: ran`, `reconcile: not due` or `reconcile: failed (<status>)`, then
@@ -247,6 +248,17 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
   **Check with Cashfree**: it reads the link at Cashfree and records what it
   finds. The hourly reconciliation does the same for every open link. Cashfree's
   dashboard also has Batch Resend for webhooks.
+- **Cashfree says a link is paid, but no payment for it is recorded** (the
+  invoice's link shows it in red, the Billing overview counts it under Needs
+  attention, and a webhook event says "Cashfree says this link is paid, but no
+  payment for it was recorded"). Billing keeps the link open, so Check with
+  Cashfree and the hourly reconciliation keep reading it, and until the payment
+  is found the invoice takes no new link, no payment by hand and no void: the
+  school may already have paid. If Check with Cashfree never finds it, open the
+  link in Cashfree's dashboard and read its order: an order that is paid there
+  but not recorded here means billing does not read Cashfree's answer the way
+  Cashfree sends it (the formats are UNVERIFIED until the sandbox run), which is
+  a code fix, not a hand edit.
 - **A payment is listed under Needs attention.** It arrived but was not counted.
   Refund it (owner: Payments, Refund) or call the school. It never changes a
   licence.

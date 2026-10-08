@@ -462,3 +462,96 @@ describe('reconciliation', () => {
     await expect(rpc(db, aal2(safety), 'billing_webhook_log', {})).rejects.toThrow(/not allowed/);
   });
 });
+
+describe('money Cashfree reports that no stored payment accounts for', () => {
+  const NOT_RECORDED = 'Cashfree says this link is paid, but no payment for it was recorded; the hourly check reads it again.';
+  const attention = async () =>
+    (await rpc<{ attention: { linksUnrecorded: number } }>(db, aal2(finance), 'billing_overview', {})).attention.linksUnrecorded;
+  const dueLinks = async () =>
+    (await service<{ links: { linkId: string }[] }>('billing_reconcile_due', { p_force: true })).links.map((l) => l.linkId);
+  const linkOnPage = async (invoiceId: string, linkId: string) =>
+    (await rpc<{ links: { linkId: string; unrecordedPaise: number }[] }>(db, aal2(finance), 'billing_invoice', { p_invoice: invoiceId })).links.find(
+      (x) => x.linkId === linkId,
+    );
+
+  it('a PAID event without an order keeps the link open, is marked mismatch, and is counted until it is found', async () => {
+    const before = await attention();
+    const inv = await raise(abc.org, 30_000);
+    const l = await openLink(inv.invoiceId);
+    expect(await ingest('unrecorded-no-order', linkEvent({ linkId: l.linkId, invoice: inv.number, amountPaise: 35_400 }))).toEqual({
+      duplicate: false,
+      status: 'mismatch',
+    });
+    expect((await one<{ detail: string }>(`select detail from billing.webhook_event where idem_key = 'unrecorded-no-order'`)).detail).toBe(
+      NOT_RECORDED,
+    );
+    expect(await linkStatus(l.linkId)).toBe('active');
+    expect(await invoiceStatus(inv.invoiceId)).toBe('unpaid');
+    expect(await dueLinks()).toContain(l.linkId);
+    expect((await attention()) - before).toBe(1);
+    expect(await linkOnPage(inv.invoiceId, l.linkId)).toMatchObject({ unrecordedPaise: 35_400 });
+    // No second link is made for an invoice whose link Cashfree says is paid.
+    expect(await prepare(aal2(ops), inv.invoiceId)).toMatchObject({ existing: true, linkId: l.linkId });
+  });
+
+  it('a PAID event whose order is not SUCCESS is not counted, and the link stays open', async () => {
+    const inv = await raise(abc.org, 31_000);
+    const l = await openLink(inv.invoiceId);
+    const ev = linkEvent({ linkId: l.linkId, invoice: inv.number, amountPaise: 36_580, orderId: 'CF_not_success' });
+    const odd = { ...ev, order: { ...ev.order, transactionStatus: 'PAID' } };
+    expect(await ingest('unrecorded-not-success', odd)).toEqual({ duplicate: false, status: 'mismatch' });
+    expect(await linkStatus(l.linkId)).toBe('active');
+    expect(await invoiceStatus(inv.invoiceId)).toBe('unpaid');
+    expect(await dueLinks()).toContain(l.linkId);
+  });
+
+  it('an observed PAID link whose orders are not PAID stays open until a paid order is found, then pays the invoice', async () => {
+    const inv = await raise(abc.org, 32_000);
+    const l = await openLink(inv.invoiceId);
+    const seen = (status: string) => ({
+      status: 'PAID',
+      amountPaidPaise: 37_760,
+      currency: 'INR',
+      orders: [{ orderId: 'CF_observed_late', amountPaise: 37_760, status }],
+    });
+    await service('billing_link_observed', { p_link_id: l.linkId, p_value: seen('SUCCESS') });
+    expect(await linkStatus(l.linkId)).toBe('active');
+    expect(await invoiceStatus(inv.invoiceId)).toBe('unpaid');
+    expect(await dueLinks()).toContain(l.linkId);
+    expect(await linkOnPage(inv.invoiceId, l.linkId)).toMatchObject({ unrecordedPaise: 37_760 });
+    await service('billing_link_observed', { p_link_id: l.linkId, p_value: seen('PAID') });
+    expect(await linkStatus(l.linkId)).toBe('paid');
+    expect(await invoiceStatus(inv.invoiceId)).toBe('paid');
+    expect(await dueLinks()).not.toContain(l.linkId);
+    expect(await linkOnPage(inv.invoiceId, l.linkId)).toMatchObject({ unrecordedPaise: 0 });
+  });
+
+  it('money reported on a closed link is still read by reconciliation, and stops a new link, a payment by hand and a void', async () => {
+    const inv = await raise(abc.org, 33_000);
+    const l = await openLink(inv.invoiceId);
+    await db.query(`update billing.payment_link set status = 'cancelled' where link_id = $1`, [l.linkId]);
+    expect(await ingest('unrecorded-closed', linkEvent({ linkId: l.linkId, invoice: inv.number, amountPaise: 38_940 }))).toEqual({
+      duplicate: false,
+      status: 'mismatch',
+    });
+    expect(await linkStatus(l.linkId)).toBe('cancelled');
+    expect(await dueLinks()).toContain(l.linkId);
+    const notYet = /Cashfree reports money on this invoice's payment link that is not recorded yet; check with Cashfree first/;
+    await expect(prepare(aal2(ops), inv.invoiceId)).rejects.toThrow(notYet);
+    await expect(
+      rpc(db, fresh(finance), 'billing_payment_record', {
+        p_invoice: inv.invoiceId,
+        p_source: 'bank_transfer',
+        p_amount_paise: 1000,
+        p_received_on: new Date().toISOString().slice(0, 10),
+        p_reference: 'UTR-UNRECORDED-1',
+        p_reason: 'paid by transfer',
+        p_env: 'TEST',
+      }),
+    ).rejects.toThrow(notYet);
+    await expect(
+      rpc(db, fresh(owner), 'billing_invoice_void', { p_invoice: inv.invoiceId, p_reason: 'mistake', p_env: 'TEST', p_commit: true }),
+    ).rejects.toThrow(notYet);
+    expect(await invoiceStatus(inv.invoiceId)).toBe('unpaid');
+  });
+});

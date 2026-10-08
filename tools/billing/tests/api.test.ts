@@ -217,6 +217,19 @@ describe('/check and /void', () => {
     expect(cf.calls.map((c) => c.method)).toEqual(['createLink', 'getLink', 'linkOrders']);
   });
 
+  it('/check also reads a closed link whose money Cashfree reported and no payment accounts for, and records it', async () => {
+    const inv = await raise(21_000);
+    const cf = fakeCashfree();
+    const linkId = await sentLink(cf, inv.invoiceId);
+    cf.pay(linkId, 'CF_found_late', 24_780);
+    // What a PAID report without its order leaves behind once the link was closed.
+    await db.query(`update billing.payment_link set status = 'cancelled', amount_paid_paise = 24780 where link_id = $1`, [linkId]);
+    const out = await call(deps(cf), 'check', 'ops', { invoiceId: inv.invoiceId });
+    expect(out).toEqual({ status: 200, body: { checked: 1, changed: 1 } });
+    expect(await invoiceStatus(inv.invoiceId)).toBe('paid');
+    expect((await linkRow(linkId)).status).toBe('paid');
+  });
+
   it('/void cancels an active link at Cashfree and then voids; money already on the link stops the void and is recorded', async () => {
     const a = await raise(30_000);
     const cf = fakeCashfree();

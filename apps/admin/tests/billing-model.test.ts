@@ -1,6 +1,7 @@
 import type { InvoiceDetail, InvoiceRow, PaymentRow } from '@ai-tutor/admin-client';
 import { describe, expect, it } from 'vitest';
 import {
+  attentionSummary,
   billingRights,
   invoiceTone,
   linkBlast,
@@ -26,6 +27,7 @@ const row: InvoiceRow = {
   totalPaise: 2_360_000,
   paidPaise: 0,
   status: 'unpaid',
+  unrecordedPaise: 0,
   openLink: null,
 };
 
@@ -116,7 +118,7 @@ describe('the billing model', () => {
       ...detail,
       kind: 'other',
       subscriptionId: null,
-      links: [{ linkId: 'L', url: 'https://x', status: 'active', amountPaise: 2_360_000, amountPaidPaise: 0, expiresAt: 'x', createdAt: 'x' }],
+      links: [{ linkId: 'L', url: 'https://x', status: 'active', amountPaise: 2_360_000, amountPaidPaise: 0, unrecordedPaise: 0, expiresAt: 'x', createdAt: 'x' }],
     };
     expect(paymentBlast(withLink, 2_360_000)).toBe(
       '₹23,600.00 is recorded against QRIE/26-27/0001. This pays it in full. It has an open payment link for ₹23,600.00; if the school pays that too, the extra will need a refund.',
@@ -168,6 +170,23 @@ describe('the billing model', () => {
     expect(stateLabel('active', null)).toEqual({ tone: 'ok', text: 'Active' });
     expect(stateLabel('trial', null)).toEqual({ tone: 'ok', text: 'Trial' });
     expect(stateLabel('none', null)).toEqual({ tone: 'grey', text: 'No licence' });
+  });
+
+  it('needs attention adds up money not counted, money Cashfree reported that is not recorded, webhook problems and signature failures', () => {
+    const a = {
+      notCounted: 1,
+      linksUnrecorded: 2,
+      webhookProblems24h: 3,
+      signatureFailures24h: 4,
+      lastWebhookMinutesAgo: null,
+      reconciledMinutesAgo: null,
+      openLinks: 0,
+    };
+    expect(attentionSummary(a)).toEqual({
+      count: 10,
+      detail:
+        '1 payments not counted · 2 links Cashfree says are paid with no payment recorded · 3 webhook problems · 4 signature failures (24 h)',
+    });
   });
 
   it('todayIst turns at midnight India time', () => {

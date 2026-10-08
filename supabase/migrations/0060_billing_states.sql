@@ -160,8 +160,10 @@ select cron.schedule('billing-states', '40 18 * * *', $job$ select admin.billing
 -- Counts and sums only; no school is named. Collected is the counted
 -- payments received this calendar month in India. Suspended counts suspended
 -- and ended schools (both have the tutor off). Renewals count licences other
--- than pilots whose last day is within 30, 60 or 90 days from today. The two
--- "minutes ago" are null when it has never happened.
+-- than pilots whose last day is within 30, 60 or 90 days from today.
+-- linksUnrecorded counts links Cashfree says were paid beyond the payments
+-- stored for them (ruling R26). The two "minutes ago" are null when it has
+-- never happened.
 create or replace function admin.billing_overview()
 returns jsonb
 language plpgsql stable security definer
@@ -195,6 +197,7 @@ begin
                       where not p.counted
                         and p.amount_paise > (select coalesce(sum(x.amount_paise), 0) from billing.refund x
                                                where x.payment_id = p.id and x.status in ('requested', 'pending', 'success'))),
+      'linksUnrecorded', (select count(*) from billing.payment_link l where billing.link_unrecorded(l.id) > 0),
       'webhookProblems24h', (select count(*) from billing.webhook_event w
                               where w.status in ('mismatch', 'unparsed') and w.received_at > now() - interval '24 hours'),
       'signatureFailures24h', (select count(*) from billing.webhook_event w

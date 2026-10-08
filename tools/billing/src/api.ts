@@ -15,7 +15,8 @@ import { sha256Hex } from './signature.ts';
  * service-role-only functions (serviceRpc).
  *
  *   /link     {invoiceId, reason, env}  a payment link for what is still due
- *   /check    {invoiceId}               reads the invoice's open links at Cashfree
+ *   /check    {invoiceId}               reads the invoice's open links at Cashfree, and any
+ *                                       link with money no stored payment accounts for
  *   /void     {invoiceId, reason, env}  cancels open links at Cashfree, then voids
  *   /refund   {paymentId, amountPaise, reason, env}
  *   /reconcile                          the outside checker's, with its own token
@@ -233,11 +234,12 @@ async function check(deps: BillingApiDeps, auth: string, body: Record<string, un
   const invoiceId = need(body, 'invoiceId');
   await staffMe(deps, auth);
   const detail = (await deps.userRpc(auth, 'billing_invoice', { p_invoice: invoiceId })) as {
-    links: { linkId: string; status: string; createdAt: string }[];
+    links: { linkId: string; status: string; createdAt: string; unrecordedPaise?: number }[];
   };
   let checked = 0;
   let changed = 0;
-  for (const l of detail.links.filter((x) => ['creating', 'active', 'partly_paid'].includes(x.status))) {
+  // Open links, and any link with money Cashfree reported that no stored payment accounts for.
+  for (const l of detail.links.filter((x) => ['creating', 'active', 'partly_paid'].includes(x.status) || (x.unrecordedPaise ?? 0) > 0)) {
     checked += 1;
     if (await observe(deps, l.linkId, l.status, minutesSince(l.createdAt))) changed += 1;
   }

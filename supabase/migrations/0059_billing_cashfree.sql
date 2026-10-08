@@ -30,8 +30,14 @@
 --    or the licence (ruling R18).
 -- 4. RECONCILIATION. billing-api's /reconcile asks billing_reconcile_due,
 --    which answers due at most once in 55 minutes (ruling R15) with the open
---    links and unfinished refunds to check, and billing_reconcile_done
+--    links, any link with money Cashfree reported that no stored payment
+--    accounts for, and unfinished refunds to check, and billing_reconcile_done
 --    records when it finished and three counts.
+-- 5. MONEY NOT YET FOUND (ruling R26). A link Cashfree reports paid becomes
+--    paid here only when the payments stored for it cover what Cashfree says
+--    was paid. Until then it keeps its status, the event is marked mismatch,
+--    the Billing overview counts it, and no new link, payment by hand or void
+--    is accepted for its invoice.
 
 -- ---------------------------------------------------------------------------
 -- Helpers (internal)
@@ -64,6 +70,12 @@ create or replace function billing.link_status_of(p_cf text) returns text langua
 $$;
 
 -- Moves a link forward only. True when its status or paid amount changed.
+-- The paid amount kept is what Cashfree says was paid (for PAID without an
+-- amount, the link's own amount: a link is never paid in part). The link
+-- becomes paid or part paid only when the payments stored for it, counted or
+-- not, add up to at least that; otherwise it keeps its status, so an open link
+-- stays open, reconciliation keeps reading it, and billing.link_unrecorded
+-- shows the difference.
 create or replace function billing.advance_link(p_link uuid, p_status text, p_amount_paid bigint)
 returns boolean
 language plpgsql volatile
@@ -77,7 +89,12 @@ begin
   select * into l from billing.payment_link where id = p_link for update;
   next_status := case when p_status is not null and billing.link_rank(p_status) > billing.link_rank(l.status)
                       then p_status else l.status end;
-  next_paid := greatest(l.amount_paid_paise, coalesce(p_amount_paid, 0));
+  next_paid := greatest(l.amount_paid_paise, coalesce(p_amount_paid, 0),
+                        case when p_status = 'paid' and coalesce(p_amount_paid, 0) <= 0 then l.amount_paise else 0 end);
+  if next_status <> l.status and next_status in ('paid', 'partly_paid')
+     and greatest(next_paid, 1) > (select coalesce(sum(p.amount_paise), 0) from billing.payment p where p.link_id = l.id) then
+    next_status := l.status;
+  end if;
   perform set_config('admin.session', 'on', true);
   update billing.payment_link
      set status = next_status, amount_paid_paise = next_paid, updated_at = now(), last_checked_at = now()
@@ -169,6 +186,9 @@ begin
   perform billing.advance_link(l.id, billing.link_status_of(lk ->> 'status'), billing.int_or_null(lk ->> 'amountPaidPaise'));
   if r is not null and r not in ('counted', 'duplicate') then
     return query select 'mismatch'::text, r;
+  elsif billing.link_status_of(lk ->> 'status') in ('paid', 'partly_paid') and billing.link_unrecorded(l.id) > 0 then
+    return query select 'mismatch'::text,
+      'Cashfree says this link is paid, but no payment for it was recorded; the hourly check reads it again.'::text;
   elsif odd is not null then
     return query select 'mismatch'::text, odd;
   else
@@ -290,6 +310,11 @@ begin
   if l.id is not null and l.status <> 'creating' then
     return jsonb_build_object('existing', true, 'linkRowId', l.id, 'linkId', l.link_id, 'url', l.url,
                               'amountPaise', l.amount_paise);
+  end if;
+  -- No new link while Cashfree says money arrived on an older one that no
+  -- stored payment accounts for: the school may already have paid.
+  if l.id is null and billing.unrecorded_paise(inv.id) > 0 then
+    raise exception 'Cashfree reports money on this invoice''s payment link that is not recorded yet; check with Cashfree first';
   end if;
   if l.id is null then
     select coalesce(max(pl.attempt), 0) + 1 into next_attempt from billing.payment_link pl where pl.invoice_id = inv.id;
@@ -580,7 +605,8 @@ begin
         from (select l.link_id, l.status, l.last_checked_at as checked, l.created_at,
                      floor(extract(epoch from now() - l.created_at) / 60)::int as mins
                 from billing.payment_link l
-               where l.status in ('creating', 'active', 'partly_paid') and l.created_at > now() - interval '180 days'
+               where (l.status in ('creating', 'active', 'partly_paid') or billing.link_unrecorded(l.id) > 0)
+                 and l.created_at > now() - interval '180 days'
                order by l.last_checked_at nulls first, l.created_at
                limit 50) x), '[]'::jsonb),
     'refunds', coalesce((

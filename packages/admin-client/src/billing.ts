@@ -59,6 +59,8 @@ export interface InvoiceRow {
   totalPaise: number;
   paidPaise: number;
   status: InvoiceStatus;
+  /** What Cashfree says was paid on this invoice's links beyond the payments stored for them. */
+  unrecordedPaise: number;
   openLink: OpenLink | null;
 }
 
@@ -68,6 +70,8 @@ export interface LinkRow {
   status: string;
   amountPaise: number;
   amountPaidPaise: number;
+  /** What Cashfree says was paid on this link beyond the payments stored for it. */
+  unrecordedPaise: number;
   expiresAt: string;
   createdAt: string;
 }
@@ -165,6 +169,8 @@ export interface BillingOverview {
   states: { grace: number; suspended: number };
   attention: {
     notCounted: number;
+    /** Links Cashfree says were paid beyond the payments stored for them. */
+    linksUnrecorded: number;
     webhookProblems24h: number;
     signatureFailures24h: number;
     lastWebhookMinutesAgo: number | null;

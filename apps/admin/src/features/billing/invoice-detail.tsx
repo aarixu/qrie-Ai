@@ -109,7 +109,14 @@ export function InvoiceDetailPage() {
                             l.linkId
                           )}
                         </TableCell>
-                        <TableCell>{l.status.replace('_', ' ')}</TableCell>
+                        <TableCell className='whitespace-normal'>
+                          {l.status.replace('_', ' ')}
+                          {l.unrecordedPaise > 0 && (
+                            <div className='text-xs text-destructive'>
+                              Cashfree says {formatPaise(l.unrecordedPaise)} more was paid than any payment recorded. Use Check with Cashfree.
+                            </div>
+                          )}
+                        </TableCell>
                         <TableCell className='text-end tabular-nums'>{formatPaise(l.amountPaise)}</TableCell>
                         <TableCell className='text-end tabular-nums'>{formatPaise(l.amountPaidPaise)}</TableCell>
                         <TableCell>{formatDay(l.expiresAt.slice(0, 10))}</TableCell>

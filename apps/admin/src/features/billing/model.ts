@@ -1,4 +1,4 @@
-import type { InvoiceDetail, InvoiceRow, InvoiceStatus, PaymentRow, SchoolBillingState } from '@ai-tutor/admin-client';
+import type { BillingOverview, InvoiceDetail, InvoiceRow, InvoiceStatus, PaymentRow, SchoolBillingState } from '@ai-tutor/admin-client';
 import { formatPaise } from './money.ts';
 
 /**
@@ -164,6 +164,19 @@ export function printModel(d: InvoiceDetail): {
     sac: s.sacCode ?? '',
     rate: percent(d.gstRateBp),
     status,
+  };
+}
+
+/** The overview's "Needs attention": every count a person has to look at, and what each is. */
+export function attentionSummary(a: BillingOverview['attention']): { count: number; detail: string } {
+  return {
+    count: a.notCounted + a.linksUnrecorded + a.webhookProblems24h + a.signatureFailures24h,
+    detail: [
+      `${a.notCounted} payments not counted`,
+      `${a.linksUnrecorded} links Cashfree says are paid with no payment recorded`,
+      `${a.webhookProblems24h} webhook problems`,
+      `${a.signatureFailures24h} signature failures (24 h)`,
+    ].join(' · '),
   };
 }
 
