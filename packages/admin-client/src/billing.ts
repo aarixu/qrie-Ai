@@ -63,6 +63,8 @@ export interface InvoiceRow {
   status: InvoiceStatus;
   /** What Cashfree says was paid on this invoice's links beyond the payments stored for them. */
   unrecordedPaise: number;
+  /** How much of the paid amount Cashfree reports refunded (SUCCESS); when it equals paidPaise, nothing is kept and the owner may void. */
+  refundedPaise: number;
   openLink: OpenLink | null;
 }
 
@@ -88,6 +90,9 @@ export interface InvoicePayment {
   counted: boolean;
   notCountedWhy: string | null;
   recordedAs: string;
+  /** Set when the owner reversed this payment by hand; it no longer counts. */
+  reversedAt: string | null;
+  reversedAs: string | null;
   refundedPaise: number;
 }
 
@@ -133,6 +138,11 @@ export interface PaymentRow {
   recordedAs: string;
   refundedPaise: number;
   refundable: boolean;
+  /** Set when the owner reversed this payment by hand; it no longer counts. */
+  reversedAt: string | null;
+  reversedAs: string | null;
+  /** Recorded by hand, not reversed yet, on an invoice that is not void: the owner may reverse it. */
+  reversible: boolean;
 }
 
 export interface SubscriptionRow {
@@ -337,6 +347,12 @@ export interface BillingClient {
   paymentRecordCancellingLink(
     i: PaymentRecordInput,
   ): Promise<{ paymentId: string; invoiceStatus: InvoiceStatus; licenceSet: boolean; linksCancelled: number }>;
+  /** The owner's, with a fresh code: a payment by hand recorded by mistake stops counting; no money moves. */
+  paymentReverse(i: {
+    paymentId: string;
+    reason: string;
+    env: string;
+  }): Promise<{ invoiceStatus: InvoiceStatus; paidPaise: number; licenceStays: boolean }>;
   webhookLog(problemsOnly?: boolean): Promise<WebhookRow[]>;
   sendLink(i: { invoiceId: string; reason: string; env: string }): Promise<{ linkId: string; url: string; existing: boolean }>;
   checkLink(invoiceId: string): Promise<{ checked: number; changed: number }>;
@@ -449,6 +465,7 @@ export function createBillingClient(t: AdminTransport, api: BillingApi): Billing
           env: i.env,
         })) as { paymentId: string; invoiceStatus: InvoiceStatus; licenceSet: boolean; linksCancelled: number },
       ),
+    paymentReverse: (i) => value('billing_payment_reverse', { p_payment: i.paymentId, p_reason: i.reason, p_env: i.env }),
     webhookLog: (problemsOnly) =>
       guard(async () => list<WebhookRow>(await t.value('billing_webhook_log', { p_problems: problemsOnly }))),
     sendLink: (i) =>

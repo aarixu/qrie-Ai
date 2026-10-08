@@ -15,11 +15,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
+  canVoid,
   formatDay,
   invoiceTone,
   linkBlast,
   paymentBlast,
   refundBlast,
+  reverseBlast,
   todayIst,
   voidBlast,
   type BillingRights,
@@ -296,6 +298,24 @@ export function RefundDialog({ payment, onClose }: { payment: PaymentRow; onClos
   );
 }
 
+/** The owner reverses a payment by hand recorded by mistake; it stays listed and stops counting. */
+export function ReverseDialog({ payment, onClose }: { payment: PaymentRow; onClose: () => void }) {
+  return (
+    <WriteDialog
+      title={`Reverse a payment of ${formatPaise(payment.amountPaise)}?`}
+      blast={reverseBlast(payment)}
+      guarded
+      confirmLabel='Reverse it'
+      onClose={onClose}
+      onConfirm={async ({ env, reason }) => {
+        const r = await billing.paymentReverse({ paymentId: payment.id, reason, env });
+        const status = `Reversed. ${payment.invoiceNumber ?? 'The invoice'} is ${r.invoiceStatus.replace('_', ' ')}.`;
+        toast.success(r.licenceStays ? `${status} The licence it set stays; change it on the school's page if needed.` : status);
+      }}
+    />
+  );
+}
+
 type InvoiceAction = { kind: 'link' | 'void'; invoice: InvoiceRow } | null;
 
 /** The actions on one invoice: copy its open link, send a link, check with Cashfree, void. */
@@ -344,7 +364,7 @@ export function InvoiceActions({
           {checking ? 'Checking…' : 'Check with Cashfree'}
         </Button>
       )}
-      {rights.void && invoice.status === 'unpaid' && (
+      {rights.void && canVoid(invoice) && (
         <Button size='sm' variant='ghost' className='text-destructive' onClick={() => setAction({ kind: 'void', invoice })}>
           Void
         </Button>
@@ -431,6 +451,7 @@ export function PaymentTable({
   showSchool?: boolean;
 }) {
   const [refunding, setRefunding] = useState<PaymentRow | null>(null);
+  const [reversing, setReversing] = useState<PaymentRow | null>(null);
   return (
     <>
       <Table>
@@ -463,6 +484,11 @@ export function PaymentTable({
               <TableCell>
                 {SOURCE[p.source]}
                 {!p.counted && <div className='text-xs text-destructive'>Not counted: {p.notCountedWhy}</div>}
+                {p.reversedAt && (
+                  <div className='text-xs text-muted-foreground'>
+                    Reversed by {p.reversedAs} on {formatDay(p.reversedAt.slice(0, 10))}; not counted
+                  </div>
+                )}
               </TableCell>
               <TableCell className='text-end tabular-nums'>{formatPaise(p.amountPaise)}</TableCell>
               <TableCell>{formatDay(p.receivedOn)}</TableCell>
@@ -475,6 +501,11 @@ export function PaymentTable({
                     Refund
                   </Button>
                 )}
+                {rights.reverse && p.reversible && (
+                  <Button size='sm' variant='ghost' className='text-destructive' onClick={() => setReversing(p)}>
+                    Reverse
+                  </Button>
+                )}
               </TableCell>
             </TableRow>
           ))}
@@ -485,6 +516,15 @@ export function PaymentTable({
           payment={refunding}
           onClose={() => {
             setRefunding(null);
+            onChanged();
+          }}
+        />
+      )}
+      {reversing && (
+        <ReverseDialog
+          payment={reversing}
+          onClose={() => {
+            setReversing(null);
             onChanged();
           }}
         />

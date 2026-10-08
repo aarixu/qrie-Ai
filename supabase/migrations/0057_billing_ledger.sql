@@ -23,7 +23,9 @@
 --
 -- An issued invoice is never edited and nothing in billing is ever deleted:
 -- triggers refuse both, even for hand-written SQL by the database owner. An
--- invoice's status and paid amount only move forward. Hand-written changes to
+-- invoice's paid amount and status always equal what its counted payments,
+-- less any payment by hand the owner reversed, add up to: they move back
+-- only on such a reversal (0058). Hand-written changes to
 -- any other billing table leave an 'unmanaged-change' row in admin.audit_event
 -- (admin.tripwire, 0047).
 
@@ -168,11 +170,18 @@ create table if not exists billing.payment (
   recorded_by uuid,
   recorded_as text not null,
   created_at timestamptz not null default now(),
+  -- Set once, by admin.billing_payment_reverse (0058), on a payment by hand
+  -- recorded by mistake: it stays listed and no longer counts.
+  reversed_at timestamptz,
+  reversed_by uuid,
+  reversed_as text,
   check (counted = (not_counted_why is null)),
-  check ((source = 'cashfree_link') = (cf_order_id is not null))
+  check ((source = 'cashfree_link') = (cf_order_id is not null)),
+  check (reversed_at is null or (source <> 'cashfree_link' and counted and reversed_as is not null))
 );
+-- A reference is recorded once per invoice; once reversed, it can be recorded again.
 create unique index if not exists payment_offline_once on billing.payment (invoice_id, source, reference)
-  where source <> 'cashfree_link';
+  where source <> 'cashfree_link' and reversed_at is null;
 
 create table if not exists billing.refund (
   id uuid primary key default gen_random_uuid(),
@@ -235,18 +244,41 @@ begin
 end;
 $$;
 
--- A recorded payment and an issued credit note are never edited (the message
--- is the trigger's argument).
+-- An issued credit note is never edited (the message is the trigger's argument).
 create or replace function billing.no_edit() returns trigger language plpgsql as $$
 begin
   raise exception '%', tg_argv[0] using errcode = '42501';
 end;
 $$;
 
-create or replace function billing.invoice_guard() returns trigger language plpgsql as $$
+-- A recorded payment is never edited. The one change allowed is marking a
+-- payment by hand reversed, once (admin.billing_payment_reverse, 0058); a
+-- reversal is never undone.
+create or replace function billing.payment_guard() returns trigger language plpgsql as $$
+begin
+  if (new.id, new.org_id, new.invoice_id, new.link_id, new.source, new.amount_paise, new.currency, new.received_on,
+      new.reference, new.cf_order_id, new.counted, new.not_counted_why, new.recorded_by, new.recorded_as, new.created_at)
+     is distinct from
+     (old.id, old.org_id, old.invoice_id, old.link_id, old.source, old.amount_paise, old.currency, old.received_on,
+      old.reference, old.cf_order_id, old.counted, old.not_counted_why, old.recorded_by, old.recorded_as, old.created_at)
+     or old.reversed_at is not null or new.reversed_at is null then
+    raise exception 'a recorded payment is not edited' using errcode = '42501';
+  end if;
+  return new;
+end;
+$$;
+
+-- An issued invoice's lines, tax and parties never change. Its paid amount
+-- and status always say what its counted payments, less any the owner
+-- reversed, add up to (billing.counted_paise), so they move back only when a
+-- payment by hand is reversed. It can be void only while no money is kept on
+-- it: nothing paid, or all of it refunded with Cashfree's SUCCESS
+-- (billing.refunded_paise). A void invoice never changes again.
+create or replace function billing.invoice_guard() returns trigger language plpgsql
+set search_path = billing, public
+as $$
 declare
-  rank_old integer := case old.status when 'unpaid' then 0 when 'partly_paid' then 1 when 'paid' then 2 else 3 end;
-  rank_new integer := case new.status when 'unpaid' then 0 when 'partly_paid' then 1 when 'paid' then 2 else 3 end;
+  counted bigint;
 begin
   if (new.number, new.fy, new.seq, new.org_id, new.subscription_id, new.kind, new.description, new.quantity,
       new.unit_paise, new.taxable_paise, new.gst_rate_bp, new.cgst_paise, new.sgst_paise, new.igst_paise,
@@ -260,11 +292,19 @@ begin
   if old.status = 'void' then
     raise exception 'a void invoice does not change' using errcode = '42501';
   end if;
-  if new.status = 'void' and old.paid_paise > 0 then
-    raise exception 'an invoice with money on it cannot be void' using errcode = '42501';
+  if new.status = 'void' then
+    if old.paid_paise > billing.refunded_paise(old.id) then
+      raise exception 'an invoice with money on it cannot be void' using errcode = '42501';
+    end if;
+    if new.paid_paise <> old.paid_paise then
+      raise exception 'an invoice''s paid amount and status follow its payments' using errcode = '42501';
+    end if;
+    return new;
   end if;
-  if new.paid_paise < old.paid_paise or (new.status <> 'void' and rank_new < rank_old) then
-    raise exception 'an invoice only moves forward' using errcode = '42501';
+  counted := billing.counted_paise(new.id);
+  if new.paid_paise <> counted
+     or new.status <> (case when counted >= new.total_paise then 'paid' when counted > 0 then 'partly_paid' else 'unpaid' end) then
+    raise exception 'an invoice''s paid amount and status follow its payments' using errcode = '42501';
   end if;
   return new;
 end;
@@ -302,7 +342,7 @@ drop trigger if exists invoice_guard on billing.invoice;
 create trigger invoice_guard before update on billing.invoice for each row execute function billing.invoice_guard();
 drop trigger if exists payment_no_edit on billing.payment;
 create trigger payment_no_edit before update on billing.payment
-  for each row execute function billing.no_edit('a recorded payment is not edited');
+  for each row execute function billing.payment_guard();
 drop trigger if exists credit_note_no_edit on billing.credit_note;
 create trigger credit_note_no_edit before update on billing.credit_note
   for each row execute function billing.no_edit('a credit note is not edited');
@@ -357,6 +397,24 @@ begin
   end if;
   return null;
 end;
+$$;
+
+-- What an invoice's counted payments add up to, leaving out any the owner
+-- reversed: its paid amount (invoice_guard holds it to this).
+create or replace function billing.counted_paise(p_invoice uuid) returns bigint language sql stable
+set search_path = billing, public
+as $$
+  select coalesce(sum(p.amount_paise), 0)::bigint from billing.payment p
+   where p.invoice_id = p_invoice and p.counted and p.reversed_at is null
+$$;
+
+-- How much of those payments Cashfree reports refunded (SUCCESS).
+create or replace function billing.refunded_paise(p_invoice uuid) returns bigint language sql stable
+set search_path = billing, public
+as $$
+  select coalesce(sum(r.amount_paise), 0)::bigint
+    from billing.refund r join billing.payment p on p.id = r.payment_id
+   where p.invoice_id = p_invoice and p.counted and p.reversed_at is null and r.status = 'success'
 $$;
 
 -- What Cashfree says was paid on one link beyond the payments stored for it,
@@ -786,7 +844,7 @@ begin
                  'schoolName', sch.display_name, 'kind', i.kind,
                  'issuedOn', to_char(i.issued_on, 'YYYY-MM-DD'), 'dueOn', to_char(i.due_on, 'YYYY-MM-DD'),
                  'totalPaise', i.total_paise, 'paidPaise', i.paid_paise, 'status', i.status,
-                 'unrecordedPaise', billing.unrecorded_paise(i.id),
+                 'unrecordedPaise', billing.unrecorded_paise(i.id), 'refundedPaise', billing.refunded_paise(i.id),
                  'openLink', (select jsonb_build_object('linkId', l.link_id, 'url', l.url, 'status', l.status)
                                 from billing.payment_link l
                                where l.invoice_id = i.id and l.status in ('creating', 'active', 'partly_paid')
@@ -825,7 +883,7 @@ begin
     'issuedOn', to_char(i.issued_on, 'YYYY-MM-DD'), 'dueOn', to_char(i.due_on, 'YYYY-MM-DD'),
     'seller', i.seller, 'buyer', i.buyer, 'status', i.status, 'paidPaise', i.paid_paise,
     'paidOn', to_char(i.paid_on, 'YYYY-MM-DD'), 'voidedAt', i.voided_at, 'createdAt', i.created_at,
-    'unrecordedPaise', billing.unrecorded_paise(i.id),
+    'unrecordedPaise', billing.unrecorded_paise(i.id), 'refundedPaise', billing.refunded_paise(i.id),
     'openLink', (select jsonb_build_object('linkId', l.link_id, 'url', l.url, 'status', l.status)
                    from billing.payment_link l
                   where l.invoice_id = i.id and l.status in ('creating', 'active', 'partly_paid')
@@ -842,6 +900,7 @@ begin
                                           'receivedOn', to_char(p.received_on, 'YYYY-MM-DD'),
                                           'reference', p.reference, 'counted', p.counted,
                                           'notCountedWhy', p.not_counted_why, 'recordedAs', p.recorded_as,
+                                          'reversedAt', p.reversed_at, 'reversedAs', p.reversed_as,
                                           'refundedPaise', coalesce((
                                             select sum(rf.amount_paise) from billing.refund rf
                                              where rf.payment_id = p.id
@@ -864,6 +923,7 @@ $$;
 
 revoke all on function billing.no_delete() from public, anon, authenticated, service_role;
 revoke all on function billing.no_edit() from public, anon, authenticated, service_role;
+revoke all on function billing.payment_guard() from public, anon, authenticated, service_role;
 revoke all on function billing.invoice_guard() from public, anon, authenticated, service_role;
 revoke all on function billing.fy_of(date) from public, anon, authenticated, service_role;
 revoke all on function billing.next_number(text, text) from public, anon, authenticated, service_role;
@@ -871,6 +931,8 @@ revoke all on function billing.format_number(text, text, integer) from public, a
 revoke all on function billing.gst_split(bigint, integer, text, text) from public, anon, authenticated, service_role;
 revoke all on function billing.seller_ready() from public, anon, authenticated, service_role;
 revoke all on function billing.need_reason(text) from public, anon, authenticated, service_role;
+revoke all on function billing.counted_paise(uuid) from public, anon, authenticated, service_role;
+revoke all on function billing.refunded_paise(uuid) from public, anon, authenticated, service_role;
 revoke all on function billing.link_unrecorded(uuid) from public, anon, authenticated, service_role;
 revoke all on function billing.unrecorded_paise(uuid) from public, anon, authenticated, service_role;
 revoke all on function billing.raise_invoice(uuid, uuid, text, text, integer, bigint, date, uuid)

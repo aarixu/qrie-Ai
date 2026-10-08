@@ -154,7 +154,13 @@ export function InvoiceDetailPage() {
                         <TableCell className='text-end tabular-nums'>{formatPaise(p.amountPaise)}</TableCell>
                         <TableCell>{formatDay(p.receivedOn)}</TableCell>
                         <TableCell className='font-mono text-xs'>{p.reference}</TableCell>
-                        <TableCell className='whitespace-normal'>{p.counted ? 'Yes' : `No: ${p.notCountedWhy}`}</TableCell>
+                        <TableCell className='whitespace-normal'>
+                          {p.reversedAt
+                            ? `No: reversed by ${p.reversedAs} on ${formatDay(p.reversedAt.slice(0, 10))}`
+                            : p.counted
+                              ? 'Yes'
+                              : `No: ${p.notCountedWhy}`}
+                        </TableCell>
                         <TableCell>{p.recordedAs}</TableCell>
                       </TableRow>
                     ))}

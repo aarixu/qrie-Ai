@@ -1,5 +1,5 @@
--- MONEY IN BY HAND, SETTLING, THE LICENCE FOLLOWS THE MONEY, VOID, AND THE
--- PAYMENT SIGNAL.
+-- MONEY IN BY HAND, SETTLING, THE LICENCE FOLLOWS THE MONEY, CORRECTING A
+-- PAYMENT BY HAND, VOID, AND THE PAYMENT SIGNAL.
 --
 -- 1. An offline payment (a bank transfer or a cheque) is recorded by finance
 --    or the owner with a fresh authenticator code, because it can set a
@@ -7,18 +7,24 @@
 --    cheque number) is kept on the payment and only its SHA-256 goes into the
 --    audit log. It is never recorded while the invoice has an open payment
 --    link: billing-api's /record cancels the link at Cashfree first (R27).
--- 2. Settling: an invoice's paid amount is the sum of its counted payments;
---    its status moves unpaid -> partly_paid -> paid and never back (0057's
---    guard). The day it becomes paid is India's day.
+-- 2. Settling: an invoice's paid amount is the sum of its counted payments,
+--    less any the owner reversed; its status follows (unpaid, partly_paid,
+--    paid), and 0057's guard holds both to that sum. The day it becomes paid
+--    is India's day.
 -- 3. The licence follows the money: when a subscription invoice becomes paid,
 --    lms.set_licence (0041) sets the school's plan, seats and last day, in the
 --    name of whoever recorded the payment. A payment for an older period never
 --    shortens a licence that already runs later ('licence-kept'). Nothing else
---    in billing sets a licence; a refund never changes one (ruling R18).
--- 4. Void: the owner's, with a fresh code, only while nothing is paid, and
---    only once every open payment link is cancelled (billing-api cancels it
---    at Cashfree first). The number stays used; the subscription is cancelled.
--- 5. The payment signal (spec section 9) for the school page's health card:
+--    in billing sets a licence; a refund or a reversal never changes one
+--    (rulings R18, R28).
+-- 4. Correcting: the owner, with a fresh code, reverses a payment by hand
+--    recorded by mistake (R28); it stays listed and stops counting.
+-- 5. Void: the owner's, with a fresh code, only while no money is kept on the
+--    invoice (nothing paid, or all of it refunded with Cashfree's SUCCESS or
+--    reversed) and no refund on it is unfinished, and only once every open
+--    payment link is cancelled (billing-api cancels it at Cashfree first).
+--    The number stays used; the subscription is cancelled; credit notes stand.
+-- 6. The payment signal (spec section 9) for the school page's health card:
 --    grey with no billing account, green when nothing is overdue, amber 1 to
 --    14 days overdue, red after 14. A failed mandate is plan 7's (no mandate
 --    exists yet). admin.school_payment_signal is seam S1: the same signature
@@ -75,8 +81,9 @@ begin
 end;
 $$;
 
--- Recomputes an invoice from its counted payments; sets the licence when a
--- subscription invoice has just become paid.
+-- Recomputes an invoice from its counted payments, less any reversed; sets
+-- the licence when a subscription invoice has just become paid. An invoice
+-- that stops being paid (a reversal) loses its paid day.
 create or replace function billing.settle(p_invoice uuid, p_actor uuid, p_role text, p_name text)
 returns jsonb
 language plpgsql volatile security definer
@@ -92,13 +99,12 @@ begin
   if inv.status = 'void' then
     return jsonb_build_object('status', 'void', 'licenceSet', false);
   end if;
-  select coalesce(sum(p.amount_paise) filter (where p.counted), 0) into paid
-    from billing.payment p where p.invoice_id = p_invoice;
+  paid := billing.counted_paise(p_invoice);
   next_status := case when paid >= inv.total_paise then 'paid' when paid > 0 then 'partly_paid' else 'unpaid' end;
   perform set_config('admin.session', 'on', true);
   update billing.invoice
      set paid_paise = paid, status = next_status,
-         paid_on = case when next_status = 'paid' and inv.status <> 'paid' then lms.india_today() else paid_on end
+         paid_on = case when next_status <> 'paid' then null when inv.status = 'paid' then paid_on else lms.india_today() end
    where id = p_invoice;
   if next_status = 'paid' and inv.status <> 'paid' and inv.subscription_id is not null then
     licence_set := billing.apply_licence(inv.subscription_id, p_actor, p_role, p_name);
@@ -201,7 +207,7 @@ begin
     raise exception 'Cashfree reports money on this invoice''s payment link that is not recorded yet; check with Cashfree first';
   end if;
   if exists (select 1 from billing.payment p
-              where p.invoice_id = inv.id and p.source = p_source and p.reference = ref) then
+              where p.invoice_id = inv.id and p.source = p_source and p.reference = ref and p.reversed_at is null) then
     raise exception 'this reference is already recorded for this invoice';
   end if;
   select array_agg(l.link_id order by l.attempt) into open_links
@@ -238,7 +244,9 @@ $$;
 
 -- refundedPaise counts refunds asked for, pending or done. A payment is
 -- refundable here only when it came through a Cashfree link, within Cashfree's
--- six months (180 days), with something left to refund.
+-- six months (180 days), with something left to refund. It is reversible
+-- (by the owner, admin.billing_payment_reverse) when it was recorded by hand,
+-- is not reversed yet and its invoice is not void.
 create or replace function admin.billing_payments(p_org uuid default null)
 returns jsonb
 language plpgsql stable security definer
@@ -258,7 +266,10 @@ begin
                  'counted', p.counted, 'notCountedWhy', p.not_counted_why, 'recordedAs', p.recorded_as,
                  'refundedPaise', rf.paise,
                  'refundable', p.source = 'cashfree_link' and p.received_on >= lms.india_today() - 180
-                               and p.amount_paise > rf.paise) as j
+                               and p.amount_paise > rf.paise,
+                 'reversedAt', p.reversed_at, 'reversedAs', p.reversed_as,
+                 'reversible', p.source <> 'cashfree_link' and p.reversed_at is null
+                               and coalesce(i.status, 'void') <> 'void') as j
           from billing.payment p
           join lms.school sch on sch.org_id = p.org_id
           left join billing.invoice i on i.id = p.invoice_id
@@ -275,8 +286,68 @@ end;
 $$;
 
 -- ---------------------------------------------------------------------------
--- Void: the owner, with a fresh code. p_commit false only reports the open
--- links billing-api must cancel at Cashfree first.
+-- Correcting a payment by hand: the owner, with a fresh code (ruling R28)
+-- ---------------------------------------------------------------------------
+
+-- A bank transfer or cheque recorded by mistake (the wrong invoice, the wrong
+-- amount, a cheque that bounced) is reversed, never edited or deleted: the
+-- payment stays listed, marked reversed in the owner's name, and no longer
+-- counts; the invoice's paid amount and status are worked out again. No
+-- money moves here. A licence the payment set stays as it is (licenceStays
+-- says so; the owner changes it on the school's page, as after a refund,
+-- R18). Once reversed, the same reference can be recorded again.
+create or replace function admin.billing_payment_reverse(p_payment uuid, p_reason text, p_env text)
+returns jsonb
+language plpgsql volatile security definer
+set search_path = admin, billing, lms, public
+as $$
+declare
+  me admin.platform_staff := admin.require_staff(array[]::text[]);
+  pay billing.payment;
+  inv billing.invoice;
+  r jsonb;
+  licence_stays boolean;
+begin
+  perform admin.require_fresh_mfa(10);
+  perform admin.check_environment(p_env);
+  perform billing.need_reason(p_reason);
+  select * into pay from billing.payment where id = p_payment;
+  if pay.id is null then
+    raise exception 'there is no such payment';
+  end if;
+  if pay.source = 'cashfree_link' then
+    raise exception 'only a payment recorded by hand is reversed; a payment through Cashfree is refunded';
+  end if;
+  -- The invoice first, as recording a payment does, then the payment.
+  select * into inv from billing.invoice where id = pay.invoice_id for update;
+  select * into pay from billing.payment where id = p_payment for update;
+  if pay.reversed_at is not null then
+    raise exception 'this payment is already reversed';
+  end if;
+  if inv.status = 'void' then
+    raise exception 'this invoice is void';
+  end if;
+  perform set_config('admin.session', 'on', true);
+  update billing.payment set reversed_at = now(), reversed_by = me.user_id, reversed_as = me.display_name where id = pay.id;
+  r := billing.settle(inv.id, me.user_id, me.role, me.display_name);
+  licence_stays := inv.status = 'paid' and r ->> 'status' <> 'paid'
+                   and exists (select 1 from billing.subscription s
+                                where s.id = inv.subscription_id and s.licence_applied_at is not null);
+  perform admin.audit(me, 'payment-reversed', 'invoice', inv.number, p_reason,
+    jsonb_build_object('paymentId', pay.id, 'amountPaise', pay.amount_paise, 'source', pay.source,
+                       'referenceSha256', encode(sha256(convert_to(pay.reference, 'utf8')), 'hex'),
+                       'invoiceStatus', r ->> 'status', 'licenceStays', licence_stays));
+  return jsonb_build_object('invoiceStatus', r ->> 'status',
+                            'paidPaise', (select i.paid_paise from billing.invoice i where i.id = inv.id),
+                            'licenceStays', licence_stays);
+end;
+$$;
+
+-- ---------------------------------------------------------------------------
+-- Void: the owner, with a fresh code, only while no money is kept on the
+-- invoice: nothing paid, or every payment through Cashfree refunded in full
+-- (Cashfree reported SUCCESS) and every payment by hand reversed. p_commit
+-- false only reports the open links billing-api must cancel at Cashfree first.
 -- ---------------------------------------------------------------------------
 
 create or replace function admin.billing_invoice_void(p_invoice uuid, p_reason text, p_env text, p_commit boolean)
@@ -288,6 +359,7 @@ declare
   me admin.platform_staff := admin.require_staff(array[]::text[]);
   inv billing.invoice;
   open_links text[];
+  refunded bigint;
 begin
   perform admin.require_fresh_mfa(10);
   perform admin.check_environment(p_env);
@@ -299,8 +371,13 @@ begin
   if inv.status = 'void' then
     raise exception 'this invoice is already void';
   end if;
-  if inv.paid_paise > 0 then
-    raise exception 'an invoice with money on it cannot be void';
+  if exists (select 1 from billing.refund r join billing.payment p on p.id = r.payment_id
+              where p.invoice_id = inv.id and r.status in ('requested', 'pending')) then
+    raise exception 'a refund on this invoice is not finished yet: void it once Cashfree reports it';
+  end if;
+  refunded := billing.refunded_paise(inv.id);
+  if inv.paid_paise > refunded then
+    raise exception 'an invoice with money on it cannot be void: refund what came through Cashfree, or reverse what was recorded by hand, first';
   end if;
   if billing.unrecorded_paise(inv.id) > 0 then
     raise exception 'Cashfree reports money on this invoice''s payment link that is not recorded yet; check with Cashfree first';
@@ -320,7 +397,7 @@ begin
     update billing.subscription set cancelled_at = now() where id = inv.subscription_id;
   end if;
   perform admin.audit(me, 'invoice-voided', 'invoice', inv.number, p_reason,
-    jsonb_build_object('number', inv.number, 'totalPaise', inv.total_paise));
+    jsonb_build_object('number', inv.number, 'totalPaise', inv.total_paise, 'refundedPaise', refunded));
   return jsonb_build_object('openLinks', '[]'::jsonb, 'voided', true);
 end;
 $$;
@@ -339,8 +416,10 @@ revoke all on function admin.school_payment_signal(uuid) from public, anon, auth
 
 revoke all on function admin.billing_payment_record(uuid, text, bigint, date, text, text, text, boolean) from public, anon;
 revoke all on function admin.billing_payments(uuid) from public, anon;
+revoke all on function admin.billing_payment_reverse(uuid, text, text) from public, anon;
 revoke all on function admin.billing_invoice_void(uuid, text, text, boolean) from public, anon;
 
 grant execute on function admin.billing_payment_record(uuid, text, bigint, date, text, text, text, boolean) to authenticated;
 grant execute on function admin.billing_payments(uuid) to authenticated;
+grant execute on function admin.billing_payment_reverse(uuid, text, text) to authenticated;
 grant execute on function admin.billing_invoice_void(uuid, text, text, boolean) to authenticated;

@@ -28,7 +28,9 @@
 --    only moves forward (requested, pending, then success or failed). On
 --    success a credit note QRCN/<fy>/<n> carries the refund's share of the
 --    invoice's tax, half-up. A refund never changes the invoice's paid amount
---    or the licence (ruling R18).
+--    or the licence (ruling R18); an invoice whose counted payments are all
+--    refunded in full (or, for payments by hand, reversed) can then be
+--    voided by the owner (0058).
 -- 4. RECONCILIATION. billing-api's /reconcile asks billing_reconcile_due,
 --    which answers due at most once in 55 minutes (ruling R15) with the open
 --    links, any link with money Cashfree reported that no stored payment

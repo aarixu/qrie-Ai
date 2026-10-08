@@ -48,6 +48,7 @@ describe('the admin schema', () => {
       'admin.billing_link_prepare',
       'admin.billing_overview',
       'admin.billing_payment_record',
+      'admin.billing_payment_reverse',
       'admin.billing_payments',
       'admin.billing_plan_set',
       'admin.billing_plans',

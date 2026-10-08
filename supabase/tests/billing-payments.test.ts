@@ -225,6 +225,105 @@ describe('void', () => {
   });
 });
 
+describe('correcting a payment by hand', () => {
+  const reverse = (claims: JwtClaims, payment: string, reason = 'cheque bounced') =>
+    rpc<{ invoiceStatus: string; paidPaise: number; licenceStays: boolean }>(db, claims, 'billing_payment_reverse', {
+      p_payment: payment,
+      p_reason: reason,
+      p_env: 'TEST',
+    });
+  const paymentRow = (id: string) =>
+    one<{ amount_paise: string; counted: boolean; reversed: boolean; reversed_as: string | null }>(
+      `select amount_paise::text, counted, reversed_at is not null as reversed, reversed_as from billing.payment where id = $1`,
+      [id],
+    );
+
+  it('the owner, with a fresh code and a reason, reverses a payment recorded by hand; finance, ops and an old code may not', async () => {
+    const school = await billedSchool(db, ops, 'REV');
+    const inv = await raise(school.org, 10_000);
+    const paid = await record(fresh(finance), inv.invoiceId, 11_800, { source: 'cheque', reference: 'CHQ 777' });
+    expect(paid.invoiceStatus).toBe('paid');
+    await expect(reverse(fresh(finance), paid.paymentId)).rejects.toThrow(/not allowed/);
+    await expect(reverse(fresh(ops), paid.paymentId)).rejects.toThrow(/not allowed/);
+    await expect(reverse(aal2(owner), paid.paymentId)).rejects.toThrow(/confirm with your authenticator code first/);
+    await expect(reverse(fresh(owner), paid.paymentId, '')).rejects.toThrow(/say why, in a few words/);
+    expect(await reverse(fresh(owner), paid.paymentId)).toEqual({ invoiceStatus: 'unpaid', paidPaise: 0, licenceStays: false });
+    expect(await invoice(inv.invoiceId)).toMatchObject({ status: 'unpaid', paid_paise: '0', paid_on: null });
+    // Still listed, never edited: marked reversed in the owner's name.
+    expect(await paymentRow(paid.paymentId)).toEqual({ amount_paise: '11800', counted: true, reversed: true, reversed_as: 'Aarav' });
+    const a = await one<{ reason: string; details: Record<string, unknown> }>(
+      `select reason, details from admin.audit_event where action = 'payment-reversed' order by id desc limit 1`,
+    );
+    expect(a.reason).toBe('cheque bounced');
+    expect(a.details).toMatchObject({ paymentId: paid.paymentId, amountPaise: 11_800, source: 'cheque', invoiceStatus: 'unpaid' });
+    expect(a.details.referenceSha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(JSON.stringify(a.details)).not.toContain('CHQ 777');
+    await expect(reverse(fresh(owner), paid.paymentId)).rejects.toThrow(/this payment is already reversed/);
+    // The same reference can be recorded again, for the right amount.
+    expect((await record(fresh(finance), inv.invoiceId, 5900, { source: 'cheque', reference: 'CHQ 777' })).invoiceStatus).toBe('partly_paid');
+    const list = await rpc<{ id: string; reversedAt: string | null; reversedAs: string | null; reversible: boolean }[]>(
+      db,
+      aal2(finance),
+      'billing_payments',
+      { p_org: school.org },
+    );
+    expect(list.find((p) => p.id === paid.paymentId)).toMatchObject({ reversedAs: 'Aarav', reversible: false });
+    expect(list.find((p) => p.id !== paid.paymentId)).toMatchObject({ reversedAt: null, reversible: true });
+  });
+
+  it('reversing the payment that paid a subscription leaves the licence it set, and says so; paying again sets it again', async () => {
+    const school = await billedSchool(db, ops, 'REVS');
+    const s = await subscribe(db, ops, school.org, 'standard', 5, '2026-04-01');
+    const paid = await record(fresh(finance), s.invoiceId, 295_000);
+    expect(paid).toMatchObject({ invoiceStatus: 'paid', licenceSet: true });
+    const before = await licence(school.org);
+    expect(await reverse(fresh(owner), paid.paymentId, 'recorded against the wrong school')).toEqual({
+      invoiceStatus: 'unpaid',
+      paidPaise: 0,
+      licenceStays: true,
+    });
+    expect(await licence(school.org)).toEqual(before);
+    expect(await record(fresh(finance), s.invoiceId, 295_000)).toMatchObject({ invoiceStatus: 'paid', licenceSet: true });
+  });
+
+  it('a payment through Cashfree is refunded, not reversed', async () => {
+    const inv = await raise(xyz.org, 1000);
+    const cf = await one<{ id: string }>(
+      `insert into billing.payment (org_id, invoice_id, source, amount_paise, currency, received_on, reference, cf_order_id,
+                                    counted, not_counted_why, recorded_as)
+       values ($1, $2, 'cashfree_link', 1180, 'INR', lms.india_today(), 'CF_rev', 'CF_rev', false, 'the invoice was void', 'Cashfree')
+       returning id`,
+      [xyz.org, inv.invoiceId],
+    );
+    await expect(reverse(fresh(owner), cf.id)).rejects.toThrow(
+      /only a payment recorded by hand is reversed; a payment through Cashfree is refunded/,
+    );
+  });
+
+  it('once what was recorded by hand is reversed, a part-paid invoice can be voided', async () => {
+    const inv = await raise(xyz.org, 20_000);
+    const part = await record(fresh(finance), inv.invoiceId, 10_000);
+    await expect(voidInvoice(fresh(owner), inv.invoiceId, true)).rejects.toThrow(/an invoice with money on it cannot be void/);
+    expect((await reverse(fresh(owner), part.paymentId, 'never received')).invoiceStatus).toBe('unpaid');
+    expect(await voidInvoice(fresh(owner), inv.invoiceId, true)).toEqual({ openLinks: [], voided: true });
+  });
+
+  it('by hand, a reversal cannot be undone, a payment is not edited, and an invoice\'s paid amount follows its payments', async () => {
+    await expect(db.query(`update billing.payment set reversed_at = null where reversed_at is not null`)).rejects.toThrow(
+      /a recorded payment is not edited/,
+    );
+    await expect(db.query(`update billing.payment set reference = 'x' where reversed_at is null`)).rejects.toThrow(
+      /a recorded payment is not edited/,
+    );
+    await expect(db.query(`update billing.invoice set paid_paise = 0, status = 'unpaid' where id = $1`, [abcSub.invoiceId])).rejects.toThrow(
+      /an invoice's paid amount and status follow its payments/,
+    );
+    await expect(db.query(`update billing.invoice set status = 'void' where id = $1`, [abcSub.invoiceId])).rejects.toThrow(
+      /an invoice with money on it cannot be void/,
+    );
+  });
+});
+
 describe('the audit trail and the list', () => {
   it('audit rows hold ids, amounts and a hash of the reference, never the reference', async () => {
     const ad = await raise(abc.org, 4000);

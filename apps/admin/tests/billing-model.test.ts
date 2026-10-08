@@ -3,11 +3,13 @@ import { describe, expect, it } from 'vitest';
 import {
   attentionSummary,
   billingRights,
+  canVoid,
   invoiceTone,
   linkBlast,
   paymentBlast,
   printModel,
   refundBlast,
+  reverseBlast,
   stateLabel,
   todayIst,
   voidBlast,
@@ -28,6 +30,7 @@ const row: InvoiceRow = {
   paidPaise: 0,
   status: 'unpaid',
   unrecordedPaise: 0,
+  refundedPaise: 0,
   openLink: null,
 };
 
@@ -80,12 +83,25 @@ const payment: PaymentRow = {
   recordedAs: 'Cashfree',
   refundedPaise: 0,
   refundable: true,
+  reversedAt: null,
+  reversedAs: null,
+  reversible: false,
 };
 
 describe('the billing model', () => {
   it('rights by role', () => {
-    const all = { read: true, raise: true, sendLink: true, record: true, refund: true, void: true, settings: true, grace: true };
-    const none = { read: false, raise: false, sendLink: false, record: false, refund: false, void: false, settings: false, grace: false };
+    const all = { read: true, raise: true, sendLink: true, record: true, reverse: true, refund: true, void: true, settings: true, grace: true };
+    const none = {
+      read: false,
+      raise: false,
+      sendLink: false,
+      record: false,
+      reverse: false,
+      refund: false,
+      void: false,
+      settings: false,
+      grace: false,
+    };
     expect(billingRights('owner')).toEqual(all);
     expect(billingRights('ops')).toEqual({ ...none, read: true, raise: true, sendLink: true });
     expect(billingRights('finance')).toEqual({ ...none, read: true, record: true });
@@ -128,6 +144,25 @@ describe('the billing model', () => {
     );
     expect(linkBlast(row, true)).toBe('Cashfree makes a payment page for ₹23,600.00. Cashfree emails it to the billing contact.');
     expect(linkBlast({ ...row, paidPaise: 360_000 }, false)).toBe('Cashfree makes a payment page for ₹20,000.00.');
+  });
+
+  it('an invoice can be voided only when no money is kept on it: nothing paid, or all of it refunded, and nothing Cashfree reported is unrecorded', () => {
+    expect(canVoid(row)).toBe(true);
+    expect(canVoid({ ...row, status: 'partly_paid', paidPaise: 100 })).toBe(false);
+    expect(canVoid({ ...row, status: 'paid', paidPaise: 2_360_000, refundedPaise: 2_360_000 })).toBe(true);
+    expect(canVoid({ ...row, status: 'paid', paidPaise: 2_360_000, refundedPaise: 2_359_999 })).toBe(false);
+    expect(canVoid({ ...row, status: 'void' })).toBe(false);
+    expect(canVoid({ ...row, unrecordedPaise: 1 })).toBe(false);
+    expect(voidBlast({ ...row, status: 'paid', paidPaise: 2_360_000, refundedPaise: 2_360_000 })).toBe(
+      'Invoice QRIE/26-27/0001 is cancelled for good. Its number stays used. What was paid on it went back in full; its credit notes stand. The licence does not change.',
+    );
+  });
+
+  it('reversing a payment by hand: what stops counting, that no money moves, and that the licence stays', () => {
+    const byHand: PaymentRow = { ...payment, source: 'cheque', amountPaise: 11_800, reference: 'CHQ 777', refundable: false, reversible: true };
+    expect(reverseBlast(byHand)).toBe(
+      "₹118.00 recorded by hand against QRIE/26-27/0001 stops counting; the payment stays listed, marked reversed. No money moves: if it was received and must go back, send it back by bank. A licence it set stays; change it on the school's page if needed.",
+    );
   });
 
   it('print model: CGST and SGST inside one state, IGST across, lines add up to the total, "Not registered under GST" when the seller has no GSTIN, both GSTINs when present, SAC and rate printed', () => {

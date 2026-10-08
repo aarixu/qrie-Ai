@@ -556,6 +556,64 @@ describe('money Cashfree reports that no stored payment accounts for', () => {
   });
 });
 
+describe('closing an invoice after its money went back', () => {
+  const voidIt = (invoiceId: string, commit = true) =>
+    rpc<{ openLinks: string[]; voided: boolean }>(db, fresh(owner), 'billing_invoice_void', {
+      p_invoice: invoiceId,
+      p_reason: 'the school cancelled the order',
+      p_env: 'TEST',
+      p_commit: commit,
+    });
+  const refundAsk = (payment: string, amountPaise: number) =>
+    rpc<{ refundId: string }>(db, fresh(owner), 'billing_refund_prepare', {
+      p_payment: payment,
+      p_amount_paise: amountPaise,
+      p_reason: 'the school cancelled the order',
+      p_env: 'TEST',
+    });
+  async function paidThroughLink(amountPaise: number, orderId: string) {
+    const inv = await raise(abc.org, amountPaise);
+    const l = await openLink(inv.invoiceId);
+    const total = Math.round(amountPaise * 1.18);
+    await ingest(`close-${orderId}`, linkEvent({ linkId: l.linkId, invoice: inv.number, amountPaise: total, orderId }));
+    const pay = await one<{ id: string }>(`select id from billing.payment where cf_order_id = $1`, [orderId]);
+    return { inv, payment: pay.id, total };
+  }
+
+  it('an invoice whose Cashfree payment was refunded in full is voided by the owner; a refund not finished yet stops it', async () => {
+    const { inv, payment, total } = await paidThroughLink(40_000, 'CF_close_full');
+    expect(await invoiceStatus(inv.invoiceId)).toBe('paid');
+    await expect(voidIt(inv.invoiceId)).rejects.toThrow(/an invoice with money on it cannot be void/);
+    const asked = await refundAsk(payment, total);
+    await expect(voidIt(inv.invoiceId)).rejects.toThrow(/a refund on this invoice is not finished yet: void it once Cashfree reports it/);
+    await service('billing_refund_result', { p_refund_id: asked.refundId, p_value: { status: 'SUCCESS', cfRefundId: '9' } });
+    expect(await voidIt(inv.invoiceId, false)).toEqual({ openLinks: [], voided: false });
+    expect(await voidIt(inv.invoiceId)).toEqual({ openLinks: [], voided: true });
+    const row = await one<{ status: string; paid_paise: string }>(`select status, paid_paise::text from billing.invoice where id = $1`, [
+      inv.invoiceId,
+    ]);
+    // The record keeps what was paid; the credit note says it went back.
+    expect(row).toEqual({ status: 'void', paid_paise: String(total) });
+    expect(await count(`select count(*)::int as n from billing.credit_note where invoice_id = $1`, [inv.invoiceId])).toBe(1);
+    const a = await one<{ details: Record<string, unknown> }>(
+      `select details from admin.audit_event where action = 'invoice-voided' order by id desc limit 1`,
+    );
+    expect(a.details).toMatchObject({ number: inv.number, refundedPaise: total });
+    const listed = (await rpc<{ id: string; refundedPaise: number }[]>(db, aal2(finance), 'billing_invoices', {})).find(
+      (r) => r.id === inv.invoiceId,
+    );
+    expect(listed?.refundedPaise).toBe(total);
+  });
+
+  it('a part refund leaves money on the invoice, so it is not voided', async () => {
+    const { inv, payment, total } = await paidThroughLink(10_000, 'CF_close_part');
+    const asked = await refundAsk(payment, total - 100);
+    await service('billing_refund_result', { p_refund_id: asked.refundId, p_value: { status: 'SUCCESS', cfRefundId: '10' } });
+    await expect(voidIt(inv.invoiceId)).rejects.toThrow(/an invoice with money on it cannot be void/);
+    expect(await invoiceStatus(inv.invoiceId)).toBe('paid');
+  });
+});
+
 describe('a payment by hand and an open payment link', () => {
   const byHand = (invoiceId: string, amountPaise: number, reference: string, commit?: boolean) =>
     rpc<{ openLinks?: string[]; recorded?: boolean; invoiceStatus?: string }>(db, fresh(finance), 'billing_payment_record', {

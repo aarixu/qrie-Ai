@@ -205,6 +205,33 @@ describe('billing-api', () => {
   });
 });
 
+describe('correcting a payment by hand', () => {
+  it('paymentReverse is the owner\'s with a fresh code; the payment stays listed, marked reversed', async () => {
+    const r = await as(aal2(ops)).invoiceRaise({ orgId: school.org, description: 'Lab kit', amountPaise: 1000, reason: 'kit', env: 'TEST' });
+    const paid = await as(fresh(finance)).paymentRecord({
+      invoiceId: r.invoiceId,
+      source: 'cheque',
+      amountPaise: 1180,
+      receivedOn: new Date().toISOString().slice(0, 10),
+      reference: 'CHQ 9',
+      reason: 'paid by cheque',
+      env: 'TEST',
+    });
+    const err = await as(fresh(finance)).paymentReverse({ paymentId: paid.paymentId, reason: 'bounced', env: 'TEST' }).catch((e) => e);
+    expect(err).toBeInstanceOf(AdminError);
+    expect(err.code).toBe('not-allowed');
+    expect(await as(fresh(owner)).paymentReverse({ paymentId: paid.paymentId, reason: 'bounced', env: 'TEST' })).toEqual({
+      invoiceStatus: 'unpaid',
+      paidPaise: 0,
+      licenceStays: false,
+    });
+    const listed = (await as(aal2(finance)).payments(school.org)).find((p) => p.id === paid.paymentId);
+    expect(listed).toMatchObject({ reversedAs: 'Aarav', reversible: false });
+    expect(listed?.reversedAt).toMatch(/^\d{4}-\d{2}-\d{2}/);
+    expect((await as(aal2(finance)).invoice(r.invoiceId)).payments[0]).toMatchObject({ reversedAs: 'Aarav' });
+  });
+});
+
 describe('the finance role', () => {
   it('me() types a finance member', async () => {
     const me = await createAdminClient(pgliteAdminTransport(db, aal2(finance))).me();

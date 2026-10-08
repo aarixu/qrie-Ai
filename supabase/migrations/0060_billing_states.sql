@@ -158,7 +158,8 @@ select cron.schedule('billing-states', '40 18 * * *', $job$ select admin.billing
 -- ---------------------------------------------------------------------------
 
 -- Counts and sums only; no school is named. Collected is the counted
--- payments received this calendar month in India. Suspended counts suspended
+-- payments received this calendar month in India, less any the owner
+-- reversed (refunds are not taken off). Suspended counts suspended
 -- and ended schools (both have the tutor off). Renewals count licences other
 -- than pilots whose last day is within 30, 60 or 90 days from today.
 -- linksUnrecorded counts links Cashfree says were paid beyond the payments
@@ -179,7 +180,8 @@ begin
   select max(w.received_at) into last_webhook from billing.webhook_event w where w.signature_ok;
   return jsonb_build_object(
     'collectedThisMonthPaise', (select coalesce(sum(p.amount_paise), 0) from billing.payment p
-                                 where p.counted and p.received_on >= date_trunc('month', today)::date),
+                                 where p.counted and p.reversed_at is null
+                                   and p.received_on >= date_trunc('month', today)::date),
     'outstandingPaise', (select coalesce(sum(i.total_paise - i.paid_paise), 0) from billing.invoice i
                           where i.status in ('unpaid', 'partly_paid')),
     'overdue', (select jsonb_build_object('count', count(*), 'paise', coalesce(sum(i.total_paise - i.paid_paise), 0))

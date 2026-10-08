@@ -6,8 +6,9 @@ import { formatPaise } from './money.ts';
  *
  * Rights (spec section 3, ruling R9): the owner may do everything; ops read,
  * raise invoices (and set a school's billing account) and send links; finance
- * reads and records money received by hand; safety sees no billing. A button a
- * role may not use is not shown, and the database refuses it anyway.
+ * reads and records money received by hand; safety sees no billing. Reversing
+ * a payment by hand, refunds and voids are the owner's. A button a role may
+ * not use is not shown, and the database refuses it anyway.
  */
 
 export type StaffRole = 'owner' | 'ops' | 'safety' | 'finance';
@@ -17,6 +18,7 @@ export interface BillingRights {
   raise: boolean;
   sendLink: boolean;
   record: boolean;
+  reverse: boolean;
   refund: boolean;
   void: boolean;
   settings: boolean;
@@ -30,6 +32,7 @@ export function billingRights(role: StaffRole): BillingRights {
     raise: owner || role === 'ops',
     sendLink: owner || role === 'ops',
     record: owner || role === 'finance',
+    reverse: owner,
     refund: owner,
     void: owner,
     settings: owner,
@@ -63,15 +66,34 @@ export function invoiceTone(status: InvoiceStatus, dueOn: string, today: string)
   return { tone: late <= 14 ? 'warn' : 'bad', label: `${STATUS_LABEL[status]}, ${late} day${late === 1 ? '' : 's'} late` };
 }
 
+/**
+ * Void is offered only while no money is kept on the invoice: nothing paid, or
+ * all of it refunded (Cashfree reported SUCCESS), and nothing Cashfree reported
+ * paid is still unrecorded. The database checks the same, and also waits for
+ * any refund still pending.
+ */
+export function canVoid(i: InvoiceRow): boolean {
+  return i.status !== 'void' && i.paidPaise - i.refundedPaise <= 0 && i.unrecordedPaise === 0;
+}
+
 export function voidBlast(i: InvoiceRow): string {
   return [
     `Invoice ${i.number} is cancelled for good.`,
     'Its number stays used.',
+    i.paidPaise > 0 ? 'What was paid on it went back in full; its credit notes stand.' : '',
     i.openLink ? 'Its payment link is cancelled at Cashfree first.' : '',
     'The licence does not change.',
   ]
     .filter(Boolean)
     .join(' ');
+}
+
+export function reverseBlast(p: PaymentRow): string {
+  return [
+    `${formatPaise(p.amountPaise)} recorded by hand against ${p.invoiceNumber ?? 'its invoice'} stops counting; the payment stays listed, marked reversed.`,
+    'No money moves: if it was received and must go back, send it back by bank.',
+    "A licence it set stays; change it on the school's page if needed.",
+  ].join(' ');
 }
 
 export function refundBlast(p: PaymentRow, amountPaise: number): string {

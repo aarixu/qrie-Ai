@@ -282,12 +282,35 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
 - **"Cashfree is set to sandbox but this database is HOSTED; nothing was
   sent."** (or the reverse): the keys and `CASHFREE_ENV` do not match the
   database. Fix the secrets.
-- **Voiding a part-paid invoice is refused.** Refund what was paid, then void.
+- **A payment by hand was recorded by mistake** (the wrong invoice, the wrong
+  amount, a cheque that bounced). The owner reverses it: Payments (or the
+  school's Billing tab), Reverse, a fresh code and a reason. The payment stays
+  listed, marked reversed with your name and the day, and no longer counts;
+  the invoice's paid amount and status are worked out again, so a paid invoice
+  can go back to part paid or unpaid. No money moves: if the money really
+  arrived and must go back, send it back by bank yourself, outside Qrie (a
+  reversal issues no credit note; whether the CA wants one then is
+  UNVERIFIED). A licence the payment set stays as it is: change it on the
+  school's page if needed. If the money did arrive, record it again correctly;
+  the same UTR or cheque number can be used once the old one is reversed. A
+  payment through Cashfree is never reversed; it is refunded.
+- **Voiding an invoice that has money on it is refused** ("an invoice with
+  money on it cannot be void"). Refund each payment that came through Cashfree
+  in full (Payments, Refund) and wait until Cashfree reports the refund done
+  (its credit note appears on the invoice); reverse each payment recorded by
+  hand (above); then Void. A refund still requested or pending stops the void
+  ("a refund on this invoice is not finished yet"). A part refund leaves money
+  on the invoice, so it cannot be voided. The void keeps the invoice's number,
+  what was paid and its credit notes on record, cancels its subscription, and
+  does not change the licence.
 
 ### What billing will never do
 
 It never stores card or bank details (Cashfree's pages collect them); never
 deletes an invoice or a payment, or changes an issued invoice's number, amounts
-or tax, even with hand-written SQL; never changes a licence on a refund (change
-it on the school's page if needed); and never charges a mandate before plan 7.
+or tax, or a recorded payment's amount or reference, even with hand-written
+SQL (the one change a payment takes is being marked reversed, once, which the
+owner does from Payments); never
+changes a licence on a refund or a reversal (change it on the school's page if
+needed); and never charges a mandate before plan 7.
 No child appears anywhere in billing.
