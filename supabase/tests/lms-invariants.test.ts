@@ -79,6 +79,7 @@ describe('the lms schema', () => {
       'handed_in_with(p_key uuid, p_assignment uuid)',
       'is_guardian_of(p_student uuid)',
       'import_snapshot(p_org uuid)',
+      'import_refusal(p_org uuid)',
       'admin_school(p_user uuid)',
       'account_by_login(p_org uuid, p_login text)',
       'audit_by(p_org uuid, p_actor uuid, p_action text, p_target text, p_details jsonb)',
