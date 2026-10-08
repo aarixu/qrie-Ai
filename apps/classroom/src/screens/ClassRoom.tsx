@@ -29,12 +29,15 @@ import { resolveCrossQuestion, resolveSpokenAnswer } from '../lib/judge';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
 import {
+  answeredOutcomesAtBeat,
   outcomesOf,
   recordAnswerAtBeat,
   recordDoubtAtBeat,
   recordLessonTaught,
 } from '../stores/outcomes';
-import { masteryFromModel } from '../lib/learnerModel';
+import { loadModel, masteredFromModel, masteryFromModel } from '../lib/learnerModel';
+import { askHistory, askMastery, wrongOptionText } from '../lib/askHistory';
+import { currentSessionId } from '../stores/ledger';
 import { useClassLedger } from '../lib/classLedger';
 import { readWarmUpAnswer, warmUpFor, type WarmUpQuestion } from '../lib/warmUp';
 import { profileStore } from '../stores/profile';
@@ -562,6 +565,29 @@ export function ClassRoom({
   const rungAt = useRef(new Map<string, AssistanceRung>());
   /** Her recent fixed lines, so decide() never says the same one twice in a row. */
   const recentLines = useRef<string[]>([]);
+  /**
+   * Held questions this sitting where the student asked for help before giving
+   * any answer, and the ones she has already asked to try first on — so a
+   * child who keeps pulling the hint is asked for a try of their own, once
+   * per question (decide()'s `history.hintAbuse`, lib/askHistory.ts).
+   */
+  const pulledBeforeTrying = useRef(new Set<string>());
+  const askedToTryFirst = useRef(new Set<string>());
+  /**
+   * What the learner model knows about the held question's outcomes, for
+   * decide(): the weakest cold belief, and the history it reads (a wrong idea
+   * shown before, wheel-spinning, asking before trying). Read at the moment
+   * of deciding, so it carries every answer folded so far.
+   */
+  const pastFor = (beatId: string, more: { wrongOption?: string; pulledBeforeTrying?: number } = {}) => {
+    const model = loadModel();
+    const outcomeIds = answeredOutcomesAtBeat(lesson, beatId);
+    const mastery = askMastery(model, outcomeIds);
+    return {
+      ...(mastery ? { mastery } : {}),
+      history: askHistory({ model, outcomeIds, sessionId: currentSessionId(), ...more }),
+    };
+  };
 
   const [handoffState, setHandoffState] = useState<HandoffState>('PLAYING');
   const [textLines, setTextLines] = useState<TranscriptLine[]>([]);
@@ -792,6 +818,8 @@ export function ClassRoom({
         // would have fed it read the stale placement blob.
         nodeIds: outcomesOf(lesson),
         mastery: masteryFromModel(),
+        // "They already hold this" needs the mastery rule, not a high number.
+        mastered: masteredFromModel(),
         // What she remembers about them (lib/studentMemory.ts): interests,
         // hard topics, wins, past doubts, last class, their commitment.
         notes: memoryNotes(tutorLanguage()),
@@ -1203,6 +1231,8 @@ export function ClassRoom({
             attempt: (triesAt.current.get(heldAskBeat) ?? 0) + 1,
             rungSoFar: rungAt.current.get(heldAskBeat) ?? 0,
             ask,
+            // Silence is not asking before trying: no hint-abuse here.
+            ...pastFor(heldAskBeat),
             lang: tutorLanguage(),
             now: Date.now(),
             recentLines: recentLines.current,
@@ -1250,16 +1280,25 @@ export function ClassRoom({
             asksForHint(heard.text, { afterOffer: offeredHint, answers: (ask.options ?? []).map((o) => o.text) }))
         ) {
           offeredHint = false;
+          const beforeAnyAnswer = (triesAt.current.get(heldAskBeat) ?? 0) === 0;
           const help = decide({
             // "Phir se samjhao" is asking for another way to see it (H4).
             verdict: explainAsked ? 'explainRequest' : 'hintRequest',
             attempt: (triesAt.current.get(heldAskBeat) ?? 0) + 1,
             rungSoFar: rungAt.current.get(heldAskBeat) ?? 0,
             ask,
+            // Asked to try first once on a question, never again on it.
+            ...pastFor(heldAskBeat, {
+              pulledBeforeTrying: askedToTryFirst.current.has(heldAskBeat)
+                ? 0
+                : [...pulledBeforeTrying.current].filter((beat) => beat !== heldAskBeat).length,
+            }),
             lang: tutorLanguage(),
             now: Date.now(),
             recentLines: recentLines.current,
           });
+          if (help.strategy === 'tryFirst') askedToTryFirst.current.add(heldAskBeat);
+          else if (beforeAnyAnswer && help.helped !== null) pulledBeforeTrying.current.add(heldAskBeat);
           rungAt.current.set(heldAskBeat, help.rung);
           if (help.helped !== null) ledger.helped(heldAskBeat, help.helped, true, help.strategy);
           followUpOpen.current = null;
@@ -1388,6 +1427,10 @@ export function ClassRoom({
             correct: judged.verdict === 'right',
             surface: heard.by,
             verdict: judged.verdict,
+            // The wrong idea their words matched, in the lesson's own words
+            // (a why-probe distractor is the misconception as a student would
+            // say it), so the learner model can see it come back (Task 6).
+            misconceptionId: judged.verdict === 'wrong' ? wrongOptionText(ask, resolved.matched) : undefined,
             // THE SCREENED WORDS, never `heard.text`. The screen had already
             // found and removed whatever a child should not have had to put in
             // an answer — and then this line wrote the original down anyway,
@@ -1435,6 +1478,9 @@ export function ClassRoom({
             // Which option their words were, so a named misconception gets
             // its own follow-up question (C7) rather than the generic rethink.
             ...(resolved.matched !== undefined ? { matchedOption: resolved.matched } : {}),
+            // A wrong idea they have shown before, or an outcome they keep
+            // missing cold, changes the move (Task 6).
+            ...pastFor(heldAskBeat, { wrongOption: wrongOptionText(ask, resolved.matched) }),
             lang: tutorLanguage(),
             now: Date.now(),
             recentLines: recentLines.current,

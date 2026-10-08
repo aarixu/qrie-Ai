@@ -24,6 +24,7 @@ async function open(): Promise<HTMLElement> {
       <MemoryRouter initialEntries={['/complete/l1']}>
         <Routes>
           <Route path="/complete/:lessonId" element={<LessonComplete />} />
+          <Route path="/quiz/:lessonId" element={<p>quiz page for lesson-a</p>} />
         </Routes>
       </MemoryRouter>,
     );
@@ -49,6 +50,21 @@ describe('the finished class, with a review due', () => {
     expect(host.textContent).toContain('Quick review first');
     expect(host.textContent).toContain('Outcome A');
     expect(host.textContent).not.toContain('Next lesson in');
+  });
+
+  /** Task 6 (MF8): the two new kinds each get their card, and its button goes where it says. */
+  it.each([
+    ['remedial', "Let's fix this first: Outcome A. It tripped you up last time.", 'Fix it now'],
+    ['check-prerequisite', 'Quick check first: Outcome A. It helps with what you missed.', 'Check it'],
+  ])('shows a %s card with a working button, and does not autoplay', async (kind, line, button) => {
+    due.value = { kind, titles: ['Outcome A'], route: '/quiz/lesson-a', because: 'model' };
+    const host = await open();
+    expect(host.textContent).toContain(line);
+    expect(host.textContent).not.toContain('Next lesson in');
+    const go = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes(button));
+    expect(go, button).toBeDefined();
+    await act(async () => go!.click());
+    expect(host.textContent).toContain('quiz page for lesson-a');
   });
 
   it('autoplays the next lesson when nothing is due', async () => {

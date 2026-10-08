@@ -24,7 +24,7 @@ import { profileStore } from '../stores/profile';
 import { progressStore } from '../stores/progress';
 import { outcomeStore } from '../stores/outcomes';
 import { createOutcomeLookup } from '../lib/outcomeLookup';
-import { masteryFromModel, settled } from '../lib/learnerModel';
+import { masteredFromModel, masteryFromModel, settled } from '../lib/learnerModel';
 import { studentLinesForPlanner } from '../lib/student';
 import { outcomesForTopic } from '../lib/topicOutcomes';
 import { lastClassBefore } from '../lib/lastClass';
@@ -727,6 +727,8 @@ export function LiveClassRoute() {
       await settled();
       const studentLines = studentLinesForPlanner({
         mastery: masteryFromModel(),
+        // "They hold securely" needs the mastery rule, not a high number.
+        mastered: masteredFromModel(),
         profile: profileStore.get(),
         progress: progressStore.get(),
         outcomes: outcomeStore.get(),

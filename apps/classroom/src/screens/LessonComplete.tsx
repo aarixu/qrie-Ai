@@ -27,6 +27,41 @@ import type { BeforeNext } from '../lib/nextStep';
  */
 const AUTOPLAY_SECONDS = 5;
 
+/**
+ * The card for each thing `beforeNext` can put ahead of the next lesson. The
+ * button opens the first outcome; for a review or a fix the rest come round on
+ * the same ladder. "It tripped you up" is said only of a remedial outcome,
+ * which `nextActivity` gives only for a wrong idea shown more than once or a
+ * failed cold answer.
+ */
+const BEFORE_CARD: Record<BeforeNext['kind'], { heading: string; line: (titles: string[]) => string; button: string; icon: string }> = {
+  remedial: {
+    heading: 'Fix this first',
+    line: (titles) => `Let's fix this first: ${titles[0]}. It tripped you up last time.`,
+    button: 'Fix it now',
+    icon: 'restart_alt',
+  },
+  review: {
+    heading: 'Quick review first',
+    line: (titles) =>
+      `Time to bring back ${titles[0]}${titles.length > 1 ? ` (and ${titles.length - 1} more)` : ''}. A few questions now keeps it for weeks.`,
+    button: 'Review now',
+    icon: 'history',
+  },
+  prerequisite: {
+    heading: 'Strengthen this first',
+    line: (titles) => `The next lesson builds on ${titles[0]}. Let's make it solid first.`,
+    button: 'Practise it',
+    icon: 'foundation',
+  },
+  'check-prerequisite': {
+    heading: 'Quick check first',
+    line: (titles) => `Quick check first: ${titles[0]}. It helps with what you missed.`,
+    button: 'Check it',
+    icon: 'my_location',
+  },
+};
+
 export function LessonComplete() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
@@ -39,11 +74,13 @@ export function LessonComplete() {
   const [entry, setEntry] = useState<CatalogEntry | null>(null);
   const [next, setNext] = useState<CatalogEntry | null>(null);
   /**
-   * WHAT COMES BEFORE THE NEXT LESSON (E6-E8/F5): a review that is due, or a
-   * shaky prerequisite of what comes next — the learner model's call
-   * (`nextActivity`), not syllabus order. While one stands, the next lesson
-   * does not autoplay: the plan's rule is never syllabus order while a review
-   * is due. Loaded with the map, lazily, as lib/learnerModel.ts does.
+   * WHAT COMES BEFORE THE NEXT LESSON (E6-E8/F5): something that went wrong
+   * and is not put right yet, a review that is due, a shaky prerequisite of
+   * what comes next, or an untested one under an outcome they keep missing —
+   * the learner model's call (`nextActivity`), not syllabus order. While one
+   * stands, the next lesson does not autoplay: the plan's rule is never
+   * syllabus order while a review is due. Loaded with the map, lazily, as
+   * lib/learnerModel.ts does.
    */
   const [before, setBefore] = useState<BeforeNext | null>(null);
   useEffect(() => {
@@ -161,18 +198,11 @@ export function LessonComplete() {
         <div className="grid gap-3 w-full mt-2">
           {before && (
             <div className="w-full rounded-xl bg-tertiary-container text-on-tertiary-container px-4 py-3 shadow-sm text-left">
-              <p className="font-label-md text-label-md mb-1">
-                {before.kind === 'review' ? 'Quick review first' : 'Strengthen this first'}
-              </p>
-              <p className="font-body-md text-body-md mb-3">
-                {before.kind === 'review'
-                  ? // The button opens the first; the rest come round on the same ladder.
-                    `Time to bring back ${before.titles[0]}${before.titles.length > 1 ? ` (and ${before.titles.length - 1} more)` : ''}. A few questions now keeps it for weeks.`
-                  : `The next lesson builds on ${before.titles[0]}. Let's make it solid first.`}
-              </p>
+              <p className="font-label-md text-label-md mb-1">{BEFORE_CARD[before.kind].heading}</p>
+              <p className="font-body-md text-body-md mb-3">{BEFORE_CARD[before.kind].line(before.titles)}</p>
               <button onClick={() => navigate(before.route)} className={primary}>
-                <Icon name={before.kind === 'review' ? 'history' : 'foundation'} filled />
-                {before.kind === 'review' ? 'Review now' : 'Practise it'}
+                <Icon name={BEFORE_CARD[before.kind].icon} filled />
+                {BEFORE_CARD[before.kind].button}
               </button>
             </div>
           )}

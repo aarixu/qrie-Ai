@@ -107,11 +107,37 @@ describe('what the planner is told', () => {
       progress: { lessons: {}, lastLessonId: null },
       outcomes: none,
       mastery: { 'out.chambers': 0.9, 'out.valves': 0.2, 'out.middling': 0.6 },
+      mastered: new Set(['out.chambers']),
       statement: (id) => statements[id] ?? (id === 'out.middling' ? 'something middling' : undefined),
     });
     expect(lines.some((l) => l.startsWith('They hold securely') && l.includes('four chambers'))).toBe(true);
     expect(lines.some((l) => l.startsWith('The ground is shaky') && l.includes('valves'))).toBe(true);
     expect(lines.join(' ')).not.toContain('middling');
+  });
+
+  /**
+   * lam-one-brain Task 6 (D24): "they hold securely" is a claim the mastery
+   * rule makes (`masteredAt`), not a high number. One lucky cold answer lifts
+   * belief past the line and has not earned it.
+   */
+  it('does not tell the planner they hold what they have not mastered', () => {
+    const lines = studentLinesForPlanner({
+      profile: profile(),
+      progress: { lessons: {}, lastLessonId: null },
+      outcomes: none,
+      mastery: { 'out.chambers': 0.9 },
+      statement: (id) => statements[id],
+    });
+    expect(lines.some((l) => l.startsWith('They hold securely'))).toBe(false);
+    const mastered = studentLinesForPlanner({
+      profile: profile(),
+      progress: { lessons: {}, lastLessonId: null },
+      outcomes: none,
+      mastery: { 'out.chambers': 0.9 },
+      mastered: new Set(['out.chambers']),
+      statement: (id) => statements[id],
+    });
+    expect(mastered.some((l) => l.startsWith('They hold securely'))).toBe(true);
   });
 
   /**

@@ -22,16 +22,17 @@
  * the same way: no model call, no clock of its own, no randomness, no I/O.
  */
 
-export { FAST_WRONG_MS, decide } from './decide.ts';
+export { FAST_WRONG_MS, decide, matchedOption } from './decide.ts';
 export { asksForHint, asksToExplainAgain } from './hintRequest.ts';
 export { leakTokens, leaks } from './leak.ts';
-export { FRAMES, LINES } from './lines.ts';
+export { FRAMES, LINES, RECOGNISE } from './lines.ts';
 export { recordsFor, type ActionRecord } from './records.ts';
 export type {
   Action,
   ActionKind,
   AskInput,
   BoardIntent,
+  DecideHistory,
   DecideInput,
   ErrorClass,
   TutorLanguage,

@@ -87,6 +87,23 @@ const haveAGo: Fixed = {
   ],
 };
 
+/**
+ * A hint (or another explanation) asked for before any try, from a child who
+ * keeps asking before trying (`DecideInput.history.hintAbuse`): a try of their
+ * own first. Not help, and not a refusal — the help comes once they have had a
+ * go. Says why it is asking, so it reads as belief in them, not as a rule.
+ */
+const tryFirst: Fixed = {
+  en: [
+    "Have a go on your own first — you know more than you think. If you're still stuck after that, I'll help.",
+    "Try it yourself first, even just a first step. Then I'll give you a hint if you need it.",
+  ],
+  'hi-en': [
+    'Pehle khud try karo — tumhe jitna lagta hai usse zyada aata hai. Phir bhi atke toh main help karungi.',
+    'Pehle apne aap try karo, bas pehla step hi sahi. Zarurat padi toh phir hint doongi.',
+  ],
+};
+
 /** The judge could not tell what they said. Not help, not a verdict. */
 const sayAgain: Fixed = {
   en: [
@@ -202,8 +219,33 @@ const reveal: Framed = {
   'hi-en': [(a) => `Chalo, saath mein dekhte hain. Answer hai: ${a}`, (a) => `Dekho, answer yeh hai: ${a}`],
 };
 
+/**
+ * RECOGNITION: SHE REMEMBERS (lam-one-brain Task 6, review SF11).
+ *
+ * The opening of a move `decide()` makes BECAUSE of the learner's history, put
+ * in front of that move's own framed line. Only those moves open with one, so
+ * a child hears "this tripped you up before" only when the record says so.
+ *
+ *   - `idea`: the wrong idea in their answer is one they have shown before
+ *     (`history.repeatedMisconception`), so she explains it another way;
+ *   - `stuck`: this outcome keeps going wrong when they answer it on their own
+ *     (`history.wheelSpin`), so she works a similar question with them first.
+ */
+const recogniseIdea: Fixed = {
+  en: ['This tripped you up last time too.', 'I remember this idea caught you before.'],
+  'hi-en': ['Yeh pichhli baar bhi atka tha.', 'Yaad hai, is idea pe pehle bhi confusion hua tha.'],
+};
+
+const recogniseStuck: Fixed = {
+  en: ['This topic has been tough for you lately.', 'This has been a hard topic for you so far.'],
+  'hi-en': ['Yeh topic abhi tak thoda mushkil raha hai tumhare liye.', 'Is topic pe tum kaafi baar atke ho.'],
+};
+
+export const RECOGNISE = { idea: recogniseIdea, stuck: recogniseStuck } as const;
+
 export const LINES = {
   rethink,
+  tryFirst,
   reread,
   nudge,
   haveAGo,

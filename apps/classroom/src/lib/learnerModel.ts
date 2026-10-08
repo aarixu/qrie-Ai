@@ -54,6 +54,20 @@ export const loadModel = (): LearnerModel => modelStore.get();
 export const masteryFromModel = (): Mastery => unassistedView(modelStore.get());
 
 /**
+ * The outcomes the mastery rule holds for right now (`masteredAt`, B8): cold
+ * right answers on two distinct items a day apart, not taken away since. What
+ * a decision needs before it may say a student already holds something — a
+ * high `masteryFromModel()` alone can be one lucky answer (lam-one-brain
+ * Task 6). Read by the persona's student context and the planner's lines.
+ */
+export const masteredFromModel = (): ReadonlySet<string> =>
+  new Set(
+    Object.values(modelStore.get().states)
+      .filter((s) => s.masteredAt !== null)
+      .map((s) => s.outcomeId),
+  );
+
+/**
  * The blended belief, cold and hinted together, for DISPLAY only — a progress
  * picture, never an input to a decision. See `masteryView`.
  */

@@ -67,6 +67,12 @@ export interface DecideInput {
    * 0.5. Read only to decide a retest after a cold right answer.
    */
   mastery?: { unassisted?: number; assisted?: number };
+  /**
+   * What this learner's earlier evidence says about this ask, if the caller
+   * has it (`DecideHistory`). Absent, or with no field set, the ladder is
+   * exactly what it is without it.
+   */
+  history?: DecideHistory;
   lang: TutorLanguage;
   /**
    * The caller's clock, in ms. Injected — `decide()` never reads one — and
@@ -86,6 +92,37 @@ export interface DecideInput {
    * `now`.
    */
   timing?: { askedAt: number; rules?: boolean };
+}
+
+/**
+ * WHAT THE LEARNER'S HISTORY SAYS ABOUT THIS ASK (lam-one-brain Task 6).
+ *
+ * Worked out by the caller from the learner model and the sitting; `decide()`
+ * stays pure and only reads it. Each field changes one move:
+ *
+ *   - `repeatedMisconception` — on a wrong answer that matched a wrong option,
+ *     the wrong idea that option names, which this learner has shown before
+ *     (on this ask's outcome, outside this answer). Instead of "look again"
+ *     or the follow-up question, another way to explain it (L7), where one is
+ *     authored. Only `because` carries the label; it is never spoken.
+ *   - `wheelSpin` — this ask's outcome keeps going wrong when they answer it
+ *     on their own, with no cold right answer yet. On a wrong answer, a worked
+ *     example (L5) first, else another way to explain it (L7). Stepping back
+ *     to the prerequisite is the next activity's move (learner-model
+ *     `nextActivity`), not this one's.
+ *   - `hintAbuse` — they keep asking for help before trying. A hint or another
+ *     explanation asked for before any answer on this ask is met with a
+ *     request for a try of their own first, and no help is filed. The caller
+ *     passes it on a request the child made, never on silence, and at most
+ *     once per ask: after that the help comes.
+ *
+ * Each of these moves opens with a fixed recognition phrase (`RECOGNISE`, or
+ * the `tryFirst` line itself), and no other move does.
+ */
+export interface DecideHistory {
+  repeatedMisconception?: string;
+  wheelSpin?: boolean;
+  hintAbuse?: boolean;
 }
 
 export type ActionKind =

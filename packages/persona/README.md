@@ -46,6 +46,7 @@ type Attendance = { kind: 'streak'; days: number } | { kind: 'returning'; daysAw
 interface StudentContext {
   klass: Klass                    // required — every student has one
   mastery?: number                // 0..1 belief for the node being taught now
+  mastered?: boolean              // the mastery rule (masteredAt) holds for it; "they hold it" needs this too
   namedMisconception?: string     // the wrong idea the failed probe revealed
   doubtCount?: number             // hands raised in THIS lesson
   lastAnswer?: AnswerSignal       // how the last check question went
@@ -174,7 +175,7 @@ HOW TO SPEAK — VOICE | TEXT | NARRATION
 | have a different name or self-description | `TUTOR.name` / `.role` / `.voice` in `src/traits.ts` | One constant; every surface picks it up on the next call |
 | speak with a different synthesised voice | `TUTOR.speechVoiceName` in `src/traits.ts` | The recording and the live doubt read the same field, so they cannot drift into two teachers. Changing it changes both sides at once — and re-records nothing, so cached narration audio must be regenerated |
 | commit to something new (or stop) | `TUTOR.values` / `TUTOR.neverDoes` in `src/traits.ts` | Values are positive commitments, neverDoes are prohibitions. Tests fail if the same behaviour appears in both, or if a banned phrase is used elsewhere in the package |
-| push harder / go gentler on a strong student | `MASTERY_SECURE` in `src/factors.ts` | The single band boundary for "they hold this" |
+| push harder / go gentler on a strong student | `MASTERY_SECURE` in `src/factors.ts` | The belief boundary for "they hold this"; the learner model's mastery rule (`mastered`) must hold as well |
 | rebuild prerequisites sooner | `MASTERY_SHAKY` in `src/factors.ts` | Set below the knowledge graph's `GAP_THRESHOLD` so borderline nodes get consolidated, not rebuilt |
 | notice a struggling lesson earlier | `DOUBT_PACE_THRESHOLD` in `src/factors.ts` | Hands raised before the pace itself is treated as the problem |
 | change what "slow answer" means | `SLOW_ANSWER_MS` in `src/factors.ts` | Kept equal to the knowledge graph's slow-answer boundary so the two never disagree |

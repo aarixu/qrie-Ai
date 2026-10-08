@@ -57,6 +57,13 @@ export function buildStudentContext(input: {
    * help is absent, so it never lifts the persona's mastery reading.
    */
   mastery?: Mastery;
+  /**
+   * The outcomes the learner model's mastery rule holds for (`masteredAt`,
+   * B8): the caller passes `masteredFromModel()`. Only when every node this
+   * lesson teaches is in it may she say they already hold it; absent, nothing
+   * is mastered (lam-one-brain Task 6, D24).
+   */
+  mastered?: ReadonlySet<string>;
   /** What she remembers about them, as private notes (lib/studentMemory.ts `memoryNotes`). */
   notes?: readonly string[];
   today?: Date;
@@ -77,6 +84,12 @@ export function buildStudentContext(input: {
 
   const mastery = masteryForLesson(input.mastery ?? null, input.nodeIds ?? []);
   if (mastery !== undefined) ctx.mastery = mastery;
+  // Only beside a belief, and only when the rule holds for every node taught:
+  // the persona reads it as the second half of "they hold it".
+  const nodes = input.nodeIds ?? [];
+  if (mastery !== undefined && nodes.length > 0 && nodes.every((id) => input.mastered?.has(id) === true)) {
+    ctx.mastered = true;
+  }
 
   if (input.notes && input.notes.length > 0) ctx.notes = [...input.notes];
 
@@ -134,6 +147,13 @@ export function studentLinesForPlanner(input: {
    */
   mastery: Mastery;
   /**
+   * The outcomes the mastery rule holds for (`masteredAt`, B8): the caller
+   * passes `masteredFromModel()`. "They hold securely" needs this as well as a
+   * high belief, since one lucky cold answer can reach the number (lam-one-brain
+   * Task 6, D24). Absent, nothing is said to be held.
+   */
+  mastered?: ReadonlySet<string>;
+  /**
    * The class they last finished, if any — the one thing the app can honestly
    * say it remembers about the last time these two met.
    */
@@ -174,7 +194,7 @@ export function studentLinesForPlanner(input: {
   const beliefs = Object.entries(input.mastery);
   if (beliefs.length > 0) {
     const strong = beliefs
-      .filter(([, b]) => b >= 0.75)
+      .filter(([id, b]) => b >= 0.75 && input.mastered?.has(id) === true)
       .sort((a, b) => b[1] - a[1])
       .map(([id]) => input.statement(id))
       .filter((s): s is string => s !== undefined)

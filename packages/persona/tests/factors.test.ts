@@ -59,8 +59,25 @@ describe('describeFactors', () => {
 
   describe('mastery bands', () => {
     it('stretches a student who already holds the outcome', () => {
-      const line = describeFactors({ ...base, mastery: MASTERY_SECURE })[1];
+      const line = describeFactors({ ...base, mastery: MASTERY_SECURE, mastered: true })[1];
       expect(line).toContain('stretch question');
+    });
+
+    /**
+     * lam-one-brain Task 6 (D24): a high number is not holding it. One lucky
+     * cold answer can lift belief past the line; only the mastery rule
+     * (`masteredAt`: two distinct items, a day apart) says they hold it.
+     */
+    it('does not say they hold it on a high belief alone', () => {
+      for (const mastered of [undefined, false]) {
+        const line = describeFactors({ ...base, mastery: 0.95, mastered })[1];
+        expect(line).not.toContain('already hold');
+        expect(line).toContain('unsettled');
+      }
+    });
+
+    it('says nothing from `mastered` alone, with no belief to read', () => {
+      expect(describeFactors({ ...base, mastered: true })).toHaveLength(1);
     });
 
     it('drops to the prerequisite when the ground is missing', () => {
@@ -159,6 +176,7 @@ describe('FACTORS catalogue', () => {
     expect(keys).toEqual([
       'klass',
       'mastery',
+      'mastered',
       'namedMisconception',
       'doubtCount',
       'lastAnswer',

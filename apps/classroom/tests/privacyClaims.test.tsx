@@ -299,6 +299,7 @@ describe('what /privacy says Google Vertex AI receives', () => {
         answeredRight: { 'o.right': 1 },
       },
       mastery: { 'o.strong': 0.9, 'o.shaky': 0.2 },
+      mastered: new Set(['o.strong']),
       statement: (id) => `the idea called ${id}`,
       lastClass: { title: 'Life processes', daysAgo: 3 },
       today,
@@ -326,6 +327,7 @@ describe('what /privacy says Google Vertex AI receives', () => {
     attendance: /how many days in a row you have studied/i,
     doubtCount: /how many times you have raised a hand/i,
     mastery: /how well you seem to know/i,
+    mastered: /how well you seem to know/i,
   };
 
   it('owns up to every field the doubt tutor is told about the student', () => {
@@ -337,6 +339,7 @@ describe('what /privacy says Google Vertex AI receives', () => {
       lessonId: 'L',
       nodeIds: ['o.strong'],
       mastery: { 'o.strong': 0.9 },
+      mastered: new Set(['o.strong']),
       today,
     });
     expect(context).not.toBeNull();

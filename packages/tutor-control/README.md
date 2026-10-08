@@ -20,6 +20,12 @@ controller (T1.9).
   the ladder. Unclear → "say that again", no help. A hint request climbs to L3 and no
   further. A verdict that its own matched option contradicts → "say that again", never
   praise.
+- **History (lam-one-brain Task 6).** An optional `history` the caller works out from the
+  learner model changes three moves, each opened by a fixed recognition phrase
+  (`RECOGNISE`): a wrong idea shown before gets another way to explain it (L7) instead of
+  "look again"; an outcome missed cold again and again gets a worked example (L5) first;
+  help asked for before any try, by a child who keeps doing that, gets "try it yourself
+  first" with no help filed. With no history the ladder is unchanged.
 - **Lines.** Every `say` is a fixed persona line (`src/lines.ts`, English and Hinglish in
   Roman script) or authored content framed by one. The newest line spoken is never
   chosen again.

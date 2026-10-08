@@ -33,6 +33,34 @@ describe('before the next lesson (E6-E8)', () => {
     expect(step).toMatchObject({ kind: 'review', titles: ['Outcome A'], route: '/quiz/lesson-a' });
   });
 
+  it('sends a confirmed wrong idea to its practice as remedial (Task 6, MF8)', async () => {
+    learnerModelStore.set({
+      ...emptyModel(),
+      states: {
+        a: {
+          ...emptyConceptState('a'),
+          misconceptions: {
+            'adds the bottoms': {
+              label: 'adds the bottoms', count: 2, items: ['probe:p1', 'probe:p2'], sittings: ['s1'],
+              firstAt: '2026-09-27T10:00:00.000Z', lastAt: '2026-09-28T10:00:00.000Z', clearedAt: null, clearing: [],
+            },
+          },
+        },
+      },
+    });
+    const step = await beforeNext({ index, done: entry('lesson-x', 'x/ch/x'), next: entry('lesson-d', 'x/ch/d'), now: new Date('2026-09-29T10:00:00Z') });
+    expect(step).toMatchObject({ kind: 'remedial', titles: ['Outcome A'], route: '/quiz/lesson-a' });
+  });
+
+  it('sends an unexamined prerequisite of an outcome missed cold twice to be checked (Task 6, MF8)', async () => {
+    learnerModelStore.set({
+      ...emptyModel(),
+      states: { d: { ...emptyConceptState('d'), unassistedObservations: 2, unassistedMastery: 0.2 } },
+    });
+    const step = await beforeNext({ index, done: entry('lesson-d', 'x/ch/d'), next: null, now: new Date('2026-09-29T10:00:00Z') });
+    expect(step).toMatchObject({ kind: 'check-prerequisite', titles: ['Outcome A'], route: '/quiz/lesson-a' });
+  });
+
   it('says nothing when nothing is due and nothing it rests on is shaky', async () => {
     learnerModelStore.set(emptyModel());
     expect(await beforeNext({ index, done: null, next: entry('lesson-d', 'x/ch/d') })).toBeNull();

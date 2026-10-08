@@ -2,8 +2,8 @@ import { GAP_THRESHOLD } from '@ai-tutor/knowledge-graph';
 import type { AssistanceRung } from '@ai-tutor/ledger';
 import type { AskOption } from '@ai-tutor/lesson-format';
 import { leaks } from './leak.ts';
-import { FRAMES, LINES } from './lines.ts';
-import type { Action, ActionKind, AskInput, DecideInput, ErrorClass } from './types.ts';
+import { FRAMES, LINES, RECOGNISE } from './lines.ts';
+import type { Action, ActionKind, AskInput, DecideInput, ErrorClass, TutorLanguage } from './types.ts';
 
 /**
  * A wrong answer faster than this counts as "fast" — for the response-time
@@ -56,6 +56,17 @@ export const FAST_WRONG_MS = 3000;
  *
  * Attempt 2 or later counts as at least L1 (B4): they have been told the
  * first answer was not it.
+ *
+ * THE LEARNER'S HISTORY (`input.history`, lam-one-brain Task 6), when the
+ * caller passes it, changes three moves and opens each with a fixed
+ * recognition phrase:
+ *   - a wrong answer showing a wrong idea they have shown before → another way
+ *     to explain it (L7) instead of the rethink or follow-up, where authored;
+ *   - a wrong answer on an outcome they keep missing cold → a worked example
+ *     (L5), else another way to explain it (L7), where authored;
+ *   - help asked for before any try, from a child who keeps asking before
+ *     trying → a try of their own first, with no help given or filed.
+ * With nothing authored for the move, or no history, the ladder above.
  */
 export function decide(input: DecideInput): Action {
   const floor = floorRung(input.rungSoFar, input.attempt);
@@ -121,9 +132,9 @@ export function decide(input: DecideInput): Action {
         because: `${ctx.head}: nothing usable was heard; ask again, no help given, no evidence`,
       });
     case 'hintRequest':
-      return onHintRequest(ctx);
+      return tryFirst(ctx) ?? onHintRequest(ctx);
     case 'explainRequest':
-      return onExplainRequest(ctx);
+      return tryFirst(ctx) ?? onExplainRequest(ctx);
   }
 }
 
@@ -194,6 +205,9 @@ function onWrong(ctx: Ctx): Action {
     });
   }
 
+  const recalled = fromHistory(ctx);
+  if (recalled) return recalled;
+
   if (floor < 1) {
     // A named misconception gets its own diagnostic question first (C7): the
     // tutor finds out WHY before she corrects anything. Never one that leaks.
@@ -226,16 +240,7 @@ function onWrong(ctx: Ctx): Action {
 
   if (floor < 5) {
     const worked = usableWorkedExample(ctx);
-    if ('say' in worked) {
-      return act(ctx, {
-        kind: 'workedExample',
-        rung: 5,
-        helped: 5,
-        lines: FRAMES.workedExample[input.lang].map((frame) => frame(worked.say)),
-        boardIntent: { kind: 'writeInWorkArea', text: worked.lines },
-        because: withSkips(`${ctx.head}: worked example (L5)`, skipped),
-      });
-    }
+    if ('say' in worked) return workedAction(ctx, worked, withSkips(`${ctx.head}: worked example (L5)`, skipped));
     skipped.push(`no usable worked example: ${worked.reason}`);
   }
 
@@ -247,6 +252,98 @@ function onWrong(ctx: Ctx): Action {
   }
 
   return revealOrMoveOn(ctx, skipped);
+}
+
+/**
+ * The move the learner's history calls for on a wrong answer, or undefined for
+ * the ordinary ladder. Never below the rung already in force: a wrong idea
+ * shown before gets L7 only while the floor is under it, spinning gets L5 only
+ * while the floor is under that (else L7).
+ */
+function fromHistory(ctx: Ctx): Action | undefined {
+  const { input, floor } = ctx;
+  const history = input.history;
+  if (!history) return undefined;
+
+  const idea = history.repeatedMisconception?.trim();
+  if (idea && ctx.matched !== undefined && ctx.matched.correct !== true && floor < 7) {
+    const alt = usableAlternate(ctx);
+    if ('say' in alt) {
+      return explainAction(
+        ctx,
+        alt,
+        `${ctx.head}: a wrong idea they have shown before ("${idea}", from their history); another way to explain it (L7, ${alt.mode}) instead of looking again`,
+        false,
+        7,
+        RECOGNISE.idea,
+      );
+    }
+  }
+
+  if (history.wheelSpin === true && floor < 5) {
+    const worked = usableWorkedExample(ctx);
+    if ('say' in worked) {
+      return workedAction(
+        ctx,
+        worked,
+        `${ctx.head}: this outcome keeps going wrong when answered alone (wheel-spinning, from their history); a worked example (L5) first`,
+        RECOGNISE.stuck,
+      );
+    }
+    const alt = usableAlternate(ctx);
+    if ('say' in alt) {
+      return explainAction(
+        ctx,
+        alt,
+        `${ctx.head}: this outcome keeps going wrong when answered alone (wheel-spinning, from their history), and no worked example is usable (${worked.reason}); another way to explain it (L7, ${alt.mode})`,
+        false,
+        7,
+        RECOGNISE.stuck,
+      );
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Help asked for before any try on this ask (the floor still L0), by a child
+ * the caller says keeps asking before trying: a try of their own first. No
+ * help is given, so none is filed and the next answer is still cold.
+ */
+function tryFirst(ctx: Ctx): Action | undefined {
+  if (ctx.input.history?.hintAbuse !== true || ctx.floor !== 0) return undefined;
+  return act(ctx, {
+    kind: 'nudge',
+    strategy: 'tryFirst',
+    rung: ctx.floor,
+    helped: null,
+    requested: true,
+    lines: LINES.tryFirst[ctx.input.lang],
+    because: `${ctx.head}: help asked for before any try, by a learner who keeps asking before trying (from their history); a try of their own first, no help given`,
+  });
+}
+
+/** Each fixed recognition opener in front of each framed line: the history-driven version of a move. */
+function recognised(openers: Record<TutorLanguage, readonly string[]> | undefined, lang: TutorLanguage, lines: readonly string[]): readonly string[] {
+  if (!openers) return lines;
+  return openers[lang].flatMap((opener) => lines.map((line) => `${opener} ${line}`));
+}
+
+function workedAction(
+  ctx: Ctx,
+  worked: { say: string; lines: string },
+  because: string,
+  openers?: Record<TutorLanguage, readonly string[]>,
+): Action {
+  const lang = ctx.input.lang;
+  return act(ctx, {
+    kind: 'workedExample',
+    rung: 5,
+    helped: 5,
+    lines: recognised(openers, lang, FRAMES.workedExample[lang].map((frame) => frame(worked.say))),
+    boardIntent: { kind: 'writeInWorkArea', text: worked.lines },
+    because,
+  });
 }
 
 /**
@@ -271,14 +368,16 @@ function explainAction(
   because: string,
   requested: boolean,
   rung: AssistanceRung,
+  openers?: Record<TutorLanguage, readonly string[]>,
 ): Action {
+  const lang = ctx.input.lang;
   return act(ctx, {
     kind: 'explainAgain',
     strategy: alt.mode,
     rung,
     helped: 7,
     requested,
-    lines: FRAMES.explainAgain[ctx.input.lang].map((frame) => frame(alt.say)),
+    lines: recognised(openers, lang, FRAMES.explainAgain[lang].map((frame) => frame(alt.say))),
     ...(alt.line ? { boardIntent: { kind: 'writeInWorkArea' as const, text: alt.line } } : {}),
     because,
   });
@@ -477,6 +576,15 @@ function followUpFor(ask: AskInput, matched: AskOption | undefined): string | un
   const key = matched.text.trim().toLowerCase();
   const twin = ask.whyProbe?.options.find((o) => o.correct !== true && o.text.trim().toLowerCase() === key);
   return twin?.followUp?.trim() || undefined;
+}
+
+/**
+ * The option a `matchedOption` index names, read exactly as `decide()` reads
+ * it: in the shown options, else the why-probe's. Exported so a caller working
+ * out `history` names the same option `decide()` will.
+ */
+export function matchedOption(ask: AskInput, index: number | undefined): AskOption | undefined {
+  return optionAt(optionsOf(ask), index);
 }
 
 /** The options the judge matched against: shown ones, else the why-probe's. */

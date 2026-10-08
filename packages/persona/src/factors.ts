@@ -9,6 +9,8 @@
  *
  *   klass              <- onboarding (apps/classroom Onboarding screen)
  *   mastery            <- @ai-tutor/knowledge-graph belief for the current node
+ *   mastered           <- the learner model's mastery rule (`masteredAt`, B8)
+ *                         for every node this lesson teaches
  *   namedMisconception <- Probe.misconceptions[chosenIndex] of the failed probe
  *   doubtCount         <- raised hands logged in this lesson (the data spine)
  *   lastAnswer         <- correctness plus Answer.ms from the check just given
@@ -61,6 +63,14 @@ export interface StudentContext {
   klass: Klass;
   /** Belief 0..1 that the student holds the outcome being taught right now. */
   mastery?: number;
+  /**
+   * Whether the learner model's mastery rule holds (`masteredAt`, B8: cold
+   * right answers on two distinct items a day apart) for what is taught right
+   * now. The only thing that lets her say they already hold it: a high
+   * `mastery` alone can be one lucky answer (lam-one-brain Task 6, D24).
+   * Read only beside `mastery`; on its own it says nothing.
+   */
+  mastered?: boolean;
   /** The wrong idea the failed probe revealed, in the probe author's words. */
   namedMisconception?: string;
   /** Hands raised in THIS lesson so far. */
@@ -98,7 +108,9 @@ export interface StudentContext {
 // slow; nothing else in the package needs touching.
 
 /**
- * At or above this belief the outcome counts as held. Matches the point where
+ * At or above this belief, with the mastery rule holding too (`mastered`), the
+ * outcome counts as held; without it the belief alone reads as unsettled. The
+ * number matches the point where
  * the knowledge graph treats a belief as settled (around 0.8), pulled down a
  * little so that one directly answered correct probe qualifies on its own.
  */
@@ -154,10 +166,18 @@ export const FACTORS: Record<keyof StudentContext, FactorSpec> = {
   mastery: {
     observedFrom: 'the knowledge-graph belief for the node this lesson teaches',
     values: [
-      `>= ${MASTERY_SECURE}: they hold it. Go faster, drop the basic re-explanation, end on one stretch question beyond the lesson.`,
+      `>= ${MASTERY_SECURE} and mastered: they hold it. Go faster, drop the basic re-explanation, end on one stretch question beyond the lesson.`,
+      `>= ${MASTERY_SECURE} without mastered: unsettled, as in between — one lucky answer can reach the number.`,
       `<= ${MASTERY_SHAKY}: the ground is missing. Do not re-explain at the same level — drop to the prerequisite, rebuild it, then come back up.`,
       'in between: unsettled, and often simply unmeasured. Teach at the normal pace and check before moving on.',
       'absent: unknown. Produces NO line — silence is the honest output.',
+    ],
+  },
+  mastered: {
+    observedFrom: "the learner model's mastery rule (masteredAt: cold right answers on two distinct items a day apart) for every node this lesson teaches",
+    values: [
+      'true: with mastery at or above the secure line, they hold it.',
+      'false or absent: they are not said to hold it, however high the belief. Produces no line of its own.',
     ],
   },
   namedMisconception: {
@@ -226,8 +246,8 @@ const klassLine = (klass: Klass): string => {
   return `Class ${klass}: full subject vocabulary, used precisely and without softening. Two connected ideas may share a sentence. Scaffold only where they ask, and frame the material at board and entrance-exam depth.`;
 };
 
-const masteryLine = (mastery: number): string => {
-  if (mastery >= MASTERY_SECURE) {
+const masteryLine = (mastery: number, mastered: boolean): string => {
+  if (mastery >= MASTERY_SECURE && mastered) {
     return 'They already hold this outcome. Move faster, skip the basic re-explanation, and finish with one stretch question that goes a step beyond the lesson.';
   }
   if (mastery <= MASTERY_SHAKY) {
@@ -279,7 +299,7 @@ export function describeFactors(ctx: StudentContext): string[] {
   const lines: string[] = [klassLine(ctx.klass)];
 
   const mastery = asBelief(ctx.mastery);
-  if (mastery !== null) lines.push(masteryLine(mastery));
+  if (mastery !== null) lines.push(masteryLine(mastery, ctx.mastered === true));
 
   const misconception = ctx.namedMisconception?.trim();
   if (misconception !== undefined && misconception.length > 0) {
