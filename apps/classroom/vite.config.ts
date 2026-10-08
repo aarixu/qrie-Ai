@@ -22,6 +22,7 @@ import {
   createMemoryOtpGate,
   createMemoryPrepLocks,
   createMemoryReportStore,
+  createMemorySafetyEventStore,
   createSupabaseVerifier,
   createTokenSource,
   readServiceAccount,
@@ -117,6 +118,7 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
      * of sending an SMS, which is the whole point of the seam.
      */
     reports: createMemoryReportStore(),
+    safetyEvents: createMemorySafetyEventStore(),
     prepLocks: createMemoryPrepLocks(),
     otp: createDevOtpProvider(),
     otpGate: createMemoryOtpGate(),

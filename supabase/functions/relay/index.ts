@@ -56,6 +56,7 @@ import { createSupabaseUsage } from '../../../packages/relay/src/usage.ts';
 import { handleRelay, type HandlerDeps } from '../../../packages/relay/src/handler.ts';
 import { keepClass } from '../../../packages/relay/src/classStore.ts';
 import { createSupabaseReportStore } from '../../../packages/relay/src/report.ts';
+import { createSupabaseSafetyEventStore } from '../../../packages/relay/src/safetyFlag.ts';
 import { createSupabasePrepLocks } from '../../../packages/relay/src/prep.ts';
 import {
   createSupabaseConsentStore,
@@ -177,6 +178,8 @@ const deps: HandlerDeps = {
    * words; unset, one log line in this function's own stream says the same.
    */
   reports: createSupabaseReportStore(SUPABASE_URL, SERVICE_ROLE_KEY),
+  // Plan 5: a distress flag, no words, kept by keep_safety_event (0065).
+  safetyEvents: createSupabaseSafetyEventStore(SUPABASE_URL, SERVICE_ROLE_KEY),
   ...(Deno.env.get('OPS_ALERT_WEBHOOK')
     ? { opsAlertWebhook: Deno.env.get('OPS_ALERT_WEBHOOK') }
     : {}),

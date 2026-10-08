@@ -29,12 +29,12 @@ export type RelayName = 'llm' | 'speech' | 'hear' | 'class' | 'icons';
 
 /**
  * The route families that spend no vendor money: a report, a prep lock, an
- * enrolment. Named apart from RelayName on purpose — they have no row in
+ * enrolment, a distress flag (plan 5). Named apart from RelayName on purpose — they have no row in
  * UNITS, because a price table entry of zero would contradict the table's
  * own rule, and these are not priced calls; they are control traffic that
  * still has to answer to WHO and HOW OFTEN.
  */
-export type FreeRoute = 'report' | 'prep' | 'enroll';
+export type FreeRoute = 'report' | 'prep' | 'enroll' | 'flag';
 
 /**
  * WHAT EACH CALL COSTS AGAINST THE DAILY BUDGET.
@@ -295,7 +295,9 @@ export async function admit(
  * <audio src> — and HOW OFTEN, the same per-minute window as everything
  * else, which the ledger counts on every claim whatever the units say.
  *
- * AND ONE EXEMPTION, FOR 'report' ONLY.
+ * AND ONE EXEMPTION, FOR 'report' AND 'flag' ONLY. A distress flag (plan 5,
+ * safetyFlag.ts) spends nothing either and matters most in the same minutes,
+ * so everything said below about a report holds for a flag too.
  *
  * Of claim_relay's spend arms, exactly ONE can refuse a claim of zero units
  * today: 'halted' (0016:93), which tests a boolean and never looks at the
@@ -338,7 +340,7 @@ export async function admitFree(
   const claim = await gate.ledger.claim(verified.user.userId, route, 0);
   if (!claim.allowed) {
     const spendOnly = claim.reason === 'halted' || claim.reason === 'capped' || claim.reason === 'budget';
-    if (!(route === 'report' && spendOnly)) return { ok: false, response: refuse(claim) };
+    if (!((route === 'report' || route === 'flag') && spendOnly)) return { ok: false, response: refuse(claim) };
   }
 
   return { ok: true, userId: verified.user.userId };
