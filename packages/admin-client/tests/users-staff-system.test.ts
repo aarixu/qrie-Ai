@@ -116,7 +116,14 @@ describe('system', () => {
     const h = await sys.health();
     expect(Array.isArray(h.jobs)).toBe(true);
     expect(h.environment).toBe('TEST');
-    expect(h.cashfree.captured).toBe(false);
+    // Billing's log (plan 3's 0057) is in this database since the wave-1 merge, so the Cashfree row is captured.
+    expect(h.cashfree).toEqual({
+      captured: true,
+      lastWebhookMinutesAgo: null,
+      signatureFailures24h: 0,
+      unprocessed: 0,
+      reconciledMinutesAgo: null,
+    });
     const yesterday = (await db.query<{ d: string }>(`select to_char(lms.india_today() - 1, 'YYYY-MM-DD') as d`)).rows[0].d;
     await sys.setRestoreDrill({ on: yesterday, reason: 'restored into a scratch project', env: 'TEST' });
     expect((await sys.health()).restoreDrill).toEqual({ on: yesterday, daysAgo: 1 });
