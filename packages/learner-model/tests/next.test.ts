@@ -119,6 +119,17 @@ describe('nextActivity reads what went wrong (Task 6)', () => {
     });
   });
 
+  it('a due outcome not yet mastered but not failed cold is maintenance review, not remedial', () => {
+    // One lucky right alone: nothing went wrong, it just is not mastered yet.
+    // Spacing it out is how it gets mastered, so it is reviewed, and the
+    // remedial card's "It tripped you up last time" is not said of it.
+    const lucky = state('a', { box: 0, nextReviewAt: '2026-09-28T10:00:00.000Z', unassistedObservations: 1, unassistedMastery: 0.5, masteredAt: null });
+    expect(nextActivity({ model: model(lucky), index: deep, now: NOW, next: { outcomeIds: ['e'] } })).toMatchObject({
+      kind: 'review',
+      outcomeIds: ['a'],
+    });
+  });
+
   it('never offers as remedial what they have just done', () => {
     const m = model(state('b', { misconceptions: { s: idea() } }));
     expect(nextActivity({ model: m, index: deep, now: NOW, justDone: ['b'], next: { outcomeIds: ['e'] } }).kind).toBe('next');

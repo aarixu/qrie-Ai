@@ -24,8 +24,10 @@ import type { ConceptState, LearnerModel } from './types.ts';
  *      a third try at the outcome may be a try on missing ground;
  *   5. the NEXT topic in the syllabus.
  *
- * Nothing here calls an outcome held on a high number: a due outcome with no
- * cold failure is reviewed, and only `masteredAt` (B8) says mastered.
+ * A due outcome with no confirmed wrong idea and no cold failure is
+ * maintenance review whether or not it is mastered yet (`masteredAt` is not
+ * read here): one right answer alone is not a failure, and spaced review is
+ * how it gets mastered. Nothing here calls an outcome held on a high number.
  *
  * Pure: the clock is passed in, and so is what "next" is — the app knows the
  * syllabus, this function knows the student.

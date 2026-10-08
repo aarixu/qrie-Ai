@@ -93,8 +93,9 @@ numbers the learner's decisions use.
   "look again" and goes to the re-explanation that targets it; many cold misses on an outcome whose prerequisite
   is shaky offers the prerequisite; a hint-abuse or wheel-spin reading changes the next move (cold retry, or stop
   and step back) instead of sitting in a DEV screen.
-- **Next activity:** review splits into **remedial** (a failed or unmastered outcome, or a confirmed
-  misconception) and **maintenance**; prerequisites are walked through all ancestors, and an unexamined
+- **Next activity:** review splits into **remedial** (a due outcome failed cold, or a confirmed misconception)
+  and **maintenance** (every other due outcome, mastered or not yet: one right answer alone is not a failure,
+  and spaced review is how it gets mastered; amended 2026-10-08 after the M1 review); prerequisites are walked through all ancestors, and an unexamined
   prerequisite of a repeatedly failed outcome becomes "check this first"; "they already hold this" requires
   `masteredAt`, not a high float.
 - **Student app:** practice is ranked by the learner's weak outcomes and confirmed misconceptions, then varied;

@@ -245,3 +245,11 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   until they answer again. `settleDue(db)` (`packages/lms-brain/src/think.ts`) thinks every learner with an answer
   received over the lag ago that their snapshot does not hold. Task 9's brain function runs it on its schedule,
   well before the nightly `purge_old_ledger`; until then the purge can delete an answer the snapshot never held.
+- **Remedial vs maintenance (spec section 5, amended).** A due outcome is remedial only when it was failed cold or
+  holds a confirmed wrong idea; a due outcome not yet mastered with no failure is maintenance review. Calling it
+  remedial would put nearly every due outcome there (mastered needs two cold rights a day apart) and would show
+  the remedial card's "It tripped you up last time" for something that never went wrong. Test:
+  `packages/learner-model/tests/next.test.ts`.
+- **Migration numbers.** Branch `admin` has `0060_billing_states.sql` and `0061_admin_wave1_merge.sql`; this lane
+  owns 0060-0069 (spec section 8). The admin lane renumbers before either merges or pushes;
+  `supabase/tests/harness.test.ts` now fails on two migrations with one number.
