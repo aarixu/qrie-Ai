@@ -189,10 +189,13 @@ export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild |
    *
    * `ledger_event.session_id` has no foreign key (0006 says why: rows arrive
    * out of order from an offline outbox and must never be refused for it), and
-   * `ledgerSync` holds back only the `session-started` event when a session
-   * upsert fails — the answers in that same batch are acknowledged and land
-   * anyway. So real evidence can exist with no sitting to fold it against, and
-   * silently skipping it would show up below as the model's fault.
+   * before record_evidence (0067) `ledgerSync` held back only the
+   * `session-started` event when a session upsert failed — the answers in that
+   * same batch were acknowledged and landed anyway. record_evidence now makes
+   * the sitting with the first event that needs it, but rows written the old
+   * way are still in the ledger. So real evidence can exist with no sitting to
+   * fold it against, and silently skipping it would show up below as the
+   * model's fault.
    */
   const known = new Set(sessions.map((row) => row.id));
   const orphanedEvents = events.filter((row) => !known.has(row.session_id)).length;

@@ -10,6 +10,12 @@ import { claimOutbox, forgetRefused, forgetSent, ledgerOutbox } from '../stores/
  * from the store for the same reason every external dependency in this repo
  * sits behind an adapter.
  *
+ * Everything goes through one server function, public.record_evidence
+ * (0067). It decides who the learner is and which org their evidence belongs
+ * to from the token, stamps the server's clock, and answers every event on its
+ * own: recorded, duplicate, or refused with a reason. Nothing here names an
+ * org or a user.
+ *
  * Two rules, and both are about not losing a student's evidence:
  *
  *   1. ACKNOWLEDGE ONLY AFTER A CONFIRMED WRITE. Optimistic acknowledgement is
@@ -17,37 +23,20 @@ import { claimOutbox, forgetRefused, forgetSent, ledgerOutbox } from '../stores/
  *      received but whose response was lost costs one harmless repeat; a batch
  *      that was acknowledged and never arrived is gone.
  *   2. REPLAY IS FREE. Event ids are minted on the device and are the table's
- *      primary key, so a repeat insert is a no-op rather than a duplicate
+ *      primary key, so a repeat comes back 'duplicate' rather than as a second
  *      answer inflating mastery.
  */
 
 /** Big enough to clear a whole class in one request, small enough to retry. */
 const BATCH = 200;
 
-/**
- * The student's organization, resolved once per session in memory.
- *
- * Every account has exactly one today — a private "solo" org created by the
- * trigger in migration 0005 — so this is a single lookup rather than something
- * to thread through the app. The moment a student can belong to a school as
- * well, this becomes a choice and moves out of here.
- */
-let orgId: string | null = null;
-/**
- * WHICH user that org belongs to.
- *
- * Without this the cache is a trap rather than an optimisation: sign in as
- * somebody else and every drain is sent with the previous student's org, which
- * RLS refuses — silently, forever, until the page is reloaded.
- */
-let orgUser: string | null = null;
 let inFlight: Promise<DrainResult> | null = null;
 
 export interface DrainResult {
   sent: number;
   pending: number;
   /** Set when nothing could be sent. The outbox is untouched in that case. */
-  reason?: 'offline' | 'no-account' | 'no-org' | 'rejected';
+  reason?: 'offline' | 'no-account' | 'rejected';
   /**
    * How many events the server refused outright this drain.
    *
@@ -89,94 +78,40 @@ function reportLoss(dropped: number, orphaned: number): void {
 }
 
 /**
- * Postgres classes 22 (data exception) and 23 (integrity violation) mean the
- * ROW is wrong, and it will be just as wrong in an hour. Everything else — an
- * expired token, an RLS refusal at 42501, a gateway hiccup, PostgREST's own
- * codes — is about the moment, and the event must be kept and retried.
- *
- * Getting this test wrong in the permissive direction would be far worse than
- * the bug it exists for: it would throw away a student's evidence every time
- * their token happened to expire mid-flush.
+ * The sittings these events open, as record_evidence reads them. The session
+ * row is derivable from `session-started`, so nothing extra is queued for it;
+ * the function makes the row when the first event that needs it arrives, so a
+ * session that opened on a plane and closed on the ground still lands.
  */
-const isMalformed = (code: unknown): boolean => typeof code === 'string' && /^(22|23)/.test(code);
-
-async function resolveOrg(userId: string): Promise<string | null> {
-  if (orgId && orgUser === userId) return orgId;
-  const db = supabase();
-  if (!db) return null;
-  const { data, error } = await db
-    .from('membership')
-    .select('org_id')
-    .eq('user_id', userId)
-    .limit(1)
-    .maybeSingle();
-  if (error || !data) return null;
-  orgId = (data as { org_id: string }).org_id;
-  orgUser = userId;
-  return orgId;
-}
-
-const rowOf = (e: LedgerEvent, userId: string, org: string) => ({
-  id: e.id,
-  org_id: org,
-  user_id: userId,
-  session_id: e.sessionId,
-  seq: e.seq,
-  at: e.at,
-  kind: e.kind,
-  source: e.source,
-  surface: e.surface,
-  outcome_ids: e.outcomeIds,
-  topic_ref: e.topicRef ?? null,
-  payload: e.payload,
-});
+const sittingsOf = (events: readonly LedgerEvent[]) =>
+  events
+    .filter((e) => e.kind === 'session-started')
+    .map((e) => ({ id: e.sessionId, source: e.source, topicRef: e.topicRef ?? null, startedAt: e.at }));
 
 /**
- * Write the sitting itself, from the events that describe it.
+ * Close the sittings whose `session-ended` event the server now holds.
+ * Returns the ids of those events that must NOT be acknowledged this drain.
  *
- * The session row is derivable from `session-started` and `session-ended`, so
- * nothing extra is queued for it. Doing it this way means a session that opened
- * on a plane and closed on the ground still lands complete and in order.
+ * Closing goes through the RPC rather than an update, because there is no
+ * update policy on the table — append-only is enforced by its absence, and
+ * ended_at/active_ms are the one legitimate exception. It runs after
+ * record_evidence because a close of a sitting the server has no row for
+ * closes nothing.
+ *
+ * This write used to be awaited and its error dropped on the floor, after
+ * which the event was acknowledged anyway. A transient failure therefore lost
+ * the sitting's `active_ms`, which is the DENOMINATOR of the one metric this
+ * whole system exists to optimise. Holding the event back instead costs one
+ * harmless repeat: the server answers it 'duplicate', and a close of a sitting
+ * already closed is a no-op.
  */
-async function writeSessions(
-  events: LedgerEvent[],
-  userId: string,
-  org: string,
+async function closeSittings(
+  db: NonNullable<ReturnType<typeof supabase>>,
+  events: readonly LedgerEvent[],
+  landed: ReadonlySet<string>,
 ): Promise<Set<string>> {
-  /**
-   * Event ids that must NOT be acknowledged this drain.
-   *
-   * Both writes below used to be awaited and their errors dropped on the
-   * floor, after which the events were acknowledged anyway. A transient
-   * failure on either one therefore lost the sitting — and `active_ms` with
-   * it, which is the DENOMINATOR of the one metric this whole system exists
-   * to optimise. Holding the event back instead costs one harmless repeat:
-   * the row is keyed on the client-minted id, so re-sending it is a no-op.
-   */
   const held = new Set<string>();
-  const db = supabase();
-  if (!db) return held;
-
-  const opened = events.filter((e) => e.kind === 'session-started');
-  if (opened.length > 0) {
-    const { error } = await db.from('learning_session').upsert(
-      opened.map((e) => ({
-        id: e.sessionId,
-        org_id: org,
-        user_id: userId,
-        source: e.source,
-        topic_ref: e.topicRef ?? null,
-        started_at: e.at,
-      })),
-      { onConflict: 'id', ignoreDuplicates: true },
-    );
-    if (error) for (const e of opened) held.add(e.id);
-  }
-
-  // Closing goes through the RPC rather than an update, because there is no
-  // update policy on the table — append-only is enforced by its absence, and
-  // ended_at/active_ms are the one legitimate exception.
-  for (const e of events.filter((x) => x.kind === 'session-ended')) {
+  for (const e of events.filter((x) => x.kind === 'session-ended' && landed.has(x.id))) {
     const payload = e.payload as { activeMs?: number };
     const { error } = await db.rpc('close_learning_session', {
       p_session: e.sessionId,
@@ -185,7 +120,6 @@ async function writeSessions(
     });
     if (error) held.add(e.id);
   }
-
   return held;
 }
 
@@ -226,15 +160,12 @@ async function run(): Promise<DrainResult> {
     return { sent: 0, pending: 0, dropped, refused: 0 };
   }
 
-  const org = await resolveOrg(userId);
-  if (!org) return { sent: 0, pending, dropped, refused: 0, reason: 'no-org' };
-
   const slice = batch(ledgerOutbox.get(), BATCH);
   let outcome: SendOutcome;
   let held: Set<string>;
   try {
-    held = await writeSessions(slice, userId, org);
-    outcome = await send(db, slice, userId, org);
+    outcome = await send(db, slice);
+    held = outcome.kind === 'settled' ? await closeSittings(db, slice, new Set(outcome.ok)) : new Set();
   } catch {
     // A dead network mid-flush. The outbox is untouched, so the next drain
     // sends exactly this batch again.
@@ -242,21 +173,23 @@ async function run(): Promise<DrainResult> {
   }
 
   if (outcome.kind === 'transient') {
-    // Keep everything. The token expires, RLS says no while the org is still
-    // being provisioned, a gateway blips — all of them pass.
+    // Keep everything. The token expires, the org is still being provisioned,
+    // a gateway blips — all of them pass.
     return { sent: 0, pending, dropped, refused: 0, reason: 'rejected' };
   }
 
-  // Everything that landed, EXCEPT the events whose sitting could not be
-  // written or closed. Those stay queued and are sent again; the ledger row
-  // itself is already there and the repeat is a no-op.
+  // Everything that landed, EXCEPT the closing events whose sitting could not
+  // be closed. Those stay queued and are sent again; the ledger row itself is
+  // already there and the repeat comes back 'duplicate'. An event the server
+  // gave no answer for is neither, and stays queued too.
   const acknowledged = outcome.ok.filter((id) => !held.has(id));
   forgetSent(acknowledged);
   if (outcome.poison.length > 0) {
     forgetRefused(outcome.poison);
-    // Loudly. A malformed event is OUR bug, and the whole reason this path
+    // Loudly. A refused event is OUR bug, and the whole reason this path
     // exists is that the last one was silent for as long as it took to measure
-    // a class by hand. No student data goes with it — a count and a code.
+    // a class by hand. No student data goes with it — a count and the first
+    // refusal's reason.
     track('ledger_refused', { refused: outcome.poison.length, code: outcome.code ?? 'unknown' });
   }
   return {
@@ -271,51 +204,43 @@ type SendOutcome =
   | { kind: 'transient' }
   | { kind: 'settled'; ok: string[]; poison: string[]; code?: string };
 
-/**
- * Send a slice, and if the server refuses it, find out which rows it is
- * actually refusing.
- *
- * A batch goes as ONE statement, so a single malformed row fails all two
- * hundred. Left there, the outbox is untouched, the next drain sends the same
- * batch, and that device never writes another event as long as it is
- * installed. That is not a hypothetical: the event opening every session
- * carried an id of `<uuid>:0` against a `uuid` column, so this was the
- * behaviour in production and 2,472 green tests had nothing to say about it.
- *
- * So a refusal is bisected rather than retried. Halves that write are kept;
- * a row still refused alone is refused permanently and is quarantined. Cost on
- * the healthy path: nothing, one request. Cost with one bad row in two
- * hundred: about sixteen requests, once, and then the queue moves again.
- */
-async function send(
-  db: NonNullable<ReturnType<typeof supabase>>,
-  rows: LedgerEvent[],
-  userId: string,
-  org: string,
-): Promise<SendOutcome> {
-  const { error } = await db
-    .from('ledger_event')
-    .upsert(rows.map((e) => rowOf(e, userId, org)), {
-      onConflict: 'id',
-      ignoreDuplicates: true,
-    });
-  if (!error) return { kind: 'settled', ok: rows.map((e) => e.id), poison: [] };
-  if (!isMalformed((error as { code?: string }).code)) return { kind: 'transient' };
-  if (rows.length === 1) {
-    return { kind: 'settled', ok: [], poison: [rows[0].id], code: (error as { code?: string }).code };
-  }
+/** record_evidence's answer for one event (0067). */
+interface EventAnswer {
+  id: string;
+  status: 'recorded' | 'duplicate' | 'refused';
+  reason: string | null;
+}
 
-  const mid = Math.floor(rows.length / 2);
-  const left = await send(db, rows.slice(0, mid), userId, org);
-  const right = await send(db, rows.slice(mid), userId, org);
-  // If either half turned out to be a passing problem after all, the whole
-  // slice is treated as one — better to retry good rows than to bin them.
-  if (left.kind === 'transient' || right.kind === 'transient') return { kind: 'transient' };
+/**
+ * Send a slice through record_evidence, and sort its answer.
+ *
+ * The drain used to be one insert of the whole slice, so a single malformed
+ * row failed all two hundred, and the next drain sent the same batch: that
+ * device never wrote another event as long as it was installed. That is not a
+ * hypothetical: the event opening every session carried an id of `<uuid>:0`
+ * against a `uuid` column, so this was the behaviour in production and 2,472
+ * green tests had nothing to say about it. The function answers each event on
+ * its own, so a refused event is quarantined and the rest are acknowledged in
+ * the same request.
+ *
+ * An error on the call itself is never about one event: an expired token, no
+ * org yet (42501), a gateway, or a call it could not read (22023). All of them
+ * keep the whole slice — throwing away a student's evidence because their
+ * token expired mid-flush would be far worse than one more retry.
+ */
+async function send(db: NonNullable<ReturnType<typeof supabase>>, events: LedgerEvent[]): Promise<SendOutcome> {
+  const { data, error } = await db.rpc('record_evidence', {
+    p_sessions: sittingsOf(events),
+    p_events: events,
+  });
+  if (error || !Array.isArray(data)) return { kind: 'transient' };
+  const answers = data as EventAnswer[];
+  const refused = answers.filter((a) => a.status === 'refused');
   return {
     kind: 'settled',
-    ok: [...left.ok, ...right.ok],
-    poison: [...left.poison, ...right.poison],
-    code: left.code ?? right.code,
+    ok: answers.filter((a) => a.status === 'recorded' || a.status === 'duplicate').map((a) => a.id),
+    poison: refused.map((a) => a.id),
+    code: refused[0]?.reason ?? undefined,
   };
 }
 
@@ -366,10 +291,8 @@ export function startLedgerDrain(): () => void {
 /** How many events are waiting, for anything that wants to show it. */
 export const pendingCount = (): number => ledgerOutbox.get().pending.length;
 
-/** Test seam: forget the cached organization. */
+/** Test seam: forget the drain in flight and what has been reported. */
 export function resetLedgerSync(): void {
-  orgId = null;
-  orgUser = null;
   inFlight = null;
   droppedReported = 0;
 }

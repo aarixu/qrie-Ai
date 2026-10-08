@@ -5,24 +5,38 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
  *
  * Only one mistake in this file destroys data permanently: acknowledging a
  * batch the server never took. Everything else is recoverable — a repeated
- * insert is a no-op, because the event id is minted on the device and is the
- * table's primary key. So these tests are mostly about the failure paths, and
- * about proving the outbox is untouched on every one of them.
+ * event comes back 'duplicate', because the event id is minted on the device
+ * and is the table's primary key. So these tests are mostly about the failure
+ * paths, and about proving the outbox is untouched on every one of them.
+ *
+ * The drain writes through public.record_evidence (0067, lam-one-brain Task
+ * 7a), which answers every event on its own: recorded, duplicate or refused.
  */
 
-const upsert = vi.fn();
-const rpc = vi.fn();
-const getUser = vi.fn();
-const maybeSingle = vi.fn();
+interface Sent {
+  p_sessions: { id: string; source: string; topicRef: string | null; startedAt: string }[];
+  p_events: { id: string; sessionId: string; kind: string }[];
+}
 
-const from = vi.fn((table: string) => {
-  if (table === 'membership') {
-    return {
-      select: () => ({ eq: () => ({ limit: () => ({ maybeSingle }) }) }),
-    };
-  }
-  return { upsert: (rows: unknown, opts: unknown) => upsert(table, rows, opts) };
+/** The function's answer when it takes every event. */
+const recordedAll = (args: Sent) => ({
+  data: args.p_events.map((e) => ({ id: e.id, status: 'recorded', reason: null, received_at: '2026-10-08T00:00:00Z' })),
+  error: null,
 });
+
+/** record_evidence's answer, by default every event recorded. */
+const record = vi.fn();
+/** close_learning_session's answer. */
+const close = vi.fn();
+const rpc = vi.fn((name: string, args: unknown) =>
+  name === 'record_evidence'
+    ? record(args)
+    : name === 'close_learning_session'
+      ? close(args)
+      : Promise.resolve({ error: { message: `no ${name}` } }),
+);
+const getUser = vi.fn();
+const from = vi.fn();
 
 let client: unknown = { from, rpc, auth: { getUser } };
 
@@ -35,11 +49,11 @@ let sync: typeof import('../src/lib/ledgerSync');
 
 beforeEach(async () => {
   vi.resetModules();
-  upsert.mockReset().mockResolvedValue({ error: null });
-  rpc.mockReset().mockResolvedValue({ error: null });
+  record.mockReset().mockImplementation((args: Sent) => Promise.resolve(recordedAll(args)));
+  close.mockReset().mockResolvedValue({ error: null });
+  rpc.mockClear();
   getUser.mockReset().mockResolvedValue({ data: { user: { id: 'student-1' } } });
-  maybeSingle.mockReset().mockResolvedValue({ data: { org_id: 'org-1' }, error: null });
-  from.mockClear();
+  from.mockReset();
   client = { from, rpc, auth: { getUser } };
   localStorage.clear();
   store = await import('../src/stores/ledger');
@@ -65,6 +79,9 @@ const aClass = (): void => {
   });
 };
 
+const sent = (): Sent[] => record.mock.calls.map((c) => c[0] as Sent);
+const lastSent = (): Sent => sent().at(-1)!;
+
 describe('a successful drain', () => {
   it('sends the queued events and forgets exactly those', async () => {
     aClass();
@@ -74,24 +91,30 @@ describe('a successful drain', () => {
 
     expect(result.sent).toBe(2);
     expect(store.ledgerOutbox.get().pending).toHaveLength(0);
-    const [table, rows] = upsert.mock.calls.find((c) => c[0] === 'ledger_event')!;
-    expect(table).toBe('ledger_event');
-    expect(rows).toHaveLength(2);
+    expect(rpc).toHaveBeenCalledWith('record_evidence', expect.anything());
+    expect(lastSent().p_events).toHaveLength(2);
   });
 
-  it('writes the sitting itself, derived from the session-started event', async () => {
-    // Nothing extra is queued for the session row — it is reconstructed here,
-    // so a session opened on a plane and closed on the ground still lands.
+  it('writes through record_evidence only, never into the tables', async () => {
     aClass();
     await sync.drainLedger();
-    const call = upsert.mock.calls.find((c) => c[0] === 'learning_session');
-    expect(call).toBeTruthy();
-    expect(call![1]).toMatchObject([
-      { user_id: 'student-1', org_id: 'org-1', source: 'class' },
-    ]);
+    expect(from).not.toHaveBeenCalled();
   });
 
-  it('closes a session through the RPC, because there is no update policy', async () => {
+  it('describes the sitting from its session-started event, and leaves the org and the learner to the server', async () => {
+    // Nothing extra is queued for the session row — it is described here, so
+    // a session opened on a plane and closed on the ground still lands. Who
+    // and which school are the token's, decided by the function.
+    aClass();
+    const opened = store.ledgerOutbox.get().pending.find((e) => e.kind === 'session-started')!;
+    await sync.drainLedger();
+    expect(lastSent().p_sessions).toEqual([
+      { id: opened.sessionId, source: 'class', topicRef: 'class10-science/life-processes/respiration', startedAt: opened.at },
+    ]);
+    expect(JSON.stringify(lastSent())).not.toMatch(/org_?id|user_?id/i);
+  });
+
+  it('closes a session through the RPC, after the sitting is written', async () => {
     aClass();
     store.closeSession({ activeMs: 9 * 60_000, completed: true });
     await sync.drainLedger();
@@ -100,25 +123,36 @@ describe('a successful drain', () => {
       p_ended_at: expect.any(String),
       p_active_ms: 540_000,
     });
+    // A close before record_evidence has made the sitting finds no row and
+    // closes nothing.
+    const names = rpc.mock.calls.map((c) => c[0]);
+    expect(names.indexOf('record_evidence')).toBeLessThan(names.indexOf('close_learning_session'));
   });
 
   it('sends the id the device minted, which is what makes a replay harmless', async () => {
     aClass();
     const queued = store.ledgerOutbox.get().pending.map((e) => e.id);
     await sync.drainLedger();
-    const rows = upsert.mock.calls.find((c) => c[0] === 'ledger_event')![1] as { id: string }[];
-    expect(rows.map((r) => r.id)).toEqual(queued);
-    const opts = upsert.mock.calls.find((c) => c[0] === 'ledger_event')![2];
-    expect(opts).toMatchObject({ onConflict: 'id', ignoreDuplicates: true });
+    expect(lastSent().p_events.map((e) => e.id)).toEqual(queued);
+  });
+
+  it('acknowledges an event the server already holds', async () => {
+    // The response to the last drain was lost; the server answers the repeat
+    // 'duplicate', and the event is done with.
+    aClass();
+    record.mockImplementation((args: Sent) =>
+      Promise.resolve({ data: args.p_events.map((e) => ({ id: e.id, status: 'duplicate', reason: null })), error: null }),
+    );
+    const result = await sync.drainLedger();
+    expect(result.sent).toBe(2);
+    expect(store.ledgerOutbox.get().pending).toHaveLength(0);
   });
 });
 
 describe('every way it can fail', () => {
   it('keeps everything when the write is rejected', async () => {
     aClass();
-    upsert.mockImplementation((table: string) =>
-      table === 'ledger_event' ? Promise.resolve({ error: { message: 'nope' } }) : Promise.resolve({ error: null }),
-    );
+    record.mockResolvedValue({ data: null, error: { message: 'nope' } });
     const result = await sync.drainLedger();
     expect(result.reason).toBe('rejected');
     expect(result.sent).toBe(0);
@@ -127,9 +161,7 @@ describe('every way it can fail', () => {
 
   it('keeps everything when the network dies mid-flush', async () => {
     aClass();
-    upsert.mockImplementation((table: string) =>
-      table === 'ledger_event' ? Promise.reject(new Error('offline')) : Promise.resolve({ error: null }),
-    );
+    record.mockRejectedValue(new Error('offline'));
     const result = await sync.drainLedger();
     expect(result.reason).toBe('offline');
     expect(store.ledgerOutbox.get().pending).toHaveLength(2);
@@ -144,12 +176,24 @@ describe('every way it can fail', () => {
     expect(store.ledgerOutbox.get().pending).toHaveLength(2);
   });
 
-  it('waits when the organization cannot be resolved', async () => {
+  it('waits when the server has no organization for the student yet', async () => {
+    // record_evidence answers 42501 while the account's org is provisioned.
     aClass();
-    maybeSingle.mockResolvedValue({ data: null, error: null });
+    record.mockResolvedValue({ data: null, error: { code: '42501', message: 'record_evidence: no organization yet' } });
     const result = await sync.drainLedger();
-    expect(result.reason).toBe('no-org');
+    expect(result.reason).toBe('rejected');
     expect(store.ledgerOutbox.get().pending).toHaveLength(2);
+  });
+
+  it('keeps everything when the call itself is refused as malformed, rather than binning a whole batch', async () => {
+    // A call-level 22023 is about the call (not a list, over 500 events), not
+    // any one event: each event's own fault comes back in its own row.
+    aClass();
+    record.mockResolvedValue({ data: null, error: { code: '22023', message: 'at most 500 events' } });
+    const result = await sync.drainLedger();
+    expect(result.reason).toBe('rejected');
+    expect(store.ledgerOutbox.get().pending).toHaveLength(2);
+    expect(store.ledgerOutbox.get().rejected).toBe(0);
   });
 
   it('waits when there is no project configured at all', async () => {
@@ -162,17 +206,14 @@ describe('every way it can fail', () => {
 
   it('re-sends the identical batch after a failure', async () => {
     aClass();
-    upsert.mockImplementationOnce(() => Promise.resolve({ error: null })) // learning_session
-      .mockImplementationOnce(() => Promise.resolve({ error: { message: 'nope' } })); // ledger_event
+    record.mockResolvedValueOnce({ data: null, error: { message: 'nope' } });
     await sync.drainLedger();
     const firstIds = store.ledgerOutbox.get().pending.map((e) => e.id);
 
-    upsert.mockReset().mockResolvedValue({ error: null });
     const second = await sync.drainLedger();
 
     expect(second.sent).toBe(2);
-    const rows = upsert.mock.calls.find((c) => c[0] === 'ledger_event')![1] as { id: string }[];
-    expect(rows.map((r) => r.id)).toEqual(firstIds);
+    expect(lastSent().p_events.map((e) => e.id)).toEqual(firstIds);
   });
 });
 
@@ -181,13 +222,13 @@ describe('concurrency', () => {
     aClass();
     const [a, b] = await Promise.all([sync.drainLedger(), sync.drainLedger()]);
     expect(a).toBe(b);
-    expect(upsert.mock.calls.filter((c) => c[0] === 'ledger_event')).toHaveLength(1);
+    expect(record).toHaveBeenCalledTimes(1);
   });
 
   it('does nothing at all when the outbox is empty', async () => {
     const result = await sync.drainLedger();
     expect(result).toEqual({ sent: 0, pending: 0, dropped: 0, refused: 0 });
-    expect(upsert).not.toHaveBeenCalled();
+    expect(rpc).not.toHaveBeenCalled();
   });
 
   it('carries the dropped count out, so a holed record can say so', async () => {
@@ -223,38 +264,39 @@ describe('the outbox store', () => {
 });
 
 /**
- * THE MOCK THAT BEHAVES LIKE POSTGRES ON THE ONE THING THAT MATTERED.
+ * THE MOCK THAT BEHAVES LIKE THE FUNCTION ON THE ONE THING THAT MATTERED.
  *
- * Every test above answers `{ error: null }` whatever it is handed, so a row
- * the real database refuses reads as a row it accepted. That is not a
- * hypothetical gap: the event opening every sitting carried an id of
- * `<uuid>:0` against a `uuid` column, the real database answered
- * `22P02 invalid input syntax for type uuid`, and because a batch is one
- * statement it took every other event with it — on every drain, on every
- * device, for good. This whole file was green over it.
+ * Most tests above answer every event 'recorded' whatever it is handed, so an
+ * event the real database refuses reads as one it accepted. That is not a
+ * hypothetical gap: the event opening every sitting once carried an id of
+ * `<uuid>:0` against a `uuid` column, and when the drain was one insert of the
+ * whole batch the real database's 22P02 took every other event with it — on
+ * every drain, on every device, for good. This whole file was green over it.
  *
- * So these tests give the mock the column type. It is two lines, and it is the
- * difference between a suite that proves the drain works and one that proves
- * the drain sends whatever it was given.
+ * record_evidence (0067) answers that event alone: refused, 'bad-id'. So these
+ * tests give the mock that check, as the function makes it.
  */
-describe('against a database that checks its column types', () => {
+describe('against a function that checks each event', () => {
   const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-  /** What Postgres actually answered, verified against the deployed project. */
-  const likePostgres = (): void => {
-    upsert.mockImplementation((table: string, rows: { id: string; session_id?: string }[]) => {
-      if (table !== 'ledger_event') return Promise.resolve({ error: null });
-      const bad = rows.find((r) => !UUID.test(r.id) || (r.session_id && !UUID.test(r.session_id)));
-      return Promise.resolve(
-        bad
-          ? { error: { code: '22P02', message: `invalid input syntax for type uuid: "${bad.id}"` } }
-          : { error: null },
-      );
-    });
+  /** What record_evidence answers for an id or a sitting id that is not a uuid. */
+  const likeTheFunction = (): void => {
+    record.mockImplementation((args: Sent) =>
+      Promise.resolve({
+        data: args.p_events.map((e) =>
+          !UUID.test(e.id)
+            ? { id: e.id, status: 'refused', reason: 'bad-id', received_at: null }
+            : !UUID.test(e.sessionId)
+              ? { id: e.id, status: 'refused', reason: 'bad-session', received_at: null }
+              : { id: e.id, status: 'recorded', reason: null, received_at: '2026-10-08T00:00:00Z' },
+        ),
+        error: null,
+      }),
+    );
   };
 
   it('lands a real class — every id the app mints is one the column accepts', async () => {
-    likePostgres();
+    likeTheFunction();
     aClass();
     const before = store.ledgerOutbox.get().pending.length;
     expect(before).toBeGreaterThan(0);
@@ -267,7 +309,7 @@ describe('against a database that checks its column types', () => {
   });
 
   it('quarantines one malformed row instead of letting it block the queue forever', async () => {
-    likePostgres();
+    likeTheFunction();
     aClass();
     // A poisoned event, the way a future bug would introduce one.
     const outbox = store.ledgerOutbox.get();
@@ -279,18 +321,15 @@ describe('against a database that checks its column types', () => {
 
     expect(result.refused).toBe(1);
     expect(result.sent).toBe(total - 1);
+    expect(record).toHaveBeenCalledTimes(1);
     // The queue MOVES. That is the whole point.
     expect(store.ledgerOutbox.get().pending).toHaveLength(0);
     expect(store.ledgerOutbox.get().rejected).toBe(1);
   });
 
   it('keeps everything when the refusal is about the moment and not the row', async () => {
-    // 42501 is an RLS decision — the org may simply not be provisioned yet.
-    upsert.mockImplementation((table: string) =>
-      Promise.resolve(
-        table === 'ledger_event' ? { error: { code: '42501', message: 'row-level security' } } : { error: null },
-      ),
-    );
+    // 42501 — the org may simply not be provisioned yet.
+    record.mockResolvedValue({ data: null, error: { code: '42501', message: 'record_evidence: no organization yet' } });
     aClass();
     const before = store.ledgerOutbox.get().pending.length;
 
@@ -324,13 +363,13 @@ describe('when the device changes hands', () => {
     const waiting = store.ledgerOutbox.get().pending.length;
     expect(waiting).toBeGreaterThan(0);
 
-    upsert.mockClear();
+    record.mockClear();
     getUser.mockResolvedValue({ data: { user: { id: 'student-2' } } });
     sync.resetLedgerSync();
     const result = await sync.drainLedger();
 
     expect(result.sent).toBe(0);
-    expect(upsert.mock.calls.filter((c) => c[0] === 'ledger_event')).toHaveLength(0);
+    expect(record).not.toHaveBeenCalled();
     expect(store.ledgerOutbox.get().pending).toEqual([]);
     expect(store.ledgerOutbox.get().ownerId).toBe('student-2');
   });
@@ -347,21 +386,23 @@ describe('when the device changes hands', () => {
     expect(result.sent).toBe(waiting);
   });
 
-  it('re-resolves the organization for a new identity instead of reusing the last one', async () => {
+  it('carries no org from one identity to the next, because it never names one', async () => {
+    // The drain used to cache the org it looked up and send it with every
+    // row; kept across identities, RLS then refused every drain silently until
+    // the page was reloaded. The function now takes the org from the token.
     aClass();
     await sync.drainLedger();
 
-    maybeSingle.mockResolvedValue({ data: { org_id: 'org-2' }, error: null });
     getUser.mockResolvedValue({ data: { user: { id: 'student-2' } } });
     // student-2 takes the device and does their own work.
     store.claimOutbox('student-2');
     aClass();
-    await sync.drainLedger();
+    const waiting = store.ledgerOutbox.get().pending.length;
+    const result = await sync.drainLedger();
 
-    const rows = upsert.mock.calls.filter((c) => c[0] === 'ledger_event').at(-1)![1] as { org_id: string }[];
-    // The cached org used to be kept across identities, and RLS then refused
-    // every drain silently until the page was reloaded.
-    expect(rows.every((r) => r.org_id === 'org-2')).toBe(true);
+    expect(result.sent).toBe(waiting);
+    expect(from).not.toHaveBeenCalled();
+    expect(JSON.stringify(sent())).not.toMatch(/org/i);
   });
 
   /**
@@ -398,7 +439,7 @@ describe('when the sitting cannot be written', () => {
   it('keeps the session-ended event rather than losing time on task', async () => {
     aClass();
     store.closeSession({ activeMs: 240_000, completed: true });
-    rpc.mockResolvedValue({ error: { code: '40001', message: 'serialization failure' } });
+    close.mockResolvedValue({ error: { code: '40001', message: 'serialization failure' } });
 
     const result = await sync.drainLedger();
 
@@ -407,22 +448,44 @@ describe('when the sitting cannot be written', () => {
     expect(result.sent).toBe(2); // the other two landed and were acknowledged
 
     // And it goes on the next drain, harmlessly — the ledger row is already
-    // there and the id makes the repeat a no-op.
-    rpc.mockResolvedValue({ error: null });
+    // there and the server answers the repeat 'duplicate'.
+    close.mockResolvedValue({ error: null });
     await sync.drainLedger();
     expect(store.ledgerOutbox.get().pending).toEqual([]);
   });
 
-  it('keeps the session-started event when the sitting row will not write', async () => {
+  it('does not close a sitting whose closing event the server refused', async () => {
     aClass();
-    upsert.mockImplementation((table: string) =>
-      Promise.resolve(
-        table === 'learning_session' ? { error: { code: '40001', message: 'deadlock' } } : { error: null },
-      ),
+    store.closeSession({ activeMs: 240_000, completed: true });
+    record.mockImplementation((args: Sent) =>
+      Promise.resolve({
+        data: args.p_events.map((e) =>
+          e.kind === 'session-ended'
+            ? { id: e.id, status: 'refused', reason: 'not-your-session', received_at: null }
+            : { id: e.id, status: 'recorded', reason: null, received_at: '2026-10-08T00:00:00Z' },
+        ),
+        error: null,
+      }),
+    );
+
+    const result = await sync.drainLedger();
+    expect(result.refused).toBe(1);
+    expect(close).not.toHaveBeenCalled();
+  });
+
+  it('keeps an event the server gave no answer for', async () => {
+    aClass();
+    record.mockImplementation((args: Sent) =>
+      Promise.resolve({
+        data: args.p_events
+          .filter((e) => e.kind !== 'session-started')
+          .map((e) => ({ id: e.id, status: 'recorded', reason: null, received_at: '2026-10-08T00:00:00Z' })),
+        error: null,
+      }),
     );
 
     await sync.drainLedger();
-    expect(store.ledgerOutbox.get().pending.map((e) => e.kind)).toContain('session-started');
+    expect(store.ledgerOutbox.get().pending.map((e) => e.kind)).toEqual(['session-started']);
   });
 });
 

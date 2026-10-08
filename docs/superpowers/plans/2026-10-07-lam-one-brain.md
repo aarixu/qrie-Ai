@@ -253,3 +253,19 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
 - **Migration numbers.** Branch `admin` has `0060_billing_states.sql` and `0061_admin_wave1_merge.sql`; this lane
   owns 0060-0069 (spec section 8). The admin lane renumbers before either merges or pushes;
   `supabase/tests/harness.test.ts` now fails on two migrations with one number.
+
+## Task 7a as built (2026-10-08)
+
+- `public.record_evidence(p_sessions jsonb, p_events jsonb)` (0067): `p_sessions` is a list, because one drained batch
+  can hold several sittings; events are sent in the outbox's own `LedgerEvent` shape. A sitting is made by the first
+  event that needs it (from its `p_sessions` entry, else from the event), so an answer whose `session-started` was
+  dropped by the outbox cap is not lost. Statuses: `recorded`, `duplicate`, `refused` with a reason (`source`,
+  `not-your-session`, `id-taken`, `seq-taken`, `bad-*`, `too-big`, `answer-too-long`, `error-<sqlstate>`).
+- Call-level errors: 22023 for a call that is not a list or is over 500 events; **42501** (not 22023) for "not signed
+  in" and "no org yet", because those are about the moment and the classroom must keep and retry the batch.
+  `ledgerSync` keeps the whole batch on any call-level error and no longer bisects.
+- SF2's `close_learning_session` bound (end in `[started_at, now()+5min]`, time on task at most the span) landed here.
+- Left for Task 7b: the revoke, and SF1's porting of `ledger-integrity`, `school-safe-tenancy`, `lms-client` safety
+  tests and `tools/bin/ledger-live-test.mjs` (they insert directly, which still works until the revoke). Rollout
+  order: push 0067 before deploying a classroom build with this drain (until then its calls are kept and retried),
+  then 7b after the build is live.
