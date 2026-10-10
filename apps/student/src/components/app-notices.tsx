@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
 import { isBelowMinimum, type SchoolAppConfig } from '@ai-tutor/lms-client'
+import { HELPLINE_LINES } from '../lib/report'
 
 /**
  * What Qrie control says, in front of the student app: an older
  * build than app.min_version.student is asked to update and shown nothing
- * else; otherwise the banner as plain text, then, for a suspended school, one
+ * else but the helplines (the screen replaces Help, plan 5); otherwise the banner as plain text, then, for a suspended school, one
  * notice that the tutor is off and the rest is as usual; then the app. A
  * school in grace shows a child or parent nothing (R14). Pure: the config
  * comes from lib/app-config.tsx.
@@ -25,6 +26,16 @@ export function AppNotices({ config, build, children }: { config: SchoolAppConfi
         >
           Reload
         </button>
+        <ul className='mt-4 space-y-1 text-sm'>
+          {HELPLINE_LINES.map((h) => (
+            <li key={h.number}>
+              <a href={`tel:${h.number}`} className='underline'>
+                {h.name} {h.number}
+              </a>{' '}
+              <span className='text-muted-foreground'>{h.what}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     )
   }

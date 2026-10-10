@@ -12,7 +12,8 @@ import { STUDENT_BUILD } from '../src/lib/build'
  * WHAT A STUDENT OR PARENT SEES OF QRIE CONTROL. Written first.
  *
  * The banner as plain text, one notice for a suspended school (grace shows
- * nothing to a child or parent, R14), and an old build asked to update.
+ * nothing to a child or parent, R14), and an old build asked to update, with
+ * the helplines.
  */
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -73,11 +74,14 @@ describe('the student app and Qrie control', () => {
     expect(grace.textContent).toBe('child')
   })
 
-  it('an older build is asked to update and shown nothing else', () => {
+  it('an older build is asked to update and shown nothing else but the helplines', () => {
     const old = render({ minVersion: '0.2.0' })
     expect(old.textContent).toContain('Please update the app')
     expect([...old.querySelectorAll('button')].some((b) => b.textContent === 'Reload')).toBe(true)
     expect(child(old)).toBeNull()
+    // The update screen replaces Help too, so it carries the helplines itself (plan 5's merge note 8).
+    const tels = [...old.querySelectorAll('a')].map((a) => a.getAttribute('href'))
+    expect(tels).toEqual(expect.arrayContaining(['tel:14416', 'tel:1098']))
     const typo = render({ minVersion: '0.2' })
     expect(child(typo)).not.toBeNull()
   })
