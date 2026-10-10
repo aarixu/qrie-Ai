@@ -1,12 +1,15 @@
 import {
   Activity,
+  BookOpen,
   FileText,
   IndianRupee,
   KeyRound,
   LayoutDashboard,
+  Lock,
   Repeat,
   School,
   Settings,
+  ShieldAlert,
   ShieldCheck,
   Tags,
   ToggleRight,
@@ -18,8 +21,9 @@ import type { SidebarData } from '../types';
 
 /**
  * The console's navigation. Only pages that exist are listed: a later plan adds
- * its group here when its pages land (Safety, Classes, Privacy, Money;
- * see the design's roadmap).
+ * its group here when its pages land (Money; see the design's roadmap). An
+ * item's roles name the staff roles it is meant for; plan 4 filters the
+ * sidebar by them, and nothing on this branch does yet.
  */
 export const sidebarData: SidebarData = {
   navGroups: [
@@ -38,6 +42,14 @@ export const sidebarData: SidebarData = {
         { title: 'System', url: '/system', icon: Activity },
         { title: 'Staff and audit', url: '/staff', icon: ShieldCheck },
         { title: 'Your account', url: '/account', icon: KeyRound },
+      ],
+    },
+    {
+      title: 'Safety and privacy',
+      items: [
+        { title: 'Safety', url: '/safety', icon: ShieldAlert, roles: ['owner', 'safety'] },
+        { title: 'Classes', url: '/classes', icon: BookOpen, roles: ['owner', 'ops', 'safety'] },
+        { title: 'Privacy', url: '/privacy', icon: Lock, roles: ['owner', 'ops'] },
       ],
     },
     {

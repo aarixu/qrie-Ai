@@ -12,6 +12,12 @@ import { BillingSchoolsPage } from '@/features/billing/schools';
 import { SettingsPage } from '@/features/billing/settings';
 import { SubscriptionsPage } from '@/features/billing/subscriptions';
 import { WebhooksPage } from '@/features/billing/webhooks';
+import { Classes } from '@/features/classes';
+import { ClassPage } from '@/features/classes/class-page';
+import { Privacy } from '@/features/privacy';
+import { RequestPage } from '@/features/privacy/request-page';
+import { Safety } from '@/features/safety';
+import { CasePage } from '@/features/safety/case-page';
 import { Schools } from '@/features/schools';
 import { SchoolPage } from '@/features/schools/school-page';
 import { Switches } from '@/features/switches';
@@ -55,6 +61,14 @@ const billingWebhooks = createRoute({ getParentRoute: () => root, path: '/billin
 const billingPlans = createRoute({ getParentRoute: () => root, path: '/billing/plans', component: PlansPage });
 const billingSettings = createRoute({ getParentRoute: () => root, path: '/billing/settings', component: SettingsPage });
 
+// Safety, classes and privacy (plan 5).
+const safetyPage = createRoute({ getParentRoute: () => root, path: '/safety', component: Safety });
+const casePage = createRoute({ getParentRoute: () => root, path: '/safety/cases/$caseId', component: CasePage });
+const classesPage = createRoute({ getParentRoute: () => root, path: '/classes', component: Classes });
+const classPage = createRoute({ getParentRoute: () => root, path: '/classes/$classId', component: ClassPage });
+const privacyPage = createRoute({ getParentRoute: () => root, path: '/privacy', component: Privacy });
+const requestPage = createRoute({ getParentRoute: () => root, path: '/privacy/requests/$requestId', component: RequestPage });
+
 export const router = createRouter({
   routeTree: root.addChildren([
     today,
@@ -76,6 +90,12 @@ export const router = createRouter({
     billingWebhooks,
     billingPlans,
     billingSettings,
+    safetyPage,
+    casePage,
+    classesPage,
+    classPage,
+    privacyPage,
+    requestPage,
   ]),
 });
 
