@@ -59,9 +59,19 @@ create unique index if not exists case_one_open_per_report on admin.case (report
 create unique index if not exists case_one_open_per_person on admin.case (opened_by) where status = 'open';
 revoke all on admin.case from public, anon, authenticated, service_role;
 alter table admin.case enable row level security;
+-- The tripwire, except for one change no person makes: report_id set to null
+-- and nothing else, which is what the foreign key does when the report goes
+-- (a child deleting their own account). A hand edit doing exactly that is not
+-- caught either; every other change is.
 drop trigger if exists case_tripwire on admin.case;
-create trigger case_tripwire after insert or update or delete on admin.case
+create trigger case_tripwire after insert or delete on admin.case
   for each row execute function admin.tripwire();
+drop trigger if exists case_tripwire_update on admin.case;
+create trigger case_tripwire_update after update on admin.case
+  for each row
+  when (new.report_id is not null or old.report_id is null
+        or (to_jsonb(old) - 'report_id') is distinct from (to_jsonb(new) - 'report_id'))
+  execute function admin.tripwire();
 
 -- ---------------------------------------------------------------------------
 -- 3. Every opening of a child's words or their context, insert-only.

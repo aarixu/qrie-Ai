@@ -323,6 +323,23 @@ describe('a case', () => {
     await expect(call(aal2(safety2), 'case_report', { p_case: c })).rejects.toThrow(/this report no longer exists/);
     await close(aal2(safety2), c, 'other');
   });
+
+  it('a child deleting their own account clears the case\'s report link without a "direct database change" row; a hand edit still writes one', async () => {
+    const unmanaged = async () =>
+      (await one<{ n: number }>(
+        `select count(*)::int as n from admin.audit_event where action = 'unmanaged-change' and target_kind = 'case'`,
+      )).n;
+    const kid = await createUser(db);
+    const r = await report(db, kid, { kind: 'unsafe', receivedMinutesAgo: 1 });
+    const { caseId: c } = await open(fresh(safety2), r);
+    const before = await unmanaged();
+    await asClaims(db, { sub: kid }, (tx) => tx.query(`select public.delete_own_account()`));
+    expect((await one<{ report_id: string | null }>(`select report_id from admin.case where id = $1`, [c])).report_id).toBeNull();
+    expect(await unmanaged()).toBe(before);
+    await db.query(`update admin.case set reason = 'changed by hand' where id = $1`, [c]);
+    expect(await unmanaged()).toBe(before + 1);
+    await close(aal2(safety2), c, 'other');
+  });
 });
 
 describe('what the safety pages carry', () => {
