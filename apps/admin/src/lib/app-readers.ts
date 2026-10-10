@@ -58,6 +58,9 @@ export const APP_READERS: AppReader[] = [
     when: 'on every request',
     ifUnread: 'refuses (the request fails).',
     note:
-      "tutor.enabled (and a suspended school) in the tutor's admission, claim_relay; contest.entries_open and contest.daily_limit in record_contest_signup; offboarded, suspended or ended schools in both imports.",
+      "tutor.enabled (and a suspended school) in the tutor's admission, claim_relay, for learners only: a school's teachers and admin" +
+      " (Draft with AI) are not refused by it; contest.entries_open and contest.daily_limit in record_contest_signup; offboarded," +
+      " suspended or ended schools in staff's import (admin.api_gate). The school admin's import and Add a parent, the demo's and" +
+      " the founder's import tool refuse such a school in their own code, which asks the database first (lms.import_refusal).",
   },
 ];

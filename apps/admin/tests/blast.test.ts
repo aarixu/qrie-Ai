@@ -14,7 +14,7 @@ describe('blast-radius lines', () => {
     );
   });
 
-  it('offboarding says the database now refuses the tutor and new people, and nothing is deleted', () => {
+  it('offboarding says the database refuses the tutor, nobody can add people, and nothing is deleted', () => {
     expect(blastOffboard('KV22', true)).toBe(
       'KV22 is marked offboarded and its tutor switch is set off: the database refuses its children new tutor classes,' +
         ' and neither Qrie staff nor its school admin can add people to it. Nothing is deleted: homework, marks and sign-ins stay.',

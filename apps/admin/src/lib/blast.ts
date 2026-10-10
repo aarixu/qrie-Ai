@@ -12,9 +12,11 @@ export function blastLicence(code: string, plan: string, seats: number, until: s
 /**
  * Offboarding is a mark plus the school's tutor switch off (0053). With 0063
  * and 0064 the database refuses the school's children new tutor classes (the
- * switch, in claim_relay) and refuses new people from staff and from the
- * school admin alike (admin.import_refusal). Bringing the school back clears
- * the mark only; the tutor switch is the owner's to turn on.
+ * switch, in claim_relay) and refuses staff's imports (admin.api_gate); the
+ * school admin's imports and parent sign-ins are refused by the import code
+ * (tools/lms-import, tools/lms-demo), which asks admin.import_refusal through
+ * lms.import_refusal first. Bringing the school back clears the mark only;
+ * the tutor switch is the owner's to turn on.
  */
 export function blastOffboard(code: string, offboard: boolean): string {
   return offboard

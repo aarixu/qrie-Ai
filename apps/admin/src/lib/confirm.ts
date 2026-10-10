@@ -42,7 +42,8 @@ export function describeFlagChange(key: string, value: unknown): string {
     case 'tutor.enabled':
       return value === false
         ? 'The database refuses new tutor classes for every child, at a school or not, except at a school whose own switch is on;' +
-            ' the tutor app shows them a pause notice with the helplines. A report already waiting on a phone is still delivered.'
+            ' the tutor app shows them a pause notice with the helplines, from which they can still send a report and open Settings and Help.' +
+            " A report already waiting on a phone is still delivered. Teachers' Draft with AI is not affected."
         : 'Children can take tutor classes again, except at a school whose own switch is off or whose licence is suspended.';
     case 'tutor.only_prepared':
       return value === true

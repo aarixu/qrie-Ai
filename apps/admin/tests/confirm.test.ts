@@ -34,7 +34,8 @@ describe('what a switch change will touch, said before it happens', () => {
   it('tutor.enabled: the database refuses classes, the tutor app pauses, reports still go', () => {
     expect(describeFlagChange('tutor.enabled', false)).toBe(
       'The database refuses new tutor classes for every child, at a school or not, except at a school whose own switch is on;' +
-        ' the tutor app shows them a pause notice with the helplines. A report already waiting on a phone is still delivered.',
+        ' the tutor app shows them a pause notice with the helplines, from which they can still send a report and open Settings and Help.' +
+        " A report already waiting on a phone is still delivered. Teachers' Draft with AI is not affected.",
     );
     expect(describeFlagChange('tutor.enabled', true)).toBe(
       'Children can take tutor classes again, except at a school whose own switch is off or whose licence is suspended.',

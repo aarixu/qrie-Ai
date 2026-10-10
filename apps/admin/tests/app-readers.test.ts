@@ -40,6 +40,16 @@ describe('the Apps page', () => {
     }
   }, 120_000);
 
+  it("the database's row claims only what the database refuses", () => {
+    const row = APP_READERS.find((r) => r.name === 'The database itself')!;
+    expect(row.note).toBe(
+      "tutor.enabled (and a suspended school) in the tutor's admission, claim_relay, for learners only: a school's teachers and admin" +
+        " (Draft with AI) are not refused by it; contest.entries_open and contest.daily_limit in record_contest_signup; offboarded," +
+        " suspended or ended schools in staff's import (admin.api_gate). The school admin's import and Add a parent, the demo's and" +
+        " the founder's import tool refuse such a school in their own code, which asks the database first (lms.import_refusal).",
+    );
+  });
+
   it("each app's first reading build is not newer than its package.json", () => {
     for (const app of ['classroom', 'student', 'lms'] as const) {
       const pkg = JSON.parse(fs.readFileSync(new URL(`../../${app}/package.json`, import.meta.url), 'utf8')) as { version: string };

@@ -144,9 +144,11 @@ Nothing in this section has been run against the hosted project yet.
    migration level should be 0061 (plan 2's 0052 to 0055, billing's 0056 to
    0060, and 0061, which joins the two).
 8. **What the switches do.** See section 7: once 0062 to 0064 are applied,
-   the database refuses tutor classes at a school whose tutor switch is off or
-   that is suspended, and refuses new people for an offboarded or suspended
-   school; the apps show the rest only from the builds named there. Only you
+   the database refuses tutor classes to the children of a school whose tutor
+   switch is off or that is suspended, and refuses staff's imports for an
+   offboarded or suspended school (the school admin's are refused by the
+   import code, once deployed as section 7 says); the apps show the rest only
+   from the builds named there. Only you
    (the owner) can turn a tutor switch back on; a teacher's or a school admin's
    new PIN, and a teachers sheet, are yours too.
 
@@ -377,13 +379,27 @@ What reads what is on the console's **Apps** page. In short: the tutor, student
 and teacher apps show the banner and ask an old build to update; the tutor
 shows a pause when its switch is off and follows "only prepared"; the student
 app shows a suspended school's notice; the school admin sees grace, suspension
-and invoices due; the contest form says when entries are closed. Three things
-are refused by the database itself, whatever an app shows: a tutor class at a
-school whose tutor switch is off or that is suspended (children see the relay's
-"Qrie is having a rest" sentence until their app refreshes, and can still send
-a report), a new contest entry when entries are closed or the day's limit
-(India's day) is reached, and new people at an offboarded, suspended or ended
-school (the school admin, staff and the founder's import tool are told why).
+and invoices due; the contest form says when entries are closed.
+
+Two things are refused by the database itself, whatever an app shows:
+
+- a tutor class for a child at a school whose tutor switch is off or that is
+  suspended. Children see the relay's "Qrie is having a rest" sentence until
+  their app refreshes, then the pause notice, from which they can still send a
+  report (still at most 120 a minute each) and open Settings (sign out, delete
+  the account) and Help. A school's teachers and admin are not refused by the
+  switch: the teacher app's Draft with AI carries on. The stop still refuses
+  everyone, teachers included.
+- a new contest entry when entries are closed or the day's limit (India's day)
+  is reached.
+
+New people at an offboarded, suspended or ended school are refused as well,
+and each person is told why, but only staff's import is refused by the
+database itself (`admin.api_gate`). The school admin's Add people and Add a
+parent (the `lms-admin` function, and the demo server's), and the founder's
+import tool, refuse in their own code, which asks the database first
+(`lms.import_refusal`). So they refuse only once that code is deployed (steps
+3 and 4), and the founder's tool only when run from the merged code.
 
 ### What you do (Aarav's steps)
 
@@ -398,20 +414,38 @@ school (the school admin, staff and the founder's import tool are told why).
    0069). The tutor's admission check works with the relay that is live today.
    System's migration level then reads the last number applied (0064 with this
    plan's alone), no longer section 5's 0061.
-3. **Until the new contest site is live**, leave `contest.entries_open` on: the
+3. **Deploy the two school services from the merged code**, after the
+   migrations: `npx supabase functions deploy lms-admin --no-verify-jwt` and
+   `npx supabase functions deploy admin-api --no-verify-jwt`. Until `lms-admin`
+   is deployed from it, a hosted school admin's Add people and Add a parent do
+   not ask whether the school may take people; `admin-api` brings staff the
+   same sentence when they check a sheet (the database refuses their import
+   either way). Neither deploys the relay: `lms-admin` takes only the sign-in
+   check (`createSupabaseVerifier`) from `packages/relay/src/auth.ts`, which is
+   the same here as on the live tutor branches, and `admin-api` takes nothing
+   from the relay.
+4. **Restart the demo server from the merged code** before deploying the
+   student and teacher apps: `npm run demo -- --reset`. It now answers the
+   apps' `GET /public/app-config` and refuses a demo school that may not take
+   people; an older demo server has no such route, and the apps then run on
+   their defaults (no banner, no notice, no minimum). A demo database built
+   from older migrations does not open, so `--reset` is needed: it rebuilds
+   the demo school, with new PINs in `tools/lms-demo/.demo-data/logins.md`.
+5. **Until the new contest site is live**, leave `contest.entries_open` on: the
    old form shows "We could not save that. Please try again in a moment." to a
    parent when entries are closed.
-4. **Build and deploy the student and teacher apps as you do today.** They read
-   the switches from the server they already use (the demo school today, the
-   hosted project once it serves them).
-5. **Set a minimum build only to a build that exists.** The first builds that
+6. **Build and deploy the student and teacher apps as you do today**, after
+   step 4. They read the switches from the server they already use (the demo
+   school today, the hosted project once it serves them).
+7. **Set a minimum build only to a build that exists.** The first builds that
    read it are tutor 0.1.0, student 0.1.0, teacher 2.3.0; older builds ignore it.
-6. **Try it on TEST:** set a banner and see it in each app within five minutes;
+8. **Try it on TEST:** set a banner and see it in each app within five minutes;
    switch the tutor off for a test school and start a class as one of its test
-   children (refused, then the pause notice); close entries and open the
-   contest form; set the daily limit to 1 and enter twice; suspend a test
-   school's licence (end it more than 14 days ago) and try Add people as its
-   school admin.
+   children (refused, then the pause notice), then tap Report something and
+   open Settings from the notice; as one of its teachers, use Draft with AI
+   (it works); close entries and open the contest form; set the daily limit to
+   1 and enter twice; suspend a test school's licence (end it more than 14
+   days ago) and try Add people and Add a parent as its school admin.
 
 ### If something goes wrong
 
