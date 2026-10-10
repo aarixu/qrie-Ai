@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
-import { BarChart3, ClipboardList, House, LogOut, Megaphone, Sparkles } from 'lucide-react'
+import { BarChart3, ClipboardList, House, LifeBuoy, LogOut, Megaphone, Sparkles } from 'lucide-react'
 import { useSchoolLogo } from '@/lib/brand'
 import { useOutbox } from '@/lib/outbox'
 import { OutboxBanner } from '@/components/outbox-banner'
+import { HelpSheet } from '@/features/help/help-sheet'
 import { signOut, useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
 import {
@@ -33,16 +34,18 @@ const PARENT_TABS = [
 ] as const
 
 /**
- * The phone frame every signed-in screen sits in: the school's name, a way
- * out, and the tabs — a student's four, a parent's two. The tabs step aside
- * while a child is inside one piece of work or a practice round, so a stray
- * tap does not leave it.
+ * The phone frame every signed-in screen sits in: the school's name, Help (the
+ * helplines, and a student's report), a way out, and the tabs — a student's
+ * four, a parent's two. The tabs step aside while a child is inside one piece
+ * of work or a practice round, so a stray tap does not leave it; Help stays,
+ * as a small button above the work.
  */
 export function Shell() {
   const me = useAuthStore((s) => s.me)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [leaving, setLeaving] = useState(false)
+  const [helping, setHelping] = useState(false)
   const path = useRouterState({ select: (s) => s.location.pathname })
   const logo = useSchoolLogo(!!me)
   const focused = path.startsWith('/homework/') || path.startsWith('/learn/practice')
@@ -63,6 +66,15 @@ export function Shell() {
             variant='ghost'
             size='icon'
             className='text-primary-foreground hover:bg-white/10 hover:text-primary-foreground'
+            aria-label='Help'
+            onClick={() => setHelping(true)}
+          >
+            <LifeBuoy />
+          </Button>
+          <Button
+            variant='ghost'
+            size='icon'
+            className='text-primary-foreground hover:bg-white/10 hover:text-primary-foreground'
             aria-label='Sign out'
             onClick={() => setLeaving(true)}
           >
@@ -71,6 +83,13 @@ export function Shell() {
         </header>
       )}
       <main className={cn('flex-1 px-4 py-4', focused ? 'pb-[max(env(safe-area-inset-bottom),1rem)]' : 'pb-24')}>
+        {focused && (
+          <div className='mb-2 flex justify-end'>
+            <Button variant='ghost' size='sm' aria-label='Help' onClick={() => setHelping(true)}>
+              <LifeBuoy /> Help
+            </Button>
+          </div>
+        )}
         <OutboxBanner />
         <Outlet />
       </main>
@@ -100,6 +119,7 @@ export function Shell() {
           })}
         </nav>
       )}
+      <HelpSheet open={helping} onOpenChange={setHelping} canReport={me?.kind === 'student'} />
       <AlertDialog open={leaving} onOpenChange={setLeaving}>
         <AlertDialogContent>
           <AlertDialogHeader>
