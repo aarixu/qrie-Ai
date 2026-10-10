@@ -269,3 +269,12 @@ export async function soloOrg(db: PGlite, user: string): Promise<string> {
   if (!rows[0]) throw new Error('no solo organisation');
   return rows[0].id;
 }
+
+/**
+ * The hosted project's auth.users.last_sign_in_at, which the harness's
+ * auth.users lacks (Task 5): a stand-in column, added only by the tests that
+ * need it.
+ */
+export async function addSignInColumn(db: PGlite): Promise<void> {
+  await db.query(`alter table auth.users add column if not exists last_sign_in_at timestamptz`);
+}
