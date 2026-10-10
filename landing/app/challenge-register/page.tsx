@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { saveEntry } from '@/lib/contest'
+import { useEntriesOpen } from '@/lib/use-entries'
 import { APP_URL } from '@/lib/app-url'
 import { ART, imgProps } from '@/lib/art'
 
@@ -29,6 +30,7 @@ export default function ChallengeRegisterPage() {
   const [takesTuition, setTakesTuition] = useState('')
   const [state, setState] = useState<State>({ at: 'idle' })
   const [error, setError] = useState('')
+  const { entries, retry } = useEntriesOpen()
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -86,6 +88,28 @@ export default function ChallengeRegisterPage() {
             <span>in prizes for curious minds</span>
           </div>
         </div>
+        {/*
+          Qrie control's contest.entries_open, read when the page opens
+          (lib/use-entries.ts). No form unless it says open; the database
+          refuses a closed or full contest whatever this page shows (0062).
+        */}
+        {entries !== 'open' && state.at !== 'saved' ? (
+          <div className="register-form" aria-live="polite">
+            {entries === 'checking' && <p>Checking whether entries are open…</p>}
+            {entries === 'closed' && (
+              <>
+                <h2>Entries are closed right now</h2>
+                <p>Please check back soon.</p>
+              </>
+            )}
+            {entries === 'unknown' && (
+              <>
+                <p>We could not check whether entries are open.</p>
+                <button className="pill dark-pill" type="button" onClick={retry}>Try again</button>
+              </>
+            )}
+          </div>
+        ) : (
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-heading">
             <span>01</span>
@@ -152,6 +176,7 @@ export default function ChallengeRegisterPage() {
             </button>
           )}
         </form>
+        )}
       </section>
     </main>
   )

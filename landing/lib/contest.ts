@@ -1,4 +1,5 @@
 import { accessToken, supabase } from './supabase'
+import { problemForCode } from './contest-config'
 
 /**
  * The contest entry, from what a child typed to what the database fences.
@@ -103,16 +104,11 @@ export async function saveEntry(entry: Entry): Promise<Saved> {
     // The message is ours, not Postgres's — a constraint name helps nobody on a
     // phone — but the real one is logged so a broken deploy is diagnosable.
     console.error('[qrie] contest signup failed:', error.code, error.message)
-    // 53400 is the project-wide daily cap in record_contest_signup, and it is
-    // the one failure where "try again in a moment" would be a lie: the cap
-    // does not lift until midnight UTC. Everything else is worth retrying.
-    if (error.code === '53400') {
-      return {
-        ok: false,
-        problem: 'Entries are full for today. Please come back tomorrow — nothing was saved.',
-      }
-    }
-    return { ok: false, problem: 'We could not save that. Please try again in a moment.' }
+    // 53400 is the day's limit in record_contest_signup (Qrie control's
+    // contest.daily_limit), which lifts at midnight India time (migration
+    // 0062); 55000 is entries closed (contest.entries_open). For both, "try
+    // again in a moment" would be a lie. Everything else is worth retrying.
+    return { ok: false, problem: problemForCode(error.code) }
   }
   return { ok: true }
 }
