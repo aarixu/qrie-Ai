@@ -1,4 +1,6 @@
 import type { PGlite } from '@electric-sql/pglite';
+import { handIn, ledgerEvent, markAttendance, publish } from './admin-school-fixtures.ts';
+import { seat, type School } from './fixtures.ts';
 import { asService } from './harness.ts';
 
 /**
@@ -97,4 +99,61 @@ export async function classRow(
   for (const file of over.files ?? ['manifest.json']) {
     await db.query(`insert into storage.objects (bucket_id, name) values ('classes', $1)`, [`${id}/${file}`]);
   }
+}
+
+/** A homework photo in the private `lms-work` bucket at <org>/<assignment>/<student>/<file>, as 0025 stores one. */
+export async function photo(db: PGlite, org: string, assignment: string, student: string, file = 'page-1.jpg'): Promise<string> {
+  const name = `${org}/${assignment}/${student}/${file}`;
+  await db.query(`insert into storage.objects (bucket_id, name, owner) values ('lms-work', $1, $2)`, [name, student]);
+  return name;
+}
+
+let parents = 0;
+
+/**
+ * One row in each of these tables a school child's records reach: a sitting and its
+ * ledger event, a usage row, a saved state, a report, a consent record, a
+ * contest entry, a homework handed in with a photo, an attendance mark, a
+ * teacher's comment, a notice read, a parent linked to them, and a line in the
+ * school's activity log naming their login ID. Written as the database owner.
+ */
+export async function populateChild(
+  db: PGlite,
+  school: School,
+  kid: string,
+): Promise<{ login: string; parent: string; assignment: string; photo: string }> {
+  const one = async <T>(sql: string, params: unknown[] = []): Promise<T> => (await db.query<T>(sql, params)).rows[0];
+  const { login } = await one<{ login: string }>(`select login_id as login from lms.account where user_id = $1`, [kid]);
+  const { code } = await one<{ code: string }>(`select code from lms.school where org_id = $1`, [school.org]);
+  await ledgerEvent(db, school.org, kid);
+  await db.query(`insert into public.usage_event (user_id, relay, provider, status) values ($1, 'llm', 'vertex', 200)`, [kid]);
+  await db.query(`insert into public.student_state (user_id, key, value, updated_at) values ($1, 'profile', '{}', 1)`, [kid]);
+  await report(db, kid, { note: 'a private note' });
+  await db.query(
+    `insert into public.consent_record (user_id, parent_name, parent_phone, source, otp_verified_at)
+     values ($1, 'A parent', '+919876543210', 'contest', now())`,
+    [kid],
+  );
+  await db.query(`insert into public.contest_signup (user_id, student_name, klass, city) values ($1, 'Riya', 8, 'Pune')`, [kid]);
+  const assignment = await publish(db, school, 2);
+  await handIn(db, school.org, assignment, kid);
+  const photoName = await photo(db, school.org, assignment, kid);
+  await markAttendance(db, school, kid, 1);
+  await db.query(
+    `insert into lms.work_comment (assignment_id, student_user_id, org_id, text, written_by) values ($1, $2, $3, 'Good work', $4)`,
+    [assignment, kid, school.org, school.teacherA],
+  );
+  const { id: notice } = await one<{ id: string }>(
+    `insert into lms.notice (org_id, academic_year_id, whole_school, title, body, created_by)
+     values ($1, $2, true, 'Holiday', 'School is closed on Friday.', $3) returning id`,
+    [school.org, school.year, school.admin],
+  );
+  await db.query(`insert into lms.notice_read (notice_id, user_id) values ($1, $2)`, [notice, kid]);
+  const parent = await seat(db, school.org, 'parent', `${code}-PAR${++parents}`, 'A parent');
+  await db.query(`insert into lms.guardian (parent_user_id, student_user_id, org_id) values ($1, $2, $3)`, [parent, kid, school.org]);
+  await db.query(
+    `insert into lms.audit_event (org_id, actor, action, target, details) values ($1, $2, 'pin-reset', $3, $4::jsonb)`,
+    [school.org, school.admin, login, JSON.stringify({ loginId: login, by: 'admin' })],
+  );
+  return { login, parent, assignment, photo: photoName };
 }
