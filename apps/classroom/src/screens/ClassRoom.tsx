@@ -916,6 +916,11 @@ export function ClassRoom({
         // spoken doubt left behind may reach the next one.
         pendingSpokenDoubt.current = null;
         studentHasFloor.current = false;
+        // The mic turned on for a question does not outlive a doubt raised at
+        // it: she re-speaks that beat now, which is her teaching, and the
+        // effect after `talk` closes the mic for it (integration audit,
+        // 2026-10-11). She re-asks with the mic off; a tap opens it again.
+        micBeat.current = null;
         setTextLines([]);
         setTranscript([]);
         setMuted(false);
@@ -2120,7 +2125,8 @@ export function ClassRoom({
    * than the one whose question it was turned on for (`micBeat`) — it closes,
    * so a noisy room never stops her. A next beat that asks too is her teaching
    * first: the mic does not carry into it, nor from the warm-up into the
-   * first beat.
+   * first beat. The `micBeat` exception does not survive a doubt: when one
+   * ends she re-speaks the beat, and that is her teaching too.
    */
   useEffect(() => {
     if (earReady && player.state === 'playing' && !inDoubt && !heldAskBeat && (player.beat?.id ?? null) !== micBeat.current) {

@@ -1,0 +1,2227 @@
+{
+  "formatVersion": 1,
+  "id": "human-heart-double-circulation",
+  "title": "Human Heart & Double Circulation",
+  "subtitle": "How four chambers keep your blood moving in two distinct loops",
+  "language": "en",
+  "canvas": {
+    "w": 4780,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "b1_0",
+      "x": 500,
+      "y": 72,
+      "text": "The Need for a Blood Pump"
+    },
+    {
+      "kind": "text",
+      "id": "b1_0_path",
+      "x": 500,
+      "y": 20,
+      "text": "Life Processes › Transportation in Human Beings › The Heart",
+      "size": 20,
+      "muted": true
+    },
+    {
+      "kind": "graphic",
+      "id": "b1__runner",
+      "x": 292.6963636363636,
+      "y": 138,
+      "w": 144,
+      "h": 144,
+      "noun": "runner",
+      "label": "running person",
+      "labelSide": "below",
+      "aspect": 0.7496251874062968,
+      "credit": {
+        "author": "Syced",
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "page": "https://commons.wikimedia.org/wiki/File:September_2002,_Running_race_in_Rennes.jpg"
+      }
+    },
+    {
+      "kind": "graphic",
+      "id": "b1__cell",
+      "x": 585.9236363636364,
+      "y": 138,
+      "w": 144,
+      "h": 144,
+      "noun": "cell",
+      "label": "muscle cell",
+      "labelSide": "below",
+      "aspect": 1,
+      "credit": {
+        "author": "National Institute of Standards and Technology",
+        "license": "Public domain",
+        "page": "https://commons.wikimedia.org/wiki/File:Smooth_muscle_cells_(5940523093).jpg"
+      }
+    },
+    {
+      "kind": "arrow",
+      "id": "b1_5",
+      "from": {
+        "x": 450.6963636363636,
+        "y": 210
+      },
+      "to": {
+        "x": 571.9236363636364,
+        "y": 210
+      },
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b1_5_label",
+      "x": 504.5414322100314,
+      "y": 123.90380094043887,
+      "text": "needs oxygen",
+      "size": 17.417711598746095,
+      "tone": "accent"
+    },
+    {
+      "kind": "mark",
+      "id": "b1_7",
+      "x": 571.9236363636364,
+      "y": 124,
+      "w": 172,
+      "h": 172,
+      "shape": "circle"
+    },
+    {
+      "kind": "text",
+      "id": "b1_9_dot",
+      "x": 520,
+      "y": 353.1,
+      "text": "•",
+      "size": 19
+    },
+    {
+      "kind": "handwrite",
+      "id": "b1_9",
+      "x": 724.2162699999999,
+      "y": 353.1,
+      "text": "Heart pumps continuously to transport",
+      "size": 19
+    },
+    {
+      "kind": "handwrite",
+      "after": 1702,
+      "id": "b1_9_l1",
+      "x": 569.31972,
+      "y": 388.75,
+      "text": "gases",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "b1_11_dot",
+      "x": 520,
+      "y": 428.40000000000003,
+      "text": "•",
+      "size": 19
+    },
+    {
+      "kind": "handwrite",
+      "id": "b1_11",
+      "x": 711.7697499999999,
+      "y": 428.40000000000003,
+      "text": "Oxygen-rich and carbon dioxide-rich",
+      "size": 19
+    },
+    {
+      "kind": "handwrite",
+      "after": 1610,
+      "id": "b1_11_l1",
+      "x": 636.56224,
+      "y": 464.05000000000007,
+      "text": "blood stay separate",
+      "size": 19
+    },
+    {
+      "kind": "box",
+      "id": "b1_12",
+      "x": 510,
+      "y": 524,
+      "w": 450,
+      "h": 78,
+      "label": "",
+      "as": "banner",
+      "tone": "accent"
+    },
+    {
+      "kind": "text",
+      "id": "b1_12_s0",
+      "x": 735,
+      "y": 555,
+      "text": "Heart pumps blood to supply",
+      "size": 20
+    },
+    {
+      "kind": "text",
+      "id": "b1_12_s1",
+      "x": 735,
+      "y": 583,
+      "text": "oxygen and remove waste",
+      "size": 20
+    },
+    {
+      "kind": "title",
+      "id": "b2_0",
+      "x": 1760,
+      "y": 72,
+      "text": "Internal Structure of the Heart"
+    },
+    {
+      "kind": "text",
+      "id": "b2_0_path",
+      "x": 1760,
+      "y": 20,
+      "text": "Life Processes › Transportation › Four Chambers",
+      "size": 20,
+      "muted": true
+    },
+    {
+      "kind": "image",
+      "id": "heart_cross_section",
+      "x": 1418,
+      "y": 171.45454545454544,
+      "w": 354,
+      "h": 193.0909090909091,
+      "src": "generated/heart_cross_section.png",
+      "alt": "Internal cross section diagram of the human heart showing four chambers, valves, and septum",
+      "parts": [
+        {
+          "name": "right_atrium",
+          "x": 0.27,
+          "y": 0.13,
+          "w": 0.15,
+          "h": 0.39
+        },
+        {
+          "name": "right_ventricle",
+          "x": 0.31,
+          "y": 0.52,
+          "w": 0.28,
+          "h": 0.38
+        },
+        {
+          "name": "left_atrium",
+          "x": 0.51,
+          "y": 0.08,
+          "w": 0.17,
+          "h": 0.26
+        },
+        {
+          "name": "left_ventricle",
+          "x": 0.51,
+          "y": 0.385,
+          "w": 0.21,
+          "h": 0.45
+        },
+        {
+          "name": "septum",
+          "x": 0.49,
+          "y": 0.47,
+          "w": 0.16,
+          "h": 0.45
+        },
+        {
+          "name": "valves",
+          "x": 0.53,
+          "y": 0.32,
+          "w": 0.16,
+          "h": 0.14
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_5",
+      "x": 1370.76242,
+      "y": 217.90909090909088,
+      "text": "Right",
+      "size": 18,
+      "ink": "red"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_5_l1",
+      "x": 1370.76242,
+      "y": 252.2090909090909,
+      "text": "atrium",
+      "size": 18,
+      "after": 480,
+      "ink": "red"
+    },
+    {
+      "kind": "arrow",
+      "id": "b2_5_line",
+      "from": {
+        "x": 1406,
+        "y": 229.2990909090909
+      },
+      "to": {
+        "x": 1513.58,
+        "y": 234.2090909090909
+      },
+      "ink": "red"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_7",
+      "x": 1819.23758,
+      "y": 195.70363636363626,
+      "text": "Left",
+      "size": 18,
+      "ink": "blue"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_7_l1",
+      "x": 1819.23758,
+      "y": 230.00363636363625,
+      "text": "atrium",
+      "size": 18,
+      "after": 480,
+      "ink": "blue"
+    },
+    {
+      "kind": "arrow",
+      "id": "b2_7_line",
+      "from": {
+        "x": 1784,
+        "y": 207.09363636363628
+      },
+      "to": {
+        "x": 1658.72,
+        "y": 212.00363636363633
+      },
+      "ink": "blue"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_9",
+      "x": 1361.86322,
+      "y": 296.5090909090909,
+      "text": "Right",
+      "size": 18,
+      "ink": "green"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_9_l1",
+      "x": 1361.86322,
+      "y": 330.8090909090909,
+      "text": "ventricle",
+      "size": 18,
+      "after": 480,
+      "ink": "green"
+    },
+    {
+      "kind": "arrow",
+      "id": "b2_9_line",
+      "from": {
+        "x": 1406,
+        "y": 307.8990909090909
+      },
+      "to": {
+        "x": 1527.74,
+        "y": 308.5490909090909
+      },
+      "ink": "green"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_11",
+      "x": 1828.13678,
+      "y": 318.60363636363627,
+      "text": "Left",
+      "size": 18,
+      "ink": "orange"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_11_l1",
+      "x": 1828.13678,
+      "y": 352.9036363636363,
+      "text": "ventricle",
+      "size": 18,
+      "after": 480,
+      "ink": "orange"
+    },
+    {
+      "kind": "arrow",
+      "id": "b2_11_line",
+      "from": {
+        "x": 1784,
+        "y": 329.99363636363626
+      },
+      "to": {
+        "x": 1672.88,
+        "y": 289.24
+      },
+      "ink": "orange"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_14",
+      "x": 1824.05798,
+      "y": 397.2036363636363,
+      "text": "Septum",
+      "size": 18,
+      "ink": "purple"
+    },
+    {
+      "kind": "arrow",
+      "id": "b2_14_line",
+      "from": {
+        "x": 1784,
+        "y": 391.4436363636363
+      },
+      "to": {
+        "x": 1648.1,
+        "y": 305.65272727272725
+      },
+      "ink": "purple"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_15",
+      "x": 1819.3210100000001,
+      "y": 274.30363636363626,
+      "text": "Valves",
+      "size": 18,
+      "ink": "teal"
+    },
+    {
+      "kind": "arrow",
+      "id": "b2_15_line",
+      "from": {
+        "x": 1784,
+        "y": 268.54363636363627
+      },
+      "to": {
+        "x": 1662.26,
+        "y": 246.76
+      },
+      "ink": "teal"
+    },
+    {
+      "kind": "list",
+      "id": "b2_16",
+      "x": 1910,
+      "y": 96,
+      "w": 310,
+      "heading": "Main structures of the heart",
+      "items": [
+        {
+          "term": "Atria (top)",
+          "meaning": "receive incoming blood"
+        },
+        {
+          "term": "Ventricles (bottom)",
+          "meaning": "pump blood out of heart"
+        },
+        {
+          "term": "Septum",
+          "meaning": "prevents mixing of blood",
+          "ink": "purple"
+        },
+        {
+          "term": "Valves",
+          "meaning": "prevent backflow",
+          "ink": "teal"
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "id": "b2_20_dot",
+      "x": 1310,
+      "y": 473.1,
+      "text": "•",
+      "size": 19
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_20",
+      "x": 1556.19392,
+      "y": 473.1,
+      "text": "Left ventricle has thickest wall for high pressure",
+      "size": 19
+    },
+    {
+      "kind": "box",
+      "id": "b2_21",
+      "x": 1300,
+      "y": 495.65,
+      "w": 590,
+      "h": 50,
+      "label": "",
+      "as": "banner",
+      "tone": "accent"
+    },
+    {
+      "kind": "text",
+      "id": "b2_21_s0",
+      "x": 1595,
+      "y": 526.65,
+      "text": "Four chambers and valves ensure one-way flow",
+      "size": 20
+    },
+    {
+      "kind": "mark",
+      "id": "b2_4",
+      "x": 1503.58,
+      "y": 186.5563636363636,
+      "w": 73.1,
+      "h": 95.30545454545455,
+      "shape": "circle",
+      "tone": "accent",
+      "ink": "red"
+    },
+    {
+      "kind": "mark",
+      "id": "b2_6",
+      "x": 1588.54,
+      "y": 176.90181818181816,
+      "w": 80.18,
+      "h": 70.20363636363636,
+      "shape": "circle",
+      "tone": "accent",
+      "ink": "blue"
+    },
+    {
+      "kind": "mark",
+      "id": "b2_8",
+      "x": 1517.74,
+      "y": 261.8618181818182,
+      "w": 119.12,
+      "h": 93.37454545454545,
+      "shape": "circle",
+      "ink": "green"
+    },
+    {
+      "kind": "mark",
+      "id": "b2_10",
+      "x": 1588.54,
+      "y": 235.79454545454544,
+      "w": 94.34,
+      "h": 106.89090909090909,
+      "shape": "circle",
+      "ink": "orange"
+    },
+    {
+      "kind": "mark",
+      "id": "b2_13",
+      "x": 1591.46,
+      "y": 262.2072727272727,
+      "w": 56.64,
+      "h": 86.89090909090909,
+      "shape": "underline",
+      "tone": "accent",
+      "ink": "purple"
+    },
+    {
+      "kind": "mark",
+      "id": "b2_18",
+      "x": 1588.54,
+      "y": 235.79454545454544,
+      "w": 94.34,
+      "h": 106.89090909090909,
+      "shape": "circle",
+      "ink": "orange"
+    },
+    {
+      "kind": "title",
+      "id": "b3_0",
+      "x": 3020,
+      "y": 72,
+      "text": "Circulatory Pathways"
+    },
+    {
+      "kind": "text",
+      "id": "b3_0_path",
+      "x": 3020,
+      "y": 20,
+      "text": "Life Processes › Transportation › Circulatory Loops",
+      "size": 20,
+      "muted": true
+    },
+    {
+      "kind": "diagram",
+      "id": "double_circulation_circuit",
+      "x": 2560,
+      "y": 96,
+      "w": 590,
+      "h": 344,
+      "src": "generated/double_circulation_circuit.svg",
+      "alt": "Diagram showing pulmonary and systemic circuits of double circulation",
+      "parts": [
+        "pulmonary_loop",
+        "systemic_loop",
+        "heart",
+        "lungs",
+        "body_tissues"
+      ]
+    },
+    {
+      "kind": "list",
+      "id": "b3_8",
+      "x": 3170,
+      "y": 96,
+      "w": 310,
+      "heading": "The two routes",
+      "items": [
+        {
+          "term": "Pulmonary loop",
+          "meaning": "heart to lungs for gas exchange"
+        },
+        {
+          "term": "Systemic loop",
+          "meaning": "heart to body tissues to deliver oxygen"
+        }
+      ]
+    },
+    {
+      "kind": "box",
+      "id": "b3_12_c0",
+      "x": 3170,
+      "y": 288.62,
+      "w": 310,
+      "h": 128,
+      "label": "",
+      "tone": "accent",
+      "as": "banner"
+    },
+    {
+      "kind": "text",
+      "id": "b3_12_h0",
+      "x": 3325,
+      "y": 326.62,
+      "text": "Double Circulation",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "b3_12_b0",
+      "x": 3325,
+      "y": 352.62,
+      "text": "Blood passes through the heart",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b3_12_b0_l1",
+      "x": 3325,
+      "y": 375.02,
+      "text": "twice for each complete",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b3_12_b0_l2",
+      "x": 3325,
+      "y": 397.42,
+      "text": "circuit of the body.",
+      "size": 16
+    },
+    {
+      "kind": "box",
+      "id": "b3_13",
+      "x": 3170,
+      "y": 524,
+      "w": 310,
+      "h": 78,
+      "label": "",
+      "as": "banner",
+      "tone": "accent"
+    },
+    {
+      "kind": "text",
+      "id": "b3_13_s0",
+      "x": 3325,
+      "y": 555,
+      "text": "Blood passes through",
+      "size": 20
+    },
+    {
+      "kind": "text",
+      "id": "b3_13_s1",
+      "x": 3325,
+      "y": 583,
+      "text": "heart twice per cycle",
+      "size": 20
+    },
+    {
+      "kind": "title",
+      "id": "b4_0",
+      "x": 4280,
+      "y": 72,
+      "text": "Significance of Double Circulation"
+    },
+    {
+      "kind": "text",
+      "id": "b4_0_path",
+      "x": 4280,
+      "y": 20,
+      "text": "Life Processes › Transportation › Adaptations",
+      "size": 20,
+      "muted": true
+    },
+    {
+      "kind": "box",
+      "id": "b4_2",
+      "x": 3820,
+      "y": 96,
+      "w": 560,
+      "h": 188.4,
+      "label": ""
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_lh",
+      "x": 3963,
+      "y": 127,
+      "text": "Double Circuit",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_rh",
+      "x": 4237,
+      "y": 127,
+      "text": "Incomplete Circuit",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_l0_0",
+      "x": 3963,
+      "y": 154.4,
+      "text": "Complete separation by",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_l0_1",
+      "x": 3963,
+      "y": 176.4,
+      "text": "septum",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_r0_0",
+      "x": 4237,
+      "y": 154.4,
+      "text": "Partial mixing of blood",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_l1_0",
+      "x": 3963,
+      "y": 206.4,
+      "text": "Pure oxygen-rich delivery",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_r1_0",
+      "x": 4237,
+      "y": 206.4,
+      "text": "Lower oxygen delivery",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_l2_0",
+      "x": 3963,
+      "y": 236.4,
+      "text": "Supports constant body",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_l2_1",
+      "x": 3963,
+      "y": 258.4,
+      "text": "temperature",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_r2_0",
+      "x": 4237,
+      "y": 236.4,
+      "text": "Body temperature matches",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b4_2_r2_1",
+      "x": 4237,
+      "y": 258.4,
+      "text": "surroundings",
+      "size": 16
+    },
+    {
+      "kind": "list",
+      "id": "b4_3",
+      "x": 4400,
+      "y": 96,
+      "w": 340,
+      "heading": "Key advantages",
+      "items": [
+        {
+          "term": "High efficiency",
+          "meaning": "delivers pure oxygenated blood to tissues"
+        },
+        {
+          "term": "High pressure",
+          "meaning": "maintains forceful flow through body"
+        },
+        {
+          "term": "Thermoregulation",
+          "meaning": "powers high energy needed to stay warm"
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "id": "b4_5_dot",
+      "x": 3830,
+      "y": 315.5,
+      "text": "•",
+      "size": 19
+    },
+    {
+      "kind": "handwrite",
+      "id": "b4_5",
+      "x": 4074.187995,
+      "y": 315.5,
+      "text": "Warm-blooded animals require continuous high",
+      "size": 19
+    },
+    {
+      "kind": "handwrite",
+      "after": 2024,
+      "id": "b4_5_l1",
+      "x": 3885.13201,
+      "y": 351.15,
+      "text": "energy",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "b4_9_dot",
+      "x": 3830,
+      "y": 390.8,
+      "text": "•",
+      "size": 19
+    },
+    {
+      "kind": "handwrite",
+      "id": "b4_9",
+      "x": 4076.48747,
+      "y": 390.8,
+      "text": "Zero mixing powers constant body temperature",
+      "size": 19
+    },
+    {
+      "kind": "box",
+      "id": "b4_10",
+      "x": 3820,
+      "y": 413.34999999999997,
+      "w": 560,
+      "h": 78,
+      "label": "",
+      "as": "banner",
+      "tone": "accent"
+    },
+    {
+      "kind": "text",
+      "id": "b4_10_s0",
+      "x": 4100,
+      "y": 444.34999999999997,
+      "text": "Double circulation powers warm-blooded",
+      "size": 20
+    },
+    {
+      "kind": "text",
+      "id": "b4_10_s1",
+      "x": 4100,
+      "y": 472.34999999999997,
+      "text": "metabolism",
+      "size": 20
+    },
+    {
+      "kind": "mark",
+      "id": "b4_7",
+      "x": 3822.49,
+      "y": 294.5,
+      "w": 475.8859899999999,
+      "h": 65.29999999999995,
+      "shape": "underline"
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1_1",
+      "topic": "Why We Need a Dedicated Pump",
+      "narration": "Hello! Ready to dive in?",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner"
+      ],
+      "frame": [
+        "b1__runner"
+      ]
+    },
+    {
+      "id": "b1_2",
+      "topic": "Why We Need a Dedicated Pump",
+      "narration": "Think about sprinting to catch a school bus. When you stop, your chest is thumping hard.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label"
+      ],
+      "frame": [
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label"
+      ]
+    },
+    {
+      "id": "b1_3",
+      "topic": "Why We Need a Dedicated Pump",
+      "narration": "Why do your muscle cells demand that rapid rush of blood the moment you run?",
+      "ask": {
+        "question": "Why do your muscle cells demand that rapid rush of blood the moment you run?",
+        "expect": "Muscle cells need more oxygen and glucose quickly to release energy through cellular respiration.",
+        "hint": "What do hard-working cells consume to release energy?",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Muscles need more oxygen and nutrients to produce energy fast",
+              "correct": true,
+              "why": "Active cells respire rapidly, consuming oxygen and glucose to produce ATP, so the blood must deliver them faster."
+            },
+            {
+              "text": "Blood is needed to cool down the hot muscles",
+              "correct": false,
+              "why": "Blood does distribute heat, but the immediate trigger for increased pumping is meeting high cellular energy demand.",
+              "followUp": "What chemical fuel and gas do muscle cells consume when they contract?"
+            },
+            {
+              "text": "The lungs directly push blood faster",
+              "correct": false,
+              "why": "The lungs exchange gases, but it is the muscular heart that pumps and speeds up circulation.",
+              "followUp": "Which muscular organ actually forces blood through the vessels?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "A resting muscle uses a steady amount of oxygen for base energy.",
+              "line": "Rest: baseline O2 consumed"
+            },
+            {
+              "say": "Exercise increases energy demand five-fold, requiring five times faster delivery.",
+              "line": "Exercise: 5x O2 required -> heart pumps faster"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "everyday",
+            "say": "Just like a busy kitchen needs delivery vans arriving constantly, your cells need continuous supply trucks."
+          },
+          {
+            "mode": "analogy",
+            "say": "Think of blood as a conveyor belt carrying oxygen fuel to engines running at top speed."
+          }
+        ]
+      },
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7"
+      ],
+      "frame": [
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7"
+      ]
+    },
+    {
+      "id": "b1_4",
+      "topic": "Why We Need a Dedicated Pump",
+      "narration": "Every cell in your body needs oxygen delivered without pause.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1"
+      ],
+      "frame": [
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1"
+      ]
+    },
+    {
+      "id": "b1_5",
+      "topic": "Why We Need a Dedicated Pump",
+      "narration": "Because oxygen and carbon dioxide carry opposite needs, our heart must keep them separated.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1"
+      ],
+      "frame": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1"
+      ]
+    },
+    {
+      "id": "b2_1",
+      "topic": "Internal Structure of the Heart",
+      "narration": "Here is a cross section of the human heart showing its four separate rooms.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section"
+      ],
+      "frame": [
+        "heart_cross_section"
+      ]
+    },
+    {
+      "id": "b2_2",
+      "topic": "Internal Structure of the Heart",
+      "narration": "The top chambers are the atria, and the bottom chambers are the ventricles.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line"
+      ],
+      "frame": [
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line"
+      ]
+    },
+    {
+      "id": "b2_3",
+      "topic": "Internal Structure of the Heart",
+      "narration": "A thick muscular septum divides the left and right sides, and valves keep blood flowing forward.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16"
+      ],
+      "frame": [
+        "heart_cross_section",
+        "b2_4",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16"
+      ]
+    },
+    {
+      "id": "b2_4",
+      "topic": "Internal Structure of the Heart",
+      "narration": "Notice how the ventricles have much thicker muscular walls than the atria. Why do the ventricles have thicker muscular walls than the atria?",
+      "ask": {
+        "question": "Why do the ventricles have thicker muscular walls than the atria?",
+        "expect": "Ventricles have to pump blood out to distant organs under high pressure, while atria only push blood into adjacent ventricles.",
+        "hint": "Think about how far each chamber has to push the blood.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Ventricles pump blood long distances to lungs and body under higher pressure",
+              "correct": true,
+              "why": "Ventricles generate high force to push blood through long circuits, whereas atria simply collect and drop blood into ventricles."
+            },
+            {
+              "text": "Ventricles store blood for a longer time",
+              "correct": false,
+              "why": "Ventricles do not store blood; they contract immediately after filling to propel blood forward.",
+              "followUp": "Does blood sit stationary in the heart, or is it constantly moving under pressure?"
+            },
+            {
+              "text": "The right and left sides have different types of muscles",
+              "correct": false,
+              "why": "All chambers are made of cardiac muscle, but wall thickness varies with the workload needed to generate pressure.",
+              "followUp": "Which chamber has to push blood all the way from your chest to your toes?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "Atrium pushes blood a short distance into the ventricle beneath it.",
+              "line": "Atrium -> Ventricle (short distance = thin wall)"
+            },
+            {
+              "say": "Left ventricle pushes blood all the way from head to toe.",
+              "line": "Left ventricle -> Entire body (long distance = thick wall)"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "analogy",
+            "say": "Pouring water into an adjacent cup takes very little effort, but pumping it through long pipes requires a strong motor."
+          },
+          {
+            "mode": "visual",
+            "say": "Look at the left ventricular wall: it is visibly thick because it drives pressure across the whole body."
+          }
+        ]
+      },
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18"
+      ],
+      "frame": [
+        "heart_cross_section",
+        "b2_4",
+        "b2_6",
+        "b2_7_line",
+        "b2_8",
+        "b2_10",
+        "b2_11_line",
+        "b2_13",
+        "b2_14_line",
+        "b2_15_line",
+        "b2_18"
+      ]
+    },
+    {
+      "id": "b2_5",
+      "topic": "Internal Structure of the Heart",
+      "narration": "The left ventricle has the thickest wall because it drives blood across the whole body.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0"
+      ],
+      "frame": [
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0"
+      ]
+    },
+    {
+      "id": "b3_1",
+      "topic": "The Path of Double Circulation",
+      "narration": "Blood flows through two separate circuits in human circulation.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0",
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit"
+      ],
+      "frame": [
+        "double_circulation_circuit"
+      ],
+      "focus": [
+        "double_circulation_circuit#pulmonary_loop"
+      ]
+    },
+    {
+      "id": "b3_2",
+      "topic": "The Path of Double Circulation",
+      "narration": "The right side sends deoxygenated blood to the lungs to collect oxygen.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0",
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit"
+      ],
+      "frame": [
+        "double_circulation_circuit"
+      ],
+      "focus": [
+        "double_circulation_circuit#lungs"
+      ]
+    },
+    {
+      "id": "b3_3",
+      "topic": "The Path of Double Circulation",
+      "narration": "Oxygenated blood returns to the left side and is pumped out to all body tissues.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0",
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit",
+        "b3_8"
+      ],
+      "frame": [
+        "b3_8"
+      ],
+      "focus": [
+        "double_circulation_circuit#systemic_loop"
+      ]
+    },
+    {
+      "id": "b3_4",
+      "topic": "The Path of Double Circulation",
+      "narration": "If blood travels through the heart twice to complete one full cycle through the body, what is this system called?",
+      "ask": {
+        "question": "If blood travels through the heart twice to complete one full cycle through the body, what is this system called?",
+        "expect": "It is called double circulation, consisting of pulmonary and systemic circulation.",
+        "hint": "The name directly reflects the count of times blood passes through the heart per complete cycle.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Double circulation",
+              "correct": true,
+              "why": "Because blood passes through the heart twice in one complete cycle—once through pulmonary and once through systemic."
+            },
+            {
+              "text": "Single circulation",
+              "correct": false,
+              "why": "Single circulation occurs in fishes, where blood passes through the heart only once per cycle.",
+              "followUp": "How many times does blood enter the heart before finishing a whole body tour?"
+            },
+            {
+              "text": "Open circulation",
+              "correct": false,
+              "why": "Humans have a closed circulatory system with blood enclosed within vessels and pumped in two loops.",
+              "followUp": "Is human blood loose in body cavities or contained in blood vessels?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "In a fish, heart pumps deoxygenated blood to gills, which flows straight to body, visiting heart once.",
+              "line": "Fish: Heart -> Gills -> Body -> Heart (Single circulation)"
+            },
+            {
+              "say": "In humans, heart pumps to lungs, blood returns to heart, and heart pumps to body.",
+              "line": "Human: Heart -> Lungs -> Heart -> Body -> Heart (Double circulation)"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "steps",
+            "say": "Follow the drop of blood: body to heart, heart to lungs, lungs back to heart, heart to body. Two visits to the heart equals double circulation."
+          },
+          {
+            "mode": "analogy",
+            "say": "Like a figure-eight racetrack where the car crosses the central junction twice per full lap."
+          }
+        ]
+      },
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0",
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit",
+        "b3_8"
+      ],
+      "frame": [
+        "b3_8"
+      ],
+      "focus": [
+        "double_circulation_circuit#heart"
+      ]
+    },
+    {
+      "id": "b3_5",
+      "topic": "The Path of Double Circulation",
+      "narration": "That two-loop pathway is double circulation.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0",
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit",
+        "b3_8",
+        "b3_12_c0",
+        "b3_12_h0",
+        "b3_12_b0",
+        "b3_12_b0_l1",
+        "b3_12_b0_l2",
+        "b3_13",
+        "b3_13_s0",
+        "b3_13_s1"
+      ],
+      "frame": [
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit",
+        "b3_8",
+        "b3_12_c0",
+        "b3_12_h0",
+        "b3_12_b0",
+        "b3_12_b0_l1",
+        "b3_12_b0_l2",
+        "b3_13",
+        "b3_13_s0",
+        "b3_13_s1"
+      ]
+    },
+    {
+      "id": "b4_1",
+      "topic": "Why Double Circulation is Essential",
+      "narration": "Let us compare animals with double circulation against those with single or incomplete systems.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0",
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit",
+        "b3_8",
+        "b3_12_c0",
+        "b3_12_h0",
+        "b3_12_b0",
+        "b3_12_b0_l1",
+        "b3_12_b0_l2",
+        "b3_13",
+        "b3_13_s0",
+        "b3_13_s1",
+        "b4_0",
+        "b4_0_path",
+        "b4_2",
+        "b4_2_lh",
+        "b4_2_rh",
+        "b4_2_l0_0",
+        "b4_2_l0_1",
+        "b4_2_r0_0",
+        "b4_2_l1_0",
+        "b4_2_r1_0",
+        "b4_2_l2_0",
+        "b4_2_l2_1",
+        "b4_2_r2_0",
+        "b4_2_r2_1",
+        "b4_3"
+      ],
+      "frame": [
+        "b4_2",
+        "b4_2_lh",
+        "b4_2_rh",
+        "b4_2_l0_0",
+        "b4_2_l0_1",
+        "b4_2_r0_0",
+        "b4_2_l1_0",
+        "b4_2_r1_0",
+        "b4_2_l2_0",
+        "b4_2_l2_1",
+        "b4_2_r2_0",
+        "b4_2_r2_1",
+        "b4_3"
+      ]
+    },
+    {
+      "id": "b4_2",
+      "topic": "Why Double Circulation is Essential",
+      "narration": "Humans and birds are warm-blooded, meaning we maintain a constant internal body temperature regardless of outside weather.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0",
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit",
+        "b3_8",
+        "b3_12_c0",
+        "b3_12_h0",
+        "b3_12_b0",
+        "b3_12_b0_l1",
+        "b3_12_b0_l2",
+        "b3_13",
+        "b3_13_s0",
+        "b3_13_s1",
+        "b4_0",
+        "b4_0_path",
+        "b4_2",
+        "b4_2_lh",
+        "b4_2_rh",
+        "b4_2_l0_0",
+        "b4_2_l0_1",
+        "b4_2_r0_0",
+        "b4_2_l1_0",
+        "b4_2_r1_0",
+        "b4_2_l2_0",
+        "b4_2_l2_1",
+        "b4_2_r2_0",
+        "b4_2_r2_1",
+        "b4_3",
+        "b4_5_dot",
+        "b4_5",
+        "b4_5_l1"
+      ],
+      "frame": [
+        "b4_2",
+        "b4_2_l0_0",
+        "b4_2_l0_1",
+        "b4_2_r0_0",
+        "b4_2_l1_0",
+        "b4_2_r1_0",
+        "b4_2_l2_0",
+        "b4_2_l2_1",
+        "b4_2_r2_0",
+        "b4_2_r2_1",
+        "b4_5_dot",
+        "b4_5",
+        "b4_5_l1"
+      ]
+    },
+    {
+      "id": "b4_3",
+      "topic": "Why Double Circulation is Essential",
+      "narration": "Why would mixing oxygen-rich and oxygen-poor blood make it impossible for us to maintain our body temperature in the cold?",
+      "ask": {
+        "question": "Why would mixing oxygen-rich and oxygen-poor blood make it impossible for us to maintain our body temperature in the cold?",
+        "expect": "Mixing would lower the oxygen concentration delivered to tissues, reducing cellular respiration and failing to produce enough heat and energy.",
+        "hint": "How do our cells generate the heat needed to stay warm?",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Diluted oxygen delivery slows cellular respiration so cells cannot produce sufficient heat energy",
+              "correct": true,
+              "why": "Without pure oxygen delivery, cellular respiration efficiency drops sharply, failing to meet the massive energy demands of thermoregulation."
+            },
+            {
+              "text": "The heart would stop beating immediately",
+              "correct": false,
+              "why": "The heart would still beat, but tissue respiration would be too sluggish to support warm-blooded metabolism.",
+              "followUp": "What chemical process in cells releases heat from glucose and oxygen?"
+            },
+            {
+              "text": "Cold blood would freeze inside the veins",
+              "correct": false,
+              "why": "Blood would not freeze, but the metabolic heat generation would fail to keep the core temperature steady.",
+              "followUp": "Where does body warmth originate at the microscopic level?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "A lizard allows blood mixing and tolerates low oxygenation because it absorbs heat from the sun.",
+              "line": "Lizard: 3 chambers -> mixed blood -> cold-blooded"
+            },
+            {
+              "say": "A human needs continuous internal heat production, requiring pure oxygen delivery.",
+              "line": "Human: 4 chambers -> zero mixing -> warm-blooded (37°C constant)"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "analogy",
+            "say": "If you dilute high-grade furnace fuel with exhaust smoke, the furnace cannot burn hot enough to warm the building."
+          },
+          {
+            "mode": "everyday",
+            "say": "On a chilly winter morning, shivering muscles consume vast amounts of oxygen to produce heat—double circulation guarantees that top-tier oxygen supply."
+          }
+        ]
+      },
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0",
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit",
+        "b3_8",
+        "b3_12_c0",
+        "b3_12_h0",
+        "b3_12_b0",
+        "b3_12_b0_l1",
+        "b3_12_b0_l2",
+        "b3_13",
+        "b3_13_s0",
+        "b3_13_s1",
+        "b4_0",
+        "b4_0_path",
+        "b4_2",
+        "b4_2_lh",
+        "b4_2_rh",
+        "b4_2_l0_0",
+        "b4_2_l0_1",
+        "b4_2_r0_0",
+        "b4_2_l1_0",
+        "b4_2_r1_0",
+        "b4_2_l2_0",
+        "b4_2_l2_1",
+        "b4_2_r2_0",
+        "b4_2_r2_1",
+        "b4_3",
+        "b4_5_dot",
+        "b4_5",
+        "b4_5_l1",
+        "b4_7"
+      ],
+      "frame": [
+        "b4_2",
+        "b4_2_l0_0",
+        "b4_2_l0_1",
+        "b4_2_r0_0",
+        "b4_2_l1_0",
+        "b4_2_r1_0",
+        "b4_2_l2_0",
+        "b4_2_l2_1",
+        "b4_2_r2_0",
+        "b4_2_r2_1",
+        "b4_5_dot",
+        "b4_5",
+        "b4_5_l1",
+        "b4_7"
+      ]
+    },
+    {
+      "id": "b4_4",
+      "topic": "Why Double Circulation is Essential",
+      "narration": "Separation guarantees rich oxygen delivery for continuous heat and energy production.",
+      "show": [
+        "b1_0",
+        "b1_0_path",
+        "b1__runner",
+        "b1__cell",
+        "b1_5",
+        "b1_5_label",
+        "b1_7",
+        "b1_9_dot",
+        "b1_9",
+        "b1_9_l1",
+        "b1_11_dot",
+        "b1_11",
+        "b1_11_l1",
+        "b1_12",
+        "b1_12_s0",
+        "b1_12_s1",
+        "b2_0",
+        "b2_0_path",
+        "heart_cross_section",
+        "b2_4",
+        "b2_5",
+        "b2_5_l1",
+        "b2_5_line",
+        "b2_6",
+        "b2_7",
+        "b2_7_l1",
+        "b2_7_line",
+        "b2_8",
+        "b2_9",
+        "b2_9_l1",
+        "b2_9_line",
+        "b2_10",
+        "b2_11",
+        "b2_11_l1",
+        "b2_11_line",
+        "b2_13",
+        "b2_14",
+        "b2_14_line",
+        "b2_15",
+        "b2_15_line",
+        "b2_16",
+        "b2_18",
+        "b2_20_dot",
+        "b2_20",
+        "b2_21",
+        "b2_21_s0",
+        "b3_0",
+        "b3_0_path",
+        "double_circulation_circuit",
+        "b3_8",
+        "b3_12_c0",
+        "b3_12_h0",
+        "b3_12_b0",
+        "b3_12_b0_l1",
+        "b3_12_b0_l2",
+        "b3_13",
+        "b3_13_s0",
+        "b3_13_s1",
+        "b4_0",
+        "b4_0_path",
+        "b4_2",
+        "b4_2_lh",
+        "b4_2_rh",
+        "b4_2_l0_0",
+        "b4_2_l0_1",
+        "b4_2_r0_0",
+        "b4_2_l1_0",
+        "b4_2_r1_0",
+        "b4_2_l2_0",
+        "b4_2_l2_1",
+        "b4_2_r2_0",
+        "b4_2_r2_1",
+        "b4_3",
+        "b4_5_dot",
+        "b4_5",
+        "b4_5_l1",
+        "b4_7",
+        "b4_9_dot",
+        "b4_9",
+        "b4_10",
+        "b4_10_s0",
+        "b4_10_s1"
+      ],
+      "frame": [
+        "b4_0",
+        "b4_0_path",
+        "b4_2",
+        "b4_2_lh",
+        "b4_2_rh",
+        "b4_2_l0_0",
+        "b4_2_l0_1",
+        "b4_2_r0_0",
+        "b4_2_l1_0",
+        "b4_2_r1_0",
+        "b4_2_l2_0",
+        "b4_2_l2_1",
+        "b4_2_r2_0",
+        "b4_2_r2_1",
+        "b4_3",
+        "b4_5_dot",
+        "b4_5",
+        "b4_5_l1",
+        "b4_7",
+        "b4_9_dot",
+        "b4_9",
+        "b4_10",
+        "b4_10_s0",
+        "b4_10_s1"
+      ]
+    }
+  ]
+}

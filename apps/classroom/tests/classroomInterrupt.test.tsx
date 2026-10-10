@@ -528,6 +528,37 @@ describe('the mic goes off by itself', () => {
     expect(ear.listens).toBe(listens);
   });
 
+  /**
+   * A DOUBT RAISED AT THE QUESTION THE MIC WAS TURNED ON FOR (integration
+   * audit, 2026-10-11). After "Got it" she re-speaks that beat, and the mic
+   * stayed lit through her teaching because it still named that beat. The
+   * re-spoken narration is held here, or the question is held again in the
+   * same microtask and the test proves nothing.
+   */
+  it('once a doubt raised at the question it was turned on for is over, while she re-teaches that beat', async () => {
+    let n = 0;
+    const host = await openClass(asking, sayAll((t) => t.endsWith(asking.beats[0].narration) && ++n === 2));
+    expect(questionHeld(host)).toBe(true);
+    await tapMic(host); // nothing queued
+    expect(micLabel(host)).toBe('Turn the mic off');
+    await act(async () => {
+      host.querySelector<HTMLElement>('[aria-label="Raise hand and ask a doubt"]')!.click();
+    });
+    await tick(12);
+    expect(inDoubt(host)).toBe(true);
+    expect(ear.open).toBe(true); // the doubt keeps the mic
+    await act(async () => {
+      host.querySelector<HTMLElement>('[aria-label="Got it — back to the class"]')!.click();
+    });
+    await tick(16);
+    expect(inDoubt(host)).toBe(false);
+    expect(spoken.filter((s) => s.endsWith(asking.beats[0].narration))).toHaveLength(2); // mid re-teach
+    expect(questionHeld(host)).toBe(false);
+    expect(ear.open).toBe(false);
+    expect(micLabel(host)).toBe('Turn the mic on');
+    expect(ear.speech).toBeNull();
+  });
+
   it('once the doubt it was turned on for is over and the class is back', async () => {
     const host = await openClass(teaching);
     ear.queued = ['wait, why is blood red?', 'haan samajh aa gaya'];
