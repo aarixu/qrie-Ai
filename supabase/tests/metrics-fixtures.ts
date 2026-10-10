@@ -51,7 +51,7 @@ export async function metricDef(db: PGlite, over: Partial<MetricDefOver> = {}): 
   return d.key;
 }
 
-/** One figure in the store. `day` is a date as text (YYYY-MM-DD). */
+/** One figure in the store, replacing any already there. `day` is a date as text (YYYY-MM-DD). */
 export async function putMetric(
   db: PGlite,
   row: { day: string; metric: string; org?: string | null; dim?: string; value: number; children?: number | null },
@@ -59,7 +59,9 @@ export async function putMetric(
   await db.transaction(async (tx) => {
     await tx.query(`select set_config('admin.session', 'on', true)`);
     await tx.query(
-      `insert into admin.metric_daily (day, metric, org_id, dim, value, children) values ($1::date, $2, $3, $4, $5, $6)`,
+      `insert into admin.metric_daily (day, metric, org_id, dim, value, children) values ($1::date, $2, $3, $4, $5, $6)
+       on conflict (day, metric, coalesce(org_id, '00000000-0000-0000-0000-000000000000'::uuid), dim)
+       do update set value = excluded.value, children = excluded.children`,
       [row.day, row.metric, row.org ?? null, row.dim ?? '', row.value, row.children ?? null],
     );
   });

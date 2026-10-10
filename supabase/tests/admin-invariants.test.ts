@@ -87,6 +87,7 @@ describe('the admin schema', () => {
       'admin.me',
       'admin.metric_recompute',
       'admin.metric_series',
+      'admin.money_view',
       'admin.read_log_list',
       'admin.relay_status',
       'admin.report_mark',
@@ -206,6 +207,8 @@ describe('the admin schema', () => {
       ['admin', 'metric_family_spend'],
       ['admin', 'metric_family_relay'],
       ['admin', 'metric_family_calls'],
+      ['admin', 'metric_family_money'],
+      ['admin', 'metric_family_webhooks'],
       ['public', 'keep_safety_event'],
     ]) {
       expect(await executable('authenticated', schema, name), `${schema}.${name}`).toBe(false);
