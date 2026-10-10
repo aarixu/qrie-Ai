@@ -170,6 +170,17 @@ describe('decide: the wrong-answer ladder (TD1)', () => {
     expect(a.because).toMatch(/leak/i);
   });
 
+  it('refuses a Hinglish hint that says the answer as a Hindi number (D27)', () => {
+    const hinglish: AskInput = { ...OPEN, hint: 'Dekho, x chaar hai, check karo.' };
+    const a = decide(base({ ask: hinglish, attempt: 2, rungSoFar: 1, lang: 'hi-en' }));
+    expect(a.kind).not.toBe('hint');
+    expect(say(a)).not.toContain('chaar');
+    expect(a.because).toMatch(/leak/i);
+    // The same hint in an English class is not read as a number: "chaar" is
+    // not an English word for four.
+    expect(decide(base({ ask: hinglish, attempt: 2, rungSoFar: 1 })).kind).toBe('hint');
+  });
+
   it('refuses a worked example that gives the answer away', () => {
     const a = decide(base({ ask: LEAKY_EXAMPLE, attempt: 3, rungSoFar: 3 }));
     expect(a.kind).toBe('reveal');

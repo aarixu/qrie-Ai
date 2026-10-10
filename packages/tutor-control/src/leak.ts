@@ -29,12 +29,25 @@
  * WHAT IT DOES NOT CATCH, stated so nobody reads more into a pass:
  *   - a paraphrase of a long answer ("it spreads out in the water" for "the
  *     sugar dissolves");
- *   - romanised Hindi number words ("saat" for 7). They are not normalised:
- *     several collide with English words ("do", "teen", "char"), and a partial
- *     list would look like coverage it is not. A Hinglish reply that speaks a
- *     number in Hindi passes this check. UNVERIFIED how often a model does that;
+ *   - romanised Hindi number words in an English line: several are English
+ *     words ("do", "teen", "bees", "sat"), so they are read as numbers only
+ *     when the caller says the line is Hinglish (below);
+ *   - in a Hinglish line, Hindi numbers from twenty-one to ninety-nine that are
+ *     not a tens word ("ikkees", "pachchees"), compounds ("do sau" reads as
+ *     `2 100`), fractions ("aadha", "dedh", "dhai") and Devanagari words;
+ *   - arithmetic that comes to the answer ("8 divided by 2", "2 squared");
  *   - numbers above one hundred written as words.
+ *
+ * HINGLISH (`lang` 'hi-en', D27). Romanised Hindi number words become digits
+ * on both sides: zero ("shunya"), one to twenty ("ek", "do", "teen", "chaar"
+ * or "char", ... "unnis", "bees"), the tens ("tees" ... "nabbe") and "sau",
+ * with the common spellings in `HINDI_NUMBERS`. Some are also ordinary Hindi
+ * words ("do" is "give", "saath" is "with"), so a Hinglish line that uses one
+ * of those while the answer is that number is refused: erring toward a leak,
+ * as with the minus sign.
  */
+
+import type { TutorLanguage } from './types.ts';
 
 const UNITS = [
   'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
@@ -46,15 +59,57 @@ const TENS = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty'
 const UNIT_VALUE = new Map(UNITS.map((w, i) => [w, i]));
 const TENS_VALUE = new Map(TENS.map((w, i) => [w, (i + 2) * 10]));
 
+/**
+ * Romanised Hindi number words, read as digits only in a hi-en line, with
+ * their common spellings. Short spellings that are everyday Hindi words of
+ * their own ("tera" is "your", "bara" is "big", "sath" is "with") are left out.
+ */
+const HINDI_NUMBERS = new Map<string, number>(
+  (
+    [
+      [0, ['shunya', 'shoonya', 'sunya']],
+      [1, ['ek']],
+      [2, ['do']],
+      [3, ['teen']],
+      [4, ['chaar', 'char']],
+      [5, ['paanch', 'panch', 'paach']],
+      [6, ['chhe', 'chhah', 'chheh', 'chhai']],
+      [7, ['saat', 'sat']],
+      [8, ['aath']],
+      [9, ['nau']],
+      [10, ['das', 'dus']],
+      [11, ['gyarah', 'gyaarah']],
+      [12, ['barah', 'baarah']],
+      [13, ['terah']],
+      [14, ['chaudah', 'chaudha']],
+      [15, ['pandrah', 'pandhrah']],
+      [16, ['solah']],
+      [17, ['satrah']],
+      [18, ['atharah', 'athaarah']],
+      [19, ['unnis', 'unees', 'unnees']],
+      [20, ['bees']],
+      [30, ['tees']],
+      [40, ['chaalis', 'chalis', 'chaalees']],
+      [50, ['pachaas', 'pachas']],
+      [60, ['saath']],
+      [70, ['sattar']],
+      [80, ['assi']],
+      [90, ['nabbe', 'nabbey']],
+      [100, ['sau']],
+    ] as const
+  ).flatMap(([n, words]) => words.map((w) => [w, n] as const)),
+);
+
 /** Joining words dropped from both sides, so `x equals 7` reads as `x = 7`. */
 const FILLER = new Set(['equals', 'equal', 'is', 'to']);
 
 /**
  * A line as the leak check sees it: lower case, punctuation gone, number words
- * as digits, joining words dropped. Exported so a caller can see why a line
- * was or was not flagged.
+ * as digits (Hindi ones too when `lang` is 'hi-en'), joining words dropped.
+ * Exported so a caller can see why a line was or was not flagged.
  */
-export function leakTokens(text: string): string[] {
+export function leakTokens(text: string, lang: TutorLanguage = 'en'): string[] {
+  const hindi = lang === 'hi-en';
   const cleaned = text
     .normalize('NFKC')
     .toLowerCase()
@@ -96,6 +151,11 @@ export function leakTokens(text: string): string[] {
       out.push(String(unit));
       continue;
     }
+    const spoken = hindi ? HINDI_NUMBERS.get(word) : undefined;
+    if (spoken !== undefined) {
+      out.push(String(spoken));
+      continue;
+    }
     if (FILLER.has(word)) continue;
     out.push(word);
   }
@@ -103,15 +163,15 @@ export function leakTokens(text: string): string[] {
 }
 
 /** The token runs a secret is found by: itself, and each `name = value`'s value. */
-function needlesOf(secret: string): string[][] {
+function needlesOf(secret: string, lang: TutorLanguage): string[][] {
   const needles: string[][] = [];
-  const whole = leakTokens(secret);
+  const whole = leakTokens(secret, lang);
   if (whole.length > 0) needles.push(whole);
 
   for (const clause of secret.split(/[,;]|\band\b/)) {
     const at = clause.lastIndexOf('=');
     if (at < 0) continue;
-    const value = leakTokens(clause.slice(at + 1));
+    const value = leakTokens(clause.slice(at + 1), lang);
     if (value.length > 0) needles.push(value);
   }
   return needles;
@@ -130,13 +190,15 @@ function containsRun(haystack: readonly string[], needle: readonly string[]): bo
 
 /**
  * Whether `text` contains any of `mustNotReveal`, under the normalisation
- * above. Blank secrets are ignored; no secrets means nothing can leak.
+ * above. `lang` is the language the line is in ('en' when left out); 'hi-en'
+ * reads Hindi number words as numbers. Blank secrets are ignored; no secrets
+ * means nothing can leak.
  */
-export function leaks(text: string, mustNotReveal: readonly string[]): boolean {
+export function leaks(text: string, mustNotReveal: readonly string[], lang: TutorLanguage = 'en'): boolean {
   if (mustNotReveal.length === 0 || text.trim().length === 0) return false;
-  const tokens = leakTokens(text);
+  const tokens = leakTokens(text, lang);
   for (const secret of mustNotReveal) {
-    for (const needle of needlesOf(secret)) {
+    for (const needle of needlesOf(secret, lang)) {
       if (containsRun(tokens, needle)) return true;
     }
   }

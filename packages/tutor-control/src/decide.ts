@@ -212,7 +212,7 @@ function onWrong(ctx: Ctx): Action {
     // A named misconception gets its own diagnostic question first (C7): the
     // tutor finds out WHY before she corrects anything. Never one that leaks.
     const followUp = ctx.matched?.correct !== true ? followUpFor(input.ask, ctx.matched) : undefined;
-    if (followUp && !leaks(followUp, ctx.secrets)) {
+    if (followUp && !leaks(followUp, ctx.secrets, ctx.input.lang)) {
       return act(ctx, {
         followUp: true,
         kind: 'rethink',
@@ -390,7 +390,8 @@ function explainAction(
 function usableAlternate(ctx: Ctx): { say: string; line?: string; mode: string } | { reason: string } {
   const all = ctx.input.ask.alternates ?? [];
   if (all.length === 0) return { reason: 'none authored' };
-  const safe = all.filter((a) => a.say?.trim() && !leaks(a.say, ctx.secrets) && !(a.line && leaks(a.line, ctx.secrets)));
+  const leaky = (t: string): boolean => leaks(t, ctx.secrets, ctx.input.lang);
+  const safe = all.filter((a) => a.say?.trim() && !leaky(a.say) && !(a.line && leaky(a.line)));
   if (safe.length === 0) return { reason: 'every one leaks the answer' };
   const recent = ctx.input.recentLines ?? [];
   const fresh = safe.find((a) => !recent.some((line) => line.includes(a.say.trim())));
@@ -477,7 +478,7 @@ function usableHint(ctx: Ctx): { text: string; source: string } | { reason: stri
   for (const [raw, source] of candidates) {
     const text = raw?.trim();
     if (!text) continue;
-    if (leaks(text, ctx.secrets)) {
+    if (leaks(text, ctx.secrets, ctx.input.lang)) {
       leaked = true;
       continue;
     }
@@ -490,7 +491,7 @@ function usableWorkedExample(ctx: Ctx): { say: string; lines: string } | { reaso
   const steps = ctx.input.ask.workedExample?.steps ?? [];
   if (steps.length === 0) return { reason: 'none authored' };
   if (steps.some((s) => !s.say?.trim() || !s.line?.trim())) return { reason: 'a step is blank' };
-  if (steps.some((s) => leaks(s.say, ctx.secrets) || leaks(s.line, ctx.secrets))) {
+  if (steps.some((s) => leaks(s.say, ctx.secrets, ctx.input.lang) || leaks(s.line, ctx.secrets, ctx.input.lang))) {
     return { reason: 'it leaks the answer' };
   }
   return {
@@ -528,7 +529,7 @@ function act(ctx: Ctx, d: Draft): Action {
   const newest = recent[recent.length - 1];
   const start = seedOf(`${input.ask.question}|${d.kind}|${input.attempt}|${ctx.floor}`) % Math.max(1, d.lines.length);
   const rotated = d.lines.map((_, i) => d.lines[(start + i) % d.lines.length]);
-  const clean = rotated.filter((line) => line !== newest && !leaks(line, secrets));
+  const clean = rotated.filter((line) => line !== newest && !leaks(line, secrets, input.lang));
   const say = clean.find((line) => !recent.includes(line)) ?? clean[0];
 
   const action: Action = {

@@ -39,8 +39,9 @@ import type { HaltCause } from './sessionHalt';
  *
  *   3. THE LEAK CHECK, when the hand went up while the class was holding a
  *      question: a step whose sentence or ink contains that question's answer
- *      (@ai-tutor/tutor-control `leaks`: numbers as digits and as words) is
- *      dropped with its sentence. The model is shown the question and told
+ *      (@ai-tutor/tutor-control `leaks`: numbers as digits and as words, and
+ *      as Hindi words for a child who chose Hinglish) is dropped with its
+ *      sentence. The model is shown the question and told
  *      not to answer it; this is what makes that a guarantee rather than a
  *      request. See `answerSecrets` for what counts as the answer.
  *
@@ -420,7 +421,7 @@ export function prepareDoubtTurn(input: TurnInput): PreparedTurn {
   // 3. The leak check, at a held ask.
   if (input.mustNotReveal.length > 0) {
     steps = steps.filter((step, i) => {
-      if (!boardStrings([step]).some((s) => leaks(s, input.mustNotReveal))) return true;
+      if (!boardStrings([step]).some((s) => leaks(s, input.mustNotReveal, input.lang))) return true;
       dropped.push({ at: `step ${i}`, reason: 'gives away the answer to the question the class is holding' });
       leaked += 1;
       if (step.ink.length > 0) inkLostInChecks = true;

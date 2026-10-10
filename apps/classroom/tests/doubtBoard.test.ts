@@ -218,6 +218,16 @@ describe('the leak check, at a held ask', () => {
     expect(out.lines.map((l) => l.say)).toEqual([LINES.haveAGo['hi-en'][0]]);
   });
 
+  it('for a Hinglish child, a number said in Hindi is the number (D27)', () => {
+    const steps = [
+      { say: 'Dhyaan se dekho, kitne kone hain?', ink: [] },
+      { say: 'Isme chaar kone hain.', ink: [] },
+    ];
+    const hinglish = prepareDoubtTurn(input(steps, { mustNotReveal: ['4'], lang: 'hi-en' }));
+    if (hinglish.kind !== 'turn') throw new Error('expected a turn');
+    expect(hinglish.lines.map((l) => l.say)).toEqual(['Dhyaan se dekho, kitne kone hain?']);
+  });
+
   it('away from a held ask nothing is secret, and the same step is said', () => {
     const out = prepareDoubtTurn(input([{ say: 'Here it is.', ink: [{ op: 'equation', text: 'x = 3 - 2y' }] }]));
     if (out.kind !== 'turn') throw new Error('expected a turn');
