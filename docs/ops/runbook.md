@@ -207,8 +207,9 @@ until the phone updates. So:
 2. deploy the classroom build that sends through `record_evidence`, and wait until the
    phones are on it;
 3. then push 0110 from the branch (with it go 0111, which only bounds what one
-   `record_evidence` event may name, and 0112, which only makes the school's
-   student list read "last active" from the server's clock).
+   `record_evidence` event may name, 0112, which only makes the school's
+   student list read "last active" from the server's clock, and 0113, which does
+   the same for the school overview's "active in the last 7 days").
 
 **Order across lanes.** This branch carries none of the admin lane's migrations
 (0047-0069 on branch `admin` today). If this lane's 0100+ reaches the hosted project
