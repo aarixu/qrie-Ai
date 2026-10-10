@@ -601,3 +601,121 @@ Storage.
    nothing about them is kept?
 8. May a parent file a report on a child's behalf? When a child is erased, does
    the parent's own sign-in stay?
+9. Plan 6's figures: are per-school daily sign-in counts, and the contest
+   funnel (entered, a parent verified, a first class, a second day, as 7- and
+   30-day totals with groups under 10 hidden), outside DPDP s.9(3)'s
+   "tracking or behavioural monitoring" of children? Until you have the
+   answer they are built with the small-group rule; if the answer is no, a
+   reviewed migration sets `captured` to false on those catalogue rows
+   (`school.signins`, and `funnel.cohort`, `funnel.verified`,
+   `funnel.first_class`, `funnel.second_day`), and the pages read them
+   "Not captured" (section 9).
+
+## 9. The charts (plan 6)
+
+Eight pages under **Charts** in the console: **Overview**, **Money**,
+**Schools**, **Learning**, **Content**, **Reliability**, **Funnel** and
+**Safety**, each over the last 7 or 30 India days ending yesterday. The plan is
+`docs/superpowers/plans/2026-10-11-super-admin-visualiser.md`. Nothing in this
+section has been run against a hosted project: migrations 0071 to 0074 and the
+pages were built and tested on the local test database only, and the pages
+have not been opened in a browser.
+
+**Plan 6 changes no tutor code; nothing in `apps/classroom`, `packages/relay`
+or `supabase/functions/relay` may be deployed from this branch until it is
+merged with `phase3-completion` and `voice-stt-tts` (743c05a, 1dcfcfe,
+18733af).**
+
+### What the charts are
+
+- **Who sees which page.** The database decides (`admin.chart_roles`); the
+  sidebar only follows it. Overview, Schools, Learning, Content, Reliability
+  and Funnel: the owner and ops. Money: the owner, ops and finance. Safety:
+  the owner and safety. Finance sees only Charts, Money; safety only Charts,
+  Safety.
+- **Where the numbers come from.** One table of daily figures,
+  `admin.metric_daily`, filled by the job `admin-metrics-nightly` at 18:50 UTC
+  (00:20 India time): it rolls up yesterday, with the snapshots, and works out
+  the six days before again (sittings close and phones sync late, so a day's
+  figures can still rise for six days). The owner can work out up to 92 days
+  ending yesterday again with the **Recompute** button (a fresh authenticator
+  code, a reason and the environment typed).
+- **Live tiles** at the top of Overview, Money, Safety and Reliability come
+  from the same reads as Today, Billing, Safety and System; Content's (classes
+  and the question bank now, the most reported and costliest classes to date)
+  from `admin.content_view`.
+- **Snapshots** (each school's health, students, seats, activation and
+  sign-ins; classes by status; the question bank) are what the nightly run
+  saw that night. A recompute leaves them as they were; a night that did not
+  run is a gap in those lines for good.
+
+### What they never show
+
+- **A child.** No chart lists, ranks or follows a child; the table behind them
+  has no column that can hold a person's id, and no read returns an id, a
+  login ID, a name, a report's words, a phone number or an address.
+- **A learning figure for fewer than 10 children.** Each school's activation,
+  hand-ins and sign-ins, every learning figure (outcomes answered,
+  misconceptions, practice) and the funnel read "Fewer than 10 children: not
+  shown." The funnel is shown only as the window's totals, so no small day can
+  be picked out. Misconceptions come from the library's questions only, never
+  a school's own.
+- **A zero for something not captured.** These read grey "Not captured", with
+  the reason: the relay's refusals by reason (`claim_relay` keeps no record of
+  them), the time a call took (no column records it), the alarm's history (only
+  its last check is kept), sign-ins where `auth.users` has no
+  `last_sign_in_at`, and distress flags before the day capture went live. A
+  day with no roll-up reads "No figure", never 0.
+
+### Setup, once (Aarav's steps)
+
+1. **Apply the migrations:** `npx supabase db push` applies 0071 to 0074 with
+   the rest (the hosted project had nothing past 0025 on 2026-10-03, STALE:
+   0026 to 0070 go first). Nothing new to expose: every function is in
+   `admin`.
+2. **Check the job:** on the System page, `admin-metrics-nightly` appears with
+   the schedule `50 18 * * *`; after the first night its last run should read
+   Succeeded.
+3. **Fill the past once:** on any chart page, press **Recompute** (owner, fresh
+   code) for the 92 days ending yesterday, then again for the 92 before that
+   if you want them. Snapshots start from the first night and cannot be filled
+   backwards.
+4. **Load prices:** until `public.model_price` holds a row for each model in
+   use, spend and Rs per student-hour read "at least" (the page says how many
+   calls have no price). After adding prices, Recompute the days you care
+   about.
+5. **Redeploy the console** the way you host it (section 1): it has a new
+   dependency, Recharts.
+6. **Do not deploy the tutor or the relay from this branch** (see the line at
+   the top of this section).
+7. **Ask counsel** question 9 of section 8 (sign-ins per school and the
+   contest funnel).
+
+### Day to day
+
+- The figures run through yesterday (India time); each page says when they
+  were last rolled up.
+- "No figure" means no roll-up ran for that day yet.
+- The meter's units and the ceiling are kept by UTC day, the ceiling's own
+  day, so those two lines end a day earlier than the others.
+- "At least" means some calls have no price row yet: add prices to
+  `model_price`, then Recompute.
+
+### If something goes wrong
+
+- **The charts stopped moving.** The System page shows
+  `admin-metrics-nightly`'s last run. A failed night loses that night's
+  snapshots for good; its other figures come back with Recompute.
+- **A recompute lowered an old figure.** A recompute counts the records as they
+  are now: children erased since, Cashfree signature failures older than 90
+  days (deleted by the nightly `billing-states` job), payments reversed and invoices
+  voided since, and sittings older than 90 days with no answer in them (which
+  the nightly `purge-old-ledger` job deletes) are not counted.
+- **To stop the job:** in the dashboard's SQL editor,
+  `select cron.unschedule('admin-metrics-nightly');`. The charts then stop
+  moving; the console keeps working.
+
+### Kept
+
+`admin.metric_daily` holds daily figures only, none of them a child's, and is
+kept indefinitely. It is not in the Privacy page's "What is kept" table.

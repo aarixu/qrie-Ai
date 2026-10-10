@@ -41,3 +41,12 @@ Privacy page holds erasure requests, each school's data-protection decision and
 what is kept; a request's own page (`/privacy/requests/$requestId`) is the only page
 with an Erase button, and erasing goes through `admin-api`'s `erase`. Running it:
 `docs/ops/admin-console.md` section 8.
+
+**The charts (plan 6)** live in `src/features/charts/`: eight pages under Charts
+(`/charts/overview`, `money`, `schools`, `learning`, `content`, `reliability`,
+`funnel`, `safety`), reading through `charts` in `src/lib/client.ts`, with what they
+draw decided in `src/features/charts/model.ts`. `src/components/charts/chart-card.tsx`
+and `kpi.tsx` are copied from the teacher app's `src/features/analytics/charts.tsx`,
+not imported. [Recharts](https://github.com/recharts/recharts) draws them; it is MIT
+licensed, copyright (c) 2015-present recharts, and its licence ships in its package.
+Running it: `docs/ops/admin-console.md` section 9.
