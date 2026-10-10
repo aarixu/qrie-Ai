@@ -85,6 +85,7 @@ describe('the admin schema', () => {
       'admin.flag_list',
       'admin.flag_set',
       'admin.me',
+      'admin.metric_series',
       'admin.read_log_list',
       'admin.relay_status',
       'admin.report_mark',
@@ -172,7 +173,7 @@ describe('the admin schema', () => {
     }
   });
 
-  it('keeps the plan-5 internals and the flag door away from browsers', async () => {
+  it('keeps the internals of plans 5 and 6 and the flag door away from browsers', async () => {
     const executable = async (role: string, schema: string, name: string) =>
       (
         await db.query<{ ok: boolean }>(
@@ -192,6 +193,10 @@ describe('the admin schema', () => {
       ['admin', 'activity_lines_naming'],
       ['admin', 'erasure_row'],
       ['admin', 'contest_purge_due'],
+      ['admin', 'ist_start'],
+      ['admin', 'chart_roles'],
+      ['admin', 'signins_readable'],
+      ['admin', 'metric_json'],
       ['public', 'keep_safety_event'],
     ]) {
       expect(await executable('authenticated', schema, name), `${schema}.${name}`).toBe(false);
