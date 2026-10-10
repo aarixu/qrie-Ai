@@ -1,8 +1,9 @@
 /**
- * Where the app finds the school's server. The phone app is built with one
- * address (its VITE_QRIE_DEMO_URL: the laptop's on the Wi-Fi, for the demo);
- * one set on the sign-in screen (components/server-setting.tsx) takes its
- * place, kept on the phone.
+ * Where a build for the demo school finds its server. The phone app is built
+ * with one address (its VITE_QRIE_DEMO_URL: the laptop's on the Wi-Fi); one
+ * set on the sign-in screen (components/server-setting.tsx) takes its place,
+ * kept on the phone. A build for the hosted project uses neither
+ * (lib/backend.ts).
  */
 export const SERVER_KEY = 'qrie-school-server'
 

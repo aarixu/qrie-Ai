@@ -1,4 +1,5 @@
 import type { McqResult } from './api.ts';
+import { isSignedOutError } from './errors.ts';
 
 /**
  * THE STUDENT APP'S OUTBOX: WORK THAT WAITS FOR THE INTERNET.
@@ -89,12 +90,13 @@ export function newKey(): string {
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
 }
 
-/** The school asking the child to sign in again: the job waits for that, it is not turned down. */
-const SIGN_IN_AGAIN = /sign in again|jwt expired|invalid jwt|not signed in/i;
-
-/** Whether a failed job should wait and be tried again, rather than be taken out. */
+/**
+ * Whether a failed job should wait and be tried again, rather than be taken
+ * out. The school asking the child to sign in again (errors.ts) is waited for,
+ * not a refusal.
+ */
 function shouldWait(error: unknown): boolean {
-  return isOffline(error) || SIGN_IN_AGAIN.test(error instanceof Error ? error.message : String(error ?? ''));
+  return isOffline(error) || isSignedOutError(error);
 }
 
 const ALREADY_THERE = /already exists|duplicate/i;

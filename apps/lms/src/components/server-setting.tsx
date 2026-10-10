@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { backend } from '@/lib/backend'
 import { inPhoneApp, saveServer, savedServer, SERVER_ADDRESS } from '@/lib/server'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -6,12 +7,14 @@ import { Input } from '@/components/ui/input'
 /**
  * On the phone app's sign-in screen: the school server's address, and a way
  * to set another (lib/server.ts) — say, when the laptop running the demo is
- * on a new Wi-Fi address — without a new build. Nothing on the web.
+ * on a new Wi-Fi address — without a new build. Nothing on the web, and
+ * nothing in a build for the hosted project, whose address is built in.
  */
 export function ServerSetting({ current, onSaved = () => location.reload() }: { current: string; onSaved?: () => void }) {
   const [editing, setEditing] = useState(false)
   const [value, setValue] = useState(current)
   const [problem, setProblem] = useState<string | null>(null)
+  if (backend.mode !== 'demo') return null
   if (!inPhoneApp() && savedServer() === null) return null
 
   const save = () => {

@@ -29,3 +29,20 @@ export function friendlyError(error: unknown): string {
   }
   return message;
 }
+
+/**
+ * A session the school's server no longer takes. The demo server and
+ * lms-admin say "Please sign in again.", as supabaseBackend does when it holds
+ * no session; an lms function run with no user says "not signed in";
+ * PostgREST, refusing a token, names it ("JWT expired"; any message with "JWT"
+ * or "JWSError" in it is taken the same way). On the hosted project a session
+ * that is gone says none of these: supabase-js calls with the anon key
+ * instead, and anon may run no lms function but school_brand
+ * (supabase/tests/lms-invariants.test.ts), so the call fails with "permission
+ * denied for function …".
+ */
+const SIGNED_OUT = /sign in again|not signed in|\bjwt\b|jwserror|^permission denied for function /i;
+
+export function isSignedOutError(error: unknown): boolean {
+  return SIGNED_OUT.test(error instanceof Error ? error.message : String(error ?? ''));
+}

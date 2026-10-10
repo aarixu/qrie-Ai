@@ -5,11 +5,19 @@ import { ServerSetting } from '../src/components/server-setting'
 import { SERVER_KEY, savedServer } from '../src/lib/server'
 
 /**
- * Where the phone app finds the school's server. The Android build is made
- * with one address (the laptop's on the Wi-Fi); should that change, the sign-in
- * screen lets it be set again, without a new build. On the web the app is
- * served beside its server and shows nothing of this.
+ * Where the phone app finds the demo school's server. The Android build is
+ * made with one address (the laptop's on the Wi-Fi); should that change, the
+ * sign-in screen lets it be set again, without a new build. On the web the app
+ * is served beside its server and shows nothing of this. A build for the
+ * hosted project shows nothing of it either (backend-choice.test.tsx).
  */
+
+// A demo build, set before the imports above run: this laptop's .env.local
+// sets the hosted pair for the tutor.
+vi.hoisted(() => {
+  vi.stubEnv('VITE_SUPABASE_URL', '')
+  vi.stubEnv('VITE_SUPABASE_ANON_KEY', '')
+})
 
 const roots: Root[] = []
 beforeAll(() => {

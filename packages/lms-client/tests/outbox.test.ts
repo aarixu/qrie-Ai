@@ -90,7 +90,8 @@ describe('the outbox', () => {
   it('keeps everything when the school asks the child to sign in again, for after they do', async () => {
     const box = createOutbox(memoryOutboxStore());
     await box.add(mcq('hw1'));
-    for (const said of ['Please sign in again.', 'JWT expired', 'not signed in']) {
+    // The last: the hosted project once the session is gone (supabase-js then calls as anon).
+    for (const said of ['Please sign in again.', 'JWT expired', 'not signed in', 'permission denied for function submit_mcq']) {
       const r = await box.flush(
         fakeSend({
           submitMcq: async () => {

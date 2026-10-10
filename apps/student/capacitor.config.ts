@@ -7,14 +7,18 @@ import type { CapacitorConfig } from '@capacitor/cli'
  * `npx cap sync android` copies it into `android/`, and Gradle makes the APK.
  * It wears the school's name, logo and colours once a child or parent signs in.
  *
- * It reaches the school's server at the address it was built with
- * (VITE_QRIE_DEMO_URL — for the demo, the laptop running `npm run demo -- --lan`)
- * or one set on its sign-in screen (src/lib/server.ts).
+ * Built with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY, it reaches the
+ * hosted project (src/lib/backend.ts). Otherwise it reaches the demo school at
+ * the address it was built with (VITE_QRIE_DEMO_URL — the laptop running
+ * `npm run demo -- --lan`) or one set on its sign-in screen (src/lib/server.ts).
  */
 // Built for a demo server on plain http (the laptop's, over Wi-Fi): the only
-// case in which the https app may call an http address. Read when `cap sync`
-// runs, from the same VITE_QRIE_DEMO_URL the web build used.
-const demoOverHttp = (process.env.VITE_QRIE_DEMO_URL ?? '').startsWith('http://')
+// case in which the https app may call an http address. A build for the
+// hosted project never uses the demo address, so one left set does not count.
+// Read from the environment when `cap sync` runs: set the same variables
+// there as for the web build.
+const hosted = Boolean(process.env.VITE_SUPABASE_URL && process.env.VITE_SUPABASE_ANON_KEY)
+const demoOverHttp = !hosted && (process.env.VITE_QRIE_DEMO_URL ?? '').startsWith('http://')
 
 const config: CapacitorConfig = {
   // Reverse-DNS of curie.co.in, the domain we own; fixed for good once on a store.
