@@ -11,8 +11,8 @@ import { Icon } from './Icon';
  * support reply, written to be said to a child — so a student who missed it,
  * or who is reading rather than listening, has it in front of them.
  *
- * Calm, and deliberately short of choices. The two helplines from that reply
- * are one tap from a phone call. The only button leaves the class (every
+ * Calm, and deliberately short of choices. Every number in that reply (the
+ * two helplines and 112) is one tap from a phone call. The only button leaves the class (every
  * caller of ClassRoom passes an `onExit` that goes home). There is no "carry
  * on": a class that starts talking again a tap after it has told a child to go
  * and find somebody is the app talking over that. Nothing on this screen
@@ -64,6 +64,12 @@ export function SupportScreen({ line, onLeave }: { line: string; onLeave(): void
           <a href={`tel:${HELPLINES.childline}`} className={LINK}>
             <span>Childline</span>
             <span className="font-semibold tabular-nums">{HELPLINES.childline}</span>
+          </a>
+          {/* The line she said ends on "If you are in danger right now, call
+              112" (persona v3): every number in it is one tap away. */}
+          <a href={`tel:${HELPLINES.emergency}`} className={LINK}>
+            <span>Emergency</span>
+            <span className="font-semibold tabular-nums">{HELPLINES.emergency}</span>
           </a>
         </div>
         <button

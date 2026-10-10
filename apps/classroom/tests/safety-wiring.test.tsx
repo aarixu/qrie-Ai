@@ -1,8 +1,7 @@
 import { renderToString } from 'react-dom/server';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { HELPLINES, SUPPORT_REPLY } from '@ai-tutor/safety';
-import { TUTOR } from '@ai-tutor/persona';
-import { buildSystemPrompt } from '@ai-tutor/persona';
+import { REGION_HELPLINES, buildSystemPrompt } from '@ai-tutor/persona';
 import { fromStudent, screenedSpeech, toStudent } from '../src/lib/safety';
 import { flagStore, recentFlags } from '../src/stores/flags';
 import { ReportSheet } from '../src/ui/ReportSheet';
@@ -84,39 +83,37 @@ describe('toStudent', () => {
 });
 
 describe('the persona carries the same rules', () => {
-  const prompt = buildSystemPrompt({
-    moment: 'DOUBT_OPENING',
-    student: { klass: 10 },
-    surface: 'voice',
+  // v3 (2026-10-11): the safety block is the prompt's backstop to the crisis
+  // reply in code, in every prompt she speaks from, above the learner notes.
+  const heard = buildSystemPrompt({ moment: 'DOUBT_OPENING', student: { klass: 10 }, surface: 'voice' });
+  const read = buildSystemPrompt({ moment: 'DOUBT_OPENING', student: { klass: 10 }, surface: 'text' });
+
+  it('says she may be talking to a child, in every prompt', () => {
+    for (const prompt of [heard, read]) {
+      expect(prompt).toContain('SAFETY (outranks everything)');
+      expect(prompt).toContain('Assume you may be talking to a child');
+    }
   });
 
-  it('says who she is talking to, in every prompt', () => {
-    expect(prompt).toContain('WHO YOU ARE TALKING TO');
-    expect(prompt).toContain('between 11 and 18');
-  });
-
-  it('carries the helplines into the model, not only into the app', () => {
+  it('carries the helplines into the model, not only into the app: words when heard, digits when read', () => {
     // The live speech path has no text checkpoint at all — her voice arrives
     // as audio. The prompt is the only place a rule can reach it.
-    expect(prompt).toContain(HELPLINES.telemanas);
-    expect(prompt).toContain(HELPLINES.childline);
+    const IN = REGION_HELPLINES.IN;
+    expect(heard).toContain(IN.telemanas.en);
+    expect(heard).toContain(IN.childline.en);
+    expect(heard).toContain(IN.emergency.en);
+    expect(read).toContain(HELPLINES.telemanas);
+    expect(read).toContain(HELPLINES.childline);
+    expect(read).toContain(HELPLINES.emergency);
   });
 
-  it('keeps the syllabus explicitly in scope', () => {
+  it('keeps the syllabus in scope, taught plainly', () => {
     // A tutor who refuses the Class 10 reproduction chapter is not safer.
-    expect(prompt.toLowerCase()).toContain('never off limits');
+    expect(heard).toContain('a syllabus topic is taught plainly at textbook depth');
   });
 
-  it('puts the safety block above this student’s own notes', () => {
-    expect(prompt.indexOf('WHO YOU ARE TALKING TO')).toBeLessThan(
-      prompt.indexOf('THIS STUDENT'),
-    );
-  });
-
-  it('states each rule once, positively or negatively but not both', () => {
-    // The same discipline the values/neverDoes split is already held to.
-    expect(TUTOR.safety.length).toBeGreaterThan(0);
-    expect(new Set(TUTOR.safety).size).toBe(TUTOR.safety.length);
+  it('puts the safety block above the learner’s own notes', () => {
+    expect(heard.indexOf('SAFETY (outranks everything)')).toBeLessThan(heard.indexOf('THE LEARNER'));
   });
 });
 

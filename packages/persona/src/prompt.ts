@@ -1,16 +1,21 @@
-import { TUTOR } from './traits';
 import { describeFactors, type StudentContext } from './factors';
-import { isTutorLanguage, registerLine } from './language';
+import { REGISTER, isTutorLanguage, type TutorLanguage } from './language';
+import { CORE, MOVES, SPEAKING, likesBlock, safetyBlock, type Move } from './meera';
 import { momentGuidance, type Moment } from './moments';
 
 /**
  * THE ASSEMBLER.
  *
  * The whole point of this package is that behaviour is COMPOSED rather than
- * copy-pasted per call site: traits + factors + moment + surface. Before this
- * existed the tutor's character lived in three hand-written prompt strings that
- * had already drifted apart, so the tutor a student met in a typed doubt was
- * not quite the tutor they met in a spoken one.
+ * copy-pasted per call site. Before this existed the tutor's character lived in
+ * three hand-written prompt strings that had already drifted apart, so the
+ * tutor a student met in a typed doubt was not quite the tutor they met in a
+ * spoken one.
+ *
+ * Since v3 (2026-10-11) the blocks are meera.ts's: the core every call opens
+ * on, her likes where she chats, the safety backstop, one language module, the
+ * speaking rules, the app's learner lines, the lesson, the conductor's
+ * prepared item, and ONE turn card, last.
  *
  * Pure and deterministic: no clock, no randomness, no I/O. The same input
  * always produces byte-identical output, which is what makes a prompt
@@ -61,86 +66,81 @@ export interface LessonContext {
   recallableBeats?: readonly { id: string; topic: string }[];
 }
 
+/**
+ * THE VERIFIED PREPARED ITEM the conductor hands over (code, not model). She
+ * uses exactly this and invents no number, formula, example or fact beyond it.
+ * No conductor is wired yet; the shape is ready for it.
+ */
+export interface PreparedItem {
+  question?: string;
+  expected?: string;
+  wrongIdeas?: readonly string[];
+  alternate?: string;
+  workedExample?: string;
+  freshItem?: string;
+  prerequisite?: string;
+  reveal?: string;
+  owed?: string;
+}
+
 export interface PromptInput {
-  moment: Moment;
   student: StudentContext;
   lesson?: LessonContext;
   surface: Surface;
+  /**
+   * The app-flow moment this turn is, rendered as its card ("THIS MOMENT").
+   * Today the doubt flow's three moments are the turns that reach a model.
+   */
+  moment?: Moment;
+  /** The conductor's move for this turn (v3), rendered as its card ("THIS TURN"). Wins over `moment`. */
+  move?: Move;
+  /** The help-ladder rung the move must give (1 to 8). */
+  rung?: number;
+  /** The rung of help they have already had on this item, if any. */
+  helped?: number;
+  /** The conductor's one-line reason for this move. */
+  because?: string;
+  payload?: PreparedItem;
 }
 
 const bullets = (lines: readonly string[]): string => lines.map((l) => `- ${l}`).join('\n');
 
 /**
- * HOW THE WORDS PHYSICALLY COME OUT, per surface.
- *
- * ONE OR TWO SHORT SENTENCES A TURN, on both live surfaces. The voice rule used
- * to allow 20 to 60 words and the text rule "short paragraphs of two or three
- * sentences", which is a lecture's rhythm, not a tutor's: a tutor across a desk
- * says one thing and hands the turn back. The typed doubt uses `text`, and its
- * reply is not only read — apps/classroom hands the screened line to the
- * class's voice as well (lib/sessionHalt.ts, `say`) — so it is held to the
- * same length as the spoken one.
+ * NARRATION keeps its own speaking rules: the authored voice of a recorded
+ * class, where she cannot hear them. v3's two blocks (meera.ts SPEAKING) are
+ * for the surfaces where she chats.
  */
-const SPEAKING: Record<Surface, string> = {
-  voice: [
-    'HOW TO SPEAK — VOICE',
-    'Your words are spoken out loud and heard, never read.',
-    bullets([
-      'Short spoken sentences, the way a person actually talks.',
-      'One or two short sentences per turn. Say one thing, then stop and let them answer.',
-      'No markdown, no bullet points, no numbered lists, no headings, no emoji.',
-      'No stage directions, and never describe your own tone.',
-      'Speak notation out in words: "H two O", "two thirds", "x squared".',
-    ]),
-  ].join('\n'),
+const NARRATION = [
+  'HOW TO SPEAK — NARRATION',
+  "This is the authored voice of the recorded class, read aloud by the app's text-to-speech.",
+  bullets([
+    '30 to 60 words for this beat: one idea, then the handover into the next beat.',
+    'Conversational and spoken. No markdown, no stage directions, no emoji.',
+    'Address the student directly as "you".',
+    'You cannot hear them here, so ask any check question rhetorically and answer it a beat later.',
+  ]),
+].join('\n');
 
-  text: [
-    'HOW TO SPEAK — TEXT',
-    'Your words are read on a phone screen.',
-    bullets([
-      'One or two short sentences at a time, the length you would say them across a desk: one idea, then the question that moves them forward.',
-      'Put a formula on its own line so it stays readable on a narrow screen.',
-    ]),
-  ].join('\n'),
-
-  narration: [
-    'HOW TO SPEAK — NARRATION',
-    "This is the authored voice of the recorded class, read aloud by the app's text-to-speech.",
-    bullets([
-      '30 to 60 words for this beat: one idea, then the handover into the next beat.',
-      'Conversational and spoken. No markdown, no stage directions, no emoji.',
-      'Address the student directly as "you".',
-      'You cannot hear them here, so ask any check question rhetorically and answer it a beat later.',
-    ]),
-  ].join('\n'),
-};
-
-/** The lesson block, or null when the caller supplied nothing usable. */
-function lessonSection(lesson: LessonContext | undefined): string | null {
-  if (lesson === undefined) return null;
+/** The lesson blocks, or none when the caller supplied nothing usable. */
+function lessonSections(lesson: LessonContext | undefined): string[] {
+  if (lesson === undefined) return [];
 
   const facts: string[] = [];
   if (lesson.subject !== undefined) facts.push(`Subject: ${lesson.subject}`);
   if (lesson.title !== undefined) facts.push(`Lesson: ${lesson.title}`);
-  if (lesson.beatTopic !== undefined) {
-    facts.push(`Right now the class is on "${lesson.beatTopic}".`);
-  }
+  if (lesson.beatTopic !== undefined) facts.push(`Right now the class is on "${lesson.beatTopic}".`);
   if (lesson.outcome !== undefined && lesson.outcome.length > 0) {
-    facts.push(
-      `What this beat is FOR: by the end of it the student should be able to — ${lesson.outcome}. That is the thing to make true; the topic label is only its name.`,
-    );
+    facts.push(`By the end they should be able to: ${lesson.outcome}.`);
   }
   if (lesson.onScreen !== undefined && lesson.onScreen.length > 0) {
-    facts.push(
-      `On the canvas at this moment: ${lesson.onScreen.join(', ')}. Refer only to these as visible.`,
-    );
+    facts.push(`On the board now: ${lesson.onScreen.join(', ')}. Refer only to these as visible.`);
   }
 
   const blocks: string[] = [];
   if (facts.length > 0) blocks.push(['THIS LESSON', ...facts].join('\n'));
 
   if (lesson.transcriptSoFar !== undefined && lesson.transcriptSoFar.length > 0) {
-    blocks.push(['WHAT THE CLASS HAS COVERED SO FAR', lesson.transcriptSoFar].join('\n'));
+    blocks.push(['COVERED SO FAR', lesson.transcriptSoFar].join('\n'));
   }
 
   // The foundations, marked with what we believe about each. She is told the
@@ -172,59 +172,84 @@ function lessonSection(lesson: LessonContext | undefined): string | null {
     );
   }
 
-  return blocks.length > 0 ? blocks.join('\n\n') : null;
+  return blocks;
+}
+
+function preparedSection(p: PreparedItem | undefined): string | null {
+  if (p === undefined) return null;
+  const lines = [
+    p.question && `Question: ${p.question}`,
+    p.expected && `A good answer is: ${p.expected}`,
+    p.wrongIdeas && p.wrongIdeas.length > 0 && `Known wrong ideas: ${p.wrongIdeas.join('; ')}`,
+    p.alternate && `Another way to explain it: ${p.alternate}`,
+    p.workedExample && `Worked example: ${p.workedExample}`,
+    p.freshItem && `Fresh question for them to try alone: ${p.freshItem}`,
+    p.prerequisite && `The earlier idea to go back to: ${p.prerequisite}`,
+    p.reveal && `What actually happens: ${p.reveal}`,
+    p.owed && `Owed from last class: ${p.owed}`,
+  ].filter((l): l is string => typeof l === 'string' && l.length > 0);
+  if (lines.length === 0) return null;
+  return ['PREPARED. Use exactly this; invent no number, formula, example or fact beyond it.', ...lines].join('\n');
+}
+
+function turnSection(input: PromptInput): string | null {
+  if (input.move !== undefined) {
+    const turn = [
+      'THIS TURN. The conductor chose this move from marks and pace and cannot hear feelings: if their last words are about how they feel, about you, or about safety, answer that first; the card then shapes what comes next. Where the move needs content and none is given, use only what is on the board or was said in class.',
+      `MOVE: ${input.move}`,
+      MOVES[input.move],
+    ];
+    if (input.rung !== undefined) turn.push(`RUNG: ${input.rung}`);
+    if (input.helped !== undefined) {
+      turn.push(
+        `HELPED: they have had help (rung ${input.helped}). Confirm only the step they did, never say they have learnt it, and next they try a fresh one alone.`,
+      );
+    }
+    if (input.because !== undefined && input.because.length > 0) turn.push(`WHY THIS MOVE: ${input.because}`);
+    return turn.join('\n');
+  }
+  if (input.moment !== undefined) return [`THIS MOMENT — ${input.moment}`, momentGuidance(input.moment)].join('\n');
+  return null;
 }
 
 /**
- * Build the system prompt for one moment, one student, one surface.
+ * Build the system prompt for one turn, one learner, one surface.
  *
- * Section order is fixed and runs from the most permanent thing to the most
- * situational: who she is, what she will not do, WHO SHE IS TALKING TO, who is
- * in front of her, what this moment needs, what the class is showing, and
- * finally how the words physically come out. A model reading top to bottom
- * meets her character before it meets today's details, which is what stops the
- * details from overwriting her.
+ * Section order runs from the most permanent thing to the most situational:
+ * who she is, her likes (where she chats), the safety backstop, the language
+ * the learner chose, how the words come out, the app's private notes about the
+ * learner, what the class is showing, the prepared item, and finally this
+ * turn's card. A model reading top to bottom meets her character before it
+ * meets today's details, which is what stops the details from overwriting her.
  *
- * THE LANGUAGE THE STUDENT CHOSE is part of "how the words come out", so it
- * sits immediately above the speaking rules as a section of its own — never in
- * the private notes, which are things she knows and must not say. It is one
- * line (language.ts), the same line the judge and the close carry
- * (packages/tutor-judge/src/prompts.ts), so the live doubt and the answers
- * around it are one voice. A language that is absent, or is not one of the two
- * the app stores, renders nothing: unknown says nothing, as with every factor.
+ * The safety block sits above the learner's own notes deliberately: nothing
+ * about this minute should be able to argue with the fact that the person
+ * listening may be a child. Its helplines are words when heard and digits when
+ * read.
  *
- * The safety block sits above the student's own notes deliberately. Everything
- * below it is about this lesson and this minute; nothing about this minute
- * should be able to argue with the fact that the person listening is a child.
+ * THE LANGUAGE is the learner's choice, checked at runtime as well as by type:
+ * a profile row can come back from the cloud written by an older build, and a
+ * value that is not one of the two languages must not become an instruction to
+ * speak it. Anything else is English, the base (v3).
  */
-export function buildSystemPrompt({ moment, student, lesson, surface }: PromptInput): string {
-  const sections: string[] = [
-    ['WHO YOU ARE', `You are ${TUTOR.name}, ${TUTOR.role}.`, `You are ${TUTOR.voice}.`].join('\n'),
-    ['YOU ALWAYS', bullets(TUTOR.values)].join('\n'),
-    ['YOU NEVER', bullets(TUTOR.neverDoes)].join('\n'),
-    // Above the student's own details on purpose: nothing about today should
-    // be able to argue with this.
-    ['WHO YOU ARE TALKING TO — this outranks everything below it', bullets(TUTOR.safety)].join('\n'),
-    [
-      'THIS STUDENT — private notes. Never read them out, never mention scores, never say you are adapting.',
-      bullets(describeFactors(student)),
-    ].join('\n'),
-    [`THIS MOMENT — ${moment}`, momentGuidance(moment)].join('\n'),
-  ];
+export function buildSystemPrompt(input: PromptInput): string {
+  const { student, lesson, surface } = input;
+  const language: TutorLanguage = isTutorLanguage(student.language) ? student.language : 'en';
+  const chats = surface === 'voice' || surface === 'text';
 
-  const lessonBlock = lessonSection(lesson);
-  if (lessonBlock !== null) sections.push(lessonBlock);
+  const sections: string[] = [CORE];
+  if (chats) sections.push(likesBlock());
+  sections.push(safetyBlock(language, 'IN', surface === 'text' ? 'text' : 'voice'));
+  sections.push(`LANGUAGE\n${REGISTER[language]}`);
+  sections.push(surface === 'narration' ? NARRATION : SPEAKING[surface]);
+  sections.push(['THE LEARNER (private notes: never read them out)', bullets(describeFactors(student))].join('\n'));
+  sections.push(...lessonSections(lesson));
 
-  // Checked at runtime as well as by type: a profile row can come back from
-  // the cloud written by an older build, and a value that is not one of the
-  // two languages must not become an instruction to speak it.
-  if (isTutorLanguage(student.language)) {
-    sections.push(
-      ['WHICH LANGUAGE YOU SPEAK — the student chose this', registerLine(student.language)].join('\n'),
-    );
-  }
+  const prepared = preparedSection(input.payload);
+  if (prepared !== null) sections.push(prepared);
 
-  sections.push(SPEAKING[surface]);
+  const turn = turnSection(input);
+  if (turn !== null) sections.push(turn);
 
   return sections.join('\n\n');
 }

@@ -14,7 +14,7 @@ import {
   entryLine,
   type DoubtContext,
 } from '@ai-tutor/doubt-session';
-import { REGISTER, type StudentContext } from '@ai-tutor/persona';
+import { REGISTER, SPEAKING, type StudentContext } from '@ai-tutor/persona';
 import { profileStore } from '../src/stores/profile';
 import { setTutorLanguage } from '../src/lib/workspace';
 
@@ -662,6 +662,40 @@ describe('the language the child chose', () => {
     const p = buildDoubtSystemPrompt(ctx, { klass: 10, language: 'en' });
     expect(p).toContain(REGISTER.en);
     expect(p).not.toContain(REGISTER['hi-en']);
+  });
+
+  /**
+   * HEARD OR READ (persona v3, handoff 2026-10-11 section 5.4): a doubt the
+   * student SAID gets the voice surface (numbers and notation in words, no
+   * markdown); one they TYPED gets the text surface. Both replies are voiced.
+   */
+  it('briefs a spoken doubt for the voice, and a typed one for the screen', () => {
+    setTutorLanguage('en');
+    expect(buildDoubtSystemPrompt(ctx, { klass: 10 }, undefined, 'voice')).toContain(SPEAKING.voice);
+    expect(buildDoubtSystemPrompt(ctx, { klass: 10 }, undefined, 'text')).toContain(SPEAKING.text);
+    expect(buildDoubtSystemPrompt(ctx, { klass: 10 })).toContain(SPEAKING.text);
+  });
+
+  it('builds each turn\'s brief for how that turn arrived', async () => {
+    setTutorLanguage('en');
+    const bodies: string[] = [];
+    vi.stubGlobal('fetch', async (url: string, init: RequestInit) => {
+      if (String(url).includes('/api/llm')) bodies.push(String(init.body));
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ choices: [{ message: { content: '{"say":"Why four?","recallBeatId":null,"done":false}' } }] }),
+      };
+    });
+    const session = createGeminiAgent({ student }).start(ctx, { say: async () => {}, recall: () => {}, done: () => {} });
+    session.sendUserText('why four?', { spoken: true });
+    for (let i = 0; i < 5; i += 1) await new Promise((r) => setTimeout(r, 0));
+    session.sendUserText('and the valves?');
+    for (let i = 0; i < 5; i += 1) await new Promise((r) => setTimeout(r, 0));
+    const systems = bodies.map((b) => (JSON.parse(b) as { messages: { role: string; content: string }[] }).messages[0].content);
+    expect(systems).toHaveLength(2);
+    expect(systems[0]).toContain(SPEAKING.voice);
+    expect(systems[1]).toContain(SPEAKING.text);
   });
 
   it('sends the Hinglish brief on the wire, on the turn the child asks', async () => {

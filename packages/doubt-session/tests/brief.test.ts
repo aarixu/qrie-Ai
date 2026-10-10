@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { Lesson } from '@ai-tutor/lesson-format';
-import { REGISTER, TUTOR, momentGuidance, type StudentContext } from '@ai-tutor/persona';
+import { CORE, REGISTER, TUTOR, momentGuidance, type StudentContext } from '@ai-tutor/persona';
 import { buildContext, type DoubtContext } from '../src/context';
 import { buildDoubtBrief, isRecallable, recallTargets } from '../src/brief';
 
@@ -43,12 +43,10 @@ describe('buildDoubtBrief', () => {
     });
 
     // Not "a warm Indian tutor" written out again by this package: her actual
-    // name and her actual lists, so the live tutor cannot drift from the
-    // recorded one the way the three hand-written prompts did.
+    // name and her actual core (persona v3), so the live tutor cannot drift
+    // from the recorded one the way the three hand-written prompts did.
     expect(prompt).toContain(TUTOR.name);
-    expect(prompt).toContain(TUTOR.role);
-    for (const value of TUTOR.values) expect(prompt).toContain(value);
-    for (const ban of TUTOR.neverDoes) expect(prompt).toContain(ban);
+    expect(prompt.startsWith(CORE)).toBe(true);
   });
 
   it('carries the moment the caller asked for', () => {
@@ -77,8 +75,8 @@ describe('buildDoubtBrief', () => {
       surface: 'text',
     });
 
-    expect(spoken).toContain('spoken out loud');
-    expect(typed).toContain('read on a phone screen');
+    expect(spoken).toContain('Spoken aloud: one or two short sentences');
+    expect(typed).toContain('Read on a phone: one or two short sentences');
     expect(spoken).not.toBe(typed);
   });
 
@@ -177,7 +175,7 @@ describe('buildDoubtBrief', () => {
       surface: 'voice',
     });
 
-    const section = prompt.split('\n\n').find((block) => block.startsWith('THIS STUDENT'));
+    const section = prompt.split('\n\n').find((block) => block.startsWith('THE LEARNER'));
     expect(section).toBeDefined();
     expect(section?.split('\n').filter((line) => line.startsWith('- '))).toHaveLength(1);
     expect(section).toContain('Class 9');
@@ -214,12 +212,12 @@ describe('buildDoubtBrief', () => {
     expect(prompt).not.toMatch(/devanagari/i);
   });
 
-  it('invents no language when the caller did not say one', () => {
+  it('speaks English, the base, when the caller did not say a language (persona v3)', () => {
     const prompt = buildDoubtBrief(midLesson(), KLASS_ONLY, {
       moment: 'answering',
       surface: 'text',
     });
-    expect(prompt).not.toContain(REGISTER.en);
+    expect(prompt).toContain(REGISTER.en);
     expect(prompt).not.toContain(REGISTER['hi-en']);
   });
 

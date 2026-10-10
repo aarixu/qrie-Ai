@@ -5,7 +5,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { validateLesson, type Lesson } from '@ai-tutor/lesson-format';
 import type { TtsAdapter } from '@ai-tutor/player';
-import { SUPPORT_REPLY } from '@ai-tutor/safety';
+import { SUPPORT_REPLY, spokenSupportReply } from '@ai-tutor/safety';
+
+/** The support line as her voice says it, numbers as words (persona v3); shown, it is SUPPORT_REPLY. */
+const SPOKEN_SUPPORT = spokenSupportReply('en');
 import { LINES } from '@ai-tutor/tutor-control';
 
 /**
@@ -383,7 +386,7 @@ describe('a typed distress line in a real doubt', () => {
     await tick(10);
 
     expect(llmCalls).toBe(1);
-    expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
+    expect(spoken[spoken.length - 1]).toBe(SPOKEN_SUPPORT);
     const dialog = host.querySelector('[role="alertdialog"]');
     expect(dialog?.textContent).toContain('Tele-MANAS');
     // The room is gone, not covered: no hand to raise, no box to type into.
@@ -405,7 +408,7 @@ describe('a typed distress line in a real doubt', () => {
     await tick(10);
 
     expect(llmCalls).toBe(0);
-    expect(spoken.filter((l) => l === SUPPORT_REPLY)).toHaveLength(1);
+    expect(spoken.filter((l) => l === SPOKEN_SUPPORT)).toHaveLength(1);
     expect(host.querySelector('[role="alertdialog"]')).not.toBeNull();
   });
 });
@@ -473,7 +476,7 @@ describe('a spoken answer that is distress, in the real room', () => {
     expect(ear.on).toBe(false);
     // Neither the judge nor anything else went to a model.
     expect(llmCalls).toBe(0);
-    expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
+    expect(spoken[spoken.length - 1]).toBe(SPOKEN_SUPPORT);
     expect(spoken.join(' ')).not.toContain('kill myself');
     // The room is gone: no hand to raise.
     expect(host.querySelector('[aria-label="Raise hand and ask a doubt"]')).toBeNull();
@@ -782,7 +785,7 @@ describe('a held question with the mic off', () => {
     await typeAnswer(host, 'i want to kill myself');
     await tick(10);
     expect(host.querySelector('[role="alertdialog"]')).not.toBeNull();
-    expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
+    expect(spoken[spoken.length - 1]).toBe(SPOKEN_SUPPORT);
     expect(llmCalls).toBe(0);
   });
 

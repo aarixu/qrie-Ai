@@ -453,6 +453,8 @@ export function ClassRoom({
       board: { freeze: () => boardRef.current.freeze() },
       showSupport: (line) => setSupport(line),
       lessonId: () => lessonIdRef.current,
+      // The support line in the language the child chose for her voice.
+      language: () => tutorLanguage(),
     }),
   );
 
@@ -1979,7 +1981,7 @@ export function ClassRoom({
    * what LEAVES the device is the cleaned version, and a sentence that needs a
    * person halts the class (lib/sessionHalt.ts) instead of reaching a model.
    */
-  const sendText = (text: string) => {
+  const sendText = (text: string, spoken = false) => {
     if (halt.halted) return;
     setTextLines((prev) => [...prev, { role: 'student', text, final: true }]);
     const out = halt.typedDoubt(text);
@@ -1996,7 +1998,9 @@ export function ClassRoom({
     // Its length, never its words. clean() would drop the text anyway; not
     // writing it is the clearer statement.
     track('doubt_message_sent', { lessonId: lesson.id, length: text.length });
-    handoff.sendUserText(out.forward);
+    // A doubt they SAID is answered for the ear; a typed one for the screen
+    // (persona v3: the voice and text surfaces).
+    handoff.sendUserText(out.forward, spoken ? { spoken: true } : undefined);
   };
 
   const endDoubt = () => {
@@ -2184,7 +2188,7 @@ export function ClassRoom({
     void (async () => {
       const first = pendingSpokenDoubt.current;
       pendingSpokenDoubt.current = null;
-      if (first) sendTextRef.current(first);
+      if (first) sendTextRef.current(first, true);
       while (!over()) {
         if (herTurn()) {
           await pause(150);
@@ -2211,7 +2215,7 @@ export function ClassRoom({
           endDoubtRef.current();
           return;
         }
-        sendTextRef.current(text);
+        sendTextRef.current(text, true);
       }
     })();
     return () => {

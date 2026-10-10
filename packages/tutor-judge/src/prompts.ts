@@ -1,4 +1,4 @@
-import { TUTOR, isTutorLanguage, registerLine, type TutorLanguage } from '@ai-tutor/persona';
+import { coreFor, type TutorLanguage } from '@ai-tutor/persona';
 import type { AuthoredProbe, SpokenAsk } from './types.ts';
 
 /**
@@ -31,72 +31,73 @@ import type { AuthoredProbe, SpokenAsk } from './types.ts';
  *     "Great job!" is the congratulation a model reaches for without noticing
  *     it is one.
  *
+ * HER CORE OPENS BOTH CALLS (persona v3, Aarav 2026-10-10: a small core in
+ * EVERY model call). Until 2026-10-11 these two borrowed only her name and a
+ * register line ("You are Meera, an Indian tutor"), so none of her values,
+ * bans or safety reached the calls that answer every spoken answer. Now each
+ * opens on `coreFor(language)` (the core, the safety backstop and the language
+ * module, no likes and no speaking rules: the call states its own JSON shape),
+ * then says what this call is, under THIS CALL.
+ *
  * THE LANGUAGE SHE SPEAKS IS THE CHILD'S CHOICE, never the language they
- * happened to answer in. Both prompts take the student's `TutorLanguage` and
- * render persona's one register line for it (packages/persona/src/language.ts),
- * the same line the live doubt tutor carries, so the class and the replies
- * around it are one voice. The close used to say "meet them in kind", which
- * moved an English child who reasoned in Hindi into Hindi and a Hinglish child
- * who reasoned in English into English — overriding, one answer at a time, a
- * choice they made once at onboarding. How she READS is unchanged: the idea is
- * judged, not the wording and not the language.
+ * happened to answer in: the same language module the live doubt tutor
+ * carries, so the class and the replies around it are one voice. The close
+ * used to say "meet them in kind", which moved an English child who reasoned
+ * in Hindi into Hindi and a Hinglish child who reasoned in English into
+ * English — overriding, one answer at a time, a choice they made once at
+ * onboarding. How she READS is unchanged: the idea is judged, not the wording
+ * and not the language. A language that is absent, or not one of the two the
+ * app stores, is English, the base (v3). The one caller in the app always has
+ * one (apps/classroom/src/lib/judge.ts passes the workspace's
+ * `tutorLanguage()`); the measurement tools in tools/measure call these with
+ * none and get the English module.
  *
- * A language that is absent, or not one of the two the app stores, renders no
- * line: unknown says nothing, persona's rule for every signal. The one caller
- * in the app always has one (apps/classroom/src/lib/judge.ts passes the
- * workspace's `tutorLanguage()`); the measurement tools in tools/measure call
- * these with none and get the prompt without a register line.
+ * WHAT IT COSTS. MEASURED on 2026-10-11 by rendering these: JUDGE_SYSTEM is
+ * 4,535 characters in English and 5,007 in Hinglish (1,688 before, English),
+ * CLOSE_SYSTEM 3,994 and 4,466 (1,147 before). DERIVED at four characters to
+ * the token, gemini-3.7-flash's $0.75/1M prompt price and Rs 95.6 to the
+ * dollar: about Rs 0.05 more on every judge call and every close. Aarav chose
+ * that (core in every call); both ceilings are asserted in tests/judge.test.ts,
+ * so growing either prompt again is a decision somebody makes on purpose.
  *
- * WHAT IT COSTS. MEASURED on 2026-09-29 by rendering the committed prompts and
- * these side by side: the register line is 175 characters for 'en' and 173 for
- * 'hi-en'. JUDGE_SYSTEM went from 1,235 characters to 1,688 with the English
- * line (1,510 with none), and CLOSE_SYSTEM from 831 to 1,147 (969 with none).
- * DERIVED at four characters to the token, gemini-3.7-flash's $0.75/1M prompt
- * price and Rs 95.6 to the dollar: about Rs 0.008 more on every judge call and
- * Rs 0.006 on every close. Both ceilings are asserted in tests/judge.test.ts,
- * so growing either prompt is a decision somebody makes on purpose.
- *
- * WHETHER THE MODEL OBEYS THE LINE IS UNVERIFIED. The plan's bar (a 30-item
- * labelled set: ≥ 90% Hinglish replies to Hinglish students, ≥ 95% English
- * replies to English students) has not been run.
+ * WHETHER THE MODEL OBEYS THE LANGUAGE IS UNVERIFIED. The plan's bar (a
+ * 30-item labelled set: ≥ 90% Hinglish replies to Hinglish students, ≥ 95%
+ * English replies to English students) has not been run.
  */
 
 /**
- * The register line as a prompt bullet, or nothing.
- *
- * Checked at runtime as well as by type, because the value arrives from a
- * profile row that round-trips through the cloud: a language the app does not
- * speak must not become an instruction to speak it.
+ * Her core, then this call. `coreFor` checks the language at runtime as well
+ * as by type, because the value arrives from a profile row that round-trips
+ * through the cloud: a language the app does not speak must not become an
+ * instruction to speak it.
  */
-const speaks = (language: TutorLanguage | undefined): string[] =>
-  isTutorLanguage(language) ? [`- ${registerLine(language)}`] : [];
+const herCall = (language: TutorLanguage | undefined, lines: readonly string[]): string =>
+  [coreFor(language), ['THIS CALL', ...lines].join('\n')].join('\n\n');
 
 export const JUDGE_SYSTEM = (language?: TutorLanguage): string =>
-  [
-    `You are ${TUTOR.name}, an Indian tutor teaching a live class. The class is holding on one question and the student just answered OUT LOUD. Judge their spoken words.`,
+  herCall(language, [
+    `You are teaching a live class. The class is holding on one question and the student just answered OUT LOUD. Judge their spoken words.`,
     `Reply with ONE JSON object, nothing else: {"verdict":"right"|"wrong"|"unclear","say":"...","gave":"question"|"hint"}`,
     `- Students answer in English, Hindi or a mix, in their own words or by letter ("B", "option B"). Judge the IDEA, not the wording or the language.`,
     `- "say" is SPOKEN aloud to them next: 1-2 short, warm, natural sentences, the way a real tutor talks to one child across a desk. Plain text, no markdown.`,
-    ...speaks(language),
     `- Ask before you tell: hand their own words back to them and let a question do the teaching.`,
     `- NEVER say "correct" or congratulate, and never "Great job!", "Well done!" or any other stock praise - warmth is in how closely you listened, not in a compliment.`,
     `- right: acknowledge their words in one short clause, then ask ONE cross-question about their own answer - a why, a how, or a when - and STOP THERE. Do not give the reason yet; they earn it by thinking one step further.`,
     `- wrong: never reveal the answer. Ask ONE why/how/when question, or give the hint, that makes them think again. "I don't know" is wrong, not unclear.`,
     `- "gave" says which of those two you just did: "question" for a leading question, "hint" for the hint itself. It is recorded, never spoken. Omit it unless the verdict is wrong.`,
     `- unclear: the words do not answer the question at all (noise, off-topic, cut off). Ask them to say it once more in their own words.`,
-  ].join('\n');
+  ]);
 
 export const CLOSE_SYSTEM = (language?: TutorLanguage): string =>
-  [
-    `You are ${TUTOR.name}, an Indian tutor teaching a live class. The student answered a question RIGHT, you asked one cross-question about their answer, and they have just reasoned out loud. Close the loop.`,
+  herCall(language, [
+    `You are teaching a live class. The student answered a question RIGHT, you asked one cross-question about their answer, and they have just reasoned out loud. Close the loop.`,
     `Reply with ONE JSON object, nothing else: {"say":"...","held":true|false}`,
     `- "say" is SPOKEN aloud: 1-2 short, warm, natural sentences, the way a real tutor talks to one child across a desk. Plain text. They may reason in English, Hindi or a mix - weigh the idea, not the language.`,
-    ...speaks(language),
     `- If their reasoning holds, name what it proves in your own words, then give the full why in one line.`,
     `- If it wobbles, or they said nothing, give the why yourself, warmly - no scolding, never the word "wrong".`,
     `- "held" says which of those two you just did: true if their reasoning stood up, false if it wobbled or they said nothing. It is recorded, never spoken.`,
     `- NEVER say "correct" or congratulate, and never "Great job!", "Well done!" or any other stock praise. The reason is the lesson.`,
-  ].join('\n');
+  ]);
 
 /**
  * THE AUTHORED JUDGEMENT, WRITTEN FOR EARS RATHER THAN AS A MENU.

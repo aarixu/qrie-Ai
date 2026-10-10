@@ -5,6 +5,23 @@
 export { TUTOR, type TutorTraits } from './traits';
 
 export {
+  BANNED_PHRASES,
+  CORE,
+  LIKES,
+  MOVES,
+  REGION_HELPLINES,
+  SPEAKING,
+  coreFor,
+  likesBlock,
+  neutralLearnerVerbs,
+  safetyBlock,
+  type Helpline,
+  type Move,
+  type Region,
+  type SafetySurface,
+} from './meera';
+
+export {
   describeFactors,
   classifyAnswer,
   FACTORS,
@@ -35,5 +52,6 @@ export {
   buildSystemPrompt,
   type Surface,
   type LessonContext,
+  type PreparedItem,
   type PromptInput,
 } from './prompt';

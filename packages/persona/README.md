@@ -18,11 +18,18 @@ a hand goes up are unmistakably the same person.
 Behaviour is **composed**, never copy-pasted:
 
 ```
-traits  (who she is)          ─┐
-factors (who is in front)     ─┼─► buildSystemPrompt() ─► one system prompt
-moment  (what is happening)   ─┤
-surface (how words come out)  ─┘
+meera   (who she is: v3 core, likes, safety, moves) ─┐
+language (the learner's module)                     ─┤
+factors (who is in front, injected by the app)      ─┼─► buildSystemPrompt() ─► one system prompt
+move / moment (what this turn is)                   ─┤
+surface (how words come out)                        ─┘
 ```
+
+Since 2026-10-11 her character is **persona v3** (`src/meera.ts`), ported word
+for word from `tools/voice-probe/persona-draft/meera.mjs` (Aarav's decisions are in
+`docs/handoff/2026-10-11-voice-stt-tts-persona-handoff.md`, sections 4.3 and 5).
+`coreFor(language)` (core + safety + language) opens the judge, the close and the
+class planner too: a small core in every model call.
 
 ## Public API
 
@@ -33,10 +40,20 @@ interface TutorTraits {
   role: string
   voice: string             // PROSE: how she sounds, for a human reading a draft line
   speechVoiceName: string   // the prebuilt Gemini voice id her words are synthesised with
-  values: string[]
-  neverDoes: string[]
 }
 const TUTOR: TutorTraits
+
+// --- meera.ts : persona v3 -----------------------------------------------
+const CORE: string              // every model call opens on it
+const LIKES: readonly string[]  // fixed, so she is the same Meera next week
+likesBlock(): string            // only where she chats (voice, text)
+safetyBlock(language, region, 'voice' | 'text'): string   // helplines: words when heard, digits when read
+const REGION_HELPLINES          // per region; @ai-tutor/safety's digits are held equal to it by a test
+const SPEAKING: { voice, text }
+const MOVES: Record<Move, string>   // the conductor's cards: the brief's list plus LIFT, CHAT, HOLD
+coreFor(language): string       // core + safety + language: the judge, the close, the planner
+const BANNED_PHRASES: readonly string[]
+neutralLearnerVerbs(text): string   // "karoge" -> "karo" for a Hinglish learner
 
 // --- factors.ts : what she adapts to -------------------------------------
 type Klass = 6 | 7 | 8 | 9 | 10 | 11 | 12
@@ -93,7 +110,11 @@ interface LessonContext {
   recallableBeats?: readonly { id: string; topic: string }[] // the ONLY legal recall targets
 }
 
-interface PromptInput { moment: Moment; student: StudentContext; lesson?: LessonContext; surface: Surface }
+interface PromptInput {
+  student: StudentContext; lesson?: LessonContext; surface: Surface
+  moment?: Moment                     // an app-flow turn (today: the doubt's opening, answering, closing)
+  move?: Move; rung?: number; helped?: number; because?: string; payload?: PreparedItem   // a conductor turn (not wired yet)
+}
 buildSystemPrompt(input: PromptInput): string
 ```
 
@@ -125,16 +146,22 @@ const systemPrompt = buildSystemPrompt({
 The prompt comes out in a fixed section order, most permanent thing first:
 
 ```
-WHO YOU ARE / YOU ALWAYS / YOU NEVER
-THIS STUDENT — private notes
-THIS MOMENT — <MOMENT>
-THIS LESSON / WHAT THE CLASS HAS COVERED SO FAR / MOMENTS YOU CAN BRING BACK
-WHICH LANGUAGE YOU SPEAK — only when `student.language` is set
-HOW TO SPEAK — VOICE | TEXT | NARRATION
+WHO YOU ARE / HOW YOU TEACH / HOW YOU ARE / HONEST   (CORE)
+YOUR LIKES                                           (voice and text only)
+SAFETY (outranks everything)
+LANGUAGE                                             (English when none is set)
+HOW TO SPEAK                                         (voice | text | narration)
+THE LEARNER (private notes: never read them out)
+THIS LESSON / COVERED SO FAR / WHAT THIS RESTS ON / MOMENTS YOU CAN BRING BACK
+PREPARED                                             (only with a payload)
+THIS TURN (a move) | THIS MOMENT — <MOMENT>          (last)
 ```
 
 ## The rules worth knowing
 
+- **The persona names no learner.** No students, age, class or board in her own
+  text (a test holds it); the app injects the learner lines (`describeFactors`).
+  She says she is an AI only when asked; the app's screens say it plainly.
 - **Absent means unknown, and unknown says nothing.** A missing `mastery`
   produces no line at all — never "average", never "weak". Out-of-range and
   non-finite values are treated as missing for the same reason.
@@ -143,9 +170,10 @@ HOW TO SPEAK — VOICE | TEXT | NARRATION
   signals nobody measured is a tutor making things up. Adding a factor means
   adding a real signal first — see the "DELIBERATELY NOT FACTORS" block at the
   top of `src/factors.ts`.
-- **Blanket prohibitions live once**, in `TUTOR.neverDoes`, and are rendered
-  into every prompt. Moment guidance says what to DO in that moment; it never
-  repeats a global ban, because two copies of a rule drift apart.
+- **Blanket prohibitions live once**, in the v3 core, which opens every prompt.
+  Moment guidance and move cards say what to DO in that turn; they never repeat
+  a global ban, because two copies of a rule drift apart. `BANNED_PHRASES` is the
+  list tests hold every fixed line to.
 - **The student notes are private.** The assembled prompt labels them as such
   and forbids reading scores out. Beliefs are never printed as numbers.
 - **Recall targets are enumerated by id.** The model can only be trusted to pick
@@ -163,9 +191,9 @@ HOW TO SPEAK — VOICE | TEXT | NARRATION
   puts a formula on its own line; `narration` is the authored 30-60 word beat
   voice of the recorded class.
 - The language is the child's choice, not the surface's. `student.language`
-  renders one register line (`src/language.ts`) as its own section above the
-  speaking rules — the same line `@ai-tutor/tutor-judge` puts in the judge and
-  the close. Absent, it renders nothing.
+  renders one language module (`src/language.ts`) as its own section above the
+  speaking rules — the same module `coreFor` puts in the judge, the close and the
+  planner. Absent, or a value the app does not store, it is English, the base.
 
 ## For the developer: what to change, and where
 
@@ -173,14 +201,15 @@ HOW TO SPEAK — VOICE | TEXT | NARRATION
 |---|---|---|
 | have a different name or self-description | `TUTOR.name` / `.role` / `.voice` in `src/traits.ts` | One constant; every surface picks it up on the next call |
 | speak with a different synthesised voice | `TUTOR.speechVoiceName` in `src/traits.ts` | The recording and the live doubt read the same field, so they cannot drift into two teachers. Changing it changes both sides at once — and re-records nothing, so cached narration audio must be regenerated |
-| commit to something new (or stop) | `TUTOR.values` / `TUTOR.neverDoes` in `src/traits.ts` | Values are positive commitments, neverDoes are prohibitions. Tests fail if the same behaviour appears in both, or if a banned phrase is used elsewhere in the package |
+| commit to something new (or stop) | `CORE` in `src/meera.ts` (and `BANNED_PHRASES` for a phrase she never says) | One core in every call. Tests fail if a move, a like or a moment rule uses a banned phrase |
+| change a move the conductor can ask for | `MOVES` in `src/meera.ts` | One card per move, rendered last |
 | push harder / go gentler on a strong student | `MASTERY_SECURE` in `src/factors.ts` | The single band boundary for "they hold this" |
 | rebuild prerequisites sooner | `MASTERY_SHAKY` in `src/factors.ts` | Set below the knowledge graph's `GAP_THRESHOLD` so borderline nodes get consolidated, not rebuilt |
 | notice a struggling lesson earlier | `DOUBT_PACE_THRESHOLD` in `src/factors.ts` | Hands raised before the pace itself is treated as the problem |
 | change what "slow answer" means | `SLOW_ANSWER_MS` in `src/factors.ts` | Kept equal to the knowledge graph's slow-answer boundary so the two never disagree |
 | reword how she handles one situation | the entry in `GUIDANCE` in `src/moments.ts` | One moment, one rule, nothing else touched |
 | add a whole new situation | add to `MOMENTS` in `src/moments.ts` | The compiler then refuses to build until `GUIDANCE` has an entry for it |
-| change spoken length or formatting rules | `SPEAKING` in `src/prompt.ts` | Surface rules are about physical form only, never character |
+| change spoken length or formatting rules | `SPEAKING` in `src/meera.ts` (narration: `NARRATION` in `src/prompt.ts`) | Surface rules are about physical form only, never character |
 | adapt to a new signal | `StudentContext` + `FACTORS` + `describeFactors` in `src/factors.ts` | `FACTORS` is keyed by `keyof StudentContext`, so a new field will not compile until it is documented |
 | reorder or retitle prompt sections | `buildSystemPrompt` in `src/prompt.ts` | The only place the prompt is assembled |
 

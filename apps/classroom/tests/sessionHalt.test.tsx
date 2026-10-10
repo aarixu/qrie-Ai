@@ -2,7 +2,10 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { HELPLINES, REDIRECT_REPLY, SUPPORT_REPLY } from '@ai-tutor/safety';
+import { HELPLINES, REDIRECT_REPLY, SUPPORT_REPLY, spokenSupportReply, supportReply, type SupportLanguage } from '@ai-tutor/safety';
+
+/** The support line as her voice says it: the numbers as words (persona v3). */
+const SPOKEN_SUPPORT = spokenSupportReply('en');
 import {
   createHandoff,
   createStubAgent,
@@ -75,7 +78,7 @@ async function settle(): Promise<void> {
   for (let i = 0; i < 6; i += 1) await new Promise((r) => setTimeout(r, 0));
 }
 
-function classroom(reply: string = ANSWER) {
+function classroom(reply: string = ANSWER, language?: SupportLanguage) {
   const spoken: string[] = [];
   let cancels = 0;
   let drops = 0;
@@ -103,6 +106,7 @@ function classroom(reply: string = ANSWER) {
     doubt: { halt: () => handoff?.halt() },
     showSupport: (line) => void shown.push(line),
     lessonId: () => ctx.lessonId,
+    ...(language ? { language: () => language } : {}),
   });
   handoff = createHandoff({
     agent: createGeminiAgent({ student, fallback: createStubAgent({ opening: false }) }),
@@ -155,9 +159,10 @@ async function expectStoppedForGood(room: Room, llmBefore: number): Promise<void
   room.handoff.endDoubt();
   await settle();
 
-  // 1. The support line, once, and nothing after it.
-  expect(room.spoken.filter((l) => l === SUPPORT_REPLY)).toHaveLength(1);
-  expect(room.spoken[room.spoken.length - 1]).toBe(SUPPORT_REPLY);
+  // 1. The support line, once, and nothing after it (said with its numbers
+  // as words; shown with them as digits, below).
+  expect(room.spoken.filter((l) => l === SPOKEN_SUPPORT)).toHaveLength(1);
+  expect(room.spoken[room.spoken.length - 1]).toBe(SPOKEN_SUPPORT);
   // 2. No further model call.
   expect(room.llmCalls()).toBe(llmBefore);
   // 3. The mic is closed.
@@ -266,9 +271,62 @@ describe('haltSession — what it is not', () => {
     await room.halt.say(DISTRESS, 'model-reply');
     room.halt.haltSession('ear', SUPPORT_REPLY);
 
-    expect(room.spoken).toEqual([SUPPORT_REPLY]);
+    expect(room.spoken).toEqual([SPOKEN_SUPPORT]);
     expect(room.shown).toEqual([SUPPORT_REPLY]);
     expect(room.halt.haltedBy).toBe('ear');
+  });
+
+  /**
+   * IN THE LEARNER'S LANGUAGE (persona v3, 2026-10-11). The screen's verdict
+   * is English; the room knows which language the child chose for her voice,
+   * and the halt shows and says the support line in it: digits on the screen
+   * so they can be rung, words in her voice so "1098" is never "ten
+   * ninety-eight".
+   */
+  it('shows and says the support line in Hinglish to a Hinglish learner', async () => {
+    const room = classroom(ANSWER, 'hi-en');
+    const out = await room.halt.say(DISTRESS, 'model-reply');
+    expect(out).toEqual({ halted: true, said: supportReply('hi-en') });
+    expect(room.shown).toEqual([supportReply('hi-en')]);
+    expect(room.spoken).toEqual([spokenSupportReply('hi-en')]);
+  });
+
+  it('says the numbers as words and shows them as digits in English too', () => {
+    const room = classroom(ANSWER, 'en');
+    room.halt.heard(DISTRESS, 'ear');
+    expect(room.shown).toEqual([SUPPORT_REPLY]);
+    expect(room.spoken).toEqual([SPOKEN_SUPPORT]);
+    expect(room.spoken[0]).not.toMatch(/\d/);
+  });
+
+  /**
+   * NO GENDER FOR THE LEARNER, IN CODE (persona v3). "karoge" tells a child
+   * they are a boy; about 8% of Hinglish replies still used such a form in the
+   * 5-draw test, so every line she says to a Hinglish learner, a model's or
+   * the lesson's, loses it on the way out — in the voice and the caption alike.
+   */
+  it('says a Hinglish line without a gendered verb for the learner, voice and caption alike', async () => {
+    const room = classroom(ANSWER, 'hi-en');
+    const captions: string[] = [];
+    const out = await room.halt.say('Ab ek baar phir try karoge?', 'model-reply', (l) => void captions.push(l));
+    expect(out).toEqual({ halted: false, said: 'Ab ek baar phir try karo?' });
+    expect(room.spoken).toEqual(['Ab ek baar phir try karo?']);
+    expect(captions).toEqual(['Ab ek baar phir try karo?']);
+    const authored = await room.halt.sayAuthored('Phir se bologe?');
+    expect(authored.said).toBe('Phir se bolo?');
+  });
+
+  it('leaves an English learner\'s lines as they are', async () => {
+    const room = classroom(ANSWER, 'en');
+    const out = await room.halt.say('The Karoge river is a made-up name.', 'model-reply');
+    expect(out.said).toBe('The Karoge river is a made-up name.');
+  });
+
+  it('passes any other line through as it is', () => {
+    const room = classroom(ANSWER, 'hi-en');
+    room.halt.haltSession('typed-doubt', 'A line that is not the support line.');
+    expect(room.shown).toEqual(['A line that is not the support line.']);
+    expect(room.spoken).toEqual(['A line that is not the support line.']);
   });
 
   it('silences whatever she was already saying before the support line', () => {
@@ -399,9 +457,10 @@ describe('SupportScreen', () => {
     host.remove();
   });
 
-  it('puts both helplines one tap away', () => {
+  it('puts every number in the line one tap away, 112 included', () => {
     expect(html).toContain(`href="tel:${HELPLINES.telemanas}"`);
     expect(html).toContain(`href="tel:${HELPLINES.childline}"`);
+    expect(html).toContain(`href="tel:${HELPLINES.emergency}"`);
   });
 
   it('offers a way home and no way back into the class', () => {

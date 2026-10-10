@@ -1,4 +1,5 @@
-import { screen } from '@ai-tutor/safety';
+import { isSupportReply, screen, spokenSupportReply, supportReply, type SupportLanguage } from '@ai-tutor/safety';
+import { neutralLearnerVerbs } from '@ai-tutor/persona';
 import { fromStudent, toStudent } from './safety';
 
 /**
@@ -80,6 +81,11 @@ export interface HaltRoom {
   showSupport(line: string): void;
   /** Which lesson a recorded flag belongs to. */
   lessonId?: () => string | undefined;
+  /**
+   * The language the learner chose for her voice. The support line is shown
+   * and said in it; English when the room does not say (persona v3).
+   */
+  language?: () => SupportLanguage | undefined;
 }
 
 export interface SessionHalt {
@@ -159,6 +165,29 @@ export function createSessionHalt(room: HaltRoom): SessionHalt {
   let haltedBy: HaltCause | null = null;
   const lessonId = (): string | undefined => room.lessonId?.();
 
+  /**
+   * THE SUPPORT LINE IN THE LEARNER'S LANGUAGE, as shown and as said. The
+   * screen's verdict is always the English line; the room knows which
+   * language the child chose. Shown with the numbers as digits, so they can be
+   * read and rung; said with them as words, so her voice never reads "1098"
+   * as "ten ninety-eight". Any other line is shown and said as it is.
+   */
+  const supportFor = (line: string): { shown: string; spoken: string } => {
+    if (!isSupportReply(line)) return { shown: line, spoken: line };
+    const language: SupportLanguage = room.language?.() === 'hi-en' ? 'hi-en' : 'en';
+    return { shown: supportReply(language), spoken: spokenSupportReply(language) };
+  };
+
+  /**
+   * NO GENDER FOR THE LEARNER, IN CODE (persona v3). A second-person future
+   * ("karoge", "samjhaoge") tells a child they are a boy; v3's Hinglish module
+   * forbids it and about 8% of Hinglish replies in the 5-draw test still used
+   * one. Every line she says reaches the child through `say` or
+   * `sayAuthored`, so a Hinglish learner's lines lose it here, in the voice
+   * and the caption alike. English lines are left as they are.
+   */
+  const herWords = (text: string): string => (room.language?.() === 'hi-en' ? neutralLearnerVerbs(text) : text);
+
   const haltSession = (cause: HaltCause, supportLine: string): void => {
     if (halted) return;
     // First, so anything the steps below set off — a listen loop polling,
@@ -171,10 +200,11 @@ export function createSessionHalt(room: HaltRoom): SessionHalt {
     room.player.pause();
     room.tts.cancel();
     room.tts.drop?.();
-    room.showSupport(supportLine);
+    const { shown, spoken } = supportFor(supportLine);
+    room.showSupport(shown);
     // A voice that fails still leaves the support screen up with the same
     // words; the screen is the part that cannot be missed.
-    void room.tts.speak(supportLine).catch(() => undefined);
+    void room.tts.speak(spoken).catch(() => undefined);
   };
 
   /** True, and halted, when these words from the student are distress. */
@@ -200,16 +230,19 @@ export function createSessionHalt(room: HaltRoom): SessionHalt {
       const screened = toStudent(text, lessonId());
       if (screened.say !== null) {
         // Reported before anything else happens, like every line: the caption
-        // shows the support line, never the one it replaced.
-        onSaid?.(screened.say);
+        // shows the support line, in the learner's language, never the one it
+        // replaced.
+        const { shown } = supportFor(screened.say);
+        onSaid?.(shown);
         haltSession(cause, screened.say);
-        return { halted: true, said: screened.say };
+        return { halted: true, said: shown };
       }
-      onSaid?.(text);
+      const line = herWords(text);
+      onSaid?.(line);
       // A lost voice line counts as spoken — a stuck class is worse — which
       // is the same rule `screenedSpeech` keeps.
-      await room.tts.speak(text).catch(() => undefined);
-      return { halted, said: text };
+      await room.tts.speak(line).catch(() => undefined);
+      return { halted, said: line };
     },
 
     async sayAuthored(text, onSaid) {
@@ -217,9 +250,10 @@ export function createSessionHalt(room: HaltRoom): SessionHalt {
       // The pure screen, not `toStudent`: that one files a 'distress' flag,
       // and a flag of that kind means the CHILD said something.
       if (screen(text, 'to-student').kind === 'support') return { halted: false, said: '' };
-      onSaid?.(text);
-      await room.tts.speak(text).catch(() => undefined);
-      return { halted, said: text };
+      const line = herWords(text);
+      onSaid?.(line);
+      await room.tts.speak(line).catch(() => undefined);
+      return { halted, said: line };
     },
 
     heard(text, cause) {

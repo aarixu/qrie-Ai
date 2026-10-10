@@ -1279,7 +1279,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    */
   const repairCall = (user: string, done: number): Promise<string> =>
     askAgainLater(
-      () => planner.complete(plannerSystemFor(opts.composed === true), user),
+      () => planner.complete(plannerSystemFor(opts.composed === true, language), user),
       opts.repairRetry,
       (ms) => {
         const seconds = Math.round(ms / 1000);
@@ -1293,7 +1293,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   /** Every plan the planner returns is laid out composed, when this class is. */
   const stamp = (plan: Blueprint | null): Blueprint | null =>
     plan && opts.composed ? { ...plan, layout: 'composed' } : plan;
-  const raw = await planner.complete(plannerSystemFor(opts.composed === true), brief);
+  const raw = await planner.complete(plannerSystemFor(opts.composed === true, language), brief);
 
   // Unreadable JSON gets the same second chance a bad plan does. A model that
   // drops a brace has still done the thinking; failing the whole class over

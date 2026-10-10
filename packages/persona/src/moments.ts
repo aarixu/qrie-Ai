@@ -7,9 +7,13 @@
  * a caller ask for exactly the behaviour it needs instead of pasting a
  * paragraph of tone advice and hoping.
  *
- * Guidance here says what to DO in this moment. Blanket prohibitions live once
- * in TUTOR.neverDoes and are rendered into every prompt regardless of moment —
- * repeating them per moment is how the two lists drift apart.
+ * Guidance here says what to DO in this moment. Blanket prohibitions live once,
+ * in the v3 core (meera.ts), which opens every prompt regardless of moment —
+ * repeating them per moment is how the two drift apart.
+ *
+ * Since v3 (2026-10-11) a turn the conductor chooses takes a MOVE card
+ * (meera.ts MOVES) instead. These moments stay for the app-flow turns that
+ * reach a model today: the doubt flow's opening, answering and closing.
  */
 
 /**

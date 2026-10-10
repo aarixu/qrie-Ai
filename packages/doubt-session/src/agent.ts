@@ -21,6 +21,12 @@ export interface SayOptions {
 /** How a message reached the doubt. */
 export interface SendOptions {
   opener?: boolean;
+  /**
+   * The student SAID it (the ear wrote it down) rather than typing it. An
+   * agent briefs that turn for the voice surface, a typed one for the text
+   * surface (persona v3).
+   */
+  spoken?: boolean;
 }
 
 /** How an agent talks back to the room. Implemented by the app / handoff. */

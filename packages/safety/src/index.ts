@@ -11,6 +11,11 @@
 // `redirect` verdicts hand back no text at all.
 export {
   HELPLINES,
+  HELPLINE_WORDS,
+  isSupportReply,
+  spokenSupportReply,
+  supportReply,
+  type SupportLanguage,
   MASK,
   MAX_DISTRESS_SCAN_CHARS,
   MAX_STUDENT_CHARS,

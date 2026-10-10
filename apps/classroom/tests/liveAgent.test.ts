@@ -104,7 +104,7 @@ describe('buildLiveSystemInstruction', () => {
     // Her standing rules legitimately mention mastery ("never read out internal
     // scores"), so the check has to be the STUDENT section, not the whole
     // prompt: what must be absent is a claim about THIS student.
-    const from = prompt.indexOf('THIS STUDENT');
+    const from = prompt.indexOf('THE LEARNER');
     const section = prompt.slice(from, prompt.indexOf('\n\n', from));
     expect(from).toBeGreaterThan(-1);
     expect(section).toContain('Class 10');

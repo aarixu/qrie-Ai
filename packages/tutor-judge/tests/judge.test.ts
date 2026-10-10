@@ -10,7 +10,7 @@ import {
   type JudgeDeps,
   type SpokenAsk,
 } from '../src/index';
-import { REGISTER, TUTOR_LANGUAGES } from '@ai-tutor/persona';
+import { REGISTER, TUTOR_LANGUAGES, coreFor } from '@ai-tutor/persona';
 
 /**
  * This decides right from wrong for every answer a student speaks aloud, and
@@ -645,14 +645,13 @@ describe('the language the child chose', () => {
   });
 
   it('asks for Roman-script Hinglish for a Hinglish child', () => {
-    expect(JUDGE_SYSTEM('hi-en')).toContain(
-      'Speak Hinglish the way a friendly Delhi tutor talks to a Class 6-10 student: Hindi sentence structure in Roman script with English science and maths terms; never Devanagari.',
-    );
+    expect(JUDGE_SYSTEM('hi-en')).toContain(`LANGUAGE\n${REGISTER['hi-en']}`);
+    expect(REGISTER['hi-en']).toContain('Roman script, never Devanagari');
   });
 
   it('gives an English child no Hinglish line at all', () => {
     for (const sys of [JUDGE_SYSTEM('en'), CLOSE_SYSTEM('en')]) {
-      expect(sys).toMatch(/plain Indian English/);
+      expect(sys).toMatch(/Indian English/);
       expect(sys).not.toMatch(/hinglish/i);
       expect(sys).not.toMatch(/devanagari/i);
     }
@@ -673,10 +672,28 @@ describe('the language the child chose', () => {
     }
   });
 
-  it('says nothing about language when nobody named one', () => {
+  it('speaks English, the base, when nobody named a language (persona v3)', () => {
     for (const sys of [JUDGE_SYSTEM(), CLOSE_SYSTEM()]) {
-      expect(sys).not.toContain(REGISTER.en);
+      expect(sys).toContain(REGISTER.en);
       expect(sys).not.toContain(REGISTER['hi-en']);
+    }
+  });
+
+  /**
+   * HER CORE IN EVERY CALL (Aarav, 2026-10-10). The judge and the close used
+   * to borrow only her name and a register line ("You are Meera, an Indian
+   * tutor"), so none of her values, bans or safety reached the two calls that
+   * answer every spoken answer. Now each opens on the core, the safety
+   * backstop and the language, and says what this call is after it.
+   */
+  it('opens both calls on her core, safety and language, then says what the call is', () => {
+    for (const language of TUTOR_LANGUAGES) {
+      for (const sys of [JUDGE_SYSTEM(language), CLOSE_SYSTEM(language)]) {
+        expect(sys.startsWith(coreFor(language))).toBe(true);
+        expect(sys).toContain('\n\nTHIS CALL\n');
+        expect(sys).not.toMatch(/an Indian tutor/);
+        expect(sys).not.toContain('YOUR LIKES');
+      }
     }
   });
 
@@ -744,8 +761,10 @@ describe('how she sounds when she answers an answer', () => {
  * rule can still be reworded but not quietly doubled.
  */
 describe('what the language and the human rules cost', () => {
-  const JUDGE_CEILING = 1_750;
-  const CLOSE_CEILING = 1_200;
+  // Raised on purpose on 2026-10-11, when her core went into both calls
+  // (persona v3; measured 4,535 / 5,007 and 3,994 / 4,466, see prompts.ts).
+  const JUDGE_CEILING = 5_100;
+  const CLOSE_CEILING = 4_550;
 
   it('keeps each prompt inside a ceiling somebody has priced, in either language', () => {
     for (const language of TUTOR_LANGUAGES) {

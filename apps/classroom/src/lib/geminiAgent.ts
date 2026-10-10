@@ -347,12 +347,21 @@ function boardBrief(board: DoubtBoard, ctx: DoubtContext): string[] {
  * on `student` is kept: whoever built the context measured it, and the
  * workspace is the fallback, not an override.
  */
-export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContext, board?: DoubtBoard): string {
+export function buildDoubtSystemPrompt(
+  ctx: DoubtContext,
+  student: StudentContext,
+  board?: DoubtBoard,
+  /**
+   * How the turn being answered arrived: 'voice' when the student said it,
+   * 'text' when they typed it (persona v3). Her reply is voiced either way.
+   */
+  surface: 'voice' | 'text' = 'text',
+): string {
   const spokenTo: StudentContext = { ...student, language: student.language ?? tutorLanguage() };
   return [
     buildDoubtBrief(ctx, spokenTo, {
       moment: 'answering',
-      surface: 'text',
+      surface,
       // She is told the outcome this beat is for, and what it rests on.
       // With the MODEL's belief, so the foundations she names carry a real
       // secure/shaky marking instead of arriving unmarked.
@@ -494,10 +503,10 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
        * The blocked question is taken back out and the reply to it is never
        * added; the turns answered before it stay.
        */
-      const call = async (userText: string): Promise<AgentReply> => {
+      const call = async (userText: string, spoken = false): Promise<AgentReply> => {
         history.push({ role: 'user', text: userText });
         const reply = await transport(
-          buildDoubtSystemPrompt(ctx, opts.student, opts.board),
+          buildDoubtSystemPrompt(ctx, opts.student, opts.board, spoken ? 'voice' : 'text'),
           history,
           controller.signal,
         );
@@ -563,7 +572,7 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
              * closed the doubt when it ended, and the reply was never heard
              * (round-8 review).
              */
-            const pending = call(userText);
+            const pending = call(userText, send?.spoken === true);
             let thinking: Promise<void> | null = null;
             const timer = setTimeout(() => {
               if (!stopped) thinking = io.say(thinkingLine(tutorLanguage(), userText), { more: true });

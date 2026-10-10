@@ -1,4 +1,4 @@
-import { TUTOR } from '@ai-tutor/persona';
+import { TUTOR, coreFor } from '@ai-tutor/persona';
 import type { VisualBrief } from './types.ts';
 import { recipeLines, toolkitPrompt } from './toolPrompt.ts';
 
@@ -145,7 +145,7 @@ English is wrong in Hinglish.`;
  * Taking the grid away does not validate that bug out of existence; it makes it
  * inexpressible.
  */
-export const PLANNER_SYSTEM = `You plan one short lesson for ${TUTOR.name}, an AI tutor
+export const PLANNER_SYSTEM = `You plan one short lesson for ${TUTOR.name}, the teacher above,
 who teaches Indian school students (NCERT syllabus). You write the teaching. You
 never write positions, sizes, colours or coordinates — the board works those out.
 
@@ -681,14 +681,31 @@ board with nothing else it is the main demonstration.
 The board colours each part you label, and that part's name in the notes, in
 the same colour. You never name a colour.`;
 
-export function plannerSystemFor(composed: boolean): string {
-  if (!composed) return PLANNER_SYSTEM;
+/**
+ * WHO SHE IS, ABOVE THE PLAN (persona v3, Aarav 2026-10-10: a small core in
+ * EVERY model call, the planner's included). Every spoken line the planner
+ * writes comes out of her mouth, and until 2026-10-11 the planner knew only her
+ * name, a one-line voice and that she was "an AI tutor": none of her values,
+ * bans or safety. The core is written to her ("You are Meera"), so a header
+ * says whose it is before the plan's own "you" takes over.
+ *
+ * In the class's language: the Hinglish module is about how she SPEAKS; which
+ * JSON fields stay English is still HINGLISH_REGISTER's, in the user message.
+ */
+export const plannerPersona = (language: TutorLanguage = 'en'): string =>
+  [`# ${TUTOR.name}: every line you write is hers, so it must sound like her. In this part, "you" is her.`, coreFor(language)].join(
+    '\n\n',
+  );
+
+export function plannerSystemFor(composed: boolean, language: TutorLanguage = 'en'): string {
+  const persona = plannerPersona(language);
+  if (!composed) return `${persona}\n\n${PLANNER_SYSTEM}`;
   let text = PLANNER_SYSTEM;
   for (const [from, to] of COMPOSED_SWAPS) {
     if (!text.includes(from)) throw new Error(`plannerSystemFor: the planner prompt no longer says "${from.slice(0, 50)}…"`);
     text = text.replace(from, to);
   }
-  return text + PAGE_CONTRACT;
+  return `${persona}\n\n${text}${PAGE_CONTRACT}`;
 }
 
 /** What the map says this topic is FOR — the ids a beat may claim to teach. */

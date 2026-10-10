@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PLANNER_SYSTEM, plannerSystemFor } from '../src/prompts';
+import { PLANNER_SYSTEM, plannerPersona, plannerSystemFor } from '../src/prompts';
 import { parsePlan, prepareClass, type LlmAdapter } from '../src/prepare';
 
 const PLAN = {
@@ -23,8 +23,8 @@ const PLAN = {
 };
 
 describe('the planner for a composed board', () => {
-  it('is the planner as it was when the board is not composed', () => {
-    expect(plannerSystemFor(false)).toBe(PLANNER_SYSTEM);
+  it('is the planner as it was when the board is not composed (her core above it, persona v3)', () => {
+    expect(plannerSystemFor(false)).toBe(`${plannerPersona('en')}\n\n${PLANNER_SYSTEM}`);
   });
 
   it('asks for one main demonstration and a full page, and teaches summary, compare and path', () => {
@@ -135,7 +135,7 @@ describe('prepareClass({ composed })', () => {
 
   it('plans and lays out as before when it is not asked', async () => {
     const { systems, result } = await run();
-    expect(systems[0]).toBe(PLANNER_SYSTEM);
+    expect(systems[0]).toBe(`${plannerPersona('en')}\n\n${PLANNER_SYSTEM}`);
     expect(result.lesson.elements.find((e) => e.kind === 'title')).toMatchObject({ y: 86 });
   });
 });
