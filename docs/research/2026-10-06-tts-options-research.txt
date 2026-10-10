@@ -1,0 +1,444 @@
+﻿
+==================== PHONE-NATIVE ====================
+SUMMARY: Best cheap path: the phone's own voice through the browser's speechSynthesis in Chrome on Android (90.6% of Indian mobile browsing, Sept 2026). It costs Rs 0 per minute, against about Rs 3.6 for Gemini today.
+Limits: you cannot pick the voice, a phone without a Hindi voice pack silently speaks Hindi in an English voice, and Chrome Android gives onstart/onend but no word-boundary events. I did not find any source showing how a device voice reads Roman-letter Hinglish. That is the biggest unknown.
+So send Hindi words in Devanagari and keep English science terms in Latin script. Do not count on Roman Hinglish until someone listens on 3 real phones.
+iPhone Safari shows only pre-installed voices and needs a tap. Edge on Windows has the best free voices (Swara and Madhur for Hindi, Neerja and Prabhat for Indian English) but Edge is 8.4% of Indian desktop. Chrome's built-in AI APIs have no text-to-speech.
+Suggested design: device voice by default, a one-tap "can you hear Hindi?" check, and Gemini TTS only as fallback. Also worth pricing: Gemini 3.8 Flash-Lite TTS, about Rs 0.8 per minute (see caveats).
+CAVEATS: NOT VERIFIED: I did not hear any phone voice. I had no phone and no connected real Chrome. My only hands-on probe was a Windows 11 PC; the embedded browser pane listed voices but speak() failed ('synthesis-failed') even for English, so I measured no onstart/onboundary timing. The Windows audio probe (duration, plus a Windows en-US recogniser as a rough ear) is weak evidence and applies only to the old Microsoft Hindi desktop voices. Gaps: (1) How any on-device voice reads ROMAN Hinglish: no developer report found, only vendor marketing claims and inference. (2) Which hi-IN and en-IN voices Chrome Android and iOS 18/26 Safari actually expose today. (3) Voice quality for 11-18 year olds: no listening test or MOS score found. (4) Whether Android Chrome marks voices as network or local. Surprising: Chrome Android returns a list of languages, not voices, so a missing Hindi pack silently give…
+options: 10
+
+[1] Chrome on Android, via speechSynthesis (the phone's Google or Samsung speech engine)  (phone-native; evidence: Verified on vendor pages: Google Android Developers Blog (Hindi voice upgrade), Google Accessibility help (voice data), W3C Community Group spec draft (events, queue, rate/pitch). Third-party developer reports: Readium, Chromium and MDN bug threads, talkrapp. Unverified: Hinglish behaviour, en-IN, voice quality.)
+  price: Free: OS/browser feature, no vendor price. Rs 0 per minute of speech (900 chars/min x 0 = 0). Gemini today is about Rs 3.6/min.
+  hindi/hinglish: DOCUMENTED: Google's engine has Hindi (HI-IN) voices; Google said in Sept 2022 it upgraded all 421 voices in 67 languages, HI-IN named, on 64-bit phones (Android Developers Blog). Voice data is installed per language in Settings > Text-to-speech > Install voice data (Google support page). A developer write-up (Readium, Apr 2024…
+  runs on: Phone browser and the phone's installed speech engine. On-device once the voice pack is downloaded. Pack size unverified. | licence: No licence fee; browser and OS feature. Voice data is Google's, used only through the OS and the br…
+  risks: (1) No voice choice: one voice per language, set in system settings (talkrapp, 2019). (2) Missing Hindi pack gives English-voice Hindi; the page cannot detect this from getVoices(). (3) onboundary never fires on Android Chrome (Chromium issue 40715888, MDN co…
+
+[2] Other Android browsers: Samsung Internet, Firefox, Edge, Opera Mini, UC  (phone-native; evidence: third-party (caniuse, Readium, statcounter); not independently tested)
+  price: Free. Rs 0 per minute.
+  hindi/hinglish: Samsung Internet is Chromium-based; its voices come from the installed Google or Samsung TTS engine (search-result summary of developer pages, not read directly). caniuse says Firefox Android supports the API and UC Browser, Opera Mini and the old Android Browser do not. Edge on Android returns an empty voice list (Readium, Apr…
+  runs on: Phone browser using the phone's installed engine. | licence: No licence fee.
+  risks: Small audience: Samsung Internet 0.79%, Firefox 0.27%, Opera 3.51% and UC 0.97% of Indian mobile browser traffic (Sept 2026), and Opera/UC probably cannot speak at all. Needs a feature check and a fallback to server TTS. The Edge-on-Android claim is from 2024…
+
+[3] iPhone/iPad Safari (every iOS browser uses the Safari engine)  (phone-native; evidence: third-party (Apple developer forums, developer write-ups); WebKit blog is a vendor page for the Safari 26 point only; Hindi availability on current iOS unverified)
+  price: Free. Rs 0 per minute.
+  hindi/hinglish: DOCUMENTED (older, third-party): a talkrapp iOS voice table (undated, about 2019) lists Lekha, female hi-IN, and Rishi, male en-IN. An Apple frameworks engineer said (Jan 2023) that web pages get only pre-installed voices, not downloadable ones. Developers report iOS 16 to 18 regressions: higher-quality voices missing from Safa…
+  runs on: Phone browser; compact voices are on-device. | licence: No licence fee; Apple's voices are used only through Safari.
+  risks: speak() works only inside a tap handler, otherwise WebKit drops it silently (testmuai, May 2026). The hardware mute switch silences speechSynthesis (talkrapp). No word-boundary events (dev.to, 2021). Speech stops when Safari goes to the background (WebOutLoud…
+
+[4] Chrome on Windows (and similar desktop Chrome): local Microsoft voices plus Google network voice  (phone-native; evidence: own measurement (voice list, audio duration, recogniser transcript: weak proxy) plus third-party reports; Narrator list is a vendor page)
+  price: Free. Rs 0 per minute.
+  hindi/hinglish: MY OWN CHECK on this Windows 11 PC (embedded Chromium 152): getVoices() listed 5 voices, all local: David, Mark, Zira (en-US) and Microsoft Hemant (male) and Kalpana (female), hi-IN. These are older Microsoft desktop voices; Narrator's list marks only Neerja and Prabhat as 'Natural'. Chrome also has a network voice 'Google हिन्…
+  runs on: Desktop browser. Microsoft voices are local; the Google voice is a network voice and needs internet. | licence: No licence fee; the Microsoft voices ship with Windows.
+  risks: Google network voices cut off an utterance after about 14-15 seconds (about 200-250 characters) with no error, so chunk by sentence (Readium, testmuai, Chromium bug 41346274). Chrome desktop network voices fire no boundary events (Readium); local Windows voic…
+
+[5] Microsoft Edge on Windows: 'Online (Natural)' voices through speechSynthesis  (phone-native; evidence: third-party (Microsoft Community thread, GitHub, Readium, voice-list sites); the Narrator list is a vendor page)
+  price: Free to the page. Rs 0 per minute. The vendor publishes no per-use price for these browser voices.
+  hindi/hinglish: Edge lists Microsoft 'Online (Natural)' neural voices in getVoices(). A July 2026 Microsoft Community thread about Edge 150 shows entries like 'Microsoft undefined Online (Natural) - undefined'; Microsoft fixed it in 150.0.4078.99 (24 Jul 2026). Hindi voices are Swara (female) and Madhur (male): third-party voice lists say so, …
+  runs on: Desktop Edge; the voice is synthesised in Microsoft's cloud, so it needs internet. | licence: A Microsoft Edge feature; no developer licence is documented for web pages. A page using it relies …
+  risks: Edge was 8.42% of Indian desktop browsing in Sept 2026 and about 0.9% overall, and is not on Android phones (empty list). Chrome and Safari users do not get these voices. Edge does not support pitch (Readium, 2024). Special characters may need escaping. Micro…
+
+[6] Safari on macOS  (phone-native; evidence: third-party (Readium, Apple forums))
+  price: Free. Rs 0 per minute.
+  hindi/hinglish: Same restriction as iOS: Safari lists only pre-installed voices and drops downloadable or higher-quality ones. Readium: the best Siri voices are unavailable; installing a higher-quality variant can make the voice vanish from Safari. Lekha (hi-IN) is the classic macOS Hindi voice (Apple Community, 2012: it mixes English and Hind…
+  runs on: Desktop browser; local voices. | licence: No licence fee.
+  risks: Every voice reports default=true; some voices are listed twice; voice names are localised, so name matching breaks (Readium). Safari 26 hides the voice list from known fingerprinting scripts. Only 1.46% of Indian desktop browsing.
+
+[7] Chrome or Edge on macOS  (phone-native; evidence: third-party (Apple forum, Readium))
+  price: Free. Rs 0 per minute.
+  hindi/hinglish: Apple forum posts (Oct 2024) say Chrome and Edge on macOS list all installed system voices while Safari does not, so a Mac user who downloaded Lekha or a premium voice could use it in Chrome. Hindi voice quality and Roman Hinglish: unverified.
+  runs on: Desktop browser; local macOS voices. | licence: No licence fee.
+  risks: The result depends on what each Mac has installed; macOS shows only 18 voices initially in Edge (Readium); boundary events work for local voices on desktop Chrome. A tiny audience for Indian school students.
+
+[8] Chrome built-in AI APIs (Prompt, Summarizer, Translator and others) as a way to get speech  (phone-native; evidence: verified (Chrome's own docs and the blink-dev intent post))
+  price: Free to call, but not usable for speech. Rs 0 per minute, not applicable.
+  hindi/hinglish: Chrome's own built-in AI page lists Translator, Language Detector, Summarizer, Prompt (stable), and Writer, Rewriter, Proofreader (trial). There is no text-to-speech or speech-synthesis API there. The Prompt API takes text, image and audio in, but its output is text only. Chrome's on-device Web Speech work (Chrome 135, Jan 2025…
+  runs on: Desktop Chrome only for the Prompt API: Windows 10/11, macOS 13+, Linux; more than 4 GB VRAM and at least 22 GB free disk; Android and iOS unsupported. | licence: Not applicable.
+  risks: No speech output exists. The only useful piece here is on-device Hindi speech recognition, which is a different job. Not a TTS option for 2026.
+
+[9] Technique: write Hinglish as Devanagari plus Latin English terms, chunk by sentence, add a 'can you hear Hindi?' check and a paid-voice fallback  (technique; evidence: unverified inference built on third-party reports and my weak probe; needs a listening test on at least 3 real Android phones and 1 iPhone)
+  price: Free for the technique. It lets a Rs 0 device voice serve most lines, so Gemini cost applies only to fallback minutes. Devanagari uses more LLM output tokens: unverified size.
+  hindi/hinglish: RECOMMENDED BY INFERENCE, not tested on a device: tell the lesson LLM to write Hindi words in Devanagari and keep English science and maths terms in Latin letters, and speak with a hi-IN voice. Reasons: (a) commercial Hindi TTS vendor pages say Roman input gets read like English; (b) Windows hi-IN voices read my English test wo…
+  runs on: Phone or desktop browser plus the lesson-writing LLM. | licence: Not applicable.
+  risks: Devanagari spellings of English terms ('माइटोकॉन्ड्रिया') may sound odder than Latin 'mitochondria' in some voices: untested. The voice check must run on a real tap, because Chrome and iOS block speech without one. A phone with no Hindi pack cannot be detecte…
+
+[10] Native wrapper (Trusted Web Activity or Capacitor app) calling Android TextToSpeech directly  (phone-native; evidence: verified (Android developer reference) for the API; the Hindi quality is unverified)
+  price: Free per use. Rs 0 per minute. Needs an app-store build.
+  hindi/hinglish: Android's TextToSpeech API (not the browser) can list real voices and show their quality, and its UtteranceProgressListener has onStart, onDone, onError and onRangeStart (character range), which the browser does not pass through. Documented on Android's reference page. Whether an Indian phone's Hindi voice reads Roman Hinglish:…
+  runs on: Phone app. The voice data is on-device. | licence: Android SDK API; no licence fee.
+  risks: It means shipping an Android app, which the product has frozen for now (the LMS and white-label app are separate tracks). iOS would need separate work. The voice is still whatever the phone has.
+
+==================== CLOUD-APIS ====================
+SUMMARY: 1) No paid cloud TTS with Hindi comes near the INR 5 per student-hour ceiling. The paid options run INR 0.3 to 3.5 per minute of speech, which is INR 19 to 210 per hour of continuous speech. Only the free tiers (Google Standard/WaveNet 4M chars a month, Polly Standard 5M chars a month) and hosted open models (DeepInfra Kokoro INR 0.05/min, Chatterbox INR 0.08/min) get close. Phone-native TTS plus caching is therefore the real cost lever.
+2) The cheapest big-vendor step down from today is Gemini 3.8 Flash-Lite TTS at USD 6 per 1M audio tokens. That is INR 0.8 to 1.0 a minute against INR 2.6 to 3.4 on the current 3.1 model. It is Preview, and the price doubles on 1 Jan 2027, so it is still INR 1.6 to 2.0 a minute after that.
+3) Documented Hinglish in Roman letters: Amazon Polly Aditi/Kajal (AWS doc) and Cartesia Sonic-3.6 (vendor blog). Sarvam Bulbul says Roman Hindi degrades quality and costs INR 2.70/min. Most others have no Roman-Hinglish claim, so listen to samples before choosing.
+4) Only Polly states in writing that you may store and replay audio. Pre-generating fixed lessons once and caching them is the second lever.
+5) The Gemini API (AI Studio) terms bar apps likely used by under-18s, and its free tier trains on your data. Vertex uses Cloud terms, where I found no such clause by text search.
+CAVEATS: Not verified: I ran no synthesis and heard no audio, so quality, child-friendliness and Hinglish pronunciation are untested for every option. Hinglish claims are what vendors document, plus clearly labelled inference. Assumptions: INR 88 per USD, 900 characters (15 a second) per minute of speech. Characters were assumed to be counted as typed, with spaces. Gemini audio tokens use the page's 25 tokens a second and a third-party measurement (mxchat, 44 calls, one site) of about 32 a second on 3.1 and 3.8. The measurement matches your INR 0.06 a second: 20 x 32 / 1e6 x 88 = INR 0.056. Surprising: the Google pages list Gemini 3.8 Flash and Flash-Lite TTS at 3.3x and 2.2x cheaper than your current 3.1 preview, with prices that double on 1 Jan 2027. Whether voice Sulafat exists on 3.8 is unverified. Terms: the Gemini API Additional Terms (effective 23 Mar 2026) forbid API clients directed to …
+options: 30
+
+[1] DeepInfra-hosted Kokoro-82M  (cloud API; evidence: verified (price); third-party (Hindi))
+  price: USD 0.62 per 1M characters (DeepInfra page). INR/min = 900 chars x 0.62/1,000,000 = USD 0.000558 x 88 = INR 0.049/min (about INR 3/hour).
+  hindi/hinglish: Hindi is listed for Kokoro only by a third-party search summary; I did not confirm it on a vendor page. Roman-letter Hinglish handling is undocumented; inference: weak. Needs a listening test.
+  runs on: vendor cloud (DeepInfra GPU); the 82M model could also run on a server CPU | licence: Apache-2.0 weights (per DeepInfra listing)
+  risks: Quality for Hindi and Hinglish unknown and probably below Gemini. DeepInfra marks it ZDR (zero data retention) with Priority tier. I did not read DeepInfra's terms for children or caching.
+
+[2] DeepInfra-hosted Chatterbox Multilingual (Resemble AI, open model)  (cloud API; evidence: verified (price, Hindi listed); unverified (quality))
+  price: USD 1.00 per 1M characters (DeepInfra page). INR/min = 900 x 1.00/1,000,000 = USD 0.0009 x 88 = INR 0.079/min (about INR 4.8/hour).
+  hindi/hinglish: Vendor page lists Hindi among 23 languages. Roman-letter Hinglish or code-mixing: undocumented, so inference only; test.
+  runs on: vendor cloud (DeepInfra); self-hostable on server GPU | licence: MIT (per DeepInfra listing)
+  risks: Open model on a third-party host; no SLA seen. Terms for children and caching not read. The INR 0.079/min figure is about the whole INR 5/hour budget if the tutor talks all hour.
+
+[3] Lemonfox TTS API  (cloud API; evidence: verified (price); unverified (Hindi))
+  price: USD 2.50 per 1,000,000 characters (vendor page). INR/min = 900 x 2.50/1,000,000 = USD 0.00225 x 88 = INR 0.198/min. First month free.
+  hindi/hinglish: Vendor page shows 8 languages with 7 collapsed; Hindi not visible on it. A search summary says Hindi is supported: unverified. Roman Hinglish: undocumented.
+  runs on: vendor cloud | licence: 
+  risks: Small vendor; underlying model not stated on the page I read; data retention, children and caching terms not read.
+
+[4] Google Cloud TTS Standard and WaveNet (hi-IN, en-IN)  (cloud API; evidence: verified (price, free tier, voices))
+  price: USD 4 per 1M characters for both Standard and WaveNet; free 0 to 4M characters a month, about 74 hours of speech. INR/min = 900 x 4/1,000,000 = USD 0.0036 x 88 = INR 0.32/min after the free tier.
+  hindi/hinglish: hi-IN Standard A-F and WaveNet A-F exist (voice list). No code-mixed or Roman-letter claim found. Inference: a hi-IN voice will garble 'mujhe lagta hai' typed in Latin letters, while an en-IN voice reads it with English phonetics. Test needed.
+  runs on: vendor cloud | licence: Proprietary; Google Cloud terms
+  risks: Older voices; more robotic than Gemini, which may fail the sounds natural to a child test. Google says it logs no TTS text or audio. I found no caching or children clause in the Cloud terms text I searched, but that was a text search, not a legal read. Free t…
+
+[5] Amazon Polly Standard - Aditi (bilingual Hindi and Indian English)  (cloud API; evidence: verified (price, voices, Roman Hindi doc, caching and COPPA statements))
+  price: USD 4.00 per 1M characters; free 5M characters a month for Standard (the page states a 12-month limit for other tiers but not for Standard), about 92 hours. INR/min = 900 x 4/1,000,000 = USD 0.0036 x 88 = INR 0.32/min. New AWS accounts also get up to USD 200 credits.
+  hindi/hinglish: AWS doc: Aditi and Kajal are fully bilingual and read Devanagari, Roman Hindi ('Romanagari') and English, mixed in one sentence. This is the only vendor doc I found that explicitly covers Roman-letter Hinglish.
+  runs on: vendor cloud | licence: Proprietary; AWS Service Terms
+  risks: Standard-voice quality is dated, so listen first. AWS Service Terms let AWS use and store your text to improve the service unless you set an AI-services opt-out policy. For children you must give notices and get consent. The Polly FAQ says audio can be cached…
+
+[6] Gemini 3.8 Flash-Lite TTS via Batch (50% off)  (technique; evidence: verified (batch price on Gemini API page); unverified (batch on Vertex))
+  price: Batch audio output USD 3.00 per 1M tokens through 31 Dec 2026, USD 6.00 from 1 Jan 2027, plus text input USD 0.25 per 1M (Gemini API pricing page). Page rate is 25 audio tokens a second; a third party measured about 32. INR/min = 1,500 tokens x 3/1e6 = USD 0.0045 x 88 = INR 0.40, or 1,920 tokens = INR 0.51. Doubles after 1 Jan …
+  hindi/hinglish: Same model as the live entry: Hindi is listed as supported; no Hinglish claim from Google.
+  runs on: vendor cloud, asynchronous | licence: 
+  risks: Batch is not live, so it only suits pre-generating fixed lesson audio to cache. A Flex tier is listed on the pricing page at the same price for this model, but the Flex docs do not list TTS models among supported models, so treat Flex as unverified.
+
+[7] Reverie Indian-accent TTS  (cloud API; evidence: unverified)
+  price: Reported INR 500 per 1M characters with a 5M-character minimum, from a search-engine summary with no named source; Reverie's own page shows no price. INR/min = 900 x 500/1,000,000 = INR 0.45/min if true. Not confirmed.
+  hindi/hinglish: Reverie lists 11+ Indian languages; Hinglish or Roman handling not documented on the page I read.
+  runs on: vendor cloud or on-premise (vendor page) | licence: 
+  risks: Enterprise B2B vendor, not self-serve. Its site had an expired TLS certificate when I fetched it. Price, minimum and terms must be quoted by Reverie.
+
+[8] Speechify API (Simba)  (cloud API; evidence: verified (price); unverified (Hindi))
+  price: Free 500K characters a month. Starter USD 10 a month (1.9M chars included), then USD 10 per 1M; Pro USD 99 a month, USD 8 per 1M; Scale USD 499 a month, USD 6 per 1M (vendor page). INR/min = 900 x 10/1,000,000 = USD 0.009 x 88 = INR 0.79, down to INR 0.48 at USD 6.
+  hindi/hinglish: Self-serve is English on Simba 3.2 plus 6 languages on Simba 3.0; I did not find Hindi named on the page, and wider coverage is through sales. Hinglish undocumented.
+  runs on: vendor cloud | licence: 
+  risks: Hindi may not be self-serve. Terms not read.
+
+[9] Gemini 3.8 Flash-Lite TTS, live (gemini-3.8-flash-lite-tts), Gemini API and Vertex Preview  (cloud API; evidence: verified (price, languages); third-party (32 tokens a second, style-read-aloud))
+  price: Audio output USD 6.00 per 1M tokens through 31 Dec 2026, USD 12.00 after; text input USD 0.50 per 1M, USD 1.00 after (Gemini API and Vertex pages). Page says 25 audio tokens a second; a third party billed about 32. INR/min = 1,500 x 6/1e6 = USD 0.009 x 88 = INR 0.79, or 1,920 tokens = INR 1.01, plus about INR 0.01 text. From 1 …
+  hindi/hinglish: Hindi is listed as supported (Gemini API and Cloud docs); language is detected from the text (third party). Roman-letter Hinglish is not documented by Google, but you already use the family. The third party reports the 3.8 models read style instructions aloud.
+  runs on: vendor cloud | licence: Proprietary; Gemini API Additional Terms, or Google Cloud terms on Vertex
+  risks: Preview status; price doubles on 1 Jan 2027, still INR 1.6 to 2.0 a minute. The Gemini API terms bar apps directed to or likely used by under-18s and its free tier is used to improve Google products; the Vertex route uses Cloud terms. The third-party billing-…
+
+[10] Murf Falcon 2 TTS API  (cloud API; evidence: verified (1 cent a minute headline); unverified (Roman Hinglish, caching, children terms))
+  price: 1 cent (USD 0.01) per minute (Murf pages). INR/min = 0.01 x 88 = INR 0.88/min. The vendor says free API key; the Startup Incubator gives 50M free characters for 3 months.
+  hindi/hinglish: Vendor says 35 languages, with a demo of Indian English with Hindi code-mixing. Roman-letter input is not documented. I could not read Murf's own API pricing page, which needs JavaScript.
+  runs on: vendor cloud | licence: 
+  risks: Per-minute billing basis and caching terms not confirmed. Aimed at voice agents.
+
+[11] Microsoft Azure AI Speech - Neural and MAI-Voice-2-Flash (hi-IN, en-IN)  (cloud API; evidence: verified (price via Azure retail API and Microsoft AI post); the Azure pricing page itself shows no numbers without JavaScript)
+  price: Neural USD 15 per 1M characters (Azure Retail Prices API, Central India meter); MAI-Voice-2-Flash USD 15 per 1M (Microsoft AI announcement, public preview); free tier F0 0.5M characters a month, about 9 hours. INR/min = 900 x 15/1,000,000 = USD 0.0135 x 88 = INR 1.19/min.
+  hindi/hinglish: Many hi-IN voices (Swara, Madhur, Kavya and more) plus hi-IN MAI-Voice-2 Flash voices (vendor list). en-IN 'IndicNeural' voices exist, but I found no Roman-Hinglish or code-mixing doc; inference only.
+  runs on: vendor cloud | licence: Proprietary; Microsoft terms
+  risks: Flash is Preview. I found no separate meter for HD Flash, and the pricing-page row groups it with Neural. Children and caching terms not checked.
+
+[12] Inworld TTS-2 Flash  (cloud API; evidence: verified (price, Hindi listed))
+  price: USD 15 per 1M characters on-demand; subscription tiers lower it to USD 8 to 10 (vendor page). INR/min = 900 x 15/1,000,000 = USD 0.0135 x 88 = INR 1.19/min.
+  hindi/hinglish: Hindi is a Tier 1 language (vendor doc). Hinglish and Roman input are not mentioned.
+  runs on: vendor cloud | licence: 
+  risks: Hinglish untested; terms not read.
+
+[13] Gemini 3.8 Flash TTS (gemini-3.8-flash-tts)  (cloud API; evidence: verified (price); third-party (32 tokens a second))
+  price: Output USD 9.00 per 1M audio tokens through 31 Dec 2026, USD 18 after; input USD 0.50 per 1M. INR/min = 1,500 x 9/1e6 = USD 0.0135 x 88 = INR 1.19 at 25 tokens a second, INR 1.52 at 32. From 1 Jan 2027 double.
+  hindi/hinglish: Hindi listed; Google says it suits difficult pronunciations and regional dialects. No Hinglish claim.
+  runs on: vendor cloud | licence: 
+  risks: Preview; doubles on 1 Jan 2027; same Gemini API under-18 clause.
+
+[14] Google Cloud TTS Neural2 (hi-IN, en-IN)  (cloud API; evidence: verified)
+  price: USD 16 per 1M characters; free 0 to 1M characters a month, about 18.5 hours. INR/min = 900 x 16/1,000,000 = USD 0.0144 x 88 = INR 1.27/min.
+  hindi/hinglish: hi-IN-Neural2-A to D exist. No code-mixed or Roman claim found.
+  runs on: vendor cloud | licence: 
+  risks: Costs more than Gemini 3.8 Flash-Lite for similar or less naturalness; Hinglish untested.
+
+[15] Amazon Polly Neural and Generative - Kajal (bilingual)  (cloud API; evidence: verified)
+  price: Neural USD 16 per 1M characters (free 1M a month for first 12 months); Generative USD 30 per 1M (free 100K for first 12 months). INR/min = 900 x 16/1,000,000 x 88 = INR 1.27 Neural; 900 x 30/1,000,000 x 88 = INR 2.38 Generative.
+  hindi/hinglish: Same AWS doc as Aditi: bilingual, reads Roman Hindi mixed with English. Kajal is Neural for Hindi and Neural plus Generative for Indian English.
+  runs on: vendor cloud | licence: 
+  risks: Same AWS content-use and consent terms as above. Generative price matches Chirp 3 HD.
+
+[16] OpenAI gpt-4o-mini-tts  (cloud API; evidence: verified (token prices); third-party (about USD 0.015 a minute))
+  price: USD 0.60 per 1M text tokens in, USD 12 per 1M audio tokens out (OpenAI model page). OpenAI's own launch estimate of about USD 0.015 a minute was seen only via third parties. INR/min = 0.015 x 88 = INR 1.32/min.
+  hindi/hinglish: Docs say 99+ languages including Hindi, but voices are optimised for English. Hinglish undocumented.
+  runs on: vendor cloud | licence: 
+  risks: OpenAI docs require telling users the voice is AI-generated. The under-18 guidance allows serving minors with COPPA compliance. Hindi accent quality unknown.
+
+[17] Gemini 2.5 Flash TTS (preview)  (cloud API; evidence: verified (price); third-party (25 tokens a second))
+  price: Output USD 10 per 1M audio tokens, input USD 0.50 per 1M; no 2027 step shown. A third party measured exactly 25 tokens a second. INR/min = 1,500 x 10/1e6 = USD 0.015 x 88 = INR 1.32/min. Batch USD 5.
+  hindi/hinglish: Hindi presumed as in the family but not read for this model.
+  runs on: vendor cloud | licence: 
+  risks: Older preview model, so deprecation risk.
+
+[18] Smallest.ai Lightning v3.1 and v3.1 Pro  (cloud API; evidence: verified (price); third-party (Hindi code-switching))
+  price: USD 0.175 per 10K characters (v3.1) and USD 0.195 per 10K (Pro) (vendor page). INR/min = 900 x 17.5/1,000,000 = USD 0.01575 x 88 = INR 1.39; Pro INR 1.54.
+  hindi/hinglish: A third party says Pro does English plus Hindi code-switching; the vendor page says auto-detect across 14+ languages. Roman-letter handling is undocumented.
+  runs on: vendor cloud | licence: 
+  risks: Terms say you may not sell or share Output with third parties for commercial benefit, which may conflict with serving paying schools; get written clarity. Account holder must be 18+; no caching clause found.
+
+[19] Azure Neural HD (MAI-Voice-2 and Dragon HD)  (cloud API; evidence: verified)
+  price: USD 22 per 1M characters (Azure Retail Prices API, effective 2026-03-01). INR/min = 900 x 22/1,000,000 = USD 0.0198 x 88 = INR 1.74/min.
+  hindi/hinglish: hi-IN-Arjun and hi-IN-Dhruva MAI-Voice-2 voices listed; en-IN Dragon HD voices listed. Hinglish undocumented.
+  runs on: vendor cloud | licence: 
+  risks: Dearer than Flash with no proven benefit for this use.
+
+[20] Inworld TTS-2  (cloud API; evidence: verified)
+  price: USD 25 per 1M characters on-demand. INR/min = 900 x 25/1,000,000 = USD 0.0225 x 88 = INR 1.98/min.
+  hindi/hinglish: Hindi Tier 1; Hinglish not stated.
+  runs on: vendor cloud | licence: 
+  risks: Flash tier is cheaper for similar use.
+
+[21] Google Cloud TTS Chirp 3: HD (hi-IN, en-IN)  (cloud API; evidence: verified)
+  price: USD 30 per 1M characters; free 0 to 1M a month. INR/min = 900 x 30/1,000,000 = USD 0.027 x 88 = INR 2.38/min.
+  hindi/hinglish: About 30 hi-IN Chirp3-HD voices listed. The Chirp 3 doc lists hi-IN and en-IN but has no Hinglish or Roman statement.
+  runs on: vendor cloud | licence: 
+  risks: Costs about 2x the Gemini 3.8 Flash-Lite price.
+
+[22] Deepgram Aura-2 and Aura-1  (cloud API; evidence: verified)
+  price: Aura-2 USD 0.030 per 1K characters (USD 30 per 1M); Aura-1 USD 0.015 per 1K; USD 200 free credit (vendor page). INR/min = 900 x 30/1,000,000 x 88 = INR 2.38 (Aura-2); INR 1.19 (Aura-1).
+  hindi/hinglish: No Hindi: vendor languages are English, Spanish, German, French, Dutch, Italian, Japanese.
+  runs on: vendor cloud | licence: 
+  risks: Not usable for this product.
+
+[23] Cartesia Sonic-3.6  (cloud API; evidence: verified (price, Hinglish claim); vendor-only (blind test))
+  price: Credits: 1 credit = 1 character, 750 to 800 credits a minute (vendor FAQ). Scale USD 299 for 8M credits; Startup USD 49 for 1.25M; Pro USD 5 for 100K; Free 20K credits (about 27 minutes). INR/min at 800 credits: Scale 800 x USD 37.4/1M x 88 = INR 2.63; Startup 2.76; Pro 3.52.
+  hindi/hinglish: Vendor blog: Hinglish code-switching in one generation using Devanagari, Latin script or a mix; 11 Indic locales. The vendor's own blind test claims Hindi wins vs Gemini 3.1 by 55% to 25%.
+  runs on: vendor cloud | licence: 
+  risks: Commercial licence needs a paid plan. Overage USD 38 to 65 per 1M credits. Account holder 18+; no caching or children clause found.
+
+[24] Gemini 3.1 Flash TTS preview (gemini-3.1-flash-tts-preview) - today's baseline  (cloud API; evidence: verified (price); third-party (32 tokens a second))
+  price: Output USD 20 per 1M audio tokens, input USD 1.00 per 1M; Batch USD 10 (Gemini API page). INR/min = 1,500 x 20/1e6 = USD 0.030 x 88 = INR 2.64 at 25 tokens a second; 1,920 tokens = INR 3.38. Your measured INR 3.6 fits the 32-tokens-a-second case.
+  hindi/hinglish: Hindi listed.
+  runs on: vendor cloud | licence: 
+  risks: 3.3x dearer than 3.8 Flash-Lite and 2.2x dearer than 3.8 Flash at launch prices.
+
+[25] Sarvam Bulbul v3  (cloud API; evidence: verified)
+  price: INR 3.00 per 1,000 characters, real-time and streaming (vendor page); free credits on signup, amount not shown. INR/min = 0.9 x 3.00 = INR 2.70/min.
+  hindi/hinglish: Docs: code-mixed text supported, with Hindi in Devanagari and English in Latin (e.g. 'आपका order confirm हो गया है'). Documented limitation: Romanised Indic input significantly degrades quality. Your Roman Hinglish would need converting to Devanagari plus English first; a cheap LLM step could do it.
+  runs on: vendor cloud (India) | licence: 
+  risks: Dearest Indian option. Under-18 users need parental consent per ToS 2.2 (applies to account users). No caching clause found. Credits non-refundable.
+
+[26] ElevenLabs (Flash/Turbo, v4 Turbo, v3)  (cloud API; evidence: verified)
+  price: Flash/Turbo and v4 Turbo list USD 0.04 per 1K characters; v4, v3 and v2 Multilingual USD 0.08. v4 and v4 Turbo are 72% off until 12 Oct 2026 (USD 0.011 per 1K). INR/min at list = 0.9 x USD 0.04 x 88 = INR 3.17; promo = 0.9 x USD 0.011 x 88 = INR 0.87 until 12 Oct only.
+  hindi/hinglish: Hindi (hin) is in the models doc; Flash says 32 languages, v4 90+. Roman Hinglish undocumented.
+  runs on: vendor cloud | licence: 
+  risks: Promo ends in 6 days. Free users non-commercial; account holders under 18 not allowed. Startup Grants Program page says 12 months free and 33M characters (eligibility unverified).
+
+[27] Resemble AI hosted TTS  (cloud API; evidence: third-party; unverified)
+  price: Not on Resemble's current pricing page, which now covers deepfake detection. A third party puts pay-as-you-go at USD 0.03 to 0.036 a minute; INR/min = 0.03 to 0.036 x 88 = INR 2.64 to 3.17.
+  hindi/hinglish: A third party says 149+ languages; unverified.
+  runs on: vendor cloud | licence: 
+  risks: Price not confirmed. Its open Chatterbox model is available cheaply via DeepInfra above.
+
+[28] Gnani.ai Timbre v2.5  (cloud API; evidence: verified (no price); vendor-only (quality claim))
+  price: No list price; vendor page says free audio minutes then per-character with volume tiers, quote on request. INR/min unknown.
+  hindi/hinglish: Vendor says Hinglish is native, citing its own blind Hinglish evaluation at 1621 ELO and 75% win rate; the demo is Devanagari. Roman input not stated.
+  runs on: vendor cloud (India), VPC or on-premise in enterprise contracts | licence: 
+  risks: Cannot budget without a quote.
+
+[29] Bhashini (Government of India)  (cloud API; evidence: verified (PoC-only line; page last updated 3 years ago))
+  price: Free, but vendor docs say APIs are for proof of concept only; production or charging end users needs the paid version, price on request. INR/min unknown.
+  hindi/hinglish: 22 Indian languages; Hinglish not documented.
+  runs on: government cloud | licence: 
+  risks: Not usable for production without a paid agreement.
+
+[30] Play.ht (PlayAI)  (cloud API; evidence: third-party)
+  price: Not available: third parties report shutdown on 31 Dec 2025 after Meta acquired the team; I did not confirm on a vendor page.
+  hindi/hinglish: n/a
+  runs on: n/a | licence: 
+  risks: Do not build on it.
+
+==================== OPEN-SOURCE ====================
+SUMMARY: 1) Best zero-cost thing to try: Supertonic 3 in the phone/desktop browser (99M params, 398 MB, Hindi, onnxruntime-web). But its upstream repo was archived on 9 Sep 2026, it has no Indian-English voice, and Hindi/Hinglish naturalness is unverified. Test about 20 real tutor lines before committing.
+2) Best cheap server fallback: NVIDIA Magpie TTS 357M as GGUF on a CPU box (Hindi plus code-switching documented, commercial licence, 2.7x real-time on CPU, about Rs 0.02-0.1 per minute by my estimate). Best documented Hinglish (Roman and Devanagari) is Indic-Speak, but it is 3.78B and needs a GPU.
+3) Skip for a commercial product: MMS-TTS, XTTS-v2, Voxtral, OmniVoice, Fish S2, Piper Pratham/Priyamvada (all non-commercial or paid licence). Kokoro Hindi voices are grade C (1-10 hours of Hindi data) and are not in the official kokoro-js.
+4) Almost every small Hindi model wants Devanagari. Likely fix (my inference, not documented anywhere): have the tutor LLM emit a separate Devanagari speech line, with English science terms transliterated.
+5) Budget: even Rs 0.2/min is Rs 12 per hour if the tutor speaks for the full hour, which is over the Rs 5 per student-hour ceiling. Only on-device (Rs 0) or a very busy server fits.
+CAVEATS: I heard no audio, ran no model and measured no speed. Every naturalness statement is either a vendor claim or a third-party remark, and I mark which. The things the owner can try himself right now: offlinetts.com/tts/hindi/ (third-party site; its Supertonic runs in the browser, its Kokoro Hindi sends text to the site's own server), and the sherpa-onnx Android APK with Supertonic-3 Hindi int8 (ARM64). Surprises: Supertonic's upstream repo was archived on 9 Sep 2026; the official kokoro-js has no Hindi; two of the three Piper Hindi voices are non-commercial; AI4Bharat's IndicF5 page now recommends the 3.78B Indic-Speak. Could not read: the Kokoro HF discussion about Hindi (403), the IIT-Madras IndicTTS licence PDF (timeout, so Rohan's licence and the SYSPIN data licence are open), and any int8 Supertonic size. Hosting numbers use RunPod RTX 4090 community $0.34/h (vendor page, Sep 2026), …
+options: 19
+
+[1] Supertonic 3 (Supertone, ~99M)  (open-source model (phone-native app via sherpa-onnx; browser via onnxruntime-web); evidence: verified for size, licence, languages, archive status (HF and GitHub pages read). Hindi naturalness: unverified (no samples heard). Browser notes from third-party site.)
+  price: Free weights. On-device: Rs 0/min (user's own device). One-time download 398 MB fp32; an int8 build exists in sherpa-onnx, size unverified.
+  hindi/hinglish: Hindi (hi) is one of 31 languages; 10 preset voices (M1-M5, F1-F5), none Indian-specific. Vendor gives no Hindi WER and says nothing about Roman-script or code-switching. A third-party site advises Devanagari because Romanised and mixed Hindi-English is read inconsistently. Hinglish in Roman letters: unverified; plan on Devanag…
+  runs on: Phone or desktop browser (WebGPU, WASM fallback) or Android native. About 99M params in 4 ONNX files: vector_estimator 257 MB, vocoder 101 MB, text_encoder 36 … | licence: Model: OpenRAIL-M (commercial use allowed, but use restrictions must be passed on to users, includi…
+  risks: Upstream GitHub repo archived 9 Sep 2026: no fixes or support, weights moved to supertone-oss-archive. 400 MB first load on mobile data. WebGPU only in recent Chrome/Edge; mobile browsers weaker. No Hindi quality figures. Sherpa-onnx also ships an Android APK…
+
+[2] Kokoro-82M (Hindi voices hf_alpha, hf_beta, hm_omega, hm_psi)  (open-source model (browser via kokoro-js / onnxruntime-web); evidence: verified (HF VOICES.md, ONNX file list, GitHub source and issues read); quality of Hindi: third-party/unverified)
+  price: Free weights. On-device: Rs 0/min.
+  hindi/hinglish: Four Hindi voices exist in the ONNX repo, graded C overall (target B); total Hindi training data is 1-10 hours, each voice 10-100 minutes. The official kokoro-js has them commented out and only does American/British English; a PR adding Hindi via eSpeak-NG WASM (#313) is still open. Python Hindi runs through espeak-ng and has o…
+  runs on: Phone/desktop browser: ONNX q8 92.4 MB, q8f16 86 MB, fp16 163 MB, fp32 326 MB. WebGPU recommended with fp32. A third-party blog says it is desktop-oriented and… | licence: Apache 2.0 weights. espeak-ng (needed for non-English phonemes) is GPL-3.0; a repo issue (#247) dis…
+  risks: Hindi is the weakest part of Kokoro (little data, grade C). Browser Hindi needs custom phonemizer work or a server call (offlinetts.com sends Hindi text to its own endpoint). GPL dependency. Hinglish untested.
+
+[3] Piper Hindi voices (hi_IN pratham, priyamvada, rohan) and community en_IN-spicor  (open-source model (VITS; browser via onnxruntime-web / sherpa-onnx WASM); evidence: verified (model cards, file sizes, licences read); speed and Hindi quality third-party/unverified)
+  price: Free weights. On-device: Rs 0/min. Each Hindi voice 63.5 MB (22.05 kHz, medium).
+  hindi/hinglish: Phonemes come from espeak-ng 'hi' (config says phoneme_type espeak, voice Hindi), so Devanagari input; Roman Hinglish unverified. No Hindi quality reports found; one search snippet claiming no viable Hindi voices is unreliable.
+  runs on: Phone/desktop browser, CPU only. Third-party blog: 3-5x faster than real time on ordinary hardware, 5-10 s first load. | licence: Pratham and Priyamvada: CC BY-NC-SA 4.0, non-commercial, unusable. Rohan: data licence is an IIT-Ma…
+  risks: Two of three Hindi voices non-commercial. Rohan's licence needs a real answer from IIT-Madras. Copyleft licences (GPL/AGPL) may force source disclosure. Flat VITS prosody is likely less warm than Gemini, unverified.
+
+[4] Meta MMS-TTS Hindi (facebook/mms-tts-hin, 36.3M)  (open-source model (VITS; transformers.js in browser); evidence: verified (HF cards and file list); naturalness third-party)
+  price: Free weights. On-device Rs 0/min. ONNX: q8 38.4 MB, fp16 58.1 MB, fp32 114 MB; 16 kHz.
+  hindi/hinglish: Accepts Hindi text, Devanagari. Stochastic duration predictor (needs a fixed seed for repeatable output). Roman Hinglish unverified. Third-party eval calls it natural and clear with some voice inconsistencies.
+  runs on: Phone/desktop browser (Xenova/mms-tts-hin on transformers.js), very small. | licence: CC-BY-NC 4.0, non-commercial: cannot be used in a paid product.
+  risks: Licence rules it out for a commercial product. 16 kHz single voice.
+
+[5] SYSPIN VITS Hindi male/female (IISc SPIRE Lab + Bhashini)  (open-source model (Coqui-style VITS, trained on about 30 h studio Hindi per voice); evidence: verified (HF pages, file sizes read); quality and speed unverified)
+  price: Free weights. Server or on-device Rs 0/min once converted. Checkpoints: 333 MB (tts_vits_coquiai_HindiMale, cc-by-4.0) and 998 MB (vits_Hindi_*, MIT).
+  hindi/hinglish: Hindi only; the 225-byte chars.txt suggests a Devanagari-only character set (inference). English words would need Devanagari transliteration. No Hinglish handling documented.
+  runs on: Python Coqui TTS; JIT-traced .pt is available. No browser or ONNX build found; would need your own ONNX export (VITS usually exports fine). | licence: HF tags: cc-by-4.0 and MIT. Underlying dataset licence was not readable; confirm before commercial …
+  risks: No ready browser build. Small download is plausible after export but unmeasured. Pickle file flagged suspicious by HF scanner (normal for .pt, load in a sandbox).
+
+[6] NVIDIA Magpie TTS Multilingual 357M (GGUF via NeMo-Speech.cpp or magpie-tts.cpp)  (open-source model (cheap CPU server; not browser); evidence: verified (HF card, two GitHub READMEs read); naturalness of Hindi voices unverified; hosting arithmetic is my estimate)
+  price: Free weights. Server estimate: Hetzner CAX31 8-vCPU is EUR 20.99/month (third-party price table, Oct 2026) = about Rs 2,100 at an assumed EUR 1 = Rs 100. At 2.7x real time (NVIDIA q8_0 streaming claim, CPU unspecified, ARM unverified) that is 43,800 min x 2.7 = 118k audio-min/month, so about Rs 0.018/min at 100% load, Rs 0.09/m…
+  hindi/hinglish: Hindi is one of 12 languages; card claims 1.23% CER for Hindi and improved Hindi code-switching with IPA G2P and custom pronunciation dictionaries; a Hindi G2P dictionary is embedded in the GGUF. Whether Roman Hinglish is accepted is unverified; the 5 voices are English-named (Aria, Jason, Leo, Sofia, John), not Hindi-native sp…
+  runs on: Server CPU: GGUF 541 MB (q4_k) to 1294 MB (f32), 22.05 kHz. GPU optional. CPU speed claim 2.7x real time at q8_0, 203 ms to first audio (NVIDIA repo); magpie-t… | licence: NVIDIA Open Model License ('ready for commercial use' per card); NeMo-Speech.cpp runtime Apache 2.0.
+  risks: Not on the student's device, so you pay for the server and its idle time. Speed on cheap ARM/x86 VPS not shown. Need to confirm Devanagari vs Roman input and English-word handling by testing.
+
+[7] AI4Bharat Indic Parler-TTS (0.9B)  (open-source model (GPU server); evidence: verified (HF card and file list); speed and hosting numbers unverified/my estimate)
+  price: Free weights. GPU needed; RTF not found (unverified). For scale: RunPod RTX 4090 community pod $0.34/h = Rs 30/h; at an assumed RTF 0.3 that is Rs 0.15/min at 100% load, Rs 0.6/min at 25% load.
+  hindi/hinglish: 21 languages incl. Hindi and English, 69 voices, description-controlled style. Hindi examples use Devanagari; Roman Hinglish unverified. A third-party eval calls it very natural and clear with some inconsistencies.
+  runs on: Server GPU (or slow CPU). 3.75 GB safetensors. No ONNX/browser build found. | licence: Apache 2.0 weights, gated (contact details required).
+  risks: Large and slow for a live tutor. AI4Bharat's own IndicF5 page now says to use the newer Indic-Speak instead.
+
+[8] AI4Bharat IndicF5 (0.4B) and distilled Hindi 190M student  (open-source model (flow-matching, voice-clone needs reference clip); evidence: verified (HF cards, arXiv abstract); Hinglish figure is a single author's blog (third-party))
+  price: Free weights. GPU about 6 GB VRAM (third-party author). RTF not found; use the RunPod arithmetic above (Rs 30/h GPU).
+  hindi/hinglish: 11 Indian languages incl. Hindi, needs reference audio plus its transcript. A third-party author reports 4.70/5 intelligibility (self-measured) for Hinglish only after routing Roman text through IndicXlit transliteration to Devanagari, plus a UTF-8 byte-count bug fix. HF discussions include reports of garbled output and unclear…
+  runs on: Server GPU. ONNX export (developerabu/IndicF5-ONNX) has a 1.3 GB DiT and is reported NOT real-time on an M1 CPU. Browser: not feasible. | licence: IndicF5: MIT, gated. Distilled 190M student (5ivatej/hindi-tts-190M): MIT, claims about 96% of teac…
+  risks: Reference-audio dependency, gating, heavy download, quality complaints in discussions.
+
+[9] Indic-Speak (Bodhan AI + AI4Bharat, 3.78B)  (open-source model (GPU server); evidence: verified (HF card and file list read); naturalness unverified)
+  price: Free weights under licence below. GPU needed; vendor says about 200 ms to first audio. Use RunPod arithmetic (Rs 30/h GPU) once RTF is measured; unverified.
+  hindi/hinglish: Documented: Roman and Devanagari scripts, code-switching, 13 production languages incl. Hindi, 95 voices, 24 kHz. This is the best-documented Hinglish input of any model found. Quality figures (26.49 WER, 96.47% voice consistency) are vendor claims.
+  runs on: Server GPU. Llama-3.2-3B base, SNAC codes + Vocos; model.safetensors 6.6 GB. | licence: Indic Open Model License v1.0: commercial use free below 500M monthly users or USD 250M revenue. Ga…
+  risks: Too heavy for browser and costly to host; Orpheus-style models can hallucinate or drop words; no quantised build found.
+
+[10] svara-TTS v1 (Kenpath, 3B, Orpheus-style)  (open-source model (GPU server; GGUF export mentioned); evidence: verified (HF card and blog read); performance unverified)
+  price: Free weights. GPU; RTF not published (unverified). Same RunPod arithmetic as above.
+  hindi/hinglish: 19 languages incl. Hindi, about 50 speakers; card says 'code-switch aware' incl. Hinglish but not deterministic. Roman-script handling and MOS/WER not published. Hindi trained on about 100 h (SYSPIN + IndicTTS). Authors admit rare names can be mispronounced.
+  runs on: Server GPU (or CPU via GGUF, speed not shown). 3B parameters. | licence: Apache 2.0.
+  risks: No latency data; 3B model on CPU is likely slow, unverified.
+
+[11] Veena (Maya Research, 3B) and Orpheus Hindi research release (Canopy Labs, 3B)  (open-source model (GPU server); evidence: verified for specs (HF cards); speed is vendor claim; a competitor's blog (third-party, promotional) reports 22 s to produce 7 s of audio on lesser hardware)
+  price: Free weights. Veena vendor claim: RTF 0.05 on H100, about 200 ms latency on RTX 4090 (H100 price not read; unverified). RunPod 4090 community $0.34/h = Rs 30/h as scale.
+  hindi/hinglish: Veena: Hindi, English and code-mixed, examples use both Devanagari and Roman text, 4 voices (kavya, agastya, maitri, vinaya), 24 kHz. Orpheus Hindi: 3B Hindi fine-tune, research release (Apr 2025), zero-shot voice cloning, gated.
+  runs on: Server GPU; Veena says CPU 'significantly slower'; an onnx-community/Veena-Onnx repo exists, file sizes and browser use not shown. | licence: Both Apache 2.0 (Orpheus Hindi gated, with no-impersonation terms).
+  risks: 2048-token limit and no streaming (Veena); big GPU needed; marketing numbers need independent timing.
+
+[12] Chatterbox Multilingual V3 (Resemble AI, 0.5B) and Chatterbox-Multilingual-hi  (open-source model (GPU server); evidence: verified (HF and GitHub cards, file list))
+  price: Free weights. T3 2.14 GB + S3Gen 1.06 GB. GPU needed; RTF not found (unverified).
+  hindi/hinglish: Hindi among 23+ languages, plus a Hindi-only fine-tune. Voice cloning from a short clip. Script handling and Hinglish are not documented on the cards.
+  runs on: Server GPU; ONNX multilingual build exists (onnx-community) but is heavy; not realistic for a phone. | licence: MIT; every output carries a Perth watermark.
+  risks: Large; no Hindi speed or quality data; watermark.
+
+[13] VoxCPM2 (OpenBMB, 2B)  (open-source model (GPU server); evidence: verified (HF card))
+  price: Free weights. About 8 GB VRAM; RTF about 0.30 on RTX 4090 (0.13 with Nano-vLLM), vendor claim. RunPod 4090 community $0.34/h x 88 = Rs 30/h; 60/0.30 = 200 audio-min/h, so about Rs 0.15/min at 100% load (Rs 0.6/min at 25%).
+  hindi/hinglish: Hindi is in its 30-language list; Hinglish and Roman script not documented.
+  runs on: Server GPU, 48 kHz output. | licence: Apache 2.0.
+  risks: Too heavy for browser; no Hindi quality data.
+
+[14] MeloTTS-English (EN_INDIA accent)  (open-source model (English only, CPU); evidence: verified (HF card and file list))
+  price: Free weights. 208 MB checkpoint. Server CPU or on-device Rs 0/min.
+  hindi/hinglish: No Hindi at all. Could only voice the English lines of a Hinglish script.
+  runs on: Server CPU (model card says fast enough for CPU real time); third-party ONNX ports exist; no browser build verified. | licence: MIT.
+  risks: No Hindi; accent quality unverified; project last updated about 2 years ago.
+
+[15] XTTS-v2 (Coqui)  (open-source model (GPU); evidence: verified (HF card))
+  price: Free weights but not for commercial use.
+  hindi/hinglish: Hindi is one of 17 languages; voice cloning from 6 s of audio.
+  runs on: GPU server. | licence: Coqui Public Model License (CPML): restricts commercial use.
+  risks: Licence blocks commercial use; Coqui as a company is no longer a source of support (from memory, not re-checked).
+
+[16] OmniVoice, Fish Audio S2 Pro, Voxtral-4B-TTS (restricted-licence multilingual models)  (open weights (GPU server); evidence: verified (HF cards read))
+  price: OmniVoice 0.6B: RTF 0.025 (vendor). Fish S2 Pro 5B: RTF 0.195 on H200. Voxtral 4B: RTF 0.103 on H200, needs 16 GB GPU. Free to download, not free to use commercially.
+  hindi/hinglish: Hindi supported by Fish S2 Pro and Voxtral (explicit); OmniVoice lists 600+ languages with Hindi not shown on the card (search result only). No Roman-script/Hinglish claims read.
+  runs on: Server GPU only. | licence: OmniVoice weights CC-BY-NC (code Apache 2.0). Fish S2 Pro: Fish Audio Research License, commercial …
+  risks: Licences block use in a paid product without a deal; heavy GPUs.
+
+[17] eSpeak-NG (formant synthesiser)  (open-source engine (no neural model); evidence: verified (GitHub README))
+  price: Free. Rs 0/min; package is a few MB.
+  hindi/hinglish: Hindi is included. Formant voice is intelligible but, by its own description, not as natural as recorded-voice systems. Used as the phonemiser inside Piper and Kokoro.
+  runs on: Phone, browser (Emscripten build), anything. | licence: GPL-3.0 or later.
+  risks: Robotic voice; poor fit for a child-facing tutor except as a last-resort fallback.
+
+[18] Sarvam Edge on-device Bulbul (not open source)  (phone-native app / commercial licence of an on-device model; evidence: verified (vendor page read); quality and price unverified)
+  price: No price published; page says contact for a commercial partnership. Rs per minute: unverified.
+  hindi/hinglish: Bulbul TTS for 11 Indian languages on-device; Hinglish handling not stated on the page.
+  runs on: Phone: Bulbul about 60 MB (whole speech stack under 1 GB), mid-range Android and iOS, runs on CPU/GPU/NPU. | licence: Edge runtime and optimised variants are commercial only; Sarvam's open weights are LLMs (30B/105B),…
+  risks: Enterprise-sales-only, lock-in, no way to test without contacting them.
+
+[19] No usable Hindi: Dia, Qwen3-TTS / Qwen-Audio-3.0-TTS, MOSS-TTS-Nano, kokoro-js and sherpa Kokoro  (open-source models (ruled out); evidence: verified (GitHub/HF pages) except Qwen language lists (search results))
+  price: Free weights.
+  hindi/hinglish: Dia: English only. Qwen3-TTS: 10 languages without Hindi (Qwen-Audio-3.0-TTS 16 languages also without Hindi). MOSS-TTS-Nano (100M, Apache 2.0, CPU): Hindi not in the 19 of 20 listed languages, the 20th is unlisted. sherpa-onnx Kokoro v1.0/v1.1: Chinese + English only.
+  runs on: n/a | licence: Dia Apache 2.0; MOSS-TTS-Nano Apache 2.0.
+  risks: MOSS-TTS-Nano could be worth a re-check if its 20th language is Hindi.
+
+==================== COST-LEVERS ====================
+SUMMARY: 1. Cheapest same-family swap: gemini-3.1-flash-tts-preview ($20 per 1M audio tokens) to gemini-3.8-flash-lite-tts ($6 until 31 Dec 2026, $12 from 1 Jan 2027). That is Rs 1.0/min vs Rs 3.4/min today at your measured 32 tokens/s, so -70% now and -40% after the price doubles. Hindi is on its language list; Hinglish and the Indian-English accent are not documented, so A/B by ear first.
+2. Biggest lever is a shared server-side audio cache keyed on (text, voice, language, model, style version). Storage is paise a month (about 0.25 MB per minute). Your current cache is per-device IndexedDB, so it does not share a take between students.
+3. My estimate (not measured): 60-90% of tutor speech minutes are prepared narration that repeats exactly. Billable share is about 0.75/N + 0.25 for N students on the same lesson, so N=30 gives -72% and N=1 gives 0. Flash-Lite plus a 75% hit rate is about Rs 0.25/min (-93%), or Rs 0.51/min at the 2027 list price.
+4. Terms: Google's Cloud terms (section 20a) say generated output is Customer Data and Google claims no ownership, so storing and re-serving is allowed, but you must not use it to train a similar model. Blocker to settle first: section 20(d) bars Generative AI Services in apps likely used by under-18s (the Gemini API terms say the same), and your students are 11-18.
+5. Smaller levers: speak fewer words (10-30%), phone voice for throwaway lines (changes the sound), Batch/Flex for pre-rendered lessons (-50%, Developer API only). Interrupt cut-off saves little (about 2-8%).
+CAVEATS: Biggest finding, not about price: Google Cloud Service Specific Terms section 20(d) says Customer will not use a Generative AI Service in a website or application directed towards or likely to be accessed by individuals under 18. The Gemini API Additional Terms have a similar 18+ rule for API clients. Gemini on the Agent Platform API (the Vertex route you use) is a named Generative AI Service. I found no education carve-out on the page. Your students are 11-18. This applies to what you already run, not only to the cheaper options, and I am not a lawyer. Get a written answer from Google or counsel before scaling. If it applies, the open options (other agents' topic) matter more than any Gemini discount. Not verified: (1) Hinglish quality and the Indian-English accent on 3.8 Flash-Lite, since the only way to know is by ear. tools/voice-probe/tts-models.mjs already has an English and a Hin…
+options: 9
+
+[1] Gemini 3.8 Flash-Lite TTS (gemini-3.8-flash-lite-tts), replaces 3.1 Flash TTS preview  (cloud API; evidence: verified (prices, languages and Preview status read on Google's pricing and docs pages); quality numbers are vendor or third-party)
+  price: Vertex and Gemini API: $6.00 per 1M audio tokens and $0.50 per 1M text tokens through 31 Dec 2026; $12.00 and $1.00 from 1 Jan 2027. Google says 25 audio tokens per second. On Vertex the 2026 price is a 50% credit-back on net spend, not a lower list price. Rs per minute: at 25 tok/s, 1500 x $6/1M x 88 = Rs 0.79; at the 32 tok/s…
+  hindi/hinglish: Documented: Hindi is in the Flash-Lite table (101 languages), and Google says both 3.8 models place near the top on Voice Arena for Hindi (vendor claim). Not documented: Hinglish (Roman-script Hindi with English terms). The model auto-detects language. My inference is it will read Hinglish but needs a listening test. One aggreg…
+  runs on: vendor cloud. Vertex 'global' location only, via aiplatform.googleapis.com generateContent or streamGenerateContent. | licence: Proprietary API. On Vertex it is Preview under Pre-GA terms, but Google says production use is allo…
+  risks: Migration is not a one-line change: 3.8 treats text strictly as the transcript and has no system instructions, so style moves to speech_metadata or a designed voice (packages/voice/src/speechPrompt.ts and packages/relay/src/vertexSpeech.ts need rework). Unary…
+
+[2] Gemini 3.8 Flash TTS (gemini-3.8-flash-tts), the dearer 3.8 model  (cloud API; evidence: verified on Google's pricing and docs pages; ranking is third-party)
+  price: $9.00 per 1M audio tokens and $0.50 text through 31 Dec 2026; $18.00 and $1.00 from 1 Jan 2027. Rs per minute: at 25 tok/s, $9 x 1500/1M x 88 = Rs 1.19; at 32 tok/s, Rs 1.52. From Jan 2027: Rs 2.38 to Rs 3.04. Saving vs 3.1 Flash is -55% now but only about -10% from 2027, so it is a stopgap, not a fix.
+  hindi/hinglish: Hindi listed (130-language table). Google positions Flash over Flash-Lite for difficult pronunciations and regional dialects, so it is the safer fallback if Lite's Hinglish fails your listening test. Hinglish itself is not documented.
+  runs on: vendor cloud. Vertex 'global' only. | licence: Proprietary API. Vertex Preview; output is Customer Data.
+  risks: Same migration work as Flash-Lite. Price advantage vanishes in January. Third-party Arena has it 2nd overall, Lite 6th, with the top three statistically close.
+
+[3] Batch and Flex tiers for pre-rendered lesson audio  (cloud API; evidence: verified for Gemini Developer API; unverified for Vertex)
+  price: Gemini API page, Batch and Flex are half of Standard: 3.8 Flash-Lite $3.00 per 1M audio tokens ($0.25 text) through 31 Dec 2026, then $6.00; 3.8 Flash Batch $4.50 then $9.00; 3.1 Flash Batch $10; 2.5 Flash Batch $5. Rs per minute for Flash-Lite Batch: at 25 tok/s, 1500 x $3/1M x 88 = Rs 0.40; at 32 tok/s, Rs 0.51 (Rs 0.79 to Rs…
+  hindi/hinglish: Same models, so same Hindi and Hinglish status as above.
+  runs on: vendor cloud, asynchronous. Suits authoring-time rendering, not live replies. | licence: Gemini Developer API terms (not Vertex). Output ownership is the same: Google does not claim owners…
+  risks: Vertex's TTS pricing section lists no Batch or Flex row and the 3.8 model page lists only pay-as-you-go, so unverified on Vertex. The Gemini Developer API terms also carry an 18+ age clause (see caveats). Flex and Batch give no latency promise.
+
+[4] Shared server-side audio cache keyed by hash(text, voice, language, model, style version)  (technique; evidence: verified for terms and storage prices on vendor pages; the 60-90% repeat share is my estimate from the product description, not measured)
+  price: Free technique; cost is storage. Cloudflare R2: $0.015 per GB-month, egress free. Supabase Pro: 100 GB storage included then $0.0213 per GB-month, cached egress 250 GB included then $0.03 per GB. Size: about 0.25 MB per minute as m4a or Opus (your 2-minute class is 498 KB), so 100 hours of unique speech is about 1.5 GB, about $…
+  hindi/hinglish: Language-neutral. The key must include language and the style version, because the Hinglish and English takes of one lesson are different audio.
+  runs on: server: Supabase Storage or R2 behind a CDN; the student's phone just plays the file. | licence: Cloud terms 20(a): Generated Output is Customer Data and Google asserts no ownership of new IP in i…
+  risks: Lines with the student's name never hit (speak the name as a separate tiny clip, or drop it). Any lesson edit or voice change must invalidate keys (tools/record-class already hashes narration). Your current cache (packages/voice/src/cachedTts.ts) is per-devic…
+
+[5] Speak fewer words: shorter lines, captions instead of voice for some lines  (technique; evidence: unverified (reasoned from per-second pricing; the percentage is my estimate))
+  price: Free. Cost is linear in spoken seconds: 10% fewer seconds is 10% off. At Flash-Lite 2026 price, each saved minute is Rs 0.79 to Rs 1.01; at today's 3.1 price it is Rs 2.64 to Rs 3.38. My estimate: 10-30% of speech minutes (cap lines at 1-2 sentences, drop filler openers, caption-only for 'okay', 'next', recaps).
+  hindi/hinglish: Independent of voice. Hinglish tends to run longer than the English line it replaces, so check line length in the Hinglish track too.
+  runs on: your own prompt and content pipeline (prep-time line writer). | licence: n/a
+  risks: Colder tutor; less audio exposure for the student. Captions need screen space and a reading student. It overlaps with the cache saving, because trimmed narration is also what gets cached.
+
+[6] Free phone voice for low-stakes lines, paid voice for narration  (phone-native; evidence: unverified for Hindi and en-IN voices; the 263 MB and 0.7x figures are from your repo comments)
+  price: free (Rs 0 per minute). Saving equals the share of minutes moved: moving 20% of minutes saves about 20% (estimate). Repo comment: the on-device model is a 263 MB download and ran 0.7x realtime on a 4 GB Mali phone, so it needs one-line lookahead.
+  hindi/hinglish: Unverified by me. Whether a phone has a hi-IN or en-IN voice depends on its installed engine; I did not check. Reading Roman-script Hinglish with a Hindi voice is likely poor (inference).
+  runs on: phone browser (speechSynthesis) or phone app; the on-device model in the repo. | licence: Depends on the engine: the OS speech engine in the browser, or an open model already in your repo (…
+  risks: It is a different voice, so the student hears two teachers. Your own code comments call that seam the thing the product hides, so this changes how the tutor sounds. Use only for short interjections ('sahi', 'try again'). Quality and availability vary by phone.
+
+[7] Google Cloud TTS classic voices: Standard, WaveNet, Neural2, Chirp 3 HD  (cloud API; evidence: verified for prices and voice lists on Google pages; quality is unverified)
+  price: Per 1M characters: Standard $4, WaveNet $4, Neural2 $16, Chirp 3 HD $30, Studio $160. Free monthly: Standard and WaveNet 4M chars, Neural2 1M, Chirp 3 HD 1M. At 900 chars/min x 88: Standard or WaveNet Rs 0.32/min, Neural2 Rs 1.27/min, Chirp 3 HD Rs 2.38/min (not cheaper than 3.8 Flash-Lite), Studio Rs 12.67/min. The 4M free cha…
+  hindi/hinglish: hi-IN voices exist: 6 Standard, 6 WaveNet, 4 Neural2, 30 Chirp 3 HD (Cloud voice list). Roman-script Hinglish is not documented; inference is a Hindi voice may read Latin letters as English.
+  runs on: vendor cloud. | licence: Proprietary API (texttospeech.googleapis.com), priced per character.
+  risks: Different voice from Sulafat, so this is for low-stakes lines only and changes the sound. Standard and WaveNet are noticeably more robotic than Gemini TTS (my expectation, not tested here). Chirp 3 HD costs more per minute than 3.8 Flash-Lite.
+
+[8] Stop paying for audio nobody hears: one-line lookahead and abort on interrupt  (technique; evidence: unverified (Google does not document it; third-party reports conflict))
+  price: Free. My estimate is only 2-8% of spend. Lines are 1-3 sentences (about 4-10 s) and the model likely generates faster than playback, so most of a line is already billed when a student breaks in. Your mic is tap-only, so interrupts are probably rare.
+  hindi/hinglish: Independent of voice.
+  runs on: your relay and player: cancel the streamGenerateContent SSE request on barge-in; synthesise at most one line ahead, never a whole lesson. | licence: n/a
+  risks: I found no Google page saying whether a cancelled TTS stream stops billing. Third-party GitHub issues report Gemini may keep generating and billing after a client disconnect. Measure it with one aborted call before relying on it.
+
+[9] Gemini 2.5 Flash TTS and 2.5 Flash-Lite Preview TTS (older, half price of 3.1)  (cloud API; evidence: verified for price (Cloud TTS and Gemini API pages); quality unverified)
+  price: $10.00 per 1M audio tokens and $0.50 text (Standard); Batch $5.00 on the Gemini API. Rs per minute: at 25 tok/s, 1500 x $10/1M x 88 = Rs 1.32; at 32 tok/s, Rs 1.69; Batch Rs 0.66 to Rs 0.84. Saving is -50% vs 3.1 Flash, but 3.8 Flash-Lite at $6 is cheaper and newer.
+  hindi/hinglish: Hindi and Hinglish quality is not documented on the pages I read; unverified.
+  runs on: vendor cloud. | licence: Proprietary API; the 2.5 Flash-Lite preview model is listed in Cloud TTS docs.
+  risks: Google's deprecation table points 2.5 TTS users to the 3.8 models, with no shutdown date announced. Older generation, probably worse and less steerable than 3.x (unverified). Only worth it if 3.8 Preview proves unusable on Vertex.

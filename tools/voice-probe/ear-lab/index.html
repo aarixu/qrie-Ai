@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ear lab</title>
+<style>
+  :root { --bg: #fbfaf7; --ink: #1d1b16; --soft: #6b665c; --line: #e3ded2; --card: #fff; --accent: #2f6f4e; --warn: #b4531a; --bad: #b3261e; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #17160f; --ink: #f1eee6; --soft: #a39d8f; --line: #34312a; --card: #1f1d15; --accent: #6fcf9f; --warn: #e6975c; --bad: #ff8a80; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 20px 16px 80px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 28px 0 8px; }
+  p.lede { color: var(--soft); margin: 0 0 12px; }
+  .row { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+  .row.done { border-color: var(--accent); }
+  .say { font-size: 18px; font-weight: 600; margin: 0 0 8px; }
+  .ref { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--ink); }
+  .bar { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+  button { font: inherit; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; min-height: 40px; }
+  button.rec { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button.stop { background: var(--bad); color: #fff; border-color: var(--bad); }
+  button:disabled { opacity: .5; cursor: default; }
+  .meta { color: var(--soft); font-size: 13px; }
+  .warn { color: var(--warn); }
+  audio { height: 32px; max-width: 100%; }
+  #count { position: sticky; top: 0; background: var(--bg); padding: 8px 0; border-bottom: 1px solid var(--line); z-index: 1; font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ear lab</h1>
+  <p class="lede">Har line ke saamne <b>Record</b> dabao, line ko apni normal awaaz mein bolo, phir <b>Stop</b>. Jaise class mein bolte ho waise bolo, slow ya "clear" mat bolo. Agar line ko alag bol diya to neeche box mein jo bola wo likh do.</p>
+  <div id="count"></div>
+  <h2>Lines</h2>
+  <div id="script"></div>
+  <h2>Apne words mein</h2>
+  <p class="lede">Kuch bhi bolo (jaise koi doubt ya answer), phir box mein likho ki kya bola.</p>
+  <div id="free"></div>
+</main>
+<script>
+const SCRIPT = [
+  'I think breathing gives us energy directly.',
+  'Respiration happens in the mitochondria.',
+  'Glucose breaks down into pyruvate first.',
+  'mujhe lagta hai saans lene se energy milti hai',
+  'yeast mein oxygen nahi hoti toh alcohol banta hai',
+  'muscles mein lactic acid banta hai isliye cramp aata hai',
+  'pata nahi, ek hint do na',
+  'haan samajh aa gaya, aage chalo',
+  'Can you explain that once more, please?',
+  'ye wala step mujhe samajh nahi aaya',
+  'photosynthesis mein carbon dioxide aur paani se glucose banta hai',
+  'the answer is twenty four',
+  'thoda slow bolo na',
+  'ATP energy ki currency hai',
+  'aaj ka topic kya hai',
+  'mera doubt hai ki arteries mein hamesha oxygenated blood kyun nahi hota',
+  'no, I did not understand',
+  'reflex action brain se control nahi hota, spinal cord se hota hai',
+  'ek minute ruko, main sochta hoon',
+  'okay, next question',
+];
+const FREE = 4;
+const RATE = 16000;
+const APP = { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
+const RAW = { echoCancellation: false, noiseSuppression: false, autoGainControl: false };
+
+const ids = [...SCRIPT.map((_, i) => i), ...Array.from({ length: FREE }, (_, i) => SCRIPT.length + i)];
+const pad = (n) => String(n).padStart(2, '0');
+const refs = {};
+const saved = new Set();
+let busy = false;
+
+function wavOf(float32) {
+  const bytes = float32.length * 2;
+  const buf = new ArrayBuffer(44 + bytes);
+  const v = new DataView(buf);
+  const w = (at, s) => { for (let i = 0; i < s.length; i++) v.setUint8(at + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + bytes, true); w(8, 'WAVE'); w(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, RATE, true); v.setUint32(28, RATE * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  w(36, 'data'); v.setUint32(40, bytes, true);
+  for (let i = 0; i < float32.length; i++) {
+    const s = Math.max(-1, Math.min(1, float32[i]));
+    v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+  }
+  return new Blob([buf], { type: 'audio/wav' });
+}
+
+function level(f) {
+  let sum = 0, peak = 0;
+  for (let i = 0; i < f.length; i++) { sum += f[i] * f[i]; peak = Math.max(peak, Math.abs(f[i])); }
+  return { rms: Math.sqrt(sum / Math.max(1, f.length)), peak };
+}
+
+/** One mic stream with the given processing, captured as 16 kHz mono floats. */
+async function capture(constraints, withOpus) {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: constraints });
+  const settings = stream.getAudioTracks()[0].getSettings();
+  const ctx = new AudioContext({ sampleRate: RATE });
+  const src = ctx.createMediaStreamSource(stream);
+  const sp = ctx.createScriptProcessor(4096, 1, 1);
+  const parts = [];
+  sp.onaudioprocess = (e) => parts.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+  const mute = ctx.createGain(); mute.gain.value = 0;
+  src.connect(sp); sp.connect(mute); mute.connect(ctx.destination);
+  let recorder = null; const opus = [];
+  if (withOpus && window.MediaRecorder) {
+    try {
+      recorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus', audioBitsPerSecond: 32000 });
+      recorder.ondataavailable = (e) => { if (e.data.size) opus.push(e.data); };
+      recorder.start();
+    } catch { recorder = null; }
+  }
+  return {
+    settings,
+    async stop() {
+      const done = recorder ? new Promise((r) => { recorder.onstop = r; }) : null;
+      if (recorder && recorder.state !== 'inactive') recorder.stop();
+      if (done) await done;
+      sp.onaudioprocess = null;
+      stream.getTracks().forEach((t) => t.stop());
+      await ctx.close().catch(() => {});
+      const n = parts.reduce((a, p) => a + p.length, 0);
+      const out = new Float32Array(n); let at = 0;
+      for (const p of parts) { out.set(p, at); at += p.length; }
+      return { samples: out, opus: opus.length ? new Blob(opus, { type: 'audio/webm' }) : null };
+    },
+  };
+}
+
+const post = (name, blob) => fetch('/clip?name=' + name, { method: 'POST', body: blob });
+let saveTimer = null;
+function saveRefs() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => fetch('/refs', { method: 'POST', body: JSON.stringify(refs) }), 300);
+}
+
+function render(id, isFree) {
+  const row = document.createElement('div'); row.className = 'row'; row.id = 'r' + id;
+  const say = document.createElement('p'); say.className = 'say';
+  say.textContent = isFree ? 'Free: ' + (id - SCRIPT.length + 1) : SCRIPT[id];
+  const ref = document.createElement('input'); ref.className = 'ref'; ref.value = refs[id] ?? '';
+  ref.placeholder = isFree ? 'jo bola wo yahan likho' : 'jo bola (agar alag bola ho to sudhaar do)';
+  ref.addEventListener('input', () => { refs[id] = ref.value; saveRefs(); });
+  const bar = document.createElement('div'); bar.className = 'bar';
+  const btn = document.createElement('button'); btn.className = 'rec'; btn.textContent = 'Record';
+  const info = document.createElement('span'); info.className = 'meta';
+  const players = document.createElement('div'); players.className = 'bar';
+  bar.append(btn, info);
+  row.append(say, ref, bar, players);
+
+  let session = null;
+  btn.addEventListener('click', async () => {
+    if (!session) {
+      if (busy) return;
+      busy = true; btn.disabled = true; info.textContent = 'mic khul raha hai...';
+      try {
+        const [app, raw] = await Promise.all([capture(APP, true), capture(RAW, false)]);
+        session = { app, raw };
+        btn.disabled = false; btn.textContent = 'Stop'; btn.className = 'stop'; info.textContent = 'bolo...';
+      } catch (e) {
+        busy = false; btn.disabled = false; info.textContent = 'mic nahi mila: ' + e.message;
+      }
+      return;
+    }
+    btn.disabled = true; info.textContent = 'save ho raha hai...';
+    const s = session; session = null;
+    const [a, r] = await Promise.all([s.app.stop(), s.raw.stop()]);
+    const la = level(a.samples), lr = level(r.samples);
+    const name = 's' + pad(id);
+    const uploads = [post(name + '-app.wav', wavOf(a.samples)), post(name + '-raw.wav', wavOf(r.samples))];
+    if (a.opus) uploads.push(post(name + '-app.webm', a.opus));
+    await Promise.all(uploads);
+    saved.add(id); row.classList.add('done');
+    players.replaceChildren(
+      ...[['app (jaisa app bhejta hai)', a.samples], ['raw (processing band)', r.samples]].map(([label, f]) => {
+        const box = document.createElement('div');
+        const cap = document.createElement('div'); cap.className = 'meta'; cap.textContent = label;
+        const au = document.createElement('audio'); au.controls = true; au.src = URL.createObjectURL(wavOf(f));
+        box.append(cap, au); return box;
+      }),
+    );
+    const quiet = Math.max(la.peak, lr.peak) < 0.03;
+    info.className = 'meta' + (quiet ? ' warn' : '');
+    info.textContent = 'saved. peak app ' + la.peak.toFixed(2) + ' / raw ' + lr.peak.toFixed(2) + (quiet ? ' (bahut dheema, mic ke paas bolo)' : '') +
+      ' | NS app=' + s.app.settings.noiseSuppression + ' raw=' + s.raw.settings.noiseSuppression;
+    btn.textContent = 'Dobara'; btn.className = 'rec'; btn.disabled = false; busy = false;
+    count();
+  });
+  return row;
+}
+
+function count() {
+  document.getElementById('count').textContent = saved.size + ' / ' + ids.length + ' record ho gaye (kam se kam 12 chahiye, 24 best)';
+}
+
+(async () => {
+  try {
+    const st = await (await fetch('/state')).json();
+    Object.assign(refs, st.refs);
+    for (const f of st.files) { const m = /^s(\d\d)-/.exec(f); if (m) saved.add(Number(m[1])); }
+  } catch {}
+  for (const id of ids) {
+    const isFree = id >= SCRIPT.length;
+    if (!isFree && refs[id] === undefined) refs[id] = SCRIPT[id];
+    document.getElementById(isFree ? 'free' : 'script').append(render(id, isFree));
+    if (saved.has(id)) document.getElementById('r' + id).classList.add('done');
+  }
+  saveRefs(); count();
+})();
+</script>
+</body>
+</html>

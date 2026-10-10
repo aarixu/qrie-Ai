@@ -18,7 +18,10 @@ if (!process.argv.includes('--spend')) {
   process.exit(0);
 }
 const { readServiceAccount, createTokenSource } = await import('../../packages/relay/src/googleAuth.ts');
-const { speechPrompt, VERTEX_SPEECH_MODEL } = await import('../../packages/relay/src/vertexSpeech.ts');
+// `speechPrompt` is the 3.1 request (the style is a director's note in the text), so this tool
+// speaks with the 3.1 model, not the relay's default since 2026-10-07 (3.8, which reads such
+// notes aloud). Same name as before so the rest of the file is unchanged.
+const { speechPrompt, VERTEX_SPEECH_FALLBACK_MODEL: VERTEX_SPEECH_MODEL } = await import('../../packages/relay/src/vertexSpeech.ts');
 const tokens = createTokenSource(readServiceAccount(readFileSync('.secrets/vertex-service-account.json', 'utf8')));
 const OUT = 'tools/voice-probe/out/voices';
 mkdirSync(OUT, { recursive: true });

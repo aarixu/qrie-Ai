@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { handleRelay, type HandlerDeps } from '../src/handler';
 import { UNITS, createMemoryLedger, unitsFor, type Gate, type Ledger } from '../src/gate';
-import { COMPRESSED_HEAR_SECONDS, MAX_COMPRESSED_HEAR_BYTES, hearFormat, heardSeconds } from '../src/hearFormat';
+import {
+  AUDIO_TOKENS_PER_SECOND,
+  COMPRESSED_HEAR_SECONDS,
+  HEAR_INSTRUCTION_TOKENS,
+  MAX_COMPRESSED_HEAR_BYTES,
+  hearFormat,
+  heardSeconds,
+} from '../src/hearFormat';
 import { hearRelay, type RelayRequest } from '../src/relays';
 
 /**
@@ -61,8 +68,9 @@ describe('hearFormat', () => {
     expect(hearFormat('text/plain')).toBeNull();
   });
 
-  it('reads the seconds Vertex heard from its prompt tokens (measured: 247 tokens for 3.28 s)', () => {
-    expect(heardSeconds(247)).toBeCloseTo(3.28, 1);
+  it('reads the seconds Vertex heard from its prompt tokens (measured 2026-10-06: 317 tokens for 2 s, 467 for 8 s)', () => {
+    expect(heardSeconds(317)).toBeCloseTo(2, 1);
+    expect(heardSeconds(467)).toBeCloseTo(8, 1);
     expect(heardSeconds(100)).toBe(0);
   });
 });
@@ -102,8 +110,9 @@ describe('the meter on a compressed answer', () => {
 
   it('tops up from what Vertex heard when it was longer', async () => {
     const ledger = spyLedger();
-    // 20 s of audio: 165 + 20 x 25 prompt tokens.
-    await handleRelay(req(), depsWith(ledger, 165 + 20 * 25));
+    // 20 s of audio: the instruction's tokens + 20 x 25 prompt tokens (the instruction's own
+    // cost is measured, not guessed: tools/voice-probe/ear-instruction-tokens.mjs).
+    await handleRelay(req(), depsWith(ledger, HEAR_INSTRUCTION_TOKENS + 20 * AUDIO_TOKENS_PER_SECOND));
     await new Promise((r) => setTimeout(r, 0));
     expect(ledger.claims).toEqual([
       { relay: 'hear', units: Math.ceil(COMPRESSED_HEAR_SECONDS * UNITS.hear.units) },

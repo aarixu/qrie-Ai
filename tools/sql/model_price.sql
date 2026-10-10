@@ -66,12 +66,22 @@ insert into public.model_price (provider, model, unit, inr_per_unit, note) value
   ('vertex', 'gemini-3.1-flash-image', 'output_token', 2.00 / 1e6 * :rate, 'a generated picture is believed to be billed HERE, as tokens'),
   ('vertex', 'gemini-3.1-flash-image', 'image',        0,                    'ZERO on purpose - see the header; raise only if measurement shows images are not token-billed'),
 
-  -- Gemini 3.1 Flash TTS — her voice, on Vertex (the only voice since 2026-09-28)
-  -- (packages/relay/src/vertexSpeech.ts). $1/M text in, $20/M audio out,
-  -- checked 2026-09-28 (openrouter.ai/google/gemini-3.1-flash-tts-preview,
-  -- getmaxim.ai/bifrost Vertex calculator). Measured ~32 audio tokens/second.
-  ('vertex', 'gemini-3.1-flash-tts-preview', 'prompt_token', 1.00 / 1e6 * :rate, 'her voice; text in'),
-  ('vertex', 'gemini-3.1-flash-tts-preview', 'output_token', 20.00 / 1e6 * :rate, 'her voice; audio out, ~32 tokens/s'),
+  -- Gemini 3.8 Flash-Lite TTS — her voice since 2026-10-07 (Aarav: "default kar do"),
+  -- on Vertex (packages/relay/src/vertexSpeech.ts). $0.50/M text in and $6/M audio
+  -- out through 31 Dec 2026, DOUBLE from 1 Jan 2027 ($1 and $12): Google's Gemini API
+  -- and Vertex pricing pages, read 2026-10-06. Measured 24.3 audio tokens/second on 21
+  -- tutor lines (2026-10-07, tools/voice-probe/tts-compare-samples.mjs): Rs 0.81 a
+  -- minute of speech at Rs 88 to the dollar. CHANGE THESE TWO ROWS ON 1 JAN 2027.
+  ('vertex', 'gemini-3.8-flash-lite-tts', 'prompt_token', 0.50 / 1e6 * :rate, 'her voice; text in; doubles 2027-01-01'),
+  ('vertex', 'gemini-3.8-flash-lite-tts', 'output_token', 6.00 / 1e6 * :rate, 'her voice; audio out, ~25 tokens/s; doubles 2027-01-01'),
+
+  -- Gemini 3.1 Flash TTS — her voice on Vertex from 2026-09-28 to 2026-10-07, and
+  -- the voice for any line 3.8 cannot speak (vertexSpeech.ts). $1/M text in, $20/M
+  -- audio out, checked 2026-09-28 (openrouter.ai/google/gemini-3.1-flash-tts-preview,
+  -- getmaxim.ai/bifrost Vertex calculator). Billed 25.0 audio tokens/second on 21
+  -- lines on 2026-10-07 (this note said ~32): Rs 2.83 a minute at Rs 88 to the dollar.
+  ('vertex', 'gemini-3.1-flash-tts-preview', 'prompt_token', 1.00 / 1e6 * :rate, 'her voice (fallback); text in'),
+  ('vertex', 'gemini-3.1-flash-tts-preview', 'output_token', 20.00 / 1e6 * :rate, 'her voice (fallback); audio out, ~25 tokens/s'),
 
   -- Speech, through OpenRouter (Vertex is credits; this is real money)
   ('openrouter', 'deepgram/aura-2', 'character',    30 / 1e6 * :rate,        'the tutor voice, per character of text'),

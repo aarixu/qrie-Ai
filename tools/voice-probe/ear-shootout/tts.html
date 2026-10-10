@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Phone voice test</title>
+<style>
+  :root { --bg: #fbfaf7; --ink: #1d1b16; --soft: #6b665c; --line: #e3ded2; --card: #fff; --accent: #2f6f4e; --blue: #2b5fa8; --warn: #b4531a; --bad: #b3261e; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #17160f; --ink: #f1eee6; --soft: #a39d8f; --line: #34312a; --card: #1f1d15; --accent: #6fcf9f; --blue: #7fb0ee; --warn: #e6975c; --bad: #ff8a80; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px 16px 90px; }
+  h1 { font-size: 21px; margin: 0 0 4px; }
+  h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 24px 0 8px; }
+  p.lede { color: var(--soft); margin: 0 0 12px; font-size: 15px; }
+  #env { font-size: 13px; color: var(--soft); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin-bottom: 12px; }
+  label { display: flex; flex-direction: column; font-size: 13px; color: var(--soft); gap: 4px; margin-bottom: 10px; }
+  select, input[type=text], textarea { font: inherit; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); width: 100%; }
+  textarea { min-height: 70px; }
+  input[type=range] { width: 100%; }
+  button { font: inherit; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; min-height: 44px; padding: 8px 18px; }
+  .row { display: grid; gap: 8px; margin: 8px 0; }
+  .row.two { grid-template-columns: 1fr 1fr; }
+  button.go { color: #fff; border: 0; font-size: 17px; min-height: 54px; }
+  button.go.phone { background: var(--accent); }
+  button.go.gem { background: var(--blue); }
+  button.go.all { background: var(--warn); }
+  button:disabled { opacity: .5; }
+  #status { color: var(--soft); font-size: 14px; min-height: 22px; }
+  #now { font-size: 17px; font-weight: 600; min-height: 28px; word-break: break-word; }
+  .att { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+  .att .t { font-size: 15px; word-break: break-word; margin: 0 0 4px; }
+  .att .m { font-size: 12px; color: var(--soft); margin-bottom: 8px; }
+  .rate { display: flex; gap: 8px; margin-bottom: 8px; }
+  .rate button { flex: 1; min-height: 44px; }
+  .rate button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .rate button.on.half { background: var(--warn); border-color: var(--warn); }
+  .rate button.on.bad { background: var(--bad); border-color: var(--bad); }
+  #score { font-size: 14px; white-space: pre-line; }
+  #out { height: 150px; font: 12px/1.4 ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Phone voice test</h1>
+  <p class="lede">Phone ke apne awaaz (free, phone par hi banti hai) sunne ke liye. Line chuno, awaaz chuno, <b>Phone se bajao</b> dabao. Har baar ✓ sahi / ~ chalega / ✗ kharab dabao. "Gemini se bajao" paid wali hai (jo abhi app mein hai), seedhe sunne ke liye.</p>
+  <div id="env">checking...</div>
+
+  <label>Line
+    <select id="line"></select>
+  </label>
+  <label>Ya apni line likho (Hinglish ya English)
+    <textarea id="custom" placeholder="yahan likho, phir Phone se bajao dabao"></textarea>
+  </label>
+  <label>Awaaz (phone ki)
+    <select id="voice"></select>
+  </label>
+  <label>Speed: <span id="rateLabel">1.0</span>
+    <input id="rate" type="range" min="0.7" max="1.4" step="0.05" value="1">
+  </label>
+
+  <div class="row">
+    <button id="bPhone" class="go phone">🔊 Phone se bajao</button>
+    <button id="bAll" class="go all">▶ Is line ko saari Hindi aur Indian-English awaazon mein bajao</button>
+    <button id="bGem" class="go gem">🔊 Gemini se bajao (paid, ~₹0.06 per second)</button>
+    <button id="bStop">⏹ Roko</button>
+  </div>
+  <div id="status"></div>
+  <div id="now"></div>
+
+  <h2>Score</h2>
+  <div id="score">abhi koi nahi</div>
+
+  <h2>Suni hui awaazein</h2>
+  <div id="log"></div>
+
+  <h2>Mujhe bhejne ke liye</h2>
+  <button id="copy">Results copy karo</button>
+  <textarea id="out" readonly placeholder="yahan results aayenge"></textarea>
+</main>
+<script>
+// Filled in when the page is built for deployment; the repo copy keeps placeholders.
+const CFG = { relay: '__RELAY__', supabase: '__SUPABASE__', anon: '__ANON__' };
+const GEM_READY = !CFG.relay.startsWith('__') && !CFG.anon.startsWith('__');
+const $ = (id) => document.getElementById(id);
+const synth = window.speechSynthesis;
+const results = [];
+let playing = null; // { cancelled }
+let audioCtx = null;
+
+const LINES = [
+  { id: 'en1', lang: 'en', text: 'Good thinking. So where in the cell does the glucose start breaking down?' },
+  { id: 'en2', lang: 'en', text: "Let's do this step by step. First, what do we already know about the triangle?" },
+  { id: 'hi1', lang: 'hi-en', text: 'Achha socha! Toh batao, cell ke andar glucose sabse pehle kahan tootta hai?' },
+  { id: 'hi2', lang: 'hi-en', text: 'Mujhe lagta hai tum sahi raaste par ho. Ek kaam karo, pehle x ki value nikalo.' },
+  { id: 'hi3', lang: 'hi-en', text: 'x square plus y square barabar hota hai z square. Isme x ki value kaise nikalenge?' },
+  { id: 'hi4', lang: 'hi-en', text: 'Carbon ka atomic number 6 hai, aur mass number 12. Toh neutrons kitne hue?' },
+  { id: 'dv1', lang: 'hi-en', text: 'अच्छा सोचा! तो बताओ, cell के अंदर glucose सबसे पहले कहाँ टूटता है?' },
+  { id: 'dv2', lang: 'hi-en', text: 'कोई बात नहीं, ये थोड़ा मुश्किल है। चलो ek hint लेते हैं।' },
+];
+for (const l of LINES) { const o = document.createElement('option'); o.value = l.id; o.textContent = (l.lang === 'en' ? 'English: ' : l.id.startsWith('dv') ? 'Devanagari mix: ' : 'Hinglish: ') + l.text; $('line').append(o); }
+
+function envLine() {
+  const ua = navigator.userAgent;
+  const bits = [];
+  bits.push(/iPhone|iPad/.test(ua) ? 'iPhone/iPad' : /Android/.test(ua) ? 'Android' : /Windows/.test(ua) ? 'Windows' : /Mac/.test(ua) ? 'Mac' : 'device?');
+  bits.push(/Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Firefox|FxiOS/.test(ua) ? 'Firefox' : /Safari/.test(ua) ? 'Safari' : 'browser?');
+  bits.push(synth ? 'speechSynthesis: HAI' : 'speechSynthesis: NAHI');
+  bits.push('voices: ' + (synth ? synth.getVoices().length : 0));
+  bits.push('Gemini link: ' + (GEM_READY ? 'ready' : 'NAHI'));
+  return bits.join(' · ');
+}
+
+// ---------------------------------------------------------------- the phone's voices
+const norm = (l) => (l || '').replace('_', '-');
+const kind = (v) => { const l = norm(v.lang).toLowerCase(); return l.startsWith('hi') ? 'hi' : l === 'en-in' ? 'en-in' : l.startsWith('en') ? 'en' : 'other'; };
+function loadVoices() {
+  if (!synth) return;
+  const vs = synth.getVoices().slice().sort((a, b) => (a.name > b.name ? 1 : -1));
+  const sel = $('voice'); const keep = sel.value; sel.replaceChildren();
+  const auto = document.createElement('option'); auto.value = 'auto'; auto.textContent = 'Auto (Hinglish line = Hindi awaaz, English line = Indian English)'; sel.append(auto);
+  const groups = [['hi', 'Hindi (hi-IN)'], ['en-in', 'Indian English (en-IN)'], ['en', 'Baaki English'], ['other', 'Doosri bhasha']];
+  for (const [k, label] of groups) {
+    const list = vs.filter((v) => kind(v) === k); if (!list.length) continue;
+    const og = document.createElement('optgroup'); og.label = label + ' - ' + list.length;
+    for (const v of list) { const o = document.createElement('option'); o.value = v.voiceURI; o.textContent = v.name + ' (' + norm(v.lang) + (v.localService ? ', phone par' : ', network') + ')'; og.append(o); }
+    sel.append(og);
+  }
+  if ([...sel.options].some((o) => o.value === keep)) sel.value = keep;
+  $('env').textContent = envLine();
+}
+if (synth) { loadVoices(); synth.addEventListener?.('voiceschanged', loadVoices); setTimeout(loadVoices, 600); setTimeout(loadVoices, 2000); }
+$('env').textContent = envLine();
+$('rate').addEventListener('input', () => { $('rateLabel').textContent = Number($('rate').value).toFixed(2); });
+
+function currentLine() {
+  const custom = $('custom').value.trim();
+  if (custom) return { id: 'custom', lang: /[a-z]/i.test(custom) && /\b(hai|hain|toh|kya|kaise|nahi|ko|ka|ki|ke|mein|aur|batao|karo|hota)\b/i.test(custom) ? 'hi-en' : 'en', text: custom };
+  return LINES.find((l) => l.id === $('line').value) || LINES[0];
+}
+function pickVoice(line) {
+  const vs = synth.getVoices();
+  const chosen = $('voice').value;
+  if (chosen !== 'auto') return vs.find((v) => v.voiceURI === chosen) || null;
+  const want = line.lang === 'en' ? ['en-in', 'en'] : ['hi', 'en-in'];
+  for (const k of want) { const v = vs.find((x) => kind(x) === k); if (v) return v; }
+  return null;
+}
+
+// ---------------------------------------------------------------- one play, measured
+function setStatus(s) { $('status').textContent = s; }
+function stopAll() {
+  if (playing) playing.cancelled = true;
+  try { synth && synth.cancel(); } catch {}
+  try { audioCtx && audioCtx.suspend(); } catch {}
+  $('now').textContent = '';
+}
+
+function speakOne(line, voice) {
+  return new Promise((resolve) => {
+    const u = new SpeechSynthesisUtterance(line.text);
+    if (voice) { u.voice = voice; u.lang = norm(voice.lang); }
+    u.rate = Number($('rate').value);
+    const t0 = performance.now();
+    const rec = { engine: 'Phone: ' + (voice ? voice.name + ' (' + norm(voice.lang) + (voice.localService ? ', phone par' : ', network') + ')' : 'default'), lineId: line.id, text: line.text, rate: u.rate, startMs: null, durMs: null, error: '', rating: '' };
+    u.onstart = () => { rec.startMs = Math.round(performance.now() - t0); $('now').textContent = '🔊 ' + rec.engine; };
+    u.onend = () => { rec.durMs = Math.round(performance.now() - t0); results.push(rec); render(); resolve(rec); };
+    u.onerror = (e) => { rec.error = e.error || 'error'; rec.durMs = Math.round(performance.now() - t0); results.push(rec); render(); resolve(rec); };
+    synth.speak(u);
+  });
+}
+
+async function playPhone() {
+  if (!synth) { setStatus('is browser mein speechSynthesis nahi hai'); return; }
+  stopAll();
+  const line = currentLine(); const voice = pickVoice(line);
+  if (!voice) setStatus('koi matching awaaz nahi mili, default se bajaya.');
+  else setStatus('bol rahi hai...');
+  playing = { cancelled: false };
+  await speakOne(line, voice);
+  setStatus('ho gaya. ✓ / ~ / ✗ dabao.');
+}
+
+async function playAll() {
+  if (!synth) { setStatus('is browser mein speechSynthesis nahi hai'); return; }
+  stopAll();
+  const line = currentLine();
+  const vs = synth.getVoices().filter((v) => ['hi', 'en-in'].includes(kind(v)));
+  if (!vs.length) { setStatus('koi Hindi ya Indian-English awaaz is phone par nahi mili.'); return; }
+  const me = { cancelled: false }; playing = me;
+  setStatus(vs.length + ' awaazein, ek ke baad ek. Har ek ke baad ✓ / ~ / ✗ dabana baad mein bhi ho jayega.');
+  for (const v of vs) {
+    if (me.cancelled) break;
+    await speakOne(line, v);
+    await new Promise((r) => setTimeout(r, 350));
+  }
+  if (!me.cancelled) setStatus('saari awaazein ho gayin. neeche rate karo.');
+}
+
+// ---------------------------------------------------------------- Gemini through the production relay (paid, for comparison)
+const SESSION_KEY = 'eartest.session';
+const loadSession = () => { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; } };
+async function accessToken(force) {
+  let s = loadSession();
+  if (!force && s && s.expires_at * 1000 - Date.now() > 60_000) return s.access_token;
+  const res = await fetch(CFG.supabase + '/auth/v1/signup', { method: 'POST', headers: { apikey: CFG.anon, 'content-type': 'application/json' }, body: JSON.stringify({ data: {} }) });
+  if (!res.ok) throw new Error('sign-in ' + res.status);
+  s = await res.json();
+  try { localStorage.setItem(SESSION_KEY, JSON.stringify({ access_token: s.access_token, expires_at: s.expires_at })); } catch {}
+  return s.access_token;
+}
+async function playGemini() {
+  if (!GEM_READY) return;
+  stopAll();
+  audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  await audioCtx.resume().catch(() => {});   // inside the tap, so iPhone allows the sound later
+  const line = currentLine();
+  const rec = { engine: 'Gemini (paid, app wala)', lineId: line.id, text: line.text, rate: 1, startMs: null, durMs: null, error: '', rating: '' };
+  setStatus('Gemini se la raha hoon...');
+  const t0 = performance.now();
+  try {
+    let res;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const token = await accessToken(attempt > 0);
+      res = await fetch(CFG.relay + '/api/speech', { method: 'POST', headers: { authorization: 'Bearer ' + token, 'content-type': 'application/json' }, body: JSON.stringify({ text: line.text, lang: line.lang }) });
+      if (res.status !== 401) break;
+    }
+    if (!res.ok) throw new Error('relay ' + res.status + ' ' + (await res.text()).slice(0, 100));
+    const buf = await audioCtx.decodeAudioData(await res.arrayBuffer());
+    rec.startMs = Math.round(performance.now() - t0);        // the whole line, collected: the app streams, so it starts sooner
+    const src = audioCtx.createBufferSource(); src.buffer = buf; src.connect(audioCtx.destination);
+    $('now').textContent = '🔊 ' + rec.engine;
+    src.onended = () => { rec.durMs = Math.round(performance.now() - t0); results.push(rec); render(); setStatus('ho gaya. ✓ / ~ / ✗ dabao.'); $('now').textContent = ''; };
+    playing = { cancelled: false, src };
+    src.start();
+    rec.audioSecs = buf.duration;
+    setStatus('bol rahi hai... (' + buf.duration.toFixed(1) + ' s ki audio)');
+  } catch (e) { rec.error = String(e.message || e); results.push(rec); render(); setStatus('Gemini nahi chali: ' + rec.error); }
+}
+
+// ---------------------------------------------------------------- the list, the score, the copy text
+function render() {
+  const log = $('log'); log.replaceChildren();
+  [...results].reverse().forEach((r) => {
+    const box = document.createElement('div'); box.className = 'att';
+    const t = document.createElement('div'); t.className = 't'; t.textContent = r.text;
+    const m = document.createElement('div'); m.className = 'm';
+    m.textContent = r.engine + ' · ' + (r.error ? 'error: ' + r.error : (r.startMs != null ? 'shuru hone mein ' + r.startMs + ' ms' : '') + (r.durMs != null ? ' · poora ' + (r.durMs / 1000).toFixed(1) + ' s' : '') + (r.audioSecs ? ' · audio ' + r.audioSecs.toFixed(1) + ' s' : ''));
+    box.append(t, m);
+    if (!r.error) {
+      const rate = document.createElement('div'); rate.className = 'rate';
+      for (const [val, label, cls] of [['good', '✓ achha', ''], ['half', '~ chalega', 'half'], ['bad', '✗ kharab', 'bad']]) {
+        const b = document.createElement('button'); b.textContent = label;
+        if (r.rating === val) { b.classList.add('on'); if (cls) b.classList.add(cls); }
+        b.addEventListener('click', () => { r.rating = val; render(); });
+        rate.append(b);
+      }
+      box.append(rate);
+    }
+    log.append(box);
+  });
+  summary();
+}
+function summary() {
+  const by = {};
+  for (const r of results) if (r.rating) (by[r.engine] ??= { good: 0, half: 0, bad: 0 })[r.rating] += 1;
+  const lines = Object.entries(by).map(([k, v]) => { const n = v.good + v.half + v.bad; return k + ': ✓' + v.good + ' ~' + v.half + ' ✗' + v.bad + ' (' + n + ')'; });
+  $('score').textContent = lines.join('\n') || 'abhi koi nahi';
+  const rows = results.map((r) => '[' + (r.rating || '?') + '] ' + r.engine + ' | ' + r.lineId + (r.error ? ' | err ' + r.error : ' | start ' + r.startMs + 'ms | total ' + r.durMs + 'ms'));
+  $('out').value = $('env').textContent + '\n' + lines.join('\n') + '\n' + rows.join('\n');
+}
+$('copy').addEventListener('click', async () => {
+  summary();
+  try { await navigator.clipboard.writeText($('out').value); setStatus('copy ho gaya, chat mein paste karo.'); }
+  catch { $('out').select(); setStatus('neeche wala text select kar ke copy karo.'); }
+});
+$('bPhone').addEventListener('click', playPhone);
+$('bAll').addEventListener('click', playAll);
+$('bGem').addEventListener('click', playGemini);
+$('bStop').addEventListener('click', () => { stopAll(); setStatus('ruk gaya.'); });
+if (!synth) { $('bPhone').disabled = true; $('bAll').disabled = true; }
+if (!GEM_READY) $('bGem').disabled = true;
+render();
+</script>
+</body>
+</html>
