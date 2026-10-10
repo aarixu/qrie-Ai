@@ -11,7 +11,7 @@ import { claimOutbox, forgetRefused, forgetSent, ledgerOutbox } from '../stores/
  * sits behind an adapter.
  *
  * Everything goes through one server function, public.record_evidence
- * (0067). It decides who the learner is and which org their evidence belongs
+ * (0107). It decides who the learner is and which org their evidence belongs
  * to from the token, stamps the server's clock, and answers every event on its
  * own: recorded, duplicate, or refused with a reason. Nothing here names an
  * org or a user.
@@ -204,7 +204,7 @@ type SendOutcome =
   | { kind: 'transient' }
   | { kind: 'settled'; ok: string[]; poison: string[]; code?: string };
 
-/** record_evidence's answer for one event (0067). */
+/** record_evidence's answer for one event (0107). */
 interface EventAnswer {
   id: string;
   status: 'recorded' | 'duplicate' | 'refused';

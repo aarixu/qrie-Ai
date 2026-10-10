@@ -385,7 +385,7 @@ export interface SubmissionPhoto {
 }
 
 /**
- * What a child does alone beside what they do with help (0065), over the
+ * What a child does alone beside what they do with help (0105), over the
  * outcomes a row covers. The brain's `mastery` counts an answer given after
  * hints, at a discount; these keep the two apart.
  */
@@ -398,7 +398,7 @@ export interface OnTheirOwn {
   assistedPerformance: number | null;
 }
 
-/** What the brain believes about one student in one chapter (0027, 0065). */
+/** What the brain believes about one student in one chapter (0027, 0105). */
 export interface ChapterStanding extends OnTheirOwn {
   studentUserId: string;
   displayName: string;
@@ -521,7 +521,7 @@ export interface StudentChapter extends OnTheirOwn {
   mastery: number;
 }
 
-/** Whether the brain has read a child's answers yet (0065). */
+/** Whether the brain has read a child's answers yet (0105). */
 export interface BrainStatus {
   /** When the server received their last answer; null when they have none. */
   lastAnswerAt: string | null;
@@ -531,7 +531,7 @@ export interface BrainStatus {
   updatedAt: string | null;
 }
 
-/** Whether the brain has read the answers of a class's children yet (0065). */
+/** Whether the brain has read the answers of a class's children yet (0105). */
 export interface ClassBrainStatus {
   /** When the brain last wrote any of their models; null when it never has. */
   updatedAt: string | null;
@@ -820,10 +820,10 @@ export interface PracticeQuestion {
   options: string[];
 }
 
-/** Why lms.practice_for_me (0064) put a question where it is, most telling first. */
+/** Why lms.practice_for_me (0104) put a question where it is, most telling first. */
 export type PracticeReason = 'misconception' | 'review' | 'weak' | 'new' | 'more';
 
-/** A practice question picked from the child's own evidence (0064): stem and options, never the answer. */
+/** A practice question picked from the child's own evidence (0104): stem and options, never the answer. */
 export interface PracticeForMe extends PracticeQuestion {
   subject: string;
   chapter: string;
@@ -1196,7 +1196,7 @@ export function createLmsClient(t: Transport) {
     /**
      * Up to `count` (at most 20) practice questions of one subject, or of all when `subject` is null,
      * ranked by the child's own evidence: a confirmed wrong idea, a due review, their weakest
-     * outcomes alone, then what is new to them, then the rest (0064).
+     * outcomes alone, then what is new to them, then the rest (0104).
      */
     practiceForMe: (subject: string | null, count?: number) =>
       rows<PracticeForMe>('practice_for_me', { p_subject: subject, p_count: count }),

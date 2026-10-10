@@ -8,7 +8,7 @@ import { loadOutcomes, think } from '../src/index.ts';
 
 /**
  * PRACTICE PICKED FROM THE CHILD'S OWN EVIDENCE (lam-one-brain Task 5; truth
- * test D14, D15, D18; review SF14; migration 0064).
+ * test D14, D15, D18; review SF14; migration 0104).
  *
  * lms.practice_questions hands out a chapter's questions in a random order,
  * whatever the child has shown. lms.practice_for_me ranks the questions the

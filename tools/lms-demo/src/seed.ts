@@ -362,7 +362,7 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   // 5, again. A wrong idea a child really holds comes back: each planted
   // student practises their planted chapter and chooses the same wrong option
   // on every question of it they had in homework. One wrong answer is a slip
-  // (0063); the same one in a second sitting is what the brain confirms.
+  // (0103); the same one in a second sitting is what the brain confirms.
   await seedPlantedPractice(db, plantedChoices);
 
   // 6. The brain. It is given the ledger and nothing else — not `planted`.

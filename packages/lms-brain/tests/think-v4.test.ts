@@ -25,7 +25,7 @@ import {
 /**
  * THE SERVER HOLDS THE WHOLE MODEL (lam-one-brain Task 2).
  *
- * think() writes every field of a v4 ConceptState to concept_state (0060),
+ * think() writes every field of a v4 ConceptState to concept_state (0100),
  * times every sitting on the server's clock rather than the phone's (MF3),
  * takes a school item's labels and identity from lms.item (MF5), and does
  * each learner in one transaction under a per-learner lock (MF9).
@@ -334,7 +334,7 @@ describe('one transaction per learner, under a lock (MF9)', () => {
   });
 });
 
-describe('what is written of the wrong ideas stays inside 0060’s size line (SF12)', () => {
+describe('what is written of the wrong ideas stays inside 0100’s size line (SF12)', () => {
   // The largest record the fold can hold: 20 ideas, each with a 120-character
   // label (quotes, a backslash and non-ASCII letters, which print as more
   // than one byte or with an escape) and 8 items and 8 sittings.

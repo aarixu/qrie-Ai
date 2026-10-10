@@ -7,7 +7,7 @@
 -- (apps/classroom/tests/privacyClaims.test.tsx).
 --
 -- think() keeps a snapshot of each learner's model and folds forward from it
--- (0061), so deleting an answer the snapshot already holds loses nothing the
+-- (0101), so deleting an answer the snapshot already holds loses nothing the
 -- model learned from it. The snapshot takes an answer only on a run over an
 -- hour after the answer arrived; think() runs straight after a hand-in, so
 -- packages/lms-brain settleDue has to think those learners again before the

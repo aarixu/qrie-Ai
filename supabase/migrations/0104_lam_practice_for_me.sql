@@ -16,7 +16,7 @@
 --    them (written by packages/lms-brain think()):
 --      'misconception'  a question with a wrong option written to catch a
 --                       wrong idea the brain holds confirmed and not cleared
---                       for them (lms.brain_misconceptions, 0063; matched by
+--                       for them (lms.brain_misconceptions, 0103; matched by
 --                       lms.misconception_key); watch_out is that option's
 --                       label in the bank's words;
 --      'review'         one of its outcomes is due for spaced review

@@ -5,7 +5,7 @@ import { buildSchool, type School } from './fixtures';
 import { asUser, createUser, freshDatabase } from './harness';
 
 /**
- * 0067: public.record_evidence, the one door the tutor's evidence comes in by
+ * 0107: public.record_evidence, the one door the tutor's evidence comes in by
  * (lam-one-brain Task 7a, review MF1, MF2, MF3, SF2).
  *
  * Run as the real roles: a student's token calls it as `authenticated`, and
@@ -86,7 +86,7 @@ const orgOf = async (user: string): Promise<string> =>
 
 const ms = (v: unknown): number => (v instanceof Date ? v : new Date(String(v))).getTime();
 
-describe('0067 record_evidence: what it writes', () => {
+describe('0107 record_evidence: what it writes', () => {
   it('records a sitting and its answers as the caller, in the caller’s org, on the server’s clock', async () => {
     const kid = await createUser(db);
     const s = sitting();
@@ -167,7 +167,7 @@ describe('0067 record_evidence: what it writes', () => {
   });
 });
 
-describe('0067 record_evidence: replay is free', () => {
+describe('0107 record_evidence: replay is free', () => {
   it('answers a repeated event as a duplicate, with the time it first arrived, and writes nothing', async () => {
     const kid = await createUser(db);
     const s = sitting();
@@ -189,7 +189,7 @@ describe('0067 record_evidence: replay is free', () => {
   });
 });
 
-describe('0067 record_evidence: what it refuses, one event at a time', () => {
+describe('0107 record_evidence: what it refuses, one event at a time', () => {
   it.each(['practice', 'homework', 'test', 'api'])(
     'refuses %s from a child’s phone and writes nothing (only the LMS functions write it)',
     async (source) => {
@@ -282,7 +282,7 @@ describe('0067 record_evidence: what it refuses, one event at a time', () => {
   });
 });
 
-describe('0067 record_evidence: the call itself', () => {
+describe('0107 record_evidence: the call itself', () => {
   const code = async (fn: () => Promise<unknown>): Promise<string | undefined> => {
     try {
       await fn();
@@ -316,7 +316,7 @@ describe('0067 record_evidence: the call itself', () => {
   });
 });
 
-describe('0067 close_learning_session: time on task bounded by the sitting', () => {
+describe('0107 close_learning_session: time on task bounded by the sitting', () => {
   const close = (user: string, session: string, endedAt: string | null, activeMs: number): Promise<unknown> =>
     asUser(db, user, (tx) =>
       tx.query(`select public.close_learning_session($1, $2, $3)`, [session, endedAt, activeMs]),

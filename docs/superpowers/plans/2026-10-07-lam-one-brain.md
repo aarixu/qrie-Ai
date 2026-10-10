@@ -27,7 +27,7 @@ vitest 4.
    false.
 5. One commit per task, message `lam: <what changed>` with the trailer
    `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
-6. Migrations: next free number in **0060-0069**; re-check `supabase/migrations/` in this worktree and on
+6. Migrations: next free number in **0100-0069**; re-check `supabase/migrations/` in this worktree and on
    `origin/lms` before naming. Every migration gets a PGlite test.
 
 ## Milestone M1 — visibly adaptive (the "medium version"; must land)
@@ -47,7 +47,7 @@ vitest 4.
   `itemId` on 2 distinct items 24h+ apart set `masteredAt`; a retry-right is not cold.
 
 ### Task 2: persist the whole model on the server; safe `think()` (D07, D22, part of D01)
-- Migration `0060_lam_concept_state_v4.sql`: add `mastered_at timestamptz`, `cold_wins jsonb`, `box smallint`,
+- Migration `0100_lam_concept_state_v4.sql`: add `mastered_at timestamptz`, `cold_wins jsonb`, `box smallint`,
   `last_exposed_at timestamptz`, `last_retrieved_at timestamptz`, `misconceptions jsonb not null default '{}'`
   to `public.concept_state`; nothing else changes.
 - `packages/lms-brain/src/think.ts`: write every v4 field (extend `COLUMNS`, jsonb for the two objects),
@@ -164,7 +164,7 @@ vitest 4.
 ## Deferred, with reason
 D06/D17/D16-data (content generation and the Class 6-9 rebuild need model spend and review), D21 (retention needs
 a fold-forward snapshot), D25 (live-board display belongs to the canvas session), D19 (moot once the server is
-authoritative). Production steps (db push of 0060+, deploying `supabase/functions/brain`, the pg_cron schedule,
+authoritative). Production steps (db push of 0100+, deploying `supabase/functions/brain`, the pg_cron schedule,
 setting the apps' env) are Aarav's.
 
 
@@ -188,7 +188,7 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
 
 - **MF1** (Spec §3.1 allow-list; Plan Task 7): Replace sources with 'class|quiz|diagnostic|doubt only; homework, test, practice and api are refused per event'. Test: kid8a sends practice/homework/test/api via record_evidence; each comes back refused and ledger_event count is unchanged. _Why:_ 0034:469-479 bars phone-written practice; only lms.check_practice_answer (0031:594-605) writes it; no tutor emitter (classLedger/quizLedger/diagnosticLedger). Allowing it forges rung-0 correct practice.
 - **MF2** (Plan Task 7 record_evidence contract): org := current_org_id(), user := auth.uid(), never from input; session insert-only (on conflict do nothing); refuse events whose session is not the caller's; insert ... on conflict do nothing (no target); return rows (id,status,reason,received_at), never raise per event; call-level errors errcode 22023; max 500 events; revoke from public, anon. _Why:_ Definer bypasses is_member(org) policy (0006:158-160) while client sends org (ledgerSync.ts:119-132); (session_id,seq) unique (0006:115) aborts a batch; plain raise = P0001, which ledgerSync.ts:101 retries forever.
-- **MF3** (Plan Task 2 think() + Task 7 tests; Spec §6): think() selects s.received_at, e.received_at; orders sessions by s.received_at and passes startedAt = s.received_at; clamps e.at to [e.received_at-7d, e.received_at+5min]. Tests: 2 cold rights sent at now-25h and now in one call leave mastered_at null; a pre-0060 2099 row schedules nothing past now()+5min. _Why:_ think.ts:68,106 order and start sessions on client started_at; coldWins spacing uses session.startedAt (fold.ts:370); a 7-day clamp still allows a 25h backdate; old rows are unclamped.
+- **MF3** (Plan Task 2 think() + Task 7 tests; Spec §6): think() selects s.received_at, e.received_at; orders sessions by s.received_at and passes startedAt = s.received_at; clamps e.at to [e.received_at-7d, e.received_at+5min]. Tests: 2 cold rights sent at now-25h and now in one call leave mastered_at null; a pre-0100 2099 row schedules nothing past now()+5min. _Why:_ think.ts:68,106 order and start sessions on client started_at; coldWins spacing uses session.startedAt (fold.ts:370); a 7-day clamp still allows a 25h backdate; old rows are unclamped.
 - **MF4** (Spec §3.1 last sentence; §2 C2): Replace with: 'a child's token can no longer forge a source, a clock, a session, an org or another learner; a tutor answer's correctness stays client-asserted until server grading, and the results doc lists it as C2 partial.' _Why:_ Tutor payload.correct is built in the browser and sent as-is (ledgerSync.ts:119-132 rowOf); the current sentence claims what the code does not do (repo rule: comments are claims).
 - **MF5** (Plan Task 2 think() SELECT (feeds Task 1, 4, 5)): Left join lms.item i on (source in homework/test/practice and i.id=(payload->>'itemId')::uuid) or (source in class/quiz/diagnostic and i.library_ref=payload->>'probeId'). For wrong answers set misconceptionId from i.misconceptions->>(chosenIndex)::int (array only) and itemKey from library_ref. Unmatched client labels: id only, no text. _Why:_ Homework/test payloads carry no label (0024:173-180, 0030:192-198); fold is pure. library_ref = probe id (tools/lms-library/src/library.ts:71) gives server-owned labels for tutor too; the source guard avoids a uuid-cast crash on tutor itemId.
 - **MF6** (Spec §4 confirmation rule; Plan Task 1 tests): Confirmed if: same normalised label on 2+ distinct items or 2 sittings; OR same item key + same wrong chosenIndex in 2 sittings; OR two labels on one outcome with content-word Jaccard >= 0.5. Test with real label pairs from the demo seed's planted chapter. Spec: cross-item taxonomy deferred. _Why:_ Spec:80-82 says labels are free text (14,017/14,091); seed.ts:33-35 planted kids pick a different item's label each time, so exact-id matching almost never confirms and the floor's headline does not show.
@@ -213,7 +213,7 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
 - **SF9** (Plan Task 10): supabaseBackend already exists (packages/lms-client/src/backend.ts:185). Task 10 becomes env selection in apps/student and apps/lms backend.ts only. Move it to the end of M2, rebase on origin/lms first, and skip it if the LMS lane already did it.
 - **SF10** (Plan Task 3/5 copy; Spec §6): Child: 'Checking your answers, back in a few minutes.' (not 'Results not computed yet'). Teacher: 'Updated <time> ago'; 'Results delayed' after 30 min. Labels 'On their own' / 'With help', with a tip. The child never sees the words misconception or confirmed: 'Practise this: <outcome>, watch out for: <label>'.
 - **SF11** (Plan Task 6 decide()): When the move is history-driven, the tutor's line opens with an authored recognition phrase (e.g. 'This one tripped you last time too, let's see it another way.'), Hinglish per profile, no model call. Test: the phrase appears only when the history exists.
-- **SF12** (Plan Task 1/2 tests and bounds): Update the replay golden with a dated paragraph listing changed fields. Set the learner_model.version default to 4 in 0060 and flip migrations.test.ts:480. Normalisation tests. Caps: 20 misconceptions per concept, label 120 chars, items 8; check (octet_length(misconceptions::text) <= 8192).
+- **SF12** (Plan Task 1/2 tests and bounds): Update the replay golden with a dated paragraph listing changed fields. Set the learner_model.version default to 4 in 0100 and flip migrations.test.ts:480. Normalisation tests. Caps: 20 misconceptions per concept, label 120 chars, items 8; check (octet_length(misconceptions::text) <= 8192).
 - **SF13** (Spec §1 learner (a); §2 scorecard): Add: 'In this branch learner (a)'s tutor path is proven by acceptance test only; the live demo covers (b) and (c).' Scorecard: M1 = C1 and C4 pass for (b),(c); M2 = C1-C5 for (b),(c) and C2/C5 for (a); the rest are listed with reasons.
 - **SF14** (Plan Task 5 practice after reveal): Redefine lms.check_practice_answer so assistanceRung = 1 when the learner already has a practice event for the same itemId, because 0031:607 returns correct_index on every answer. Test: a second practice right on the same item does not raise unassisted mastery.
 
@@ -250,13 +250,13 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   remedial would put nearly every due outcome there (mastered needs two cold rights a day apart) and would show
   the remedial card's "It tripped you up last time" for something that never went wrong. Test:
   `packages/learner-model/tests/next.test.ts`.
-- **Migration numbers.** Branch `admin` has `0060_billing_states.sql` and `0061_admin_wave1_merge.sql`; this lane
-  owns 0060-0069 (spec section 8). The admin lane renumbers before either merges or pushes;
+- **Migration numbers.** Branch `admin` has `0100_billing_states.sql` and `0101_admin_wave1_merge.sql`; this lane
+  owns 0100-0069 (spec section 8). The admin lane renumbers before either merges or pushes;
   `supabase/tests/harness.test.ts` now fails on two migrations with one number.
 
 ## Task 7a as built (2026-10-08)
 
-- `public.record_evidence(p_sessions jsonb, p_events jsonb)` (0067): `p_sessions` is a list, because one drained batch
+- `public.record_evidence(p_sessions jsonb, p_events jsonb)` (0107): `p_sessions` is a list, because one drained batch
   can hold several sittings; events are sent in the outbox's own `LedgerEvent` shape. A sitting is made by the first
   event that needs it (from its `p_sessions` entry, else from the event), so an answer whose `session-started` was
   dropped by the outbox cap is not lost. Statuses: `recorded`, `duplicate`, `refused` with a reason (`source`,
@@ -267,7 +267,7 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
 - SF2's `close_learning_session` bound (end in `[started_at, now()+5min]`, time on task at most the span) landed here.
 - Left for Task 7b: the revoke, and SF1's porting of `ledger-integrity`, `school-safe-tenancy`, `lms-client` safety
   tests and `tools/bin/ledger-live-test.mjs` (they insert directly, which still works until the revoke). Rollout
-  order: push 0067 before deploying a classroom build with this drain (until then its calls are kept and retried),
+  order: push 0107 before deploying a classroom build with this drain (until then its calls are kept and retried),
   then 7b after the build is live.
 
 ## Task 8 as built (2026-10-08)

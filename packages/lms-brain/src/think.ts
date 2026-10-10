@@ -20,9 +20,9 @@ import { libraryIndex } from './graph.ts';
  * public.concept_state with packages/learner-model's foldSession: the same
  * function, the same parameters and the same graph propagation the tutor has
  * run in the browser, so there is one idea of what a child knows, not two.
- * Every field of the fold's ConceptState is written (0060).
+ * Every field of the fold's ConceptState is written (0100).
  *
- * IT FOLDS FORWARD FROM A SNAPSHOT (Task 2b, 0061). learner_model.snapshot
+ * IT FOLDS FORWARD FROM A SNAPSHOT (Task 2b, 0101). learner_model.snapshot
  * holds the model built from everything the server received up to an hour
  * before the last run (SNAPSHOT_LAG_SECONDS); each run reads only the events
  * received after it, folds them on top and writes the result. Events are read
@@ -32,7 +32,7 @@ import { libraryIndex } from './graph.ts';
  * lands. The snapshot stays an hour behind because a write that began
  * earlier (so has an earlier received_at) can commit after a later one has
  * been folded; that hour is folded again on every run. The snapshot keeps
- * what the fold learned, so the nightly purge (0062) can delete an answer
+ * what the fold learned, so the nightly purge (0102) can delete an answer
  * older than 90 days without the model forgetting it ONCE THE SNAPSHOT HOLDS
  * IT, which takes a run over an hour after the answer arrived. A run straight
  * after a hand-in is too soon for that hand-in, so `settleDue` thinks every
@@ -248,14 +248,14 @@ function bankLabels(rows: readonly LedgerRow[], labels: Map<string, string> = ne
   return labels;
 }
 
-/** concept_state's size line on one outcome's wrong ideas (0060). */
+/** concept_state's size line on one outcome's wrong ideas (0100). */
 export const MISCONCEPTIONS_MAX_BYTES = 8192;
 
 const utf8 = new TextEncoder();
 
 /**
  * The bytes of `value` as Postgres prints a jsonb — `octet_length(x::text)`,
- * which is what 0060's line measures. jsonb prints a space after every `:`
+ * which is what 0100's line measures. jsonb prints a space after every `:`
  * and `,`, which JSON.stringify does not; strings escape the same way.
  */
 export function jsonbTextBytes(value: unknown): number {
@@ -279,7 +279,7 @@ export function jsonbTextBytes(value: unknown): number {
  * One outcome's wrong ideas as they are written: the bank's own wording where
  * the idea's label is one the bank gave (`bank`: id to wording), never the
  * label as the fold first saw it, which may be the phone's; no text
- * otherwise; and inside 0060's size line, dropping first what tells a teacher
+ * otherwise; and inside 0100's size line, dropping first what tells a teacher
  * least — a slip or a cleared idea before a standing confirmed one, then the
  * longest unseen, then the least shown (the order the fold itself evicts in).
  */
@@ -336,7 +336,7 @@ const INSERT_STATES = `insert into public.concept_state (org_id, user_id, outcom
   select $1, $2, x.outcome_id, ${COLUMNS.map(([, c]) => `x.${c}`).join(', ')}
     from jsonb_to_recordset($3::jsonb) as x(outcome_id text, ${COLUMNS.map(([, c, t]) => `${c} ${t}`).join(', ')})`;
 
-/** What learner_model.snapshot holds (0061). */
+/** What learner_model.snapshot holds (0101). */
 interface Snapshot {
   model: LearnerModel;
   /** Each wrong-idea label the bank gave this learner's answers: its id to the bank's wording (bankLabels). */

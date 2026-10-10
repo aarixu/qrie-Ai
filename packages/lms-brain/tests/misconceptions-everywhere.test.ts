@@ -9,7 +9,7 @@ import { loadOutcomes, think } from '../src/index.ts';
 
 /**
  * A WRONG IDEA IS A WRONG IDEA WHEREVER IT WAS SHOWN (lam-one-brain Task 4;
- * truth test D10; migration 0063).
+ * truth test D10; migration 0103).
  *
  * The teacher's three lists of wrong ideas — per child (class_misconceptions),
  * the class's likely ones (class_likely_misconceptions) and a child's report

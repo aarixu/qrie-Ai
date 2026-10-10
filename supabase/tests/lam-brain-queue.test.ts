@@ -5,7 +5,7 @@ import { buildSchool, type School } from './fixtures';
 import { asUser, freshDatabase } from './harness';
 
 /**
- * 0068: public.brain_queue, the list of learners the brain has to think about
+ * 0108: public.brain_queue, the list of learners the brain has to think about
  * again (lam-one-brain Task 9; review MF10, MF11, SF3).
  *
  * Every insert into ledger_event, whoever makes it, puts its learners on the
@@ -61,7 +61,7 @@ const sql = (role: 'anon' | 'authenticated', user: string | null, text: string) 
     return tx.query(text);
   });
 
-describe('0068 brain_queue', () => {
+describe('0108 brain_queue', () => {
   it('puts the learner on the queue when an answer is written', async () => {
     await clear();
     await answers(school.kid8a, 1);

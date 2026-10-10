@@ -14,7 +14,7 @@ import {
 /**
  * THE BRAIN RUNS BY ITSELF (lam-one-brain Task 9; review MF9, MF11, SF3).
  *
- * An answer puts its learner on public.brain_queue (0068); drainBrainQueue
+ * An answer puts its learner on public.brain_queue (0108); drainBrainQueue
  * thinks about each queued learner in their own transaction and takes them
  * off only if nothing new arrived meanwhile. PGlite runs one query at a time,
  * so what two drains at once do is checked on a real Postgres in

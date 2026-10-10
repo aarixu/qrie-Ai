@@ -1,23 +1,23 @@
 -- WRONG IDEAS: TEST SECRECY IN PRACTICE, NO STOCK-LABEL CLUSTERS (lam-one-brain
 -- M1 review).
 --
--- 1. lms.brain_misconceptions (0063) also says whether an idea is NAMED: its
+-- 1. lms.brain_misconceptions (0103) also says whether an idea is NAMED: its
 --    label is the question bank's (think() writes no other text), rather than
 --    one of the two stock labels it stands in for an idea with no text.
--- 2. lms.class_likely_misconceptions (0063) lists only named ideas from the
+-- 2. lms.class_likely_misconceptions (0103) lists only named ideas from the
 --    brain. It groups by chapter and label, so every text-less idea of every
 --    child read as one shared "Repeated wrong idea (from the tutor)" with a
 --    summed count, and its practice was whatever the chapter held, matching
 --    nothing. A text-less idea stays on the per-child lists
 --    (class_misconceptions, student_misconceptions). Every label left is the
 --    bank's, so it matches a bank option.
--- 3. lms.practice_for_me (0064) targets only named ideas, and not one whose
+-- 3. lms.practice_for_me (0104) targets only named ideas, and not one whose
 --    questions are on a test the child sat whose results are not out: the
---    same exclusion lms.student_misconceptions (0063) makes for the child's
+--    same exclusion lms.student_misconceptions (0103) makes for the child's
 --    own report. Before this, "watch out for: <label>" told a child which
 --    wrong option they picked on a test before its release.
 --
--- Bodies otherwise 0063's and 0064's.
+-- Bodies otherwise 0103's and 0104's.
 
 -- Its result gains a column, so it is dropped and made again. The functions
 -- that call it name the columns they read.
@@ -50,7 +50,7 @@ as $$
          ) >= 2;
 $$;
 
--- 0063's, with only named ideas from the brain (2. above).
+-- 0103's, with only named ideas from the brain (2. above).
 create or replace function lms.class_likely_misconceptions(p_section uuid, p_subject uuid)
 returns table (chapter text, label text, students integer, children jsonb, questions integer)
 language plpgsql stable security definer
@@ -138,7 +138,7 @@ begin
 end;
 $$;
 
--- 0064's, with the ideas it targets cut as 3. above says.
+-- 0104's, with the ideas it targets cut as 3. above says.
 create or replace function lms.practice_for_me(p_subject text default null, p_count integer default 5)
 returns table (
   item_id uuid, stem text, options jsonb, subject text, chapter text,

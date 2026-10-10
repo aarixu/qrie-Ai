@@ -7,7 +7,7 @@ import { think } from '../src/index.ts';
 /**
  * THE TUTOR'S DOOR AND THE BRAIN'S CLOCK (lam-one-brain Task 7a, review MF3).
  *
- * Evidence written by a student's token through public.record_evidence (0067)
+ * Evidence written by a student's token through public.record_evidence (0107)
  * and folded by think(): a phone that backdates one of two cold rights by a
  * day, sending both in one call, does not earn "mastered"; the same two rights
  * received a day apart by the server do.

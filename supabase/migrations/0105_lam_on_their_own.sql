@@ -28,7 +28,7 @@
 -- 2. Whether the brain has read a child's answers yet, so an app can say
 --    "being worked out" instead of "no answers yet" (D26). An event is
 --    waiting while the server received it after the last event concept_state
---    was built from (learner_model.folded_through_received_at, 0061; to the
+--    was built from (learner_model.folded_through_received_at, 0101; to the
 --    millisecond, the order packages/lms-brain think() folds in), or while
 --    the child has no learner_model row at all.
 --      lms.brain_status(p_student): the time the server received their last

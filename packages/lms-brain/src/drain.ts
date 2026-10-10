@@ -5,7 +5,7 @@ import { SETTLE_DUE, thinkLearner, type Sql, type ThinkOptions } from './think.t
 /**
  * THE BRAIN RUNS BY ITSELF (lam-one-brain Task 9; review MF11, SF3).
  *
- * Every answer puts its learner on public.brain_queue (0068). A drain reads a
+ * Every answer puts its learner on public.brain_queue (0108). A drain reads a
  * batch of queued learners, the longest waiting first, without locking a row,
  * and then, for each, in that learner's own transaction:
  *
@@ -16,7 +16,7 @@ import { SETTLE_DUE, thinkLearner, type Sql, type ThinkOptions } from './think.t
  *      taken off is left alone;
  *   3. thinks (think.ts thinkLearner);
  *   4. deletes the row only if its ticket is still the one read in step 2.
- *      An answer that lands during step 3 takes a new ticket (0068), so its
+ *      An answer that lands during step 3 takes a new ticket (0108), so its
  *      learner stays queued and the next run folds it.
  *
  * No row lock is held while thinking, so a hand-in's enqueue never waits for

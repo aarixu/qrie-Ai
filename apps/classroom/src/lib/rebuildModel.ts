@@ -198,7 +198,7 @@ export async function rebuildFromLedger(stored: LearnerModel, unsent?: Unsent): 
    *
    * `ledger_event.session_id` has no foreign key (0006 says why: rows arrive
    * out of order from an offline outbox and must never be refused for it), and
-   * before record_evidence (0067) `ledgerSync` held back only the
+   * before record_evidence (0107) `ledgerSync` held back only the
    * `session-started` event when a session upsert failed — the answers in that
    * same batch were acknowledged and landed anyway. record_evidence now makes
    * the sitting with the first event that needs it, but rows written the old
@@ -216,7 +216,7 @@ export async function rebuildFromLedger(stored: LearnerModel, unsent?: Unsent): 
    * server does not hold yet is folded with its rows. Its sitting is the
    * outbox's open one, or the server's, or — for an older sitting still
    * waiting to be sent — placed at its first event's time, the same stand-in
-   * record_evidence (0067) uses for a sitting it was not told about.
+   * record_evidence (0107) uses for a sitting it was not told about.
    */
   const onServer = new Set(ledger.map((e) => e.id));
   const fresh = (unsent?.events ?? []).filter((e) => !onServer.has(e.id));

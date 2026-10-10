@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
  * and is the table's primary key. So these tests are mostly about the failure
  * paths, and about proving the outbox is untouched on every one of them.
  *
- * The drain writes through public.record_evidence (0067, lam-one-brain Task
+ * The drain writes through public.record_evidence (0107, lam-one-brain Task
  * 7a), which answers every event on its own: recorded, duplicate or refused.
  */
 
@@ -273,7 +273,7 @@ describe('the outbox store', () => {
  * whole batch the real database's 22P02 took every other event with it — on
  * every drain, on every device, for good. This whole file was green over it.
  *
- * record_evidence (0067) answers that event alone: refused, 'bad-id'. So these
+ * record_evidence (0107) answers that event alone: refused, 'bad-id'. So these
  * tests give the mock that check, as the function makes it.
  */
 describe('against a function that checks each event', () => {

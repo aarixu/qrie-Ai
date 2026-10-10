@@ -6,7 +6,7 @@
 -- (student_misconceptions, 0031). They counted a single wrong answer, and
 -- never saw what the tutor saw. Each now lists:
 --
--- 1. FROM THE BRAIN, what concept_state.misconceptions (0060, written by
+-- 1. FROM THE BRAIN, what concept_state.misconceptions (0100, written by
 --    packages/lms-brain think()) holds confirmed and not cleared: a wrong idea
 --    shown on two distinct questions or in two sittings, homework and tutor
 --    alike, until two later right answers on distinct questions, alone, clear
@@ -19,7 +19,7 @@
 -- 2. FROM HOMEWORK THE BRAIN HAS NOT READ YET, the rule each list had, with
 --    the same two-or-more rule: the label chosen on two distinct questions or
 --    in two hand-ins. A hand-in is read once learner_model's
---    folded_through_received_at (0061) has reached its submitted_at: its
+--    folded_through_received_at (0101) has reached its submitted_at: its
 --    ledger rows are written in the hand-in's own transaction, so they were
 --    received at that same now(). Where nothing runs think() (the hosted
 --    project today), every hand-in is unread and this is the whole list. Once

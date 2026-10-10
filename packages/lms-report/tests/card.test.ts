@@ -114,7 +114,7 @@ const subjects: StudentSubject[] = [
     handedIn: 3,
     handinRate: 0.75,
     averageScore: 0.62,
-    // The blend with help in it is higher; the card shows the figure alone (0065).
+    // The blend with help in it is higher; the card shows the figure alone (0105).
     mastery: 0.9,
     chaptersSeen: 2,
     unassistedMastery: 0.55,

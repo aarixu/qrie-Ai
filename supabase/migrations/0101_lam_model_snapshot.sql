@@ -3,7 +3,7 @@
 -- Until now think() rebuilt every child from their whole ledger on every run,
 -- so the model could only ever know what the ledger still held. The nightly
 -- purge is meant to delete every answer older than 90 days (0007; Aarav's
--- choice (a), restored by 0062), and a rebuild after it would forget what
+-- choice (a), restored by 0102), and a rebuild after it would forget what
 -- those answers had taught. So learner_model now keeps the model itself:
 -- packages/lms-brain/src/think.ts folds forward from this snapshot, reading
 -- only the events the server received after it, and rebuilds from the ledger

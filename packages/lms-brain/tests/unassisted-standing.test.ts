@@ -8,7 +8,7 @@ import { loadOutcomes, think } from '../src/index.ts';
 
 /**
  * WHAT A CHILD CAN DO ON THEIR OWN, SHOWN FIRST (lam-one-brain Task 3; truth
- * test D08, D26; migration 0065).
+ * test D08, D26; migration 0105).
  *
  * concept_state.mastery counts an answer given after hints (at a discount),
  * so a child carried by help reads as knowing it. Every report the school

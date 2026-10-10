@@ -12,7 +12,7 @@ export type Standing = {
 /**
  * Words for a child, not a number: the model's belief is a guide, not a grade.
  * MasteryInfo says what they mean. Read from what the child did on their own
- * (lms.* unassisted_mastery, 0065), never from the figure help is folded into:
+ * (lms.* unassisted_mastery, 0105), never from the figure help is folded into:
  *   - "Strong": FEW_ANSWERS or more answers alone, and STRONG or more alone;
  *   - "Getting there (with help)": otherwise, when they reach STRONG with help;
  *   - "Just started": under FEW_ANSWERS answers alone;
@@ -44,7 +44,7 @@ export function weakestAlone(chapters: PracticeChapter[]): PracticeChapter | nul
 
 /**
  * What the chapter list says when it has no chapter: the brain has not read
- * the answers the server holds yet (lms.brain_status, 0065), or there are none
+ * the answers the server holds yet (lms.brain_status, 0105), or there are none
  * to read. `name` is a parent's child.
  */
 export function chaptersEmptyText(status: BrainStatus | null | undefined, name?: string): string {

@@ -129,11 +129,11 @@ describe('the nightly purge (A3)', () => {
   }
 
   // 0021 made this purge delete only what a server fold had covered, and no
-  // fold wrote that mark, so it deleted nothing. 0062 restores Aarav's choice
+  // fold wrote that mark, so it deleted nothing. 0102 restores Aarav's choice
   // (a): every answer older than the window goes, by age alone, whatever
-  // learner_model says; the server's snapshot (0061) keeps what the fold
+  // learner_model says; the server's snapshot (0101) keeps what the fold
   // learned from them (lam-one-brain Task 2b).
-  it('deletes an old event that no fold has covered (0062)', async () => {
+  it('deletes an old event that no fold has covered (0102)', async () => {
     const student = await createUser(db);
     const event = await oldEvent(student, 200);
     await asService(db, (tx) => tx.query(`select public.purge_old_ledger(90)`));

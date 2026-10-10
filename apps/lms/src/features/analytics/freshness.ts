@@ -8,7 +8,7 @@ const delayed = (s: ClassBrainStatus, now: number) =>
   s.waitingSince !== null && now - Date.parse(s.waitingSince) > DELAYED_AFTER_MS
 
 /**
- * How fresh a class's figures are (lms.class_brain_status, 0065): when the
+ * How fresh a class's figures are (lms.class_brain_status, 0105): when the
  * brain last wrote any child's model, and "Results delayed" once an answer of
  * theirs has waited for it over DELAYED_AFTER_MS. Null when there is nothing
  * to say.

@@ -468,12 +468,12 @@ describe('the learner model migration', () => {
   it('keeps the model version in step with the code that writes it', () => {
     // The same drift check the day budget has, for the same reason: two places
     // hold this number and only one of them is tested by anything else.
-    // 0013 created the column at default 1; 0060 moved the default to the
+    // 0013 created the column at default 1; 0100 moved the default to the
     // version the server fold writes (lam-one-brain Task 2). The newest one is
     // the one in force, and it must be exactly the code's.
     expect(/version integer not null default (\d+)/i.exec(sql)).not.toBeNull();
     const latest = /alter table public\.learner_model alter column version set default (\d+)/i.exec(
-      sqlOf('0060_lam_concept_state_v4.sql'),
+      sqlOf('0100_lam_concept_state_v4.sql'),
     );
     expect(latest).not.toBeNull();
     expect(Number(latest![1])).toBe(MODEL_VERSION);

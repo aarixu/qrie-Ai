@@ -9,7 +9,7 @@ import { GETTING_THERE, SECURE, band, pct } from './charts'
  * packages/lms-brain folds the ledger, and the ledger holds the answers
  * students give in the app — a teacher's mark, a test on paper, photos and
  * ticks never reach it. Every Mastery figure in this app is the one from
- * answers given on their own (lms.* unassisted_mastery, 0065); "with help"
+ * answers given on their own (lms.* unassisted_mastery, 0105); "with help"
  * beside it is assisted_performance.
  */
 export function MasteryInfo({ className }: { className?: string }) {

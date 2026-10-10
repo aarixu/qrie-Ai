@@ -9,7 +9,7 @@ import { MasteryInfo } from '@/features/analytics/mastery-info'
 /**
  * One class in graphs: work by work (lms.class_trend) and, chapter by
  * chapter, the class's mean belief from the learning model on their own
- * (lms.class_insights, 0065), over the children who answered alone.
+ * (lms.class_insights, 0105), over the children who answered alone.
  */
 export function ClassAnalytics({ sectionId, subjectId }: { sectionId: string; subjectId: string }) {
   const trend = useQuery({

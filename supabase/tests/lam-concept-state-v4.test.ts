@@ -5,7 +5,7 @@ import { MODEL_VERSION } from '@ai-tutor/learner-model';
 import { asUser, createUser, freshDatabase } from './harness';
 
 /**
- * 0060: the columns that let concept_state hold a whole learner-model v4
+ * 0100: the columns that let concept_state hold a whole learner-model v4
  * ConceptState, the size line on its wrong ideas, and the version default.
  */
 
@@ -34,7 +34,7 @@ const insertRow = (outcome: string, extra: Record<string, unknown> = {}) => {
   );
 };
 
-describe('0060 concept_state v4', () => {
+describe('0100 concept_state v4', () => {
   it('gives a row written without the new fields what emptyConceptState holds', async () => {
     await insertRow('o-defaults');
     const { rows } = await db.query<Record<string, unknown>>(

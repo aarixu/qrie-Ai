@@ -140,13 +140,13 @@ describe('the window both screens promise', () => {
   it('is enforced by age alone, so "deleted after N days" is true of every answer', () => {
     // The LMS lane's 0021 rewrote the purge to delete only what a server fold
     // had marked as covered, and nothing wrote that mark, so from 0021 on it
-    // deleted NOTHING and this failed. 0062 (lam-one-brain Task 2b) deletes by
+    // deleted NOTHING and this failed. 0102 (lam-one-brain Task 2b) deletes by
     // age alone again; the server fold keeps a snapshot of what it learned
-    // (0061), so it no longer needs the old answers.
+    // (0101), so it no longer needs the old answers.
     //
     // WHAT THIS CANNOT SEE: it reads this checkout's migrations only. Pushing
-    // 0021 to the live database without 0062 makes both screens false while
-    // this stays green, so the push must take 0061 and 0062 with it.
+    // 0021 to the live database without 0102 makes both screens false while
+    // this stays green, so the push must take 0101 and 0102 with it.
     expect(purgeBody()).toMatch(/delete from public\.ledger_event where received_at < cutoff;/i);
     expect(purgeBody()).not.toMatch(/purge_safe_before/i);
   });

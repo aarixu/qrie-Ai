@@ -4,10 +4,10 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { asService, asUser, createUser, freshDatabase } from './harness';
 
 /**
- * 0061: learner_model keeps the server's snapshot of a learner's model (the
+ * 0101: learner_model keeps the server's snapshot of a learner's model (the
  * model carries its own cursor) and the last event concept_state was built
  * from, so think() folds forward instead of rebuilding (lam-one-brain Task 2b).
- * 0062: purge_old_ledger deletes every answer older than its window by age
+ * 0102: purge_old_ledger deletes every answer older than its window by age
  * alone again (Aarav's choice (a)); the snapshot keeps what the fold learned.
  */
 
@@ -46,7 +46,7 @@ async function oldEvent(user: string, daysAgo: number): Promise<{ event: string;
 const exists = async (table: string, id: string): Promise<boolean> =>
   (await db.query(`select 1 from public.${table} where id = $1`, [id])).rows.length === 1;
 
-describe('0061 learner_model snapshot', () => {
+describe('0101 learner_model snapshot', () => {
   it('holds a snapshot and the last event the model was built from', async () => {
     const kid = await createUser(db);
     const { event } = await oldEvent(kid, 1);
@@ -94,7 +94,7 @@ describe('0061 learner_model snapshot', () => {
   });
 });
 
-describe('0062 the nightly purge deletes by age alone', () => {
+describe('0102 the nightly purge deletes by age alone', () => {
   it('drops purge_safe_before: nothing writes it and the purge reads no fold any more', async () => {
     const { rows } = await db.query(
       `select 1 from information_schema.columns

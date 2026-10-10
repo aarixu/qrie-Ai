@@ -80,7 +80,7 @@ const MAX_CHAPTER_BARS = 15;
 const MAX_MISTAKES = 5;
 const MAX_RECENT = 10;
 
-/** Every Mastery figure on the card is the one from answers given on their own (lms.* unassisted_mastery, 0065). */
+/** Every Mastery figure on the card is the one from answers given on their own (lms.* unassisted_mastery, 0105). */
 const FOOTNOTE =
   "Mastery is Qrie's learning model's belief from the answers the student gave on their own — not a mark.";
 

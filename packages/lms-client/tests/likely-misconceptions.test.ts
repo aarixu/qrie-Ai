@@ -14,7 +14,7 @@ import { createLmsClient, pgliteTransport, type LmsClient } from '../src/index.t
  * A class's page lists the mistakes the most of its children show now — on
  * the latest occasion each child met a question that can catch it, they
  * chose it, and they have chosen it on two questions or in two hand-ins
- * (0063: one wrong answer is a slip) — with who they are and the chapter.
+ * (0103: one wrong answer is a slip) — with who they are and the chapter.
  * Next to each, the teacher
  * sends practice on that chapter to those children only (adjusting the list
  * first): only they see it, only they can hand it in, and only they count in
@@ -105,7 +105,7 @@ beforeAll(async () => {
   });
   await teacherA.setAssignmentItems(old, [q.seen]);
   await teacherA.publishAssignment(old);
-  // The first showing of the mistake each of them shows again below (0063: two or more).
+  // The first showing of the mistake each of them shows again below (0103: two or more).
   for (const name of ['Riya', 'Isha', 'Tara']) await as[name].submitMcq(old, { [q.seen]: 1 });
   await as.Kabir.submitMcq(old, { [q.seen]: 2 });
   await db.query(`update lms.assignment set due_at = now() - interval '3 days' where id = $1`, [old]);

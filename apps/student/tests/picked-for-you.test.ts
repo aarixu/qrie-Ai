@@ -4,7 +4,7 @@ import { pickedCard, pickedForYou } from '../src/features/learn/picked'
 
 /**
  * The words on the "Picked for you" card (home and Learn): what the
- * practice round lms.practice_for_me (0064) picked from the child's own
+ * practice round lms.practice_for_me (0104) picked from the child's own
  * answers, in a child's words. A due review is named first, then the outcome
  * to practise, with the wrong idea to watch out for; the child never reads
  * "misconception" or "confirmed" (review SF10). When nothing was picked

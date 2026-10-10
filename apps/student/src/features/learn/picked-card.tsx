@@ -10,7 +10,7 @@ export const ROUND = 5
 
 /**
  * The query for round `round` picked from the child's answers
- * (lms.practice_for_me, 0064). The card reads round 1 under the same key the
+ * (lms.practice_for_me, 0104). The card reads round 1 under the same key the
  * practice page does, so the round it opens is the one it describes; the
  * card fetches it afresh each time it is shown.
  */
@@ -20,11 +20,11 @@ export const pickedRound = (subject: string | undefined, round: number) => ({
 })
 
 /**
- * "Picked for you": the round lms.practice_for_me (0064) starts now, of one
+ * "Picked for you": the round lms.practice_for_me (0104) starts now, of one
  * subject or of all, said in a child's words (pickedForYou). It opens that
  * round. When the child's answers picked nothing (no answers yet, or strong
  * on everything open) it says the answers are being checked while the brain
- * has not read them (lms.brain_status, 0065), and shows `fallback` otherwise
+ * has not read them (lms.brain_status, 0105), and shows `fallback` otherwise
  * (pickedCard), as it does when the round cannot be fetched.
  */
 export function PickedForYouCard({ subject, fallback = null }: { subject?: string; fallback?: React.ReactNode }) {

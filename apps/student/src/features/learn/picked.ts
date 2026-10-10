@@ -3,7 +3,7 @@ import { chaptersEmptyText } from '../standing'
 
 /**
  * The lines on the "Picked for you" card, from a round lms.practice_for_me
- * (0064) ranked by the child's own answers: the first outcome due for review,
+ * (0104) ranked by the child's own answers: the first outcome due for review,
  * then the first outcome to practise (a wrong idea to fix, or an outcome they
  * are not yet strong on alone) with the idea to watch out for. None when the
  * round holds only questions new to them or ones they are strong on, because
@@ -28,7 +28,7 @@ export function pickedForYou(rows: readonly PracticeForMe[]): string[] {
 /**
  * What the "Picked for you" card shows: the picked round to open, with its
  * lines (pickedForYou); else, while the brain has not read answers the
- * server holds (lms.brain_status, 0065), the chapter list's words for that
+ * server holds (lms.brain_status, 0105), the chapter list's words for that
  * (chaptersEmptyText), with nothing to open; else nothing.
  */
 export function pickedCard(

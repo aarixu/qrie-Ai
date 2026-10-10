@@ -11,7 +11,7 @@ import { SNAPSHOT_LAG_SECONDS, settleDue, think } from '../src/index.ts';
  * think() keeps the model it built in learner_model.snapshot and, next time,
  * folds only what the server received after it, in the order it received it.
  * That is what lets the nightly purge delete every answer older than 90 days
- * (0062) without the model forgetting what those answers taught it, provided
+ * (0102) without the model forgetting what those answers taught it, provided
  * each answer reached the snapshot first: think() over an hour after it
  * arrived, which settleDue makes sure of.
  */
@@ -198,7 +198,7 @@ describe('the snapshot stays behind what may still be committing', () => {
   });
 });
 
-describe('keeping the 90-day promise (Aarav’s choice (a), 0062)', () => {
+describe('keeping the 90-day promise (Aarav’s choice (a), 0102)', () => {
   it('keeps mastery the purged answers earned, and builds on it', async () => {
     const kid = await createUser(db);
     await sitting(kid, ago(100 * 24), [quiz('a1', 0), quiz('a2', 0)]);

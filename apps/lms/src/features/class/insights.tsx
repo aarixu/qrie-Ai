@@ -41,7 +41,7 @@ function tone(m: number | null) {
  * lms.class_likely_misconceptions). Belief is per outcome, from every answer
  * handed in, with prerequisites taken into account — so it is not the same
  * as the average mark. The figure shown first is from answers given on their
- * own; how they do with hints is beside it (0065). Above, how fresh it is
+ * own; how they do with hints is beside it (0105). Above, how fresh it is
  * (lms.class_brain_status).
  */
 export function Insights({ sectionId, subjectId }: { sectionId: string; subjectId: string }) {
