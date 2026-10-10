@@ -5,7 +5,7 @@ import { CLOSED, LOCKED, NETWORK_LIMIT, WRONG_PIN } from '../../../packages/lms-
 import { buildSchool, seat, type School } from '../../../supabase/tests/fixtures.ts';
 import { asService, freshDatabase } from '../../../supabase/tests/harness.ts';
 import { authPassword, guardPin } from '../src/pinGuard.ts';
-import { clientIp, handleSignIn, type SignInDeps } from '../src/signIn.ts';
+import { callerKey, handleSignIn, MAX_BODY, serveSignIn, type SignInDeps } from '../src/signIn.ts';
 
 /**
  * THE HOSTED SIGN-IN'S GUARD (supabase/functions/lms-signin, migration 0046).
@@ -38,6 +38,25 @@ async function rpc(fn: string, args: Record<string, unknown>): Promise<unknown> 
 const deps: SignInDeps = { rpc, pepper: PEPPER };
 const signIn = (loginId: unknown, pin: unknown, ip?: string) =>
   handleSignIn({ method: 'POST', body: JSON.stringify({ loginId, pin }), ...(ip ? { ip } : {}) }, deps);
+
+/** A request as it reaches the lms-signin function, its body a stream with no declared length. */
+const request = (headers: Record<string, string>, body: string | ReadableStream<Uint8Array> | null, method = 'POST') => ({
+  method,
+  headers: new Headers(headers),
+  body: typeof body === 'string' ? new Response(body).body : body,
+});
+/** A sign-in through the function's door, from a caller with these headers. */
+const signInWith = async (headers: Record<string, string>, loginId: string, pin: string) => {
+  const res = await serveSignIn(request(headers, JSON.stringify({ loginId, pin })), deps);
+  return { status: res.status, body: await res.json() };
+};
+const key = (headers: Record<string, string>) => callerKey(new Headers(headers));
+/** 200 tries not proven right, counted under this key: its budget for the window, spent. */
+const spend = async (ipKey: string | undefined, prefix: string) => {
+  for (let i = 0; i < 200; i++) await rpc('pin_guard_try', { p_login: `${prefix}${i}`, p_ip: ipKey });
+};
+const ipRow = async (ipKey: string) =>
+  (await db.query<{ failures: number }>(`select failures from lms.sign_in_ip where ip = $1`, [ipKey])).rows[0];
 
 /** A new PIN for an ID, as the portal gives one: the count and any lock are cleared. */
 const givePin = (user: string, loginId: string, pin: string) => guardPin(rpc, PEPPER, user, loginId, pin);
@@ -169,15 +188,141 @@ describe('one network', () => {
     expect(rows).toEqual([{ failures: 1 }]);
   });
 
-  it('is read from the first address of x-forwarded-for; without a usable one there is no per-network count', async () => {
-    expect(clientIp('203.0.113.7, 10.0.0.1')).toBe('203.0.113.7');
-    expect(clientIp(' 2001:DB8::1 ')).toBe('2001:db8::1');
-    expect(clientIp(null)).toBeUndefined();
-    expect(clientIp('')).toBeUndefined();
-    expect(clientIp('<script>, 10.0.0.1')).toBeUndefined();
+  it('is not held to the limit when neither header holds an address', async () => {
+    expect(await key({})).toBeUndefined();
+    expect(await key({ 'x-forwarded-for': '' })).toBeUndefined();
+    expect(await key({ 'x-forwarded-for': '<script>, unknown', 'cf-connecting-ip': 'nobody' })).toBeUndefined();
     const before = (await db.query<{ n: number }>(`select count(*)::int n from lms.sign_in_ip`)).rows[0].n;
-    await signIn('SIG-999', '123456');
+    expect(await signInWith({ 'x-forwarded-for': 'unknown' }, 'SIG-999', '123456')).toEqual({ status: 401, body: { error: WRONG_PIN } });
     expect((await db.query<{ n: number }>(`select count(*)::int n from lms.sign_in_ip`)).rows[0].n).toBe(before);
+  });
+});
+
+describe('the key a try is counted under (callerKey)', () => {
+  // A proxy appends the address it was reached from to x-forwarded-for, after
+  // whatever the caller sent in it; so its first entry is the caller's to choose.
+  it('cannot be another address’s for naming it first in x-forwarded-for: a forger spends a budget of their own, not the school’s', async () => {
+    const school = '203.0.113.50';
+    await givePin(one.kid8a, 'SIG-101', '493817');
+    const schoolKey = await key({ 'x-forwarded-for': school });
+    const forgerKey = await key({ 'x-forwarded-for': `${school}, 198.51.100.66` });
+    expect(schoolKey).toBe(school);
+    expect(forgerKey).not.toBe(schoolKey);
+    await spend(forgerKey, 'SIG-F');
+    // The forger, even with a right PIN, is refused; the school is not.
+    expect(await signInWith({ 'x-forwarded-for': `${school}, 198.51.100.66` }, 'SIG-101', '493817')).toEqual({
+      status: 429,
+      body: { error: NETWORK_LIMIT },
+    });
+    expect((await signInWith({ 'x-forwarded-for': school }, 'SIG-101', '493817')).status).toBe(200);
+    expect(await ipRow(school)).toEqual({ failures: 0 });
+  });
+
+  it('is cf-connecting-ip, when that holds an address, whatever x-forwarded-for says', async () => {
+    expect(await key({ 'cf-connecting-ip': '198.51.100.5', 'x-forwarded-for': '203.0.113.7, 10.0.0.1' })).toBe('198.51.100.5');
+    // Not an address there: the chain is used.
+    expect(await key({ 'cf-connecting-ip': 'nobody', 'x-forwarded-for': '203.0.113.7, 10.0.0.1' })).toBe('203.0.113.7,10.0.0.1');
+    await givePin(one.kid8a, 'SIG-101', '493817');
+    expect((await signInWith({ 'cf-connecting-ip': '198.51.100.77', 'x-forwarded-for': '203.0.113.77' }, 'SIG-101', '000000')).status).toBe(401);
+    expect(await ipRow('198.51.100.77')).toEqual({ failures: 1 });
+    expect(await ipRow('203.0.113.77')).toBeUndefined();
+  });
+
+  it('is an IPv6 address’s /64, so every address in one /64 shares one budget', async () => {
+    const mine = await key({ 'cf-connecting-ip': '2001:DB8:1:2::1' });
+    expect(mine).toBe('2001:db8:1:2::/64');
+    expect(await key({ 'cf-connecting-ip': '2001:0db8:0001:0002:ffff:ffff:ffff:ffff' })).toBe(mine);
+    expect(await key({ 'cf-connecting-ip': '2001:db8:1:3::1' })).toBe('2001:db8:1:3::/64');
+    expect(await key({ 'x-forwarded-for': '2001:db8:1:2::7, 2001:db8:9:9:1:2:3:4' })).toBe('2001:db8:1:2::/64,2001:db8:9:9::/64');
+    // IPv4 written as IPv6 is IPv4.
+    expect(await key({ 'cf-connecting-ip': '::ffff:198.51.100.5' })).toBe('198.51.100.5');
+    await givePin(one.kid8a, 'SIG-101', '493817');
+    await spend(mine, 'SIG-V');
+    expect(await signInWith({ 'cf-connecting-ip': '2001:db8:1:2:abcd::5' }, 'SIG-101', '493817')).toEqual({
+      status: 429,
+      body: { error: NETWORK_LIMIT },
+    });
+    expect((await signInWith({ 'cf-connecting-ip': '2001:db8:1:3::1' }, 'SIG-101', '493817')).status).toBe(200);
+  });
+
+  it('is a SHA-256 when the chain is longer than the 64 characters the table keeps, so a forger who copies a long chain’s opening does not share it', async () => {
+    const chain = '2001:db8:aaaa:bbbb::1, 2001:db8:cccc:dddd::1, 2001:db8:eeee:ffff::1';
+    const real = await key({ 'x-forwarded-for': chain });
+    const copied = await key({ 'x-forwarded-for': `${chain}, 198.51.100.66` });
+    expect(real).toMatch(/^[0-9a-f]{64}$/);
+    expect(copied).toMatch(/^[0-9a-f]{64}$/);
+    expect(copied).not.toBe(real);
+    await givePin(one.kid8a, 'SIG-101', '493817');
+    await spend(copied, 'SIG-L');
+    expect((await signInWith({ 'x-forwarded-for': chain }, 'SIG-101', '493817')).status).toBe(200);
+  });
+});
+
+describe('the function’s door (serveSignIn)', () => {
+  const expectHeaders = (res: Response) => {
+    expect(res.headers.get('access-control-allow-origin')).toBe('*');
+    expect(res.headers.get('cache-control')).toBe('no-store');
+    expect(res.headers.get('content-type')).toBe('application/json');
+  };
+  /** A stream of `total` spaces in 100-byte chunks, counting what has been taken from it. */
+  const spaces = (total: number) => {
+    const counter = { sent: 0 };
+    // highWaterMark 0: nothing is taken until it is read.
+    const stream = new ReadableStream<Uint8Array>(
+      {
+        pull(c) {
+          if (counter.sent >= total) return c.close();
+          counter.sent += 100;
+          c.enqueue(new Uint8Array(100).fill(0x20));
+        },
+      },
+      { highWaterMark: 0 },
+    );
+    return { stream, counter };
+  };
+
+  it('reads a body with no declared length only until it is past the limit, and refuses it', async () => {
+    const { stream, counter } = spaces(100_000);
+    const res = await serveSignIn(request({}, stream), deps);
+    expect(res.status).toBe(413);
+    expect(await res.json()).toEqual({ error: 'That request is too large.' });
+    expectHeaders(res);
+    expect(counter.sent).toBeLessThanOrEqual(MAX_BODY + 300);
+  });
+
+  it('refuses a body whose declared length is over the limit without reading it', async () => {
+    const { stream, counter } = spaces(1_000);
+    const res = await serveSignIn(request({ 'content-length': '1000' }, stream), deps);
+    expect(res.status).toBe(413);
+    expectHeaders(res);
+    expect(counter.sent).toBe(0);
+  });
+
+  it('answers a body that breaks off while being read with 400 and its headers, not a crash', async () => {
+    const broken = new ReadableStream<Uint8Array>({
+      start(c) {
+        c.enqueue(new TextEncoder().encode('{"loginId":"SIG-1'));
+      },
+      pull(c) {
+        c.error(new TypeError('connection reset'));
+      },
+    });
+    const res = await serveSignIn(request({}, broken), deps);
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: 'That request could not be read.' });
+    expectHeaders(res);
+  });
+
+  it('sends its headers with every other answer', async () => {
+    await givePin(one.kid8a, 'SIG-101', '493817');
+    for (const res of [
+      await serveSignIn(request({}, JSON.stringify({ loginId: 'SIG-101', pin: '493817' })), deps),
+      await serveSignIn(request({}, JSON.stringify({ loginId: 'SIG-101', pin: '000000' })), deps),
+      await serveSignIn(request({}, 'not json'), deps),
+      await serveSignIn(request({}, null, 'GET'), deps),
+    ]) {
+      expectHeaders(res);
+    }
   });
 });
 

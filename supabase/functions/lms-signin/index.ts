@@ -5,12 +5,13 @@
 // supabaseBackend (packages/lms-client) calls it first, at its signInUrl, and
 // only then signs in to Supabase Auth with what it sends back.
 //
-// Everything with a decision in it lives in handleSignIn and is covered by the
-// repo's tests (tools/lms-import/tests/signIn.test.ts, over the real
-// migrations). This file is the Deno adapter: it reads the environment, the
-// body and the caller's address, and hands them to handleSignIn with the
-// service role's calls to 0046's guard functions. It has not yet run against
-// a deployed project.
+// Everything with a decision in it lives in signIn.ts — serveSignIn reads the
+// body and the caller's key and answers with handleSignIn's verdict — and is
+// covered by the repo's tests (tools/lms-import/tests/signIn.test.ts, over the
+// real migrations). This file is the Deno adapter: it reads the environment,
+// answers OPTIONS and a missing setup, and hands every other request to
+// serveSignIn with the service role's calls to 0046's guard functions. It has
+// not yet run against a deployed project.
 //
 // Deploy, after `supabase db push` has applied migration 0046:
 //   npx supabase secrets set LMS_PIN_PEPPER=<at least 32 random characters>
@@ -24,14 +25,23 @@
 // Supabase supplies SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY by itself. The
 // apps reach this at <SUPABASE_URL>/functions/v1/lms-signin.
 //
-// The caller's address is the first in x-forwarded-for (clientIp). Whether
-// Supabase's gateway lets a caller choose that first address has not been
-// checked; if it does, the per-address limit can be dodged by naming a new
-// address each time, while the per-ID lockout, which does not depend on the
-// address, still holds. A request without a usable address is not held to
-// the per-address limit at all.
+// The per-address limit counts each try under callerKey: the address in
+// cf-connecting-ip, which Cloudflare sets, or, without one, the whole
+// x-forwarded-for chain, never its first entry alone, which the caller
+// writes; IPv6 by its /64. So naming someone else's address in
+// x-forwarded-for spends a budget of the caller's own, not theirs. Which of
+// the two headers carries the caller's real address on the deployed project,
+// and whether a caller can set cf-connecting-ip themselves, has not been
+// checked; the security review's finding 1 says how to check it at the
+// staging rehearsal. If a caller can set cf-connecting-ip, they can name any
+// address there, someone else's included. A request with neither header
+// holding an address is not held to the per-address limit; the per-ID
+// lockout, which does not depend on the address, holds whatever the headers.
+//
+// serveSignIn reads a body only until it passes MAX_BODY bytes, inside a
+// try, so a long or broken one gets 413 or 400 with this function's headers.
 
-import { handleSignIn, clientIp, MAX_BODY } from '../../../tools/lms-import/src/signIn.ts';
+import { serveSignIn, SIGN_IN_HEADERS } from '../../../tools/lms-import/src/signIn.ts';
 import { pepperProblem } from '../../../tools/lms-import/src/pinGuard.ts';
 import { lmsRpc, supabaseRest } from '../../../tools/lms-import/src/supabaseStore.ts';
 
@@ -40,21 +50,12 @@ const SUPABASE_URL = env('SUPABASE_URL');
 const SERVICE_ROLE_KEY = env('SUPABASE_SERVICE_ROLE_KEY');
 const PEPPER = env('LMS_PIN_PEPPER');
 
-const HEADERS = {
-  'content-type': 'application/json',
-  'cache-control': 'no-store',
-  'access-control-allow-origin': '*',
-  'access-control-allow-headers': 'authorization, content-type',
-  'access-control-allow-methods': 'POST, OPTIONS',
-  'access-control-max-age': '86400',
-};
-
-const answer = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: HEADERS });
+const answer = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: SIGN_IN_HEADERS });
 
 const rpc = lmsRpc(supabaseRest(SUPABASE_URL, SERVICE_ROLE_KEY));
 
 Deno.serve(async (request: Request) => {
-  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: HEADERS });
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: SIGN_IN_HEADERS });
   const missing = [
     ['SUPABASE_URL', SUPABASE_URL],
     ['SUPABASE_SERVICE_ROLE_KEY', SERVICE_ROLE_KEY],
@@ -66,15 +67,5 @@ Deno.serve(async (request: Request) => {
   const weak = pepperProblem(PEPPER);
   if (weak) return answer(503, { error: `lms-signin: ${weak}` });
 
-  // A body whose declared length is over the limit is refused unread; one
-  // without a declared length is read, and handleSignIn refuses it if long.
-  if (Number(request.headers.get('content-length') ?? '0') > MAX_BODY) {
-    return answer(413, { error: 'That request is too large.' });
-  }
-  const body = request.method === 'POST' ? await request.text() : '';
-  const out = await handleSignIn(
-    { method: request.method, body, ip: clientIp(request.headers.get('x-forwarded-for')) },
-    { rpc, pepper: PEPPER },
-  );
-  return answer(out.status, out.body);
+  return serveSignIn(request, { rpc, pepper: PEPPER });
 });

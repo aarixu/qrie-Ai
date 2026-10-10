@@ -182,7 +182,10 @@ grant execute on function lms.attach_parent(uuid, uuid, text, text) to service_r
 --   same secret, so this table alone cannot be searched for PINs), the wrong
 --   tries in a row, and until when the ID is locked.
 -- sign_in_ip: per caller address, the tries not yet proven right in its
---   current 15-minute window.
+--   current 15-minute window. The address is the key lms-signin's callerKey
+--   reads (tools/lms-import/src/signIn.ts): one address, an IPv6 /64, or
+--   every address in the x-forwarded-for chain, as their SHA-256 when they
+--   run longer than the 64 characters this table keeps.
 --
 -- pin_guard_try: counts the try BEFORE the PIN is checked, in one
 --   update ... returning, so tries sent at the same moment queue on the row
