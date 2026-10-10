@@ -258,6 +258,31 @@ describe('a request', () => {
     );
   });
 
+  it('a school student restored after verification is not erased: Erase is refused at the start and again at the finish', async () => {
+    const other = await buildSchool(db, 'ERB');
+    const disable = () =>
+      call(aal2(ops), 'school_person_disable', { p_code: 'ERB', p_login: 'ERB-101', p_reason: 'left the school', p_env: 'TEST' });
+    // What lms.restore_account does when the school admin re-admits the child.
+    const restore = () => db.query(`update lms.account set left_at = null where user_id = $1`, [other.kid8a]);
+    const status = async (id: string) =>
+      (await one<{ status: string }>(`select status from admin.erasure_request where id = $1`, [id])).status;
+    const leftFirst = /mark this child as left first \(the school admin, or Disable on their card\)/;
+    await disable();
+    const id = (await intake(aal2(ops), { p_code: 'ERB', p_login: 'ERB-101', p_reference: 'LETTER 9' })).requestId;
+    await verify(aal2(ops), id);
+    await restore();
+    await expect(prepare(fresh(owner), id)).rejects.toThrow(leftFirst);
+    expect(await status(id)).toBe('verified');
+    await disable();
+    await prepare(fresh(owner), id);
+    expect(await status(id)).toBe('erasing');
+    await restore();
+    await expect(prepare(fresh(owner), id)).rejects.toThrow(leftFirst);
+    await expect(complete(id, 0)).rejects.toThrow(leftFirst);
+    expect(await status(id)).toBe('erasing');
+    expect((await one<{ n: number }>(`select count(*)::int as n from lms.account where user_id = $1`, [other.kid8a])).n).toBe(1);
+  });
+
   it('a direct user is erased the same way and their solo organisation goes with them', async () => {
     const solo = await db.query<{ id: string }>(
       `select o.id from public.organization o join public.membership m on m.org_id = o.id where m.user_id = $1 and o.kind = 'solo'`,

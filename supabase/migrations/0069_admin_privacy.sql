@@ -3,7 +3,9 @@
 -- ERASURE HAS ONE DOOR. A request is recorded (owner or ops) with a reference
 -- that is never an email address or a phone number, and no requester details
 -- (ruling R21). It is verified (owner or ops); a school student must first be
--- marked as left (ruling R19). Only the owner, with a fresh code, starts the
+-- marked as left (ruling R19), and still be marked as left when the erasure
+-- starts and again when it finishes (a school admin may restore a child in
+-- between). Only the owner, with a fresh code, starts the
 -- erasure (admin.erasure_prepare, called by admin-api), which lists the child's
 -- homework photos; admin-api deletes them through the Storage API and then
 -- calls admin.erasure_complete with the service role. That refuses while any
@@ -331,6 +333,11 @@ begin
   if r.id is null or r.status not in ('verified', 'erasing') then
     raise exception 'only a verified request is erased';
   end if;
+  -- R19 again: the child may have been restored since the request was verified.
+  if r.subject_kind = 'school-student'
+     and exists (select 1 from lms.account a where a.user_id = r.user_id and a.left_at is null) then
+    raise exception 'mark this child as left first (the school admin, or Disable on their card)';
+  end if;
   if r.status = 'verified' then
     perform set_config('admin.session', 'on', true);
     update admin.erasure_request
@@ -361,10 +368,17 @@ declare
   log_lines integer := 0;
   solo_orgs uuid[];
   photos integer := greatest(coalesce(p_objects_removed, 0), 0);
+  still_enrolled boolean;
 begin
   select * into r from admin.erasure_request where id = p_request for update;
   if r.id is null or r.status <> 'erasing' then
     raise exception 'this request is not being erased';
+  end if;
+  -- R19 once more, with the account row locked, so a restore cannot land
+  -- between this check and the delete below.
+  select a.left_at is null into still_enrolled from lms.account a where a.user_id = r.user_id for update;
+  if r.subject_kind = 'school-student' and coalesce(still_enrolled, false) then
+    raise exception 'mark this child as left first (the school admin, or Disable on their card)';
   end if;
   select count(*)::int into left_over
     from storage.objects o
