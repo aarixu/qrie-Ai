@@ -4,7 +4,8 @@ import type { NavGroup, NavItem, SidebarData } from '@/components/layout/types';
 /**
  * The sidebar and the Ctrl+K menu for one staff role: an item is kept when it
  * names no roles, names this one, or the role is the owner's (admin.require_staff
- * lets the owner through everywhere). A group left with no items is dropped.
+ * lets the owner through everywhere). A collapsible item left with no sub-items
+ * is dropped, and so is a group left with no items.
  * The database refuses a page's read to anyone else whatever is shown.
  */
 export function navFor(role: Me['role'], data: SidebarData): NavGroup[] {
@@ -14,7 +15,8 @@ export function navFor(role: Me['role'], data: SidebarData): NavGroup[] {
       ...g,
       items: g.items
         .filter((i) => sees(i.roles))
-        .map((i) => (i.items ? { ...i, items: i.items.filter((s) => sees(s.roles)) } : i)) as NavItem[],
+        .map((i) => (i.items ? { ...i, items: i.items.filter((s) => sees(s.roles)) } : i))
+        .filter((i) => !i.items || i.items.length > 0) as NavItem[],
     }))
     .filter((g) => g.items.length > 0);
 }

@@ -19,9 +19,10 @@ import { sidebarData } from './layout/data/sidebar-data';
 import { ScrollArea } from './ui/scroll-area';
 
 /**
- * Ctrl+K: jump to any page this role sees in the sidebar (lib/nav.ts), jump
- * to a school (by its code or name: the list of schools is read once, the
- * first time the menu opens), or change the theme.
+ * Ctrl+K: jump to any page this role sees in the sidebar (lib/nav.ts; a
+ * collapsible's pages are listed as "<its title>: <page>", such as
+ * "Charts: Money"), jump to a school (by its code or name: the list of
+ * schools is read once, the first time the menu opens), or change the theme.
  * A later plan may add "find a person".
  */
 export function CommandMenu() {
@@ -53,15 +54,17 @@ export function CommandMenu() {
           <CommandEmpty>Nothing matches.</CommandEmpty>
           {navFor(me.role, sidebarData).map((group) => (
             <CommandGroup key={group.title} heading={group.title}>
-              {group.items.map((item, i) =>
-                item.url ? (
-                  <CommandItem key={`${item.title}-${i}`} value={item.title} onSelect={() => run(() => navigate({ to: item.url }))}>
-                    <div className='flex size-4 items-center justify-center'>
-                      <ArrowRight className='size-2 text-muted-foreground/80' />
-                    </div>
-                    {item.title}
-                  </CommandItem>
-                ) : null,
+              {group.items.flatMap((item, i) =>
+                (item.url ? [{ title: item.title, url: item.url }] : (item.items ?? []).map((s) => ({ title: `${item.title}: ${s.title}`, url: s.url }))).map(
+                  (link) => (
+                    <CommandItem key={`${link.title}-${i}`} value={link.title} onSelect={() => run(() => navigate({ to: link.url }))}>
+                      <div className='flex size-4 items-center justify-center'>
+                        <ArrowRight className='size-2 text-muted-foreground/80' />
+                      </div>
+                      {link.title}
+                    </CommandItem>
+                  ),
+                ),
               )}
             </CommandGroup>
           ))}
