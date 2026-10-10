@@ -1,6 +1,14 @@
 export { libraryIndex } from './graph.ts';
 export { loadOutcomes } from './outcomes.ts';
 export {
+  handleBrain,
+  runBrain,
+  type BrainAnswer,
+  type BrainCall,
+  type BrainDeps,
+  type BrainRun,
+} from './run.ts';
+export {
   DRAIN_DEFAULTS,
   MAX_ATTEMPTS,
   drainBrainQueue,

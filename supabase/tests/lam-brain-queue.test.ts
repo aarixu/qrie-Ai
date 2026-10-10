@@ -38,7 +38,7 @@ const queued = async (user: string): Promise<Queued | undefined> =>
 const clear = () => db.query(`delete from public.brain_queue`);
 
 /** A sitting and `n` answers in it, inserted by the owner in one statement. */
-async function answers(user: string, n: number, session = crypto.randomUUID()): Promise<string> {
+async function answers(user: string, n: number, session: string = crypto.randomUUID()): Promise<string> {
   await db.query(
     `insert into public.learning_session (id, org_id, user_id, source, started_at)
      values ($1, $2, $3, 'quiz', now()) on conflict do nothing`,

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { think } from '../../../packages/lms-brain/src/index.ts';
+import { drainBrainQueue } from '../../../packages/lms-brain/src/index.ts';
 import {
   createLmsClient,
   pgliteTransport,
@@ -133,7 +133,8 @@ describe('the brain, against a known answer', () => {
       hw,
       Object.fromEntries(rows.map((r) => [r.id, r.correct_index])),
     );
-    await think(db, [user]);
+    // The hand-in queued them (0108); the brain's drain reads it.
+    expect(await drainBrainQueue(db)).toMatchObject({ thought: 1, waiting: 0 });
 
     const after = standingOf(await c.teacher.classInsights(c.sectionId, c.subjectId), p.loginId, p.topic, seeded)!;
     expect(after.answers).toBe(before.answers + rows.length);

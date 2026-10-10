@@ -4,7 +4,7 @@ import http from 'node:http';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
 import type { PGlite } from '@electric-sql/pglite';
-import { think } from '../../../packages/lms-brain/src/index.ts';
+import { drainBrainQueue, runBrain } from '../../../packages/lms-brain/src/index.ts';
 import { AI_OFF } from '../../../packages/lms-client/src/backend.ts';
 import { DRAFT_MODEL } from '../../../packages/lms-client/src/drafts.ts';
 import { pgliteTransport } from '../../../packages/lms-client/src/transport.ts';
@@ -71,6 +71,8 @@ export function diskWork(dir: string): WorkStore {
 }
 
 const SESSION_MS = 12 * 60 * 60 * 1000;
+/** The demo's brain drains the whole queue each time: one school, on one machine. */
+const ALL = { maxLearners: Infinity, maxMs: Infinity };
 const SIGNED_URL_MS = 10 * 60 * 1000;
 const MAX_BODY = 6 * 1024 * 1024;
 const LOCAL_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d{1,5})?$/;
@@ -237,10 +239,12 @@ export async function startDemoServer(opts: {
       } catch (e) {
         throw new HttpError(400, (e as Error).message);
       }
-      // The brain reads every hand-in and practice answer as it lands, so a teacher's view is
-      // never behind the answers. (On the hosted project nothing does this
-      // yet: final plan, L6.)
-      if (call[2] === 'submit_mcq' || call[2] === 'check_practice_answer') await think(db, [me]);
+      // Every answer a call wrote put its learner on public.brain_queue
+      // (0108); the queue is drained, whole, before the call is answered, so
+      // a teacher's view is never behind the answers. (The hosted project
+      // drains it with supabase/functions/brain on a schedule, once that is
+      // deployed.)
+      await drainBrainQueue(db, ALL);
       return send(res, 200, body);
     }
 
@@ -310,18 +314,15 @@ export async function startDemoServer(opts: {
   });
   await new Promise<void>((resolve) => server.listen(opts.port ?? 0, '127.0.0.1', resolve));
 
-  // What pg_cron does on the hosted project (0030): every half minute, hand
-  // in the test attempts whose time has run out, then let the brain read them.
+  // What pg_cron does on the hosted project: every half minute, hand in the
+  // test attempts whose time has run out (0030), then one run of the brain,
+  // as supabase/functions/brain does there (packages/lms-brain run.ts: the
+  // settle pass, then the queue, which the hand-ins just joined).
   const finalizer = setInterval(() => {
     void (async () => {
-      const { rows } = await db.query<{ n: number }>(`select lms.finalize_tests() as n`);
-      if (!rows[0]?.n) return;
-      const { rows: kids } = await db.query<{ id: string }>(
-        `select distinct student_user_id as id from lms.submission
-          where kind = 'mcq' and submitted_at > now() - interval '2 minutes'`,
-      );
-      await think(db, kids.map((k) => k.id));
-    })().catch((e: unknown) => console.error('finalize_tests failed:', e));
+      await db.query(`select lms.finalize_tests()`);
+      await runBrain(db, ALL);
+    })().catch((e: unknown) => console.error('finalize_tests or the brain failed:', e));
   }, 30_000);
   const { port } = server.address() as AddressInfo;
   return {

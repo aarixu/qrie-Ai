@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { SUPABASE_SHIM, migrationFiles, migrationSql } from '../../../supabase/tests/harness.ts';
-import { think, type Sql, type Tx } from '../src/index.ts';
+import { drainBrainQueue, think, type Sql, type Tx } from '../src/index.ts';
 
 /**
  * TWO think() RUNS AT ONCE, ON A REAL POSTGRES (review MF9).
@@ -17,7 +17,9 @@ import { think, type Sql, type Tx } from '../src/index.ts';
  * the second one's insert meets the first one's rows and fails on the primary
  * key), they leave exactly what one run leaves, and a reader polling all the
  * while never sees the learner with no rows (without the transaction it sees
- * the moment between the delete and the insert).
+ * the moment between the delete and the insert). And two drains of the brain
+ * queue at once (drain.ts, Task 9) think about a queued learner once between
+ * them, and leave the queue empty.
  */
 
 const URL_ENV = process.env.LAM_PG_URL;
@@ -113,6 +115,23 @@ describe.skipIf(!URL_ENV)('think() under real concurrency (LAM_PG_URL)', () => {
 
     expect(runs.map((r) => r.status)).toEqual(['fulfilled', 'fulfilled', 'fulfilled']);
     expect([...seen]).toEqual([once.length]);
+    expect(await rowsOf()).toEqual(once);
+  }, 120_000);
+
+  it('two drains at once think about a queued learner once between them, and empty the queue', async () => {
+    const once = await rowsOf();
+    await sql.unsafe(
+      `insert into public.brain_queue (user_id) values ($1)
+       on conflict (user_id) do update set ticket = nextval('public.brain_queue_ticket')`,
+      [kid],
+    );
+    const all = { maxLearners: Infinity, maxMs: Infinity };
+    const runs = await Promise.all([drainBrainQueue(db, all), drainBrainQueue(db, all)]);
+
+    expect(runs.reduce((n, r) => n + r.thought, 0)).toBe(1);
+    expect(runs.reduce((n, r) => n + r.failed, 0)).toBe(0);
+    const [{ n }] = await sql.unsafe(`select count(*)::int as n from public.brain_queue`);
+    expect(n).toBe(0);
     expect(await rowsOf()).toEqual(once);
   }, 120_000);
 });

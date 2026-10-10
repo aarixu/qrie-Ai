@@ -37,10 +37,11 @@ import { libraryIndex } from './graph.ts';
  * IT, which takes a run over an hour after the answer arrived. A run straight
  * after a hand-in is too soon for that hand-in, so `settleDue` thinks every
  * learner whose snapshot is behind their settled evidence; it has to run
- * between that hour and the purge's cutoff. Nothing on the hosted project
- * runs think() or settleDue yet (Task 9's brain function is to), and an
- * answer the snapshot does not hold when the purge deletes it is lost to the
- * model. The snapshot is the fold's own model, so it keeps a wrong idea's
+ * between that hour and the purge's cutoff. The brain function
+ * (supabase/functions/brain; run.ts) runs it, through the queue, on every
+ * call, but it is not deployed or scheduled yet, so nothing on the hosted
+ * project runs think() or the settle pass, and an answer the snapshot does
+ * not hold when the purge deletes it is lost to the model. The snapshot is the fold's own model, so it keeps a wrong idea's
  * wording as the phone sent it (only what is written to concept_state is
  * replaced by the bank's); the learner reads their own row (0013), and the
  * lms functions read only learner_model's cursor and updated_at, never
@@ -72,9 +73,10 @@ import { libraryIndex } from './graph.ts';
  * model or the next one, never half of one.
  *
  * Writes as the database owner or service role — concept_state has no
- * browser write policy (0013). WHERE THIS RUNS: the demo school's server,
- * after every hand-in. On the hosted project nothing runs it yet; that is
- * open work in the final plan (L6).
+ * browser write policy (0013). WHERE THIS RUNS: drain.ts, for every learner
+ * an answer put on public.brain_queue (0108): the demo school's server drains
+ * the queue after every lms call, and supabase/functions/brain is to drain it on
+ * the hosted project once it is deployed and scheduled (Aarav's step).
  */
 
 /** Something that runs a query: a database, or a transaction on one. */

@@ -7,7 +7,7 @@ import { pgliteStore } from '../../lms-import/src/pgliteStore.ts';
 import { planImport, type SchoolConfig } from '../../lms-import/src/plan.ts';
 import { readStudents, readTeachers } from '../../lms-import/src/sheet.ts';
 import { libraryItems, loadBanks, type LibraryItem } from '../../lms-library/src/library.ts';
-import { loadOutcomes, think } from '../../../packages/lms-brain/src/index.ts';
+import { drainBrainQueue, loadOutcomes } from '../../../packages/lms-brain/src/index.ts';
 import { setPin } from './auth.ts';
 import { demoLogoPng } from './logo.ts';
 
@@ -41,9 +41,11 @@ import { demoLogoPng } from './logo.ts';
  *      the school's events (0029). Run before the brain, but none of it
  *      reaches the ledger: ticks and paper marks are not answers.
  *   6. The brain (packages/lms-brain) folds every student's answers into
- *      concept_state, as the demo server does after each hand-in. It is
- *      given the ledger only, never the planted list. It runs before step
- *      12, whose practice goes to the children it finds.
+ *      concept_state: every answer put its student on public.brain_queue
+ *      (0108), and the seed drains the whole queue, as the demo server does
+ *      after each hand-in. It is given the ledger only, never the planted
+ *      list. It runs before step 12, whose practice goes to the children it
+ *      finds.
  *
  * Only step 4's timestamps, and the dates in step 3, are written directly
  * (as the database owner); everything else goes through the real paths.
@@ -365,8 +367,9 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   // (0103); the same one in a second sitting is what the brain confirms.
   await seedPlantedPractice(db, plantedChoices);
 
-  // 6. The brain. It is given the ledger and nothing else — not `planted`.
-  await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
+  // 6. The brain. It is given the ledger and nothing else — not `planted`:
+  // every learner the answers queued, the whole queue at once.
+  await drainBrainQueue(db, { maxLearners: Infinity, maxMs: Infinity });
 
   // 12. Practice for some children (0040): Neha's, in 8A Mathematics, for the
   // children who show the class's most-shown misconception.

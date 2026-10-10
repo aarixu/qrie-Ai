@@ -283,3 +283,26 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   from `rebuildFromLedger` with the outbox's unsent events; it takes the rebuild only when it accounts for everything
   the device holds, else retries at most every 10 minutes. Limit, stated in the code: one page of the server ledger
   (1,000) and its 90 days, so a longer history keeps the flag set. Task 11 replaces this base with the server's model.
+
+## Task 9 as built (2026-10-10)
+
+- `public.brain_queue` (0108): one row per learner, put there by a statement-level trigger on every
+  `ledger_event` insert, whoever makes it. MF11 asked the trigger to move `enqueued_at`; it takes a new **ticket**
+  from a sequence instead, and the drain deletes a row only if its ticket is still the one it read, so an answer
+  landing mid-think keeps its learner queued (two writers' `now()` can commit in either order, a sequence taken
+  under the row lock cannot). `enqueued_at` stays the first wait, so the longest-waiting go first and a learner
+  who keeps answering is not starved. A new answer resets `attempts`/`last_error`. MF10: RLS on, everything
+  revoked from public/anon/authenticated, the trigger function is security definer and not executable by them.
+- `drainBrainQueue` (`packages/lms-brain/src/drain.ts`): reads a batch without row locks; per learner one
+  transaction with `pg_try_advisory_xact_lock` (busy -> left queued), `thinkLearner`, ticket-checked delete;
+  failures are counted and skipped after 5 (SF3); `maxLearners` 200 / `maxMs` 1000 by default.
+  `queueSettleDue` puts the settle pass's learners on the queue, so its limits apply to them too.
+- `runBrain` / `handleBrain` (`run.ts`): one run = settle pass + drain; the x-brain-secret / BRAIN_SECRET check
+  (401, or 503 while unset), POST only, counts-only answer and log line. `supabase/functions/brain` is the Deno
+  adapter (postgres.js `npm:postgres@3.4.5`, `prepare: false`, `sql.begin`), with a `deno.json` import map to
+  the package sources. The graph is imported as static JSON (`graphData.ts`, MF12), so nothing on the brain's
+  path reads the file system; `tests/brain-function.test.ts` walks every module the function reaches.
+- The demo server drains the whole queue after every lms call and runs `runBrain` every 30 s after
+  `finalize_tests`; the seed drains instead of calling `think()`.
+- Not run here: two drains at once on a real Postgres (`think.pg.test.ts`, gated on `LAM_PG_URL`), and the
+  function under Deno. Deploy, secret and schedule: `docs/ops/runbook.md`, "The brain" (Aarav's step).

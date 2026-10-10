@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "@ai-tutor/knowledge-graph": "../../../packages/knowledge-graph/src/index.ts",
+    "@ai-tutor/learner-model": "../../../packages/learner-model/src/index.ts",
+    "@ai-tutor/ledger": "../../../packages/ledger/src/index.ts",
+    "postgres": "npm:postgres@3.4.5"
+  }
+}

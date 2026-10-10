@@ -154,6 +154,16 @@ describe('the demo school', () => {
       expect(rows[0].wrong).toBe(rows[0].total);
     }
   });
+
+  it('has the brain read every answer the seed wrote, through its queue, leaving nobody waiting', async () => {
+    const { rows } = await db.query<{ queued: number; thought: number; answered: number }>(
+      `select (select count(*)::int from public.brain_queue) as queued,
+              (select count(*)::int from public.learner_model) as thought,
+              (select count(distinct user_id)::int from public.ledger_event) as answered`,
+    );
+    expect(rows[0].answered).toBeGreaterThan(0);
+    expect(rows[0]).toEqual({ queued: 0, thought: rows[0].answered, answered: rows[0].answered });
+  });
 });
 
 describe('signing in', () => {
@@ -231,6 +241,18 @@ describe('the two apps, joined', () => {
 
     const row = (await t.api.assignmentResults(hw)).find((x) => x.loginId === 'DEMO-8A-2')!;
     expect(row).toMatchObject({ submitted: true, machineCorrect: r.correct, machineTotal: 2 });
+
+    // The hand-in queued the child for the brain, and the server drained the
+    // queue before answering: their model has read it already.
+    const kid = login('DEMO-8A-2').userId;
+    const { rows: brain } = await db.query<{ queued: number; behind: number }>(
+      `select (select count(*)::int from public.brain_queue where user_id = $1) as queued,
+              (select count(*)::int from public.ledger_event e
+                 join public.learner_model lm on lm.user_id = e.user_id
+                where e.user_id = $1 and e.received_at > lm.folded_through_received_at) as behind`,
+      [kid],
+    );
+    expect(brain[0]).toEqual({ queued: 0, behind: 0 });
   });
 
   it('carries a photo of notebook work to the teacher, and to no other child', async () => {

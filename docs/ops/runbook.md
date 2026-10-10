@@ -187,6 +187,44 @@ older commit, but a migration that has been pushed is applied. There is no
 The safe intermediate step, when you are not sure whether a deploy is the problem,
 is §1: halt, look, then decide.
 
+### The brain (`supabase/functions/brain`) — NOT DEPLOYED YET
+
+Every answer puts its learner on `public.brain_queue` (migration 0108). The brain
+function takes them off: each call runs the settle pass, then folds queued learners
+into `concept_state` (at most 200, starting no new one after a second; the rest wait
+for the next call). Until it runs on a schedule, nothing on the hosted project writes
+`concept_state` (the standing, reviews and wrong ideas the apps read from it), and the nightly
+`purge_old_ledger` can delete answers the model never kept.
+
+```bash
+supabase db push                                     # 0100-0108 first; read what is pending
+supabase secrets set BRAIN_SECRET=<a long random string>
+supabase functions deploy brain --no-verify-jwt     # the secret header is its auth
+```
+
+Then schedule it from the SQL editor (needs the `pg_cron` and `pg_net` extensions;
+keep the secret in Vault, never in the job's text):
+
+```sql
+-- select vault.create_secret('<the same BRAIN_SECRET>', 'brain_secret');
+-- select cron.schedule('lam-brain', '30 seconds', $job$
+--   select net.http_post(
+--     url := 'https://<project-ref>.supabase.co/functions/v1/brain',
+--     headers := jsonb_build_object(
+--       'content-type', 'application/json',
+--       'x-brain-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'brain_secret')),
+--     body := '{}'::jsonb,
+--     timeout_milliseconds := 10000);
+-- $job$);
+```
+
+Each call logs one line of counts: `{"brain":{"settled":…,"thought":…,"events":…,"failed":…,"busy":…,"waiting":…,"stuck":…}}`.
+A growing `waiting` means the schedule is too slow for the school; `stuck` counts learners
+the brain failed on five times running (their error is in `brain_queue.last_error`; a
+new answer, or `update public.brain_queue set attempts = 0`, gives them another try).
+A call without the right `x-brain-secret` gets 401, and every call gets 503 while
+`BRAIN_SECRET` is unset.
+
 ---
 
 ## 7. Checking the money
