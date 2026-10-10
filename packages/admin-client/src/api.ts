@@ -20,13 +20,20 @@ export interface RelayStatus {
   capOverride: { previousUnits: number; revertOn: string } | null;
 }
 
+/** The stop's state alone (admin.stop_status, 0064): the one status read every staff role may make, finance included. */
+export interface StopStatus {
+  halted: boolean;
+  haltedReason: string | null;
+  haltedAt: string | null;
+}
+
 export interface Today {
   environment: string;
   generatedAt: string;
   relay: { halted: boolean; haltedReason: string | null; ceilingUnits: number; unitsToday: number; studentsNow: number };
   reports: { newCount: number; unsafeNew: number; oldestNewMinutes: number };
   classes: { pendingCount: number; oldestPendingHours: number };
-  contest: { entriesToday: number; dailyCap: number };
+  contest: { entriesToday: number; dailyCap: number; entriesOpen: boolean };
   schools: { code: string; name: string; plan: string | null; seats: number | null; seatsUsed: number; daysLeft: number | null }[];
   prices: { modelPriceRows: number };
   alarm: { lastCheckMinutesAgo: number | null };
@@ -35,7 +42,7 @@ export interface Today {
 
 export interface FlagRow {
   key: string;
-  kind: 'bool' | 'text' | 'tone';
+  kind: 'bool' | 'text' | 'tone' | 'version' | 'count';
   description: string;
   guarded: boolean;
   schoolScoped: boolean;
@@ -77,6 +84,7 @@ export interface StaffSetInput {
 export interface AdminClient {
   me(): Promise<Me>;
   relayStatus(): Promise<RelayStatus>;
+  stopStatus(): Promise<StopStatus>;
   setHalt(halted: boolean, reason: string, env: string): Promise<void>;
   setCaps(units: number, reason: string, env: string): Promise<void>;
   today(): Promise<Today>;
@@ -101,6 +109,7 @@ export function createAdminClient(t: AdminTransport): AdminClient {
   return {
     me: () => guard(async () => (await t.value('me')) as Me),
     relayStatus: () => guard(async () => (await t.value('relay_status')) as RelayStatus),
+    stopStatus: () => guard(async () => (await t.value('stop_status')) as StopStatus),
     async setHalt(halted, reason, env) {
       await guard(() => t.value('set_halt', { p_halted: halted, p_reason: reason, p_env: env }));
     },

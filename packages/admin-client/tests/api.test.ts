@@ -2,6 +2,7 @@
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { aal2, anonymousChild, fresh, makeStaff, setEnvironment, staleAmr, type Staff } from '../../../supabase/tests/admin-fixtures.ts';
+import { makeFinance } from '../../../supabase/tests/billing-fixtures.ts';
 import { freshDatabase } from '../../../supabase/tests/harness.ts';
 import { AdminError, createAdminClient, pgliteAdminTransport, type AdminClaims } from '../src/index.ts';
 
@@ -15,6 +16,7 @@ import { AdminError, createAdminClient, pgliteAdminTransport, type AdminClaims }
 let db: PGlite;
 let owner: Staff;
 let ops: Staff;
+let finance: { id: string; role: 'finance' };
 let child: string;
 
 beforeAll(async () => {
@@ -22,6 +24,7 @@ beforeAll(async () => {
   await setEnvironment(db);
   owner = await makeStaff(db, 'owner', 'Aarav');
   ops = await makeStaff(db, 'ops', 'Ops person');
+  finance = await makeFinance(db, 'Accounts');
   child = await anonymousChild(db);
 });
 afterAll(async () => {
@@ -49,6 +52,23 @@ describe('reading', () => {
     const flags = await as(aal2(ops)).flagList();
     const tutor = flags.find((f) => f.key === 'tutor.enabled');
     expect(tutor).toMatchObject({ kind: 'bool', guarded: true, schoolScoped: true, safeDefault: true, scope: null, value: null });
+  });
+
+  it('stopStatus() answers every staff role, finance included', async () => {
+    expect(await as(aal2(finance)).stopStatus()).toEqual({ halted: false, haltedReason: null, haltedAt: null });
+    const err = await as({ sub: child, aal: 'aal2', is_anonymous: true }).stopStatus().catch((e) => e);
+    expect(err).toBeInstanceOf(AdminError);
+    expect(err.code).toBe('not-allowed');
+  });
+
+  it('today() carries whether contest entries are open', async () => {
+    expect((await as(aal2(ops)).today()).contest).toEqual({ entriesToday: 0, dailyCap: 2000, entriesOpen: true });
+  });
+
+  it('flagList() reads the minimum builds as versions and the contest limit as a count', async () => {
+    const flags = await as(aal2(ops)).flagList();
+    expect(flags.find((f) => f.key === 'app.min_version.lms')?.kind).toBe('version');
+    expect(flags.find((f) => f.key === 'contest.daily_limit')).toMatchObject({ kind: 'count', safeDefault: 2000 });
   });
 });
 
