@@ -114,9 +114,10 @@ as $$
   end
 $$;
 
--- Whether this database's auth.users has a sign-in time (the hosted project's
--- auth.users has last_sign_in_at; the test harness's has none). Read from the
--- catalogue, which does not depend on the caller's column privileges.
+-- Whether this database's auth.users has a sign-in time column,
+-- last_sign_in_at (Supabase's auth.users documents one, UNVERIFIED on Qrie's
+-- project; the test harness's has none). Read from the catalogue, which does
+-- not depend on the caller's column privileges.
 create or replace function admin.signins_readable()
 returns boolean
 language sql stable security definer
