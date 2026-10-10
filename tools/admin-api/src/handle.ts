@@ -1,5 +1,6 @@
 import { importForSchool, Refused, resetPinForSchool, type AdminDeps } from '../../lms-import/src/admin.ts';
 import { newStaffPassword } from './password.ts';
+import { classRemoveRoute, eraseRoute } from './privacy.ts';
 
 /**
  * THE STAFF CONSOLE'S SERVICE CALLS, as the admin-api edge function serves
@@ -9,13 +10,17 @@ import { newStaffPassword } from './password.ts';
  *   POST …/reset-pin     {code, loginId, reason, env}            → {loginId, displayName, pin}
  *   POST …/staff-invite  {email, displayName, role, reason, env} → {userId, email, temporaryPassword}
  *   POST …/user-block    {userId, blocked, reason, env}          → {userId, blocked}
+ *   POST …/class-remove  {classId, action, reason, env}          → {classId, removed}
+ *   POST …/erase         {requestId, reason, env}                → {requestId, rows, photos, activityLogLines}
  *
  * Each call first asks the database AS THE CALLER, with their own token:
- * admin.api_gate, admin.staff_invite or admin.direct_user_block decide who may
- * act (staff, role, a recent authenticator code, the environment, a reason).
+ * admin.api_gate, admin.staff_invite, admin.direct_user_block,
+ * admin.class_remove_prepare or admin.erasure_prepare decide who may act
+ * (staff, role, a recent authenticator code, the environment, a reason).
  * Only then does anything happen with the service role. Adding people and new
  * PINs run the LMS lane's own code (tools/lms-import/src/admin.ts) for the
- * school the gate named, with the member of staff as the actor.
+ * school the gate named, with the member of staff as the actor. The two
+ * Storage routes are in ./privacy.ts.
  *
  * A refusal answers {error, code}; code is what the console's AdminError
  * branches on.
@@ -30,7 +35,7 @@ export class CallerError extends Error {
   }
 }
 
-export const CALLER_FUNCTIONS = ['api_gate', 'staff_invite', 'direct_user_block'] as const;
+export const CALLER_FUNCTIONS = ['api_gate', 'staff_invite', 'direct_user_block', 'class_remove_prepare', 'erasure_prepare'] as const;
 export type CallerFunction = (typeof CALLER_FUNCTIONS)[number];
 
 export interface AdminApiDeps {
@@ -44,12 +49,16 @@ export interface AdminApiDeps {
     setBanned(userId: string, banned: boolean): Promise<void>;
   };
   password?: () => string;
+  /** The Storage API with the service role (plan 5). Absent: the two routes answer 503 before anything changes. */
+  files?: { remove(bucket: 'classes' | 'lms-work', names: string[]): Promise<number> };
+  /** A service-role-only admin function (plan 5). */
+  serviceAdmin?(fn: 'class_files_removed' | 'erasure_complete', args: Record<string, unknown>): Promise<unknown>;
 }
 
 export interface ApiRequest { method: string; path: string; authorization?: string; body: unknown }
 export interface ApiReply { status: number; body: unknown }
 
-const ROUTES = ['import', 'reset-pin', 'staff-invite', 'user-block'] as const;
+const ROUTES = ['import', 'reset-pin', 'staff-invite', 'user-block', 'class-remove', 'erase'] as const;
 type Route = (typeof ROUTES)[number];
 
 const EMAIL = /^[^@\s]{1,64}@[^@\s]+\.[^@\s]{2,}$/;
@@ -145,6 +154,8 @@ export async function handleAdminApi(req: ApiRequest, deps: AdminApiDeps): Promi
       route === 'import' ? await importRoute(deps, auth, b)
       : route === 'reset-pin' ? await resetPinRoute(deps, auth, b)
       : route === 'staff-invite' ? await staffInviteRoute(deps, auth, b)
+      : route === 'class-remove' ? await classRemoveRoute(deps, auth, b)
+      : route === 'erase' ? await eraseRoute(deps, auth, b)
       : await userBlockRoute(deps, auth, b);
     return { status: 200, body: answer };
   } catch (e) {
