@@ -347,5 +347,6 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   `origin/lms` (1751c56).
 - What a hosted build needs from this lane: the 0100+ migrations pushed and the brain function deployed
   with its schedule (`docs/ops/runbook.md`, "The brain"). Until it runs, a hosted child's answers are kept
-  and queued but their labels, practice and review do not change; the demo server drains after every call,
+  and queued but what reads the brain's model (labels, practice ranked by weak spots and wrong ideas, review
+  due) does not change; the demo server drains after every call,
   the hosted project only on the brain's schedule.
