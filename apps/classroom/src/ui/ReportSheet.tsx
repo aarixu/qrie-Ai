@@ -349,6 +349,7 @@ export function ReportDone({
   sending,
   onRetry,
   onClose,
+  closeLabel = 'Back to the class',
 }: {
   outcome: ReportOutcome;
   /** What the safety screen made of the note, or null if it had no objection. */
@@ -362,6 +363,8 @@ export function ReportDone({
   sending: boolean;
   onRetry: () => void;
   onClose: () => void;
+  /** The last button's words: 'Back' when the sheet was opened outside a class. */
+  closeLabel?: string;
 }) {
   return (
     <div className="flex flex-col gap-3 text-center items-center">
@@ -421,7 +424,7 @@ export function ReportDone({
         onClick={onClose}
         className="mt-1 w-full bg-primary text-on-primary font-label-md text-label-md py-3 rounded-xl border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
       >
-        Back to the class
+        {closeLabel}
       </button>
     </div>
   );
@@ -443,12 +446,19 @@ export function ReportSheet({
    */
   spokenLine,
   onClose,
+  place = 'class',
 }: {
   lessonId?: string;
   topicRef?: string;
   beatId?: string | null;
   spokenLine?: string | null;
   onClose: () => void;
+  /**
+   * Where it was opened: in a class, or from the tutor's pause card
+   * (ui/AppConfigGate.tsx), outside any class. Only the dialog's name and the
+   * last button's words change.
+   */
+  place?: 'class' | 'app';
 }) {
   const [reason, setReason] = useState<ReportKind | null>(null);
   const [note, setNote] = useState('');
@@ -562,7 +572,7 @@ export function ReportSheet({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Report something in this class"
+      aria-label={place === 'app' ? 'Report something' : 'Report something in this class'}
       className="fixed inset-0 z-50 grid place-items-end sm:place-items-center bg-black/50 px-4 pb-4 sm:pb-0"
     >
       <div className="w-full max-w-md bg-surface-container-lowest rounded-[24px] p-card-padding shadow-lg font-body-md">
@@ -574,6 +584,7 @@ export function ReportSheet({
             sending={sending}
             onRetry={() => void send()}
             onClose={onClose}
+            closeLabel={place === 'app' ? 'Back' : 'Back to the class'}
           />
         ) : (
           <div className="flex flex-col gap-4">

@@ -1,6 +1,7 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { __resetAppConfigForTests, applyAppConfig } from '../src/lib/appConfig';
 import { AppConfigGate } from '../src/ui/AppConfigGate';
 
@@ -9,7 +10,9 @@ import { AppConfigGate } from '../src/ui/AppConfigGate';
  *
  * A banner above the app as plain text; an old build asked to update; the
  * tutor switched off shown as a pause. Both full-screen cards carry the
- * helplines, because they replace every screen, Help included (R25).
+ * helplines (R25). The update card replaces every screen. The pause card
+ * replaces the learning screens only: a child can still report something from
+ * it, and reach their account (Settings, Profile, Sign in) and Help.
  */
 
 const roots: Root[] = [];
@@ -24,15 +27,23 @@ afterEach(() => {
   __resetAppConfigForTests();
 });
 
-function mount(): HTMLElement {
+/** The gate in front of stand-in screens, starting at `at`. */
+function mount(at = '/'): HTMLElement {
   const host = document.body.appendChild(document.createElement('div'));
   const root = createRoot(host);
   roots.push(root);
   act(() =>
     root.render(
-      <AppConfigGate>
-        <p data-testid="app">The app</p>
-      </AppConfigGate>,
+      <MemoryRouter initialEntries={[at]}>
+        <AppConfigGate>
+          <Routes>
+            {['/settings', '/profile', '/signin', '/help'].map((path) => (
+              <Route key={path} path={path} element={<p data-testid="screen">{path}</p>} />
+            ))}
+            <Route path="*" element={<p data-testid="app">The app</p>} />
+          </Routes>
+        </AppConfigGate>
+      </MemoryRouter>,
     ),
   );
   return host;
@@ -85,5 +96,53 @@ describe('the gate', () => {
     // The banner comes before the pause card in the page.
     const card = [...host.querySelectorAll('h1, h2')].find((h) => h.textContent === 'The tutor is switched off for now')!;
     expect(banner.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});
+
+describe('while the tutor is switched off', () => {
+  const screen = (host: HTMLElement) => host.querySelector('[data-testid="screen"]')?.textContent ?? null;
+  const control = (host: HTMLElement, text: string) =>
+    [...host.querySelectorAll<HTMLElement>('a, button')].find((el) => el.textContent?.trim() === text) ?? null;
+
+  it("the child's account and Help stay open: Settings, Profile, Sign in and Help", () => {
+    for (const path of ['/settings', '/profile', '/signin', '/help']) {
+      const host = mount(path);
+      apply({ 'tutor.enabled': false });
+      expect(screen(host), path).toBe(path);
+      expect(host.textContent).not.toContain('The tutor is switched off for now');
+    }
+  });
+
+  it('every other screen shows the pause card, which leads to Settings and Help', () => {
+    const host = mount('/syllabus');
+    apply({ 'tutor.enabled': false });
+    expect(app(host)).toBeNull();
+    expect(host.textContent).toContain('The tutor is switched off for now');
+    act(() => control(host, 'Settings: sign out or delete your account')!.click());
+    expect(screen(host)).toBe('/settings');
+
+    const again = mount('/');
+    act(() => control(again, 'Help')!.click());
+    expect(screen(again)).toBe('/help');
+  });
+
+  it('the pause card opens the report sheet', async () => {
+    const host = mount('/');
+    apply({ 'tutor.enabled': false });
+    // The sheet is a lazy chunk; load it first so the wait below is React's, not the transform's.
+    await import('../src/ui/ReportSheet');
+    await act(async () => control(host, 'Report something')!.click());
+    await vi.waitFor(
+      async () => {
+        await act(async () => {});
+        expect(host.querySelector('[role="dialog"]')).not.toBeNull();
+      },
+      { timeout: 5_000 },
+    );
+    const sheet = host.querySelector('[role="dialog"]')!;
+    expect(sheet.getAttribute('aria-label')).toBe('Report something');
+    expect([...sheet.querySelectorAll('button')].some((b) => b.textContent === 'Send report')).toBe(true);
+    // The helplines stay on the card behind it.
+    for (const link of helplines(host)) expect(link).not.toBeNull();
   });
 });
