@@ -25,8 +25,8 @@ export interface ApiWorld {
   rpcCalls: string[];
   /** The next ban fails, as the auth service would with a 500. */
   failNextBan(): void;
-  /** The next Storage removal throws before deleting anything. */
-  failNextRemove(): void;
+  /** A Storage removal throws before deleting anything: the next one, or the one after `after` more succeed. */
+  failNextRemove(after?: number): void;
 }
 
 export function apiWorld(db: PGlite): ApiWorld {
@@ -35,7 +35,7 @@ export function apiWorld(db: PGlite): ApiWorld {
   const bans = new Map<string, boolean>();
   const rpcCalls: string[] = [];
   let banFailsOnce = false;
-  let removeFailsOnce = false;
+  let removeFailsAfter: number | null = null;
 
   function deps(): AdminApiDeps {
     const base = pgliteStore(db);
@@ -100,9 +100,12 @@ export function apiWorld(db: PGlite): ApiWorld {
       },
       files: {
         async remove(bucket, names) {
-          if (removeFailsOnce) {
-            removeFailsOnce = false;
-            throw new Error('storage 500');
+          if (removeFailsAfter !== null) {
+            if (removeFailsAfter === 0) {
+              removeFailsAfter = null;
+              throw new Error('storage 500');
+            }
+            removeFailsAfter -= 1;
           }
           const { rows } = await db.query<{ name: string }>(
             `delete from storage.objects where bucket_id = $1 and name = any($2::text[]) returning name`,
@@ -131,8 +134,8 @@ export function apiWorld(db: PGlite): ApiWorld {
     failNextBan() {
       banFailsOnce = true;
     },
-    failNextRemove() {
-      removeFailsOnce = true;
+    failNextRemove(after = 0) {
+      removeFailsAfter = after;
     },
   };
 }

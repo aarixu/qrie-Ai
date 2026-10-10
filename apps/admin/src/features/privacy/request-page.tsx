@@ -224,7 +224,7 @@ function EraseDialog({ open, onOpenChange, d, onDone }: { open: boolean; onOpenC
         <Label htmlFor='erase-confirm'>{d.loginId ? 'Type the login ID to confirm' : "Type the request's reference to confirm"}</Label>
         <Input id='erase-confirm' value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete='off' className='font-mono' />
         <p className='text-xs text-muted-foreground'>
-          If Storage does not remove the photos, nothing is erased: press Erase again.
+          If Storage stops partway, some photos may already be gone for good and nothing else is erased: press Erase again to finish.
         </p>
       </div>
     </WriteDialog>

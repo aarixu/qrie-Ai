@@ -15,6 +15,11 @@ import type { AdminApiDeps } from './handle.ts';
  * role report back (admin.class_files_removed deletes the catalogue row;
  * admin.erasure_complete deletes the child's rows), and the database refuses
  * that report while any of the files is still in Storage.
+ *
+ * Storage can stop partway: the batches before the failure are deleted for
+ * good, nothing else changes, and the 502 says so. Pressing again lists what
+ * is left and finishes. The counts reported at the end come from the
+ * database, which recorded how many files there were at the first press.
  */
 
 const BATCH = 100;
@@ -64,10 +69,12 @@ export async function classRemoveRoute(
     files,
     'classes',
     namesOf(prepared),
-    'The class is hidden, but Storage did not remove its files. Press again; it is safe to repeat.',
+    'The class is hidden, but Storage did not remove all of its files. Press again to finish; it is safe to repeat.',
   );
-  await serviceAdmin('class_files_removed', { p_class: classId, p_removed: removed });
-  return { classId, removed };
+  const done = (await serviceAdmin('class_files_removed', { p_class: classId, p_removed: removed })) as { removed?: unknown } | null;
+  // The database's count: every file the class had when it was hidden, even
+  // when an earlier press removed some of them before Storage stopped.
+  return { classId, removed: typeof done?.removed === 'number' ? done.removed : removed };
 }
 
 export async function eraseRoute(deps: AdminApiDeps, auth: string, b: Record<string, unknown>): Promise<unknown> {
@@ -81,7 +88,7 @@ export async function eraseRoute(deps: AdminApiDeps, auth: string, b: Record<str
     files,
     'lms-work',
     namesOf(prepared),
-    "Nothing was erased: Storage did not remove the child's photos. Press again; it is safe to repeat.",
+    "Some or none of the child's photos were removed; nothing else was erased. Press Erase again to finish; it is safe to repeat.",
   );
   return serviceAdmin('erasure_complete', { p_request: requestId, p_objects_removed: removed });
 }

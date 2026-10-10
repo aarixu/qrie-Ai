@@ -5,7 +5,8 @@ import { aal2, fresh, makeStaff, setEnvironment, type Staff } from '../../../sup
 import { rpc } from '../../../supabase/tests/billing-fixtures.ts';
 import { buildSchool, type School } from '../../../supabase/tests/fixtures.ts';
 import { freshDatabase } from '../../../supabase/tests/harness.ts';
-import { classRow, populateChild } from '../../../supabase/tests/safety-fixtures.ts';
+import { seat } from '../../../supabase/tests/fixtures.ts';
+import { classRow, photo, populateChild } from '../../../supabase/tests/safety-fixtures.ts';
 import { handleAdminApi, type AdminApiDeps } from '../src/handle.ts';
 import { apiWorld, type ApiWorld } from './deps.ts';
 
@@ -29,6 +30,9 @@ let school: School;
 let kid: { login: string; parent: string; assignment: string; photo: string };
 
 type Reply = { status: number; body: Record<string, unknown> };
+const CLASS_PARTLY = 'The class is hidden, but Storage did not remove all of its files. Press again to finish; it is safe to repeat.';
+const ERASE_PARTLY =
+  "Some or none of the child's photos were removed; nothing else was erased. Press Erase again to finish; it is safe to repeat.";
 const send = async (route: string, body: unknown, token: string, d: AdminApiDeps = world.deps()) =>
   (await handleAdminApi(
     { method: 'POST', path: `/functions/v1/admin-api/${route}`, authorization: `Bearer ${token}`, body },
@@ -112,7 +116,7 @@ describe('class-remove', () => {
     world.failNextRemove();
     expect(await send('class-remove', removeBody('cls-storage', 'retract'), 'ops-fresh')).toEqual({
       status: 502,
-      body: { error: 'The class is hidden, but Storage did not remove its files. Press again; it is safe to repeat.', code: 'other' },
+      body: { error: CLASS_PARTLY, code: 'other' },
     });
     expect(await classStatus('cls-storage')).toBe('retracted');
     expect(await filesOf('cls-storage')).toBe(3);
@@ -137,11 +141,11 @@ describe('erase', () => {
     expect(await requestStatus(requestId)).toBe('verified');
   });
 
-  it('when a photo will not delete, nothing is erased and pressing again finishes it', async () => {
+  it('when Storage fails before removing a photo, nothing else is erased and pressing again finishes it', async () => {
     world.failNextRemove();
     expect(await send('erase', { requestId, reason: 'verified request', env: 'TEST' }, 'owner-fresh')).toEqual({
       status: 502,
-      body: { error: "Nothing was erased: Storage did not remove the child's photos. Press again; it is safe to repeat.", code: 'other' },
+      body: { error: ERASE_PARTLY, code: 'other' },
     });
     expect(await requestStatus(requestId)).toBe('erasing');
     expect(await count(`select count(*)::int as n from lms.account where user_id = $1`, [school.kid8a])).toBe(1);
@@ -162,6 +166,50 @@ describe('erase', () => {
       [requestId],
     );
     expect(erased.rows).toEqual([{ actor: owner.id }]);
+  });
+});
+
+describe('Storage that stops partway through more than one batch of 100', () => {
+  it('a class: the answer says not all files went, and the finish counts every file the class had when it was hidden', async () => {
+    const files = Array.from({ length: 150 }, (_, i) => `beats/${i}.json`);
+    await classRow(db, 'cls-many', { files });
+    world.failNextRemove(1);
+    expect(await send('class-remove', removeBody('cls-many', 'retract'), 'ops-fresh')).toEqual({
+      status: 502, body: { error: CLASS_PARTLY, code: 'other' },
+    });
+    expect(await filesOf('cls-many')).toBe(50);
+    expect(await send('class-remove', removeBody('cls-many', 'retract'), 'ops-fresh')).toEqual({
+      status: 200, body: { classId: 'cls-many', removed: 150 },
+    });
+    const review = await one<{ files: number }>(
+      `select files from admin.class_review where class_id = 'cls-many' and action = 'files-removed'`,
+    );
+    expect(review.files).toBe(150);
+  });
+
+  it('an erasure: the answer says some photos may be gone and nothing else is, and the finish counts every photo', async () => {
+    const kid3 = await seat(db, school.org, 'student', 'APX-103', 'Kabir');
+    for (let i = 0; i < 150; i += 1) await photo(db, school.org, kid.assignment, kid3, `page-${i}.jpg`);
+    const request = await verifiedRequest('APX-103', 'MAIL 7');
+    const photosOf = () =>
+      count(`select count(*)::int as n from storage.objects where bucket_id = 'lms-work' and split_part(name, '/', 3) = $1`, [kid3]);
+    world.failNextRemove(1);
+    expect(await send('erase', { requestId: request, reason: 'verified request', env: 'TEST' }, 'owner-fresh')).toEqual({
+      status: 502, body: { error: ERASE_PARTLY, code: 'other' },
+    });
+    expect(await photosOf()).toBe(50);
+    expect(await count(`select count(*)::int as n from lms.account where user_id = $1`, [kid3])).toBe(1);
+    const ok = await send('erase', { requestId: request, reason: 'verified request', env: 'TEST' }, 'owner-fresh');
+    expect(ok.status).toBe(200);
+    expect(ok.body).toMatchObject({ requestId: request, photos: 150 });
+    expect(await photosOf()).toBe(0);
+    const done = await one<{ tallies: { photos: number } }>(`select tallies from admin.erasure_request where id = $1`, [request]);
+    expect(done.tallies.photos).toBe(150);
+    const audit = await one<{ details: { photos: number } }>(
+      `select details from admin.audit_event where action = 'child-erased' and target_id = $1`,
+      [request],
+    );
+    expect(audit.details.photos).toBe(150);
   });
 });
 

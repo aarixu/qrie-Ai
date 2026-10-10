@@ -35,7 +35,12 @@ create table if not exists admin.class_review (
   actor_name text not null,
   at timestamptz not null default now(),
   reason text not null default '' check (char_length(reason) <= 500),
-  files integer
+  -- files-removed rows: how many files went. retracted and rejected rows:
+  -- files_listed, how many Storage held when the class was hidden (not shown;
+  -- the files-removed count is the larger of it and the last attempt's count,
+  -- so a retry after Storage stopped partway still counts every file).
+  files integer,
+  files_listed integer
 );
 create index if not exists class_review_class on admin.class_review (class_id, id);
 revoke all on admin.class_review from public, anon, authenticated, service_role;
@@ -245,9 +250,11 @@ begin
   if p.review_status <> 'retracted' then
     perform set_config('admin.session', 'on', true);
     update public.prepared_class set review_status = 'retracted', retracted_at = now() where id = p.id;
-    insert into admin.class_review (class_id, topic_ref, title, version, action, actor, actor_name, reason)
+    insert into admin.class_review (class_id, topic_ref, title, version, action, actor, actor_name, reason, files_listed)
     values (p.id, p.topic_ref, p.title, p.version, case when p_action = 'retract' then 'retracted' else 'rejected' end,
-            me.user_id, me.display_name, left(btrim(p_reason), 500));
+            me.user_id, me.display_name, left(btrim(p_reason), 500),
+            (select count(*)::int from storage.objects o
+              where o.bucket_id = 'classes' and o.name like admin.like_escape(p.id) || '/%'));
     perform admin.audit(me, case when p_action = 'retract' then 'class-retracted' else 'class-rejected' end, 'class', p.id,
       p_reason, jsonb_build_object('classId', p.id, 'topicRef', p.topic_ref, 'version', p.version));
   end if;
@@ -260,7 +267,9 @@ end;
 $$;
 
 -- admin-api's report, with the service role, once Storage has deleted the
--- files: the catalogue row goes, and the class_review row says how many.
+-- files: the catalogue row goes, and the class_review row says how many (the
+-- files Storage held when the class was hidden, or the last attempt's count
+-- if that is larger).
 create or replace function admin.class_files_removed(p_class text, p_removed integer)
 returns jsonb
 language plpgsql volatile security definer
@@ -271,6 +280,7 @@ declare
   left_over integer;
   last_review admin.class_review;
   who admin.platform_staff;
+  removed integer;
 begin
   select * into p from public.prepared_class x where x.id = p_class for update;
   if p.id is null or p.review_status <> 'retracted' then
@@ -284,19 +294,20 @@ begin
   select * into last_review from admin.class_review cr
    where cr.class_id = p.id and cr.action in ('retracted', 'rejected') order by cr.id desc limit 1;
   select * into who from admin.platform_staff s where s.user_id = last_review.actor;
+  removed := greatest(coalesce(last_review.files_listed, 0), coalesce(p_removed, 0), 0);
   perform set_config('admin.session', 'on', true);
   insert into admin.class_review (class_id, topic_ref, title, version, action, actor, actor_name, reason, files)
   values (p.id, p.topic_ref, p.title, p.version, 'files-removed', last_review.actor,
-          coalesce(last_review.actor_name, 'service role'), coalesce(last_review.reason, ''), greatest(coalesce(p_removed, 0), 0));
+          coalesce(last_review.actor_name, 'service role'), coalesce(last_review.reason, ''), removed);
   delete from public.prepared_class where id = p.id;
   if who.user_id is null then
     perform admin.audit_service('class-files-removed', 'class', p.id, '',
-      jsonb_build_object('files', greatest(coalesce(p_removed, 0), 0), 'topicRef', p.topic_ref));
+      jsonb_build_object('files', removed, 'topicRef', p.topic_ref));
   else
     perform admin.audit(who, 'class-files-removed', 'class', p.id, '',
-      jsonb_build_object('files', greatest(coalesce(p_removed, 0), 0), 'topicRef', p.topic_ref));
+      jsonb_build_object('files', removed, 'topicRef', p.topic_ref));
   end if;
-  return jsonb_build_object('classId', p.id, 'removed', greatest(coalesce(p_removed, 0), 0));
+  return jsonb_build_object('classId', p.id, 'removed', removed);
 end;
 $$;
 

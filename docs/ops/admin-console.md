@@ -462,11 +462,15 @@ the local test database only, and the pages have not been opened in a browser.
   and its row goes. Open the class: "Files in Storage" should read 0. Copies
   served by Storage's CDN may stay reachable for up to its cache lifetime
   (UNVERIFIED).
-- **Retract answers that Storage did not remove the files.** The class is
-  already hidden. Press Retract again (the Removed tab lists it as hidden with
-  its files still in Storage); it is safe to repeat.
-- **An erasure stops with photos left** ("Nothing was erased: Storage did not
-  remove the child's photos"). Nothing was erased. Press Erase again.
+- **Retract answers that Storage did not remove all of the files.** The class
+  is already hidden; some of its files may be gone. Press Retract again (the
+  Removed tab lists it as hidden with its files still in Storage) to finish;
+  it is safe to repeat. The file count recorded at the end includes the files
+  the first press removed.
+- **An erasure stops with photos left** ("Some or none of the child's photos
+  were removed; nothing else was erased"). Some photos may already be gone for
+  good; no other record was touched. Press Erase again to finish. The photo
+  count recorded at the end includes the ones the first press removed.
 - **The 30 readings a day are used up on a busy day.** The next India day
   resets them; or change the constant in a reviewed migration.
 - **A contest entrant corrects their entry after the purge day.** Their

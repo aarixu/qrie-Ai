@@ -56,6 +56,9 @@ create table if not exists admin.erasure_request (
   erasing_by uuid,
   erasing_at timestamptz,
   erase_reason text check (char_length(erase_reason) <= 500),
+  -- The child's photos in Storage when the erasure started: the tally counts
+  -- them even when Storage stopped partway and a retry removed the rest.
+  photos_listed integer,
   erased_at timestamptz,
   tallies jsonb
 );
@@ -318,8 +321,9 @@ end;
 $$;
 
 -- The owner starts an erasure with a fresh code; admin-api is its only caller.
--- Answers the child's homework photos for admin-api to delete. A request
--- already erasing (a retry after Storage failed) is listed again, unchanged.
+-- Answers the child's homework photos for admin-api to delete, and on the
+-- first call records how many there are. A request already erasing (a retry
+-- after Storage failed) is listed again, unchanged.
 create or replace function admin.erasure_prepare(p_request uuid, p_reason text, p_env text)
 returns jsonb
 language plpgsql volatile security definer
@@ -344,7 +348,9 @@ begin
   if r.status = 'verified' then
     perform set_config('admin.session', 'on', true);
     update admin.erasure_request
-       set status = 'erasing', erasing_by = me.user_id, erasing_at = now(), erase_reason = left(btrim(p_reason), 500)
+       set status = 'erasing', erasing_by = me.user_id, erasing_at = now(), erase_reason = left(btrim(p_reason), 500),
+           photos_listed = (select count(*)::int from storage.objects o
+                             where o.bucket_id = 'lms-work' and split_part(o.name, '/', 3) = r.user_id::text)
      where id = r.id;
     perform admin.audit(me, 'erasure-started', 'erasure', r.id::text, p_reason, jsonb_build_object('requestId', r.id));
   end if;
@@ -370,13 +376,17 @@ declare
   rows_found jsonb;
   log_lines integer := 0;
   solo_orgs uuid[];
-  photos integer := greatest(coalesce(p_objects_removed, 0), 0);
+  photos integer;
   still_enrolled boolean;
 begin
   select * into r from admin.erasure_request where id = p_request for update;
   if r.id is null or r.status <> 'erasing' then
     raise exception 'this request is not being erased';
   end if;
+  -- Every photo Storage held when the erasure started is gone by now (the
+  -- check below refuses otherwise), so that count is the tally; the last
+  -- attempt's own count only if it is larger.
+  photos := greatest(coalesce(r.photos_listed, 0), coalesce(p_objects_removed, 0), 0);
   -- R19 once more, with the account row locked, so a restore cannot land
   -- between this check and the delete below.
   select a.left_at is null into still_enrolled from lms.account a where a.user_id = r.user_id for update;
