@@ -26,8 +26,13 @@ create trigger safety_event_tripwire after insert or update or delete on admin.s
   for each row execute function admin.tripwire();
 
 -- The relay's door, service role only. true: kept now; false: already kept (a
--- retry); null: 1000 or more flags arrived in the last hour, so this one is
--- refused and the app keeps it to send again (ruling R5).
+-- retry); null: 1000 or more flags arrived in the last hour from the same
+-- school's children (or, for a child who came on their own, from children who
+-- came on their own), so this one is refused and the app keeps it to send
+-- again (ruling R5). A flood fills only its own hour: one account cannot stop
+-- the flags of another school's children. It can stop those of its own school,
+-- or of every child who came on their own, while it lasts; a cap per account
+-- would need a record of which child sent distress flags, which R1 rules out.
 create or replace function public.keep_safety_event(
   p_user uuid, p_id uuid, p_category text, p_direction text, p_platform text, p_release text, p_at timestamptz
 )
@@ -48,11 +53,6 @@ begin
   if exists (select 1 from admin.safety_event e where e.id = p_id) then
     return false;
   end if;
-  perform pg_advisory_xact_lock(hashtext('admin.safety_event'));
-  select count(*)::int into last_hour from admin.safety_event e where e.received_at > now() - interval '1 hour';
-  if last_hour >= 1000 then
-    return null;
-  end if;
   -- A school only: a direct user's solo organisation would name the child.
   select m.org_id into school
     from public.membership m
@@ -60,6 +60,12 @@ begin
    where m.user_id = p_user
    order by m.created_at
    limit 1;
+  perform pg_advisory_xact_lock(hashtext('admin.safety_event'));
+  select count(*)::int into last_hour from admin.safety_event e
+   where e.received_at > now() - interval '1 hour' and e.org_id is not distinct from school;
+  if last_hour >= 1000 then
+    return null;
+  end if;
   perform set_config('admin.session', 'on', true);
   insert into admin.safety_event (id, category, direction, org_id, platform, release, at)
   values (p_id, 'distress', p_direction, school,

@@ -104,22 +104,32 @@ describe('keeping a flag', () => {
     }
   });
 
-  it('the thousand-and-first flag in an hour is refused with null and not kept', async () => {
-    const before = (await one<{ n: number }>(`select count(*)::int as n from admin.safety_event`)).n;
-    await db.transaction(async (tx) => {
-      await tx.query(`select set_config('admin.session', 'on', true)`);
-      await tx.query(
-        `insert into admin.safety_event (id, category, direction, at, received_at)
-         select gen_random_uuid(), 'distress', 'from-student', now(), now() from generate_series(1, $1::int)`,
-        [1000 - before],
+  it('a flood fills only its own hour: past 1000, flags from children who came on their own, or from one school, are refused with null; other schools are not', async () => {
+    const asOwner = (sql: string, params: unknown[] = []) =>
+      db.transaction(async (tx) => {
+        await tx.query(`select set_config('admin.session', 'on', true)`);
+        await tx.query(sql, params);
+      });
+    const fill = (org: string | null) =>
+      asOwner(
+        `insert into admin.safety_event (id, category, direction, org_id, at, received_at)
+         select gen_random_uuid(), 'distress', 'from-student', $1::uuid, now(), now() from generate_series(1, 1000)`,
+        [org],
       );
-    });
-    expect(await keepFlag(db, school.kid8a)).toBeNull();
-    expect((await one<{ n: number }>(`select count(*)::int as n from admin.safety_event`)).n).toBe(1000);
-    await db.transaction(async (tx) => {
-      await tx.query(`select set_config('admin.session', 'on', true)`);
-      await tx.query(`delete from admin.safety_event`);
-    });
+    const total = async () => (await one<{ n: number }>(`select count(*)::int as n from admin.safety_event`)).n;
+    await asOwner(`delete from admin.safety_event`);
+    await fill(null);
+    expect(await keepFlag(db, direct)).toBeNull();
+    expect(await keepFlag(db, school.kid8a)).toBe(true);
+    await fill(school.org);
+    expect(await keepFlag(db, school.kid8b)).toBeNull();
+    const other = await buildSchool(db, 'CAQ');
+    expect(await keepFlag(db, other.kid8a)).toBe(true);
+    expect(await total()).toBe(2002);
+    // An hour later the same school is heard again.
+    await asOwner(`update admin.safety_event set received_at = now() - interval '61 minutes' where org_id = $1`, [school.org]);
+    expect(await keepFlag(db, school.kid8b)).toBe(true);
+    await asOwner(`delete from admin.safety_event`);
   });
 });
 

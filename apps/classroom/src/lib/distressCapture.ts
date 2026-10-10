@@ -29,7 +29,8 @@ import { isNative } from './platform';
  * a user id, null for nobody signed in, or UNKNOWN_OWNER when the stored
  * session could not be read. At most MAX_WAITING wait; the oldest go first
  * when more arrive. The queue is drained when the capture starts (every app
- * open) and after each new flag.
+ * open), after each new flag, every RETRY_EVERY_MS while the app stays open
+ * and something waits, and when the browser says the phone is back online.
  */
 
 export interface SafetyFlagBody {
@@ -48,6 +49,9 @@ export interface Waiting {
 }
 
 export const MAX_WAITING = 20;
+
+/** How often a waiting flag is tried again while the app is open. */
+export const RETRY_EVERY_MS = 2 * 60 * 1000;
 
 /** Never synced: a list of a child's distress moments does not go to student_state. */
 export const captureStore: Store<{ waiting: Waiting[] }> = createLocalStore<{ waiting: Waiting[] }>(
@@ -135,7 +139,10 @@ export interface CaptureDeps {
   release?: string;
 }
 
-/** Subscribes to flagStore; returns the unsubscribe. Flags already in the log when it starts are not sent. */
+/**
+ * Subscribes to flagStore and starts the retry timer; returns the stop. Flags
+ * already in the log when it starts are not sent.
+ */
 export function startDistressCapture(deps: CaptureDeps = {}): () => void {
   const send = deps.send ?? sendDistress;
   const whoIsHere = deps.whoIsHere ?? accountFromStoredSession;
@@ -180,5 +187,19 @@ export function startDistressCapture(deps: CaptureDeps = {}): () => void {
   const unsubscribe = flagStore.subscribe(onChange);
   // A flag queued on an earlier open, while offline.
   if (persist()) run(async () => drainDistress(await ask(), send));
-  return unsubscribe;
+
+  // A flag the server could not keep (offline, a 503 during a flood) is not
+  // left until the next app open: it is tried again while the app is open.
+  const retry = (): void => {
+    if (captureStore.get().waiting.length === 0 || !persist()) return;
+    run(async () => drainDistress(await ask(), send));
+  };
+  const timer = setInterval(retry, RETRY_EVERY_MS);
+  const events = typeof window === 'undefined' ? null : window;
+  events?.addEventListener('online', retry);
+  return () => {
+    unsubscribe();
+    clearInterval(timer);
+    events?.removeEventListener('online', retry);
+  };
 }

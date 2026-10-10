@@ -471,6 +471,12 @@ the local test database only, and the pages have not been opened in a browser.
   were removed; nothing else was erased"). Some photos may already be gone for
   good; no other record was touched. Press Erase again to finish. The photo
   count recorded at the end includes the ones the first press removed.
+- **The safety chat counts hundreds of distress flags.** Probably a flood
+  from one account rather than hundreds of children. Past 1000 in an hour,
+  flags from that school (or from children who came on their own) are
+  refused and wait on the children's phones, which try again every 2
+  minutes; other schools' flags are still kept. The Safety page's counts
+  include the flood.
 - **The 30 readings a day are used up on a busy day.** The next India day
   resets them; or change the constant in a reviewed migration.
 - **A contest entrant corrects their entry after the purge day.** Their

@@ -3,6 +3,7 @@ import { flagStore, recordFlag } from '../src/stores/flags';
 import {
   captureStore,
   drainDistress,
+  RETRY_EVERY_MS,
   sendDistress,
   startDistressCapture,
   type CaptureDeps,
@@ -52,6 +53,11 @@ afterEach(() => {
 
 /** Lets the module's queued promises settle. */
 const settle = () => new Promise((r) => setTimeout(r, 0));
+/** Settles until `ok` holds (vi.waitFor would move faked intervals on by itself). */
+const until = async (ok: () => boolean): Promise<void> => {
+  for (let i = 0; i < 100 && !ok(); i += 1) await settle();
+  expect(ok()).toBe(true);
+};
 
 describe('sending distress flags', () => {
   it('a distress flag recorded on the device is sent once, with no words, and leaves the queue', async () => {
@@ -154,6 +160,48 @@ describe('sending distress flags', () => {
     await settle();
     await settle();
     expect(d.send).not.toHaveBeenCalled();
+  });
+
+  it('a flag the server could not keep is sent again every two minutes while the app is open, and when the phone is back online', async () => {
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+    try {
+      let answer: 'kept' | 'sent' = 'kept';
+      const send = vi.fn(async (_flag: SafetyFlagBody) => answer);
+      stop = startDistressCapture(deps({ send }));
+      recordFlag({ kind: 'distress', at: '2026-10-08T08:00:00.000Z' });
+      await until(() => send.mock.calls.length === 1);
+      await settle();
+      expect(captureStore.get().waiting).toHaveLength(1);
+      vi.advanceTimersByTime(RETRY_EVERY_MS - 1);
+      await settle();
+      await settle();
+      expect(send).toHaveBeenCalledTimes(1);
+      vi.advanceTimersByTime(1);
+      await until(() => send.mock.calls.length === 2);
+      await settle();
+      expect(captureStore.get().waiting).toHaveLength(1);
+      answer = 'sent';
+      window.dispatchEvent(new Event('online'));
+      await until(() => send.mock.calls.length === 3);
+      await settle();
+      expect(captureStore.get().waiting).toEqual([]);
+      // Nothing waits, so the timer sends nothing.
+      vi.advanceTimersByTime(RETRY_EVERY_MS);
+      await settle();
+      await settle();
+      expect(send).toHaveBeenCalledTimes(3);
+      // Stopped: neither the timer nor the online event sends.
+      stop();
+      stop = null;
+      captureStore.set({ waiting: [{ flag: send.mock.calls[0][0], owner: CHILD }] });
+      vi.advanceTimersByTime(RETRY_EVERY_MS);
+      window.dispatchEvent(new Event('online'));
+      await settle();
+      await settle();
+      expect(send).toHaveBeenCalledTimes(3);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('at most 20 flags wait', async () => {
