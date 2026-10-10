@@ -1,7 +1,10 @@
 import type { RelayStatus, Today as TodayData } from '@ai-tutor/admin-client';
+import { Navigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
 import { admin } from '@/lib/client';
 import { loadToday } from '@/lib/load-today';
+import { useMe } from '@/lib/me';
+import { homeFor } from '@/lib/nav';
 import { schoolNotes, tilesFor, type Tone } from '@/lib/tiles';
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -19,8 +22,15 @@ const TONE: Record<Tone, string> = {
 
 const REFRESH_MS = 30_000;
 
-/** The home page: what needs a person today, from one database function. */
+/** Finance lands on Billing (admin.today refuses it), so it never calls admin.today. */
 export function Today() {
+  const me = useMe();
+  const home = homeFor(me.role);
+  return home === '/' ? <TodayPage /> : <Navigate to={home} replace />;
+}
+
+/** The home page: what needs a person today, from one database function. */
+function TodayPage() {
   const [today, setToday] = useState<TodayData | null>(null);
   const [relay, setRelay] = useState<RelayStatus | null>(null);
   const [error, setError] = useState('');
