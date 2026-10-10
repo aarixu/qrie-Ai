@@ -21,8 +21,11 @@ let teacherA: LmsClient;
 let teacherB: LmsClient;
 let riya: LmsClient;
 let arjun: LmsClient;
-const today = new Date().toISOString().slice(0, 10);
-const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString().slice(0, 10);
+// India's date, as 0036's lms.india_today: from midnight to 05:30 in India the
+// UTC date is still yesterday's.
+const indiaDate = (ms: number) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(ms);
+const today = indiaDate(Date.now());
+const daysAgo = (n: number) => indiaDate(Date.now() - n * 86_400_000);
 
 beforeAll(async () => {
   db = await freshDatabase();
