@@ -40,7 +40,7 @@ export function Privacy() {
     <AdminPage title='Privacy'>
       <div className='space-y-4'>
         {rights.requests && <Requests rights={rights} />}
-        <Schools rights={rights} />
+        {(rights.requests || rights.retention) && <Schools rights={rights} />}
         {rights.retention && <Kept rights={rights} />}
         {!rights.requests && !rights.retention && <p className='text-sm text-muted-foreground'>Your role cannot see this.</p>}
       </div>

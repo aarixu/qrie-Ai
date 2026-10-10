@@ -241,7 +241,7 @@ function ReportsTable({ rows, more, rights, onChanged }: { rows: ReportRow[]; mo
         open={marking !== null}
         onOpenChange={(o) => !o && setMarking(null)}
         title={marking ? MARK_LABEL[marking.to] : ''}
-        blast={marking ? `This ${KIND_LABEL[marking.report.kind].toLowerCase()} report becomes ${STATUS_LABEL[marking.to].toLowerCase()}. Its words stay unread.` : ''}
+        blast={marking ? `This report is marked ${STATUS_LABEL[marking.to]}. Marking does not open its words, and a report only moves forward.` : ''}
         confirmLabel={marking ? MARK_LABEL[marking.to] : ''}
         onConfirm={async (w) => {
           if (marking) await safety.mark({ reportId: marking.report.id, status: marking.to, ...w });

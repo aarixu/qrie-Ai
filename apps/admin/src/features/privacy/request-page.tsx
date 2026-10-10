@@ -54,7 +54,7 @@ function Detail({ d, rights, onChanged }: { d: ErasureDetail; rights: PrivacyRig
   const [refusing, setRefusing] = useState(false);
   const [erasing, setErasing] = useState(false);
   const open = d.status === 'received' || d.status === 'verified' || d.status === 'erasing';
-  const counts = d.preview ?? (d.tallies as ErasureDetail['preview']);
+  const counts = d.status === 'refused' ? null : (d.preview ?? (d.tallies as ErasureDetail['preview']));
   return (
     <div className='space-y-4'>
       <Card>
