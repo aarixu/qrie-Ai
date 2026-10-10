@@ -7,4 +7,5 @@ export * from './colour.ts';
 export * from './errors.ts';
 export * from './drafts.ts';
 export * from './outbox.ts';
+export * from './privacy.ts';
 export * from './xlsx.ts';

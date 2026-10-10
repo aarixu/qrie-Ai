@@ -8,6 +8,7 @@ import {
   Palette,
   PieChart,
   School,
+  ShieldCheck,
   UserPlus,
   Users,
 } from 'lucide-react'
@@ -17,6 +18,13 @@ import { type NavGroup, type SidebarData } from '../types'
 const settings: NavGroup = {
   title: 'Settings',
   items: [{ title: 'Appearance', url: '/settings/appearance', icon: Palette }],
+}
+
+// The privacy notice, outside the signed-in layout: the same page the
+// sign-in screen links to.
+const help: NavGroup = {
+  title: 'Help',
+  items: [{ title: 'Privacy notice', url: '/privacy', icon: ShieldCheck }],
 }
 
 /**
@@ -46,6 +54,7 @@ export function sidebarFor(kind: AccountKind | undefined): SidebarData {
           items: [{ title: 'Question bank', url: '/bank', icon: Library }],
         },
         settings,
+        help,
       ],
     }
   }
@@ -60,6 +69,7 @@ export function sidebarFor(kind: AccountKind | undefined): SidebarData {
         ],
       },
       settings,
+      help,
     ],
   }
 }

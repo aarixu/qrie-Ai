@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
-import { BarChart3, ClipboardList, House, LogOut, Megaphone, Sparkles } from 'lucide-react'
+import { BarChart3, ClipboardList, House, LogOut, Megaphone, ShieldCheck, Sparkles } from 'lucide-react'
 import { useSchoolLogo } from '@/lib/brand'
 import { useOutbox } from '@/lib/outbox'
 import { OutboxBanner } from '@/components/outbox-banner'
@@ -33,10 +33,10 @@ const PARENT_TABS = [
 ] as const
 
 /**
- * The phone frame every signed-in screen sits in: the school's name, a way
- * out, and the tabs — a student's four, a parent's two. The tabs step aside
- * while a child is inside one piece of work or a practice round, so a stray
- * tap does not leave it.
+ * The phone frame every signed-in screen sits in: the school's name, the
+ * privacy notice, a way out, and the tabs — a student's four, a parent's
+ * two. The tabs step aside while a child is inside one piece of work or a
+ * practice round, so a stray tap does not leave it.
  */
 export function Shell() {
   const me = useAuthStore((s) => s.me)
@@ -59,6 +59,16 @@ export function Shell() {
               <span className='block truncate font-semibold'>{me?.displayName}</span>
             </span>
           </Link>
+          <Button
+            asChild
+            variant='ghost'
+            size='icon'
+            className='text-primary-foreground hover:bg-white/10 hover:text-primary-foreground'
+          >
+            <Link to='/privacy' aria-label='Privacy notice'>
+              <ShieldCheck />
+            </Link>
+          </Button>
           <Button
             variant='ghost'
             size='icon'

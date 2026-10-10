@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSearch } from '@tanstack/react-router'
+import { Link, useSearch } from '@tanstack/react-router'
 import { backend, DEMO_URL } from '@/lib/backend'
 import { useSignInSchool } from '@/lib/brand'
 import {
@@ -42,6 +42,14 @@ export function SignIn() {
           </p>
         </CardFooter>
       </Card>
+      <p className='text-center text-sm'>
+        <Link
+          to='/privacy'
+          className='text-muted-foreground underline-offset-4 hover:text-foreground hover:underline'
+        >
+          Privacy notice
+        </Link>
+      </p>
     </AuthLayout>
   )
 }

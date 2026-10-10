@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { api, backend, say } from '@/lib/backend'
 import { forThisApp, NOT_A_STUDENT, useAuthStore } from '@/stores/auth-store'
@@ -102,6 +102,11 @@ export function SignIn() {
           Lost your slip? Ask your class teacher.
         </p>
       </form>
+      <p className='mt-6 text-center text-sm'>
+        <Link to='/privacy' className='text-muted-foreground underline underline-offset-4'>
+          Privacy notice
+        </Link>
+      </p>
       <ServerSetting current={DEMO_URL} />
     </div>
   )

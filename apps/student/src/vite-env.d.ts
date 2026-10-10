@@ -7,4 +7,6 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_ANON_KEY?: string
   /** Where `npm run demo` serves the demo school. */
   readonly VITE_QRIE_DEMO_URL?: string
+  /** The email address the privacy notice gives for questions and requests; not set, it says to ask the school office. */
+  readonly VITE_QRIE_PRIVACY_CONTACT?: string
 }
