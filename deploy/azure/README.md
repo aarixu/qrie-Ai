@@ -24,15 +24,16 @@ or memory: confirm them the first time.
 
 The apps run in the browser and talk to Supabase directly. The VM serves their
 files. What it holds of the schools: nginx's logs (each request's address and
-path), and each night's dump, which waits in `/var/lib/qrie-backup` only until
-it is uploaded.
+path, kept 180 days: step 6), and each night's dump, which waits in
+`/var/lib/qrie-backup` only until it is uploaded.
 
 ## Files
 
 | File | Runs where | Does |
 |---|---|---|
-| `setup-server.sh` | VM, once, with sudo | packages, firewall, fail2ban, sshd, swap, time zone, Node 22, PostgreSQL client, azcopy, nginx, folders, the backup timer |
+| `setup-server.sh` | VM, once, with sudo | packages, firewall, fail2ban, sshd, swap, time zone, Node 22, PostgreSQL client, azcopy, nginx and its log rotation, folders, the backup timer |
 | `nginx/site.conf.template`, `nginx/render-sites.sh` | VM (`qrie-render-sites`) | one nginx site per app, with its own Content-Security-Policy |
+| `nginx/nginx.logrotate` | VM (`/etc/logrotate.d/nginx`) | nginx's logs rotated daily, 180 kept |
 | `deploy-apps.ps1` | laptop | builds the apps for the hosted project, checks them, uploads, switches |
 | `activate-release.sh` | VM, run by `deploy-apps.ps1` | unpacks a release, switches `current`, reloads nginx, keeps five; also rollback |
 | `backup/qrie-backup.sh`, `.service`, `.timer`, `row-counts.sql`, `backup.env.example` | VM | the nightly backup |
@@ -103,11 +104,17 @@ working when it does, until you change it (step 15).
 
 ## 5. Copy the kit to the VM (founder, laptop)
 
-From the repository's folder:
+From the repository's folder, removing any copy from an earlier time first:
 
 ```powershell
+ssh -i $HOME\.ssh\qrie_azure_ed25519 qrie@<VM IP> rm -rf qrie-kit
 scp -i $HOME\.ssh\qrie_azure_ed25519 -r deploy\azure qrie@<VM IP>:qrie-kit
 ```
+
+The first line matters on every copy after the first: when `~/qrie-kit`
+already exists, `scp -r` puts the new kit inside it, at `~/qrie-kit/azure`,
+and step 6 would run the old one. On the first copy there is nothing to
+remove, and it does nothing.
 
 If bash on the VM later complains about `$'\r'`, the files reached it with
 Windows line endings (a checkout made before this folder's `.gitattributes`
@@ -141,9 +148,27 @@ It takes some minutes, and running it again is safe. In order, it:
 - Node.js 22 (NodeSource), for the brain runner later; the PostgreSQL 17 client
   (PGDG), whose `pg_dump` the backup uses; azcopy (packages.microsoft.com);
 - a sudo rule letting `qrie` run exactly `nginx -t` and `systemctl reload nginx`
-  without a password, which is all a deploy needs as root;
+  without a password, which is all a deploy needs as root. **That rule limits
+  nothing on this VM:** cloud-init, which makes `qrie` with the VM, also writes
+  `/etc/sudoers.d/90-cloud-init-users`, which lets `qrie` run every command as
+  root without a password (NOT VERIFIED on this VM; setup prints a note when
+  it finds such a rule). So the SSH key `deploy-apps.ps1` uses is, in effect,
+  a root key: keep it on the laptop, with its passphrase. Do not remove that
+  file: every `sudo` in this runbook (setup, the certificates, the backup
+  settings, and the way back in through the serial console in step 15) runs
+  through it;
 - nginx: removes Ubuntu's default site, writes the three sites for port 80
   (step 8 adds https), and turns on certbot's renewal timer;
+- **nginx's logs, kept 180 days:** it puts `nginx/nginx.logrotate` in place
+  of the nginx package's `/etc/logrotate.d/nginx` (which keeps 14 days; NOT
+  VERIFIED on this VM), so the logs are rotated daily, the newest 180 old
+  ones kept, compressed, on the VM in Central India. The CERT-In directions
+  of 2022 ask for 180 days. It checks the file with `logrotate --debug`
+  first, and leaves the old one in place, with a warning, if that fails. The
+  package owns that file: if an nginx update ever ships a new version of it,
+  `apt upgrade` asks which to keep (keep yours), and unattended upgrades
+  leave that update for you to install by hand (NOT VERIFIED). This covers
+  nginx's logs only (below, "What this kit leaves open");
 - the backup script and its systemd timer, switched on only once
   `/etc/qrie/backup.env` exists (step 12).
 
@@ -437,10 +462,15 @@ overwritten copy for its days.
 **The SAS.** On the container: Shared access tokens, permissions **Create** and
 **Write** only, HTTPS only, an expiry a year out, and a reminder in your
 calendar before then: the backup fails, and the heartbeat stops, the night it
-expires. Copy the **Blob SAS URL**: that is `AZURE_BLOB_SAS_URL`. That azcopy
-uploads with only these two permissions is NOT VERIFIED; the first run below
-is the test. If it is refused, do not add Read: a SAS that can read would let
-whoever holds it download every backup.
+expires. Copy the **Blob SAS URL**: that is `AZURE_BLOB_SAS_URL`. The backup
+runs azcopy with `--check-length=false`: azcopy's length check after an upload,
+on by default, reads the blob's properties, which takes Read. The dump has
+been read back on the VM already (`pg_restore --list`), and `--put-md5` stores
+its MD5 with the blob, which azcopy compares when the drill downloads it (its
+`--check-md5` default; NOT VERIFIED). That azcopy uploads with only these two
+permissions is NOT VERIFIED; the first run below is the test. If it is
+refused, do not add Read: a SAS that can read would let whoever holds it
+download every backup.
 
 **The database address.** Supabase dashboard, Connect, **Session pooler**, with
 the database password in place of `[YOUR-PASSWORD]`: that is `SUPABASE_DB_URL`.
@@ -497,7 +527,12 @@ It does **not** hold:
   exist in every Supabase project.
 - **Extensions' code.** The dump says `CREATE EXTENSION` for pg_cron,
   pg_graphql and the rest; plain PostgreSQL lacks several, so those fail there
-  (`RESTORE-DRILL.md`, step 4).
+  (`RESTORE-DRILL.md`, step 4). The cron jobs, for a restore of only `lms`
+  and `public`: `lms-finalize-tests` (every minute, migration 0030), which
+  hands in a test whose time has run out, and the tutor's `purge-old-ledger`
+  (0009) live in the `cron` schema, which that restore leaves out, so a new
+  project needs them scheduled again (`RESTORE-DRILL.md`, "Restoring for
+  real").
 - **What lives outside the database:** the edge functions (their code is in
   git), their secrets (keep `LMS_PIN_PEPPER` in your password manager: without
   the same pepper no restored account's PIN works), the project's settings
@@ -530,7 +565,8 @@ Subscribe to Supabase's status page for that.
 - **Updates:** Ubuntu's security updates install by themselves every day,
   with a restart at 03:30 when one needs it. Node, the PostgreSQL client and
   azcopy come from outside Ubuntu, which those automatic updates do not cover
-  by default: once a month, `sudo apt update && sudo apt upgrade`.
+  by default: once a month, `sudo apt update && sudo apt upgrade`. If it asks
+  whether to keep your version of `/etc/logrotate.d/nginx`, keep it (step 6).
 - **Certificates** renew by themselves; the uptime monitor warns if one does not.
 - **Restore drill:** monthly (`RESTORE-DRILL.md`).
 - **The backup SAS:** renew it before it expires (step 12).
@@ -571,10 +607,17 @@ runbook will say how it runs here.
 ## What this kit leaves open
 
 - **The photos of work are not backed up** (step 12).
-- **Logs.** Ubuntu's nginx package rotates nginx's logs away after 14 days
-  (`/etc/logrotate.d/nginx`; NOT VERIFIED on this VM). The CERT-In directions
-  ask for 180 days, kept in India, and the security review's item 6 (exporting
-  logs for a year) is not built here.
+- **Logs.** The CERT-In directions ask for 180 days, kept in India. Setup
+  keeps nginx's logs that long, on the VM (step 6), and nothing else:
+  - the VM's other logs (sign-ins over SSH in `/var/log/auth.log`, fail2ban,
+    the systemd journal) keep Ubuntu's own settings for how long they last,
+    which this kit does not change;
+  - **Supabase's own logs** (Auth, the API, the database, the edge functions)
+    are kept by Supabase, for as long as the project's plan keeps them and
+    where it keeps them. Keeping them 180 days, in India, is a step of yours
+    with Supabase (Logs, and log drains, in its documentation), not this kit's;
+  - the security review's item 6 (exporting logs for a year) is not built here.
+- **The deploy key is a root key** (step 6), through cloud-init's sudo rule.
 - **The teacher app's fonts come from Google** (step 8), so Google Fonts sees
   teachers' addresses.
 - **Microsoft Azure is a new sub-processor.** The security review's list
@@ -589,7 +632,7 @@ runbook will say how it runs here.
 
 ## What has been checked
 
-On the laptop, on 2026-10-10:
+On the laptop, on 2026-10-10, and the shell checks run again on 2026-10-11:
 
 - `bash -n` on the four shell scripts; the PowerShell parser on `deploy-apps.ps1`.
 - `bash deploy/azure/tests/activate-release.test.sh`: unpacking, carrying the
@@ -600,7 +643,14 @@ On the laptop, on 2026-10-10:
 - `bash deploy/azure/tests/render-sites.test.sh`: the sites rendered into a
   scratch folder with and without a certificate (29 checks).
 - `bash deploy/azure/tests/qrie-backup.test.sh`: the backup's handling of the
-  database address and its refusals of bad settings (10 checks).
+  database address, its refusals of bad settings, and the arguments its upload
+  gives a stand-in azcopy, `--check-length=false` and `--put-md5` among them
+  (14 checks).
+- `bash deploy/azure/tests/setup-server.test.sh`: `bash -n` on
+  `setup-server.sh`, the nginx log rotation's file (daily, `rotate 180`,
+  compressed, no age or size limit), and that setup installs it as
+  `/etc/logrotate.d/nginx` (8 checks; `logrotate --debug` on the file is
+  skipped where logrotate is not installed, as in Git Bash).
 - `powershell -NoProfile -ExecutionPolicy Bypass -File deploy\azure\tests\deploy-apps.test.ps1`
   in Windows PowerShell 5.1 (run again on 2026-10-11): the key checks, the
   teacher and student builds' variables with and without `-BackupsOn`,
@@ -610,5 +660,6 @@ On the laptop, on 2026-10-10:
   stopping on a planted key (26 checks).
 
 **Not run:** anything on a VM; `nginx -t` on the rendered files; certbot;
-`setup-server.sh` itself; `pg_dump`, `psql` or azcopy against the real
-services; the systemd units; `deploy-apps.ps1` from start to end.
+`setup-server.sh` itself; logrotate on the nginx file; `pg_dump`, `psql` or
+azcopy against the real services; the systemd units; `deploy-apps.ps1` from
+start to end.

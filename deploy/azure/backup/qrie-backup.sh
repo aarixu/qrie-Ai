@@ -16,7 +16,8 @@
 #      supabase_migrations (row-counts.sql), for RESTORE-DRILL.md. This step
 #      alone may fail without stopping the backup: the journal says so and
 #      the dump goes up without its counts;
-#   4. both files to db/ in the Blob container, with azcopy;
+#   4. both files to db/ in the Blob container, with azcopy, its length check
+#      after the upload switched off (upload(), below, says why);
 #   5. if BACKUP_HEARTBEAT_URL is set, one request to it.
 #
 # The settings come from /etc/qrie/backup.env (root, 0600), which the service
@@ -111,7 +112,11 @@ container=${container%/}
 sas=${AZURE_BLOB_SAS_URL#*\?}
 upload() { # local file, blob name
   # The SAS is on azcopy's command line while it runs (README.md, "Backups").
-  azcopy copy "$1" "$container/db/$2?$sas" --put-md5 --log-level=WARNING > /dev/null ||
+  # --check-length=false: azcopy's length check after an upload (on by default)
+  # reads the blob's properties, which takes Read, and the SAS may only Create
+  # and Write. The dump was read back here already (pg_restore --list), and
+  # --put-md5 stores its MD5 with the blob for a download to compare.
+  azcopy copy "$1" "$container/db/$2?$sas" --check-length=false --put-md5 --log-level=WARNING > /dev/null ||
     fail "azcopy could not upload db/$2 (its log is under $work/azcopy)"
   log "uploaded db/$2"
 }

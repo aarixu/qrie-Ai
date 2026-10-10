@@ -132,6 +132,14 @@ Moving to a new Supabase project would need, at the least:
 - a new project in the same region, with the extensions the old one had
   switched on;
 - the `lms` and `public` schemas and their rows from the dump (`pg_restore -n lms -n public`);
+- pg_cron switched on, and its jobs scheduled again as the migrations
+  schedule them: a restore of `lms` and `public` does not bring back the
+  `cron` schema's jobs. `lms-finalize-tests` runs `select lms.finalize_tests();`
+  every minute (`cron.schedule('lms-finalize-tests', '* * * * *', ...)` in
+  `supabase/migrations/0030_lms_test_saves_and_checks.sql`); without it, a
+  test whose time ran out before the child handed it in is handed in only
+  when its teacher releases the results. The tutor's `purge-old-ledger`
+  (`0009_retention_schedule.sql`) is scheduled the same way;
 - the accounts: the rows of `auth.users` and `auth.identities` from the dump,
   into the new project's own `auth` schema, data only;
 - the same `LMS_PIN_PEPPER` (from your password manager), or every PIN stops

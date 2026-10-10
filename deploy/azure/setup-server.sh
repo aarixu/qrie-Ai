@@ -108,7 +108,7 @@ step "Packages: update, upgrade, and what this VM needs"
 apt_get update
 apt_get upgrade
 apt_get install ca-certificates curl gnupg ufw fail2ban python3-systemd unattended-upgrades \
-  nginx certbot python3-certbot-nginx
+  nginx certbot python3-certbot-nginx logrotate
 # python3-certbot-nginx is there for running `certbot --nginx` by hand. The
 # kit itself gets certificates with --webroot (README.md), so certbot never
 # edits the nginx files qrie-render-sites writes.
@@ -300,6 +300,14 @@ EOF
 visudo -cf "$tmp" >/dev/null || { rm -f "$tmp"; die "visudo refused the sudoers rule"; }
 install -m 0440 -o root -g root "$tmp" /etc/sudoers.d/qrie-deploy
 rm -f "$tmp"
+# Where cloud-init's /etc/sudoers.d/90-cloud-init-users lets the user made
+# with the VM run every command as root without a password, as on Azure's
+# Ubuntu image (NOT VERIFIED), the rule above limits nothing. That file stays:
+# every sudo in README.md runs through it (step 6).
+if sudo -l -U "$DEPLOY_USER" 2>/dev/null | grep -Eq 'NOPASSWD: *ALL[[:space:]]*$'; then
+  echo "note: $DEPLOY_USER may run any command as root without a password (sudo -l -U $DEPLOY_USER),"
+  echo "      so the SSH key deploy-apps.ps1 uses is, in effect, a root key (README.md, step 6)"
+fi
 
 # ---------------------------------------------------------------------------
 step "nginx"
@@ -329,6 +337,28 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+step "nginx's logs: kept 180 days (logrotate)"
+# ---------------------------------------------------------------------------
+# Ubuntu's nginx package keeps 14 days of them (NOT VERIFIED on the VM: its
+# /etc/logrotate.d/nginx says). nginx/nginx.logrotate takes the place of
+# the package's /etc/logrotate.d/nginx instead of sitting beside it, since
+# logrotate does not accept one log named in two files. The package owns that
+# file, so an nginx update that ships a new version of it asks which to keep
+# (README.md, step 6). Checked with logrotate --debug, which changes nothing,
+# before it goes in; if that fails, /etc/logrotate.d/nginx is left as it was.
+tmp=$(mktemp)
+sed 's/\r$//' "$KIT/nginx/nginx.logrotate" > "$tmp"
+if logrotate --debug "$tmp" > /dev/null 2>&1; then
+  install -m 0644 -o root -g root "$tmp" /etc/logrotate.d/nginx
+  nginx_logs="keeps nginx's logs: rotated daily, the newest 180 kept (/etc/logrotate.d/nginx);"
+else
+  nginx_logs="has /etc/logrotate.d/nginx as it was before: logrotate refused nginx/nginx.logrotate (logrotate --debug <file> says why);"
+  echo "warning: logrotate --debug refused nginx/nginx.logrotate, so /etc/logrotate.d/nginx was left as it was" >&2
+fi
+rm -f "$tmp"
+echo "$nginx_logs"
+
+# ---------------------------------------------------------------------------
 step "The nightly backup (qrie-backup.timer)"
 # ---------------------------------------------------------------------------
 install_text 0755 "$KIT/backup/qrie-backup.sh" /usr/local/sbin/qrie-backup
@@ -353,6 +383,7 @@ cat <<EOF
 This VM now:
   - takes SSH from $ADMIN_IP only, with keys only, and no root sign-in;
   - allows 80 and 443 from anywhere;
+  - $nginx_logs
   - serves /var/www/qrie/<site>/current over https once that site has its
     certificate and a release has been deployed.
 Next (README.md): the Azure network security group, the certificates, the
