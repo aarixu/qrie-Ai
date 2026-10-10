@@ -17,9 +17,10 @@
  *                                        — measures a real student through their own
  *                                          session token; RLS scopes every read to them
  *
- * The seed needs no service key: students may INSERT their own append-only
- * ledger rows (0006), which is exactly how the app itself writes them. The
- * synthetic history is two sittings — help laundered onto a recorded rung 0
+ * The seed needs no service key: it sends the student's events through
+ * public.record_evidence (0107), with the student's own token, which is exactly
+ * how the app itself writes them; since 0110 a direct insert into the tables is
+ * refused. The synthetic history is two sittings — help laundered onto a recorded rung 0
  * that deriveRung must catch, a cold success, a spoken answer, a cold LOSS —
  * so the number printed exercises every rule the metric depends on.
  */
@@ -73,9 +74,9 @@ const seed = async () => {
     console.error('could not mint a throwaway student:', JSON.stringify(body).slice(0, 200));
     process.exit(1);
   }
+  // record_evidence takes the org from the token and refuses a student with none.
   const membership = await (await fetch(`${URL_}/rest/v1/membership?select=org_id`, { headers: as(student.token) })).json();
-  const org = membership?.[0]?.org_id;
-  if (!org) {
+  if (!membership?.[0]?.org_id) {
     console.error('no org was provisioned for the throwaway student — is the trigger deployed?');
     process.exit(1);
   }
@@ -92,28 +93,24 @@ const seed = async () => {
   const s1 = randomUUID();
   const s2 = randomUUID();
 
+  // In the outbox's own LedgerEvent shape, as record_evidence reads it.
   const ev = (sessionId, seq, at, kind, outcomeIds, payload, surface = 'tap') => ({
-    id: randomUUID(), org_id: org, user_id: student.id, session_id: sessionId,
-    seq, at, kind, source: 'quiz', surface, outcome_ids: outcomeIds, payload,
+    id: randomUUID(), sessionId, seq, at, kind, source: 'quiz', surface, outcomeIds, payload,
   });
   const answered = (correct, extra = {}) => ({
     correct, ms: 4000, attempt: 1, assistanceRung: 0, hintsShown: 0, chosenIndex: 0, ...extra,
   });
 
-  const open = async (id, at) => {
-    const r = await fetch(`${URL_}/rest/v1/learning_session`, {
-      method: 'POST', headers: as(student.token),
-      body: JSON.stringify({ id, org_id: org, user_id: student.id, source: 'quiz', started_at: at }),
-    });
-    if (!r.ok) { console.error('session insert failed:', await r.text()); process.exit(1); }
-  };
   const close = (id, endedAt, activeMs) => fetch(`${URL_}/rest/v1/rpc/close_learning_session`, {
     method: 'POST', headers: as(student.token),
     body: JSON.stringify({ p_session: id, p_ended_at: endedAt, p_active_ms: activeMs }),
   });
 
-  await open(s1, s1At);
-  await open(s2, s2At);
+  // record_evidence opens each sitting from its entry here when its first event arrives.
+  const sittings = [
+    { id: s1, source: 'quiz', topicRef: null, startedAt: s1At },
+    { id: s2, source: 'quiz', topicRef: null, startedAt: s2At },
+  ];
   const rows = [
     // Sitting one: help laundered onto a recorded rung 0 (deriveRung must
     // refuse it), then a genuinely cold success.
@@ -127,10 +124,14 @@ const seed = async () => {
     ev(s2, 1, s2At, 'answered', [basis], { ...answered(false), beatId: 'B4' }),
     ev(s2, 2, s2At, 'session-ended', [], { activeMs: 180_000, completed: true }),
   ];
-  const ins = await fetch(`${URL_}/rest/v1/ledger_event`, {
-    method: 'POST', headers: as(student.token), body: JSON.stringify(rows),
+  const ins = await fetch(`${URL_}/rest/v1/rpc/record_evidence`, {
+    method: 'POST', headers: as(student.token), body: JSON.stringify({ p_sessions: sittings, p_events: rows }),
   });
-  if (!ins.ok) { console.error('event insert failed:', await ins.text()); process.exit(1); }
+  const answers = ins.ok ? await ins.json() : null;
+  if (!Array.isArray(answers) || answers.length !== rows.length || answers.some((a) => a.status !== 'recorded')) {
+    console.error('record_evidence did not record every event:', ins.ok ? JSON.stringify(answers).slice(0, 300) : await ins.text());
+    process.exit(1);
+  }
   await close(s1, new Date(Date.parse(s1At) + 300_000).toISOString(), 240_000);
   await close(s2, new Date(Date.parse(s2At) + 200_000).toISOString(), 180_000);
 

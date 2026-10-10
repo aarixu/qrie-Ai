@@ -112,7 +112,7 @@ describe.skipIf(!process.env.MEASURE_CLASS)('one cold class, measured through th
         headers: { apikey: ANON, 'content-type': 'application/json' },
         body: '{}',
       });
-      const { access_token: token, user } = (await signup.json()) as { access_token: string; user: { id: string } };
+      const { access_token: token } = (await signup.json()) as { access_token: string };
       expect(token).toBeTruthy();
       const sessionId = crypto.randomUUID();
       const auth = {
@@ -134,22 +134,35 @@ describe.skipIf(!process.env.MEASURE_CLASS)('one cold class, measured through th
         JSON.stringify({ sessionId, topicRef: TOPIC_REF, token, startedAt: new Date().toISOString() }, null, 2),
       );
 
-      // The sitting, as the ledger drain would write it.
-      const org = (await (
-        await fetch(`${URL_}/rest/v1/membership?select=org_id`, { headers: auth })
-      ).json()) as { org_id: string }[];
-      await fetch(`${URL_}/rest/v1/learning_session`, {
+      // The sitting, opened the way the ledger drain opens it: through
+      // record_evidence (0107), a phone's only way to write evidence since 0110,
+      // with its session-started event and that sitting's entry. The org and the
+      // learner come from the token. A sitting not opened leaves cost-report
+      // nothing to join this class's usage onto, so the answer is checked.
+      const startedAt = new Date().toISOString();
+      const opened = await fetch(`${URL_}/rest/v1/rpc/record_evidence`, {
         method: 'POST',
         headers: auth,
         body: JSON.stringify({
-          id: sessionId,
-          org_id: org[0].org_id,
-          user_id: user.id,
-          source: 'class',
-          topic_ref: TOPIC_REF,
-          started_at: new Date().toISOString(),
+          p_sessions: [{ id: sessionId, source: 'class', topicRef: TOPIC_REF, startedAt }],
+          p_events: [
+            {
+              id: crypto.randomUUID(),
+              sessionId,
+              seq: 0,
+              at: startedAt,
+              kind: 'session-started',
+              source: 'class',
+              surface: 'tap',
+              outcomeIds: [],
+              topicRef: TOPIC_REF,
+              payload: {},
+            },
+          ],
         }),
       });
+      expect(opened.ok).toBe(true);
+      expect(((await opened.json()) as { status: string }[]).map((r) => r.status)).toEqual(['recorded']);
 
       // ------------------------------------------------- the adapters, as the app
       const counted: Record<string, number> = {};
