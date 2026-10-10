@@ -1,0 +1,590 @@
+[
+  {
+    "label": "03 A why doubt (must ask first)",
+    "draw": 1,
+    "turn": 1,
+    "move": "ELICIT",
+    "student": "Mam, mitochondria ko powerhouse kyun kehte hain?",
+    "meera": "Ek powerhouse ka kaam energy banana hota hai. Toh socho, hamare cell mein mitochondria aisa kya banata hai jisse use yeh naam mila?",
+    "flags": []
+  },
+  {
+    "label": "03 A why doubt (must ask first)",
+    "draw": 2,
+    "turn": 1,
+    "move": "ELICIT",
+    "student": "Mam, mitochondria ko powerhouse kyun kehte hain?",
+    "meera": "Powerhouse naam sunte hi dimaag mein kya aata hai, wahan kya banta hai jo pure cell ko chahiye?",
+    "flags": []
+  },
+  {
+    "label": "03 A why doubt (must ask first)",
+    "draw": 3,
+    "turn": 1,
+    "move": "ELICIT",
+    "student": "Mam, mitochondria ko powerhouse kyun kehte hain?",
+    "meera": "Powerhouse sunte hi kya dhyan mein aata hai, wahan kya banta hai aur mitochondria cell ke liye kya banata hai?",
+    "flags": []
+  },
+  {
+    "label": "03 A why doubt (must ask first)",
+    "draw": 4,
+    "turn": 1,
+    "move": "ELICIT",
+    "student": "Mam, mitochondria ko powerhouse kyun kehte hain?",
+    "meera": "Powerhouse ka kaam poore shehar ko bijli ya energy dena hota hai. Cell ke andar mitochondria aisa kya banata hai?",
+    "flags": []
+  },
+  {
+    "label": "03 A why doubt (must ask first)",
+    "draw": 5,
+    "turn": 1,
+    "move": "ELICIT",
+    "student": "Mam, mitochondria ko powerhouse kyun kehte hain?",
+    "meera": "Powerhouse sunte hi dimag mein energy generate karne wali jagah aati hai na? Socho, mitochondria hamare cell ke liye aisi kaun si cheez banata hoga?",
+    "flags": []
+  },
+  {
+    "label": "03 A why doubt (must ask first)",
+    "draw": 6,
+    "turn": 1,
+    "move": "ELICIT",
+    "student": "Mam, mitochondria ko powerhouse kyun kehte hain?",
+    "meera": "Socho, agar cell ek ghar hai, toh use powerhouse kyun kahenge? Mitochondria ke andar aisi kya cheez banti hai jo power deti hai?",
+    "flags": []
+  },
+  {
+    "label": "03 A why doubt (must ask first)",
+    "draw": 7,
+    "turn": 1,
+    "move": "ELICIT",
+    "student": "Mam, mitochondria ko powerhouse kyun kehte hain?",
+    "meera": "Powerhouse sunkar pehle kya khayal aata hai? Socho cell ko kaam karne ke liye mitochondria aisi kaunsi cheez bana kar deta hoga?",
+    "flags": []
+  },
+  {
+    "label": "03 A why doubt (must ask first)",
+    "draw": 8,
+    "turn": 1,
+    "move": "ELICIT",
+    "student": "Mam, mitochondria ko powerhouse kyun kehte hain?",
+    "meera": "Powerhouse naam sunkar kya lagta hai, cell mein mitochondria aisa kya banata hoga jo ise ye naam mila?",
+    "flags": []
+  },
+  {
+    "label": "08 A right answer",
+    "draw": 1,
+    "turn": 1,
+    "move": "ASK_WHY",
+    "student": "Mitochondria mein glucose oxygen ke saath toot ke energy deta hai, aur wo ATP mein store hoti hai.",
+    "meera": "Tumne mitochondria mein oxygen se glucose tootne aur ATP banne ki baat pakdi. Cell ko iss saari energy ko ATP mein store karne ki zaroorat kyun padti hai?",
+    "flags": []
+  },
+  {
+    "label": "08 A right answer",
+    "draw": 2,
+    "turn": 1,
+    "move": "ASK_WHY",
+    "student": "Mitochondria mein glucose oxygen ke saath toot ke energy deta hai, aur wo ATP mein store hoti hai.",
+    "meera": "Right, tumne glucose ke tootne aur ATP banne ki baat sahi jodi. Toh socho, is process ko aerobic respiration kyun kehte hain?",
+    "flags": []
+  },
+  {
+    "label": "08 A right answer",
+    "draw": 3,
+    "turn": 1,
+    "move": "ASK_WHY",
+    "student": "Mitochondria mein glucose oxygen ke saath toot ke energy deta hai, aur wo ATP mein store hoti hai.",
+    "meera": "Right, tumne mitochondria mein glucose aur oxygen se energy banne ki baat pakdi. Par cell is energy ko seedhe use karne ke bajay ATP mein kyun pack karta hai?",
+    "flags": []
+  },
+  {
+    "label": "08 A right answer",
+    "draw": 4,
+    "turn": 1,
+    "move": "ASK_WHY",
+    "student": "Mitochondria mein glucose oxygen ke saath toot ke energy deta hai, aur wo ATP mein store hoti hai.",
+    "meera": "Mitochondria mein oxygen ke saath glucose toot kar ATP banna tumne theek bataya. Par cell ko seedhe glucose use karne ke bajay energy ATP mein store kyu karni padti hai?",
+    "flags": []
+  },
+  {
+    "label": "08 A right answer",
+    "draw": 5,
+    "turn": 1,
+    "move": "ASK_WHY",
+    "student": "Mitochondria mein glucose oxygen ke saath toot ke energy deta hai, aur wo ATP mein store hoti hai.",
+    "meera": "Right, mitochondria mein oxygen ki madad se glucose tootkar ATP banata hai. Cell ko is energy ya ATP ki zaroorat aakhir kyun padti hai?",
+    "flags": []
+  },
+  {
+    "label": "08 A right answer",
+    "draw": 6,
+    "turn": 1,
+    "move": "ASK_WHY",
+    "student": "Mitochondria mein glucose oxygen ke saath toot ke energy deta hai, aur wo ATP mein store hoti hai.",
+    "meera": "Right, tumne bataya ki mitochondria mein glucose toot kar ATP deta hai. Is process ko complete hone ke liye oxygen ki zaroorat kyu padti hai?",
+    "flags": []
+  },
+  {
+    "label": "08 A right answer",
+    "draw": 7,
+    "turn": 1,
+    "move": "ASK_WHY",
+    "student": "Mitochondria mein glucose oxygen ke saath toot ke energy deta hai, aur wo ATP mein store hoti hai.",
+    "meera": "Tumne bataya ki mitochondria mein glucose tootkar ATP banta hai. Lekin cell ko is process ke liye oxygen ki zaroorat kyu padti hai?",
+    "flags": []
+  },
+  {
+    "label": "08 A right answer",
+    "draw": 8,
+    "turn": 1,
+    "move": "ASK_WHY",
+    "student": "Mitochondria mein glucose oxygen ke saath toot ke energy deta hai, aur wo ATP mein store hoti hai.",
+    "meera": "Tumne bataya ki mitochondria mein glucose aur oxygen milkar energy ko ATP mein store karte hain. Cell ko energy seedhe glucose se lene ke bajay ATP kyun chahiye hoti hai?",
+    "flags": []
+  },
+  {
+    "label": "09 Frustrated with her",
+    "draw": 1,
+    "turn": 1,
+    "move": "ANOTHER_WAY",
+    "student": "Mam teen baar bata diya par samajh hi nahi aa raha.",
+    "meera": "Koi baat nahi, pareshaan mat ho. Ek weighing balance socho: dono side barabar rakhne ke liye agar left se five hataoge, toh right se kitna hataana padega?",
+    "flags": [
+      "gendered-verb"
+    ]
+  },
+  {
+    "label": "09 Frustrated with her",
+    "draw": 2,
+    "turn": 1,
+    "move": "ANOTHER_WAY",
+    "student": "Mam teen baar bata diya par samajh hi nahi aa raha.",
+    "meera": "Fikr mat karo, ek doosre tareeqe se dekhte hain. Equation ko ek weighing balance samjho: dono taraf barabar wazan hai. Agar ek side se five nikaala, toh balance seedha rakhne ke liye doosri side kya karoge?",
+    "flags": [
+      "gendered-verb"
+    ]
+  },
+  {
+    "label": "09 Frustrated with her",
+    "draw": 3,
+    "turn": 1,
+    "move": "ANOTHER_WAY",
+    "student": "Mam teen baar bata diya par samajh hi nahi aa raha.",
+    "meera": "Koi baat nahi, isko ek weighing balance ki tarah socho: dono sides barabar tabhi rahengi jab dono taraf se same cheez hataoge. Agar ek side se five nikala, toh doosri taraf balance rakhne ke liye kya karna hoga?",
+    "flags": [
+      "gendered-verb"
+    ]
+  },
+  {
+    "label": "09 Frustrated with her",
+    "draw": 4,
+    "turn": 1,
+    "move": "ANOTHER_WAY",
+    "student": "Mam teen baar bata diya par samajh hi nahi aa raha.",
+    "meera": "Koi baat nahi, tension mat lo. Equation ko ek weighing balance ki tarah socho: agar ek side se five nikaala, toh balance barabar rakhne ke liye doosri side se kya nikaalna padega?",
+    "flags": []
+  },
+  {
+    "label": "09 Frustrated with her",
+    "draw": 5,
+    "turn": 1,
+    "move": "ANOTHER_WAY",
+    "student": "Mam teen baar bata diya par samajh hi nahi aa raha.",
+    "meera": "Fikr mat karo, ek doosre tareeqe se dekhte hain. Equation ko ek weighing balance samjho: agar ek taraf se five hatao, toh balance seedha rakhne ke liye doosri taraf se kya hatana padega?",
+    "flags": []
+  },
+  {
+    "label": "09 Frustrated with her",
+    "draw": 6,
+    "turn": 1,
+    "move": "ANOTHER_WAY",
+    "student": "Mam teen baar bata diya par samajh hi nahi aa raha.",
+    "meera": "Fikr mat karo, ek doosre tareeqe se dekhte hain. Equation ko ek weighing balance ki tarah socho: agar ek side se five nikaala, toh doosri side ka balance barabar rakhne ke liye kya karna padega?",
+    "flags": []
+  },
+  {
+    "label": "09 Frustrated with her",
+    "draw": 7,
+    "turn": 1,
+    "move": "ANOTHER_WAY",
+    "student": "Mam teen baar bata diya par samajh hi nahi aa raha.",
+    "meera": "Koi baat nahi, pareshaan mat ho. Ek weighing balance socho, agar dono taraf barabar weight hai aur hum ek side se five nikaalein, toh balance rakhne ke liye doosri taraf kya karna hoga?",
+    "flags": []
+  },
+  {
+    "label": "09 Frustrated with her",
+    "draw": 8,
+    "turn": 1,
+    "move": "ANOTHER_WAY",
+    "student": "Mam teen baar bata diya par samajh hi nahi aa raha.",
+    "meera": "Koi baat nahi, isse alag tarah se dekhte hain. Socho ek weighing balance hai jo bilkul barabar hai, agar ek side se five nikaala, toh doosri side kya karna hoga balance rakhne ke liye?",
+    "flags": []
+  },
+  {
+    "label": "25 \"Samajh gaya\"",
+    "draw": 1,
+    "turn": 1,
+    "move": "TEACH_BACK",
+    "student": "Ok mam samajh gaya.",
+    "meera": "Agar main tumhari dost hoti aur meri class miss ho jati, toh mujhe kaise samjhate ki mitochondria mein energy kaise banti hai?",
+    "flags": []
+  },
+  {
+    "label": "25 \"Samajh gaya\"",
+    "draw": 2,
+    "turn": 1,
+    "move": "TEACH_BACK",
+    "student": "Ok mam samajh gaya.",
+    "meera": "Acha! Maan lo tumhare dost ne yeh class miss ki, toh usko kaise samjhaoge ki mitochondria mein energy kaise banti hai?",
+    "flags": [
+      "gendered-verb"
+    ]
+  },
+  {
+    "label": "25 \"Samajh gaya\"",
+    "draw": 3,
+    "turn": 1,
+    "move": "TEACH_BACK",
+    "student": "Ok mam samajh gaya.",
+    "meera": "Agar main tumhari dost hoti jo class miss kar gayi, toh mujhe kaise samjhate ki cell ko energy kahan aur kaise milti hai?",
+    "flags": []
+  },
+  {
+    "label": "25 \"Samajh gaya\"",
+    "draw": 4,
+    "turn": 1,
+    "move": "TEACH_BACK",
+    "student": "Ok mam samajh gaya.",
+    "meera": "Agar main tumhari dost hoti aur aaj class miss kar deti, toh mujhe kaise samjhate ki mitochondria mein energy kaise banti hai?",
+    "flags": []
+  },
+  {
+    "label": "25 \"Samajh gaya\"",
+    "draw": 5,
+    "turn": 1,
+    "move": "TEACH_BACK",
+    "student": "Ok mam samajh gaya.",
+    "meera": "Agar main tumhari dost hoti jo class miss kar gayi, toh mujhe kaise samjhate ki cell ko mitochondria se energy kaise milti hai?",
+    "flags": []
+  },
+  {
+    "label": "25 \"Samajh gaya\"",
+    "draw": 6,
+    "turn": 1,
+    "move": "TEACH_BACK",
+    "student": "Ok mam samajh gaya.",
+    "meera": "Agar main tumhari dost hoti aur aaj class miss kar deti, toh mujhe simple shabdon mein kaise samjhate ki cell ko energy kaise milti hai?",
+    "flags": []
+  },
+  {
+    "label": "25 \"Samajh gaya\"",
+    "draw": 7,
+    "turn": 1,
+    "move": "TEACH_BACK",
+    "student": "Ok mam samajh gaya.",
+    "meera": "Agar main tumhari dost hoti jo aaj class miss kar gayi, toh mujhe kaise samjhati ki cell glucose aur oxygen se energy kaise banata hai?",
+    "flags": []
+  },
+  {
+    "label": "25 \"Samajh gaya\"",
+    "draw": 8,
+    "turn": 1,
+    "move": "TEACH_BACK",
+    "student": "Ok mam samajh gaya.",
+    "meera": "Agar kisi dost ko batana ho jo aaj class mein nahi tha, toh kaise samjhaoge ki mitochondria mein aerobic respiration se energy kaise banti hai?",
+    "flags": [
+      "gendered-verb"
+    ]
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 1,
+    "turn": 1,
+    "move": "RECAP",
+    "student": "Ho gaya mam?",
+    "meera": "Haan, bas khatam karne se pehle, aaj humne jo respiration ke baare mein seekha, uske do teen main points apne shabdon mein batao?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 1,
+    "turn": 2,
+    "move": "RECAP",
+    "student": "Mitochondria mein glucose oxygen se toot ke energy deta hai, wo ATP mein jaati hai. Aur ye cell ke andar hota hai.",
+    "meera": "Right, tumne glucose se ATP banne ka poora raasta saaf bataya. Agli baar aerobic respiration pe thoda aur sochenge, kab milte hain?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 2,
+    "turn": 1,
+    "move": "RECAP",
+    "student": "Ho gaya mam?",
+    "meera": "Haan, bas khatam karne se pehle, bina board dekhe batao ki cell mein energy kaise aur kahan banti hai?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 2,
+    "turn": 2,
+    "move": "RECAP",
+    "student": "Mitochondria mein glucose oxygen se toot ke energy deta hai, wo ATP mein jaati hai. Aur ye cell ke andar hota hai.",
+    "meera": "Right, mitochondria mein glucose aur oxygen milkar ATP banate hain. Agli baar aerobic respiration pe baat karenge, tab tak ke liye revision ready rakhna!",
+    "flags": [
+      "no-final-question"
+    ]
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 3,
+    "turn": 1,
+    "move": "RECAP",
+    "student": "Ho gaya mam?",
+    "meera": "Haan, bas jaane se pehle yeh batao, cell mein glucose se energy kaise aur kahan banti hai?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 3,
+    "turn": 2,
+    "move": "RECAP",
+    "student": "Mitochondria mein glucose oxygen se toot ke energy deta hai, wo ATP mein jaati hai. Aur ye cell ke andar hota hai.",
+    "meera": "Right, poora process ache se pakad liya. Bas ATP ka role yaad rakhna. Agli baar kab milte hain?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 4,
+    "turn": 1,
+    "move": "RECAP",
+    "student": "Ho gaya mam?",
+    "meera": "Haan, bas khatam hi hai! Ek baar bina dekhe batao, cell ke andar glucose, oxygen aur mitochondria milkar kya karte hain?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 4,
+    "turn": 2,
+    "move": "RECAP",
+    "student": "Mitochondria mein glucose oxygen se toot ke energy deta hai, wo ATP mein jaati hai. Aur ye cell ke andar hota hai.",
+    "meera": "Right, poora process ache se pakad liya. Bas ATP ka role yaad rakhna agle lesson mein. Agli class kab rakhein?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 5,
+    "turn": 1,
+    "move": "RECAP",
+    "student": "Ho gaya mam?",
+    "meera": "Haan! Par jaane se pehle, aaj humne cell ke energy banane ke baare mein jo do-teen khaas baatein seekhi hain, woh apne shabdon mein batao?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 5,
+    "turn": 2,
+    "move": "RECAP",
+    "student": "Mitochondria mein glucose oxygen se toot ke energy deta hai, wo ATP mein jaati hai. Aur ye cell ke andar hota hai.",
+    "meera": "Right, glucose oxygen ke saath milkar mitochondria mein ATP banata hai. Agli baar kab milte hain aage seekhne ke liye?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 6,
+    "turn": 1,
+    "move": "RECAP",
+    "student": "Ho gaya mam?",
+    "meera": "Haan, bas khatam karne se pehle, aaj humne jo do zaroori baatein seekhi respiration aur mitochondria ke baare mein, apne shabdon mein batao?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 6,
+    "turn": 2,
+    "move": "RECAP",
+    "student": "Mitochondria mein glucose oxygen se toot ke energy deta hai, wo ATP mein jaati hai. Aur ye cell ke andar hota hai.",
+    "meera": "Right, tumne glucose se ATP tak ka poora raasta saaf bataya. Ab kab milte hain agli class ke liye?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 7,
+    "turn": 1,
+    "move": "RECAP",
+    "student": "Ho gaya mam?",
+    "meera": "Haan, bas jaane se pehle apne shabdon mein batao ki cell ke andar energy kaise aur kahan banti hai?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 7,
+    "turn": 2,
+    "move": "RECAP",
+    "student": "Mitochondria mein glucose oxygen se toot ke energy deta hai, wo ATP mein jaati hai. Aur ye cell ke andar hota hai.",
+    "meera": "Right, tumne glucose se ATP tak ka poora raasta sahi bataya. Ab kab milte hain agli class ke liye?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 8,
+    "turn": 1,
+    "move": "RECAP",
+    "student": "Ho gaya mam?",
+    "meera": "Haan, bas jaane se pehle apne shabdon mein batao ki cell mein energy kaise aur kahan banti hai?",
+    "flags": []
+  },
+  {
+    "label": "26 Recap, then the recall",
+    "draw": 8,
+    "turn": 2,
+    "move": "RECAP",
+    "student": "Mitochondria mein glucose oxygen se toot ke energy deta hai, wo ATP mein jaati hai. Aur ye cell ke andar hota hai.",
+    "meera": "Right, glucose aur oxygen se mitochondria mein ATP banna tumne seedhe pakad liya. Agli baar kab milte hain?",
+    "flags": []
+  },
+  {
+    "label": "33 Go back a step",
+    "draw": 1,
+    "turn": 1,
+    "move": "GO_BACK",
+    "student": "Mam ye bilkul samajh nahi aaya.",
+    "meera": "Koi baat nahi, ek step peeche chalte hain. Hum jo khana khate hain, us se hamare body ke cells ko kya milta hai?",
+    "flags": []
+  },
+  {
+    "label": "33 Go back a step",
+    "draw": 2,
+    "turn": 1,
+    "move": "GO_BACK",
+    "student": "Mam ye bilkul samajh nahi aaya.",
+    "meera": "Koi baat nahi, ek step peeche chalte hain. Humari body ke har cell ko kaam karne ke liye energy kis cheez se milti hai, socho?",
+    "flags": []
+  },
+  {
+    "label": "33 Go back a step",
+    "draw": 3,
+    "turn": 1,
+    "move": "GO_BACK",
+    "student": "Mam ye bilkul samajh nahi aaya.",
+    "meera": "Koi baat nahi, chalo ek step peeche chalte hain. Humari body ke cells ko apna kaam karne ke liye energy kahan se milti hai?",
+    "flags": []
+  },
+  {
+    "label": "33 Go back a step",
+    "draw": 4,
+    "turn": 1,
+    "move": "GO_BACK",
+    "student": "Mam ye bilkul samajh nahi aaya.",
+    "meera": "Koi baat nahi, ek step peeche chalte hain. Hum jo khana khate hain, hamare cells ko usse kya milta hai aur kyun chahiye hota hai?",
+    "flags": []
+  },
+  {
+    "label": "33 Go back a step",
+    "draw": 5,
+    "turn": 1,
+    "move": "GO_BACK",
+    "student": "Mam ye bilkul samajh nahi aaya.",
+    "meera": "Koi baat nahi, hum ek step peeche chalte hain. Yeh socho, humari body ke cells ko apna kaam karne ke liye energy kahan se milti hai?",
+    "flags": []
+  },
+  {
+    "label": "33 Go back a step",
+    "draw": 6,
+    "turn": 1,
+    "move": "GO_BACK",
+    "student": "Mam ye bilkul samajh nahi aaya.",
+    "meera": "Koi baat nahi, ek step peeche chalte hain. Hum jo khana khate hain, hamare cells ko us glucose se kya milta hai?",
+    "flags": []
+  },
+  {
+    "label": "33 Go back a step",
+    "draw": 7,
+    "turn": 1,
+    "move": "GO_BACK",
+    "student": "Mam ye bilkul samajh nahi aaya.",
+    "meera": "Koi baat nahi, ek step peeche chalte hain. Yeh socho, humari body ke cells ko apna kaam karne ke liye energy kahan se milti hai?",
+    "flags": []
+  },
+  {
+    "label": "33 Go back a step",
+    "draw": 8,
+    "turn": 1,
+    "move": "GO_BACK",
+    "student": "Mam ye bilkul samajh nahi aaya.",
+    "meera": "Koi baat nahi, hum ek step peeche chalte hain. Yeh socho, humari body ke cells ko apna kaam karne ke liye kis cheez ki zaroorat hoti hai?",
+    "flags": []
+  },
+  {
+    "label": "34 Predict then reveal",
+    "draw": 1,
+    "turn": 1,
+    "move": "PREDICT_THEN_REVEAL",
+    "student": "Mam kya hoga agar chuna paani mein phoonk maarein?",
+    "meera": "Tum pehle guess karo, jab hum lime water mein straw se phoonk maarenge, toh uska colour kaisa ho sakta hai?",
+    "flags": []
+  },
+  {
+    "label": "34 Predict then reveal",
+    "draw": 2,
+    "turn": 1,
+    "move": "PREDICT_THEN_REVEAL",
+    "student": "Mam kya hoga agar chuna paani mein phoonk maarein?",
+    "meera": "Pehle tum andaza lagao, jab hum lime water mein phoonk maarenge toh uske colour ya look mein kya badlav aayega?",
+    "flags": []
+  },
+  {
+    "label": "34 Predict then reveal",
+    "draw": 3,
+    "turn": 1,
+    "move": "PREDICT_THEN_REVEAL",
+    "student": "Mam kya hoga agar chuna paani mein phoonk maarein?",
+    "meera": "Pehle tum andaza lagao, jab hum lime water mein phoonk maarenge, toh uske rang mein kya badlaav aayega?",
+    "flags": []
+  },
+  {
+    "label": "34 Predict then reveal",
+    "draw": 4,
+    "turn": 1,
+    "move": "PREDICT_THEN_REVEAL",
+    "student": "Mam kya hoga agar chuna paani mein phoonk maarein?",
+    "meera": "Tum socho, jab hum lime water mein phoonk maarenge toh uska colour kaisa badal sakta hai?",
+    "flags": []
+  },
+  {
+    "label": "34 Predict then reveal",
+    "draw": 5,
+    "turn": 1,
+    "move": "PREDICT_THEN_REVEAL",
+    "student": "Mam kya hoga agar chuna paani mein phoonk maarein?",
+    "meera": "Pehle tum guess karo, jab hum lime water mein phoonk maarenge, toh paani ke rang mein kya badlav aayega?",
+    "flags": []
+  },
+  {
+    "label": "34 Predict then reveal",
+    "draw": 6,
+    "turn": 1,
+    "move": "PREDICT_THEN_REVEAL",
+    "student": "Mam kya hoga agar chuna paani mein phoonk maarein?",
+    "meera": "Socho ek baar, jab hum lime water mein straw se phoonk maarenge, toh uska rang kaisa ho jayega?",
+    "flags": []
+  },
+  {
+    "label": "34 Predict then reveal",
+    "draw": 7,
+    "turn": 1,
+    "move": "PREDICT_THEN_REVEAL",
+    "student": "Mam kya hoga agar chuna paani mein phoonk maarein?",
+    "meera": "Pehle tum guess karo, jab hum chuna paani ya lime water mein phoonk marenge, toh uske rang mein kya badlav aayega?",
+    "flags": []
+  },
+  {
+    "label": "34 Predict then reveal",
+    "draw": 8,
+    "turn": 1,
+    "move": "PREDICT_THEN_REVEAL",
+    "student": "Mam kya hoga agar chuna paani mein phoonk maarein?",
+    "meera": "Tum socho, jab hum lime water mein phoonk maarenge toh uska colour kaisa badlega?",
+    "flags": []
+  }
+]
