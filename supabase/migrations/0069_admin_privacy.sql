@@ -35,7 +35,10 @@ create table if not exists admin.erasure_request (
   due_on date not null,
   channel text not null check (channel in ('email', 'phone', 'letter', 'school', 'in-app')),
   requester text not null check (requester in ('parent', 'student', 'school', 'other')),
-  reference text not null check (reference ~ '^[A-Za-z0-9#/_ -]{3,60}$' and reference !~ '[0-9]{10}'),
+  -- No ten digits in a row once spaces, #, /, _ and - are taken out: a phone
+  -- number is refused however it was typed ('98765 43210', '91 98765-43210').
+  reference text not null check (reference ~ '^[A-Za-z0-9#/_ -]{3,60}$'
+                                 and regexp_replace(reference, '[ #/_-]', '', 'g') !~ '[0-9]{10}'),
   subject_kind text not null check (subject_kind in ('school-student', 'direct')),
   org_id uuid references lms.school on delete set null,
   login_id text,
@@ -161,8 +164,8 @@ begin
   if p_requester is null or p_requester not in ('parent', 'student', 'school', 'other') then
     raise exception 'the request is from a parent, the student, the school or someone else';
   end if;
-  if ref !~ '^[A-Za-z0-9#/_ -]{3,60}$' or ref ~ '[0-9]{10}' then
-    raise exception 'a reference is 3 to 60 letters, digits, spaces, #, /, _ or -, and never an email address or a phone number';
+  if ref !~ '^[A-Za-z0-9#/_ -]{3,60}$' or regexp_replace(ref, '[ #/_-]', '', 'g') ~ '[0-9]{10}' then
+    raise exception 'a reference is 3 to 60 letters, digits, spaces, #, /, _ or -, and never an email address or a phone number (no ten digits in a row, even with spaces or marks between them)';
   end if;
   if p_received_on is null or p_received_on > lms.india_today() or p_received_on < lms.india_today() - 365 then
     raise exception 'the day it was received is in the last year, not in the future';

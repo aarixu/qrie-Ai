@@ -204,7 +204,9 @@ function IntakeDialog({ open, onOpenChange, onDone }: { open: boolean; onOpenCha
         <div className='space-y-1'>
           <Label htmlFor='req-ref'>Reference</Label>
           <Input id='req-ref' value={reference} onChange={(e) => setReference(e.target.value)} placeholder='MAIL 2026/11 #4' />
-          <p className='text-xs text-muted-foreground'>Never an email address or a phone number.</p>
+          <p className='text-xs text-muted-foreground'>
+            Never an email address or a phone number: no ten digits in a row, even with spaces or dashes between them.
+          </p>
         </div>
         <div className='space-y-1'>
           <Label htmlFor='req-on'>Received on</Label>

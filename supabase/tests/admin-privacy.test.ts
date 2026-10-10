@@ -126,6 +126,16 @@ describe('a request', () => {
     const ref = /a reference is 3 to 60 letters, digits, spaces, #, \/, _ or -, and never an email address or a phone number/;
     await expect(intake(aal2(ops), { p_reference: 'a@b.co' })).rejects.toThrow(ref);
     await expect(intake(aal2(ops), { p_reference: '9876543210' })).rejects.toThrow(ref);
+    // A phone number typed the natural way, with spaces, dashes or slashes between its digits.
+    for (const phone of ['98765 43210', '91 98765-43210', '9876-543-210', '98765/43210', 'CALL 98_765 43#210']) {
+      await expect(intake(aal2(ops), { p_reference: phone }), phone).rejects.toThrow(ref);
+    }
+    await expect(
+      db.query(
+        `insert into admin.erasure_request (received_on, due_on, channel, requester, reference, subject_kind, user_id, created_by)
+         values (current_date, current_date, 'phone', 'parent', '98765 43210', 'direct', gen_random_uuid(), gen_random_uuid())`,
+      ),
+    ).rejects.toThrow(/erasure_request_reference_check/);
     await expect(intake(aal2(ops), { p_reference: 'ab' })).rejects.toThrow(ref);
     await expect(intake(aal2(ops), { p_channel: 'fax' })).rejects.toThrow(/a request came by email, phone, letter, school or in-app/);
     await expect(intake(aal2(ops), { p_requester: 'neighbour' })).rejects.toThrow(/the request is from a parent, the student, the school or someone else/);
