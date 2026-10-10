@@ -6,6 +6,7 @@ import type { PracticeChapter } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { subjectHue } from '@/lib/palette'
+import { useAuthStore } from '@/stores/auth-store'
 // Relative: the tests' `@` is the teacher app's, which has no such file.
 import { MasteryInfo } from '../../components/mastery-info'
 import { SubjectBadge } from '@/components/subject-icon'
@@ -14,14 +15,26 @@ import { chapterTitle, standingOf } from '../progress'
 /**
  * Learn: every chapter of the child's subjects. A chapter opens for practice
  * once the school has approved its questions (lms.practice_chapters); the
- * AI tutor joins here later.
+ * AI tutor joins here later. With no chapter at all, the child's subjects
+ * (lms.student_subjects) tell a class whose chapters the project does not
+ * hold from a child with no subjects.
  */
 export function Learn() {
+  const me = useAuthStore((s) => s.me)
   const chapters = useQuery({ queryKey: ['practice-chapters'], queryFn: api.practiceChapters })
+  const none = chapters.data?.length === 0
+  const mySubjects = useQuery({
+    queryKey: ['my-subjects', me?.userId],
+    queryFn: () => api.studentSubjects(me!.userId),
+    enabled: !!me && none,
+  })
   const [subject, setSubject] = useState<string | null>(null)
 
-  if (chapters.isPending) return <p className='text-muted-foreground'>Loading your chapters…</p>
+  if (chapters.isPending || (none && !!me && mySubjects.isPending)) {
+    return <p className='text-muted-foreground'>Loading your chapters…</p>
+  }
   if (chapters.isError) return <p className='text-destructive'>{say(chapters.error)}</p>
+  if (none && mySubjects.isError) return <p className='text-destructive'>{say(mySubjects.error)}</p>
 
   const subjects = [...new Set(chapters.data.map((c) => c.subjectName))]
   const current = subject ?? subjects[0] ?? null
@@ -49,7 +62,14 @@ export function Learn() {
       </div>
 
       {subjects.length === 0 ? (
-        <p className='text-sm text-muted-foreground'>No subjects yet.</p>
+        mySubjects.data?.length ? (
+          // Teachers set work without chapters: their own questions, written tasks, photos, tests on paper.
+          <p className='rounded-xl bg-muted p-3 text-sm text-muted-foreground'>
+            Your class’s chapters are not in Qrie yet, so practice is not open. Your teachers can still set homework and tests.
+          </p>
+        ) : (
+          <p className='text-sm text-muted-foreground'>No subjects yet.</p>
+        )
       ) : (
         <>
           <div className='-mx-4 flex gap-2 overflow-x-auto px-4 pb-1'>

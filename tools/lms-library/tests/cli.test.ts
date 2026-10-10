@@ -36,6 +36,10 @@ describe('lms-library', () => {
     expect(await run([], t.deps)).toBe(0);
     const text = t.out.join('\n');
     expect(text).toContain('Skipped Classes 6-9: their banks come from the old NCERT books, not the current syllabus.');
+    // What a class without outcomes goes without (lms.practice_chapters, lms.library_topics, concept_state).
+    expect(text).toContain(
+      '  So Classes 6-9 will have no chapters on this project, unless it holds some already: no practice, no topics, no mastery until new-book content is loaded.',
+    );
     expect(text).toContain('Class 6: 526 items and 526 outcomes (class6-mathematics, class6-science)');
     expect(text).toContain('Class 7: 481 items and 481 outcomes (class7-mathematics, class7-science)');
     expect(text).toContain('Class 8: 1115 items and 1115 outcomes (class8-mathematics, class8-science)');
@@ -54,6 +58,7 @@ describe('lms-library', () => {
     expect(text).toMatch(/class8-science: 762/);
     expect(text).toContain('Including Classes 6-9 from the old NCERT books (--include-old-books-6-9).');
     expect(text).not.toContain('Skipped Classes 6-9');
+    expect(text).not.toContain('will have no chapters');
   });
 
   it('refuses --apply without the project URL and service role key', async () => {

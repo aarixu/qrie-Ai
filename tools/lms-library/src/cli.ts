@@ -13,8 +13,16 @@ import { syncLibrary } from './sync.ts';
  *
  * Classes 6-9 are left out, items and outcomes both, and counted class by
  * class in the output: their banks come from the old NCERT books
- * (OLD_BOOK_GRADES). --include-old-books-6-9 loads them too. Leaving them out
- * removes nothing a project already holds.
+ * (OLD_BOOK_GRADES), and so do their outcomes' chapter names.
+ * --include-old-books-6-9 loads them too. Leaving them out removes nothing a
+ * project already holds.
+ *
+ * What that costs, on a project that holds no Class 6-9 outcomes: those
+ * classes have no chapters, so no practice (lms.practice_chapters lists the
+ * chapters of a class's outcomes), no topics to file questions under
+ * (lms.library_topics), and no mastery (the brain's beliefs are per outcome),
+ * until new-book content is loaded. Their teachers can still set work: their
+ * own questions, written tasks, photos and tests on paper need no chapter.
  */
 
 export interface CliDeps {
@@ -33,6 +41,9 @@ function choose(all: Bank[], includeOld: boolean, log: (line: string) => void): 
   const { kept, skipped } = withoutOldBooks(all);
   if (skipped.length) {
     log('Skipped Classes 6-9: their banks come from the old NCERT books, not the current syllabus.');
+    log(
+      '  So Classes 6-9 will have no chapters on this project, unless it holds some already: no practice, no topics, no mastery until new-book content is loaded.',
+    );
     skipped.forEach((s: SkippedGrade) =>
       log(`  Class ${s.grade}: ${s.items} items and ${s.outcomes} outcomes (${s.banks.join(', ')})`),
     );
