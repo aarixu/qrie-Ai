@@ -218,3 +218,25 @@ export function chartSearch(search: Record<string, unknown>): { days: 7 | 30; sc
   const school = typeof search.school === 'string' && search.school.trim() !== '' ? search.school.trim().toUpperCase() : undefined;
   return school ? { days, school } : { days };
 }
+
+/**
+ * A school-by-school metric added up per day (dimension ''): seats, homework
+ * published. A day with no point has no figure; a day where any point is
+ * hidden for fewer than 10 children is hidden as a whole.
+ */
+export function totalByDay(m: Metric): DayPoint[] {
+  return daysBetween(m.from, m.to).map((day) => {
+    if (!m.captured || (m.capturedSince !== null && day < m.capturedSince)) return { day, value: null, state: 'not-captured' };
+    const on = m.points.filter((p) => p.day === day && p.dim === '');
+    if (on.length === 0) return { day, value: null, state: 'no-figure' };
+    if (on.some((p) => p.suppressed || p.value === null)) return { day, value: null, state: 'suppressed' };
+    return { day, value: on.reduce((a, p) => a + (p.value ?? 0), 0), state: 'value' };
+  });
+}
+
+/** The platform's points (or, with `school`, one school's) on the latest day that has any. */
+export function latestPoints(m: Metric, school: string | null = null): Metric['points'] {
+  const mine = m.points.filter((p) => p.school === school);
+  const last = mine.reduce<string | null>((d, p) => (d === null || p.day > d ? p.day : d), null);
+  return last === null ? [] : mine.filter((p) => p.day === last);
+}

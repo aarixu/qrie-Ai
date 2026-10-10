@@ -128,7 +128,7 @@ export const metricOf = (s: ChartSeries, key: string): Metric | undefined => s.m
 /**
  * One metric as a chart card: grey "Not captured" with the reason when the
  * database cannot see it, else its lines (dimensions) drawn by SeriesChart,
- * with the UTC note on a UTC metric.
+ * with the UTC day said on a UTC metric.
  */
 export function MetricCard({
   metric,
@@ -155,16 +155,16 @@ export function MetricCard({
 }) {
   if (!metric) return null;
   if (!metric.captured) return <NotCaptured label={title ?? metric.label} why={metric.why} className={className} />;
-  const wanted = lines ?? [{ dim: '', label: metric.label }];
+  const wanted = lines && lines.length > 0 ? lines : [{ dim: '', label: metric.label }];
   const series: ChartLine[] = wanted.map((l, i) => ({
     key: `s${i}`,
     label: l.label,
     colour: colourAt(i),
     points: seriesFor(metric, { dim: l.dim, school }),
   }));
-  const note = utcNote(metric);
+  const utcDay = utcNote(metric);
   return (
-    <ChartCard title={title ?? metric.label} description={[description, note].filter(Boolean).join(' ') || undefined} className={className}>
+    <ChartCard title={title ?? metric.label} description={[description, utcDay].filter(Boolean).join(' ') || undefined} className={className}>
       <SeriesChart series={series} kind={kind} unit={unit ?? metric.unit} reference={reference} />
       {footer && <div className='mt-2 px-4 text-sm text-muted-foreground'>{footer}</div>}
     </ChartCard>

@@ -9,6 +9,7 @@ import {
   formatValue,
   healthByDay,
   latestBySchool,
+  latestPoints,
   NO_FIGURE_TEXT,
   NOT_CAPTURED_TEXT,
   perStudentHourPaise,
@@ -20,6 +21,7 @@ import {
   sumOf,
   SUPPRESSED_TEXT,
   TARGET_PAISE_PER_HOUR,
+  totalByDay,
   unpricedShare,
   utcNote,
 } from '../src/features/charts/model.ts';
@@ -199,6 +201,41 @@ describe('derived lines and the page address', () => {
       { day: '2026-10-04', value: null, state: 'suppressed' },
       { day: '2026-10-05', value: null, state: 'no-figure' },
     ]);
+  });
+
+  it("totalByDay adds every school's figure per day, and a day with none has no figure", () => {
+    const m = metric({
+      to: '2026-10-03',
+      points: [
+        pt('2026-10-01', 12, { school: 'BIG' }),
+        pt('2026-10-01', 2, { school: 'SML' }),
+        pt('2026-10-02', 0, { school: 'BIG' }),
+        pt('2026-10-02', 5, { school: 'BIG', dim: 'other' }),
+      ],
+    });
+    expect(totalByDay(m)).toEqual([
+      { day: '2026-10-01', value: 14, state: 'value' },
+      { day: '2026-10-02', value: 0, state: 'value' },
+      { day: '2026-10-03', value: null, state: 'no-figure' },
+    ]);
+    expect(totalByDay(metric({ captured: false, to: '2026-10-01' }))).toEqual([{ day: '2026-10-01', value: null, state: 'not-captured' }]);
+  });
+
+  it('latestPoints gives the platform’s (or one school’s) points of the latest day that has any', () => {
+    const m = metric({
+      points: [
+        pt('2026-10-01', 1, { dim: '8|Maths' }),
+        pt('2026-10-03', 2, { dim: '8|Maths' }),
+        pt('2026-10-03', null, { dim: '7|Science' }),
+        pt('2026-10-04', 9, { dim: '8|Maths', school: 'BIG' }),
+      ],
+    });
+    expect(latestPoints(m).map((p) => [p.day, p.dim, p.value])).toEqual([
+      ['2026-10-03', '8|Maths', 2],
+      ['2026-10-03', '7|Science', null],
+    ]);
+    expect(latestPoints(m, 'BIG').map((p) => [p.day, p.value])).toEqual([['2026-10-04', 9]]);
+    expect(latestPoints(metric())).toEqual([]);
   });
 
   it('chartSearch keeps 7 or 30 days (7 otherwise) and a school code when one is given', () => {

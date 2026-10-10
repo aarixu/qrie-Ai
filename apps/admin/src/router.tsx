@@ -13,10 +13,15 @@ import { BillingSchoolsPage } from '@/features/billing/schools';
 import { SettingsPage } from '@/features/billing/settings';
 import { SubscriptionsPage } from '@/features/billing/subscriptions';
 import { WebhooksPage } from '@/features/billing/webhooks';
+import { ChartsContent } from '@/features/charts/content';
+import { ChartsFunnel } from '@/features/charts/funnel';
+import { ChartsLearning } from '@/features/charts/learning';
 import { chartSearch } from '@/features/charts/model';
 import { ChartsMoney } from '@/features/charts/money';
 import { ChartsOverview } from '@/features/charts/overview';
+import { ChartsReliability } from '@/features/charts/reliability';
 import { ChartsSafety } from '@/features/charts/safety';
+import { ChartsSchools } from '@/features/charts/schools';
 import { Classes } from '@/features/classes';
 import { ClassPage } from '@/features/classes/class-page';
 import { Privacy } from '@/features/privacy';
@@ -81,6 +86,11 @@ const chartRoute = <P extends string>(path: P, component: () => React.ReactNode)
 const chartsOverview = chartRoute('/charts/overview', ChartsOverview);
 const chartsMoney = chartRoute('/charts/money', ChartsMoney);
 const chartsSafety = chartRoute('/charts/safety', ChartsSafety);
+const chartsSchools = chartRoute('/charts/schools', ChartsSchools);
+const chartsLearning = chartRoute('/charts/learning', ChartsLearning);
+const chartsContent = chartRoute('/charts/content', ChartsContent);
+const chartsReliability = chartRoute('/charts/reliability', ChartsReliability);
+const chartsFunnel = chartRoute('/charts/funnel', ChartsFunnel);
 
 export const router = createRouter({
   routeTree: root.addChildren([
@@ -113,6 +123,11 @@ export const router = createRouter({
     chartsOverview,
     chartsMoney,
     chartsSafety,
+    chartsSchools,
+    chartsLearning,
+    chartsContent,
+    chartsReliability,
+    chartsFunnel,
   ]),
 });
 
