@@ -16,7 +16,7 @@ export {
 } from './review.ts';
 export { screenSpine, type ScreenedLine } from './screenSpine.ts';
 export { verifySvg } from './verify.ts';
-export { PLANNER_SYSTEM, ARTIST_SYSTEM, plannerUser, artistUser, repairUser } from './prompts.ts';
+export { PLANNER_SYSTEM, ARTIST_SYSTEM, plannerSystemFor, plannerUser, artistUser, repairUser } from './prompts.ts';
 export type {
   Blueprint,
   VisualBrief,
@@ -53,5 +53,8 @@ export {
   type GateOptions,
   type MathsCheck,
 } from './gate.ts';
+export type { ComposerReport, PageReport } from './composerChecks.ts';
 export * from './fromWeb.ts';
 export * from './commons.ts';
+export * from './nounPhotos.ts';
+export * from './credits.ts';

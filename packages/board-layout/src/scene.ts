@@ -1,7 +1,7 @@
 import {
   fitText,
   graphicLabelSize,
-  textWidth,
+  graphicLabelWidth,
   BESIDE_GAP,
   type Element,
   type Rect,
@@ -56,6 +56,13 @@ export function layoutScene(
   band: { x: number; y: number; w: number; h: number },
   /** Makes an element id from the author's — see `Placed.elementId`. */
   namespaced: (authorId: string) => string = (id) => id,
+  /**
+   * The gap between two rows. 18 on a stacked board; a composed board asks for
+   * a lane, so the words of an arrow from one row to the next have room beside
+   * it (small intestine, 2026-10-07: in 18 units they were shrunk and parked
+   * far from their arrow).
+   */
+  gapBetweenRows = 18,
 ): { elements: Element[]; boxes: Map<string, Placed> } {
   const boxes = new Map<string, Placed>();
   const elements: Element[] = [];
@@ -69,7 +76,6 @@ export function layoutScene(
   // the others.
   const rows = [...new Set(places.map((p) => p.row ?? 0))].sort((a, b) => a - b);
   if (rows.length > 1) {
-    const gapBetweenRows = 18;
     const each = (band.h - gapBetweenRows * (rows.length - 1)) / rows.length;
     for (const [n, row] of rows.entries()) {
       const strip = { ...band, y: band.y + n * (each + gapBetweenRows), h: each };
@@ -139,7 +145,7 @@ export function layoutScene(
   const spanAt = (q: PlaceStep, k: number) => {
     const size = natural(q) * k;
     if (!q.label) return size;
-    const write = textWidth(q.label, graphicLabelSize(size, q.label, labelSide));
+    const write = graphicLabelWidth(q.label, graphicLabelSize(size, q.label, labelSide));
     return labelSide === 'beside' ? size + BESIDE_GAP + write : Math.max(size, write);
   };
 
@@ -359,11 +365,14 @@ export function connectElements(
     // close together leave a short arrow, and a label at full size then spills
     // across both of the pictures it was meant to be between.
     const run = Math.hypot(to.x - from.x, to.y - from.y);
-    // Sized by the sans ruler on purpose, not her handwriting's narrower one
-    // (lesson-format `handWidth`): measured narrower, a label grew up to 1.6x
-    // to fill the same run, and the taller words ran into the pictures either
-    // side of the arrow (300-class fuzz, 2026-10-02: overlaps 1 -> 3 classes).
-    const size = fitText(step.label, run, 30, 17);
+    // Sized by the sans ruler on purpose, not her own narrower one
+    // (lesson-format `handWidth`): measured narrower — Caveat's ruler was, when
+    // this was found — a label grew up to 1.6x to fill the same run, and the
+    // taller words ran into the pictures either side of the arrow (300-class
+    // fuzz, 2026-10-02: overlaps 1 -> 3 classes).
+    // 27 and 15: 0.9 of what they were in Caveat (layout.ts, the sizes she
+    // writes at).
+    const size = fitText(step.label, run, 27, 15);
     out.push({
       kind: 'handwrite',
       id: labelIdFor(id),

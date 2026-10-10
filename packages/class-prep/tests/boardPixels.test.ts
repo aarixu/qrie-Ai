@@ -23,6 +23,15 @@ import { fuzzPlan } from './fixtures/fuzzPlans';
  * Tried and left: a connector-label floor of 19 or 20 units cut the sideways
  * lines under 12 px to ~2.5%, and turned one overlapping class in 300 into two
  * or three — each a class the keep gate refuses after its spend.
+ *
+ * MEASURED AGAIN 2026-10-07, her lines drawn in Quicksand instead of Caveat
+ * (Aarav: "writing font ko normal kr do") at 0.9 of their old sizes:
+ *   phone held sideways: median 17.7 px; 22.9% under 14 px, 8.0% under 12 px.
+ *   laptop: median 25.4 px; 0.5% under 14 px, none under 12.
+ * Smaller numbers, larger letters: these are font sizes, and Quicksand's
+ * lowercase stands 0.54 of its size against Caveat's 0.36. Her lowercase on a
+ * phone held sideways went from about 7.9 px tall (22 x 0.36) to 9.6 px
+ * (17.7 x 0.54) — the measure a reader's eye actually meets.
  * The guards below hold those numbers.
  */
 
@@ -80,14 +89,14 @@ describe('how big her writing comes out, 300 seeded classes at 16:9', () => {
     px[screen].filter((v) => v < limit).length / px[screen].length;
   const median = (screen: Screen): number => [...px[screen]].sort((a, b) => a - b)[Math.floor(px[screen].length / 2)];
 
-  it('reads at about 22 px on a phone held sideways, few lines under 12', () => {
-    expect(median('sideways')).toBeGreaterThanOrEqual(21);
-    expect(under('sideways', 12)).toBeLessThanOrEqual(0.075);
-    expect(under('sideways', 14)).toBeLessThanOrEqual(0.12);
+  it('reads at about 18 px on a phone held sideways, few lines under 12', () => {
+    expect(median('sideways')).toBeGreaterThanOrEqual(17);
+    expect(under('sideways', 12)).toBeLessThanOrEqual(0.085);
+    expect(under('sideways', 14)).toBeLessThanOrEqual(0.24);
   });
 
-  it('reads at about 30 px on a laptop, nothing under 12', () => {
-    expect(median('laptop')).toBeGreaterThanOrEqual(29);
+  it('reads at about 25 px on a laptop, nothing under 12', () => {
+    expect(median('laptop')).toBeGreaterThanOrEqual(25);
     expect(under('laptop', 12)).toBe(0);
   });
 });

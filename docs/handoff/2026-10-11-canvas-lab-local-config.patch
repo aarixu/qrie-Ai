@@ -1,0 +1,138 @@
+diff --git a/apps/classroom/vite.canvas.local.config.ts b/apps/classroom/vite.canvas.local.config.ts
+index 8c166c8..01eba6e 100644
+--- a/apps/classroom/vite.canvas.local.config.ts
++++ b/apps/classroom/vite.canvas.local.config.ts
+@@ -1,13 +1,130 @@
+ // LOCAL ONLY, never commit: runs the canvas worktree on its own port, and
+ // allows the main checkout's node_modules (a junction here) to be served.
++// The worktree has no .env.local and no .secrets: both are read, at run time,
++// from the main checkout, so the dev relays can call the models. Nothing is
++// copied and no value is printed.
++//
++// CANVAS LAB DEMO RELAYS: on this local server only, the relay routes run the
++// same handleRelay as everywhere else but accept a request with no sign-in, so
++// a demo class can be prepared in the lab without a session on this port.
++// Production's gate is untouched: this file is never committed or deployed.
++import fs from 'node:fs';
++import path from 'node:path';
+ import { fileURLToPath } from 'node:url';
+-import type { ConfigEnv, UserConfig } from 'vite';
++import { loadEnv, type ConfigEnv, type Plugin, type UserConfig } from 'vite';
+ import base from './vite.config';
++import {
++  createDevOtpProvider,
++  createMemoryConsentStore,
++  createMemoryLedger,
++  createMemoryOtpGate,
++  createMemoryPrepLocks,
++  createMemoryReportStore,
++  createTokenSource,
++  handleRelay,
++  readServiceAccount,
++  sendRelayResponse,
++  toRelayRequest,
++  type UsageEvent,
++} from '../../packages/relay/src/index.ts';
+ 
+ const worktree = fileURLToPath(new URL('../..', import.meta.url));
+-const mainModules = fileURLToPath(new URL('../../../../../node_modules', import.meta.url));
++const mainRoot = fileURLToPath(new URL('../../../../..', import.meta.url));
++const mainModules = path.join(mainRoot, 'node_modules');
++/** Where the lab saves a prepared class for the static viewer: the session's scratchpad, never the repo. */
++const SAVE_DIR = 'C:/Users/ASHISH~1/AppData/Local/Temp/claude/C--Users-Ashish-Sharma-curie/d3f457d3-4828-4f06-aad3-ea5d4c4169b7/scratchpad/qrie-canvas-demo-public';
++
++function demoRelays(key: string, accountFile: string | undefined): Plugin {
++  // A model call that hangs is given up after four minutes here (a plan can
++  // take two), so a stuck Vertex reply costs the lab one call, not the server.
++  const timed: typeof fetch = (input, init) => fetch(input, { ...init, signal: AbortSignal.timeout(240_000) });
++  const vertex = accountFile
++    ? { tokens: createTokenSource(readServiceAccount(fs.readFileSync(accountFile, 'utf8'))), fetch: timed }
++    : undefined;
++  const deps = {
++    key,
++    gate: {
++      verify: async () => ({ ok: true as const, user: { userId: 'canvas-lab-demo' } }),
++      ledger: createMemoryLedger(),
++      ticketSecret: 'dev-only-ticket-secret',
++    },
++    ...(vertex ? { vertex } : {}),
++    reports: createMemoryReportStore(),
++    prepLocks: createMemoryPrepLocks(),
++    otp: createDevOtpProvider(),
++    otpGate: createMemoryOtpGate(),
++    consent: createMemoryConsentStore(),
++    usage: {
++      async record(e: UsageEvent) {
++        const q = [
++          e.promptTokens !== undefined ? `in=${e.promptTokens}` : '',
++          e.outputTokens !== undefined ? `out=${e.outputTokens}` : '',
++          e.thoughtTokens !== undefined ? `think=${e.thoughtTokens}` : '',
++          e.images ? `images=${e.images}` : '',
++        ].filter(Boolean).join(' ');
++        console.log(`  usage: ${e.relay} ${e.model ?? '-'} ${q}`);
++      },
++    },
++  };
++  console.log('  relays: CANVAS LAB DEMO — no sign-in needed, on this local server only');
++  return {
++    name: 'canvas-lab-demo-relays',
++    apply: 'serve',
++    configureServer(server) {
++      // The lab's prepared class, written to a file outside the repo so a
++      // static viewer can play it with no model and no sign-in.
++      server.middlewares.use('/__lab/save', (req, res) => {
++        if (req.method !== 'POST') {
++          res.statusCode = 405;
++          res.end();
++          return;
++        }
++        const chunks: Buffer[] = [];
++        req.on('data', (c: Buffer) => chunks.push(c));
++        req.on('end', () => {
++          fs.mkdirSync(SAVE_DIR, { recursive: true });
++          fs.writeFileSync(path.join(SAVE_DIR, 'class.json'), Buffer.concat(chunks));
++          console.log(`  lab: saved the class to ${SAVE_DIR}`);
++          res.end('saved');
++        });
++      });
++      for (const route of ['/api/llm', '/api/prep']) {
++        server.middlewares.use(route, (req, res) => {
++          void (async () => {
++            try {
++              const relayRequest = await toRelayRequest(req);
++              const url = `${route}${relayRequest.url === '/' ? '' : relayRequest.url}`;
++              await sendRelayResponse(res, await handleRelay({ ...relayRequest, url }, deps as never));
++            } catch (e) {
++              // An upstream failure is this request's 502, never the server's end.
++              console.log(`  relay error: ${route} ${e instanceof Error ? e.message : String(e)}`);
++              if (!res.headersSent) {
++                res.statusCode = 502;
++                res.setHeader('content-type', 'application/json');
++              }
++              res.end(JSON.stringify({ error: { message: 'the model did not answer' } }));
++            }
++          })();
++        });
++      }
++    },
++  };
++}
+ 
+ export default (env: ConfigEnv): UserConfig => {
++  for (const [k, value] of Object.entries(loadEnv(env.mode, mainRoot, ''))) {
++    if (process.env[k] === undefined) process.env[k] = value;
++  }
++  // The page calls THIS server's relays (same origin), never the deployed one
++  // the main checkout's .env.local names.
++  process.env.VITE_RELAY_URL = '';
++  const account = path.join(mainRoot, '.secrets', 'vertex-service-account.json');
++  if (!process.env.GOOGLE_SERVICE_ACCOUNT_FILE && fs.existsSync(account)) process.env.GOOGLE_SERVICE_ACCOUNT_FILE = account;
+   const config = (base as (e: ConfigEnv) => UserConfig)(env);
+-  return { ...config, server: { ...config.server, port: 5191, strictPort: true, fs: { allow: [worktree, mainModules] } } };
++  return {
++    ...config,
++    // Ahead of the app's own relays, so these routes answer first.
++    plugins: [demoRelays(process.env.OPENROUTER_API_KEY ?? '', process.env.GOOGLE_SERVICE_ACCOUNT_FILE), ...(config.plugins ?? [])],
++    server: { ...config.server, port: 5191, strictPort: true, fs: { allow: [worktree, mainModules] } },
++  };
+ };

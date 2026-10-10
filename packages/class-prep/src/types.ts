@@ -1,5 +1,5 @@
 import type { ScriptBeat } from '@ai-tutor/board-layout';
-import type { ImagePart, Lesson } from '@ai-tutor/lesson-format';
+import type { Credit, ImagePart, Lesson, VideoSource } from '@ai-tutor/lesson-format';
 import type { TutorLanguage } from './prompts.ts';
 import type { ReviewProblem } from './review.ts';
 import type { GateProblem } from './gate.ts';
@@ -27,6 +27,12 @@ export interface VisualBrief {
    * Absent means diagram, so every lesson written before this stays valid.
    */
   medium?: 'diagram' | 'picture';
+  /**
+   * A picture whose lesson IS the movement — a heart pumping, a person
+   * running: a short silent loop of the real thing is looked for first and
+   * played over its still (fromWeb.ts). Only with no parts.
+   */
+  motion?: boolean;
   /**
    * The parts a tutor will point at.
    *
@@ -74,6 +80,13 @@ export interface Blueprint {
   /** Personal lines, if the planner was given anything about a student. */
   fill?: PlannedFill[];
   visuals: VisualBrief[];
+  /**
+   * 'composed': laid out in regions (board-layout compose.ts), framed region by
+   * region, and held to the keep gate's page-full and phone-readable rules.
+   * Set by prepareClass when it is asked to compose, never by the planner. Absent
+   * on every plan made before the composer, which keeps its stacked board.
+   */
+  layout?: 'composed';
 }
 
 /** What happened to one picture on the way to the board. */
@@ -179,6 +192,14 @@ export interface Replay {
   parts: Record<string, ImagePart[]>;
   shapes: Record<string, number>;
   language: TutorLanguage;
+  /**
+   * The credit of each picture found on the web, by brief id: laid out again,
+   * the class must still say whose work it shows. Absent on a replay made
+   * before credits travelled with the class.
+   */
+  credits?: Record<string, Credit>;
+  /** The loop each moving picture plays, by brief id, for the same reason. */
+  videos?: Record<string, VideoSource[]>;
 }
 
 /** Progress, so a student waiting a minute sees something happening. */

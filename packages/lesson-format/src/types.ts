@@ -23,6 +23,18 @@ export interface Point {
 export type Tone = 'neutral' | 'good' | 'bad' | 'accent';
 
 /**
+ * The colours a composed page gives its named parts (board composer, 2026-10-03).
+ *
+ * Set by the layout engine only, never by the planner. On a composed page each
+ * part a label names gets one of these, and the label, its leader line, the
+ * marks on that part and its term in the notes all carry the same one — so a
+ * colour means the same thing everywhere on that page. The renderer owns the
+ * actual colours (stage, INK_COLORS).
+ */
+export const INK_NAMES = ['red', 'blue', 'green', 'orange', 'purple', 'teal'] as const;
+export type InkName = (typeof INK_NAMES)[number];
+
+/**
  * A named region inside a picture, as fractions of it (0..1).
  *
  * Fractions rather than units because a picture is placed by the layout and
@@ -35,6 +47,41 @@ export interface ImagePart {
   y: number;
   w: number;
   h: number;
+}
+
+/**
+ * ONE WAY TO PLAY A MOVING PICTURE: a silent loop found on the web, for a
+ * picture whose lesson is the movement itself (Aarav, 2026-10-07: "images ya
+ * videos ya kuch or jo bhi ho"). An https address on Wikimedia's file host
+ * (validate.ts) and its video type; the board tries each in turn and keeps
+ * the still where none plays.
+ */
+export interface VideoSource {
+  src: string;
+  /** "video/webm" or "video/mp4", as the browser is told before it fetches. */
+  type: string;
+}
+
+/**
+ * WHO MADE A PICTURE THAT CAME FROM THE WEB, AND UNDER WHAT LICENCE.
+ *
+ * Aarav's rule (2026-10-07): a real thing on the board is a real photograph,
+ * found where its licence lets a school build on it — public domain, CC0, CC
+ * BY, CC BY-SA. The last two ask for the author and the licence to be shown
+ * with the work, so the credit travels on the element it is drawn as: the
+ * board writes it on the picture's foot, and the class lists it with its links
+ * under the board (stage CreditsList). The links are https web pages, never
+ * anything else: a saved class is data from a store, and a credit's link is
+ * one a student can follow.
+ */
+export interface Credit {
+  author?: string;
+  /** As the source names it, e.g. "CC BY-SA 4.0". */
+  license: string;
+  /** Where the licence's own terms are. */
+  licenseUrl?: string;
+  /** The page that describes the work. */
+  page?: string;
 }
 
 /**
@@ -179,12 +226,12 @@ export type Element =
       y: number;
       w: number;
       heading?: string;
-      items: { term: string; meaning?: string }[];
+      items: { term: string; meaning?: string; ink?: InkName }[];
       /** Item text size; the heading scales with it. */
       size?: number;
       tone?: Tone;
     }
-  | { kind: 'arrow'; id: string; from: Point; to: Point; label?: string; dashed?: boolean; tone?: Tone }
+  | { kind: 'arrow'; id: string; from: Point; to: Point; label?: string; dashed?: boolean; tone?: Tone; ink?: InkName }
   | { kind: 'pen'; id: string; points: Point[]; tone?: Tone }
   /**
    * A line of maths. `after` holds it back that many milliseconds: a line of
@@ -212,6 +259,15 @@ export type Element =
       alt: string;
       label?: string;
       parts?: ImagePart[];
+      /** Present when the picture was found on the web rather than made. */
+      credit?: Credit;
+      /**
+       * The picture, moving: a silent loop played in place of the still once
+       * it can play. `src` stays the still — what is drawn first, and what is
+       * left where no source plays. A moving picture has no `parts`: nothing
+       * holds still to be pointed at.
+       */
+      video?: VideoSource[];
     }
   /**
    * A generated SVG diagram whose named parts the tutor can point at.
@@ -325,6 +381,7 @@ export type Element =
       text: string;
       size?: number;
       tone?: Tone;
+      ink?: InkName;
       after?: number;
     }
   /**
@@ -364,6 +421,18 @@ export type Element =
        * the collision solver and the renderer all read the same one.
        */
       labelSide?: 'below' | 'beside';
+      /**
+       * A PHOTOGRAPH OF THE THING, when one was found (2026-10-07).
+       *
+       * A placed noun used to be an icon or a drawn one; a real thing is now a
+       * real photograph first. Live, the photograph is handed in as an asset
+       * like an icon is; once the class is saved it is a file this points at.
+       * `aspect` is its width over its height, so it is drawn at its own shape
+       * inside the element's square, and `credit` is shown with it.
+       */
+      src?: string;
+      aspect?: number;
+      credit?: Credit;
     }
   /**
    * A teacher's mark on top of something already on the board.
@@ -382,8 +451,26 @@ export type Element =
       /** `box` and `highlight` are for her own writing (canvas C3): a frame round a line, a marker stroke over part of one. */
       shape: 'circle' | 'underline' | 'tick' | 'cross' | 'box' | 'highlight';
       tone?: Tone;
+      ink?: InkName;
     }
-  | { kind: 'model3d'; id: string; x: number; y: number; w: number; h: number; asset?: string; label?: string };
+  | { kind: 'model3d'; id: string; x: number; y: number; w: number; h: number; asset?: string; label?: string }
+  /**
+   * A toolkit tool (canvas toolkit part 1): the board draws and animates it
+   * from `params`, which `tools/<tool>.ts` validates. `tool` stays a plain
+   * string so a lesson naming a tool this build lacks still parses and is
+   * reported, not crashed on. `after` holds it back like a written line.
+   */
+  | {
+      kind: 'tool';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      tool: string;
+      params: Record<string, unknown>;
+      after?: number;
+    };
 
 export type ElementKind = Element['kind'];
 

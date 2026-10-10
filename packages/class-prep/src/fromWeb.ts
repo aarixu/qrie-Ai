@@ -1,3 +1,4 @@
+import type { Credit, VideoSource } from '@ai-tutor/lesson-format';
 import {
   PART_FINDER_SYSTEM,
   imageAspect,
@@ -64,6 +65,22 @@ export interface WebCandidate {
    * the account it was served to.
    */
   license?: string;
+  /** Who made it, for the credit a CC BY licence asks for. */
+  author?: string;
+  /** Where the licence's own terms are, for the same credit. */
+  licenseUrl?: string;
+  /** The page that describes the file — the place a credit links to. */
+  page?: string;
+  /**
+   * For a video: the sources to play once its still, at `url`, has been
+   * looked at and passed.
+   */
+  video?: VideoSource[];
+  /**
+   * For a video: stills from its middle, each of which must pass too — one
+   * frame passed is not a clip passed (review, 2026-10-08).
+   */
+  frames?: string[];
 }
 
 export interface WebImageAdapter {
@@ -71,14 +88,67 @@ export interface WebImageAdapter {
   search(query: string, limit: number): Promise<readonly WebCandidate[]>;
   /** One image as a `data:` URL, or null if it could not be had. */
   fetch(url: string): Promise<string | null>;
+  /**
+   * Videos matching a query, best first, each as its still with `video` set.
+   * Optional: a search with no videos is a search for stills.
+   */
+  searchVideo?(query: string, limit: number): Promise<readonly WebCandidate[]>;
 }
+
+export type { Credit };
 
 /** A found picture, with where it came from so the class can credit it. */
 export interface FoundPicture extends PictureResult {
   /** The page the image was found on, when the search said. */
   source: string | null;
   license: string | null;
+  /** Everything a credit needs, when the search reported a licence. */
+  credit: Credit | null;
+  /** When what was found is a loop: the sources to play over `src`, its still. */
+  video?: VideoSource[];
 }
+
+/** The credit a candidate carries, or null when it has no licence to name. */
+export function creditOf(c: WebCandidate): Credit | null {
+  if (!c.license) return null;
+  const author = c.author ? shortened(c.author, CREDIT_AUTHOR_MAX) : undefined;
+  const licenseUrl = webPage(c.licenseUrl);
+  const page = webPage(c.page);
+  return {
+    ...(author ? { author } : {}),
+    license: shortened(c.license, CREDIT_LICENCE_MAX),
+    ...(licenseUrl ? { licenseUrl } : {}),
+    ...(page ? { page } : {}),
+  };
+}
+
+/**
+ * A CREDIT THE CLASS FORMAT WILL KEEP (review, 2026-10-08).
+ *
+ * Commons' Artist text runs to any length and its LicenseUrl is sometimes
+ * http or protocol-relative ("//creativecommons.org/…"). The format keeps a
+ * credit's words under 200 characters and its links as https pages under 600
+ * (lesson-format validate.ts), and a credit it refuses makes the keep fail —
+ * so the next student pays to prepare the same class again. Made to fit
+ * here, where it is made.
+ */
+const CREDIT_AUTHOR_MAX = 120;
+const CREDIT_LICENCE_MAX = 80;
+const LINK_MAX = 600;
+
+const shortened = (text: string, max: number): string =>
+  text.length <= max ? text : `${text.slice(0, max - 1).trimEnd()}…`;
+
+/** An https web page, from what a source wrote; undefined when it is not one. */
+function webPage(link: string | undefined): string | undefined {
+  if (!link) return undefined;
+  const https = link.trim().replace(/^\/\//, 'https://').replace(/^http:\/\//i, 'https://');
+  return https.length <= LINK_MAX && /^https:\/\/[^\s"'<>]+$/.test(https) ? https : undefined;
+}
+
+/** The loop sources the class format keeps: https, under its length. */
+export const keepableVideo = (sources: readonly VideoSource[] | undefined): VideoSource[] =>
+  (sources ?? []).filter((s) => s.src.length <= LINK_MAX && /^https:\/\/[^\s"'<>]+$/.test(s.src));
 
 /**
  * Licences that allow a picture to be reused in a served lesson.
@@ -184,7 +254,9 @@ Answer with JSON and nothing else:
 {"saw":"<what the picture actually shows, in a few words>",
  "right":true|false,
  "text":true|false,
- "count":<how many of the subject are in it>}
+ "count":<how many of the subject are in it>,
+ "safe":true|false,
+ "photo":true|false}
 
 - "right" is true ONLY if the picture shows the subject the lesson asked for.
   Not something related to it, not something that shares its name, not a
@@ -198,6 +270,14 @@ Answer with JSON and nothing else:
 - "count" is how many separate instances of the subject are in the picture.
   She teaches on ONE: with two, every mark she makes lands on one of them and
   the student does not know which.
+- "safe" is true ONLY if a class of school children, aged 11 to 18, may be
+  shown it. False for blood, a wound or injury, surgery, an autopsy or a dead
+  body, an organ cut out of a body, nudity, violence or a weapon, or anything
+  meant to frighten. A model, a drawing, or a clean photograph of a living
+  thing, a place or an object is fine.
+- "photo" is true ONLY if it is a photograph of a real thing (a real model
+  counts). False for a drawing, an illustration, a cartoon, a pictogram, an
+  icon, a diagram, a chart or a computer render.
 
 Say what you actually see in "saw" even when it is not what was asked for.`;
 
@@ -213,6 +293,10 @@ export interface Verdict {
   right: boolean;
   hasText: boolean;
   count: number;
+  /** Whether a class of children may be shown it. Absent is a no. */
+  safe: boolean;
+  /** Whether it is a photograph of a real thing. Absent is a no. */
+  photo: boolean;
   /** What the model said it saw, for a prep report to quote. */
   saw: string;
 }
@@ -225,7 +309,7 @@ export interface Verdict {
  * an unverified web image on a child's board, so it fails closed.
  */
 export function parseVerdict(raw: string): Verdict {
-  const no: Verdict = { right: false, hasText: false, count: 0, saw: '' };
+  const no: Verdict = { right: false, hasText: false, count: 0, safe: false, photo: false, saw: '' };
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw.replace(/^\s*```(?:json)?\s*|\s*```\s*$/g, ''));
@@ -240,15 +324,24 @@ export function parseVerdict(raw: string): Verdict {
     // Absent is one, not zero: a model that answered the two questions that
     // matter and left this one out has not thereby failed the picture.
     count: typeof o.count === 'number' ? o.count : 1,
+    // Unlike the count, NOT given the benefit of the doubt: a reply that did
+    // not say a picture is fit for a class has not said it.
+    safe: o.safe === true,
+    photo: o.photo === true,
     saw: typeof o.saw === 'string' ? o.saw : '',
   };
 }
 
 /** Why a candidate was turned down, in words a prep report can print. */
-export function refusalFor(v: Verdict): string | null {
+export function refusalFor(
+  v: Verdict,
+  rules: Pick<FindOptions, 'allowText' | 'photoOnly' | 'allowMany'> = {},
+): string | null {
   if (!v.right) return v.saw ? `it is ${v.saw}` : 'it is not the subject';
-  if (v.hasText) return 'it has words printed on it';
-  if (v.count >= 2) return `it has ${v.count} of the subject in it`;
+  if (!v.safe) return v.saw ? `it is not for a school child (${v.saw})` : 'it is not for a school child';
+  if (rules.photoOnly && !v.photo) return v.saw ? `it is not a photograph (${v.saw})` : 'it is not a photograph';
+  if (v.hasText && !rules.allowText) return 'it has words printed on it';
+  if (v.count >= 2 && !rules.allowMany) return `it has ${v.count} of the subject in it`;
   return null;
 }
 
@@ -263,10 +356,66 @@ export interface FindOptions {
   tries?: number;
   /** How many results to ask the search for — more, to filter by licence from. */
   searchLimit?: number;
+  /** How long one look may take before it counts as a refusal. */
+  lookTimeoutMs?: number;
+  /**
+   * Take a picture with words in it. The no-words rule is for a picture she
+   * labels part by part, whose printed labels would fight hers; a placed
+   * thing's photograph has none written on it, and a street sign or a race
+   * number behind a runner is no reason to refuse it (heart class,
+   * 2026-10-08). Commons' rules keep watermarks off its files.
+   */
+  allowText?: boolean;
+  /**
+   * Take only a photograph of the real thing. A placed thing's picture stands
+   * in for an icon, and the first "running person" the search found was a
+   * stick-figure pictogram — the very cartoon Aarav's rule replaces (heart
+   * class, 2026-10-08).
+   */
+  photoOnly?: boolean;
+  /**
+   * Take a picture with several of the subject in it. One-of-the-subject is
+   * for a picture she marks part by part; a placed thing's photograph of a
+   * race of runners is still a picture of running (heart class, 2026-10-08).
+   */
+  allowMany?: boolean;
 }
 
 export const DEFAULT_TRIES = 3;
+/**
+ * How many results to look at for a photograph only (`photoOnly`). More than
+ * for a picture: a keyword search on file names is crowded with posters, film
+ * stills and drawings, and the heart class's "running person" had its first
+ * real photograph of one fifth in the list (2026-10-08). They are looked at in
+ * waves of DEFAULT_TRIES, and a passing wave ends the search.
+ */
+export const PHOTO_TRIES = 6;
+
+/**
+ * A file whose own name says it is not a photograph. Dropped before it costs
+ * a download and a look, when only a photograph will do: the names Commons
+ * gives its drawings, posters, pictograms and material textures.
+ */
+const NOT_A_PHOTO =
+  /poster|pictogram|icon|logo|diagram|drawing|illustration|clip.?art|cartoon|caricature|painting|engraving|lithograph|etching|woodcut|sketch|\bmap\b|_map_|chart|texture|_8k_|\bsvg\b|coat.of.arms|\bflag\b/i;
 export const DEFAULT_SEARCH_LIMIT = 12;
+/**
+ * A minute. A vision call has been seen to hang for more than five (board
+ * composer, 2026-10-06), and the class waits on this rung: a look that has
+ * not answered by now is a refusal, and the ladder moves on.
+ */
+export const LOOK_TIMEOUT_MS = 60_000;
+
+const NO_ANSWER = 'the check did not answer in time';
+
+/** A promise that settles, or a rejection with NO_ANSWER after `ms`. */
+function within<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const late = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(NO_ANSWER)), ms);
+  });
+  return Promise.race([promise, late]).finally(() => clearTimeout(timer));
+}
 
 export interface Search {
   found: FoundPicture | null;
@@ -287,17 +436,65 @@ export async function findOnTheWeb(
   eyes: VisionAdapter,
   options: FindOptions = {},
 ): Promise<Search> {
-  const tries = options.tries ?? DEFAULT_TRIES;
+  /**
+   * A PICTURE OF SOMETHING MOVING, MOVING (Aarav, 2026-10-07: "images ya
+   * videos ya kuch or jo bhi ho").
+   *
+   * When the lesson is the movement itself — a heart pumping, a person
+   * running — a short silent loop is looked for first, each judged by its
+   * still exactly as a photograph is. Never for a picture with parts to point
+   * at: nothing in a loop holds still to be circled. No loop passing, the
+   * still photograph is looked for as always.
+   */
+  const limit = options.searchLimit ?? DEFAULT_SEARCH_LIMIT;
+  if (brief.motion && brief.parts.length === 0 && web.searchVideo) {
+    const loops = await firstThatPasses(
+      brief,
+      () => web.searchVideo!(searchQuery(brief), limit),
+      'the video search could not be reached',
+      web,
+      eyes,
+      options,
+    );
+    if (loops.found) return loops;
+    const stills = await firstThatPasses(
+      brief,
+      () => web.search(searchQuery(brief), limit),
+      'the image search could not be reached',
+      web,
+      eyes,
+      options,
+    );
+    return { found: stills.found, refusals: [...loops.refusals.map((r) => `a video: ${r}`), ...stills.refusals] };
+  }
+  return firstThatPasses(brief, () => web.search(searchQuery(brief), limit), 'the image search could not be reached', web, eyes, options);
+}
+
+/** The best-ranked of a search's results that the eyes pass, or why none did. */
+async function firstThatPasses(
+  brief: PictureBrief,
+  searching: () => Promise<readonly WebCandidate[]>,
+  unreachable: string,
+  web: WebImageAdapter,
+  eyes: VisionAdapter,
+  options: FindOptions,
+): Promise<Search> {
+  const tries = options.tries ?? (options.photoOnly ? PHOTO_TRIES : DEFAULT_TRIES);
   const refusals: string[] = [];
 
   let candidates: readonly WebCandidate[];
   try {
-    candidates = await web.search(searchQuery(brief), options.searchLimit ?? DEFAULT_SEARCH_LIMIT);
+    candidates = await searching();
   } catch {
-    return { found: null, refusals: ['the image search could not be reached'] };
+    return { found: null, refusals: [unreachable] };
   }
 
-  const usable = candidates.filter((c) => c.url && mayReuse(c.license));
+  // A loop keeps only the sources the class format keeps, and a loop left with
+  // none is no loop at all.
+  const usable = candidates
+    .map((c) => (c.video ? { ...c, video: keepableVideo(c.video) } : c))
+    .filter((c) => c.url && mayReuse(c.license) && (c.video === undefined || c.video.length > 0))
+    .filter((c) => !options.photoOnly || !NOT_A_PHOTO.test(`${c.page ?? ''} ${c.title ?? ''}`));
   if (usable.length === 0) {
     refusals.push(
       candidates.length === 0
@@ -307,33 +504,87 @@ export async function findOnTheWeb(
     return { found: null, refusals };
   }
 
+  /**
+   * THE BEST FEW, LOOKED AT TOGETHER.
+   *
+   * One after another, three refusals and the generation behind them took
+   * six minutes for one picture (board composer, 2026-10-06). The looks do
+   * not depend on each other, so up to `tries` are downloaded and looked at
+   * at once, and the best-ranked that passes is kept. A wave whose downloads
+   * failed spent no looks, and the next candidates take their places.
+   */
+  const lookMs = options.lookTimeoutMs ?? LOOK_TIMEOUT_MS;
+
+  /**
+   * Why a clip's middle fails, or null when every frame from it passes: the
+   * right subject, and fit for a class of children. A frame that cannot be
+   * fetched or looked at fails the clip — a part of it nobody saw is a part
+   * that might show anything. Printed text and a second subject are allowed
+   * here: a caption over a moment, or two hearts in one frame, are not reasons
+   * to refuse a clip whose still already passed on them.
+   */
+  const framesRefusal = async (frames: readonly string[]): Promise<string | null> => {
+    const verdicts = await Promise.all(
+      frames.map(async (frame) => {
+        try {
+          const still = await web.fetch(frame);
+          if (!still || !still.startsWith('data:image/')) return null;
+          return parseVerdict(await within(eyes.look(still, VERIFIER_SYSTEM, verifierUser(brief)), lookMs));
+        } catch {
+          return null;
+        }
+      }),
+    );
+    for (const v of verdicts) {
+      if (!v) return 'a frame from its middle could not be looked at';
+      if (!v.safe) return v.saw ? `a frame in it is not for a school child (${v.saw})` : 'a frame in it is not for a school child';
+      if (!v.right) return v.saw ? `a frame in it is ${v.saw}` : 'a frame in it is not the subject';
+    }
+    return null;
+  };
+
   let looked = 0;
-  for (const candidate of usable) {
-    if (looked >= tries) break;
+  let next = 0;
+  while (looked < tries && next < usable.length) {
+    // At most DEFAULT_TRIES at once: a longer search (PHOTO_TRIES) goes on in
+    // a second wave only when the first found nothing.
+    const wave = usable.slice(next, next + Math.min(DEFAULT_TRIES, tries - looked));
+    next += wave.length;
 
-    let src: string | null = null;
-    try {
-      src = await web.fetch(candidate.url);
-    } catch {
-      src = null;
-    }
-    // A download that failed cost no vision call, so it does not spend a try:
-    // a dead link is not the search being wrong about the picture.
-    if (!src || !src.startsWith('data:image/')) continue;
+    const seen = await Promise.all(
+      wave.map(async (candidate) => {
+        let src: string | null = null;
+        try {
+          src = await web.fetch(candidate.url);
+        } catch {
+          src = null;
+        }
+        // A download that failed cost no vision call, so it does not spend a
+        // try: a dead link is not the search being wrong about the picture.
+        if (!src || !src.startsWith('data:image/')) return null;
 
-    looked += 1;
-    let verdict: Verdict;
-    try {
-      verdict = parseVerdict(await eyes.look(src, VERIFIER_SYSTEM, verifierUser(brief)));
-    } catch {
-      verdict = { right: false, hasText: false, count: 0, saw: '' };
-    }
+        try {
+          const verdict = parseVerdict(await within(eyes.look(src, VERIFIER_SYSTEM, verifierUser(brief)), lookMs));
+          const refusal = refusalFor(verdict, options);
+          if (refusal !== null || !candidate.frames?.length) return { candidate, src, refusal };
+          // A clip: every frame looked at from its middle must pass as well.
+          return { candidate, src, refusal: await framesRefusal(candidate.frames) };
+        } catch (error) {
+          const late = error instanceof Error && error.message === NO_ANSWER;
+          return { candidate, src, refusal: late ? NO_ANSWER : 'it is not the subject' };
+        }
+      }),
+    );
 
-    const refusal = refusalFor(verdict);
-    if (refusal) {
-      refusals.push(refusal);
-      continue;
+    let kept: { candidate: WebCandidate; src: string } | null = null;
+    for (const look of seen) {
+      if (!look) continue;
+      looked += 1;
+      if (look.refusal !== null) refusals.push(look.refusal);
+      else if (!kept) kept = look;
     }
+    if (!kept) continue;
+    const { candidate, src } = kept;
 
     // It is the right picture. Now find out where its parts are — the same
     // second look a generated picture gets, and for the same reason: layout
@@ -343,7 +594,7 @@ export async function findOnTheWeb(
     if (brief.parts.length > 0) {
       try {
         parts = parseParts(
-          await eyes.look(src, PART_FINDER_SYSTEM, partFinderUser(brief.parts)),
+          await within(eyes.look(src, PART_FINDER_SYSTEM, partFinderUser(brief.parts)), lookMs),
           brief.parts,
         );
       } catch {
@@ -360,6 +611,8 @@ export async function findOnTheWeb(
         faults: [],
         source: candidate.source ?? null,
         license: candidate.license ?? null,
+        credit: creditOf(candidate),
+        ...(candidate.video ? { video: candidate.video } : {}),
       },
       refusals,
     };

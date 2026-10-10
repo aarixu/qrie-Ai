@@ -398,8 +398,9 @@ describe('what this relay will spend on', () => {
   });
 
   it('has a request ceiling above every prompt this app builds', () => {
-    // A planner prompt is a few thousand tokens; a vision call carries a
-    // picture. Both sit well inside this.
+    // A planner prompt is a few thousand tokens, well inside this. A vision
+    // call's picture is not held to it: see MAX_PICTURE_BYTES and
+    // visionRequest.test.ts (a generated picture is about 1.2 MB).
     expect(MAX_REQUEST_BYTES).toBeGreaterThan(200_000);
   });
 });

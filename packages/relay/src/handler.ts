@@ -17,9 +17,12 @@ import { handleEnroll, handleEnrollOtp, type ConsentStore, type OtpGate, type Ot
 import { mintTicket, TICKET_TTL_MS } from './ticket.ts';
 import { readSavedClass } from './classStore.ts';
 import {
+  MAX_PICTURES,
+  MAX_PICTURE_BYTES,
   MAX_REQUEST_BYTES,
   bareModel,
   completeOnVertex,
+  oversized,
   type OpenAiReply,
   type VertexOptions,
 } from './vertex.ts';
@@ -491,8 +494,10 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     if (deps.vertex) {
       if (req.method !== 'POST') return fail(405, 'POST only');
       // Before the parse, not after: a refusal should not cost the memory of
-      // decoding what it is refusing.
-      if (req.body.byteLength > MAX_REQUEST_BYTES) {
+      // decoding what it is refusing. The most a call can carry is the text
+      // ceiling and one picture; what is text and what is picture is told
+      // apart once it is read (vertex.ts, oversized).
+      if (req.body.byteLength > MAX_REQUEST_BYTES + MAX_PICTURE_BYTES * MAX_PICTURES) {
         return fail(413, 'that request is larger than anything this app sends');
       }
       let chat: unknown;
@@ -501,6 +506,8 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
       } catch {
         return fail(400, 'the request body was not JSON');
       }
+      const tooBig = oversized(req.body.byteLength, chat);
+      if (tooBig) return fail(413, tooBig);
       const modelStarted = Date.now();
       const answer = await completeOnVertex(chat as Parameters<typeof completeOnVertex>[0], deps.vertex);
       const modelMs = Date.now() - modelStarted;

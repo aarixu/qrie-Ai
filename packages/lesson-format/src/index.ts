@@ -1,9 +1,12 @@
 export type {
   Point,
   Tone,
+  InkName,
   Element,
   ElementKind,
   ImagePart,
+  Credit,
+  VideoSource,
   Beat,
   Fill,
   Lesson,
@@ -14,7 +17,7 @@ export type {
   AlternateMode,
   WorkArea,
 } from './types';
-export { ALTERNATE_MODES, CANVAS_W, CANVAS_H, PAGE_STRIDE, STAGE_ASPECT } from './types';
+export { ALTERNATE_MODES, CANVAS_W, CANVAS_H, INK_NAMES, PAGE_STRIDE, STAGE_ASPECT } from './types';
 export { validateLesson, findBeat, elementsForBeat, splitPartRef, PART_SEPARATOR } from './validate';
 export type { ValidationResult } from './validate';
 export {
@@ -34,6 +37,7 @@ export {
   titleSize,
   TITLE_SIZE,
   listBoxHeight,
+  listItemBox,
   listItemText,
   LIST_HEADING_SIZE,
   LIST_ITEM_SIZE,
@@ -47,6 +51,7 @@ export {
   mathPlain,
   writeMs,
   graphicLabelSize,
+  graphicLabelWidth,
   BESIDE_GAP,
   flowHeight,
   FLOW_STEP_H,
@@ -54,3 +59,31 @@ export {
   type Rect,
 } from './geometry';
 export { compileFunction, samplePoints } from './safeExpr';
+export {
+  TOOLS,
+  TOOL_NAMES,
+  isToolName,
+  toolProblems,
+  toolDurationMs,
+  toolStrings,
+  toolAspect,
+  toolMinSize,
+  openParams,
+  RESERVED_KEYS,
+  SPOKEN_MS_PER_CHAR,
+  type ToolName,
+  type ToolSpec,
+  type ToolCheck,
+  type RecipeTag,
+  type PieChartParams,
+  type LineChartParams,
+  EQUATION_LINE_H,
+  EQUATION_MOVE_MS,
+  EQUATION_STEP_MS,
+  matchTerms,
+  termsOf,
+  type EquationMoveParams,
+  type MoveKind,
+  type Term,
+  type TermMove,
+} from './tools/index.ts';

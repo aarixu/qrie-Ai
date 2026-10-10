@@ -58,6 +58,11 @@ draws, and general icon sets usually draw the famous one, not the everyday
 one. Choose null. A qualified name ("water-…", "scuba-…") or a category tells
 you what it depicts; trust those.
 
+A word may come with the label written beside it on the board. The picture
+must show the LABELLED thing: "tube" labelled "Intestinal lumen" is a part of
+the gut, and test-tube for "tube" is a different thing, as delivery-truck is for
+"liver". A name that merely contains the word is not evidence; choose null.
+
 If none of the options depicts the right thing, choose null. A pencilled circle
 with the word written in it is better than a confidently wrong picture — a
 student who sees a war machine in a lesson about water tanks learns the wrong
@@ -69,10 +74,16 @@ Reply with ONE JSON object mapping each word to your choice:
 export function iconPickerUser(
   topic: string,
   options: Readonly<Record<string, readonly IconOption[]>>,
+  /** The label each word is written with on the board, when it has one. */
+  labels: Readonly<Record<string, readonly string[]>> = {},
 ): string {
+  const labelOf = (noun: string): string => {
+    const said = [...new Set(labels[noun] ?? [])].filter((l) => l.trim() !== '');
+    return said.length > 0 ? ` (labelled ${said.map((l) => `"${l}"`).join(', ')})` : '';
+  };
   const lines = Object.entries(options).map(
     ([noun, opts]) =>
-      `- "${noun}": ${
+      `- "${noun}"${labelOf(noun)}: ${
         opts
           .map((o) => `${o.set}:${o.icon}${o.category ? ` [${o.category}]` : ''}`)
           .join(', ') || '(nothing found)'
@@ -96,6 +107,8 @@ export async function pickIcons(
   topic: string,
   options: Readonly<Record<string, readonly IconOption[]>>,
   llm: LlmAdapter,
+  /** The label each word is written with on the board (see iconPickerUser). */
+  labels: Readonly<Record<string, readonly string[]>> = {},
 ): Promise<Record<string, IconChoice>> {
   const nouns = Object.keys(options);
   const fallback = Object.fromEntries(
@@ -105,7 +118,7 @@ export async function pickIcons(
 
   let reply: string;
   try {
-    reply = await llm.complete(ICON_PICKER_SYSTEM, iconPickerUser(topic, options));
+    reply = await llm.complete(ICON_PICKER_SYSTEM, iconPickerUser(topic, options, labels));
   } catch {
     return fallback;
   }

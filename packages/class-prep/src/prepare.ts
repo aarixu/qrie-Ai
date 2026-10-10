@@ -4,15 +4,21 @@ import { findOnTheWeb, type WebImageAdapter } from './fromWeb.ts';
 import {
   ALTERNATE_MODES,
   PART_SEPARATOR,
+  isToolName,
+  boxOf,
   latexToPlain,
   mathPlain,
+  overlaps,
+  union,
   validateLesson,
   type AlternateMode,
   type AskAlternate,
   type Beat,
   type Element,
   type ImagePart,
+  type Credit,
   type Lesson,
+  type VideoSource,
   type WhyProbe,
   type WorkedExample,
 } from '@ai-tutor/lesson-format';
@@ -22,7 +28,7 @@ import { readDistress } from './distressReading.ts';
 
 import {
   ARTIST_SYSTEM,
-  PLANNER_SYSTEM,
+  plannerSystemFor,
   artistUser,
   plannerUser,
   repairPlanUser,
@@ -32,7 +38,11 @@ import {
 } from './prompts.ts';
 import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
+import { mergeSpoken, splitNarrations } from './sayLines.ts';
+import { addMarks } from './marks.ts';
+import { dressFoundPictures } from './credits.ts';
 import { checkLessonMaths, gateLesson, type GateProblem, type MathsCheck, type Undrawn } from './gate.ts';
+import type { ComposerReport, PageReport } from './composerChecks.ts';
 import { askAgainLater, type RepairRetry } from './notNow.ts';
 export { REPAIR_WAITS_MS, type RepairRetry } from './notNow.ts';
 import { checkLines } from '../../maths-check/src/index.ts';
@@ -209,6 +219,14 @@ export interface PrepOptions {
    * kept" posture at refuseWrongMaths). Wrong maths is refused either way.
    */
   stopWhenUnkeepable?: boolean;
+  /**
+   * Plan and lay the class out for a composed board (board composer): the
+   * planner gets the page contract (plannerSystemFor), every plan it returns
+   * is laid out in regions, and the keep gate holds it to page-full and
+   * phone-readable. Off by default; the live classroom and the prewarm runner
+   * turn it on.
+   */
+  composed?: boolean;
 }
 
 /**
@@ -262,6 +280,7 @@ const REQUIRED: Record<string, readonly string[]> = {
   connect: ['from', 'to'],
   annotate: ['target', 'mark'],
   say: ['text'],
+  summary: ['text'],
 };
 
 const isWords = (v: unknown): v is string => typeof v === 'string' && v.trim() !== '';
@@ -312,6 +331,35 @@ function wellFormedStep(step: unknown): Instruction | null {
     s.data = data;
     return s as unknown as Instruction;
   }
+  if (isToolName(kind)) {
+    // A planner used to nesting fields may write {"do":"pieChart","params":{…}};
+    // the board reads a tool's params flat, beside its "do".
+    if (typeof s.params === 'object' && s.params !== null && !Array.isArray(s.params)) {
+      const nested = s.params as Record<string, unknown>;
+      delete s.params;
+      Object.assign(s, nested);
+    }
+    return s as unknown as Instruction;
+  }
+  if (kind === 'compare') {
+    // A side is a heading and its points; a point without words is dropped.
+    // How many points a side has, the layout judges (two to six, or nothing
+    // drawn, which the keep gate's drawn rule names).
+    const side = (v: unknown): { heading: string; points: string[] } | null => {
+      if (typeof v !== 'object' || v === null) return null;
+      const o = v as { heading?: unknown; points?: unknown };
+      if (!isWords(o.heading) || !Array.isArray(o.points)) return null;
+      return { heading: o.heading, points: o.points.filter(isWords) };
+    };
+    const left = side(s.left);
+    const right = side(s.right);
+    if (!left || !right) return null;
+    s.left = left;
+    s.right = right;
+    return s as unknown as Instruction;
+  }
+  // A title's path is words, every one of them, or no path at all.
+  if (kind === 'title' && s.path !== undefined && !(Array.isArray(s.path) && s.path.every(isWords))) delete s.path;
   const needs = REQUIRED[kind];
   // A kind this list does not know goes on as it came: the layout decides.
   if (needs && !needs.every((field) => isWords(s[field]))) return null;
@@ -341,18 +389,27 @@ function withPlaceIds(board: Instruction[]): Instruction[] {
 function wellFormed(parsed: unknown): Blueprint | null {
   if (typeof parsed !== 'object' || parsed === null || !Array.isArray((parsed as { beats?: unknown }).beats)) return null;
   const plan = parsed as Blueprint;
+  if (!Array.isArray(plan.visuals)) plan.visuals = [];
+  const steps = (list: unknown): Instruction[] =>
+    (Array.isArray(list) ? list : []).map(wellFormedStep).filter((s): s is Instruction => s !== null);
   plan.beats = plan.beats
     .filter((b) => typeof b === 'object' && b !== null)
-    .map((b) => ({
-      ...b,
-      narration: typeof b.narration === 'string' ? b.narration : '',
-      board: withPlaceIds(
-        (Array.isArray(b.board) ? b.board : [])
-          .map(wellFormedStep)
-          .filter((s): s is Instruction => s !== null),
-      ),
-    }));
-  if (!Array.isArray(plan.visuals)) plan.visuals = [];
+    .map((b) => {
+      const { say, ...beat } = b as typeof b & { say?: unknown };
+      const board = steps(b.board);
+      // Its lines written as a list of their own beside the board (sayLines.ts,
+      // mergeSpoken): one board, each line with what it talks about.
+      const spoken = steps(say);
+      const merged =
+        spoken.some((s) => s.do === 'say') && !board.some((s) => s.do === 'say')
+          ? mergeSpoken(board, spoken, plan.visuals)
+          : board;
+      return {
+        ...beat,
+        narration: typeof b.narration === 'string' ? b.narration : '',
+        board: withPlaceIds(merged),
+      };
+    });
   return plan;
 }
 
@@ -485,6 +542,8 @@ export function assemble(
    * board-layout's `undrawn`, for the keep gate's `drawn` rule.
    */
   undrawn: Undrawn[];
+  /** For a composed plan: every page it leaves and every pull-out, for the keep gate. */
+  composer?: ComposerReport;
 } {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
   const bonds: Bond[] = [];
@@ -493,6 +552,11 @@ export function assemble(
   const opening: string[] = [];
   /** The planner's first beat — the opening, by the prompt's own contract. */
   const openingBeat = blueprint.beats[0];
+  const composed = blueprint.layout === 'composed';
+  const pages: PageReport[] = [];
+  const overview: string[] = [];
+  /** Beats of a composed plan that layout drew as a stack (gate rule one-main). */
+  const stacked: { beat: string; plannerBeat: string }[] = [];
   const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
   /** A copy of a picture is described by the same brief the original was. */
   const briefFor = (id: string) => briefs.get(aliases.get(id) ?? id);
@@ -513,7 +577,9 @@ export function assemble(
   const shapesByRef = new Map<string, number>(pictureShapes);
   const aliases = new Map<string, string>();
   const reuse = (step: Instruction, beatId: string): Instruction => {
-    if ('ref' in step) {
+    // `typeof`, not only `in`: a toolkit instruction carries its params as
+    // arbitrary keys, so `in` alone cannot promise `ref` is a picture's name.
+    if ('ref' in step && typeof step.ref === 'string') {
       if (!shownArt.has(step.ref)) return step;
       const id = reuseId(step.ref, beatId);
       aliases.set(id, step.ref);
@@ -555,10 +621,12 @@ export function assemble(
   // blank page of its own beside it.
   let lastDx = 0;
   let lastFrame: string[] | null = null;
+  /** Whether `lastFrame` is a composed page's whole-page frame (a pull-out). */
+  let lastWhole = false;
 
   for (const beat of blueprint.beats) {
     const board = (beat.board ?? []).filter((step) =>
-      'ref' in step ? drawn.has(step.ref) : true,
+      'ref' in step && typeof step.ref === 'string' ? drawn.has(step.ref) : true,
     ).map((step) => reuse(step, beat.id));
     const {
       elements: laidOut,
@@ -568,7 +636,9 @@ export function assemble(
       asks,
       bonds: meant,
       undrawn: missing,
-    } = layoutBeat({ ...beat, board }, partsByRef, shapesByRef);
+      regions,
+      sheets: sheetReports,
+    } = layoutBeat({ ...beat, board }, partsByRef, shapesByRef, { composed });
     bonds.push(...meant);
     for (const m of missing) undrawn.push({ beat: beat.id, do: m.do, text: m.text });
 
@@ -670,18 +740,76 @@ export function assemble(
      */
     const asksHere = asks.some((a) => usable.some(({ stepIndex }) => stepIndex === a.step));
 
+    /**
+     * WHERE THE CAMERA LOOKS ON A COMPOSED PAGE (board composer).
+     *
+     * On the regions the line's new ink is in, so a phone can read it. On the
+     * whole page on the page's last line: the moment a student sees the full
+     * board before it is turned. A line that writes only the title is framed
+     * on the header, never on the page before. A line with nothing new keeps
+     * the frame it had, and a whole-page frame kept is still a pull-out. A beat
+     * the composer laid out as a stack has no regions, and is framed as before.
+     */
+    const composedHere = composed && Object.keys(regions).length > 0;
+    const inkAt = (n: number): string[] => {
+      const before = new Set(n > 0 ? usable[n - 1].step.show : []);
+      return usable[n].step.show.filter((id) => !before.has(id) && regions[id] !== undefined);
+    };
+    const sheetOf = (id: string): string => regions[id].split('/')[0];
+    let sheetNow = '0';
+    /** The lesson beat on which the class leaves each sheet. */
+    const leftAt = new Map<string, string>();
+    const cameraFor = (n: number): { frame: string[] | null; whole: boolean } => {
+      const ink = inkAt(n);
+      if (ink.length > 0) sheetNow = sheetOf(ink[ink.length - 1]);
+      const later = usable
+        .slice(n + 1)
+        .map((_, k) => inkAt(n + 1 + k))
+        .find((x) => x.length > 0);
+      const whole = later === undefined || sheetOf(later[0]) !== sheetNow;
+      const onSheet = usable[n].step.show.filter((id) => regions[id]?.startsWith(`${sheetNow}/`));
+      if (whole) return { frame: onSheet, whole };
+      if (ink.length === 0) return { frame: null, whole };
+      const body = ink.filter((id) => !regions[id].endsWith('/header'));
+      const hot = new Set((body.length > 0 ? body : ink).map((id) => regions[id]));
+      const inHot = onSheet.filter((id) => hot.has(regions[id]));
+      // A region framed whole is often too big to read on a phone: a scene
+      // spans the page's width, and a notes column runs its full height. So a
+      // line is framed on what it drew and on what is near it — 24 units
+      // across (a connector stops 14 short of the pictures it joins), and 160
+      // up and down, the two or three lines of writing around it.
+      const boxes = new Map(laidOut.map((el) => [el.id, el]));
+      const drawn = ink.map((id) => boxes.get(id)).filter((el) => el !== undefined).map(boxOf);
+      if (drawn.length === 0) return { frame: inHot, whole };
+      const reach = drawn.reduce(union);
+      const near = { x: reach.x - 24, y: reach.y - 160, w: reach.w + 48, h: reach.h + 320 };
+      return {
+        frame: inHot.filter((id) => ink.includes(id) || (boxes.has(id) && overlaps(boxOf(boxes.get(id)!), near))),
+        whole,
+      };
+    };
+
     usable.forEach(({ step, stepIndex }, n) => {
       const last = n === usable.length - 1;
       // A line spoken over a board that has nothing new on it keeps the camera
       // where it was, rather than letting an empty frame widen to the plane.
-      const frame = step.show.length > 0 ? [...step.show] : lastFrame;
+      // On a composed page, see cameraFor.
+      const view = composedHere ? cameraFor(n) : { frame: step.show.length > 0 ? [...step.show] : lastFrame, whole: false };
+      const kept = !(view.frame && view.frame.length > 0);
+      const frame = kept ? lastFrame : view.frame;
       if (frame) lastFrame = frame;
+      const whole = composedHere && (view.whole || (kept && lastWhole));
+      lastWhole = whole;
       // The question lands on the very moment that asks it — the beat the
       // player will hold until the student answers.
       const held = asks.find((a) => a.step === stepIndex);
       const ask = held?.ask;
       const checksHere = asksHere ? ask !== undefined : last;
       const id = usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`;
+      if (whole) {
+        overview.push(id);
+        if (view.whole) leftAt.set(sheetNow, id);
+      }
       if (ask && beat === openingBeat && opening.length === 0) opening.push(id);
       beats.push({
         id,
@@ -702,6 +830,21 @@ export function assemble(
         ...(last && beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
       });
     });
+    // A composed plan's beat with ink and no regions was drawn as a stack: two
+    // main demonstrations, or names on something that is not a picture.
+    if (composed && !composedHere && laid.show.length > 0) {
+      stacked.push({ beat: usable.length === 1 ? beat.id : `${beat.id}_${usable.length}`, plannerBeat: beat.id });
+    }
+    if (composedHere) {
+      for (const report of sheetReports) {
+        pages.push({
+          ...report,
+          beat: leftAt.get(String(report.sheet)) ?? beat.id,
+          plannerBeat: beat.id,
+          opening: beat === openingBeat,
+        });
+      }
+    }
     /**
      * INK HELD BACK FOR AFTER THE ANSWER, WITH NO LINE TO ARRIVE UNDER.
      *
@@ -730,7 +873,7 @@ export function assemble(
     // Everything this beat drew stays on the board for later beats, the ink
     // held back for after an answer included.
     shownSoFar.push(...steps[steps.length - 1].show);
-    for (const step of board) if ('ref' in step) shownArt.add(aliases.get(step.ref) ?? step.ref);
+    for (const step of board) if ('ref' in step && typeof step.ref === 'string') shownArt.add(aliases.get(step.ref) ?? step.ref);
   }
 
   return {
@@ -768,6 +911,7 @@ export function assemble(
     unspoken,
     opening,
     undrawn,
+    ...(composed ? { composer: { pages, overview, stacked } } : {}),
   };
 }
 
@@ -890,6 +1034,51 @@ export function capChecks(
     beat.checks = beat.checks.slice(0, 2);
   }
   return cut;
+}
+
+/** How many problems the repair prompt carries. */
+const REPAIR_PLACES = 10;
+
+/**
+ * Rules whose fix is the same for everything they catch in one beat — "write
+ * less beside it, or give it a line of its own" — so one of them stands for
+ * the rest. Every other rule's message names what to fix (a reaction, a line,
+ * a page), and is sent whole.
+ */
+const SAME_FIX: ReadonlySet<GateProblem['rule']> = new Set(['on-camera', 'on-board', 'overlap']);
+
+/**
+ * WHAT THE REPAIR PROMPT'S TEN PLACES CARRY, when there are more problems than
+ * places.
+ *
+ * The gate names every thing a rule catches, and one line can catch nine: the
+ * small-intestine class's first plan (2026-10-06) had one line on beat 3 that
+ * put nine things off camera, those took nine of the ten places, and its three
+ * half-empty pages were never sent to repair. So when `room` is too small for
+ * them all, a same-fix rule's problems on one beat are sent as the first of
+ * them, with how many more there are. When there is room, every one is sent.
+ */
+export function oncePerBeat(problems: readonly GateProblem[], room: number = REPAIR_PLACES): string[] {
+  if (problems.length <= room) return problems.map((p) => p.message);
+  const out: { message: string; more: number }[] = [];
+  const groups = new Map<string, { message: string; more: number }>();
+  for (const p of problems) {
+    if (!SAME_FIX.has(p.rule)) {
+      out.push({ message: p.message, more: 0 });
+      continue;
+    }
+    const beat = /^Beat "([^"]+)"/.exec(p.message)?.[1] ?? p.where;
+    const key = `${p.rule}|${beat}`;
+    const group = groups.get(key);
+    if (group) {
+      group.more += 1;
+      continue;
+    }
+    const fresh = { message: p.message, more: 0 };
+    groups.set(key, fresh);
+    out.push(fresh);
+  }
+  return out.map(({ message, more }) => (more === 0 ? message : `${message} (And ${more} more like it in this beat.)`));
 }
 
 /**
@@ -1090,7 +1279,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    */
   const repairCall = (user: string, done: number): Promise<string> =>
     askAgainLater(
-      () => planner.complete(PLANNER_SYSTEM, user),
+      () => planner.complete(plannerSystemFor(opts.composed === true), user),
       opts.repairRetry,
       (ms) => {
         const seconds = Math.round(ms / 1000);
@@ -1101,7 +1290,10 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
   say('planning', 'Working out how to teach this…', 0.05);
   const brief = plannerUser(topic, klass, minutes, opts.studentLines, opts.teacherStyle, opts.outcomes, language);
-  const raw = await planner.complete(PLANNER_SYSTEM, brief);
+  /** Every plan the planner returns is laid out composed, when this class is. */
+  const stamp = (plan: Blueprint | null): Blueprint | null =>
+    plan && opts.composed ? { ...plan, layout: 'composed' } : plan;
+  const raw = await planner.complete(plannerSystemFor(opts.composed === true), brief);
 
   // Unreadable JSON gets the same second chance a bad plan does. A model that
   // drops a brace has still done the thinking; failing the whole class over
@@ -1112,7 +1304,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   // first 4,000 characters and nothing else; a plan rewritten from that knew no
   // outcomes, tagged no `checks`, and the keep gate refused every ask it held
   // (Respiration, 2026-10-02).
-  let blueprint = parsePlan(raw);
+  let blueprint = stamp(parsePlan(raw));
   if (!blueprint) {
     issues.push('The first plan was not readable JSON.');
     say('planning', 'That came back garbled — asking again…', 0.2);
@@ -1120,7 +1312,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       `${brief}\n\nYour last reply to this was not valid JSON. Return the whole plan again, as one JSON object.`,
       0.2,
     );
-    blueprint = parsePlan(retry);
+    blueprint = stamp(parsePlan(retry));
   }
   if (!blueprint) {
     throw new Error('The planner did not return readable JSON, twice.');
@@ -1134,6 +1326,18 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   // whole model call — three seconds of a student sitting in front of a blank
   // board — and it would be spent recovering a word we already have.
   for (const beat of blueprint.beats) beat.topic ||= blueprint.title;
+
+  // A composed board is taught line by line (sayLines.ts): a beat the planner
+  // wrote as one narration is written again as its sentences.
+  const asLines = (plan: Blueprint, who: string): void => {
+    if (!opts.composed) return;
+    const split = splitNarrations(plan.beats, plan.visuals);
+    if (split > 0) issues.push(`Wrote ${split} beat(s) of the ${who} as lines: the planner gave each one narration and no line.`);
+    // And what each line talks about is marked as she says it (marks.ts).
+    const marked = addMarks(plan.beats, plan.visuals);
+    if (marked > 0) issues.push(`Marked ${marked} thing(s) in the ${who} as the lines talk about them.`);
+  };
+  asLines(blueprint, 'plan');
 
   /**
    * AN OUTCOME THE MAP DOES NOT HAVE IS NOT AN OUTCOME.
@@ -1218,10 +1422,14 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * keeps the report beside the lesson.
    */
   const sources = new Map<string, string>();
+  /** Each found picture's credit, by brief id, for the board to show beside it. */
+  const foundCredits = new Map<string, Credit>();
+  /** Each found loop, by brief id, for a moving picture to play over its still. */
+  const foundVideos = new Map<string, VideoSource[]>();
 
   say('checking', 'Checking the class holds together…', 0.15);
   const first = assemble(blueprint, promised, pictureParts, pictureShapes, language);
-  let { aliases, bonds, unspoken, opening, undrawn } = first;
+  let { aliases, bonds, unspoken, opening, undrawn, composer } = first;
 
   let validated = validateLesson(first.lesson);
 
@@ -1242,9 +1450,22 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const gateOf = (
     candidate: unknown,
     checked: ReturnType<typeof validateLesson>,
-    made: { bonds: readonly Bond[]; unspoken: readonly string[]; opening: readonly string[]; undrawn: readonly Undrawn[] },
+    made: {
+      bonds: readonly Bond[];
+      unspoken: readonly string[];
+      opening: readonly string[];
+      undrawn: readonly Undrawn[];
+      composer?: ComposerReport;
+    },
   ): GateProblem[] | null => {
-    const read = { bonds: made.bonds, unspoken: made.unspoken, opening: made.opening, undrawn: made.undrawn, outcomes: opts.outcomes };
+    const read = {
+      bonds: made.bonds,
+      unspoken: made.unspoken,
+      opening: made.opening,
+      undrawn: made.undrawn,
+      composer: made.composer,
+      outcomes: opts.outcomes,
+    };
     if (checked.ok) return gateLesson(checked.lesson as Lesson, { ...read, mathsCheck: opts.mathsCheck });
     const maths = opts.mathsCheck ?? checkLessonMaths;
     try {
@@ -1318,22 +1539,28 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
      * could read this plan; by inkWaitsForALine, which reads the plan, when it
      * could not. Both at once filled two of the ten places with one problem.
      */
-    const toFix = [
+    const ahead = [
       ...gate.filter((p) => p.rule === 'maths').map((p) => p.message),
       ...(validated.ok ? [] : validated.errors),
       ...(firstGate === null ? inkWaitsForALine(blueprint.beats) : []),
-      ...gate.filter((p) => p.rule !== 'maths').map((p) => p.message),
+    ];
+    const toFix = [
+      ...ahead,
+      ...oncePerBeat(
+        gate.filter((p) => p.rule !== 'maths'),
+        Math.max(0, REPAIR_PLACES - ahead.length),
+      ),
       ...unwritten,
     ];
     // Every problem it was sent for, not only the first: when the repair does
     // not fix one, the state file is the only place left to find out which.
-    issues.push(`The first plan was sent to repair, for: ${toFix.slice(0, 10).join(' | ')}`);
+    issues.push(`The first plan was sent to repair, for: ${toFix.slice(0, REPAIR_PLACES).join(' | ')}`);
     say('checking', 'Fixing the plan…', 0.2);
     try {
-      const reply = await repairCall(repairPlanUser(JSON.stringify(blueprint), toFix.slice(0, 10), language), 0.2);
+      const reply = await repairCall(repairPlanUser(JSON.stringify(blueprint), toFix.slice(0, REPAIR_PLACES), language), 0.2);
       // parsePlan, not bare JSON.parse: a repair reply is a model reply, and
       // recovering JSON from prose is the whole reason parsePlan exists.
-      const fixed = parsePlan(reply);
+      const fixed = stamp(parsePlan(reply));
       if (!fixed) throw new Error('the repaired plan was unreadable');
       fixed.beats ??= [];
       // The briefs are pinned: the draft's element ids come from them, and a
@@ -1341,6 +1568,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       // that is never going to arrive.
       fixed.visuals = blueprint.visuals;
       fixed.id ||= blueprint.id;
+      asLines(fixed, 'repaired plan');
 
       /**
        * The repaired plan is fresh planner output, and it gets the same check
@@ -1375,6 +1603,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         bonds = rebuilt.bonds;
         unspoken = rebuilt.unspoken;
         undrawn = rebuilt.undrawn;
+        composer = rebuilt.composer;
         opening = rebuilt.opening;
         blueprint = fixed;
         gate = regate;
@@ -1525,7 +1754,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
               `The claim "${p.claim}" is factually wrong — ${p.why}. Look for it in or around beat "${p.beatId.replace(/_\d+$/, '')}". Correct the teaching itself; do not delete the beat.`,
           );
         const reply = await repairCall(repairPlanUser(JSON.stringify(blueprint), named, language), 0.27);
-        const fixed = parsePlan(reply);
+        const fixed = stamp(parsePlan(reply));
         if (!fixed) throw new Error('the corrected plan was unreadable');
         fixed.beats ??= [];
         // Pinned for the same reason the structural repair pins them: the
@@ -1534,6 +1763,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         fixed.id ||= blueprint.id;
         fixed.title ||= blueprint.title;
         for (const beat of fixed.beats) beat.topic ||= fixed.title;
+        asLines(fixed, 'corrected plan');
         // The same three deterministic trims the first plan got, with the
         // same accounting: a repaired class that silently loses the record of
         // what was dropped is a class nobody can explain afterwards.
@@ -1585,6 +1815,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           bonds = rebuilt.bonds;
           unspoken = rebuilt.unspoken;
           undrawn = rebuilt.undrawn;
+          composer = rebuilt.composer;
           opening = rebuilt.opening;
           lesson = revalidated.lesson as Lesson;
           repaired = true;
@@ -1647,6 +1878,20 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * gets exactly the behaviour it had before, at the end.
    */
   opts.onDraft?.({ lesson, assets });
+  /**
+   * The copy on screen. A found picture's credit and loop are put on it IN
+   * PLACE as the picture lands (below): the room is holding these element
+   * objects and keeps showing them, while the dressed copy returned at the end
+   * goes to be kept and is never on screen (review, 2026-10-08).
+   */
+  const onScreen = lesson;
+  const dressOnScreen = (id: string, extras: { credit?: Credit; video?: VideoSource[] }): void => {
+    for (const el of onScreen.elements) {
+      if (el.kind !== 'image' || (el.id !== id && aliases[el.id] !== id)) continue;
+      if (extras.credit) el.credit = extras.credit;
+      if (extras.video) el.video = extras.video;
+    }
+  };
 
   const t1 = Date.now();
   const total = blueprint.visuals.length;
@@ -1687,7 +1932,15 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       const started = Date.now();
 
       if (wantsPicture) {
-        const want = { id: brief.id, alt: brief.alt, brief: brief.brief, parts: brief.parts };
+        // A loop is looked for only when the plan said, in so many words, that
+        // the lesson is the movement: `true`, not anything a planner wrote.
+        const want = {
+          id: brief.id,
+          alt: brief.alt,
+          brief: brief.brief,
+          parts: brief.parts,
+          ...(brief.motion === true ? { motion: true } : {}),
+        };
         const looking = eyes ?? { look: async () => '{}' };
 
         /**
@@ -1719,6 +1972,14 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           // credit is one line of text whose whole job is to be readable by a
           // person who has to answer a takedown.
           sources.set(brief.id, found.license ? `${found.source} (${found.license})` : found.source);
+        }
+        if (found?.credit) foundCredits.set(brief.id, found.credit);
+        if (found?.video) foundVideos.set(brief.id, found.video);
+        if (found) {
+          dressOnScreen(brief.id, {
+            ...(found.credit ? { credit: found.credit } : {}),
+            ...(found.video ? { video: found.video } : {}),
+          });
         }
         finished += 1;
         say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.65 * finished) / Math.max(1, total));
@@ -1797,6 +2058,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   let finalBonds = bonds;
   let finalUnspoken = unspoken;
   let finalUndrawn = undrawn;
+  let finalComposer = composer;
   let finalOpening = opening;
   if (pictureShapes.size > 0 || pictureParts.size > 0) {
     const refitted = assemble({ ...blueprint, beats }, promised, pictureParts, pictureShapes, language);
@@ -1806,6 +2068,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       finalBonds = refitted.bonds;
       finalUnspoken = refitted.unspoken;
       finalUndrawn = refitted.undrawn;
+      finalComposer = refitted.composer;
       finalOpening = refitted.opening;
       // A copy of a picture needs the markup under its own id, and the copy
       // ids are decided by this second layout rather than the first.
@@ -1834,6 +2097,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       bonds: finalBonds,
       unspoken: finalUnspoken,
       undrawn: finalUndrawn,
+      composer: finalComposer,
       opening: finalOpening,
       outcomes: opts.outcomes,
       mathsCheck: opts.mathsCheck,
@@ -1849,9 +2113,19 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * the one the in-prep gate judged and the first student was taught. So a
    * class that passed in preparation cannot be refused at the keep for a
    * layout it was never shown — whatever, in the layout engine, moved.
+   *
+   * Only a draft that PASSED is protected this way. A draft its own gate
+   * already failed is not kept either, so keeping it protects nothing and
+   * throws away the truer copy: the second small-intestine class (2026-10-06)
+   * found every part of its villus, and came back as the draft with every
+   * name floating.
    */
-  if (final !== lesson && keepGate.length > 0) {
-    const key = (p: GateProblem): string => `${p.rule}|${p.where}|${p.message}`;
+  if (final !== lesson && keepGate.length > 0 && gate.length === 0) {
+    // A problem is the rule and the place, not its wording: a page the draft
+    // left 52% written on and the re-fit 55% is the draft's problem, not a new
+    // one, and keeping the draft for it kept the names that point at nothing
+    // (small intestine, 2026-10-06).
+    const key = (p: GateProblem): string => `${p.rule}|${p.where}`;
     const drafted = new Set(gate.map(key));
     const fresh = keepGate.filter((p) => !drafted.has(key(p)));
     if (fresh.length > 0) {
@@ -1863,11 +2137,17 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       finalBonds = bonds;
       finalUnspoken = unspoken;
       finalUndrawn = undrawn;
+      finalComposer = composer;
       finalOpening = opening;
       keepGate = gateFinal();
     }
   }
   for (const problem of keepGate) issues.push(`Fails the keep gate, so it is not kept: ${problem.message}`);
+  // Whose work each found picture is, on the picture itself (credits.ts).
+  final = dressFoundPictures(final, assets, {
+    credits: Object.fromEntries(foundCredits),
+    videos: Object.fromEntries(foundVideos),
+  });
 
   const report: PrepReport = {
     topic,
@@ -1887,6 +2167,8 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     parts: Object.fromEntries([...pictureParts].map(([id, ps]) => [id, [...ps]])),
     shapes: Object.fromEntries(pictureShapes),
     language,
+    ...(foundCredits.size > 0 ? { credits: Object.fromEntries(foundCredits) } : {}),
+    ...(foundVideos.size > 0 ? { videos: Object.fromEntries(foundVideos) } : {}),
   };
   return { lesson: final, assets, report, replay };
 }
@@ -1921,6 +2203,7 @@ export function rekeep(
     unspoken: laid.unspoken,
     opening: laid.opening,
     undrawn: laid.undrawn,
+    composer: laid.composer,
     outcomes: opts.outcomes,
     mathsCheck: opts.mathsCheck,
   });
@@ -1929,7 +2212,7 @@ export function rekeep(
   for (const [copy, original] of Object.entries(laid.aliases)) if (assets[original]) assets[copy] = assets[original];
   return {
     made: {
-      lesson: checked.lesson as Lesson,
+      lesson: dressFoundPictures(checked.lesson as Lesson, assets, { credits: r.credits, videos: r.videos }),
       assets,
       report: {
         ...made.report,

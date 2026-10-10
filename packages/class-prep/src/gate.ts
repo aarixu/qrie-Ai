@@ -11,6 +11,8 @@ import { computeFrame } from '../../stage/src/frame.ts';
 import { checkLesson } from '../../maths-check/src/index.ts';
 import type { TopicOutcome } from './prompts.ts';
 import { boardChecks } from './boardChecks.ts';
+import { toolChecks } from './toolChecks.ts';
+import { composerChecks, type ComposerReport } from './composerChecks.ts';
 
 /**
  * THE KEEP GATE — what a prepared class must pass before it is kept.
@@ -86,6 +88,22 @@ import { boardChecks } from './boardChecks.ts';
  *   chem             every `\ce{…}` reaction balances, unless the board says
  *                    it is the skeletal equation.
  *
+ * And four about the toolkit (canvas toolkit part 1, toolChecks.ts):
+ *   tool-valid       the tool exists and its params pass its spec.
+ *   tool-maths       every equationMove step is true and follows the last.
+ *   tool-one-motion  one tool starts per spoken line.
+ *   tool-fits-line   the line lasts as long as its tool draws.
+ *
+ * And four about a composed board (board composer, composerChecks.ts):
+ *   page-full        no page is left under 60% written on, and a subtopic
+ *                    with a main demonstration (a picture, a scene, a flow, a
+ *                    chart, working or a comparison) has its notes, key points
+ *                    and summary.
+ *   phone-readable   every line's frame keeps its writing 12px or more on a
+ *                    phone held sideways (on a pull-out, what that line writes).
+ *   one-main         every beat is one composed page, not a stack.
+ *   answer-shown     no ask is held while its answer is written on its page.
+ *
  * NOT IN `validateLesson`, ON PURPOSE. The classroom validates every lesson
  * it loads and shows one that fails as "not available"
  * (apps/classroom/src/lib/content.ts, fetchLesson), so a rule added there
@@ -113,7 +131,15 @@ export type GateRule =
   | 'drawn'
   | 'echo'
   | 'tex'
-  | 'chem';
+  | 'chem'
+  | 'tool-valid'
+  | 'tool-maths'
+  | 'tool-one-motion'
+  | 'tool-fits-line'
+  | 'page-full'
+  | 'phone-readable'
+  | 'one-main'
+  | 'answer-shown';
 
 /** A board instruction that writes words and drew nothing — assemble's `undrawn`. */
 export interface Undrawn {
@@ -193,6 +219,11 @@ export interface GateOptions {
    * Absent: rule `drawn` has nothing to read and finds nothing.
    */
   undrawn?: readonly Undrawn[];
+  /**
+   * A composed class's pages and pull-outs — `assemble(...).composer`. Absent
+   * on a class that is not composed: rules page-full and phone-readable are off.
+   */
+  composer?: ComposerReport;
 }
 
 /** The planner beat a lesson beat or element id came from: `b3_4` -> `b3`, `b3__pen` -> `b3`. */
@@ -449,7 +480,7 @@ function boardProblems(lesson: Lesson): GateProblem[] {
   // The shape every student sees: the stage is 16:9 on every screen (canvas C2).
   const aspect = STAGE_ASPECT;
   for (const beat of lesson.beats) {
-    const frame = computeFrame(lesson, beat.frame ?? beat.show, beat.focus ?? [], aspect);
+    const frame = computeFrame(lesson, beat.frame ?? beat.show, beat.focus ?? [], aspect, undefined, beat.show);
     for (const id of beat.show) {
       const el = byId.get(id);
       if (!el || seen.has(id)) continue;
@@ -484,6 +515,8 @@ export function gateLesson(lesson: Lesson, opts: GateOptions = {}): GateProblem[
     ...unspokenProblems(lesson, opts.unspoken ?? []),
     ...boardProblems(lesson),
     ...boardChecks(lesson),
+    ...toolChecks(lesson),
+    ...composerChecks(lesson, opts.composer),
     ...(opts.undrawn ?? []).map((u) => ({
       rule: 'drawn' as const,
       where: u.beat,

@@ -29,35 +29,50 @@ export interface Rect {
 const EM_SANS = 0.58;
 const EM_MONO = 0.62;
 /**
- * Her handwriting, Caveat, in ems a character by the KIND of character.
+ * The lines she writes, in Quicksand at weight 600, in ems a character.
  *
- * MEASURED 2026-10-02 in the browser (canvas measureText, 'Caveat Variable'):
- * lowercase 0.359 on average, capitals 0.509, digits 0.45, punctuation 0.30, a
- * space 0.242; m and w reach 0.56, M and W 0.72. A typical board line comes to
- * 0.35-0.37 overall, and an all-capitals one to 0.46. It used to be measured
- * with EM_SANS, 0.58 for every character — 66% over on an ordinary line — so
- * her lines wrapped early, her points shrank to fit room they already had, and
- * the page turned too often.
+ * Her lines used to be drawn in Caveat, a handwriting face, and Aarav found it
+ * odd to read (2026-10-07). They are now drawn in the face the rest of the
+ * board uses, and this is that face measured: every printable ASCII glyph's
+ * advance at weight 600, the weight her lines are drawn at, read with canvas
+ * measureText from the self-hosted 'Quicksand Variable' file.
  *
- * Each figure below is that mean with about 8% kept for the glyphs above it;
- * the renderer's writing mask adds its own 1.3x on top, so nothing is clipped.
- * Anything outside plain ASCII is counted wide.
+ * PER GLYPH, NOT PER KIND OF GLYPH. Caveat's letters were nearly one width, so
+ * one figure for lowercase did; Quicksand's are not — an i is 0.23 and a g is
+ * 0.63 — and a lowercase mean came out under the drawn width on "good dog".
+ * Summed glyph by glyph the ruler lands within -0.4% to +1.0% of the shaped
+ * line over every handwritten line in content/, and `HAND_MARGIN` is kept on
+ * top so it is never under.
+ *
+ * Anything not in the table — Devanagari, which Baloo 2 draws for her, or a
+ * symbol the face lacks — is counted at `HAND_WIDE`: generous, because a line
+ * measured short is a line the mask clips.
  */
-const HAND = { space: 0.26, lower: 0.39, wideLower: 0.6, upper: 0.55, wideUpper: 0.75, digit: 0.49, other: 0.33, wide: 0.6 };
+const HAND_EMS: Readonly<Record<string, number>> = {
+  ' ': 0.278, '!': 0.24, '"': 0.414, '#': 0.68, $: 0.585, '%': 0.803, '&': 0.699, "'": 0.206,
+  '(': 0.363, ')': 0.363, '*': 0.345, '+': 0.573, ',': 0.248, '-': 0.394, '.': 0.226, '/': 0.553,
+  '0': 0.608, '1': 0.383, '2': 0.564, '3': 0.533, '4': 0.568, '5': 0.566, '6': 0.548, '7': 0.537, '8': 0.545, '9': 0.565,
+  ':': 0.244, ';': 0.262, '<': 0.524, '=': 0.586, '>': 0.527, '?': 0.513, '@': 0.967,
+  A: 0.642, B: 0.654, C: 0.636, D: 0.716, E: 0.571, F: 0.563, G: 0.696, H: 0.719, I: 0.267, J: 0.559,
+  K: 0.662, L: 0.552, M: 0.822, N: 0.733, O: 0.761, P: 0.601, Q: 0.762, R: 0.681, S: 0.585, T: 0.619,
+  U: 0.708, V: 0.674, W: 0.951, X: 0.639, Y: 0.584, Z: 0.647,
+  '[': 0.404, '\\': 0.553, ']': 0.404, '^': 0.585, _: 0.692, '`': 0.248,
+  a: 0.621, b: 0.621, c: 0.519, d: 0.621, e: 0.582, f: 0.411, g: 0.633, h: 0.58, i: 0.229, j: 0.273,
+  k: 0.558, l: 0.257, m: 0.919, n: 0.59, o: 0.617, p: 0.621, q: 0.621, r: 0.418, s: 0.478, t: 0.386,
+  u: 0.581, v: 0.551, w: 0.763, x: 0.486, y: 0.581, z: 0.482,
+  '{': 0.41, '|': 0.234, '}': 0.41, '~': 0.514,
+  '—': 0.87, '–': 0.514, '→': 0.584, '×': 0.488, '°': 0.373,
+  '’': 0.248, '“': 0.42, '”': 0.42, '…': 0.603,
+};
+/** Kept on top of the summed advances: the most the sum fell short by, and a little more. */
+const HAND_MARGIN = 1.03;
+/** A character the table does not hold. */
+const HAND_WIDE = 0.95;
 
 function handEms(text: string): number {
   let ems = 0;
-  for (const ch of text) {
-    if (ch === ' ') ems += HAND.space;
-    else if (ch === 'm' || ch === 'w') ems += HAND.wideLower;
-    else if (ch === 'M' || ch === 'W') ems += HAND.wideUpper;
-    else if (ch >= 'a' && ch <= 'z') ems += HAND.lower;
-    else if (ch >= 'A' && ch <= 'Z') ems += HAND.upper;
-    else if (ch >= '0' && ch <= '9') ems += HAND.digit;
-    else if (ch.charCodeAt(0) < 128) ems += HAND.other;
-    else ems += HAND.wide;
-  }
-  return ems;
+  for (const ch of text) ems += HAND_EMS[ch] ?? HAND_WIDE;
+  return ems * HAND_MARGIN;
 }
 
 /**
@@ -208,9 +223,9 @@ export function textWidth(text: string, size: number, mono = false): number {
 }
 
 /**
- * How wide one line of HER HANDWRITING will be drawn (a `handwrite`). A line
- * with `$…$` maths in it is typeset by KaTeX rather than written in Caveat,
- * so it keeps the sans measure.
+ * How wide one line SHE WRITES will be drawn (a `handwrite`). A line with
+ * `$…$` maths in it is typeset by KaTeX rather than drawn in her face, so it
+ * keeps the sans measure.
  */
 export function handWidth(text: string, size: number): number {
   return hasMath(text) ? textWidth(text, size) : handEms(text) * size;
@@ -326,6 +341,26 @@ export function listBoxHeight(
 }
 
 /**
+ * Where item `n` of a list is drawn: its row, from its first line to its last,
+ * across the text's width — by the same measure listBoxHeight uses, so a mark
+ * on an item lands on the item.
+ */
+export function listItemBox(
+  list: { x: number; y: number; w: number; heading?: string; items: readonly { term: string; meaning?: string }[]; size?: number },
+  n: number,
+): Rect | null {
+  if (n < 0 || n >= list.items.length) return null;
+  const size = list.size ?? LIST_ITEM_SIZE;
+  const lead = size * LIST_LINE_H;
+  let y = list.y + (list.heading ? LIST_HEADING_SIZE * LIST_LINE_H + LIST_HEADING_GAP : 0);
+  for (let k = 0; k < n; k += 1) {
+    y += wrapLines(`${k + 1}. ${listItemText(list.items[k])}`, list.w - LIST_INDENT, size).length * lead + LIST_ITEM_GAP;
+  }
+  const lines = wrapLines(`${n + 1}. ${listItemText(list.items[n])}`, list.w - LIST_INDENT, size).length;
+  return { x: list.x, y, w: list.w, h: lines * lead };
+}
+
+/**
  * The largest size at which this text still fits the width it is given.
  *
  * Anything that can be longer than its container must ASK rather than hope. A
@@ -366,7 +401,22 @@ export function graphicLabelSize(
 ): number {
   // Beneath, a label must not dominate the picture it names. Beside, it has
   // the rest of the row and only needs to be legible.
-  return fitText(label, iconW * (side === 'beside' ? 3.5 : 1.8), 26, 14);
+  const room = iconW * (side === 'beside' ? 3.5 : 1.8);
+  // Fitted by both rulers and the smaller kept (graphicLabelWidth): never
+  // larger than the sans ruler alone made it, so no layout grows from this.
+  return Math.min(fitText(label, room, 26, 14), fitHand(label, room, 26, 14));
+}
+
+/**
+ * How wide a picture's name is drawn.
+ *
+ * It is written in her face (Quicksand), whose capitals run wider than the
+ * sans ruler's 0.58 an em — "DNA" was drawn a quarter wider than the box the
+ * camera and the overlap check measured (review, 2026-10-08) — and whose
+ * lowercase runs narrower. So both, and the wider: never under what is drawn.
+ */
+export function graphicLabelWidth(label: string, size: number): number {
+  return Math.max(textWidth(label, size), handWidth(label, size));
 }
 
 /**
@@ -439,6 +489,7 @@ export function boxOf(el: Element): Rect {
     case 'plot':
     case 'mark':
     case 'model3d':
+    case 'tool':
       return { x: el.x, y: el.y, w: el.w, h: el.h };
     // A graphic's label hangs below its box and is part of the element: the
     // camera has to know about it, and so does anything trying not to sit on
@@ -448,10 +499,10 @@ export function boxOf(el: Element): Rect {
     case 'graphic': {
       if (!el.label) return { x: el.x, y: el.y, w: el.w, h: el.h };
       if (el.labelSide === 'beside') {
-        const labelW = textWidth(el.label, graphicLabelSize(el.w, el.label, 'beside'));
+        const labelW = graphicLabelWidth(el.label, graphicLabelSize(el.w, el.label, 'beside'));
         return { x: el.x, y: el.y, w: el.w + BESIDE_GAP + labelW, h: el.h };
       }
-      const labelW = textWidth(el.label, graphicLabelSize(el.w, el.label));
+      const labelW = graphicLabelWidth(el.label, graphicLabelSize(el.w, el.label));
       const w = Math.max(el.w, labelW);
       return { x: el.x + el.w / 2 - w / 2, y: el.y, w, h: el.h + 34 };
     }

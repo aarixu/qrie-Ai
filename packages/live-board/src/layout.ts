@@ -155,7 +155,7 @@ export function augmentLesson(lesson: Lesson, state: LiveState): Lesson {
  */
 function handLines(text: string, id: string, x: number, top: number, w: number): Element[] | string {
   for (const size of HAND_SIZES) {
-    // Measured as her handwriting (Caveat), as `boxOf` measures a handwrite.
+    // Measured with her ruler (`handWidth`), as `boxOf` measures a handwrite.
     const lines = wrapHand(text, w, size);
     if (!lines.every((l) => handWidth(l, size) <= w + EPS)) continue;
     const lead = size * 1.35 + LINE_GAP;

@@ -1,6 +1,13 @@
 import type { Lesson } from "@ai-tutor/lesson-format";
 import { relayFetch } from './relay';
-import { createCommonsSearch, type TopicOutcome, type WebImageAdapter } from '@ai-tutor/class-prep';
+import {
+  createCommonsSearch,
+  dressNounPhotos,
+  findNounPhotos,
+  type FoundPicture,
+  type TopicOutcome,
+  type WebImageAdapter,
+} from '@ai-tutor/class-prep';
 import {
   drawMissingIcons,
   pickIcons,
@@ -32,6 +39,17 @@ import { pencilGlyph } from '@ai-tutor/graphics';
  */
 const PLANNER_MODEL = 'google/gemini-3.7-flash';
 const ARTIST_MODEL = 'google/gemini-3.7-flash';
+
+/**
+ * WHETHER A LIVE CLASS IS PREPARED FOR THE COMPOSED BOARD (board composer).
+ *
+ * Off until real composed classes are measured (the composer plan's Task 13).
+ * A composed class is held to the keep gate's page-full, phone-readable and
+ * one-main rules, and a class the gate refuses is not kept: if most real
+ * classes failed them, every student on a cold topic would pay to prepare it
+ * again. Turn this on once real classes pass.
+ */
+export const COMPOSE_LIVE_CLASSES = false;
 /** Picks which meaning of a word to draw. One small call, so the fastest model. */
 const PICKER_MODEL = 'google/gemini-3.1-flash-lite';
 /**
@@ -108,10 +126,10 @@ const svgOf = (glyph: { body: string; width: number; height: number }): string =
  * moment to start spending — a pencil is free, honest, and enough to make the
  * class keepable.
  */
-export function pencilsFor(lesson: Lesson): Record<string, string> {
+export function pencilsFor(lesson: Lesson, covered: ReadonlySet<string> = new Set()): Record<string, string> {
   const assets: Record<string, string> = {};
   for (const el of lesson.elements) {
-    if (el.kind !== 'graphic') continue;
+    if (el.kind !== 'graphic' || covered.has(el.noun)) continue;
     assets[el.id] = svgOf(pencilGlyph(el.noun));
   }
   return assets;
@@ -123,10 +141,12 @@ async function fetchGraphics(
   llm: LlmAdapter,
   /** Draws the nouns nothing depicts. A stronger model than the picker. */
   drawIcon: LlmAdapter,
+  /** The nouns a photograph was already found for: no icon is looked for, picked or drawn for them. */
+  covered: ReadonlySet<string> = new Set(),
 ): Promise<Record<string, string>> {
   const nouns = [
     ...new Set(lesson.elements.filter((el) => el.kind === 'graphic').map((el) => el.noun)),
-  ];
+  ].filter((noun) => !covered.has(noun));
   if (nouns.length === 0) return {};
 
   // One parameter per noun. Joined with commas, a noun containing one was
@@ -153,7 +173,7 @@ async function fetchGraphics(
    * catalogue and is safe in a bundle; its own header is explicit that loading
    * the sets is somebody else's job.
    */
-  if (!res.ok) return pencilsFor(lesson);
+  if (!res.ok) return pencilsFor(lesson, covered);
 
   type Glyph = { body: string; width: number; height: number };
   type Found = {
@@ -172,7 +192,13 @@ async function fetchGraphics(
       })),
     ]),
   );
-  const chosen = await pickIcons(topic, options, llm);
+  // The label each noun is written with, so "tube" labelled "Intestinal lumen"
+  // is not given a test tube (small intestine, 2026-10-07).
+  const labels: Record<string, string[]> = {};
+  for (const el of lesson.elements) {
+    if (el.kind === 'graphic' && el.label) labels[el.noun] = [...(labels[el.noun] ?? []), el.label];
+  }
+  const chosen = await pickIcons(topic, options, llm, labels);
 
   /**
    * The picked glyph, or null when this noun has no picture worth using —
@@ -206,7 +232,7 @@ async function fetchGraphics(
 
   const assets: Record<string, string> = {};
   for (const el of lesson.elements) {
-    if (el.kind !== 'graphic') continue;
+    if (el.kind !== 'graphic' || covered.has(el.noun)) continue;
     const custom = drawn[el.noun];
     if (custom) {
       // Keyed by ELEMENT id, not by noun: the same noun placed twice is two
@@ -261,6 +287,15 @@ export interface LivePrep {
  * job, it is the one the artist draws.
  */
 const PICTURE_SEARCH = createCommonsSearch();
+
+/**
+ * WHERE A PLACED THING'S PHOTOGRAPH IS LOOKED FOR (Aarav, 2026-10-07).
+ *
+ * The same Commons search, asking for a 500-pixel thumbnail: a placed thing
+ * is drawn a hundred-odd units across, and a scene holds several, each saved
+ * inside the class.
+ */
+const NOUN_PHOTO_SEARCH = createCommonsSearch({ thumbWidth: 500 });
 
 /**
  * THE LOCK IS THE CALLER'S JOB, NOT THIS FUNCTION'S — said here because the
@@ -328,6 +363,13 @@ export async function prepareLiveClass(
      * preparation comes out Hinglish today. All three are handoffs.
      */
     language?: TutorLanguage;
+    /**
+     * Prepare THIS class for the composed board, whatever COMPOSE_LIVE_CLASSES
+     * says. The canvas lab asks, to measure real composed classes before the
+     * switch is turned on; every other caller leaves it out and follows the
+     * switch.
+     */
+    composed?: boolean;
   },
   onProgress: (progress: PrepProgress) => void,
   /**
@@ -390,6 +432,10 @@ export async function prepareLiveClass(
    */
   const language: TutorLanguage = ask.language ?? tutorLanguage();
 
+  // The draft the room opens on, so its placed things can be dressed in their
+  // photographs too (below): the student is watching that copy.
+  let draftLesson: Lesson | null = null;
+
   const result = await prepareClass({
     topic: ask.topic,
     language,
@@ -398,6 +444,9 @@ export async function prepareLiveClass(
     minutes: ask.minutes,
     studentLines: ask.studentLines,
     outcomes: ask.outcomes,
+    // A full, well-annotated page per subtopic (board composer), once switched
+    // on, or for a caller that asks for this class.
+    composed: ask.composed ?? COMPOSE_LIVE_CLASSES,
     planner: createBrowserLlm(PLANNER_MODEL, { json: true }),
     artist: createBrowserLlm(ARTIST_MODEL),
     // THE FACTUAL GATE, ON (C10). Without it the class a live student
@@ -416,7 +465,15 @@ export async function prepareLiveClass(
     // turns it off deliberately, which is a different thing from forgetting.
     ...(ask.web === null ? {} : { web: ask.web ?? PICTURE_SEARCH }),
     onProgress,
-    ...(warm ? { onDraft: warm.onDraft, onAsset: () => warm.onArt() } : {}),
+    ...(warm
+      ? {
+          onDraft: (draft: { lesson: Lesson; assets: Record<string, string> }) => {
+            draftLesson = draft.lesson;
+            warm.onDraft(draft);
+          },
+          onAsset: () => warm.onArt(),
+        }
+      : {}),
   });
 
   /**
@@ -429,6 +486,28 @@ export async function prepareLiveClass(
    */
   onProgress({ phase: 'drawing', message: 'Finding the pictures for each word…', done: 0.97 });
 
+  /**
+   * A REAL THING IS A REAL PHOTOGRAPH FIRST (Aarav, 2026-10-07).
+   *
+   * Each placed noun is looked for on Commons before any icon: an openly
+   * licensed photograph a vision model has checked is the thing the lesson
+   * means and is fit for a class of children. The nouns it finds skip the icon
+   * library, the picker and the icon artist; the rest go on exactly as before.
+   * `web: null` turns this off with the picture search.
+   */
+  let photos = new Map<string, FoundPicture>();
+  const photoSearch = ask.web === null ? null : (ask.web ?? NOUN_PHOTO_SEARCH);
+  if (photoSearch) {
+    try {
+      photos = await findNounPhotos(result.lesson, ask.topic, photoSearch, createBrowserVision(VISION_MODEL));
+    } catch {
+      // Icons for every noun, as before.
+    }
+  }
+  const photoAssets = dressNounPhotos(result.lesson, photos);
+  const watching = draftLesson as Lesson | null;
+  if (watching && watching !== result.lesson) dressNounPhotos(watching, photos);
+
   let graphics: Record<string, string> = {};
   try {
     graphics = await fetchGraphics(
@@ -436,10 +515,12 @@ export async function prepareLiveClass(
       ask.topic,
       createBrowserLlm(PICKER_MODEL, { json: true }),
       createBrowserLlm(ARTIST_MODEL),
+      new Set(photos.keys()),
     );
   } catch {
     // The board shows what it has.
   }
+  Object.assign(graphics, photoAssets);
 
   // Into the same record the draft was handed, not a copy: the room is holding
   // that object, and a copy would leave every noun undressed for the student

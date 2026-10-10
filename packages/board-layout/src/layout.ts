@@ -16,11 +16,15 @@ import {
   wrapHand,
   wrapLines,
   listBoxHeight,
+  listItemBox,
   compileFunction,
+  isToolName,
+  toolAspect,
+  toolMinSize,
   type Element,
   type Beat,
 } from '@ai-tutor/lesson-format';
-import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
+import type { Instruction, LaidOutBeat, ScriptBeat, ToolInstruction } from './types';
 import {
   annotateElement,
   connectElements,
@@ -29,6 +33,20 @@ import {
   layoutScene,
 } from './scene';
 import { resolveOverlaps, type Bond, type Leash } from './collide';
+import {
+  ARRANGEMENTS,
+  arrangementOf,
+  coverage,
+  fillRegions,
+  FILL_GAP,
+  inTwoColumns,
+  isMainKind,
+  PAGE,
+  writtenArea,
+  type Fillable,
+  type SheetReport,
+} from './compose';
+import { inksFor, paintInks } from './ink';
 
 /**
  * The board's three bands. Nothing is ever placed outside them, and nothing
@@ -83,19 +101,72 @@ const DERIVE_LEAD = 44;
 const MAX_DERIVE_STEPS = 7;
 const DERIVE_STEP_MS = 1400;
 const WRITE_H = 62;
+/**
+ * THE SIZES SHE WRITES AT, SET FOR THE FACE SHE WRITES IN (2026-10-07).
+ *
+ * Every size below that a line of hers is written at was chosen for Caveat,
+ * a narrow handwriting face with small lowercase. Her lines are now drawn in
+ * Quicksand (Aarav: "writing font ko normal kr do"), which at the same size is
+ * about 1.32x as wide and has lowercase 1.5x as tall. Each size is now 0.9 of
+ * what it was (a composed key point a little less: see POINT_SIZE), measured
+ * over the 300 seeded classes against 1.0 and 0.8:
+ *
+ *   - 1.0: composed pages 1347 -> 1534, and a page's last point and summary
+ *     turned onto a page of their own, 12% written on;
+ *   - 0.9: 1400 pages, page-full in 288 classes against 286 before,
+ *     phone-readable in 101 against 84, her lowercase about 11 px tall on a
+ *     phone held sideways against 7.9 px in Caveat;
+ *   - 0.8: 1335 pages, but phone-readable in 113 and page-full in 295.
+ *
+ * Phone-readable counts more classes than it did because it reads font size,
+ * and the same 12 px is now a much larger letter: it is held at 12 px, the
+ * floor the rest of the board's text already meets.
+ */
+const WIDE_SIZE = 32;
+const WIDE_MIN = 15;
+const WIDE_WRAP_BELOW = 25;
+const WIDE_WRAPPED_SIZE = 27;
+const COLUMN_SIZE = 24;
+/** The sizes a picture's margin names are written at, largest first. */
+const MARGIN_SIZES = [18, 16, 14, 13];
+const MARGIN_MIN = MARGIN_SIZES[MARGIN_SIZES.length - 1];
 const CARD_H = 128;
 /** The sizes a card's body may wrap at, largest first; see the card block. */
 const CARD_BODY_SIZES = [16, 15, 14, 13];
+/**
+ * A summary's words: size, line pitch, and the room the banner's notches take
+ * at each end. 20 because on a composed page the summary is written on the
+ * page's last line, whose frame is the whole page (1102 wide at 16:9), and 20
+ * units there is 12px on a phone. Two lines of it fill an 80-unit summary place.
+ */
+const SUMMARY_SIZE = 20;
+const SUMMARY_LEAD = 28;
+const SUMMARY_NOTCH = 28;
+/**
+ * A comparison: its inner padding, headings, points and their line pitch. A
+ * padding of 12 keeps three one-line rows (144 tall) inside the 148-unit band
+ * under a composed figure (compose.ts).
+ */
+const COMPARE_PAD = 12;
+const COMPARE_HEAD = 19;
+const COMPARE_SIZE = 16;
+const COMPARE_LEAD = 22;
+/**
+ * No wider than this: framed whole on a phone, a comparison across the full
+ * board set its 16-unit points at 10.7px (the composer demo, 2026-10-04); at
+ * 680 they read at 12px or more.
+ */
+const COMPARE_MAX_W = 680;
 
 /**
  * A connector's words lifted above their row (the scene block): written no
  * larger than LANE_SIZE, LANE_CLEAR above the tallest thing they span, and —
  * when the row reached the top of its band — in a LANE that tall kept clear
- * above it. 42 holds a size-20 line (27 tall, `boxOf`) with its clearance
- * under it and the solver's breathing room over it.
+ * above it. 42 holds a line at LANE_SIZE (`boxOf`) with its clearance under
+ * it and the solver's breathing room over it.
  */
 const LANE = 42;
-const LANE_SIZE = 20;
+const LANE_SIZE = 18;
 const LANE_CLEAR = 8;
 /** A label's box with the room the solver wants round it (collide.ts BREATHING). */
 const padLabel = (r: Rect): Rect => ({ x: r.x - 6, y: r.y - 6, w: r.w + 12, h: r.h + 12 });
@@ -117,7 +188,47 @@ const BAND_GAP = 16;
 const POINT_GAP = 10;
 const MIN_FIGURE_H = 190;
 /** The sizes a band is written at, largest first. All its points share one. */
-const BAND_SIZES = [30, 26, 23, 20];
+const BAND_SIZES = [27, 23, 21, 18];
+/**
+ * A key point on a composed page: smaller than a stacked board's, because
+ * the camera comes close to the region being taught (assemble frames it), and
+ * the page has more to hold.
+ *
+ * 19, not the 20 that 0.9 of its Caveat size would be (2026-10-08): at 20 the
+ * composer demo's first page sent its last point and its summary onto a page
+ * of their own, 12% written on — the empty page this composer exists to
+ * prevent. At 19 its three pages are 69%, 64% and 60%; over the 300 seeded
+ * classes, page-full 291 and phone-readable 105 against 288 and 101. At 18,
+ * 294 and 111 for the same three pages.
+ */
+const POINT_SIZE = 19;
+/** How far a composed key point's words start from its region's left edge: the bullet's margin. */
+const BULLET_INDENT = 32;
+/** The gap between a composed scene's rows: a lane, room for an arrow's words beside it. */
+const COMPOSED_ROW_GAP = 44;
+/** A part's name in the key under a picture, its part not found: the size of a name in the margin. */
+const HOMELESS_NAME_SIZE = 18;
+/** The key under a picture: the gap above it, a bullet's room before each name, and the room between names. */
+const KEY_GAP = 12;
+const KEY_DOT_W = 26;
+const KEY_ITEM_GAP = 28;
+
+/** Names in rows no wider than `w`, each name with its bullet; a row's width is what its names take. */
+function keyRowsOf(texts: readonly string[], w: number): { items: { index: number; w: number }[]; w: number }[] {
+  const rows: { items: { index: number; w: number }[]; w: number }[] = [];
+  texts.forEach((text, index) => {
+    const width = handWidth(text, HOMELESS_NAME_SIZE);
+    const row = rows[rows.length - 1];
+    const wider = row ? row.w + KEY_ITEM_GAP + KEY_DOT_W + width : Infinity;
+    if (row && wider <= w) {
+      row.items.push({ index, w: width });
+      row.w = wider;
+    } else {
+      rows.push({ items: [{ index, w: width }], w: KEY_DOT_W + width });
+    }
+  });
+  return rows;
+}
 
 /**
  * From one handwritten line to the next.
@@ -184,10 +295,23 @@ interface Block {
   at: number | null;
   /** Turn an allotted rectangle into elements. */
   place: (rect: { x: number; y: number; w: number; h: number }) => Element[];
+  /**
+   * Its height when drawn `w` wide, for a block that cannot be drawn just to
+   * be measured: a card, a summary and a comparison record bonds as they are
+   * placed, so drawing one to measure it would record them twice. A block
+   * without one is measured by drawing it (the composed page, compose.ts).
+   */
+  heightAt?: (w: number) => number;
 }
 
 const idFor = (beatId: string, index: number, suffix = ''): string =>
   `${beatId}_${index}${suffix}`;
+
+/** A tool instruction's params: every key but the ones the board itself reads. */
+export function toolParamsOf(item: ToolInstruction): Record<string, unknown> {
+  const { do: _do, id: _id, at: _at, ...params } = item;
+  return params;
+}
 
 /**
  * How long into a spoken line she reaches `word`: its place in the line at
@@ -289,8 +413,9 @@ function planBand(
  * The BREAKING is `wrapHand` in lesson-format, beside the width measurement it
  * is made of — this file used to carry its own copy that guessed half an em per
  * character, packed more onto a line than would fit, and ran text past the very
- * margin it was wrapping for. Every caller writes in her hand (a key point, a
- * picture's name), so it is measured as Caveat, not as the sans board text.
+ * margin it was wrapping for. Every caller is a line she writes (a key point, a
+ * picture's name), so it is measured with her ruler, `handWidth`, not the sans
+ * one the rest of the board's text uses.
  *
  * The six percent held back is the only part that belongs here: a board is not
  * a page, and text that reaches the edge of its column reads as though it ran
@@ -391,6 +516,12 @@ export function layoutBeat(
    * picture in a box of the wrong shape and then marks parts of the box.
    */
   shapes: ReadonlyMap<string, number> = new Map(),
+  /**
+   * `composed`: lay the page out in regions (compose.ts) rather than as one
+   * stack. Off unless the plan asks for it, so every plan made before the
+   * composer, and every fixture, is laid out exactly as it was.
+   */
+  opts: { composed?: boolean } = {},
 ): {
   elements: Element[];
   laid: LaidOutBeat;
@@ -425,11 +556,21 @@ export function layoutBeat(
    * reads it.
    */
   undrawn: { index: number; do: Instruction['do']; text: string }[];
+  /** Each element's region on a composed page, "<sheet>/<region>" (compose.ts). Empty on a stacked page. */
+  regions: Record<string, string>;
+  /** How full each page of a composed beat is, and what is on it. Empty on a stacked page. */
+  sheets: SheetReport[];
 } {
   const elements: Element[] = [];
   const show: string[] = [];
   const focus: string[] = [];
+  /** Each `point`, by the item it came from, so a composed board can light it on its own line. */
+  const pointAt: { at: number; ref: string }[] = [];
   const blocks: Block[] = [];
+  /** Each element's region on a composed page; nothing on a stacked one. */
+  const regions: Record<string, string> = {};
+  /** The region what is emitted now goes in, or null on a stacked page. */
+  let regionNow: string | null = null;
 
   /**
    * Which element ids each ITEM produced, keyed by the item's index in the
@@ -440,6 +581,7 @@ export function layoutBeat(
   const byInstruction = new Map<number, string[]>();
   let current = -1;
   const emit = (el: Element, focused = false): void => {
+    if (regionNow !== null) regions[el.id] = regionNow;
     elements.push(el);
     show.push(el.id);
     if (focused) focus.push(el.id);
@@ -490,6 +632,20 @@ export function layoutBeat(
     });
   });
 
+  /**
+   * THE COMPOSED PAGE (compose.ts), decided before anything is drawn, because
+   * a composed page writes its title, its captions and its key points
+   * differently. A page with two main demonstrations stays a stack, exactly as
+   * before.
+   */
+  const arranged = opts.composed ? arrangementOf(items.map((it) => it.do)) : 'fallback';
+  // Names and insets are drawn round a figure only. On any other composed page
+  // they would have nowhere to go, so that page keeps the stack, which draws
+  // them, rather than lose what the planner wrote.
+  const arrangement =
+    arranged !== 'figure' && items.some((it) => it.do === 'label' || it.do === 'sketch') ? 'fallback' : arranged;
+  const composition = arrangement === 'fallback' ? null : ARRANGEMENTS[arrangement];
+
   // The scene is laid out as ONE block, because a connector cannot be drawn
   // until both of its ends have somewhere to be. Collecting the places first is
   // what lets an arrow start at the edge of a box rather than guess.
@@ -533,15 +689,42 @@ export function layoutBeat(
    * a later `annotate` can mark what she wrote (canvas C3).
    */
   const writtenAt = new Map<string, number>();
+  /** The item each list came from, by its `id`, so a later `annotate` can mark one of its items. */
+  const listAt = new Map<string, number>();
   let i = 0;
   while (i < items.length) {
     const item = items[i];
     const index = i;
     current = i;
     if ((item.do === 'write' || item.do === 'equation') && item.id) writtenAt.set(item.id, index);
+    if (item.do === 'list' && item.id) listAt.set(item.id, index);
 
     switch (item.do) {
       case 'title': {
+        if (composition) {
+          // The header: where this sits in the chapter, small, over the
+          // title, both above PAGE.top so nothing is filled over them. A
+          // sub-title has no room here and is not written.
+          regionNow = '0/header';
+          emit({ kind: 'title', id: idFor(beat.id, index), x: CANVAS_W / 2, y: PAGE.titleY, text: item.text });
+          if (item.path && item.path.length > 0) {
+            emit({
+              kind: 'text',
+              id: idFor(beat.id, index, '_path'),
+              x: CANVAS_W / 2,
+              y: PAGE.crumbY,
+              text: item.path.join(' › '),
+              // 20, not smaller: the breadcrumb is often seen only in the
+              // page's pull-out, framed 1102 wide, and 20 units there is
+              // 12px on a phone (gate, phone-readable).
+              size: PAGE.crumbSize,
+              muted: true,
+            });
+          }
+          regionNow = null;
+          i += 1;
+          break;
+        }
         emit({
           kind: 'title',
           id: idFor(beat.id, index),
@@ -555,6 +738,19 @@ export function layoutBeat(
       }
 
       case 'caption': {
+        if (composition) {
+          // Written where a key point would be, at a size its region holds.
+          blocks.push({
+            kind: item.do,
+            at: index,
+            height: 34,
+            place: (r) => [
+              { kind: 'text', id: idFor(beat.id, index), x: r.x + r.w / 2, y: r.y + 24, text: item.text, size: fitText(item.text, r.w - 8, 20) },
+            ],
+          });
+          i += 1;
+          break;
+        }
         emit({
           kind: 'text',
           id: idFor(beat.id, index),
@@ -773,25 +969,25 @@ export function layoutBeat(
          * five into x equals fourteen minus y, what value do you get for x?"
          * came out at size 17 across the whole board — and the camera, framing
          * that one line and the work area under it, drew it a few pixels high on
-         * a phone. Below size 28 it is written on two or more lines at 30
-         * instead, and the block is as tall as those lines.
+         * a phone. Below WIDE_WRAP_BELOW it is written on two or more lines at
+         * WIDE_WRAPPED_SIZE instead, and the block is as tall as those lines.
          */
-        const wideFit = fitHand(item.text, WIDTH * 0.94, 36, 17);
-        const wideLines = wideFit >= 28 ? null : wrapText(item.text, WIDTH * 0.9, 30);
+        const wideFit = fitHand(item.text, WIDTH * 0.94, WIDE_SIZE, WIDE_MIN);
+        const wideLines = wideFit >= WIDE_WRAP_BELOW ? null : wrapText(item.text, WIDTH * 0.9, WIDE_WRAPPED_SIZE);
         blocks.push({
           kind: item.do,
           at: index,
-          height: wideLines ? wideLines.length * handLead(30) + 14 : WRITE_H,
+          height: wideLines ? wideLines.length * handLead(WIDE_WRAPPED_SIZE) + 14 : WRITE_H,
           // Written on the centreline when it has the board, and inside its
           // own column when it is sharing with a picture. In a column it
           // WRAPS rather than shrinking: a key point squeezed to fit one line
           // of a narrow column came out too small to read from a desk, which
           // is the one thing a key point may not be.
           place: (r) => {
-            const narrow = r.w < WIDTH * 0.75;
+            const narrow = composition !== null || r.w < WIDTH * 0.75;
             if (!narrow && wideLines) {
-              const lead = handLead(30);
-              const top = r.y + 30 * 0.9;
+              const lead = handLead(WIDE_WRAPPED_SIZE);
+              const top = r.y + WIDE_WRAPPED_SIZE * 0.9;
               return wideLines.map((line, n) => ({
                 kind: 'handwrite',
                 ...(n > 0 ? { after: afterLines(wideLines, n) } : {}),
@@ -799,12 +995,18 @@ export function layoutBeat(
                 x: r.x + r.w / 2,
                 y: top + n * lead,
                 text: line,
-                size: 30,
+                size: WIDE_WRAPPED_SIZE,
                 ...(item.tone ? { tone: item.tone } : {}),
               }));
             }
-            const size = narrow ? 27 : 36;
-            const lines = narrow ? wrapText(item.text, r.w, size) : [item.text];
+            const size = narrow ? (composition ? POINT_SIZE : COLUMN_SIZE) : WIDE_SIZE;
+            // On a composed page a key point is a bullet point (Aarav,
+            // 2026-10-04): written from the left of its region, the bullet in
+            // a margin of its own, and a wrapped line under the point's words
+            // rather than under the bullet. Centred, a wrapped point read as
+            // two notes.
+            const indent = composition ? BULLET_INDENT : 0;
+            const lines = narrow ? wrapText(item.text, r.w - indent, size) : [item.text];
             // Wide enough that the overlap solver does not read two
             // consecutive lines as a collision and shrink the point until it
             // fits a gap that was never there.
@@ -813,16 +1015,20 @@ export function layoutBeat(
             // Each line waits for the one above it — a person writes a second
             // line after the first, not alongside it — and waits exactly as
             // long as that line takes, which only the shared ruler knows.
-            return lines.map((line, n) => ({
+            const written: Element[] = lines.map((line, n) => ({
               kind: 'handwrite',
               ...(n > 0 ? { after: afterLines(lines, n) } : {}),
               id: n === 0 ? idFor(beat.id, index) : idFor(beat.id, index, `_l${n}`),
-              x: r.x + r.w / 2,
+              x: composition ? r.x + indent + handWidth(line, size) / 2 : r.x + r.w / 2,
               y: narrow ? top + n * lead : r.y + Math.min(WRITE_H, r.h) * 0.7,
               text: line,
-              size: narrow ? size : fitHand(item.text, r.w * 0.94, 36, 17),
+              size: narrow ? size : fitHand(item.text, r.w * 0.94, WIDE_SIZE, WIDE_MIN),
               ...(item.tone ? { tone: item.tone } : {}),
             }));
+            if (!composition) return written;
+            // The bullet, level with the first line and clear of it by more
+            // than the overlap solver's breathing room.
+            return [{ kind: 'text', id: idFor(beat.id, index, '_dot'), x: r.x + 10, y: top, text: '•', size }, ...written];
           },
         });
         i += 1;
@@ -889,14 +1095,21 @@ export function layoutBeat(
           run.push(items[i] as Extract<Instruction, { do: 'card' }>);
           i += 1;
         }
-        const perRow = Math.max(1, Math.min(run.length, Math.floor(WIDTH / MIN_CARD_W)));
-        const rows = Math.ceil(run.length / perRow);
+        // As many to a row as the rectangle holds at MIN_CARD_W each. On the
+        // full width that is the same three it always was.
+        const perRowAt = (w: number): number => Math.max(1, Math.min(run.length, Math.floor(w / MIN_CARD_W)));
+        const heightAt = (w: number): number => {
+          const rows = Math.ceil(run.length / perRowAt(w));
+          return rows * CARD_H + (rows - 1) * GUTTER;
+        };
         blocks.push({
           kind: item.do,
           at: index,
-          height: rows * CARD_H + (rows - 1) * GUTTER,
+          height: heightAt(WIDTH),
+          heightAt,
           place: (r) => {
             const out: Element[] = [];
+            const perRow = perRowAt(r.w);
             const cardW = (r.w - (perRow - 1) * GUTTER) / perRow;
             run.forEach((card, n) => {
               const row = Math.floor(n / perRow);
@@ -975,6 +1188,95 @@ export function layoutBeat(
         break;
       }
 
+      case 'summary': {
+        const text = item.text;
+        // No wider than a note: a one-line takeaway stretched across the
+        // whole board reads as a banner ad, not a note.
+        const widthAt = (w: number): number => Math.min(w, WIDTH * 0.7);
+        const linesAt = (w: number): string[] => wrapLines(text, widthAt(w) - SUMMARY_NOTCH * 2, SUMMARY_SIZE);
+        const heightAt = (w: number): number => linesAt(w).length * SUMMARY_LEAD + 22;
+        blocks.push({
+          kind: item.do,
+          at: index,
+          height: heightAt(WIDTH),
+          heightAt,
+          place: (r) => {
+            const w = widthAt(r.w);
+            const x = r.x + (r.w - w) / 2;
+            const lines = linesAt(r.w);
+            const frameId = idFor(beat.id, index);
+            const out: Element[] = [
+              { kind: 'box', id: frameId, x, y: r.y, w, h: heightAt(r.w), label: '', as: 'banner', tone: 'accent' },
+            ];
+            lines.forEach((line, k) => {
+              const id = idFor(beat.id, index, `_s${k}`);
+              // The words are meant to sit inside their banner.
+              bonds.push({ a: frameId, b: id });
+              out.push({ kind: 'text', id, x: x + w / 2, y: r.y + 11 + SUMMARY_SIZE + k * SUMMARY_LEAD, text: line, size: SUMMARY_SIZE });
+            });
+            return out;
+          },
+        });
+        i += 1;
+        break;
+      }
+
+      case 'compare': {
+        const { left, right } = item;
+        const fair = (side: unknown): side is { heading: string; points: string[] } =>
+          typeof side === 'object' &&
+          side !== null &&
+          typeof (side as { heading?: unknown }).heading === 'string' &&
+          Array.isArray((side as { points?: unknown }).points) &&
+          (side as { points: unknown[] }).points.length >= 2 &&
+          (side as { points: unknown[] }).points.length <= 6;
+        // Two to six points a side, or nothing at all: `undrawn` names it.
+        if (!fair(left) || !fair(right)) {
+          i += 1;
+          break;
+        }
+        // As wide as its rectangle, up to COMPARE_MAX_W, and centred in it.
+        const widthOf = (w: number): number => Math.min(w, COMPARE_MAX_W);
+        const columnAt = (w: number): number => (widthOf(w) - COMPARE_PAD * 3) / 2;
+        const rowsAt = (w: number): { left: string[]; right: string[]; h: number }[] =>
+          Array.from({ length: Math.max(left.points.length, right.points.length) }, (_, n) => {
+            const l = left.points[n] ? wrapLines(left.points[n], columnAt(w), COMPARE_SIZE) : [];
+            const rr = right.points[n] ? wrapLines(right.points[n], columnAt(w), COMPARE_SIZE) : [];
+            return { left: l, right: rr, h: Math.max(l.length, rr.length, 1) * COMPARE_LEAD + 8 };
+          });
+        const heightAt = (w: number): number =>
+          COMPARE_PAD * 2 + COMPARE_HEAD * 1.6 + rowsAt(w).reduce((sum, row) => sum + row.h, 0);
+        blocks.push({
+          kind: item.do,
+          at: index,
+          height: heightAt(WIDTH),
+          heightAt,
+          place: (r) => {
+            const frameId = idFor(beat.id, index);
+            const col = columnAt(r.w);
+            const x0 = r.x + (r.w - widthOf(r.w)) / 2;
+            const centres = [x0 + COMPARE_PAD + col / 2, x0 + COMPARE_PAD * 2 + col + col / 2];
+            const out: Element[] = [{ kind: 'box', id: frameId, x: x0, y: r.y, w: widthOf(r.w), h: heightAt(r.w), label: '' }];
+            const write = (id: string, x: number, y: number, text: string, size: number): void => {
+              bonds.push({ a: frameId, b: id });
+              out.push({ kind: 'text', id, x, y, text, size });
+            };
+            const headY = r.y + COMPARE_PAD + COMPARE_HEAD;
+            write(idFor(beat.id, index, '_lh'), centres[0], headY, left.heading, COMPARE_HEAD);
+            write(idFor(beat.id, index, '_rh'), centres[1], headY, right.heading, COMPARE_HEAD);
+            let y = r.y + COMPARE_PAD + COMPARE_HEAD * 1.6;
+            rowsAt(r.w).forEach((row, n) => {
+              row.left.forEach((line, k) => write(idFor(beat.id, index, `_l${n}_${k}`), centres[0], y + COMPARE_SIZE + k * COMPARE_LEAD, line, COMPARE_SIZE));
+              row.right.forEach((line, k) => write(idFor(beat.id, index, `_r${n}_${k}`), centres[1], y + COMPARE_SIZE + k * COMPARE_LEAD, line, COMPARE_SIZE));
+              y += row.h;
+            });
+            return out;
+          },
+        });
+        i += 1;
+        break;
+      }
+
       case 'say': {
         // Says no element of its own; it marks where the board pauses for words.
         i += 1;
@@ -1018,7 +1320,36 @@ export function layoutBeat(
              * and only the version kept leaves anything behind.
              */
             const drawScene = (band: Rect) => {
-              const { elements: figures, boxes } = layoutScene(places, band, (authorId) => `${beat.id}__${authorId}`);
+              const { elements: figures, boxes } = layoutScene(
+                places,
+                band,
+                (authorId) => `${beat.id}__${authorId}`,
+                composition ? COMPOSED_ROW_GAP : undefined,
+              );
+              /**
+               * How many earlier arrows run alongside this one: they share an
+               * end and point the same way. On a composed board only those push
+               * it sideways — every earlier arrow did, and the pancreas's arrow
+               * into the lumen was pushed through the lumen's name (small
+               * intestine, 2026-10-07). A stacked board counts them all, as it
+               * always has.
+               */
+              const centre = (id: string) => {
+                const p = boxes.get(id);
+                return p ? { x: p.x + p.w / 2, y: p.y + p.h / 2 } : null;
+              };
+              const alongside = (step: Extract<Instruction, { do: 'connect' }>, before: number): number =>
+                sceneSteps.slice(0, before).filter((s) => {
+                  if (s.do !== 'connect') return false;
+                  const ends = [s.from, s.to];
+                  if (!ends.includes(step.from) && !ends.includes(step.to)) return false;
+                  const [a, b, c, d] = [centre(step.from), centre(step.to), centre(s.from), centre(s.to)];
+                  if (!a || !b || !c || !d) return false;
+                  const u = { x: b.x - a.x, y: b.y - a.y };
+                  const v = { x: d.x - c.x, y: d.y - c.y };
+                  const cos = (u.x * v.x + u.y * v.y) / ((Math.hypot(u.x, u.y) || 1) * (Math.hypot(v.x, v.y) || 1));
+                  return Math.abs(cos) > 0.9;
+                }).length;
               const out: Element[] = [...figures];
               const attributed: [number, string][] = [];
               const tied: Leash[] = [];
@@ -1035,7 +1366,7 @@ export function layoutBeat(
               let connectors = 0;
               sceneSteps.forEach((it, n) => {
                 if (it.do === 'connect') {
-                  const made = connectElements(it, boxes, idFor(beat.id, n), connectors);
+                  const made = connectElements(it, boxes, idFor(beat.id, n), composition ? alongside(it, n) : connectors);
                   // A label may move anywhere around the pair it joins, and no
                   // further: see connectionRegion.
                   const drawn = [it.from, it.to].map((end) => {
@@ -1139,6 +1470,7 @@ export function layoutBeat(
       case 'point': {
         // Not a block: it moves no geometry, it only decides what is bright.
         focus.push(`${item.ref}#${item.part}`);
+        pointAt.push({ at: index, ref: `${item.ref}#${item.part}` });
         i += 1;
         break;
       }
@@ -1151,6 +1483,24 @@ export function layoutBeat(
       }
 
       default: {
+        // A toolkit tool is drawn like a figure: its own shape, never under
+        // its floor. Bad params are still placed — validateLesson names them
+        // to the repair round, which an instruction dropped here never would.
+        if (isToolName(item.do)) {
+          const tool = item.do;
+          const params = toolParamsOf(item as ToolInstruction);
+          blocks.push({
+            kind: tool,
+            at: index,
+            height: null,
+            place: (r) => {
+              const aspect = toolAspect(tool, params);
+              const min = toolMinSize(tool);
+              const w = Math.max(Math.min(r.w, r.h * aspect), min.w, min.h * aspect);
+              return [{ kind: 'tool', id: idFor(beat.id, index), x: r.x + (r.w - w) / 2, y: r.y, w, h: w / aspect, tool, params }];
+            },
+          });
+        }
         // An instruction this engine does not know is SKIPPED, never spun on.
         // The switch used to have no default, and an unknown `do` left `i`
         // untouched — the loop hung for two minutes until a test timed out.
@@ -1201,7 +1551,7 @@ export function layoutBeat(
   let figurePlaced = false;
 
   const FIGURE: ReadonlySet<Block['kind']> = new Set(['picture', 'diagram', 'chart', 'plot', 'flow']);
-  const figures = blocks.filter((b) => FIGURE.has(b.kind));
+  const figures = blocks.filter((b) => FIGURE.has(b.kind) || isToolName(b.kind));
   /**
    * THE FIGURE THE NAMES ARE WRITTEN ROUND.
    *
@@ -1231,6 +1581,20 @@ export function layoutBeat(
    * room for its own caption.
    */
   const beside = blocks.filter((b) => b.kind === 'write' || b.kind === 'list');
+  /** How far down each region of a composed page's first sheet is already used (compose.ts, fillRegions). */
+  const reserved = new Map<string, number>();
+  /**
+   * A COMPOSED FIGURE: the labelled arrangement below draws the figure and its
+   * names inside the page's hero region, and leaves every key point and list
+   * to the regions beside and under it. On a stacked page its room is the band
+   * it always had, so nothing there moves.
+   */
+  const composedFigure = composition !== null && composition.name === 'figure' && labelledHost !== undefined;
+  const area: Rect =
+    composedFigure && composition?.main ? composition.main : { x: SIDE, y: MAIN.y, w: WIDTH, h: MAIN.h };
+  /** On a composed page: the part each name, line and mark belongs to, and the names in drawing order (ink.ts). */
+  const partOf = new Map<string, string>();
+  const namedParts: { part: string; text: string }[] = [];
 
   /**
    * A LABELLED PICTURE: the figure centred, its names written in the margins.
@@ -1244,11 +1608,49 @@ export function layoutBeat(
    * making on purpose: a smaller picture whose parts are all named beats a
    * bigger one the student has to be told about in a sentence somewhere else.
    */
-  if (labelledHost) {
+  if (labelledHost && (composition === null || composedFigure)) {
+    if (composedFigure) regionNow = '0/hero';
     const MARGIN_GAP = 18;
-    const leastMargin = Math.round((WIDTH - MARGIN_GAP * 2) * 0.26);
-    const columnW = WIDTH - MARGIN_GAP * 2 - leastMargin * 2;
-    const columnX = SIDE + leastMargin + MARGIN_GAP;
+
+    /**
+     * A NAME WHOSE PART WAS LOOKED FOR AND NOT FOUND IS WRITTEN IN A KEY UNDER
+     * THE PICTURE (small intestine, 2026-10-06).
+     *
+     * In the margin with no line it floats beside the picture pointing at
+     * nothing, which every name on that class's villus did. So once the
+     * picture has been looked at — `parts` knows it, found or not — a name it
+     * has no part for is written in a row under the picture, inside the hero,
+     * a bullet before it, at the line that names it. (Down the notes column it
+     * pushed the list of the parts onto the next page.) When every name is in
+     * the key, the margins are the picture's. Before anyone has looked — the
+     * draft, laid out while the picture is still being made — names wait in
+     * the margin as they always have: the part may yet be found. Composed
+     * pages only.
+     */
+    const lookedAt =
+      composedFigure && labelledHost.kind === 'picture' && labelledHost.ref !== undefined
+        ? parts.get(labelledHost.ref)
+        : undefined;
+    const keyed = new Set(
+      lookedAt
+        ? pendingLabels.filter((p) => {
+            const { elementId, part } = splitPartRef(p.step.target);
+            return elementId === labelledHost.ref && part !== null && !lookedAt.some((q) => q.name === part);
+          })
+        : [],
+    );
+    const keyNames = pendingLabels.filter((p) => keyed.has(p));
+    const keyRows = keyRowsOf(keyNames.map((p) => p.step.text), area.w);
+    const keyLead = handLead(HOMELESS_NAME_SIZE);
+    const keyH = keyRows.length > 0 ? keyRows.length * keyLead + KEY_GAP : 0;
+    const everyNameKeyed = keyNames.length > 0 && keyNames.length === pendingLabels.length && !pendingSketch;
+
+    // A composed hero is 590 wide, not the board's 860: a 26% margin either
+    // side left a wide picture 266 units across, under half its region. 18%
+    // still holds a name at the sizes below, and the picture takes the rest.
+    const leastMargin = everyNameKeyed ? 0 : Math.round((area.w - MARGIN_GAP * 2) * (composedFigure ? 0.18 : 0.26));
+    const columnW = area.w - MARGIN_GAP * 2 - leastMargin * 2;
+    const columnX = area.x + leastMargin + MARGIN_GAP;
 
     // What she says out loud gets written under what she is saying it about.
     // The band is measured first, because the picture's height is whatever is
@@ -1257,26 +1659,52 @@ export function layoutBeat(
     // Lists are written under the figure too, and they are measured before the
     // key points because they are the taller thing: a four-item list is most of
     // a band on its own, and the figure has to know that before it takes a size.
-    const listsH = written.reduce((sum, b) => sum + (b.height ?? 0) + BAND_GAP, 0);
+    const listsH = composedFigure ? 0 : written.reduce((sum, b) => sum + (b.height ?? 0) + BAND_GAP, 0);
     // Wrapped to the room the band actually has: it starts at the figure's
     // edge, not the board's, so a line wrapped to the full width would walk
     // off the right side.
-    const bandWidth = WIDTH - leastMargin - MARGIN_GAP;
+    const bandWidth = area.w - leastMargin - MARGIN_GAP;
     const band = planBand(
-      pendingWrites.map((point) => point.step.text),
+      composedFigure ? [] : pendingWrites.map((point) => point.step.text),
       bandWidth,
       Math.max(0, bandRoom - MIN_FIGURE_H - BAND_GAP - listsH),
     );
     const under = band.height + listsH;
-    const figureH = under > 0 ? Math.max(MIN_FIGURE_H, bandRoom - under - BAND_GAP) : MAIN.h;
+    const figureH = composedFigure
+      ? area.h - keyH
+      : under > 0
+        ? Math.max(MIN_FIGURE_H, bandRoom - under - BAND_GAP)
+        : MAIN.h;
 
     current = labelledHost.at ?? -1;
-    for (const el of labelledHost.place({ x: columnX, y: MAIN.y, w: columnW, h: figureH })) {
+    for (const el of labelledHost.place({ x: columnX, y: area.y, w: columnW, h: figureH })) {
       emit(el);
     }
 
     const host = elements.find((el) => el.id === labelledHost.ref);
     const hostBox = host ? boxOf(host) : null;
+
+    // The key: each row centred under the picture, each name at its own line.
+    keyRows.forEach((row, r) => {
+      const y = area.y + figureH + KEY_GAP + HOMELESS_NAME_SIZE * 0.9 + r * keyLead;
+      let x = area.x + (area.w - row.w) / 2;
+      for (const { index, w } of row.items) {
+        const pending = keyNames[index];
+        current = pending.at;
+        emit({ kind: 'text', id: `${pending.id}_dot`, x: x + 8, y, text: '•', size: HOMELESS_NAME_SIZE });
+        emit({
+          kind: 'handwrite',
+          id: pending.id,
+          x: x + KEY_DOT_W + w / 2,
+          y,
+          text: pending.step.text,
+          size: HOMELESS_NAME_SIZE,
+          ...(pending.step.tone ? { tone: pending.step.tone } : {}),
+        });
+        leashes.push({ id: pending.id, region: { x: x + KEY_DOT_W + w / 2 - 14, y: y - 12, w: 28, h: 24 } });
+        x += KEY_DOT_W + w + KEY_ITEM_GAP;
+      }
+    });
 
     /**
      * The margins are whatever room is left either side of the picture ITSELF.
@@ -1301,9 +1729,9 @@ export function layoutBeat(
       // and placed in the middle of another.
       const w = Math.max(
         60,
-        side === 'left' ? near - MARGIN_GAP - SIDE : SIDE + WIDTH - (near + MARGIN_GAP),
+        side === 'left' ? near - MARGIN_GAP - area.x : area.x + area.w - (near + MARGIN_GAP),
       );
-      return { w, cx: side === 'left' ? SIDE + w / 2 : SIDE + WIDTH - w / 2 };
+      return { w, cx: side === 'left' ? area.x + w / 2 : area.x + area.w - w / 2 };
     };
     const margins = { left: marginOf('left'), right: marginOf('right') };
 
@@ -1317,10 +1745,13 @@ export function layoutBeat(
      * already there.
      */
     type Pending = (typeof pendingLabels)[number];
-    const placedFor = pendingLabels.map((pending) => {
-      const box = hostBox ? partBox(pending.step.target, elements) : null;
-      return { pending, box };
-    });
+    // The names written beside the picture: every one but those in its key.
+    const placedFor = pendingLabels
+      .filter((pending) => !keyed.has(pending))
+      .map((pending) => {
+        const box = hostBox ? partBox(pending.step.target, elements) : null;
+        return { pending, box };
+      });
 
     // Which side each name goes to. A name whose part could not be found has
     // no side of its own, so it takes whichever is emptier — better than
@@ -1369,14 +1800,14 @@ export function layoutBeat(
       const middle = hostBox.x + hostBox.w / 2;
       for (const side of ['left', 'right'] as const) {
         const other = side === 'left' ? 'right' : 'left';
-        while (pileOf(side, 14) > figureH) {
+        while (pileOf(side, MARGIN_MIN) > figureH) {
           const movable = placedFor
             .filter(({ pending, box }) => box !== null && sideOf.get(pending) === side)
             .sort((a, b) => Math.abs(a.box!.x + a.box!.w / 2 - middle) - Math.abs(b.box!.x + b.box!.w / 2 - middle));
           const mover = movable[0];
           if (!mover) break;
           sideOf.set(mover.pending, other);
-          if (pileOf(other, 14) > figureH) {
+          if (pileOf(other, MARGIN_MIN) > figureH) {
             sideOf.set(mover.pending, side);
             break;
           }
@@ -1393,10 +1824,10 @@ export function layoutBeat(
      * smaller and have every name legible.
      */
     const sizeFor = (side: 'left' | 'right'): number => {
-      for (const size of [20, 18, 16, 14]) {
+      for (const size of MARGIN_SIZES) {
         if (pileOf(side, size) <= figureH) return size;
       }
-      return 14;
+      return MARGIN_MIN;
     };
     const sizes = { left: sizeFor('left'), right: sizeFor('right') };
 
@@ -1423,23 +1854,23 @@ export function layoutBeat(
         .filter(({ pending }) => sideOf.get(pending) === side)
         .map(({ pending, box }) => {
           const height = wrapText(pending.step.text, margins[side].w, sizes[side]).length * lead;
-          return { pending, height, wanted: box ? box.y + box.h / 2 - height / 2 : MAIN.y, top: 0 };
+          return { pending, height, wanted: box ? box.y + box.h / 2 - height / 2 : area.y, top: 0 };
         })
         .sort((a, b) => a.wanted - b.wanted);
-      let cursor = MAIN.y;
+      let cursor = area.y;
       for (const name of column) {
         name.top = Math.max(name.wanted, cursor);
         cursor = name.top + name.height + NAME_GAP;
       }
-      let ceiling = MAIN.y + figureH;
+      let ceiling = area.y + figureH;
       for (let k = column.length - 1; k >= 0; k -= 1) {
         column[k].top = Math.min(column[k].top, ceiling - column[k].height);
         ceiling = column[k].top - NAME_GAP;
       }
       // Taller than the figure even so: written down from the top, past the
       // foot, rather than over one another.
-      if (column.length > 0 && column[0].top < MAIN.y) {
-        cursor = MAIN.y;
+      if (column.length > 0 && column[0].top < area.y) {
+        cursor = area.y;
         for (const name of column) {
           name.top = cursor;
           cursor += name.height + NAME_GAP;
@@ -1454,6 +1885,13 @@ export function layoutBeat(
       const size = sizes[side];
       const lines = wrapText(pending.step.text, margins[side].w, size);
       const lead = handLead(size);
+      // Its colour on a composed page: the part it names, when the picture has it.
+      const named = composition && box ? splitPartRef(pending.step.target).part : null;
+      if (named) {
+        namedParts.push({ part: named, text: pending.step.text });
+        lines.forEach((_, n) => partOf.set(n === 0 ? pending.id : `${pending.id}_l${n}`, named));
+        partOf.set(`${pending.id}_line`, named);
+      }
       /**
        * Written AGAINST the picture, not centred in the margin.
        *
@@ -1470,11 +1908,11 @@ export function layoutBeat(
           ? hostBox.x - MARGIN_GAP
           : hostBox.x + hostBox.w + MARGIN_GAP
         : onLeft
-          ? SIDE + margins.left.w
-          : SIDE + WIDTH - margins.right.w;
+          ? area.x + margins.left.w
+          : area.x + area.w - margins.right.w;
       const cx = onLeft
-        ? Math.max(SIDE + widest / 2, edge - widest / 2)
-        : Math.min(SIDE + WIDTH - widest / 2, edge + widest / 2);
+        ? Math.max(area.x + widest / 2, edge - widest / 2)
+        : Math.min(area.x + area.w - widest / 2, edge + widest / 2);
 
       // Where the side's column put it (above), as the first line's baseline.
       const top = standing.get(pending)! + size;
@@ -1534,12 +1972,21 @@ export function layoutBeat(
      * rather than through it.
      */
     if (pendingSketch && hostBox) {
-      const x = hostBox.x + hostBox.w + MARGIN_GAP;
-      const w = Math.max(150, SIDE + WIDTH - x);
-      const h = Math.max(120, Math.min(figureH, Math.round(w * 0.8)));
+      // On a composed page the inset heads the notes column, and the notes
+      // start under it. On a stacked page it sits beside the picture, level
+      // with its part, as before.
+      const column = composedFigure ? composition!.regions.find((r) => r.id === 'side') : undefined;
+      const x = column ? column.x : hostBox.x + hostBox.w + MARGIN_GAP;
+      const w = column ? column.w : Math.max(150, SIDE + WIDTH - x);
+      // 0.55 of the column's width tall: a three-item notes list still fits under it.
+      const h = column ? Math.round(column.w * 0.55) : Math.max(120, Math.min(figureH, Math.round(w * 0.8)));
       const part = partBox(pendingSketch.step.from, elements);
       const wanted = part ? part.y + part.h / 2 - h / 2 : MAIN.y;
-      const y = Math.min(Math.max(wanted, MAIN.y), MAIN.y + figureH - h);
+      const y = column ? column.y : Math.min(Math.max(wanted, MAIN.y), MAIN.y + figureH - h);
+      if (column) {
+        regionNow = '0/side';
+        reserved.set(column.id, h + FILL_GAP);
+      }
       const ref = pendingSketch.step.ref;
       current = pendingSketch.at;
       emit({
@@ -1553,7 +2000,31 @@ export function layoutBeat(
         alt: ref.replace(/_/g, ' '),
         parts: [],
       });
-      if (part) {
+      if (part && column) {
+        // The textbook zoom: a box round the part, and dashed lines from its
+        // corners to the inset. In the inset's region, so the camera frames
+        // the part and the inset together when it arrives.
+        const zoomId = `${pendingSketch.id}_zoom`;
+        emit({ kind: 'mark', id: zoomId, x: part.x - 6, y: part.y - 6, w: part.w + 12, h: part.h + 12, shape: 'box', tone: 'accent' });
+        bonds.push({ a: zoomId, b: labelledHost.ref ?? '' });
+        const corners: [number, number][] = [
+          [part.y - 6, y],
+          [part.y + part.h + 6, y + h],
+        ];
+        corners.forEach(([fromY, toY], k) => {
+          const lineId = `${pendingSketch!.id}_zoom${k}`;
+          emit({
+            kind: 'arrow',
+            id: lineId,
+            from: { x: part.x + part.w + 6, y: fromY },
+            to: { x: x - 4, y: toY },
+            dashed: true,
+            tone: 'accent',
+          });
+          bonds.push({ a: lineId, b: ref }, { a: lineId, b: labelledHost.ref ?? '' }, { a: lineId, b: zoomId });
+        });
+        regionNow = '0/hero';
+      } else if (part) {
         const arrowId = `${pendingSketch.id}_arrow`;
         emit({
           kind: 'arrow',
@@ -1680,12 +2151,14 @@ export function layoutBeat(
         .map((b) => lineOf[b.at as number]),
     );
     const leavesBand = (at: number): boolean => offBandLines.has(lineOf[at]);
-    const bandItems: BandItem[] = [
-      ...pendingWrites.map((p, n): BandItem => ({ at: p.at, point: n })),
-      ...written.map((block): BandItem => ({ at: block.at ?? -1, list: block })),
-    ]
-      .filter((item) => !leavesBand(item.at))
-      .sort((a, b) => a.at - b.at);
+    const bandItems: BandItem[] = composedFigure
+      ? []
+      : [
+          ...pendingWrites.map((p, n): BandItem => ({ at: p.at, point: n })),
+          ...written.map((block): BandItem => ({ at: block.at ?? -1, list: block })),
+        ]
+          .filter((item) => !leavesBand(item.at))
+          .sort((a, b) => a.at - b.at);
     const tallness = (item: BandItem): number =>
       item.point !== undefined
         ? band.lines[item.point].length * bandLead + POINT_GAP
@@ -1714,18 +2187,22 @@ export function layoutBeat(
      * 6). It now goes to the stacker, which starts on the page after this
      * figure's last one, so nothing is drawn over the picture or its band.
      */
-    const leftover = blocks.filter(
-      (b) =>
-        b !== labelledHost &&
-        ((b.kind !== 'write' && b.kind !== 'list') || (b.at !== null && leavesBand(b.at))),
-    );
+    const leftover = composedFigure
+      ? blocks.filter((b) => b !== labelledHost)
+      : blocks.filter(
+          (b) =>
+            b !== labelledHost &&
+            ((b.kind !== 'write' && b.kind !== 'list') || (b.at !== null && leavesBand(b.at))),
+        );
     blocks.length = 0;
     blocks.push(...leftover);
     firstSheet = bandSheets;
     figurePlaced = true;
+    regionNow = null;
   }
 
   if (
+    composition === null &&
     !figurePlaced &&
     figures.length === 1 &&
     figures[0].narrow !== false &&
@@ -1805,6 +2282,62 @@ export function layoutBeat(
     }
     columnSheets = sheet + 1;
 
+    blocks.length = 0;
+  }
+
+  /**
+   * --- a composed page: the main demonstration in its region, the writing in the others ---
+   *
+   * Everything here is placed by region (compose.ts, fillRegions), so the
+   * stacker below is left nothing to stack.
+   */
+  let composedSheets = 0;
+  if (composition) {
+    // A comparison is this page's main demonstration only on a compare page;
+    // anywhere else it is a section written beside the main one.
+    const mainBlock = blocks.find((b) => isMainKind(b.kind) && (b.kind !== 'compare' || composition.name === 'compare'));
+    if (composition.main && mainBlock) {
+      current = mainBlock.at ?? -1;
+      regionNow = `0/${composition.main.id}`;
+      let bottom = composition.main.y;
+      for (const el of mainBlock.place({ ...composition.main, h: mainBlock.height ?? composition.main.h })) {
+        emit(el);
+        const b = boxOf(el);
+        bottom = Math.max(bottom, b.y + b.h);
+      }
+      reserved.set(composition.main.id, bottom - composition.main.y + FILL_GAP);
+    }
+    // A newPage at or before the main demonstration's line turns away from a
+    // page that holds only its title and that demonstration: every beat
+    // already starts on a page of its own, so it is not a turn at all.
+    const mainAt = composedFigure ? labelledHost?.at : mainBlock?.at;
+    const mainLine = mainAt === null || mainAt === undefined ? -1 : (lineOf[mainAt] ?? -1);
+    const rest = blocks.filter(
+      (b) => b !== mainBlock && !(b.kind === 'newPage' && b.at !== null && (lineOf[b.at] ?? -1) <= mainLine),
+    );
+    const fillables: Fillable[] = rest.map((b) => ({
+      line: b.at === null ? -1 : (lineOf[b.at] ?? -1),
+      // A comparison is read across its two columns, so it goes where the key
+      // points go: the widest place writing takes (under a figure, beside a scene).
+      role:
+        b.kind === 'summary'
+          ? 'summary'
+          : b.kind === 'newPage'
+            ? 'newPage'
+            : b.kind === 'write' || b.kind === 'caption' || b.kind === 'compare'
+              ? 'points'
+              : 'notes',
+      heightAt: b.heightAt ?? ((w: number) => measured(b, w)),
+    }));
+    const first = inTwoColumns(composition, fillables.map((f) => f.role));
+    for (const p of fillRegions(fillables, first, reserved)) {
+      const b = rest[p.index];
+      current = b.at ?? -1;
+      regionNow = `${p.sheet}/${p.region}`;
+      for (const el of b.place({ ...p.rect, x: p.rect.x + p.sheet * PAGE_STRIDE })) emit(el);
+      composedSheets = Math.max(composedSheets, p.sheet + 1);
+    }
+    regionNow = null;
     blocks.length = 0;
   }
 
@@ -1900,6 +2433,7 @@ export function layoutBeat(
     stackedSheets > 0 ? firstSheet + stackedSheets : 0,
     bandSheets,
     columnSheets,
+    composedSheets,
   );
 
   // --- mark the things the scene does not own ---
@@ -1918,6 +2452,7 @@ export function layoutBeat(
       if (!box) continue;
       const grow = pending.step.mark === 'underline' || pending.step.mark === 'highlight' ? 2 : 10;
       current = pending.at;
+      regionNow = composition ? (regions[lines[0]?.id ?? ''] ?? null) : null;
       emit({
         kind: 'mark',
         id: pending.id,
@@ -1932,14 +2467,45 @@ export function layoutBeat(
       continue;
     }
 
+    // An item of a list she wrote: `<list id>#<n>`, its row highlighted.
+    const item = /^(.+)#(\d+)$/.exec(pending.step.target);
+    const listIndex = item ? listAt.get(item[1]) : undefined;
+    if (item && listIndex !== undefined) {
+      const list = elements.find(
+        (el): el is Extract<Element, { kind: 'list' }> =>
+          el.kind === 'list' && (byInstruction.get(listIndex) ?? []).includes(el.id),
+      );
+      const row = list ? listItemBox(list, Number(item[2])) : null;
+      if (!list || !row) continue;
+      current = pending.at;
+      regionNow = composition ? (regions[list.id] ?? null) : null;
+      emit({
+        kind: 'mark',
+        id: pending.id,
+        x: row.x - 2,
+        y: row.y - 2,
+        w: row.w + 4,
+        h: row.h + 4,
+        shape: pending.step.mark,
+        ...(pending.step.tone ? { tone: pending.step.tone } : {}),
+      });
+      bonds.push({ a: pending.id, b: list.id });
+      continue;
+    }
+
     const box = partBox(pending.step.target, elements);
     if (!box) continue;
     const { elementId } = splitPartRef(pending.step.target);
+    if (composition) {
+      const marked = splitPartRef(pending.step.target).part;
+      if (marked) partOf.set(pending.id, marked);
+    }
     const host = elements.find((el) => el.id === elementId);
     if (!host) continue;
 
     const grow = pending.step.mark === 'underline' ? 0 : 10;
     current = pending.at;
+    regionNow = composition ? (regions[host.id] ?? null) : null;
     emit({
       kind: 'mark',
       id: pending.id,
@@ -1952,19 +2518,26 @@ export function layoutBeat(
     });
     bonds.push({ a: pending.id, b: host.id });
   }
+  regionNow = null;
+  // One colour per named part, on its name, its line, its marks and its notes item (ink.ts).
+  if (composition && namedParts.length > 0) {
+    elements.splice(0, elements.length, ...paintInks(elements, inksFor(namedParts), partOf));
+  }
 
-  // INK TIMED TO A WORD (canvas C3). A write or an equation with `at` waits
+  // INK TIMED TO A WORD (canvas C3). A write, an equation or a toolkit tool with `at` waits
   // until she reaches that word of the line it is written under — every line
   // it drew, in whichever arrangement placed it. A word her line does not
   // hold leaves the ink where it was, with the start of the line.
   items.forEach((item, index) => {
-    if ((item.do !== 'write' && item.do !== 'equation') || !item.at) return;
+    const timed = item.do === 'write' || item.do === 'equation' || isToolName(item.do);
+    const at = timed && 'at' in item && typeof item.at === 'string' ? item.at : '';
+    if (!at) return;
     const said = saidLines[lineOf[index] - 1] ?? '';
-    const wait = anchorMs(said, item.at);
+    const wait = anchorMs(said, at);
     if (wait <= 0) return;
     const ids = new Set(byInstruction.get(index) ?? []);
     elements.forEach((el, k) => {
-      if (!ids.has(el.id) || (el.kind !== 'handwrite' && el.kind !== 'formula')) return;
+      if (!ids.has(el.id) || (el.kind !== 'handwrite' && el.kind !== 'formula' && el.kind !== 'tool')) return;
       elements[k] = { ...el, after: (el.after ?? 0) + wait };
     });
   });
@@ -1975,16 +2548,29 @@ export function layoutBeat(
   // BETWEEN and OVER them — a connector's label, a mark — which follow whatever
   // they refer to and so can land anywhere. Fixing those case by case fixes one
   // lesson at a time; this fixes every lesson.
-  const settled = resolveOverlaps(elements, bonds, [
-    // A label's first room is MAIN, where its scene lives. The whole canvas
-    // was once its playground, and a stuck label got parked above the lesson
-    // title — clear space, wrong room.
-    { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: MAIN.h + 20 },
-    // When MAIN is genuinely full, everything below the title is fair — a
-    // label near the caption reads as a footnote; one over the heading reads
-    // as a mistake.
-    { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: CANVAS_H - MAIN.y },
-  ], leashes);
+  const settled = resolveOverlaps(
+    elements,
+    bonds,
+    composition
+      ? [
+          // A composed page's writing lives under its header. A label the
+          // solver must move may use any of that, and never the header.
+          { x: 8, y: PAGE.top - 6, w: CANVAS_W - 16, h: PAGE.bottom - PAGE.top + 12 },
+          { x: 8, y: 8, w: CANVAS_W - 16, h: CANVAS_H - 16 },
+        ]
+      : [
+          // A label's first room is MAIN, where its scene lives. The whole canvas
+          // was once its playground, and a stuck label got parked above the lesson
+          // title — clear space, wrong room.
+          { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: MAIN.h + 20 },
+          // When MAIN is genuinely full, everything below the title is fair — a
+          // label near the caption reads as a footnote; one over the heading reads
+          // as a mistake.
+          { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: CANVAS_H - MAIN.y },
+        ],
+    leashes,
+    { parkFirst: composition !== null },
+  );
 
   // A part can only be pointed at if its picture is on the board this beat.
   const shown = new Set(show);
@@ -2010,16 +2596,97 @@ export function layoutBeat(
       : [],
   );
 
+  /** What each composed page holds, for the keep gate's page-full rule (class-prep). */
+  const sheetReports: SheetReport[] = [];
+  if (composition) {
+    const itemOf = new Map<string, number>();
+    for (const [item, ids] of byInstruction) for (const id of ids) itemOf.set(id, item);
+    const kindOf = (id: string): string => {
+      const item = itemOf.get(id);
+      return item === undefined ? '' : items[item].do;
+    };
+    for (let s = 0; s < sheetsUsed; s += 1) {
+      const here = settled.filter((el) => regions[el.id]?.startsWith(`${s}/`));
+      const kinds = new Set(here.map((el) => kindOf(el.id)));
+      // Each region counted from its first writing to its last (compose.ts,
+      // writtenArea), in the page's own coordinates. Pages after the first
+      // are notes pages; the header is the strip above PAGE.top.
+      const sheetPage = s === 0 ? composition : ARRANGEMENTS.notes;
+      const rectOf = (id: string): Rect =>
+        id === 'header'
+          ? { x: 0, y: 0, w: CANVAS_W, h: PAGE.top }
+          : id === sheetPage.summary.id
+            ? sheetPage.summary
+            : sheetPage.main?.id === id
+              ? sheetPage.main
+              : (sheetPage.regions.find((r) => r.id === id) ?? { x: 0, y: 0, w: CANVAS_W, h: CANVAS_H });
+      const byRegion = new Map<string, Rect[]>();
+      for (const el of here) {
+        const id = regions[el.id].split('/')[1];
+        const ink = boxOf(el);
+        const local = { ...ink, x: ink.x - s * PAGE_STRIDE };
+        // A key point is a row of the notes a student copies, and is counted
+        // across its column the way a list's rows are: a list is as wide as its
+        // column whatever its words, and a bullet point was counted only as
+        // wide as its words, so a page that wrote its key points in a column of
+        // their own read emptier than one that wrote them under its list.
+        const region = rectOf(id);
+        const row = kindOf(el.id) === 'write' && id !== 'header' ? { ...local, w: region.x + region.w - local.x } : local;
+        byRegion.set(id, [...(byRegion.get(id) ?? []), row]);
+      }
+      const written = writtenArea([...byRegion].map(([id, boxes]) => ({ region: rectOf(id), boxes })));
+      sheetReports.push({
+        sheet: s,
+        arrangement: sheetPage.name,
+        empty: sheetPage.regions.filter((r) => !byRegion.has(r.id)).map((r) => r.id),
+        coverage: coverage(written, 0),
+        main: here.some(
+          (el) => regions[el.id] === `${s}/hero` || (regions[el.id] === `${s}/main` && isMainKind(kindOf(el.id))),
+        ),
+        notes: ['list', 'note', 'card', 'compare', 'label'].some((k) => kinds.has(k)),
+        list: ['list', 'note', 'card'].some((k) => kinds.has(k)),
+        points: new Set(here.filter((el) => kindOf(el.id) === 'write').map((el) => itemOf.get(el.id))).size,
+        summary: kinds.has('summary'),
+      });
+    }
+  }
+
   return {
     elements: settled,
     laid: { show, focus: keptFocus },
-    steps: revealSteps(beat, byBoard, keptFocus),
+    steps: revealSteps(
+      beat,
+      byBoard,
+      keptFocus,
+      composition
+        ? new Map(
+            pointAt
+              .filter((p) => keptFocus.includes(p.ref))
+              .map((p) => [origin[p.at] ?? p.at, p.ref] as [number, string]),
+          )
+        : undefined,
+    ),
     bonds,
     leashes,
     pages: sheetsUsed,
     asks,
     undrawn,
+    regions,
+    sheets: sheetReports,
   };
+}
+
+/**
+ * A block's height when drawn `w` wide: drawn into a throwaway rectangle and
+ * measured, the way the column beside a figure measures its points. Only for
+ * blocks whose `place` records nothing; the others say their own height
+ * (Block.heightAt).
+ */
+function measured(block: Block, w: number): number {
+  const drawn = block.place({ x: 0, y: 0, w, h: block.height ?? WRITE_H });
+  if (drawn.length === 0) return 0;
+  const boxes = drawn.map(boxOf);
+  return Math.max(...boxes.map((b) => b.y + b.h)) - Math.min(0, ...boxes.map((b) => b.y));
 }
 
 /** The instructions whose ink is words of their own, with no picture behind them. */
@@ -2035,6 +2702,8 @@ const WRITES_WORDS: ReadonlySet<Instruction['do']> = new Set([
   'chart',
   'plot',
   'derive',
+  'summary',
+  'compare',
 ]);
 
 /** A few of an instruction's own words, for a message that names it. */
@@ -2045,9 +2714,12 @@ function wordsOf(step: Instruction): string {
     case 'note':
     case 'caption':
     case 'equation':
+    case 'summary':
       return step.text;
     case 'card':
       return step.heading;
+    case 'compare':
+      return typeof step.left?.heading === 'string' ? step.left.heading : '';
     case 'list':
       return step.heading ?? step.items[0]?.term ?? '';
     case 'flow':
@@ -2059,7 +2731,7 @@ function wordsOf(step: Instruction): string {
     case 'derive':
       return step.steps[0] ?? '';
     default:
-      return '';
+      return isToolName(step.do) ? step.do : '';
   }
 }
 
@@ -2096,6 +2768,14 @@ function revealSteps(
   beat: ScriptBeat,
   byBoard: ReadonlyMap<number, string[]>,
   focus: readonly string[],
+  /**
+   * A composed board's points, by board instruction: each is lit on the line
+   * it comes under, rather than all of them together on the beat's last line
+   * (human heart, 2026-10-07: five parts of a diagram lit at once at the end,
+   * none while it was explained). Absent on a stacked board, which keeps the
+   * beat's emphasis on its last spoken moment.
+   */
+  lit?: ReadonlyMap<number, string>,
 ): RevealStep[] {
   const says = beat.board.filter((it) => it.do === 'say');
   const asks = beat.board.some((it) => it.do === 'ask');
@@ -2128,12 +2808,17 @@ function revealSteps(
   const add = (ids: readonly string[]): void => {
     for (const id of ids) if (!cumulative.includes(id)) cumulative.push(id);
   };
+  /** What the line being spoken lights (composed board only). */
+  let litNow: string[] = [];
   const flush = (): void => {
     if (narration === null) return;
-    steps.push({ narration, show: [...cumulative], focus: [] });
+    steps.push({ narration, show: [...cumulative], focus: [...litNow] });
+    litNow = [];
   };
 
   beat.board.forEach((item, n) => {
+    const lights = lit?.get(n);
+    if (lights !== undefined && heldAt === null && !litNow.includes(lights)) litNow.push(lights);
     if (item.do === 'say') {
       flush();
       narration = item.text;
@@ -2171,7 +2856,7 @@ function revealSteps(
     // planner's to make it over.
     let last = steps.length - 1;
     while (last > 0 && steps[last].narration.trim() === '') last -= 1;
-    steps[last].focus = [...focus];
+    if (!lit) steps[last].focus = [...focus];
   }
   return steps;
 }

@@ -64,7 +64,9 @@ import { createRelayClient, priceCalls } from './relayAdapters.mjs';
 // found here is a named handoff to phase E, never an edit.
 import {
   createCommonsSearch,
+  dressNounPhotos,
   drawMissingIcons,
+  findNounPhotos,
   pickIcons,
   prepareClass,
   rekeep,
@@ -126,6 +128,9 @@ export function parseArgs(argv) {
     acceptUnreviewed: false,
     force: false,
     rekeep: false,
+    // A full, well-annotated page per subtopic (board composer), asked for
+    // with --composed while real composed classes are being measured.
+    composed: false,
     out: undefined,
     as: undefined,
     relay: process.env.PREWARM_RELAY_URL,
@@ -149,6 +154,7 @@ export function parseArgs(argv) {
     else if (a === '--i-accept-unreviewed') args.acceptUnreviewed = true;
     else if (a === '--force') args.force = true;
     else if (a === '--rekeep') args.rekeep = true;
+    else if (a === '--composed') args.composed = true;
     else if (a === '--out') args.out = path.resolve(next());
     else if (a === '--as') args.as = next();
     else if (a === '--relay') args.relay = next();
@@ -256,10 +262,10 @@ function loadIconSets() {
  * chooses which meaning of a word the lesson wants, drawMissingIcons draws
  * the nouns nothing depicts, the pencilled circle is the last resort.
  */
-async function dressNouns(lesson, topic, picker, iconArtist) {
+async function dressNouns(lesson, topic, picker, iconArtist, covered = new Set()) {
   const nouns = [
     ...new Set(lesson.elements.filter((el) => el.kind === 'graphic').map((el) => el.noun)),
-  ];
+  ].filter((noun) => !covered.has(noun));
   if (nouns.length === 0) return {};
 
   const sets = loadIconSets();
@@ -300,7 +306,7 @@ async function dressNouns(lesson, topic, picker, iconArtist) {
 
   const assets = {};
   for (const el of lesson.elements) {
-    if (el.kind !== 'graphic') continue;
+    if (el.kind !== 'graphic' || covered.has(el.noun)) continue;
     const custom = drawn[el.noun];
     if (custom) {
       assets[el.id] = custom;
@@ -337,6 +343,22 @@ const metaFor = (row) => ({
  * pending set and buy it again next run.
  */
 async function dressAndKeep(made, row, client, keepRefused, writeOut) {
+  // A real thing is a real photograph first (Aarav, 2026-10-07), as in the
+  // app's liveClass.ts: the nouns a checked, openly licensed photograph was
+  // found for skip the icons.
+  let photos = new Map();
+  try {
+    photos = await findNounPhotos(
+      made.lesson,
+      row.topic.title,
+      createCommonsSearch({ thumbWidth: 500 }),
+      client.vision(VISION_MODEL),
+    );
+  } catch {
+    // Icons for every noun, as before.
+  }
+  const photoAssets = dressNounPhotos(made.lesson, photos);
+
   let graphics = {};
   try {
     graphics = await dressNouns(
@@ -344,6 +366,7 @@ async function dressAndKeep(made, row, client, keepRefused, writeOut) {
       row.topic.title,
       patient(client.llm(PICKER_MODEL, { json: true })),
       patient(client.llm(ARTIST_MODEL)),
+      new Set(photos.keys()),
     );
   } catch (e) {
     console.warn(
@@ -351,7 +374,7 @@ async function dressAndKeep(made, row, client, keepRefused, writeOut) {
         ' anyway, as the app does',
     );
   }
-  Object.assign(made.assets, graphics);
+  Object.assign(made.assets, graphics, photoAssets);
 
   const meta = metaFor(row);
   const saved = saveable(made, meta);
@@ -386,6 +409,8 @@ async function warmOne(row, opts, client, keepRefused, writeOut) {
     klass: row.klass,
     minutes,
     outcomes,
+    // A full, well-annotated page per subtopic (board composer), on --composed.
+    composed: opts.composed,
     planner: patient(client.llm(PLANNER_MODEL, { json: true })),
     artist: patient(client.llm(ARTIST_MODEL)),
     ...(opts.review ? { reviewer: patient(client.llm(REVIEWER_MODEL, { json: true })) } : {}),

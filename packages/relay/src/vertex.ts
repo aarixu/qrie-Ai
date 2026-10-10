@@ -58,15 +58,59 @@ export const ALLOWED_MODELS: ReadonlySet<string> = new Set([
 export const CAP_OUTPUT_TOKENS = 24_000;
 
 /**
- * And a ceiling on what one call may SEND.
+ * And a ceiling on the TEXT one call may send.
  *
  * Nothing else limited this. A prepared class's planner prompt is a few
  * thousand tokens; a megabyte of text posted three hundred times a day, from
  * as many free anonymous identities as somebody cares to make, is billed
- * input. 256 KB is comfortably above every prompt this app builds, including
- * a vision call carrying a picture.
+ * input. 256 KB is comfortably above every prompt this app builds.
+ *
+ * A picture is not counted here: see MAX_PICTURE_BYTES.
  */
 export const MAX_REQUEST_BYTES = 256 * 1024;
+
+/**
+ * A PICTURE IS NOT TEXT, AND IS NOT BILLED LIKE TEXT.
+ *
+ * A vision call carries the picture it looks at as a `data:` URL, and a
+ * picture the image model draws is about 1.2 MB of one. Under the one 256 KB
+ * ceiling every such call was refused, so no part of any generated picture was
+ * ever found (a small-intestine class, 2026-10-06: every name beside its villus
+ * with no line to anything). The model bills a picture by its tiles, not its
+ * bytes, so a picture's size is not what the text ceiling guards against. One
+ * picture a call, as every look this app makes is at one picture, up to 4 MB.
+ */
+export const MAX_PICTURE_BYTES = 4 * 1024 * 1024;
+export const MAX_PICTURES = 1;
+
+/** A `data:` URL of a picture, the only kind of inline part counted as one. */
+const PICTURE_URL = /^data:image\/(?:png|jpeg|webp|gif);base64,/;
+
+/**
+ * Why this call is larger than anything the app sends, or null.
+ *
+ * `bodyBytes` is the whole request; the pictures in `chat` are taken out of it
+ * and what is left is held to MAX_REQUEST_BYTES. Base64 needs no escaping in
+ * JSON, so a picture's URL is as long in the body as it is here.
+ */
+export function oversized(bodyBytes: number, chat: unknown): string | null {
+  const pictures: number[] = [];
+  const messages = (chat as { messages?: unknown })?.messages;
+  for (const message of Array.isArray(messages) ? messages : []) {
+    const content = (message as { content?: unknown })?.content;
+    if (!Array.isArray(content)) continue;
+    for (const part of content) {
+      const url = (part as OpenAiPart)?.image_url?.url;
+      if (typeof url === 'string' && PICTURE_URL.test(url)) pictures.push(url.length);
+    }
+  }
+  if (pictures.length > MAX_PICTURES) return 'that request carries more pictures than this app sends';
+  if (pictures.some((n) => n > MAX_PICTURE_BYTES)) return 'that picture is larger than any this app sends';
+  if (bodyBytes - pictures.reduce((sum, n) => sum + n, 0) > MAX_REQUEST_BYTES) {
+    return 'that request is larger than anything this app sends';
+  }
+  return null;
+}
 
 /**
  * THE PROVIDER'S OWN HARM FILTERS, NAMED ON EVERY CALL THIS RELAY MAKES.

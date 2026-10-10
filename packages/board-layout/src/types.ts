@@ -1,4 +1,16 @@
-import type { Tone } from '@ai-tutor/lesson-format';
+import type { Tone, ToolName } from '@ai-tutor/lesson-format';
+
+/**
+ * A toolkit tool by its own name: {"do":"pieChart","slices":[…]}. Its params
+ * are every key but `do`, `id` and `at`; lesson-format's tools/<name>.ts says
+ * which they are.
+ */
+export interface ToolInstruction {
+  do: ToolName;
+  id?: string;
+  at?: string;
+  [param: string]: unknown;
+}
 
 /**
  * What the tutor wants on the board — never where it goes.
@@ -13,8 +25,14 @@ import type { Tone } from '@ai-tutor/lesson-format';
  * becomes something that cannot be expressed.
  */
 export type Instruction =
-  /** The lesson's heading. At most one, and it owns the top of the board. */
-  | { do: 'title'; text: string; sub?: string }
+  /**
+   * The lesson's heading. At most one, and it owns the top of the board.
+   *
+   * `path`, on a composed board only: where this sits in the chapter
+   * ("Digestive system", "Small intestine", "Villi"), written small above the
+   * title. A stacked board does not draw it.
+   */
+  | { do: 'title'; text: string; sub?: string; path?: string[] }
   /** A generated picture, by the id of its brief. */
   | { do: 'diagram'; ref: string }
   /**
@@ -126,6 +144,8 @@ export type Instruction =
       heading?: string;
       items: { term: string; meaning?: string }[];
       tone?: Tone;
+      /** Lets a later `annotate` mark item n with the target `<id>#<n>` (0-based). */
+      id?: string;
     }
   /** Steps with arrows between them. */
   | { do: 'flow'; steps: { label: string; note?: string }[]; tone?: Tone }
@@ -210,6 +230,17 @@ export type Instruction =
    */
   | { do: 'newPage' }
   /**
+   * The sentence a student copies down to take the page home: written last,
+   * in a banner. A composed board keeps a place for it.
+   */
+  | { do: 'summary'; text: string }
+  /**
+   * "The difference between X and Y": two headed columns, point n on the left
+   * facing point n on the right. Two to six points a side; any other number
+   * draws nothing, and the keep gate's `drawn` rule names it.
+   */
+  | { do: 'compare'; left: CompareSide; right: CompareSide }
+  /**
    * What the tutor says at this point in the beat.
    *
    * Everything written AFTER a `say` appears while that line is being spoken.
@@ -217,7 +248,14 @@ export type Instruction =
    * finished: "imagine you and your friend" and two figures appear, then
    * "walking to school" and the school does.
    */
-  | { do: 'say'; text: string };
+  | { do: 'say'; text: string }
+  | ToolInstruction;
+
+/** One column of a `compare`. */
+export interface CompareSide {
+  heading: string;
+  points: string[];
+}
 
 export type InstructionKind = Instruction['do'];
 

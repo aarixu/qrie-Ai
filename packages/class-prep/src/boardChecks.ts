@@ -1,4 +1,4 @@
-import type { Element, Lesson } from '@ai-tutor/lesson-format';
+import { toolStrings, type Element, type Lesson } from '@ai-tutor/lesson-format';
 // By relative path, as gate.ts reaches maths-check.
 import { cePart, checkReaction } from '../../maths-check/src/chem.ts';
 
@@ -38,6 +38,8 @@ const words = (text: string): string[] =>
 
 const writtenText = (el: Element): string | null => {
   if (el.kind === 'handwrite' || el.kind === 'text' || el.kind === 'note' || el.kind === 'formula') return el.text;
+  // A tool's caption and labels are ink too: a caption that reads her line back is a subtitle.
+  if (el.kind === 'tool') return toolStrings(el.tool, el.params).join(' ') || null;
   return null;
 };
 

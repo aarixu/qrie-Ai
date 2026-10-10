@@ -2,19 +2,28 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactElement } fr
 import {
   CANVAS_H,
   CANVAS_W,
+  EQUATION_MOVE_MS,
+  INK_NAMES,
   compileFunction,
   mathPlain,
   samplePoints,
   splitPartRef,
+  type Credit,
   type Element,
+  type InkName,
   type Lesson,
   type Point,
   type Tone,
 } from '@ai-tutor/lesson-format';
-import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
+import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, MAX_UNIT_PX, type Rect } from './frame';
 import { formulaTex, hasMath, lineToHtml, plainFormula, texToHtml, typesetsAsMaths } from './math';
+import { renderTool } from './tools';
+import type { ToolTheme } from './tools/context';
+import { animAt, staggerDelays, SEQUENCE_CAP_MS } from './stagger';
+import { drawOnMarkup } from './drawOn';
 import {
   graphicLabelSize,
+  handWidth,
   textWidth,
   fitText,
   titleSize,
@@ -90,12 +99,26 @@ const INK = '#3c3c3c';
  */
 const FONT_HAND = "'Quicksand Variable', 'Quicksand', 'Baloo 2', 'Segoe UI', system-ui, sans-serif";
 const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
-/** A real handwriting face, for the lines the tutor writes out rather than shows. */
-// 'Caveat Variable' is the family @fontsource-variable/caveat registers
-// (apps/classroom/src/fonts.ts); asking only for 'Caveat' fell through to the
-// system's script face on every board, and every writing mask was sized for a
-// font the child never saw (seventh review, 2026-09-29).
-const FONT_WRITE = "'Caveat Variable', 'Caveat', 'Segoe Script', 'Bradley Hand', cursive";
+/**
+ * The face for the lines she writes out rather than shows.
+ *
+ * It was Caveat, a handwriting face, until Aarav found it odd to read
+ * (2026-10-07): her lines are now the board's own face, drawn at weight 600,
+ * which is the face and weight `handWidth` in lesson-format is measured from.
+ * They still appear as she writes them; only the letters are no longer script.
+ */
+const FONT_WRITE = FONT_HAND;
+/** The weight her lines are drawn at, and measured at. */
+const WRITE_WEIGHT = 600;
+
+/** The ink and faces every toolkit tool draws with. */
+const THEME: ToolTheme = { ink: INK, tones: TONE_COLORS, fontHand: FONT_HAND, fontMono: FONT_MONO };
+
+/**
+ * Kinds that animate their own pieces in sequence, so the element as a whole
+ * must not also pop in.
+ */
+const SELF_ANIMATED: ReadonlySet<Element['kind']> = new Set(['tool', 'flow', 'chart', 'list', 'diagram', 'graphic']);
 
 /**
  * How long a handwritten line takes to appear.
@@ -110,6 +133,17 @@ const WRITE_MS = 1600;
 const DRAW_MS = 400;
 /** How long a circle, a tick or an underline takes to draw. */
 const MARK_MS = 620;
+/** A bar growing to its value; a term sliding to its new place (lesson-format's EQUATION_MOVE_MS). */
+const GROW_MS = 500;
+const MOVE_MS = EQUATION_MOVE_MS;
+/** How far apart the pieces of one element arrive, before SEQUENCE_CAP_MS squeezes them. */
+const FLOW_GAP_MS = 450;
+const BAR_GAP_MS = 150;
+const LIST_GAP_MS = 350;
+/** A flow's arrow leaves after its box has landed. */
+const ARROW_AFTER_MS = 250;
+/** How long a diagram's or an icon's strokes take to draw on. */
+const INK_MS = 900;
 
 /**
  * FNV-1a. Renders must be byte-identical across frames and test runs, so all
@@ -132,6 +166,24 @@ const frac = (id: string, salt: number): number => (hash(`${id}:${salt}`) % 1000
 
 const toneOf = (el: Element): Tone => ('tone' in el && el.tone ? el.tone : 'neutral');
 
+/**
+ * The colours of a composed page's named parts (lesson-format INK_NAMES).
+ *
+ * Darker than the tones, because they are read as text on white, and far
+ * enough apart that six on one page are still six.
+ */
+const INK_COLORS: Readonly<Record<InkName, string>> = {
+  red: '#e03131',
+  blue: '#1971c2',
+  green: '#2f9e44',
+  orange: '#e8590c',
+  purple: '#9c36b5',
+  teal: '#0c8599',
+};
+
+/** An element's colour: its part's ink when it has one, its tone's otherwise. */
+const colorOf = (el: Element): string => ('ink' in el && el.ink ? INK_COLORS[el.ink] : TONE_COLORS[toneOf(el)]);
+
 /** Rotation pivot: each element jitters around its own visual center, not the canvas origin. */
 function centerOf(el: Element): Point {
   switch (el.kind) {
@@ -151,6 +203,7 @@ function centerOf(el: Element): Point {
     case 'graphic':
     case 'mark':
     case 'model3d':
+    case 'tool':
       return { x: el.x + el.w / 2, y: el.y + el.h / 2 };
     case 'flow':
       return { x: el.x + el.w / 2, y: el.y + flowHeight(el.steps.length, el.direction) / 2 };
@@ -233,6 +286,21 @@ const SCENE_CSS = `
   stroke-dashoffset: 1;
   animation: stage-draw ${MARK_MS}ms ease-out forwards;
 }
+@keyframes stage-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* A bar grows from its axis, the way a teacher draws it out. */
+.stage-grow {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: stage-grow ${GROW_MS}ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes stage-move {
+  0%   { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)); }
+  12%  { opacity: 1; }
+  100% { opacity: 1; transform: translate(0, 0); }
+}
+/* A term of working slides from where it was in the line above. Hidden until
+   its step: \`both\` holds the first frame, which is transparent. */
+.stage-move { animation: stage-move ${MOVE_MS}ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 @keyframes stage-nib-out { to { opacity: 0; } }
 
 /* THE PAINTER'S FOUR MOTIONS.
@@ -275,21 +343,34 @@ const SCENE_CSS = `
   to   { transform: rotate(2.5deg); }
 }
 
+@keyframes stage-fill { to { fill-opacity: 1; } }
+/* A drawing is drawn: its strokes travel on together, then its colour comes in. */
+.stage-ink { stroke-dasharray: 1; stroke-dashoffset: 1; animation: stage-draw ${INK_MS}ms ease-out forwards; }
+.stage-ink-fill {
+  fill-opacity: 0;
+  animation: stage-draw ${INK_MS}ms ease-out forwards, stage-fill 400ms ease-out ${INK_MS - 200}ms forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .stage-pop, .stage-sweep, .stage-write, .stage-nib, .stage-draw {
+  .stage-pop, .stage-sweep, .stage-write, .stage-nib, .stage-draw, .stage-grow, .stage-move {
     animation-duration: 0.01ms;
     animation-delay: 0ms;
   }
+  .stage-ink, .stage-ink-fill { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
+  .stage-ink-fill { fill-opacity: 1; }
   /* The painter's motions LOOP, so they stop outright rather than speeding up. */
   .curie-drift, .curie-flow, .curie-pulse, .curie-sway { animation: none; }
 }
 `;
 
 /** One arrowhead per tone: markers cannot inherit stroke color, so each tone gets its own. */
-const ARROW_MARKERS = (Object.keys(TONE_COLORS) as Tone[]).map((tone) => (
+const ARROW_MARKERS = [
+  ...(Object.keys(TONE_COLORS) as Tone[]).map((tone) => [tone, TONE_COLORS[tone]] as const),
+  ...INK_NAMES.map((ink) => [`ink-${ink}`, INK_COLORS[ink]] as const),
+].map(([key, fill]) => (
   <marker
-    key={tone}
-    id={`stage-arrow-${tone}`}
+    key={key}
+    id={`stage-arrow-${key}`}
     viewBox="0 0 10 10"
     refX={8}
     refY={5}
@@ -297,7 +378,7 @@ const ARROW_MARKERS = (Object.keys(TONE_COLORS) as Tone[]).map((tone) => (
     markerHeight={7}
     orient="auto-start-reverse"
   >
-    <path d="M0 0 L10 5 L0 10 z" fill={TONE_COLORS[tone]} />
+    <path d="M0 0 L10 5 L0 10 z" fill={fill} />
   </marker>
 ));
 
@@ -428,41 +509,48 @@ function renderBox(el: Extract<Element, { kind: 'box' }>): ReactElement {
  * In the tutor's printed hand rather than her written one. Her handwriting is
  * for the two or three sentences she wants remembered; four definitions in
  * cursive on a phone screen is a paragraph nobody reads.
+ *
+ * New on the board, its items arrive one after another, all within
+ * SEQUENCE_CAP_MS; already there, it is drawn complete.
  */
-function renderList(el: Extract<Element, { kind: 'list' }>): ReactElement {
+function renderList(el: Extract<Element, { kind: 'list' }>, isNew = false): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const size = el.size ?? LIST_ITEM_SIZE;
   const lead = size * LIST_LINE_H;
   const headSize = LIST_HEADING_SIZE * (size / LIST_ITEM_SIZE);
+  const delays = staggerDelays(el.items.length, LIST_GAP_MS, SEQUENCE_CAP_MS);
   const out: ReactElement[] = [];
   let y = el.y;
 
   if (el.heading) {
     const baseline = y + headSize;
     out.push(
-      <text key="heading" x={el.x} y={baseline} fontFamily={FONT_HAND} fontSize={headSize} fontWeight={800} letterSpacing={0.4} fill={color}>
-        {el.heading}
-      </text>,
-      <path
-        key="rule"
-        d={`M ${el.x} ${baseline + 5} L ${el.x + Math.min(el.w, textWidth(el.heading, headSize) + 8)} ${baseline + 5}`}
-        stroke={color}
-        strokeOpacity={0.45}
-        strokeWidth={1.6}
-        strokeLinecap="round"
-      />,
+      <g key="heading" {...animAt(isNew, 'stage-pop', 0)}>
+        <text x={el.x} y={baseline} fontFamily={FONT_HAND} fontSize={headSize} fontWeight={800} letterSpacing={0.4} fill={color}>
+          {el.heading}
+        </text>
+        <path
+          d={`M ${el.x} ${baseline + 5} L ${el.x + Math.min(el.w, textWidth(el.heading, headSize) + 8)} ${baseline + 5}`}
+          stroke={color}
+          strokeOpacity={0.45}
+          strokeWidth={1.6}
+          strokeLinecap="round"
+        />
+      </g>,
     );
     y += headSize * LIST_LINE_H + LIST_HEADING_GAP;
   }
 
   el.items.forEach((item, n) => {
+    const itemInk = item.ink ? INK_COLORS[item.ink] : undefined;
     const prefix = `${n + 1}. `;
     const lines = wrapLines(`${prefix}${listItemText(item)}`, el.w - LIST_INDENT, size);
+    const drawn: ReactElement[] = [];
     lines.forEach((line, k) => {
       const baseline = y + size + k * lead;
       if (k > 0) {
         // Hanging indent: a continued line starts under the words, not the digit.
-        out.push(
+        drawn.push(
           <text key={`${n}-${k}`} x={el.x + LIST_INDENT} y={baseline} fontFamily={FONT_HAND} fontSize={size} fill={INK}>
             {line}
           </text>,
@@ -475,16 +563,23 @@ function renderList(el: Extract<Element, { kind: 'list' }>): ReactElement {
       const dash = rest.indexOf(' — ');
       const term = dash >= 0 ? rest.slice(0, dash) : rest;
       const after = dash >= 0 ? rest.slice(dash) : '';
-      out.push(
+      drawn.push(
         <text key={`${n}-0`} x={el.x} y={baseline} fontFamily={FONT_HAND} fontSize={size} fill={INK}>
-          <tspan fill={color} fontWeight={700}>
+          <tspan fill={itemInk ?? color} fontWeight={700}>
             {prefix}
           </tspan>
-          <tspan fontWeight={700}>{term}</tspan>
+          <tspan fontWeight={700} fill={itemInk}>
+            {term}
+          </tspan>
           {after && <tspan fillOpacity={0.85}>{after}</tspan>}
         </text>,
       );
     });
+    out.push(
+      <g key={`item${n}`} {...animAt(isNew, 'stage-pop', delays[n])}>
+        {drawn}
+      </g>,
+    );
     y += lines.length * lead + LIST_ITEM_GAP;
   });
 
@@ -516,8 +611,8 @@ function renderDoc(el: Extract<Element, { kind: 'doc' }>): ReactElement {
 }
 
 function renderArrow(el: Extract<Element, { kind: 'arrow' }>): ReactElement {
-  const tone = toneOf(el);
-  const color = TONE_COLORS[tone];
+  const color = colorOf(el);
+  const marker = el.ink ? `ink-${el.ink}` : toneOf(el);
   return (
     <>
       <line
@@ -529,7 +624,7 @@ function renderArrow(el: Extract<Element, { kind: 'arrow' }>): ReactElement {
         strokeWidth={2.5}
         strokeLinecap="round"
         strokeDasharray={el.dashed ? '8 7' : undefined}
-        markerEnd={`url(#stage-arrow-${tone})`}
+        markerEnd={`url(#stage-arrow-${marker})`}
       />
       {el.label && (
         <text x={(el.from.x + el.to.x) / 2} y={(el.from.y + el.to.y) / 2 - 9} textAnchor="middle" fontFamily={FONT_HAND} fontSize={14.5} fill={color} {...HALO}>
@@ -569,13 +664,99 @@ function renderImage(el: Extract<Element, { kind: 'image' }>, asset?: string): R
           the way a chart pinned up there does — a border would make it a
           panel dropped onto the lesson instead of part of it. */}
       <image href={href} x={el.x} y={el.y} width={el.w} height={el.h} preserveAspectRatio="xMidYMid meet" aria-label={el.alt} />
+      {/* A PICTURE OF SOMETHING MOVING, MOVING (2026-10-07). Its loop plays
+          over its still, in the same box: silent, so a browser lets it start
+          on its own, and inline, so a phone does not take it full-screen. The
+          still stays drawn underneath and is the poster, so a browser that
+          plays none of the sources shows the picture the class was built on.
+          The poster is the same `href` as the still, so a drawing kept as SVG
+          markup is a data: URL here too, never markup handed over as a URL. */}
+      {el.video && el.video.length > 0 && (
+        <foreignObject x={el.x} y={el.y} width={el.w} height={el.h}>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={href}
+            aria-label={el.alt}
+            style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
+          >
+            {el.video.map((source) => (
+              <source key={source.src} src={source.src} type={source.type} />
+            ))}
+          </video>
+        </foreignObject>
+      )}
       {el.label && (
         <text x={el.x + el.w / 2} y={el.y + el.h + 20} textAnchor="middle" fontFamily={FONT_HAND} fontSize={14.5} fill={color} fillOpacity={0.7}>
           {el.label}
         </text>
       )}
+      {el.credit && renderCredit(el.credit, { x: el.x, y: el.y, w: el.w, h: el.h })}
     </>
   );
+}
+
+/** The longest an author's name runs in a credit on the board; the rest is an ellipsis. */
+const CREDIT_AUTHOR_MAX = 28;
+
+/**
+ * "A. Person · CC BY-SA 4.0": who made it, and the licence it is shown under,
+ * in at most `room` characters. The author gives way first; the licence is
+ * the part that must be read.
+ */
+export function creditLine(credit: Credit, room = Infinity): string {
+  const cut = (text: string, max: number): string => (text.length <= max ? text : `${text.slice(0, Math.max(1, max - 1)).trimEnd()}…`);
+  const licence = cut(credit.license, room);
+  const author = credit.author?.trim();
+  const left = Math.min(CREDIT_AUTHOR_MAX, room - licence.length - 3);
+  return author && left >= 4 ? `${cut(author, left)} · ${licence}` : licence;
+}
+
+/**
+ * A FOUND PICTURE'S CREDIT, WRITTEN ON ITS FOOT (2026-10-07).
+ *
+ * CC BY and CC BY-SA ask for the author and the licence to be shown with the
+ * work. Small, in the picture's bottom-right corner on a pale strip so it
+ * reads over any photograph — where a museum label or a textbook's photo
+ * credit goes, and out of the way of anything she writes beside it. The full
+ * credit, with its links, is listed under the board (CreditsList).
+ *
+ * Never under 8 units, and never wider than the picture: a placed thing's
+ * photograph is a hundred-odd units across, and at 6 its credit could not be
+ * read, while a long one ran past the strip onto its neighbours (review,
+ * 2026-10-08).
+ */
+function renderCredit(credit: Credit, r: Rect): ReactElement {
+  const size = Math.max(8, Math.min(11, r.w * 0.028));
+  const line = creditLine(credit, Math.floor((r.w - size) / (size * 0.58)));
+  const w = Math.min(r.w, textWidth(line, size) + size);
+  const h = size * 1.5;
+  return (
+    <g className="stage-credit">
+      <rect x={r.x + r.w - w} y={r.y + r.h - h} width={w} height={h} fill="#fff" fillOpacity={0.72} />
+      <text x={r.x + r.w - size / 2} y={r.y + r.h - h * 0.3} textAnchor="end" fontFamily={FONT_HAND} fontSize={size} fill={TONE_COLORS.neutral}>
+        {line}
+      </text>
+    </g>
+  );
+}
+
+/**
+ * Where a photograph of a placed thing is drawn inside its square.
+ *
+ * At its own shape, as wide or as tall as the square allows, and standing on
+ * the square's foot: a scene's things share a baseline and her name for each
+ * is written under it, so a wide photograph floating mid-square would leave
+ * a gap between the thing and its name.
+ */
+function photoRect(el: Extract<Element, { kind: 'graphic' }>): Rect {
+  const aspect = el.aspect ?? 1;
+  const w = aspect >= el.w / el.h ? el.w : el.h * aspect;
+  const h = w / aspect;
+  return { x: el.x + (el.w - w) / 2, y: el.y + el.h - h, w, h };
 }
 
 /** model3d renders as a labelled placeholder panel; the real 3D viewport mounts over it in the app. */
@@ -632,23 +813,28 @@ function innerMarkup(svg: string): string {
  * Dimming is done in CSS rather than by rewriting the markup, because the
  * artwork must stay byte-identical to what was authored and reviewed — and a
  * CSS transition gives the light a moment to move, the way a real pointer does.
+ *
+ * New on the board, it is drawn on: `drawOnMarkup` marks its shapes at render
+ * time (the stored artwork is untouched), strokes first, then colour. A
+ * drawing too busy for that pops in as before.
  */
 function renderDiagram(
   el: Extract<Element, { kind: 'diagram' }>,
   svg: string | undefined,
   litParts: readonly string[],
+  isNew = false,
 ): ReactElement {
   const color = TONE_COLORS.neutral;
   if (svg === undefined) {
     // The app has not handed the markup in yet. Draw the frame so the board
     // keeps its layout instead of collapsing, and say what is missing.
     return (
-      <>
+      <g {...animAt(isNew, 'stage-pop', 0)}>
         <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={12} fill="none" stroke={color} strokeOpacity={0.35} strokeWidth={2} strokeDasharray="7 6" />
         <text x={el.x + el.w / 2} y={el.y + el.h / 2} textAnchor="middle" fontFamily={FONT_HAND} fontSize={15} fill={color} fillOpacity={0.7}>
           {el.alt}
         </text>
-      </>
+      </g>
     );
   }
 
@@ -668,10 +854,15 @@ function renderDiagram(
           ...litParts.map((part) => `.${cls} > g[id="${part}"] { opacity: 1; }`),
         ].join(' ');
 
+  // New on the board: drawn on. Too busy to draw on a phone: it pops in as before.
+  const inked = isNew ? drawOnMarkup(innerMarkup(svg)) : null;
+
   return (
-    <g transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}>
-      {spotlight && <style>{spotlight}</style>}
-      <g className={cls} dangerouslySetInnerHTML={{ __html: innerMarkup(svg) }} />
+    <g {...animAt(isNew && inked === null, 'stage-pop', 0)}>
+      <g transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}>
+        {spotlight && <style>{spotlight}</style>}
+        <g className={cls} dangerouslySetInnerHTML={{ __html: inked ?? innerMarkup(svg) }} />
+      </g>
     </g>
   );
 }
@@ -683,8 +874,12 @@ function renderDiagram(
  * vertical bars would force them sideways or into abbreviations. Values are
  * printed at the end of each bar, so a student reads the number without
  * measuring against an axis.
+ *
+ * New on the board, its bars grow out one after another, all within
+ * SEQUENCE_CAP_MS, each value written when its bar is full; already there, it
+ * is drawn complete.
  */
-function renderChart(el: Extract<Element, { kind: 'chart' }>): ReactElement {
+function renderChart(el: Extract<Element, { kind: 'chart' }>, isNew = false): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const rows = el.data;
   const max = Math.max(1, ...rows.map((d) => d.value));
@@ -694,11 +889,12 @@ function renderChart(el: Extract<Element, { kind: 'chart' }>): ReactElement {
   const capH = el.caption ? 34 : 0;
   const rowH = Math.min(46, (el.h - capH) / Math.max(1, rows.length));
   const barH = rowH * 0.56;
+  const delays = staggerDelays(rows.length, BAR_GAP_MS, SEQUENCE_CAP_MS);
 
   return (
     <>
       {el.caption && (
-        <text x={el.x} y={el.y + 20} fontFamily={FONT_HAND} fontSize={19} fontWeight={800} fill={INK}>
+        <text x={el.x} y={el.y + 20} fontFamily={FONT_HAND} fontSize={19} fontWeight={800} fill={INK} {...animAt(isNew, 'stage-pop', 0)}>
           {el.caption}
         </text>
       )}
@@ -707,19 +903,21 @@ function renderChart(el: Extract<Element, { kind: 'chart' }>): ReactElement {
         const w = Math.max(2, (d.value / max) * trackW);
         return (
           <g key={d.label}>
-            <text x={el.x + labelW} y={cy} textAnchor="end" dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={700} fill={TONE_COLORS.neutral}>
-              {d.label}
-            </text>
-            <rect x={trackX} y={cy - barH / 2} width={trackW} height={barH} rx={barH / 2} fill={color} fillOpacity={0.1} />
-            <rect x={trackX} y={cy - barH / 2} width={w} height={barH} rx={barH / 2} fill={color} fillOpacity={0.85} />
-            <text x={trackX + w + 10} y={cy} dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={800} fill={color}>
+            <g {...animAt(isNew, 'stage-pop', delays[i])}>
+              <text x={el.x + labelW} y={cy} textAnchor="end" dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={700} fill={TONE_COLORS.neutral}>
+                {d.label}
+              </text>
+              <rect x={trackX} y={cy - barH / 2} width={trackW} height={barH} rx={barH / 2} fill={color} fillOpacity={0.1} />
+            </g>
+            <rect x={trackX} y={cy - barH / 2} width={w} height={barH} rx={barH / 2} fill={color} fillOpacity={0.85} {...animAt(isNew, 'stage-grow', delays[i])} />
+            <text x={trackX + w + 10} y={cy} dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={800} fill={color} {...animAt(isNew, 'stage-pop', delays[i] + GROW_MS)}>
               {d.value.toLocaleString('en-IN')}
             </text>
           </g>
         );
       })}
       {el.unit && (
-        <text x={trackX} y={el.y + capH + rows.length * rowH + 18} fontFamily={FONT_HAND} fontSize={13} fill={TONE_COLORS.neutral} fillOpacity={0.7}>
+        <text x={trackX} y={el.y + capH + rows.length * rowH + 18} fontFamily={FONT_HAND} fontSize={13} fill={TONE_COLORS.neutral} fillOpacity={0.7} {...animAt(isNew, 'stage-pop', 0)}>
           {el.unit}
         </text>
       )}
@@ -863,14 +1061,19 @@ function renderPlot(el: Extract<Element, { kind: 'plot' }>): ReactElement | null
  * Five notes became one unreadable stripe.
  *
  * A step is as wide as it is; the writing is what gives way.
+ *
+ * New on the board, its steps arrive one after another, all within
+ * SEQUENCE_CAP_MS, and each arrow draws on after the box it leaves; already
+ * there, it is drawn complete.
  */
-function renderFlow(el: Extract<Element, { kind: 'flow' }>): ReactElement {
+function renderFlow(el: Extract<Element, { kind: 'flow' }>, isNew = false): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const n = el.steps.length;
   const row = (el.direction ?? 'row') === 'row';
   const stepW = row ? (el.w - (n - 1) * FLOW_GAP) / Math.max(1, n) : el.w;
   /** Kept clear of the rounded corners on both sides. */
   const inner = Math.max(12, stepW - 14);
+  const delays = staggerDelays(n, FLOW_GAP_MS, SEQUENCE_CAP_MS);
 
   return (
     <>
@@ -915,22 +1118,36 @@ function renderFlow(el: Extract<Element, { kind: 'flow' }>): ReactElement {
           ty += noteLead;
         });
 
+        const x1 = row ? x + stepW + 8 : cx;
+        const y1 = row ? cy : y + FLOW_STEP_H + 8;
+        const x2 = row ? x + stepW + FLOW_GAP - 8 : cx;
+        const y2 = row ? cy : y + FLOW_STEP_H + FLOW_GAP - 8;
+        // Drawn on, the arrow's head is its own stroke: a marker would sit at
+        // the end of the line before the line had reached it.
+        const arrow = !isNew ? (
+          <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={2.5} strokeLinecap="round" markerEnd={`url(#stage-arrow-${toneOf(el)})`} />
+        ) : (
+          <>
+            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={2.5} strokeLinecap="round" pathLength={1} {...animAt(true, 'stage-draw', delays[i] + ARROW_AFTER_MS)} />
+            <path
+              d={row ? `M ${x2 - 9} ${y2 - 6} L ${x2} ${y2} L ${x2 - 9} ${y2 + 6}` : `M ${x2 - 6} ${y2 - 9} L ${x2} ${y2} L ${x2 + 6} ${y2 - 9}`}
+              fill="none"
+              stroke={color}
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              {...animAt(true, 'stage-pop', delays[i] + ARROW_AFTER_MS + MARK_MS)}
+            />
+          </>
+        );
+
         return (
           <g key={i}>
-            <rect x={x} y={y} width={stepW} height={FLOW_STEP_H} rx={14} fill={color} fillOpacity={0.12} stroke={color} strokeWidth={2} />
-            {drawn}
-            {!last && (
-              <line
-                x1={row ? x + stepW + 8 : cx}
-                y1={row ? cy : y + FLOW_STEP_H + 8}
-                x2={row ? x + stepW + FLOW_GAP - 8 : cx}
-                y2={row ? cy : y + FLOW_STEP_H + FLOW_GAP - 8}
-                stroke={color}
-                strokeWidth={2.5}
-                strokeLinecap="round"
-                markerEnd={`url(#stage-arrow-${toneOf(el)})`}
-              />
-            )}
+            <g {...animAt(isNew, 'stage-pop', delays[i])}>
+              <rect x={x} y={y} width={stepW} height={FLOW_STEP_H} rx={14} fill={color} fillOpacity={0.12} stroke={color} strokeWidth={2} />
+              {drawn}
+            </g>
+            {!last && arrow}
           </g>
         );
       })}
@@ -947,23 +1164,21 @@ function renderFlow(el: Extract<Element, { kind: 'flow' }>): ReactElement {
  * it — which this gives for a fraction of the machinery.
  */
 function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElement {
-  const color = TONE_COLORS[toneOf(el)];
+  const color = colorOf(el);
   const size = el.size ?? 26;
   // The same ruler the layout and the camera use. A local guess of half an em
   // per character ran short of the real thing, and the mask — which hides
   // everything past its own right edge — clipped the last word off the line.
   // A little over, because a mask that is too wide costs nothing and a mask
-  // that is too narrow eats words.
-  // Generously over: the shared ruler is tuned for a sans face and the
-  // tutor's hand is wider, and a mask that is too wide costs nothing while a
-  // mask that is too narrow eats the last word off the line.
+  // that is too narrow eats words; and only a little, because the nib travels
+  // the mask's width and should stay with the ink it is writing.
   const math = hasMath(el.text);
   // Typeset maths runs wider and taller than the plain characters the ruler
   // counts: KaTeX spaces operators and stacks fractions. So a maths line gets
   // a wider box, and a taller one when it has a fraction, root or power —
   // the writing mask clipped "…= 5x + 20" and hid a fraction's denominator
   // (seventh review, 2026-09-29).
-  const width = textWidth(el.text, size) * (math ? 1.9 : 1.3);
+  const width = math ? textWidth(el.text, size) * 1.9 : handWidth(el.text, size) * 1.1;
   const tall = math && /\\[dt]?frac|\\sqrt|\^|_/.test(el.text);
   const top = el.y - size * (tall ? 1.6 : 1);
   const height = size * (tall ? 2.8 : 1.8);
@@ -998,7 +1213,7 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
             style={{
               fontFamily: FONT_WRITE,
               fontSize: size,
-              fontWeight: 600,
+              fontWeight: WRITE_WEIGHT,
               color,
               textAlign: 'center',
               whiteSpace: 'nowrap',
@@ -1014,7 +1229,7 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
           textAnchor="middle"
           fontFamily={FONT_WRITE}
           fontSize={size}
-          fontWeight={600}
+          fontWeight={WRITE_WEIGHT}
           fill={color}
           mask={`url(#${maskId})`}
         >
@@ -1041,24 +1256,74 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
  * box and centred. Inlined rather than dropped in an <img> for the same reason
  * a diagram is: it has to take the board's colour, and it has to be able to be
  * dimmed and lit with everything else.
+ *
+ * New on the board, it is drawn on like a diagram (`drawOnMarkup`), and its
+ * name is written once the drawing is done; a glyph too busy for that pops in.
  */
 function renderGraphic(
   el: Extract<Element, { kind: 'graphic' }>,
   svg: string | undefined,
+  isNew = false,
 ): ReactElement {
   const color = TONE_COLORS.neutral;
   const beside = el.labelSide === 'beside';
   const labelSize = el.label ? graphicLabelSize(el.w, el.label, beside ? 'beside' : 'below') : 26;
   const labelY = beside ? el.y + el.h / 2 : el.y + el.h + 26;
 
-  if (svg === undefined) {
+  // A photograph: handed in live as a data: URL, or a saved file the element
+  // points at. Never inlined as markup — those bytes are not SVG.
+  const photo = svg?.startsWith('data:image/') ? svg : svg === undefined ? el.src : undefined;
+  if (photo !== undefined) {
+    const r = photoRect(el);
+    const clipId = `photo-${el.id}`;
     return (
       <>
+        <g {...animAt(isNew, 'stage-pop', 0)}>
+          <clipPath id={clipId}>
+            <rect x={r.x} y={r.y} width={r.w} height={r.h} rx={8} />
+          </clipPath>
+          <image
+            href={photo}
+            x={r.x}
+            y={r.y}
+            width={r.w}
+            height={r.h}
+            // Cut to its own shape only when its shape is known: a photograph
+            // of unknown shape is drawn whole inside the square.
+            preserveAspectRatio={el.aspect ? 'xMidYMid slice' : 'xMidYMid meet'}
+            clipPath={`url(#${clipId})`}
+            aria-label={el.label ?? el.noun}
+          />
+          <rect x={r.x} y={r.y} width={r.w} height={r.h} rx={8} fill="none" stroke={INK} strokeOpacity={0.14} strokeWidth={1.5} />
+          {el.credit && renderCredit(el.credit, r)}
+        </g>
+        {el.label && (
+          <text
+            x={beside ? el.x + el.w + BESIDE_GAP : el.x + el.w / 2}
+            y={labelY}
+            textAnchor={beside ? 'start' : 'middle'}
+            dominantBaseline={beside ? 'middle' : undefined}
+            fontFamily={FONT_WRITE}
+            fontSize={labelSize}
+            fill={color}
+            {...HALO}
+            {...animAt(isNew, 'stage-pop', INK_MS)}
+          >
+            {el.label}
+          </text>
+        )}
+      </>
+    );
+  }
+
+  if (svg === undefined) {
+    return (
+      <g {...animAt(isNew, 'stage-pop', 0)}>
         <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={10} fill="none" stroke={color} strokeOpacity={0.3} strokeWidth={2} strokeDasharray="6 6" />
         <text x={el.x + el.w / 2} y={el.y + el.h / 2} textAnchor="middle" dominantBaseline="middle" fontFamily={FONT_WRITE} fontSize={18} fill={color}>
           {el.noun}
         </text>
-      </>
+      </g>
     );
   }
 
@@ -1066,13 +1331,16 @@ function renderGraphic(
   const scale = Math.min(el.w / view.w, el.h / view.h);
   const dx = el.x + (el.w - view.w * scale) / 2;
   const dy = el.y + (el.h - view.h * scale) / 2;
+  const inked = isNew ? drawOnMarkup(innerMarkup(svg)) : null;
 
   return (
     <>
-      <g
-        transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}
-        dangerouslySetInnerHTML={{ __html: innerMarkup(svg) }}
-      />
+      <g {...animAt(isNew && inked === null, 'stage-pop', 0)}>
+        <g
+          transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}
+          dangerouslySetInnerHTML={{ __html: inked ?? innerMarkup(svg) }}
+        />
+      </g>
       {el.label && (
         <text
           x={beside ? el.x + el.w + BESIDE_GAP : el.x + el.w / 2}
@@ -1085,6 +1353,7 @@ function renderGraphic(
           fontSize={labelSize}
           fill={color}
           {...HALO}
+          {...animAt(isNew, 'stage-pop', INK_MS)}
         >
           {el.label}
         </text>
@@ -1100,7 +1369,7 @@ function renderGraphic(
  * one does — a line travelling, not a shape appearing.
  */
 function renderMark(el: Extract<Element, { kind: 'mark' }>): ReactElement {
-  const color = TONE_COLORS[toneOf(el)];
+  const color = colorOf(el);
   const cx = el.x + el.w / 2;
   const cy = el.y + el.h / 2;
   const common = {
@@ -1167,7 +1436,7 @@ function renderMark(el: Extract<Element, { kind: 'mark' }>): ReactElement {
   }
 }
 
-function renderElement(el: Element, svg?: string, litParts: readonly string[] = []): ReactElement {
+function renderElement(el: Element, svg?: string, litParts: readonly string[] = [], isNew = false): ReactElement {
   switch (el.kind) {
     case 'title':
       return renderTitle(el);
@@ -1190,7 +1459,7 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
     case 'box':
       return renderBox(el);
     case 'list':
-      return renderList(el);
+      return renderList(el, isNew);
     case 'doc':
       return renderDoc(el);
     case 'arrow':
@@ -1232,21 +1501,23 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
     case 'image':
       return renderImage(el, svg);
     case 'diagram':
-      return renderDiagram(el, svg, litParts);
+      return renderDiagram(el, svg, litParts, isNew);
     case 'graphic':
-      return renderGraphic(el, svg);
+      return renderGraphic(el, svg, isNew);
     case 'mark':
       return renderMark(el);
     case 'chart':
-      return renderChart(el);
+      return renderChart(el, isNew);
     case 'plot':
       return renderPlot(el) ?? <></>;
     case 'flow':
-      return renderFlow(el);
+      return renderFlow(el, isNew);
     case 'handwrite':
       return renderHandwrite(el);
     case 'model3d':
       return renderModel3d(el);
+    case 'tool':
+      return renderTool(el, { isNew, theme: THEME });
   }
 }
 
@@ -1337,12 +1608,12 @@ function SceneElement({
         style={glow}
       >
         <g
-          className={isNew && !isStroke ? 'stage-pop' : undefined}
+          className={isNew && !isStroke && !SELF_ANIMATED.has(el.kind) ? 'stage-pop' : undefined}
           // A line of working arrives after the one above it; the pop's
           // `both` fill keeps it hidden until then.
           style={isNew && el.kind === 'formula' && el.after ? { animationDelay: `${el.after}ms` } : undefined}
         >
-          {renderElement(el, svg, litParts)}
+          {renderElement(el, svg, litParts, isNew)}
         </g>
       </g>
     </>
@@ -1421,12 +1692,6 @@ function useCamera(target: Rect, measured: boolean): Rect {
   return shown;
 }
 
-/**
- * One canvas unit never renders wider than this many CSS pixels. The zoom that
- * makes a note readable on a phone would set banner text on a desktop — past
- * this density the camera simply stops coming closer.
- */
-const MAX_UNIT_PX = 1.6;
 
 /** The rendered size of the SVG, so the frame can be shaped to the screen. */
 function useMeasure(
@@ -1498,7 +1763,7 @@ export function Scene({ lesson, visible, focus, wide = false, assets, frame }: S
   const { aspect, width, measured } = useMeasure(svgRef);
   const target = wide
     ? { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h }
-    : computeFrame(lesson, frame ?? visible, focus, aspect, width ? width / MAX_UNIT_PX : undefined);
+    : computeFrame(lesson, frame ?? visible, focus, aspect, width ? width / MAX_UNIT_PX : undefined, visible);
   const box = useCamera(target, measured);
 
   return (
@@ -1522,7 +1787,10 @@ export function Scene({ lesson, visible, focus, wide = false, assets, frame }: S
             key={el.id}
             el={el}
             isNew={prev === null || !prev.has(el.id)}
-            dimmed={dimming && !focusSet.has(el.id)}
+            // What this line has just written stays at full strength under a
+            // light on a part: a key point written beside the lit loop of a
+            // diagram came out at 40% (human heart, 2026-10-07).
+            dimmed={dimming && !focusSet.has(el.id) && !(prev !== null && !prev.has(el.id))}
             focused={dimming && focusSet.has(el.id)}
             svg={assets?.[el.id]}
             litParts={partsByElement.get(el.id)}

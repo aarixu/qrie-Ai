@@ -2,6 +2,7 @@ import {
   boxOf,
   flowHeight,
   noteBoxHeight,
+  splitPartRef,
   union,
   CANVAS_H,
   CANVAS_W,
@@ -38,6 +39,14 @@ export { FLOW_STEP_H, FLOW_GAP } from '@ai-tutor/lesson-format';
  * screen with no surroundings, and a diagram with no context is not a diagram.
  */
 const MAX_ZOOM = 3;
+
+/**
+ * One canvas unit never renders wider than this many CSS pixels. The zoom that
+ * makes a note readable on a phone would set banner text on a desktop — past
+ * this density the camera simply stops coming closer. (The keep gate's
+ * phone-readable rule reads it too.)
+ */
+export const MAX_UNIT_PX = 1.6;
 
 /** Breathing room around the framed content, as a fraction of the frame's larger side. */
 const PAD = 0.09;
@@ -95,13 +104,35 @@ function clampInto(rect: Rect, board: Rect): Rect {
 }
 
 /**
+ * The box of the picture part she is pointing at — but only when that
+ * picture is the newest thing in the frame. Then nothing she has written
+ * is newer, and zooming cannot cut a note in half (the reason the camera
+ * otherwise ignores focus). Only an `image` part has a box in the lesson
+ * (fractions of the picture); a diagram's parts are ids inside its SVG, so
+ * they light and dim as before and never zoom.
+ */
+function pointedPart(lesson: Lesson, visible: readonly string[], focus: readonly string[]): Rect | null {
+  const byId = new Map(lesson.elements.map((el) => [el.id, el]));
+  const newest = [...visible].reverse().map((id) => byId.get(id)).find((el) => el !== undefined);
+  if (!newest || newest.kind !== 'image' || !newest.parts) return null;
+  for (const ref of focus) {
+    const { elementId, part } = splitPartRef(ref);
+    if (elementId !== newest.id || part === null) continue;
+    const p = newest.parts.find((q) => q.name === part);
+    if (p) return { x: newest.x + p.x * newest.w, y: newest.y + p.y * newest.h, w: p.w * newest.w, h: p.h * newest.h };
+  }
+  return null;
+}
+
+/**
  * The viewBox for this moment.
  *
  * @param visible the beat's full element set — this is what gets framed
- * @param _focus  kept so every caller keeps passing the beat's focus, for when
- *                a beat gains an explicit zoom. Emphasis is not a camera
- *                decision: framing the focus alone once cut a note in half
- *                while the tutor was talking about it.
+ * @param focus   the beat's focus: a picture part named here is zoomed to when
+ *                that picture is the newest ink (see pointedPart); everything
+ *                else in focus is emphasis, not a camera decision — framing the
+ *                focus alone once cut a note in half while the tutor was
+ *                talking about it.
  * @param aspect  the renderer's w/h, so the frame comes back pre-shaped to the
  *                screen. Omitted (in a test, or before the first measure) it
  *                stays at the content's own shape.
@@ -113,9 +144,15 @@ function clampInto(rect: Rect, board: Rect): Rect {
 export function computeFrame(
   lesson: Lesson,
   visible: readonly string[],
-  _focus: readonly string[],
+  focus: readonly string[],
   aspect?: number,
   minW?: number,
+  /**
+   * Everything on the board at this moment (the beat's `show`), which the
+   * frame must not cut in half — see settle. Without it, only a page's titles
+   * are kept whole.
+   */
+  onBoard?: readonly string[],
 ): Rect {
   const board: Rect = { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h };
   const shape = (r: Rect, within: Rect = board): Rect =>
@@ -133,6 +170,22 @@ export function computeFrame(
     .filter((el): el is NonNullable<typeof el> => el !== undefined)
     .map(boxOf);
   if (boxes.length === 0) return shape(board);
+
+  const part = pointedPart(lesson, visible, focus);
+  if (part) {
+    const pad = Math.max(part.w, part.h) * 0.25;
+    let zoom: Rect = { x: part.x - pad, y: part.y - pad, w: part.w + pad * 2, h: part.h + pad * 2 };
+    const least = { w: CANVAS_W / MAX_ZOOM, h: CANVAS_H / MAX_ZOOM };
+    if (zoom.w < least.w) zoom = { ...zoom, x: zoom.x - (least.w - zoom.w) / 2, w: least.w };
+    if (zoom.h < least.h) zoom = { ...zoom, y: zoom.y - (least.h - zoom.h) / 2, h: least.h };
+    if (minW && zoom.w < minW) {
+      const scale = minW / zoom.w;
+      zoom = { x: zoom.x - (zoom.w * (scale - 1)) / 2, y: zoom.y - (zoom.h * (scale - 1)) / 2, w: zoom.w * scale, h: zoom.h * scale };
+    }
+    const page = Math.floor((part.x + part.w / 2) / PAGE_STRIDE);
+    const pageBox = { x: page * PAGE_STRIDE, y: 0, w: Math.min(CANVAS_W, board.w), h: board.h };
+    return settle(lesson, shape(zoom, pageBox), [part], onBoard, (r) => shape(r, pageBox));
+  }
 
   /**
    * THE CAMERA SCROLLS; IT DOES NOT ZOOM OUT.
@@ -204,5 +257,64 @@ export function computeFrame(
     w: Math.min(CANVAS_W, board.w),
     h: board.h,
   };
-  return shape(frame, pageRect);
+  return settle(lesson, shape(frame, pageRect), boxes, onBoard, (r) => shape(r, pageRect));
+}
+
+/** Part of `r` is in `f`, and part is not. */
+const cutBy = (r: Rect, f: Rect): boolean => {
+  const meets = r.x < f.x + f.w && f.x < r.x + r.w && r.y < f.y + f.h && f.y < r.y + r.h;
+  const inside = r.x >= f.x && r.y >= f.y && r.x + r.w <= f.x + f.w && r.y + r.h <= f.y + f.h;
+  return meets && !inside;
+};
+
+const holds = (f: Rect, r: Rect): boolean => r.x >= f.x - 0.5 && r.y >= f.y - 0.5 && r.x + r.w <= f.x + f.w + 0.5 && r.y + r.h <= f.y + f.h + 0.5;
+
+/** A mark, an arrow or a stroke may run off the edge of a frame; nothing else may be cut. */
+const MAY_BE_CUT: ReadonlySet<string> = new Set(['mark', 'arrow', 'pen']);
+
+/**
+ * NOTHING ON THE BOARD IS CUT IN HALF (small intestine and human heart,
+ * 2026-10-07).
+ *
+ * A frame zoomed onto a line's writing is padded and shaped to the screen, and
+ * that reached into whatever stood beside it: a page's title cut at both edges
+ * ("hemical Digestion in Small Intestin"), the top of a diagram sliced off
+ * above the key point under it. So whatever the frame cuts — of what is on the
+ * board (`onBoard`; without it, a page's titles) — is either moved off, the
+ * frame shifted the least it can while everything it frames stays in it, or
+ * taken in whole, the frame grown round it. Writing is shown whole or not at
+ * all, and a demonstration with the point written under it is shown together.
+ */
+function settle(
+  lesson: Lesson,
+  frame: Rect,
+  framed: readonly Rect[],
+  onBoard: readonly string[] | undefined,
+  reshape: (r: Rect) => Rect,
+): Rect {
+  const byId = new Map(lesson.elements.map((el) => [el.id, el]));
+  const there = onBoard
+    ? onBoard.map((id) => byId.get(id)).filter((el): el is NonNullable<typeof el> => el !== undefined)
+    : lesson.elements.filter((el) => el.kind === 'title');
+  // A frame round what is framed may cut what holds it — a card's border, a
+  // table's frame — and taking that in would zoom out from the very writing
+  // the line is about.
+  const whole = there
+    .filter((el) => !MAY_BE_CUT.has(el.kind))
+    .map(boxOf)
+    .filter((b) => !framed.some((r) => holds(b, r)));
+  let f = frame;
+  for (let round = 0; round < 4; round += 1) {
+    const cut = whole.find((b) => cutBy(b, f));
+    if (!cut) return f;
+    const moves = [
+      { ...f, y: cut.y + cut.h + 2 },
+      { ...f, y: cut.y - f.h - 2 },
+      { ...f, x: cut.x + cut.w + 2 },
+      { ...f, x: cut.x - f.w - 2 },
+    ].filter((m) => m.y >= 0 && m.y + m.h <= lesson.canvas.h && framed.every((b) => holds(m, b)));
+    const nearest = moves.sort((a, b) => Math.hypot(a.x - f.x, a.y - f.y) - Math.hypot(b.x - f.x, b.y - f.y))[0];
+    f = nearest ?? reshape(union(f, cut));
+  }
+  return f;
 }

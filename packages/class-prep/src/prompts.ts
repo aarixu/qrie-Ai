@@ -1,5 +1,6 @@
 import { TUTOR } from '@ai-tutor/persona';
 import type { VisualBrief } from './types.ts';
+import { recipeLines, toolkitPrompt } from './toolPrompt.ts';
 
 /**
  * WHICH LANGUAGE THE TUTOR SPEAKS IN — never which language the app is in.
@@ -249,6 +250,7 @@ demonstration that kind wants. Never mix two kinds on one board.
 - A definition or a law: write it by hand, once, large, then box it. Maybe one card.
 - A quantity that varies: a chart of amounts, or a plot when it follows a
   formula (a straight line, a parabola, a wave).
+${recipeLines()}
 - A thing with internal structure (a cell, a cross-section): one
   \`diagram\` with named parts, then point at the parts one at a time.
 
@@ -277,9 +279,12 @@ Like this — the words and the drawing arriving together:
   {"do":"say","text":"Water falls the whole way on its own."}
   {"do":"connect","from":"top","to":"tap","label":"water falls","tone":"accent"}
 
-Use everyday nouns. A picture library is searched for each one; anything it
-lacks is drawn as a pencilled circle with the word inside, so prefer the
-concrete word — place a "leaf", not "photosynthesis".
+Use everyday nouns for real things. Each is shown as a real photograph of it
+when one is found — a person running, a heart model, a bus, a leaf — checked
+against the lesson, and as a small drawing only when none is. So prefer the
+concrete word — place a "leaf", not "photosynthesis". In the opening, place the
+real example you ask about, as it looks in life (the student running for the
+bus), so the class starts on something real, never on a cartoon.
 
 ### Writing things down. Use this whenever you name more than two of anything.
 
@@ -296,6 +301,8 @@ concrete word — place a "leaf", not "photosynthesis".
 - {"do":"diagram","ref"}                A generated picture, by the id of its brief below. Only for things with internal structure worth pointing inside — a cell, a cross-section, a graph.
 - {"do":"point","ref","part"}           Light one named part of that picture, dim the rest.
 - {"do":"sketch","ref","from":"<picture>#<part>"}   A SMALL DRAWING beside the picture, with a long arrow from the part it explains. The textbook zoom-in: the photo shows the glass; what is inside the water — tiny particles — is a sketch next to it. ref is a diagram brief; keep it simple, a few shapes, and give its moving parts motion.
+
+${toolkitPrompt()}
 
 ### Last resorts, for ideas with no physical shape
 
@@ -374,6 +381,12 @@ and she circles the parts.
   where each named part sits, what connects to what. For a picture, the
   SUBJECT: what it is, how it is cut or posed, what must be visible. Never ask
   for text inside either — the board writes its own labels.
+- \`"motion":true\` on a picture whose lesson IS the movement — a heart
+  pumping, a person running, a pendulum swinging, lava flowing. A short silent
+  video of the real thing is found for it and plays on the board while she
+  talks. Give such a picture no parts (\`"parts":[]\`): nothing in a moving
+  picture holds still to be circled. If its parts must be named too, they go on
+  a separate still picture or diagram.
 
 A picture belongs to the THING it shows, not to a budget. When a lesson moves
 from one subject to a genuinely different one — epithelial tissue to connective
@@ -583,6 +596,100 @@ words per minute.
 
 Every "ref" in a beat must match a visual's id, and every "part" must be one of
 that visual's parts.`;
+
+/**
+ * THE PLANNER, FOR A COMPOSED BOARD (board composer, 2026-10-03).
+ *
+ * The same prompt with the rules that kept a board thin rewritten (one kind
+ * of demonstration, five things at most, a new page for every idea), and the
+ * page contract added. Each sentence replaced must still be in PLANNER_SYSTEM;
+ * if one has been reworded, this throws on its first call rather than asking
+ * for a full page and a thin one at once.
+ */
+const COMPOSED_SWAPS: readonly (readonly [string, string])[] = [
+  ['A good beat is 4 to 8 says over one board:', 'A good beat is 6 to 10 says over one board, each one adding to it:'],
+  [
+    'demonstration that kind wants. Never mix two kinds on one board.',
+    'MAIN demonstration that kind wants. One main demonstration a board; everything else on it is writing about that one.',
+  ],
+  [
+    'If a board would need more than one scene, more than five placed things, or a\nscene AND a chart, it is two beats pretending to be one — split it, or cut.',
+    'If a board would need two MAIN demonstrations — a scene and a chart, two pictures — it\nis two beats pretending to be one: split it. Writing never splits a board; the board\nhas room for it.',
+  ],
+  [
+    'Use it before a new idea rather than squeezing the idea in under the last one.',
+    'One beat is one subtopic on one page: use it only when a beat truly needs a second page.',
+  ],
+  ['Write generously — two to four key points in a beat.', 'Write generously — three to five key points in a beat.'],
+  [
+    'place with rows, then connect and annotate. Nothing else on the board.',
+    'place with rows, then connect and annotate; the notes, key points and summary go under it.',
+  ],
+  ['two to four in a beat is normal.', 'three to five in a beat is normal.'],
+];
+
+const PAGE_CONTRACT = `
+
+## Every board ends FULL — the page contract
+
+This class is drawn on a composed board. The page is divided into places: the
+main demonstration in one, the notes beside it, the key points under it, a
+summary in its own corner. What you write fills them, and a class that leaves
+a page half empty is not kept. So every board with a picture, a diagram, a
+chart, a flow, a scene or working on it carries ALL of this, built up line by
+line as she speaks:
+
+1. A title, with where it sits in the chapter:
+   {"do":"title","text":"Villi","path":["Digestive system","Small intestine","Villi"]}
+2. The main demonstration, with every part she names labelled on it.
+3. The notes: a "list" of each part's term and what it does, and why it is
+   built that way.
+4. Three to five key points, written as she says them ("write").
+5. A summary, last: {"do":"summary","text":"Villi absorb digested food fast"}.
+   One sentence a student would copy down, under 45 characters.
+
+The list of a picture's parts goes on the picture's own board, beside it — never
+on the next board: there it is a page of writing with nothing to explain.
+
+A board with no picture, scene, flow, chart, working or comparison is two
+columns of writing: the notes (a "list") in one, three to five key points in the
+other, and the summary. Most subtopics have something to show; when this one
+does, give the board that demonstration instead.
+
+Ask before you show. Nothing on the board while she asks may give the answer
+away — no picture's name, label, key point or list item that says it. What
+answers the question is placed or written after a say that follows the ask.
+
+A placed "noun" names the same thing as its label, as concretely as the subject
+allows: an organ by its organ's name ("duodenum", "liver"), never by its shape
+("tube", "bag"). It is shown as a real photograph of that thing when one is
+found, and drawn only when none is.
+
+Every beat is written as {"do":"say"} lines with the board between them: a line,
+then what she writes while saying it, then the next line.
+Leave "narration" empty. A beat with no line arrives on the board all at once,
+the camera has to show the whole page, and on a phone that writing is too small
+to read.
+
+For "the difference between X and Y" there is a comparison:
+{"do":"compare","left":{"heading":"Aerobic","points":["uses oxygen","much energy"]},"right":{"heading":"Anaerobic","points":["no oxygen","little energy"]}}
+Two to six points a side; point n on the left answers point n on the right. On
+a board with a picture, a scene or working it is a section of that page,
+written under it ("without villi" against "with villi" under the villus); on a
+board with nothing else it is the main demonstration.
+
+The board colours each part you label, and that part's name in the notes, in
+the same colour. You never name a colour.`;
+
+export function plannerSystemFor(composed: boolean): string {
+  if (!composed) return PLANNER_SYSTEM;
+  let text = PLANNER_SYSTEM;
+  for (const [from, to] of COMPOSED_SWAPS) {
+    if (!text.includes(from)) throw new Error(`plannerSystemFor: the planner prompt no longer says "${from.slice(0, 50)}…"`);
+    text = text.replace(from, to);
+  }
+  return text + PAGE_CONTRACT;
+}
 
 /** What the map says this topic is FOR — the ids a beat may claim to teach. */
 export interface TopicOutcome {

@@ -1,14 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Lesson } from '@ai-tutor/lesson-format';
-import { Scene, computeVisible } from '@ai-tutor/stage';
+import { CreditsList, Scene, computeVisible } from '@ai-tutor/stage';
 import { usePlayer, createBrowserTts } from '@ai-tutor/player';
 import type { PrepProgress, PrepReport } from '@ai-tutor/class-prep';
 import { prepareLiveClass } from '../lib/liveClass';
+import { toolkitDemoLesson } from '../lib/toolkitDemo';
+import { composerDemoLesson } from '../lib/composerDemo';
 
 export function CanvasLab() {
   const [topic, setTopic] = useState('Speed: distance divided by time');
   const [klass, setKlass] = useState(9);
   const [minutes, setMinutes] = useState(2);
+  /** Prepare for the composed board (board composer): on here, where real composed classes are measured. */
+  const [composed, setComposed] = useState(true);
 
   const [progress, setProgress] = useState<PrepProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -17,13 +21,19 @@ export function CanvasLab() {
     assets: Record<string, string>;
     report: PrepReport;
   } | null>(null);
+  /** The toolkit on one board, assembled here with no model call. */
+  const [demo, setDemo] = useState<ReturnType<typeof toolkitDemoLesson> | null>(null);
+  /** The composed board on three pages, assembled here with no model call. */
+  const [composedDemo, setComposedDemo] = useState<ReturnType<typeof composerDemoLesson> | null>(null);
 
   const run = useCallback(async () => {
     setError(null);
     setPrepared(null);
+    setDemo(null);
+    setComposedDemo(null);
     setProgress({ phase: 'planning', message: 'Starting…', done: 0 });
     try {
-      setPrepared(await prepareLiveClass({ topic, klass, minutes }, setProgress));
+      setPrepared(await prepareLiveClass({ topic, klass, minutes, composed }, setProgress));
     } catch (e) {
       // The whole error, stack included: this is the lab, and a message alone
       // ("cannot read trim") names no file.
@@ -31,7 +41,7 @@ export function CanvasLab() {
       setError(e instanceof Error ? e.message : String(e));
       setProgress(null);
     }
-  }, [topic, klass, minutes]);
+  }, [topic, klass, minutes, composed]);
 
   return (
     <main style={S.page}>
@@ -69,8 +79,31 @@ export function CanvasLab() {
             style={{ ...S.input, width: 56 }}
           />
         </label>
+        <label style={S.muted}>
+          <input type="checkbox" checked={composed} onChange={(e) => setComposed(e.target.checked)} /> Composed board
+        </label>
         <button onClick={run} disabled={progress !== null && progress.phase !== 'done'} style={S.primary}>
           {progress && progress.phase !== 'done' ? 'Preparing…' : 'Prepare the class'}
+        </button>
+        <button
+          onClick={() => {
+            setPrepared(null);
+            setComposedDemo(null);
+            setDemo(toolkitDemoLesson());
+          }}
+          style={S.button}
+        >
+          Toolkit demo (₹0)
+        </button>
+        <button
+          onClick={() => {
+            setPrepared(null);
+            setDemo(null);
+            setComposedDemo(composerDemoLesson());
+          }}
+          style={S.button}
+        >
+          Composer demo (₹0)
         </button>
       </div>
 
@@ -81,6 +114,25 @@ export function CanvasLab() {
         <>
           <Board lesson={prepared.lesson} assets={prepared.assets} />
           <Report report={prepared.report} lesson={prepared.lesson} />
+        </>
+      )}
+      {demo && (
+        <>
+          <Board lesson={demo.lesson} assets={{}} />
+          <p style={S.muted}>
+            Gate: {demo.problems.length === 0 ? 'no problems' : demo.problems.map((p) => `${p.rule}@${p.where}`).join(', ')}
+          </p>
+        </>
+      )}
+      {composedDemo && (
+        <>
+          <Board lesson={composedDemo.lesson} assets={composedDemo.assets} />
+          <p style={S.muted}>
+            Pages: {composedDemo.pages.map((p) => `${p.plannerBeat} ${Math.round(p.coverage * 100)}%`).join(' · ')} · Gate:{' '}
+            {composedDemo.problems.length === 0
+              ? 'no problems'
+              : composedDemo.problems.map((p) => `${p.rule}@${p.where}`).join(', ')}
+          </p>
         </>
       )}
     </main>
@@ -98,7 +150,8 @@ function Preparing({ progress }: { progress: PrepProgress }) {
   );
 }
 
-function Board({ lesson, assets }: { lesson: Lesson; assets: Record<string, string> }) {
+/** The board and its controls, for a class already prepared — the lab's, or one played from a file (viewer). */
+export function Board({ lesson, assets }: { lesson: Lesson; assets: Record<string, string> }) {
   // Browser speech: the voice does not matter here, only that the board waits
   // for it the way it will wait for a real one.
   const tts = useMemo(() => createBrowserTts({ lang: 'en-IN' }), []);
@@ -139,6 +192,8 @@ function Board({ lesson, assets }: { lesson: Lesson; assets: Record<string, stri
           {player.beatIndex + 1}/{lesson.beats.length}
         </code>
       </div>
+
+      <CreditsList lesson={lesson} style={{ margin: '6px 0' }} />
 
       <p style={S.caption}>{player.caption}</p>
       <p style={S.muted}>

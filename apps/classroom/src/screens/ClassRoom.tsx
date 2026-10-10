@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { hasMath, type Beat, type Lesson } from '@ai-tutor/lesson-format';
-import { Scene } from '@ai-tutor/stage';
+import { CreditsList, Scene, creditsOf } from '@ai-tutor/stage';
 import { usePlayer, type TtsAdapter } from '@ai-tutor/player';
 import {
   buildContext,
@@ -386,6 +386,8 @@ export function ClassRoom({
    * replaced by the support screen. Null for every ordinary moment of a class.
    */
   const [support, setSupport] = useState<string | null>(null);
+  /** Whether the picture credits are open over the board (CreditsList). */
+  const [showCredits, setShowCredits] = useState(false);
 
   /**
    * ONE HALT, FOR EVERY WAY INTO THE CLASS, AND EVERYTHING SHE SAYS GOES
@@ -2321,6 +2323,29 @@ export function ClassRoom({
       className={`relative bg-white overflow-hidden ${sideways ? '' : 'w-full aspect-video flex-shrink-0'}`}
     >
       <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
+
+      {/* Whose pictures these are, with the links their licences ask for: a
+          small control in the corner, opened on a tap (review, 2026-10-08). */}
+      {!joining && creditsOf(board.sceneLesson).length > 0 && (
+        <div className="absolute left-2 bottom-2 z-10 max-w-[75%]">
+          {showCredits ? (
+            <div className="rounded-md bg-white/95 p-2 shadow">
+              <CreditsList lesson={board.sceneLesson} />
+              <button type="button" onClick={() => setShowCredits(false)} className="mt-1 text-[11px] text-slate-600 underline">
+                Close
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowCredits(true)}
+              className="rounded bg-white/80 px-1.5 py-0.5 text-[10px] text-slate-600"
+            >
+              Picture credits
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Joining: the room readies itself, then the class begins on its own. */}
       {joining && (

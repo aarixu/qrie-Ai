@@ -77,9 +77,11 @@ of this document takes them apart.
   (`packages/relay/src/vertex.ts:42-47`, enforced `:359`) means a leaked relay URL cannot
   reach an expensive model at all. `CAP_OUTPUT_TOKENS = 24_000` (`vertex.ts:58`, applied
   `:188-189`) bounds a single call. `MAX_CLASS_BYTES` (`packages/relay/src/relays.ts:381`,
-  enforced `:429`) and `MAX_REQUEST_BYTES` (`vertex.ts:69`, enforced `handler.ts:269`) bound a
-  body, and the docblock at `relays.ts:416-425` says outright that it exists because the daily
-  budget allows six hundred of them.
+  enforced `:429`) bounds a body, and the docblock at `relays.ts:416-425` says outright that it
+  exists because the daily budget allows six hundred of them. `MAX_REQUEST_BYTES` (256 KB,
+  `vertex.ts`) bounds the TEXT of an llm call; one picture a call rides beside it up to
+  `MAX_PICTURE_BYTES` (4 MB), billed by its tiles rather than its bytes, so the most one call
+  can carry is about 4.25 MB (`vertex.ts` `oversized`, enforced in `handler.ts`'s llm branch).
 - **The books exist and re-price history correctly.** `usage_event` holds quantities,
   `model_price` holds rupees versioned by `effective_from`, `price_at` resolves a price as
   of a call, and `usage_cost`, `session_cost` and `cost_per_student_hour` are read-time joins

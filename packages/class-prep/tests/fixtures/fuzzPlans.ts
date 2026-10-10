@@ -17,7 +17,7 @@ type Part = { name: string; x: number; y: number; w: number; h: number };
 
 export function fuzzPlan(
   seed: number,
-  opts: { smartBoard?: boolean } = {},
+  opts: { smartBoard?: boolean; tools?: boolean; composed?: boolean } = {},
 ): {
   plan: Blueprint;
   drawn: Set<string>;
@@ -176,5 +176,57 @@ export function fuzzPlan(
       ],
     });
   }
-  return { plan: { id: `fuzz-${seed}`, title: 'Fuzz', visuals, beats }, drawn, parts, shapes };
+
+  /**
+   * The toolkit (canvas toolkit part 1): one tool a beat, each with a line long
+   * enough for it to draw, so the measured numbers say what layout and the gate
+   * do with tools rather than what a too-short line does.
+   */
+  if (opts.tools) {
+    const b = beats.length;
+    const sliceCount = int(2, 5);
+    const shares = Array.from({ length: sliceCount }, () => int(5, 40));
+    const total = shares.reduce((a, v) => a + v, 0);
+    const slices = shares.map((v, k) => ({ label: `part ${k + 1}`, value: Number(((v / total) * 100).toFixed(1)) }));
+    slices[0].value = Number((100 - slices.slice(1).reduce((a, s) => a + s.value, 0)).toFixed(1));
+    const labels = Array.from({ length: int(3, 8) }, (_, k) => `t${k + 1}`);
+    const [p, q] = [int(2, 9), int(1, 20)];
+    const answer = int(1, 12);
+    const toolBeats: Instruction[][] = [
+      [{ do: 'say', text: sentence(90, 120) }, { do: 'pieChart', slices, percent: true }],
+      [{ do: 'say', text: sentence(90, 120) }, { do: 'lineChart', labels, series: [{ name: 'value', values: labels.map(() => int(1, 50)) }] }],
+      [
+        { do: 'say', text: sentence(90, 120) },
+        { do: 'equationMove', steps: [`${p}x + ${q} = ${p * answer + q}`, `${p}x = ${p * answer + q} - ${q}`, `${p}x = ${p * answer}`, `x = ${answer}`] },
+      ],
+    ];
+    toolBeats.forEach((board, k) => {
+      beats.push({ id: `b${b + k + 1}`, topic: `Part ${b + k + 1}`, narration: '', board: [...board, ...ask()] });
+    });
+  }
+  const plan: Blueprint = { id: `fuzz-${seed}`, title: 'Fuzz', visuals, beats };
+  /**
+   * A composed board, written the way the page contract asks (board
+   * composer, prompts.ts PAGE_CONTRACT): every title with its path, and every
+   * beat ending with its notes (a list of three terms and what they do), at
+   * least three key points, and a summary.
+   */
+  if (opts.composed) {
+    plan.layout = 'composed';
+    for (const b of plan.beats) {
+      b.board = b.board.map((step) => (step.do === 'title' ? { ...step, path: ['Chapter', step.text] } : step));
+      const written = b.board.filter((step) => step.do === 'write').length;
+      b.board.push(
+        { do: 'say', text: sentence(20, 50) },
+        {
+          do: 'list',
+          heading: phrase(8, 20),
+          items: [1, 2, 3].map(() => ({ term: phrase(6, 14), meaning: phrase(18, 36) })),
+        },
+      );
+      for (let k = written; k < 3; k += 1) b.board.push({ do: 'say', text: sentence(20, 50) }, { do: 'write', text: sentence(18, 40) });
+      b.board.push({ do: 'say', text: sentence(20, 50) }, { do: 'summary', text: sentence(18, 40) });
+    }
+  }
+  return { plan, drawn, parts, shapes };
 }

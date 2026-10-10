@@ -4,7 +4,7 @@
  * Two problems fixed at once.
  *
  * DEVANAGARI. The classes are Hinglish — "अब देखो epithelial tissue को" is a
- * normal line here — and Quicksand, Lexend and Caveat carry no Devanagari at
+ * normal line here — and Quicksand and Lexend carry no Devanagari at
  * all. Those words were falling through to whatever the operating system
  * happened to have, which changes weight, width and baseline in the middle of
  * a sentence. That does not read as a style choice; it reads as broken.
@@ -26,7 +26,6 @@
  */
 import '@fontsource-variable/quicksand';
 import '@fontsource-variable/lexend';
-import '@fontsource-variable/caveat';
 // Only the weights the type scale actually uses, and only Devanagari: the
 // Latin in these families would never be reached, and shipping it would be
 // two more font files for nothing.
