@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
-import { privacyContact, privacyNotice } from '@ai-tutor/lms-client'
+import { privacyContact, privacyHost, privacyNotice } from '@ai-tutor/lms-client'
 import { backend } from '@/lib/backend'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
@@ -17,6 +17,8 @@ export function Privacy() {
     // index.html loads no web fonts (tests/privacy.test.tsx).
     googleFonts: false,
     contact: privacyContact(import.meta.env.VITE_QRIE_PRIVACY_CONTACT),
+    webHost: privacyHost(import.meta.env.VITE_QRIE_WEB_HOST),
+    backupHost: privacyHost(import.meta.env.VITE_QRIE_BACKUP_HOST),
   })
 
   return (

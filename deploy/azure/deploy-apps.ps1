@@ -11,9 +11,14 @@
      or a publishable key (sb_publishable_...); a service-role or secret key
      stops the script.
   2. Builds apps/lms (teacher.<domain>) and apps/student (app.<domain>) with
-     `npx vite build` and VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY and
-     VITE_QRIE_PRIVACY_CONTACT. VITE_QRIE_RELAY_URL and VITE_QRIE_DEMO_URL
-     are left unset, and the script stops if an app's .env file sets either.
+     `npx vite build` and VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY,
+     VITE_QRIE_PRIVACY_CONTACT and VITE_QRIE_WEB_HOST=Microsoft Azure, so
+     that their privacy notice names the server the pages come from. With
+     -BackupsOn, also VITE_QRIE_BACKUP_HOST=Microsoft Azure, so that it says
+     the nightly backups are kept there. VITE_QRIE_RELAY_URL,
+     VITE_QRIE_DEMO_URL and, without -BackupsOn, VITE_QRIE_BACKUP_HOST are
+     left unset, even when the shell running the script sets them, and the
+     script stops if an app's .env file sets any of the three.
      With -AdminCheckout, it also builds apps/admin in that checkout
      (admin.<domain>) with VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY and
      VITE_ADMIN_ENV.
@@ -33,10 +38,15 @@
   known_hosts (README.md step 4). With a passphrase on the key and no
   ssh-agent, each of the two connections asks for it once.
 
+.PARAMETER BackupsOn
+  Give it once the nightly backup to Azure Blob Storage runs (README.md step
+  12): the apps' privacy notice then says the backups are kept with
+  Microsoft Azure. Without it, the notice says nothing of backups.
+
 .EXAMPLE
   .\deploy\azure\deploy-apps.ps1 -VmHost 20.0.0.10 -Domain example.in `
     -SupabaseUrl https://ueemqirxyrltdmqgnidy.supabase.co `
-    -SupabaseAnonKey <the anon key> -PrivacyContact 'privacy@example.in'
+    -SupabaseAnonKey <the anon key> -PrivacyContact 'privacy@example.in' -BackupsOn
 #>
 [CmdletBinding()]
 param(
@@ -45,6 +55,7 @@ param(
     [Parameter(Mandatory = $true)] [string] $SupabaseUrl,
     [Parameter(Mandatory = $true)] [string] $SupabaseAnonKey,
     [Parameter(Mandatory = $true)] [string] $PrivacyContact,
+    [switch] $BackupsOn,
     [string] $AdminCheckout,
     [ValidateSet('HOSTED', 'STAGING', 'DEMO', 'TEST')] [string] $AdminEnv = 'HOSTED',
     [string] $VmUser = 'qrie',
@@ -92,6 +103,50 @@ function Test-BuildContains([string] $Dist, [string] $Text) {
         if ([IO.File]::ReadAllText($file.FullName).Contains($Text)) { return $true }
     }
     return $false
+}
+
+# What the teacher and student apps are built with. VITE_QRIE_WEB_HOST and
+# VITE_QRIE_BACKUP_HOST are for their privacy notice: the VM serving the pages
+# is on Microsoft Azure, and the backups go to Azure Blob Storage only once
+# they run (-BackupsOn). No region: the notice names none.
+function Get-HostedEnv([string] $SupabaseUrl, [string] $AnonKey, [string] $PrivacyContact, [bool] $BackupsOn) {
+    $vars = @{
+        VITE_SUPABASE_URL         = $SupabaseUrl
+        VITE_SUPABASE_ANON_KEY    = $AnonKey
+        VITE_QRIE_PRIVACY_CONTACT = $PrivacyContact
+        VITE_QRIE_WEB_HOST        = 'Microsoft Azure'
+    }
+    if ($BackupsOn) { $vars['VITE_QRIE_BACKUP_HOST'] = 'Microsoft Azure' }
+    return $vars
+}
+
+# Every build variable a build here sets, or must be built without.
+function Get-BuildEnvNames {
+    return @(
+        'VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY', 'VITE_QRIE_PRIVACY_CONTACT',
+        'VITE_QRIE_WEB_HOST', 'VITE_QRIE_BACKUP_HOST', 'VITE_QRIE_RELAY_URL', 'VITE_QRIE_DEMO_URL', 'VITE_ADMIN_ENV'
+    )
+}
+
+# The environment one build runs in: every build variable cleared, whether
+# the shell or the build before set it, then this build's own.
+function Set-BuildEnv([hashtable] $Vars) {
+    foreach ($name in Get-BuildEnvNames) { [Environment]::SetEnvironmentVariable($name, $null, 'Process') }
+    foreach ($pair in $Vars.GetEnumerator()) { [Environment]::SetEnvironmentVariable($pair.Key, $pair.Value, 'Process') }
+}
+
+# Vite gives a variable already in the environment priority over its .env
+# files, but it cannot be told to ignore one a file sets. So the first of an
+# app's .env files that sets a variable the hosted build leaves out (or may:
+# VITE_QRIE_BACKUP_HOST without -BackupsOn), or $null.
+function Find-EnvFileSetting([string] $Dir) {
+    foreach ($name in '.env', '.env.local', '.env.production', '.env.production.local') {
+        $file = Join-Path $Dir $name
+        if ((Test-Path -LiteralPath $file) -and (Select-String -LiteralPath $file -Pattern '^\s*(VITE_QRIE_DEMO_URL|VITE_QRIE_RELAY_URL|VITE_QRIE_BACKUP_HOST)\s*=' -Quiet)) {
+            return $file
+        }
+    }
+    return $null
 }
 
 # The module script dist/index.html starts, e.g. /assets/index-AbC123.js.
@@ -176,11 +231,7 @@ foreach ($tool in 'node', 'npx.cmd', 'ssh', 'scp') {
 $Tar = Join-Path $env:SystemRoot 'System32\tar.exe'
 if (-not (Test-Path -LiteralPath $Tar)) { Stop-Deploy "Windows' tar.exe is missing ($Tar)." }
 
-$hostedEnv = @{
-    VITE_SUPABASE_URL         = $SupabaseUrl
-    VITE_SUPABASE_ANON_KEY    = $SupabaseAnonKey
-    VITE_QRIE_PRIVACY_CONTACT = $PrivacyContact
-}
+$hostedEnv = Get-HostedEnv $SupabaseUrl $SupabaseAnonKey $PrivacyContact $BackupsOn.IsPresent
 $apps = @(
     @{ Site = 'teacher'; Checkout = $Repo; Dir = (Join-Path $Repo 'apps\lms'); Env = $hostedEnv; WantsContact = $true },
     @{ Site = 'app'; Checkout = $Repo; Dir = (Join-Path $Repo 'apps\student'); Env = $hostedEnv; WantsContact = $true }
@@ -195,15 +246,12 @@ if ($AdminCheckout) {
     }
 }
 
-# Vite gives a variable already in the environment priority over its .env
-# files, but it cannot be told to ignore one a file sets. So a file that sets
-# either of these stops the deploy.
+# An .env file that would build in what the hosted build leaves out stops the
+# deploy (Find-EnvFileSetting).
 foreach ($app in $apps) {
-    foreach ($name in '.env', '.env.local', '.env.production', '.env.production.local') {
-        $file = Join-Path $app.Dir $name
-        if ((Test-Path -LiteralPath $file) -and (Select-String -LiteralPath $file -Pattern '^\s*(VITE_QRIE_DEMO_URL|VITE_QRIE_RELAY_URL)\s*=' -Quiet)) {
-            Stop-Deploy "$file sets VITE_QRIE_DEMO_URL or VITE_QRIE_RELAY_URL. Vite would build it in; take the line out for a hosted build."
-        }
+    $file = Find-EnvFileSetting $app.Dir
+    if ($file) {
+        Stop-Deploy "$file sets VITE_QRIE_DEMO_URL, VITE_QRIE_RELAY_URL or VITE_QRIE_BACKUP_HOST. Vite would build it in; take the line out for a hosted build."
     }
 }
 
@@ -211,7 +259,7 @@ $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $Work = Join-Path ([IO.Path]::GetTempPath()) "qrie-deploy-$stamp"
 New-Item -ItemType Directory -Path $Work | Out-Null
 
-$touched = 'VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY', 'VITE_QRIE_PRIVACY_CONTACT', 'VITE_QRIE_RELAY_URL', 'VITE_QRIE_DEMO_URL', 'VITE_ADMIN_ENV'
+$touched = Get-BuildEnvNames
 $saved = @{}
 foreach ($name in $touched) { $saved[$name] = [Environment]::GetEnvironmentVariable($name, 'Process') }
 
@@ -220,8 +268,7 @@ try {
     # Build and check every app before anything leaves the laptop.
     # -----------------------------------------------------------------------
     foreach ($app in $apps) {
-        foreach ($name in $touched) { [Environment]::SetEnvironmentVariable($name, $null, 'Process') }
-        foreach ($pair in $app.Env.GetEnumerator()) { [Environment]::SetEnvironmentVariable($pair.Key, $pair.Value, 'Process') }
+        Set-BuildEnv $app.Env
 
         Write-Host "[$($app.Site)] npx vite build in $($app.Dir)"
         Push-Location -LiteralPath $app.Dir

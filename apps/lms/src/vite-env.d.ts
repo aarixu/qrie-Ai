@@ -11,4 +11,8 @@ interface ImportMetaEnv {
   readonly VITE_QRIE_DEMO_URL?: string
   /** The email address the privacy notice gives for questions and requests; not set, it says to ask the school office. */
   readonly VITE_QRIE_PRIVACY_CONTACT?: string
+  /** Who runs the server this build's pages are served from, like "Microsoft Azure"; set, the privacy notice names it and its request log. */
+  readonly VITE_QRIE_WEB_HOST?: string
+  /** Who keeps the nightly backups of the database, like "Microsoft Azure"; set, the privacy notice says so. */
+  readonly VITE_QRIE_BACKUP_HOST?: string
 }

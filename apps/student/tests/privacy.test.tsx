@@ -24,9 +24,14 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
  *
  * The tests' `@` is the teacher app's, so every `@/` module the sign-in
  * screen and the notice reach is pointed back at the student app's own. The
- * header (components/shell.tsx) also reaches student modules the teacher app
- * has no file for, which this config cannot load at all, so its link is
- * checked in its source.
+ * header (components/shell.tsx) and the signed-in pages also reach student
+ * modules the teacher app has no file for, which this config cannot load at
+ * all, and so does the sign-in route (routes/sign-in.tsx). The header's link
+ * is checked in its source. Where the app's real route tree
+ * (routeTree.gen.ts) is loaded, its root and privacy routes are the real ones;
+ * the signed-in layout (routes/_app/route.tsx), its pages and the sign-in
+ * route are stand-ins at the same places, and the stand-in layout sends
+ * everyone to sign in, as the real one does someone signed out.
  */
 
 // Again after every reset, so each build's own backend is the one reached.
@@ -41,6 +46,7 @@ function pointAtStudentApp() {
   vi.doMock('@/components/ui/button', () => import('../src/components/ui/button'))
   vi.doMock('@/components/ui/input', () => import('../src/components/ui/input'))
   vi.doMock('@/components/ui/label', () => import('../src/components/ui/label'))
+  vi.doMock('@/features/privacy', () => import('../src/features/privacy'))
 }
 
 const PROJECT = 'https://abcdefghijklmnopqrst.supabase.co'
@@ -64,11 +70,15 @@ function demoBuild(contact = '') {
   vi.stubEnv('VITE_SUPABASE_URL', '')
   vi.stubEnv('VITE_SUPABASE_ANON_KEY', '')
   vi.stubEnv('VITE_QRIE_PRIVACY_CONTACT', contact)
+  vi.stubEnv('VITE_QRIE_WEB_HOST', '')
+  vi.stubEnv('VITE_QRIE_BACKUP_HOST', '')
 }
-function hostedBuild(url = PROJECT) {
+function hostedBuild(url = PROJECT, hosts: { web?: string; backup?: string } = {}) {
   vi.stubEnv('VITE_SUPABASE_URL', url)
   vi.stubEnv('VITE_SUPABASE_ANON_KEY', 'anon-key-for-tests')
   vi.stubEnv('VITE_QRIE_PRIVACY_CONTACT', '')
+  vi.stubEnv('VITE_QRIE_WEB_HOST', hosts.web ?? '')
+  vi.stubEnv('VITE_QRIE_BACKUP_HOST', hosts.backup ?? '')
 }
 
 /** The app's sign-in screen and notice at the paths routeTree.gen.ts gives them; Home stands in for the rest. */
@@ -102,13 +112,101 @@ async function open(path: string) {
   return { host, router }
 }
 
+/** The signed-in pages under _app, each stood in for by a page at its own path. */
+const SIGNED_IN_PAGES = [
+  'index',
+  'progress',
+  'work',
+  'child.$studentId',
+  'homework.$assignmentId',
+  'learn.index',
+  'learn.practice',
+  'notices.index',
+  'notices.$noticeId',
+]
+
+/** The app's own route tree, routeTree.gen.ts, as main.tsx builds its router from it. */
+async function openApp(path: string) {
+  vi.resetModules()
+  pointAtStudentApp()
+  vi.doMock('@/components/ui/sonner', () => import('../src/components/ui/sonner'))
+  vi.doMock('../src/routes/_app/route', async () => {
+    const { createFileRoute, Outlet, redirect } = await import('@tanstack/react-router')
+    return {
+      Route: createFileRoute('/_app')({
+        beforeLoad: () => {
+          throw redirect({ to: '/sign-in' })
+        },
+        component: Outlet,
+      }),
+    }
+  })
+  vi.doMock('../src/routes/sign-in', async () => {
+    const { createFileRoute } = await import('@tanstack/react-router')
+    return { Route: createFileRoute('/sign-in')({ component: () => <p>Sign in</p> }) }
+  })
+  for (const page of SIGNED_IN_PAGES) {
+    vi.doMock(`../src/routes/_app/${page}`, async () => {
+      const { createFileRoute } = await import('@tanstack/react-router')
+      return { Route: createFileRoute(`/_app/${page}` as never)({ component: () => <p>Signed-in page</p> }) }
+    })
+  }
+  vi.stubGlobal('fetch', async () => new Response('{}', { status: 404 }))
+  const { routeTree } = await import('../src/routeTree.gen')
+  const queryClient = new QueryClient()
+  const router = createRouter({
+    routeTree,
+    context: { queryClient },
+    history: createMemoryHistory({ initialEntries: [path] }),
+  })
+  const host = document.body.appendChild(document.createElement('div'))
+  const reactRoot = createRoot(host)
+  roots.push(reactRoot)
+  await act(async () => {
+    reactRoot.render(
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    )
+  })
+  await act(async () => {
+    await router.load()
+  })
+  return { host, router }
+}
+
+describe('the privacy notice in the app’s own route tree', () => {
+  it('is a page of its own, outside the signed-in layout and with no guard of its own', async () => {
+    demoBuild()
+    const { router } = await openApp('/privacy')
+    const privacy = router.routesById['/privacy' as never] as
+      | { parentRoute: unknown; options: { beforeLoad?: unknown } }
+      | undefined
+    expect(privacy, 'a route whose id is /privacy').toBeDefined()
+    expect(privacy!.parentRoute).toBe(router.routesById['__root__' as never])
+    expect(privacy!.options.beforeLoad).toBeUndefined()
+  })
+
+  it('opens for someone signed out, where a signed-in page sends them to sign in', async () => {
+    demoBuild()
+    let { host, router } = await openApp('/')
+    expect(router.state.location.pathname).toBe('/sign-in')
+    expect(host.textContent).toBe('Sign in')
+    act(() => roots.pop()!.unmount())
+
+    ;({ host, router } = await openApp('/privacy'))
+    expect(router.state.location.pathname).toBe('/privacy')
+    expect(host.querySelector('h1')?.textContent).toBe('Privacy notice')
+  })
+})
+
 describe('the privacy notice', () => {
   it('opens without signing in', async () => {
     demoBuild()
     const { host, router } = await open('/privacy')
     expect(router.state.location.pathname).toBe('/privacy')
     expect(host.querySelector('h1')?.textContent).toBe('Privacy notice')
-    expect(host.textContent).toContain('Version of 10 October 2026')
+    expect(host.textContent).toContain('Version of 11 October 2026')
     expect(host.textContent).toContain('What is kept, and why')
     expect(host.querySelector('a[href="/"]')?.textContent).toContain('Back')
   })
@@ -164,6 +262,24 @@ describe('the privacy notice', () => {
     hostedBuild('http://192.168.1.5:54321')
     ;({ host } = await open('/privacy'))
     expect(host.textContent).not.toContain('https')
+  })
+
+  it('names the server its pages come from, and where backups are kept, only when built with them', async () => {
+    hostedBuild(PROJECT, { web: 'Microsoft Azure', backup: 'Microsoft Azure' })
+    let { host } = await open('/privacy')
+    expect(host.textContent).toContain('The app’s pages come from a server at Microsoft Azure, which keeps a log')
+    expect(host.textContent).toContain('is made and kept with Microsoft Azure.')
+    act(() => roots.pop()!.unmount())
+
+    hostedBuild(PROJECT, { web: 'Microsoft Azure' })
+    ;({ host } = await open('/privacy'))
+    expect(host.textContent).toContain('a server at Microsoft Azure')
+    expect(host.textContent).not.toContain('backup copy')
+    act(() => roots.pop()!.unmount())
+
+    hostedBuild()
+    ;({ host } = await open('/privacy'))
+    expect(host.textContent).not.toContain('Azure')
   })
 
   it('does not name Google Fonts: index.html loads nothing from there', async () => {

@@ -7,11 +7,12 @@
  * the apps. It says only what the code does today: it names no keeping
  * period, no automatic deletion and no country of hosting, because none is
  * built or confirmed. A sentence that is true of one build only — the demo
- * school, https, the teacher app's web fonts — is said only by that build,
- * from the options each app passes.
+ * school, https, the teacher app's web fonts, the server its pages come from,
+ * where backups are kept — is said only by that build, from the options each
+ * app passes.
  */
 
-export const PRIVACY_VERSION = 'Version of 10 October 2026';
+export const PRIVACY_VERSION = 'Version of 11 October 2026';
 
 export interface PrivacySection {
   heading: string;
@@ -41,6 +42,10 @@ export interface PrivacyOptions {
   googleFonts: boolean;
   /** The privacy contact's email address (privacyContact), or null. */
   contact: string | null;
+  /** Who runs the server the app's pages come from (privacyHost of VITE_QRIE_WEB_HOST), or null. */
+  webHost: string | null;
+  /** Who keeps the nightly backups of the database (privacyHost of VITE_QRIE_BACKUP_HOST), or null. */
+  backupHost: string | null;
 }
 
 const EMAIL = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
@@ -49,6 +54,12 @@ const EMAIL = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
 export function privacyContact(raw: string | null | undefined): string | null {
   const value = (raw ?? '').trim();
   return EMAIL.test(value) ? value : null;
+}
+
+/** A host's name an app was built with (VITE_QRIE_WEB_HOST, VITE_QRIE_BACKUP_HOST), trimmed; null when unset or blank. */
+export function privacyHost(raw: string | null | undefined): string | null {
+  const value = (raw ?? '').trim();
+  return value === '' ? null : value;
 }
 
 export function privacyNotice(o: PrivacyOptions): PrivacyNotice {
@@ -76,12 +87,13 @@ export function privacyNotice(o: PrivacyOptions): PrivacyNotice {
           'Your PIN — to sign you in. The school’s server keeps it only in scrambled form, never as the PIN itself. A new PIN is shown once, when it is made, so that it can be given to you.',
           'Counts of wrong PIN tries, for each ID and for each internet address sign-ins come from — to stop anyone guessing a PIN.',
           'Homework, tests and practice: the answers given in the app, ticks on notebook checklists, photos of written work, when a test was started and when work was handed in, marks, and teachers’ comments — so that teachers can mark work and report on it.',
-          'How well each chapter is known, as Qrie’s learning model works it out from those answers — so that students, parents and teachers can see what needs practice.',
+          'How well each chapter is known, as Qrie’s learning model works it out from those answers, and which common mistakes those answers show — so that students, parents and teachers can see what needs practice, and teachers can set practice on those mistakes.',
           'Attendance for each day it is marked, and the remark on the report card — to keep the school’s records and report to parents.',
           'Notices sent through the apps, any file sent with them, and who has opened each one — to reach students, parents and teachers.',
           'A photo of a student or teacher, if the school adds one — so that people can be recognised in the apps.',
           'Which parent is linked to which child — so that a parent sees only their own child.',
           'A log of changes the school’s staff make, such as adding people, giving new PINs, linking parents, sending notices and writing report remarks, with who made each change and when — so that the school can check who did what. Only the school admin sees it.',
+          'When a teacher or the school admin uses Draft with AI: a record of each request (who asked, when, which AI model answered, whether it worked, and how long the request and the answer were), and a running count of how much each person has used it that day — to keep the AI’s use and its cost within limits.',
         ],
       },
       {
@@ -97,7 +109,7 @@ export function privacyNotice(o: PrivacyOptions): PrivacyNotice {
       {
         heading: 'Draft with AI',
         paragraphs: [
-          'Teachers and the school admin can ask an AI to draft multiple-choice questions, in the Teacher app, when this is switched on for the school.',
+          'Teachers and the school admin can ask an AI to draft multiple-choice questions in the Teacher app, when Qrie has switched it on in the app.',
           'The request carries the class, subject, chapter and topic, how many questions to write, and the note the teacher writes; the app adds nothing about any child, so do not write about a child in the note. It goes to Gemini, Google’s AI model.',
           'The questions come back as drafts that only the teacher who asked can see. No child sees a draft until a teacher adds it. The Student and Parent app sends nothing to the AI.',
         ],
@@ -115,7 +127,7 @@ export function privacyNotice(o: PrivacyOptions): PrivacyNotice {
         heading: 'On your device',
         paragraphs: [
           'The app keeps your sign-in on this device until you sign out or it expires.',
-          'In the Student and Parent app, the answers chosen so far in a quiz or test, and work waiting for the internet (answers and photos), are kept on the device while they wait to be sent.',
+          'In the Student and Parent app, the answers chosen so far in a quiz or test are kept on the device until the quiz or test is handed in, and work waiting for the internet (answers and photos) until it is sent or the school turns it down. Signing out does not remove them; clearing the app’s data does.',
           'The Android apps keep all of this out of phone backups and out of transfers to a new phone.',
         ],
       },
@@ -124,6 +136,14 @@ export function privacyNotice(o: PrivacyOptions): PrivacyNotice {
         paragraphs: [
           'The school’s data is kept with Supabase, a cloud database service that Qrie uses to run the school’s server. Photos of written work are kept in its private file storage.',
           ...(o.https && !o.demo ? ['This app reaches it over https, which protects what it sends on the way.'] : []),
+          ...(o.backupHost
+            ? [`Each night a backup copy of the school’s data, without the photos and other files, is made and kept with ${o.backupHost}.`]
+            : []),
+          ...(o.webHost
+            ? [
+                `The app’s pages come from a server at ${o.webHost}, which keeps a log of the requests made to it, each with the internet address it came from.`,
+              ]
+            : []),
         ],
       },
       {

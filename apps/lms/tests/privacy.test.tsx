@@ -43,12 +43,16 @@ function demoBuild(contact = '') {
   vi.stubEnv('VITE_SUPABASE_ANON_KEY', '')
   vi.stubEnv('VITE_QRIE_RELAY_URL', '')
   vi.stubEnv('VITE_QRIE_PRIVACY_CONTACT', contact)
+  vi.stubEnv('VITE_QRIE_WEB_HOST', '')
+  vi.stubEnv('VITE_QRIE_BACKUP_HOST', '')
 }
-function hostedBuild(relay: string) {
+function hostedBuild(relay: string, hosts: { web?: string; backup?: string } = {}) {
   vi.stubEnv('VITE_SUPABASE_URL', PROJECT)
   vi.stubEnv('VITE_SUPABASE_ANON_KEY', 'anon-key-for-tests')
   vi.stubEnv('VITE_QRIE_RELAY_URL', relay)
   vi.stubEnv('VITE_QRIE_PRIVACY_CONTACT', '')
+  vi.stubEnv('VITE_QRIE_WEB_HOST', hosts.web ?? '')
+  vi.stubEnv('VITE_QRIE_BACKUP_HOST', hosts.backup ?? '')
 }
 
 /** The app's own sign-in and privacy routes, placed as routeTree.gen.ts places them. */
@@ -84,7 +88,7 @@ describe('the privacy notice', () => {
     const { host, router } = await open('/privacy')
     expect(router.state.location.pathname).toBe('/privacy')
     expect(host.querySelector('h1')?.textContent).toBe('Privacy notice')
-    expect(host.textContent).toContain('Version of 10 October 2026')
+    expect(host.textContent).toContain('Version of 11 October 2026')
     expect(host.textContent).toContain('What is kept, and why')
     expect(host.querySelector('a[href="/"]')?.textContent).toContain('Back')
   })
@@ -133,6 +137,24 @@ describe('the privacy notice', () => {
     hostedBuild('http://relay.example/functions/v1/relay')
     ;({ host } = await open('/privacy'))
     expect(host.textContent).not.toContain('https')
+  })
+
+  it('names the server its pages come from, and where backups are kept, only when built with them', async () => {
+    hostedBuild('', { web: 'Microsoft Azure', backup: ' Microsoft Azure ' })
+    let { host } = await open('/privacy')
+    expect(host.textContent).toContain('The app’s pages come from a server at Microsoft Azure, which keeps a log')
+    expect(host.textContent).toContain('is made and kept with Microsoft Azure.')
+    act(() => roots.pop()!.unmount())
+
+    hostedBuild('', { web: 'Microsoft Azure' })
+    ;({ host } = await open('/privacy'))
+    expect(host.textContent).toContain('a server at Microsoft Azure')
+    expect(host.textContent).not.toContain('backup copy')
+    act(() => roots.pop()!.unmount())
+
+    hostedBuild('')
+    ;({ host } = await open('/privacy'))
+    expect(host.textContent).not.toContain('Azure')
   })
 
   it('names Google Fonts because index.html loads its fonts from there', async () => {

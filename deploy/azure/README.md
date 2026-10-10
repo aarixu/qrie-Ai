@@ -361,6 +361,11 @@ From the repository's folder, after `npm run typecheck` (the deploy builds with
 To deploy the admin console as well, add `-AdminCheckout '<a checkout of the
 admin branch>'`; without it, only the teacher and student apps are deployed.
 
+Once the nightly backup runs (step 12), add `-BackupsOn` to every deploy: the
+apps' privacy notice then says the backups are kept with Microsoft Azure.
+Without it, the notice says nothing of backups, so the first deploy, before
+step 12, goes without it.
+
 If Windows refuses to run scripts: `powershell -ExecutionPolicy Bypass -File
 .\deploy\azure\deploy-apps.ps1 ...` (for that one run only).
 
@@ -368,11 +373,15 @@ What it does, and where it stops (`Get-Help .\deploy\azure\deploy-apps.ps1 -Full
 
 - It stops if the key is a service-role or secret key, or another project's.
 - It builds `apps/lms` and `apps/student` with `VITE_SUPABASE_URL`,
-  `VITE_SUPABASE_ANON_KEY` and `VITE_QRIE_PRIVACY_CONTACT`. `VITE_QRIE_DEMO_URL`
-  and `VITE_QRIE_RELAY_URL` stay unset, and it stops if an app's `.env` file
-  sets either. With no relay address, `supabaseBackend` answers "Draft with
-  AI" with "Drafting with AI is not switched on for this school yet."
-  (`packages/lms-client/src/backend.ts`). The admin console is built with
+  `VITE_SUPABASE_ANON_KEY`, `VITE_QRIE_PRIVACY_CONTACT` and
+  `VITE_QRIE_WEB_HOST=Microsoft Azure` (the privacy notice then names the
+  server the pages come from and its request log), and with `-BackupsOn`
+  `VITE_QRIE_BACKUP_HOST=Microsoft Azure`. `VITE_QRIE_DEMO_URL`,
+  `VITE_QRIE_RELAY_URL` and, without `-BackupsOn`, `VITE_QRIE_BACKUP_HOST`
+  stay unset, even when the PowerShell window sets them, and it stops if an
+  app's `.env` file sets any of the three. With no relay address,
+  `supabaseBackend` answers "Draft with AI" with "Drafting with AI is not
+  switched on for this school yet." (`packages/lms-client/src/backend.ts`). The admin console is built with
   `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` and `VITE_ADMIN_ENV=HOSTED`.
 - It stops if a build does not contain the Supabase address, and warns if the
   teacher or student build does not contain the privacy contact.
@@ -458,7 +467,8 @@ as a user systemd makes for the run, not as root. If `pg_dump` stops with
 `BACKUP_EXCLUDE_SCHEMAS` in `backup.env` (never `lms`, `public` or `auth`) and
 run it again. Setting that variable replaces the script's own list, so start
 from the list in `backup.env.example` and add to it. Then do
-`RESTORE-DRILL.md` once.
+`RESTORE-DRILL.md` once, and deploy the apps again with `-BackupsOn` (step 10),
+so that their privacy notice says where the backups are kept.
 
 While the upload runs, any account on the VM can read the SAS on azcopy's
 command line (the database password goes to pg_dump and psql through the
@@ -568,8 +578,10 @@ runbook will say how it runs here.
 - **The teacher app's fonts come from Google** (step 8), so Google Fonts sees
   teachers' addresses.
 - **Microsoft Azure is a new sub-processor.** The security review's list
-  (part 2) names Supabase, Google Cloud and Vercel; the school's contract and
-  the privacy notice should name Azure, Central India, for hosting and backups.
+  (part 2) names Supabase, Google Cloud and Vercel; the school's contract
+  should name Azure, Central India, for hosting and backups. The privacy
+  notice names Microsoft Azure, without a region, for the apps' pages and,
+  with `-BackupsOn`, for the backups (step 10).
 - **lms-signin's per-address limit** depends on an address header nobody has
   checked yet (step 9.6).
 - **Deploys come from the laptop**, built from whatever the checkout holds;
@@ -590,9 +602,12 @@ On the laptop, on 2026-10-10:
 - `bash deploy/azure/tests/qrie-backup.test.sh`: the backup's handling of the
   database address and its refusals of bad settings (10 checks).
 - `powershell -NoProfile -ExecutionPolicy Bypass -File deploy\azure\tests\deploy-apps.test.ps1`
-  in Windows PowerShell 5.1: the key checks, finding the entry script and the
-  project address in a build, and `check-bundle-secrets` passing a clean build
-  and stopping on a planted key (14 checks).
+  in Windows PowerShell 5.1 (run again on 2026-10-11): the key checks, the
+  teacher and student builds' variables with and without `-BackupsOn`,
+  clearing build variables the shell set, finding an `.env` file that sets one
+  the hosted build leaves out, finding the entry script and the project
+  address in a build, and `check-bundle-secrets` passing a clean build and
+  stopping on a planted key (26 checks).
 
 **Not run:** anything on a VM; `nginx -t` on the rendered files; certbot;
 `setup-server.sh` itself; `pg_dump`, `psql` or azcopy against the real
