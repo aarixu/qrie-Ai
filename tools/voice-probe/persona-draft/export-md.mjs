@@ -1,16 +1,16 @@
-﻿import { buildMeera, MOVES } from './meera.mjs';
+// Writes the readable copy of the persona draft: node export-md.mjs <out.md>
+import { CORE, likesBlock, safetyBlock, LANGUAGE, SPEAKING, MOVES, learnerLines } from './meera.mjs';
 import { writeFileSync } from 'node:fs';
-const lesson = { subject:'{subject}', title:'{lesson title}', beatTopic:'{beat topic}', outcome:'{what this beat is for}', schoolChapter:'{their school chapter, if known}', transcriptSoFar:'{what the class has covered so far}', onScreen:['{board element ids}'] };
-const hi = buildMeera({ move:'ANSWER_NUDGE', student:{klass:10, language:'hi-en', namedMisconception:'{wrong idea, if known}', notes:['{memory note, e.g. interests}']}, lesson, surface:'voice', rung:undefined, because:'{one line from the conductor}', payload:{ question:'{prepared question}', expected:'{expected answer}', wrongIdeas:['{wrong idea}'] } });
-const en = buildMeera({ move:'ANSWER_NUDGE', student:{klass:10, language:'en'}, lesson, surface:'voice' });
-const idx = hi.indexOf('WHICH LANGUAGE YOU SPEAK');
-const idx2 = hi.indexOf('HOW TO SPEAK');
-const core = hi.slice(0, idx);
-const langHi = hi.slice(idx, idx2);
-const enIdx = en.indexOf('WHICH LANGUAGE YOU SPEAK'); const langEn = en.slice(enIdx, en.indexOf('HOW TO SPEAK'));
-const speak = hi.slice(idx2, hi.indexOf('THIS STUDENT'));
-const turnBlocks = hi.slice(hi.indexOf('THIS STUDENT'));
-let md = `# Meera: persona prompt, draft v2 (2026-10-07)\n\nWritten from the LAM brief for Aarav. Fixed core first (cacheable), then the per-turn blocks, then ONE move card chosen by the conductor, always last.\nTested on the real model (gemini-3.7-flash, Vertex): 38 situations x 5 draws. About 2,400 tokens for Hinglish, 2,250 for English.\n\n---\n\n## 1. The fixed core (every turn)\n\n\`\`\`\n${core.trim()}\n\`\`\`\n\n## 2. Language block (the student chose one)\n\n### Hinglish\n\n\`\`\`\n${langHi.trim()}\n\`\`\`\n\n### English\n\n\`\`\`\n${langEn.trim()}\n\`\`\`\n\n## 3. How she speaks (voice)\n\n\`\`\`\n${speak.trim()}\n\`\`\`\n\n## 4. Per-turn blocks, filled by the app (shown with placeholders)\n\n\`\`\`\n${turnBlocks.trim()}\n\`\`\`\n\n## 5. The moves (the conductor picks one per turn; she picks only the words)\n\n`;
+
+const fence = (s) => '```\n' + s.trim() + '\n```';
+let md = `# Meera: persona, draft v3 (2026-10-10)\n\nSmall and composed. The CORE goes into every model call (planner, judge, close, doubt, live). Everything else is a block that is added only where it is needed. Nothing here says who the learner is: the app injects one line from the profile.\n\n`;
+md += `## 1. Core (every call)\n\n${fence(CORE)}\n\n`;
+md += `## 2. Her likes (doubt and live only; stable, edit the list in the code)\n\n${fence(likesBlock())}\n\n`;
+md += `## 3. Safety backstop (every call; the real crisis reply is code)\n\nSpoken surfaces get the helpline as words only. Text surfaces get digits and words. Numbers come from a per-region table, not from the persona.\n\n${fence(safetyBlock('en', 'IN', 'voice'))}\n\n`;
+md += `## 4. Language (the student's setting; English is the default)\n\n### English\n\n${fence(LANGUAGE.en)}\n\n### Hinglish (only if chosen)\n\n${fence(LANGUAGE['hi-en'])}\n\n`;
+md += `## 5. How it is spoken\n\n### Voice\n\n${fence(SPEAKING.voice)}\n\n### Text\n\n${fence(SPEAKING.text)}\n\n`;
+md += `## 6. The learner (injected by the app; shown with an example)\n\n${fence(learnerLines({ klass: 10, namedMisconception: '{wrong idea, if known}', notes: ['{memory note}'] }).map((l) => '- ' + l).join('\n'))}\n\n`;
+md += `## 7. The moves (the conductor picks one per turn; she picks only the words)\n\nThe brief's list plus LIFT, CHAT and HOLD.\n\n`;
 for (const [k, v] of Object.entries(MOVES)) md += `**${k}**: ${v}\n\n`;
 writeFileSync(process.argv[2], md);
 console.log('written', md.length, 'chars');
