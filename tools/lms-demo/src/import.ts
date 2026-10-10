@@ -60,7 +60,11 @@ export async function importForAdmin(db: PGlite, caller: string, request: Import
   if (request.importKey !== undefined && (typeof request.importKey !== 'string' || !KEY.test(request.importKey))) {
     throw new ImportRefused(400, 'That import key is not one this server gives meaning to.');
   }
-  await adminOrg(db, caller, 'add people');
+  const org = await adminOrg(db, caller, 'add people');
+  // Offboarded, suspended or ended, and later the school's privacy decision
+  // (0063, lms.import_refusal): asked before anything is read.
+  const refusal = (await db.query<{ r: string | null }>(`select lms.import_refusal($1) as r`, [org])).rows[0]?.r;
+  if (refusal) throw new ImportRefused(409, refusal);
 
   const now = Date.now();
   for (const [k, v] of kept) if (v.until < now) kept.delete(k);
@@ -140,7 +144,8 @@ export async function resetPinForAdmin(
 /**
  * A child's parent, given their own sign-in by the admin (0045): an account
  * of kind 'parent' with the school's next P-number ID and an 8-digit PIN,
- * linked to the child. The PIN is returned this once.
+ * linked to the child. The PIN is returned this once. Refused (409, with the
+ * sentence) for a school that may not take new people (0063).
  */
 export async function addParentForAdmin(
   db: PGlite,
@@ -148,6 +153,10 @@ export async function addParentForAdmin(
   request: Record<string, unknown>,
 ): Promise<{ loginId: string; displayName: string; pin: string }> {
   const org = await adminOrg(db, caller, 'give a parent a sign-in');
+  // A parent's sign-in is a new person too: the same question as an import
+  // (0063, lms.import_refusal), asked before anything is read or made.
+  const refusal = (await db.query<{ r: string | null }>(`select lms.import_refusal($1) as r`, [org])).rows[0]?.r;
+  if (refusal) throw new ImportRefused(409, refusal);
   const name = typeof request.displayName === 'string' ? request.displayName.trim().replace(/\s+/g, ' ') : '';
   if (name.length < 1 || name.length > 80) throw new ImportRefused(400, "Write the parent's name, up to 80 letters.");
   const studentId = typeof request.studentLoginId === 'string' ? request.studentLoginId.trim().toUpperCase() : '';

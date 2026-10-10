@@ -1,9 +1,12 @@
 import { type LinkProps } from '@tanstack/react-router'
+import type { Me } from '@ai-tutor/admin-client'
 
 type BaseNavItem = {
   title: string
   badge?: string
   icon?: React.ElementType
+  /** Staff roles that see this item; absent = every staff role. The owner sees every item (as admin.require_staff lets the owner through). */
+  roles?: Me['role'][]
 }
 
 type NavLink = BaseNavItem & {

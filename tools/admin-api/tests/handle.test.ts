@@ -2,6 +2,7 @@
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { aal2, anonymousChild, fresh, makeStaff, setEnvironment, type Staff } from '../../../supabase/tests/admin-fixtures.ts';
+import { setLicence } from '../../../supabase/tests/admin-school-fixtures.ts';
 import { buildSchool, type School } from '../../../supabase/tests/fixtures.ts';
 import { freshDatabase } from '../../../supabase/tests/harness.ts';
 import { CallerError, handleAdminApi, SERVER_FAILED, type AdminApiDeps } from '../src/handle.ts';
@@ -124,6 +125,24 @@ describe('people', () => {
     );
     expect(r.status).toBe(400);
     expect(r.body.error).toMatch(/offboarded/);
+  });
+
+  it('a suspended school takes no new people from staff either, and checking a sheet is refused with the same sentence', async () => {
+    // The sentence of migration 0063 (admin.import_refusal).
+    const LAPSED =
+      "This school's licence has ended and its grace period is over, so no new people can be added until it is renewed.";
+    await buildSchool(db, 'API3');
+    await setLicence(db, 'API3', 100, -20);
+    const commit = await send(
+      'import',
+      { code: 'API3', students: SHEET, commit: true, acceptWarnings: true, reason: 'term starts', env: 'TEST' },
+      'ops-fresh',
+    );
+    expect(commit.status).toBe(400);
+    expect(commit.body.error).toBe(LAPSED);
+    const preview = await send('import', { code: 'API3', students: SHEET }, 'ops');
+    expect(preview.status).toBe(409);
+    expect(preview.body.error).toBe(LAPSED);
   });
 
   it('a teachers sheet is added by the owner only: ops get not-allowed and nobody is made (R22)', async () => {

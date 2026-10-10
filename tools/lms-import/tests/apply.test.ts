@@ -89,6 +89,50 @@ describe('applyPlan', () => {
   });
 });
 
+describe('a store that says the school may not import', () => {
+  // The sentence of migration 0063 (admin.import_refusal), as the hosted
+  // store's mayImport answers it for the founder's CLI (R24).
+  const LAPSED =
+    "This school's licence has ended and its grace period is over, so no new people can be added until it is renewed.";
+  const newcomer = () =>
+    planImport(
+      SCHOOL,
+      readStudents('grade,section,roll,name,admission_no\n8,A,3,Kabir,SR004\n').students,
+      readTeachers('name,teaches\n').teachers,
+    );
+  const dpsAccounts = () => count(`lms.account a join lms.school s on s.org_id = a.org_id where s.code = 'DPS'`);
+
+  it('applyPlan stops after naming the school and before anyone is made', async () => {
+    const accounts = await dpsAccounts();
+    const users = await count('auth.users');
+    const asked: string[] = [];
+    const refusing = {
+      ...pgliteStore(db),
+      mayImport: async (org: string) => {
+        asked.push(org);
+        return LAPSED;
+      },
+    };
+    await expect(applyPlan(newcomer(), refusing)).rejects.toThrow(LAPSED);
+    await expect(applyPlan(newcomer(), refusing)).rejects.toMatchObject({ message: LAPSED });
+    const dps = (await db.query<{ org_id: string }>(`select org_id from lms.school where code = 'DPS'`)).rows[0].org_id;
+    expect(asked).toEqual([dps, dps]);
+    expect(await dpsAccounts()).toBe(accounts);
+    expect(await count('auth.users')).toBe(users);
+
+    const allowing = { ...pgliteStore(db), mayImport: async () => null };
+    const done = await applyPlan(newcomer(), allowing);
+    expect(done.created.map((c) => c.loginId)).toEqual(['DPS-SR004']);
+    expect(await dpsAccounts()).toBe(accounts + 1);
+  });
+
+  it('a store without mayImport imports as before', async () => {
+    const again = await applyPlan(plan(), pgliteStore(db));
+    expect(again.created).toEqual([]);
+    expect(again.existing).toHaveLength(6);
+  });
+});
+
 describe('loginEmail', () => {
   it('is an address on a reserved domain that can never receive mail', () => {
     expect(loginEmail('DPS-SR001')).toBe('dps-sr001@login.qrie.invalid');

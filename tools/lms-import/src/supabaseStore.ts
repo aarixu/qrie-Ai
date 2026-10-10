@@ -163,5 +163,12 @@ export function supabaseStore(url: string, serviceKey: string, fetchImpl: typeof
         body: { org_id: org, academic_year_id: year, section_id: section, student_user_id: student, roll_number: roll },
       });
     },
+
+    // lms.import_refusal (0063): the sentence why this school may not take
+    // people, or null. A failed call throws, so the import stops unasked-for.
+    async mayImport(orgId) {
+      const r = await call('/rest/v1/rpc/import_refusal', { method: 'POST', profile: 'lms', body: { p_org: orgId } });
+      return typeof r === 'string' && r ? r : null;
+    },
   };
 }

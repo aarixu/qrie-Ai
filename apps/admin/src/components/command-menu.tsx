@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowRight, Laptop, Moon, School, Sun } from 'lucide-react';
 import { schools } from '@/lib/client';
+import { useMe } from '@/lib/me';
+import { navFor } from '@/lib/nav';
 import { useSearch } from '@/context/search-provider';
 import { useTheme } from '@/context/theme-provider';
 import {
@@ -17,14 +19,16 @@ import { sidebarData } from './layout/data/sidebar-data';
 import { ScrollArea } from './ui/scroll-area';
 
 /**
- * Ctrl+K: jump to any page, jump to a school (by its code or name: the list of
- * schools is read once, the first time the menu opens), or change the theme.
+ * Ctrl+K: jump to any page this role sees in the sidebar (lib/nav.ts), jump
+ * to a school (by its code or name: the list of schools is read once, the
+ * first time the menu opens), or change the theme.
  * A later plan may add "find a person".
  */
 export function CommandMenu() {
   const navigate = useNavigate();
   const { setTheme } = useTheme();
   const { open, setOpen } = useSearch();
+  const me = useMe();
   const [schoolList, setSchoolList] = React.useState<{ code: string; name: string }[] | null>(null);
 
   React.useEffect(() => {
@@ -47,7 +51,7 @@ export function CommandMenu() {
       <CommandList>
         <ScrollArea type='hover' className='h-72 pe-1'>
           <CommandEmpty>Nothing matches.</CommandEmpty>
-          {sidebarData.navGroups.map((group) => (
+          {navFor(me.role, sidebarData).map((group) => (
             <CommandGroup key={group.title} heading={group.title}>
               {group.items.map((item, i) =>
                 item.url ? (

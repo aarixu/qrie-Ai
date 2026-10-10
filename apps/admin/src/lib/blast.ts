@@ -3,7 +3,6 @@
  * action, shown at the top of every write dialog. Pure, so the wording that
  * matters (who is affected, what stops, what can be undone) is tested.
  */
-import { SWITCH_NOT_READ } from './confirm.ts';
 
 export function blastLicence(code: string, plan: string, seats: number, until: string, seatsUsed: number): string {
   const line = `${code}'s licence becomes ${plan}, ${seats} seats, until ${until}. The school admin sees it at once.`;
@@ -11,28 +10,33 @@ export function blastLicence(code: string, plan: string, seats: number, until: s
 }
 
 /**
- * Offboarding is a mark plus the school's tutor switch off (0053). admin-api's
- * gate refuses staff imports for the school; the school admin's own import in
- * the teacher app does not look at the mark.
+ * Offboarding is a mark plus the school's tutor switch off (0053). With 0063
+ * and 0064 the database refuses the school's children new tutor classes (the
+ * switch, in claim_relay) and refuses staff's imports (admin.api_gate); the
+ * school admin's imports and parent sign-ins are refused by the import code
+ * (tools/lms-import, tools/lms-demo), which asks admin.import_refusal through
+ * lms.import_refusal first. Bringing the school back clears the mark only;
+ * the tutor switch is the owner's to turn on.
  */
 export function blastOffboard(code: string, offboard: boolean): string {
   return offboard
-    ? `${code} is marked offboarded and its tutor switch is set off. Qrie staff cannot add people to it, but its school admin still can` +
-        ` in the teacher app, and no app reads the tutor switch yet (plan 4), so the tutor keeps working there until then.` +
-        ' Nothing is deleted: homework, marks and sign-ins stay.'
-    : `${code} is no longer marked offboarded. Its tutor switch stays off until the owner turns it on.`;
+    ? `${code} is marked offboarded and its tutor switch is set off: the database refuses its children new tutor classes,` +
+        ' and neither Qrie staff nor its school admin can add people to it. Nothing is deleted: homework, marks and sign-ins stay.'
+    : `${code} is no longer marked offboarded, so people can be added again unless its licence is suspended.` +
+        ' Its tutor switch stays off until the owner turns it on.';
 }
 
 /** `enabled` is the tutor.enabled value being set for the school. */
 export function blastPause(code: string, enabled: boolean): string {
   return enabled
-    ? `${code}'s tutor switch is set on. ${SWITCH_NOT_READ}.`
-    : `${code}'s tutor switch is set off. ${SWITCH_NOT_READ}, so the tutor keeps working at ${code} until then.`;
+    ? `${code}'s tutor switch is set on: ${code}'s children can take tutor classes again, unless its licence is suspended.`
+    : `${code}'s tutor switch is set off: the database refuses new tutor classes for ${code}'s children and the tutor app shows them a pause notice.` +
+        ' Homework, marks and the student and teacher apps carry on.';
 }
 
 /** Any other switch set for one school. */
 export function blastSchoolSwitch(code: string): string {
-  return `Saved for ${code}. ${SWITCH_NOT_READ}.`;
+  return `Saved for ${code}: this value replaces the platform's for ${code} in every app and check that reads the switch.`;
 }
 
 export function blastDisable(code: string, loginId: string, kind: string): string {

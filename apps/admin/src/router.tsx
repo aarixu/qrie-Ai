@@ -1,6 +1,7 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import { AuthenticatedLayout } from '@/components/layout/authenticated-layout';
 import { Account } from '@/features/account';
+import { AppsPage } from '@/features/apps';
 import { BillingOverviewPage } from '@/features/billing';
 import { InvoiceDetailPage } from '@/features/billing/invoice-detail';
 import { InvoicePrint } from '@/features/billing/invoice-print';
@@ -26,6 +27,7 @@ import { Users } from '@/features/users';
 const root = createRootRoute({ component: () => <AuthenticatedLayout /> });
 const today = createRoute({ getParentRoute: () => root, path: '/', component: Today });
 const switches = createRoute({ getParentRoute: () => root, path: '/switches', component: Switches });
+const appsPage = createRoute({ getParentRoute: () => root, path: '/apps', component: AppsPage });
 
 // Plan 2: schools, users, the system page, staff and audit, your account.
 const schoolsList = createRoute({ getParentRoute: () => root, path: '/schools', component: Schools });
@@ -59,6 +61,7 @@ export const router = createRouter({
   routeTree: root.addChildren([
     today,
     switches,
+    appsPage,
     schoolsList,
     schoolPage,
     usersPage,

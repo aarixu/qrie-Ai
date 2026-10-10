@@ -28,6 +28,7 @@ import { addParentForAdmin, ImportRefused, importForAdmin, resetPinForAdmin } fr
  *   POST /admin/reset-pin {loginId}    → {loginId, displayName, pin}
  *   POST /admin/add-parent {studentLoginId, displayName} → {loginId, displayName, pin}
  *   GET  /public/school-brand/<code>   → {rows}   the sign-in screen's school look, unsigned
+ *   GET  /public/app-config[/<code>]   → {config} what Qrie control tells the apps, unsigned
  *   POST /ai/chat {drafting request}    → {text}   a teacher's "Draft with AI" (opts.ai)
  *
  * Every database call runs as `authenticated` with auth.uid() set to the
@@ -182,6 +183,17 @@ export async function startDemoServer(opts: {
         return (await tx.query(`select * from lms.school_brand($1)`, [brandOf[1]])).rows;
       });
       return send(res, 200, { rows });
+    }
+
+    // What Qrie control tells the apps (public.app_config), unsigned like the
+    // school's look: for one school, or for nobody.
+    const configOf = /^\/public\/app-config(?:\/([A-Z0-9]{3,12}))?$/.exec(route);
+    if (req.method === 'GET' && configOf) {
+      const config = await db.transaction(async (tx) => {
+        await tx.exec('set local role anon');
+        return (await tx.query<{ c: unknown }>(`select public.app_config($1) as c`, [configOf[1] ?? null])).rows[0].c;
+      });
+      return send(res, 200, { config });
     }
 
     if (req.method === 'POST' && (route === '/admin/import' || route === '/admin/reset-pin' || route === '/admin/add-parent')) {

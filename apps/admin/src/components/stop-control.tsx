@@ -1,4 +1,3 @@
-import type { RelayStatus } from '@ai-tutor/admin-client';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { admin } from '@/lib/client';
@@ -24,9 +23,10 @@ import { Label } from '@/components/ui/label';
  * reason already filled in. Resuming is for the owner, and asks for a fresh
  * authenticator code. Both make the person type the environment, and send the
  * environment this console was BUILT for (checkWrite): the database refuses a
- * write from a console built for another one.
+ * write from a console built for another one. `status` is a RelayStatus (Today,
+ * System) or finance's StopStatus (the header), which has no count of children.
  */
-export function StopControl({ status, onChanged }: { status: RelayStatus; onChanged: () => void }) {
+export function StopControl({ status, onChanged }: { status: { halted: boolean; studentsNow?: number }; onChanged: () => void }) {
   const me = useMe();
   const guarded = useGuarded();
   const [open, setOpen] = useState(false);
@@ -83,7 +83,7 @@ export function StopControl({ status, onChanged }: { status: RelayStatus; onChan
             <AlertDialogTitle>{stopping ? 'Stop the tutor?' : 'Resume the tutor?'}</AlertDialogTitle>
             <AlertDialogDescription>
               {stopping
-                ? `Every child's class pauses within a moment${status.studentsNow ? `; ${status.studentsNow} are learning right now` : ''}. Children can still send a report.`
+                ? `Every child's class pauses within a moment${typeof status.studentsNow === 'number' && status.studentsNow > 0 ? `; ${status.studentsNow} are learning right now` : ''}. Children can still send a report.`
                 : 'Classes start again for everyone on the next request.'}
             </AlertDialogDescription>
           </AlertDialogHeader>

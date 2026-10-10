@@ -49,6 +49,11 @@ export interface Backend {
    * message can be shown as it is.
    */
   askAi(chat: DraftChat): Promise<string>;
+  /**
+   * public.app_config for a school code, or for nobody (null): the switches
+   * the apps obey (Qrie control). Unsigned. Throws for a code that is not one.
+   */
+  appConfig(code: string | null): Promise<unknown>;
 }
 
 export interface SchoolPublicBrand {
@@ -250,6 +255,12 @@ export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: st
       if (typeof text !== 'string') throw new Error('The AI could not answer: it sent no text.');
       return text;
     },
+    async appConfig(code) {
+      if (code !== null && !SCHOOL_CODE.test(code)) throw new Error('not a school code');
+      const { data, error } = await supabase.schema('public').rpc('app_config', { p_school: code });
+      if (error) throw new Error(error.message);
+      return data;
+    },
   };
 }
 
@@ -375,6 +386,10 @@ export function demoBackend(baseUrl: string, session: SessionStore = memorySessi
     },
     async askAi(chat) {
       return ((await post('/ai/chat', chat)) as { text: string }).text;
+    },
+    async appConfig(code) {
+      if (code !== null && !SCHOOL_CODE.test(code)) throw new Error('not a school code');
+      return ((await (await send(`/public/app-config${code ? `/${code}` : ''}`)).json()) as { config: unknown }).config;
     },
   };
 }

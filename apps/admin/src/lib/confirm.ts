@@ -1,3 +1,5 @@
+import { FIRST_BUILD } from './app-readers.ts';
+
 /**
  * EVERY WRITE FROM THE CONSOLE PASSES HERE FIRST. Pure, so the rules are tested.
  *
@@ -31,30 +33,48 @@ export function checkWrite(c: WriteCheck): WriteVerdict {
   return { ok: true, env: expected, reason };
 }
 
-/** Nothing in apps/, packages/ or supabase/functions reads public.app_config yet; plan 4 wires the apps to it. */
-export const SWITCH_NOT_READ = 'No app reads this switch yet (plan 4)';
-
-/** The blast-radius line shown before a switch changes: that no app reads it yet, then what it will do once they do. */
+/**
+ * What changing a switch does, said before it is confirmed: which apps obey and
+ * whether the database enforces it (lib/app-readers.ts lists who reads what).
+ */
 export function describeFlagChange(key: string, value: unknown): string {
-  const effect = flagEffect(key, value);
-  return `${SWITCH_NOT_READ}. Once the apps read it: ${effect.charAt(0).toLowerCase()}${effect.slice(1)}`;
-}
-
-function flagEffect(key: string, value: unknown): string {
   switch (key) {
     case 'tutor.enabled':
       return value === false
-        ? 'The tutor pauses for every child at every school until it is switched back on.'
-        : 'The tutor is offered again in every app.';
+        ? 'The database refuses new tutor classes for every child, at a school or not, except at a school whose own switch is on;' +
+            ' the tutor app shows them a pause notice with the helplines, from which they can still send a report and open Settings and Help.' +
+            " A report already waiting on a phone is still delivered. Teachers' Draft with AI is not affected."
+        : 'Children can take tutor classes again, except at a school whose own switch is off or whose licence is suspended.';
     case 'tutor.only_prepared':
       return value === true
-        ? 'Children can open only classes that are already prepared; no new class is prepared for them.'
-        : 'Children can again open classes that have not been prepared yet, which prepares them (and costs money).';
+        ? 'The tutor app lets children open only classes that are already prepared, and prepares no new one. Only the app obeys this: the relay does not check it.'
+        : 'The tutor app lets children open any topic again, which prepares a new class when none exists (and costs money).';
+    case 'tutor.compose_live_classes':
+      return 'Saved, but nothing changes for children: no screen in this build reads it until the board composer is merged.';
     case 'contest.entries_open':
-      return value === false ? 'The contest form stops taking entries.' : 'The contest form takes entries again.';
+      return value === false
+        ? 'The contest form says entries are closed, and the database refuses new entries. An entry already made can still be corrected.'
+        : 'The contest form takes new entries again, up to the daily limit.';
+    case 'contest.daily_limit':
+      return `The database takes at most ${String(value)} new contest entries in one India day; after that, the form says entries are full until midnight.`;
     case 'banner.message':
-      return value === '' ? 'The notice is removed from every app.' : `Every app shows this notice at the top: "${String(value)}".`;
+      return value === ''
+        ? 'The notice is removed from the tutor, student and teacher apps.'
+        : `The tutor, student and teacher apps show this notice at the top: "${String(value)}".`;
+    case 'banner.tone':
+      return `The notice, when there is one, is shown as ${value === 'warning' ? 'a warning' : 'information'}.`;
+    case 'app.min_version.classroom':
+      return minimumLine('tutor app', FIRST_BUILD.classroom, value);
+    case 'app.min_version.student':
+      return minimumLine('student app', FIRST_BUILD.student, value);
+    case 'app.min_version.lms':
+      return minimumLine('teacher app', FIRST_BUILD.lms, value);
     default:
-      return `Every app that reads ${key} follows the new value: ${JSON.stringify(value)}.`;
+      return `Saved. No app reads ${key}.`;
   }
+}
+
+function minimumLine(app: string, firstBuild: string, value: unknown): string {
+  if (value === '0.0.0') return `No ${app} build is asked to update.`;
+  return `A ${app} older than ${String(value)} asks to be updated and opens nothing else. Builds older than ${firstBuild} do not read this and are not stopped.`;
 }

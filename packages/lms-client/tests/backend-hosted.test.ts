@@ -11,6 +11,12 @@ import { supabaseBackend, type SupabaseLike } from '../src/index.ts';
  * the portal says so plainly instead of failing obscurely.
  */
 
+/** The school admin's billing notice as lms.school_billing answers it (0064). */
+const BILLING = { state: 'grace', graceUntil: '2026-10-22', openInvoices: 1, duePaise: 1180000, earliestDueOn: '2026-10-20' };
+
+/** Each rpc reached, with the schema it was asked in. */
+const rpcs: { schema: string; fn: string; args: unknown }[] = [];
+
 const fakeSupabase = (token: string | null): SupabaseLike =>
   ({
     auth: {
@@ -19,7 +25,14 @@ const fakeSupabase = (token: string | null): SupabaseLike =>
       signOut: async () => undefined,
     },
     storage: { from: () => ({}) },
-    schema: () => ({ rpc: async () => ({ data: null, error: null }) }),
+    schema: (name: string) => ({
+      rpc: async (fn: string, args: unknown) => {
+        rpcs.push({ schema: name, fn, args });
+        if (fn === 'app_config') return { data: { 'banner.message': 'x' }, error: null };
+        if (fn === 'school_billing') return { data: BILLING, error: null };
+        return { data: null, error: null };
+      },
+    }),
   }) as unknown as SupabaseLike;
 
 afterEach(() => vi.unstubAllGlobals());
@@ -57,5 +70,25 @@ describe('the admin calls on the hosted project', () => {
     await expect(supabaseBackend(fakeSupabase('x')).resetPin('A-1')).rejects.toThrow(/not set up for this school yet/);
     const b = supabaseBackend(fakeSupabase(null), { adminUrl: 'https://p.supabase.co/functions/v1/lms-admin' });
     await expect(b.resetPin('A-1')).rejects.toThrow(/sign in again/);
+  });
+});
+
+describe('what Qrie control says, on the hosted project', () => {
+  it("the hosted backend reads app_config in the public schema with the school's code, or none", async () => {
+    const b = supabaseBackend(fakeSupabase(null));
+    rpcs.length = 0;
+    expect(await b.appConfig('HOS')).toEqual({ 'banner.message': 'x' });
+    expect(rpcs).toEqual([{ schema: 'public', fn: 'app_config', args: { p_school: 'HOS' } }]);
+    await b.appConfig(null);
+    expect(rpcs[1]).toEqual({ schema: 'public', fn: 'app_config', args: { p_school: null } });
+    await expect(b.appConfig('bad code')).rejects.toThrow(/not a school code/);
+    expect(rpcs).toHaveLength(2);
+  });
+
+  it('schoolBilling() is lms.school_billing as one value', async () => {
+    const b = supabaseBackend(fakeSupabase('admin-jwt'));
+    rpcs.length = 0;
+    expect(await b.api.schoolBilling()).toEqual(BILLING);
+    expect(rpcs).toEqual([{ schema: 'lms', fn: 'school_billing', args: {} }]);
   });
 });

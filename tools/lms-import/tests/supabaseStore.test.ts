@@ -100,3 +100,31 @@ describe('supabaseStore requests', () => {
     expect((err as Error).message).not.toContain(KEY);
   });
 });
+
+describe('supabaseStore.mayImport', () => {
+  // The sentence of migration 0063 (admin.import_refusal).
+  const LAPSED =
+    "This school's licence has ended and its grace period is over, so no new people can be added until it is renewed.";
+
+  it('asks lms.import_refusal with the service role and answers its sentence or null', async () => {
+    const refusing = fakeFetch(() => json(LAPSED));
+    const store = supabaseStore(URL_, KEY, refusing.impl);
+    expect(store.mayImport).toBeTypeOf('function');
+    expect(await store.mayImport!('org-1')).toBe(LAPSED);
+    expect(refusing.calls).toHaveLength(1);
+    const [c] = refusing.calls;
+    expect(c.url).toBe(`${URL_}/rest/v1/rpc/import_refusal`);
+    expect(c.method).toBe('POST');
+    expect(c.headers['Content-Profile']).toBe('lms');
+    expect(c.headers.apikey).toBe(KEY);
+    expect(c.headers.authorization).toBe(`Bearer ${KEY}`);
+    expect(c.body).toBe('{"p_org":"org-1"}');
+
+    const allowing = fakeFetch(() => json(null));
+    expect(await supabaseStore(URL_, KEY, allowing.impl).mayImport!('org-1')).toBeNull();
+
+    // The import stops rather than going on unasked.
+    const failing = fakeFetch(() => json({ message: 'down' }, 500));
+    await expect(supabaseStore(URL_, KEY, failing.impl).mayImport!('org-1')).rejects.toThrow(/500/);
+  });
+});

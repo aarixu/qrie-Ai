@@ -28,23 +28,90 @@ describe('a write from the console', () => {
 });
 
 describe('what a switch change will touch, said before it happens', () => {
-  // No app reads public.app_config yet (plan 4), so every line says so first.
-  const later = (effect: string) => `No app reads this switch yet (plan 4). Once the apps read it: ${effect}`;
+  // Each line names the apps that obey the switch and whether the database
+  // enforces it (lib/app-readers.ts lists who reads what).
 
-  it('pausing the tutor names everybody it reaches', () => {
-    expect(describeFlagChange('tutor.enabled', false)).toBe(later('the tutor pauses for every child at every school until it is switched back on.'));
+  it('tutor.enabled: the database refuses classes, the tutor app pauses, reports still go', () => {
+    expect(describeFlagChange('tutor.enabled', false)).toBe(
+      'The database refuses new tutor classes for every child, at a school or not, except at a school whose own switch is on;' +
+        ' the tutor app shows them a pause notice with the helplines, from which they can still send a report and open Settings and Help.' +
+        " A report already waiting on a phone is still delivered. Teachers' Draft with AI is not affected.",
+    );
+    expect(describeFlagChange('tutor.enabled', true)).toBe(
+      'Children can take tutor classes again, except at a school whose own switch is off or whose licence is suspended.',
+    );
   });
 
-  it('a banner says where it appears, and removing it says so', () => {
-    expect(describeFlagChange('banner.message', 'Back at 7 pm')).toBe(later('every app shows this notice at the top: "Back at 7 pm".'));
-    expect(describeFlagChange('banner.message', '')).toBe(later('the notice is removed from every app.'));
+  it('tutor.only_prepared: only the tutor app obeys it', () => {
+    expect(describeFlagChange('tutor.only_prepared', true)).toBe(
+      'The tutor app lets children open only classes that are already prepared, and prepares no new one. Only the app obeys this: the relay does not check it.',
+    );
+    expect(describeFlagChange('tutor.only_prepared', false)).toBe(
+      'The tutor app lets children open any topic again, which prepares a new class when none exists (and costs money).',
+    );
   });
 
-  it('closing the contest says what stops', () => {
-    expect(describeFlagChange('contest.entries_open', false)).toBe(later('the contest form stops taking entries.'));
+  it('tutor.compose_live_classes: saved, and nothing reads it in this build', () => {
+    const line = 'Saved, but nothing changes for children: no screen in this build reads it until the board composer is merged.';
+    expect(describeFlagChange('tutor.compose_live_classes', true)).toBe(line);
+    expect(describeFlagChange('tutor.compose_live_classes', false)).toBe(line);
   });
 
-  it('any other switch still says it reaches every app that reads it', () => {
-    expect(describeFlagChange('app.min_version.lms', '2.0.0')).toBe(later('every app that reads app.min_version.lms follows the new value: "2.0.0".'));
+  it('the contest switches: the form says so and the database refuses', () => {
+    expect(describeFlagChange('contest.entries_open', false)).toBe(
+      'The contest form says entries are closed, and the database refuses new entries. An entry already made can still be corrected.',
+    );
+    expect(describeFlagChange('contest.entries_open', true)).toBe('The contest form takes new entries again, up to the daily limit.');
+    expect(describeFlagChange('contest.daily_limit', 500)).toBe(
+      'The database takes at most 500 new contest entries in one India day; after that, the form says entries are full until midnight.',
+    );
+  });
+
+  it('the banner names the three apps that show it', () => {
+    expect(describeFlagChange('banner.message', '')).toBe('The notice is removed from the tutor, student and teacher apps.');
+    expect(describeFlagChange('banner.message', 'Back at 7 pm')).toBe(
+      'The tutor, student and teacher apps show this notice at the top: "Back at 7 pm".',
+    );
+    expect(describeFlagChange('banner.tone', 'warning')).toBe('The notice, when there is one, is shown as a warning.');
+    expect(describeFlagChange('banner.tone', 'info')).toBe('The notice, when there is one, is shown as information.');
+  });
+
+  it('a minimum build names the app and the first build that reads it', () => {
+    expect(describeFlagChange('app.min_version.student', '0.2.0')).toBe(
+      'A student app older than 0.2.0 asks to be updated and opens nothing else. Builds older than 0.1.0 do not read this and are not stopped.',
+    );
+    expect(describeFlagChange('app.min_version.classroom', '0.3.0')).toBe(
+      'A tutor app older than 0.3.0 asks to be updated and opens nothing else. Builds older than 0.1.0 do not read this and are not stopped.',
+    );
+    expect(describeFlagChange('app.min_version.lms', '3.0.0')).toBe(
+      'A teacher app older than 3.0.0 asks to be updated and opens nothing else. Builds older than 2.3.0 do not read this and are not stopped.',
+    );
+    expect(describeFlagChange('app.min_version.lms', '0.0.0')).toBe('No teacher app build is asked to update.');
+  });
+
+  it('a key no app reads says so', () => {
+    expect(describeFlagChange('x.unknown', 1)).toBe('Saved. No app reads x.unknown.');
+  });
+
+  it('no line says no app reads the switches', () => {
+    const cases: [string, unknown][] = [
+      ['tutor.enabled', false],
+      ['tutor.enabled', true],
+      ['tutor.only_prepared', true],
+      ['tutor.only_prepared', false],
+      ['tutor.compose_live_classes', true],
+      ['contest.entries_open', false],
+      ['contest.entries_open', true],
+      ['contest.daily_limit', 500],
+      ['banner.message', ''],
+      ['banner.message', 'Back at 7 pm'],
+      ['banner.tone', 'warning'],
+      ['banner.tone', 'info'],
+      ['app.min_version.student', '0.2.0'],
+      ['app.min_version.classroom', '0.3.0'],
+      ['app.min_version.lms', '3.0.0'],
+      ['app.min_version.lms', '0.0.0'],
+    ];
+    for (const [key, value] of cases) expect(describeFlagChange(key, value)).not.toMatch(/plan 4|No app reads this switch yet/);
   });
 });

@@ -24,3 +24,8 @@ billing is `SchoolBillingTab({ orgId, code })` in `school-billing-tab.tsx`, whic
 `/billing/schools/$orgId` frames and plan 2's school page renders as its Billing tab.
 Cashfree's keys are never in this app: only the `billing-api` and `cashfree-webhook`
 Edge Functions hold them. Running it: `docs/ops/admin-console.md` section 6.
+
+**The Apps page** (`src/features/apps/`) lists which app reads which switch,
+when, and what it does when it cannot; it and the line said before a switch changes
+(`describeFlagChange` in `src/lib/confirm.ts`) come from one list, `src/lib/app-readers.ts`.
+Running it: `docs/ops/admin-console.md` section 7.

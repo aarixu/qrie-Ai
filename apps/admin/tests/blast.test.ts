@@ -14,23 +14,28 @@ describe('blast-radius lines', () => {
     );
   });
 
-  it('offboarding says what really happens today: a mark, the switch off, no app reads it yet, the school admin can still add people, nothing deleted', () => {
-    const off = blastOffboard('KV22', true);
-    expect(off).toBe(
-      'KV22 is marked offboarded and its tutor switch is set off. Qrie staff cannot add people to it, but its school admin still can' +
-        ' in the teacher app, and no app reads the tutor switch yet (plan 4), so the tutor keeps working there until then.' +
-        ' Nothing is deleted: homework, marks and sign-ins stay.',
+  it('offboarding says the database refuses the tutor, nobody can add people, and nothing is deleted', () => {
+    expect(blastOffboard('KV22', true)).toBe(
+      'KV22 is marked offboarded and its tutor switch is set off: the database refuses its children new tutor classes,' +
+        ' and neither Qrie staff nor its school admin can add people to it. Nothing is deleted: homework, marks and sign-ins stay.',
     );
-    expect(off).not.toMatch(/tutor pauses|no one can be added/);
-    expect(blastOffboard('KV22', false)).toBe('KV22 is no longer marked offboarded. Its tutor switch stays off until the owner turns it on.');
+    expect(blastOffboard('KV22', false)).toBe(
+      'KV22 is no longer marked offboarded, so people can be added again unless its licence is suspended.' +
+        ' Its tutor switch stays off until the owner turns it on.',
+    );
   });
 
-  it('the tutor switch for one school says no app reads it yet, in both directions', () => {
+  it("the school's tutor switch says what the database and the tutor app do", () => {
     expect(blastPause('KV22', false)).toBe(
-      "KV22's tutor switch is set off. No app reads this switch yet (plan 4), so the tutor keeps working at KV22 until then.",
+      "KV22's tutor switch is set off: the database refuses new tutor classes for KV22's children and the tutor app shows them a pause notice." +
+        ' Homework, marks and the student and teacher apps carry on.',
     );
-    expect(blastPause('KV22', true)).toBe("KV22's tutor switch is set on. No app reads this switch yet (plan 4).");
-    expect(blastSchoolSwitch('KV22')).toBe('Saved for KV22. No app reads this switch yet (plan 4).');
+    expect(blastPause('KV22', true)).toBe(
+      "KV22's tutor switch is set on: KV22's children can take tutor classes again, unless its licence is suspended.",
+    );
+    expect(blastSchoolSwitch('KV22')).toBe(
+      "Saved for KV22: this value replaces the platform's for KV22 in every app and check that reads the switch.",
+    );
   });
 
   it('a new PIN says the old one stops at once and to ask the school admin first', () => {

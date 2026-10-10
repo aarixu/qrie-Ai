@@ -1,5 +1,7 @@
 import { ShieldCheck } from 'lucide-react';
 import { useLayout } from '@/context/layout-provider';
+import { useMe } from '@/lib/me';
+import { navFor } from '@/lib/nav';
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +18,7 @@ import { NavUser } from './nav-user';
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout();
+  const me = useMe();
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
@@ -34,7 +37,7 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {sidebarData.navGroups.map((group) => (
+        {navFor(me.role, sidebarData).map((group) => (
           <NavGroup key={group.title} {...group} />
         ))}
       </SidebarContent>

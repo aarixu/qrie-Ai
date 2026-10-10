@@ -1,8 +1,7 @@
 // @vitest-environment node
-import fs from 'node:fs';
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { aal2, anonymousChild, makeStaff, setEnvironment, type Staff } from './admin-fixtures.ts';
+import { aal2, anonymousChild, fresh, makeStaff, setEnvironment, type Staff } from './admin-fixtures.ts';
 import { buildSchool } from './fixtures.ts';
 import { asClaims, asService, createUser, freshDatabase } from './harness.ts';
 
@@ -15,12 +14,14 @@ import { asClaims, asService, createUser, freshDatabase } from './harness.ts';
  */
 
 let db: PGlite;
+let owner: Staff;
 let ops: Staff;
 let child: string;
 
 beforeAll(async () => {
   db = await freshDatabase();
   await setEnvironment(db);
+  owner = await makeStaff(db, 'owner');
   ops = await makeStaff(db, 'ops');
   child = await anonymousChild(db);
 });
@@ -33,7 +34,7 @@ interface Today {
   relay: { halted: boolean; ceilingUnits: number; unitsToday: number; studentsNow: number };
   reports: { newCount: number; unsafeNew: number; oldestNewMinutes: number };
   classes: { pendingCount: number; oldestPendingHours: number };
-  contest: { entriesToday: number; dailyCap: number };
+  contest: { entriesToday: number; dailyCap: number; entriesOpen: boolean };
   schools: { code: string; seats: number; seatsUsed: number; daysLeft: number }[];
   prices: { modelPriceRows: number };
   alarm: { lastCheckMinutesAgo: number | null };
@@ -88,16 +89,20 @@ describe('the home page', () => {
     expect(t.schools[0].daysLeft).toBeLessThanOrEqual(9);
   });
 
-  it("repeats the contest's daily ceiling, and a drift from 0020 fails here", () => {
-    const source = fs.readFileSync(
-      new URL('../migrations/0020_contest_signup_and_otp_attempts.sql', import.meta.url),
-      'utf8',
-    );
-    expect(source).toMatch(/day_project constant integer := 2000;/);
+  it("reads the contest's limit and whether entries are open from the switches the signup obeys", async () => {
+    const setLimit = (n: number) =>
+      asClaims(db, fresh(owner), (tx) =>
+        tx.query(`select admin.flag_set('contest.daily_limit', 'global', '', $1::jsonb, 'a reason', 'TEST')`, [
+          JSON.stringify(n),
+        ]),
+      );
+    await setLimit(750);
+    expect((await today()).contest).toEqual({ entriesToday: 0, dailyCap: 750, entriesOpen: true });
+    await setLimit(2000);
   });
 
   it('reports the contest ceiling and today\'s entries', async () => {
     const t = await today();
-    expect(t.contest).toEqual({ entriesToday: 0, dailyCap: 2000 });
+    expect(t.contest).toEqual({ entriesToday: 0, dailyCap: 2000, entriesOpen: true });
   });
 });

@@ -1,13 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
 import { format, parseISO } from 'date-fns'
 import { AlertTriangle, BadgeCheck } from 'lucide-react'
-import { licenceWarnings, type LicenceWarning, type SchoolLicence } from '@ai-tutor/lms-client'
+import { billingNotices, licenceWarnings, type LicenceWarning, type SchoolLicence } from '@ai-tutor/lms-client'
 import { api } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loading, Problem } from '@/components/layout/page'
+import { BillingNotice, indiaToday, licenceWarningsShown, useSchoolBilling } from './billing-notice'
 
 /** The school's licence (lms.school_licence, 0041): the admin's only. */
 export const useSchoolLicence = () => useQuery({ queryKey: ['school', 'licence'], queryFn: api.schoolLicence })
@@ -19,7 +20,7 @@ function warningText(w: LicenceWarning, l: SchoolLicence): { title: string; text
   if (w === 'ended') {
     return {
       title: 'Your licence has ended',
-      text: `It ended on ${day(l.validUntil!)}. Everyone can still sign in and use Qrie; ask Qrie to renew it.`,
+      text: `It ended on ${day(l.validUntil!)}. Everyone can still sign in; ask Qrie to renew it.`,
     }
   }
   if (w === 'ending') {
@@ -37,16 +38,19 @@ function warningText(w: LicenceWarning, l: SchoolLicence): { title: string; text
 /**
  * Shown on the portal's home and on Add people while the licence has ended,
  * ends within 30 days, or has every seat in use. Nobody is locked out: it
- * only says so.
+ * only says so. With the school's billing notice (billing-notice.tsx) above
+ * the licence's own warnings.
  */
 export function LicenceBanner({ className }: { className?: string }) {
   const licence = useSchoolLicence()
-  if (!licence.data) return null
-  const warnings = licenceWarnings(licence.data)
-  if (warnings.length === 0) return null
+  const billing = useSchoolBilling()
+  const warnings = licence.data ? licenceWarningsShown(licenceWarnings(licence.data), billing.data?.state) : []
+  const notices = billing.data ? billingNotices(billing.data, indiaToday()).length : 0
+  if (warnings.length === 0 && notices === 0) return null
   return (
     <div className={cn('space-y-2', className)}>
-      {warnings.map((w) => {
+      <BillingNotice />
+      {licence.data && warnings.map((w) => {
         const { title, text } = warningText(w, licence.data)
         return (
           <Alert
