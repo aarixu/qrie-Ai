@@ -142,7 +142,19 @@ export interface ImportSeats {
   adding: number;
 }
 
+/**
+ * What a sign-in refusal says, the same from the demo server
+ * (tools/lms-demo/src/auth.ts) and the hosted sign-in guard
+ * (tools/lms-import/src/signIn.ts). An unknown ID gets WRONG_PIN too, and
+ * CLOSED is said only to someone who gave the right PIN.
+ */
 export const WRONG_PIN = "That ID and PIN don't match.";
+export const LOCKED = 'This ID is locked after too many wrong PINs. Try again in 15 minutes, or ask your teacher.';
+export const CLOSED = 'This account is closed. Ask your school office.';
+/** The hosted guard's limit per caller address; the demo server has none. */
+export const NETWORK_LIMIT = 'Too many failed sign-ins from this network. Try again in 15 minutes.';
+/** The guard accepted the PIN but Supabase Auth refused the password made from it. */
+export const NEEDS_NEW_PIN = 'Your sign-in needs a new PIN. Ask your school office.';
 
 /** Where a photo of work lives: org / assignment / student / file (0025). */
 export function workPath(orgId: string, assignmentId: string, studentUserId: string, fileName: string): string {
@@ -181,8 +193,15 @@ export interface SupabaseLike extends RpcClient {
  * so the relay's gate counts it against them. `adminUrl` is the lms-admin
  * function's (supabase/functions/lms-admin), which answers the admin's
  * importPeople, resetPin and addParent the same way, checking the token.
+ * `signInUrl` is the lms-signin function's (supabase/functions/lms-signin):
+ * signIn sends it the ID and PIN, and only for the right PIN does it answer
+ * with the account's Supabase Auth password, which is not the PIN. Without
+ * it, signIn refuses.
  */
-export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: string; adminUrl?: string } = {}): Backend {
+export function supabaseBackend(
+  supabase: SupabaseLike,
+  options: { relayUrl?: string; adminUrl?: string; signInUrl?: string } = {},
+): Backend {
   const token = async () => {
     const session = (await supabase.auth.getSession()).data.session as { access_token?: string } | null;
     if (!session?.access_token) throw new Error('Please sign in again.');
@@ -201,9 +220,21 @@ export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: st
   }
   return {
     mode: 'supabase',
+    // The guard first (its lockout is the point); Supabase Auth only with
+    // the password the guard sends back.
     async signIn(loginId, pin) {
-      const { error } = await supabase.auth.signInWithPassword({ email: loginEmail(loginId.trim()), password: pin });
-      if (error) throw new Error(/invalid login credentials/i.test(error.message) ? WRONG_PIN : error.message);
+      if (!options.signInUrl) throw new Error(SIGN_IN_OFF);
+      const res = await fetch(options.signInUrl.replace(/\/+$/, ''), {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ loginId: loginId.trim(), pin }),
+      });
+      const answer = (await res.json().catch(() => null)) as { password?: unknown; error?: unknown } | null;
+      if (!res.ok || typeof answer?.password !== 'string') {
+        throw new Error(typeof answer?.error === 'string' ? answer.error : `the school's server said ${res.status}`);
+      }
+      const { error } = await supabase.auth.signInWithPassword({ email: loginEmail(loginId.trim()), password: answer.password });
+      if (error) throw new Error(/invalid login credentials/i.test(error.message) ? NEEDS_NEW_PIN : error.message);
     },
     async signOut() {
       await supabase.auth.signOut();
@@ -255,6 +286,9 @@ export function supabaseBackend(supabase: SupabaseLike, options: { relayUrl?: st
 
 /** Said when no AI is set up for this school's server. */
 export const AI_OFF = 'Drafting with AI is not switched on for this school yet.';
+
+/** Said when the app was built without the sign-in guard's address. */
+export const SIGN_IN_OFF = 'Signing in is not set up for this school yet.';
 
 // ---------------------------------------------------------------------------
 // The demo server.

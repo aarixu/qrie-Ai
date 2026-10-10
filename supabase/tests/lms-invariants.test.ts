@@ -85,6 +85,9 @@ describe('the lms schema', () => {
       'end_sessions(p_user uuid)',
       'next_parent_login(p_org uuid)',
       'attach_parent(p_org uuid, p_actor uuid, p_parent_login text, p_child_login text)',
+      'pin_guard_try(p_login text, p_ip text)',
+      'pin_guard_passed(p_login text, p_ip text)',
+      'pin_guard_set(p_user uuid, p_login text, p_salt text, p_verifier text)',
       'set_licence(p_code text, p_plan text, p_seats integer, p_until date)',
       'founder_schools()',
     ];

@@ -1,8 +1,9 @@
 import { applyPlan, type ImportResult } from './apply.ts';
 import { planImport, type ImportPlan, type SchoolConfig } from './plan.ts';
+import { guardedStore, pepperProblem } from './pinGuard.ts';
 import { renderSlips } from './slips.ts';
 import { readStudents, readTeachers } from './sheet.ts';
-import { supabaseStore } from './supabaseStore.ts';
+import { lmsRpc, supabaseRest, supabaseStore } from './supabaseStore.ts';
 
 /**
  * Import a school: `node tools/lms-import/src/cli.ts --school school.json
@@ -13,6 +14,11 @@ import { supabaseStore } from './supabaseStore.ts';
  * SUPABASE_URL with SUPABASE_SERVICE_ROLE_KEY from the environment, and needs
  * --out, because the PINs it creates are shown once, on that page, and never
  * again. PINs are never printed to the terminal.
+ *
+ * --apply also needs LMS_PIN_PEPPER, the secret the lms-signin and lms-admin
+ * functions hold: the auth service is given the password made from each PIN
+ * with it, never the PIN, and each new account's sign-in guard row is written
+ * with it (pinGuard.ts).
  */
 
 export interface CliDeps {
@@ -84,10 +90,17 @@ export async function run(args: string[], deps: CliDeps): Promise<number> {
     deps.log('--apply needs --out slips.html: new PINs are shown once, on that page, and nowhere else.');
     return 1;
   }
+  const pepper = deps.env.LMS_PIN_PEPPER;
+  const problem = pepperProblem(pepper);
+  if (problem) {
+    deps.log(`--apply needs LMS_PIN_PEPPER, the same secret the lms-signin function holds: ${problem}`);
+    return 1;
+  }
 
   let result: ImportResult;
   try {
-    result = await applyPlan(plan, supabaseStore(url, key, deps.fetchImpl));
+    const store = guardedStore(supabaseStore(url, key, deps.fetchImpl), lmsRpc(supabaseRest(url, key, deps.fetchImpl)), pepper!);
+    result = await applyPlan(plan, store);
   } catch (e) {
     deps.log(`Import stopped: ${(e as Error).message}`);
     deps.log('Everything before this point was kept. Fix the cause and run again; nothing is created twice.');

@@ -44,6 +44,11 @@ export function supabaseRest(url: string, serviceKey: string, fetchImpl: typeof 
   };
 }
 
+/** One of the lms schema's functions, called with the service role through the Data API; its JSON answer. */
+export function lmsRpc(call: RestCall): (fn: string, args: Record<string, unknown>) => Promise<unknown> {
+  return (fn, args) => call(`/rest/v1/rpc/${fn}`, { method: 'POST', profile: 'lms', body: args });
+}
+
 export function supabaseStore(url: string, serviceKey: string, fetchImpl: typeof fetch = fetch): ImportStore {
   const call = supabaseRest(url, serviceKey, fetchImpl);
 

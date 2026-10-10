@@ -3,6 +3,7 @@ import { SOMETHING_WENT_WRONG } from '../../../packages/lms-client/src/errors.ts
 import { loginEmail } from '../../../packages/lms-client/src/login.ts';
 import { applyPlan, type ImportStore } from './apply.ts';
 import { newPin, type AccountKind } from './pin.ts';
+import { authPassword, guardedStore, guardPin } from './pinGuard.ts';
 import { previewImport, type SchoolSnapshot } from './portal.ts';
 
 /**
@@ -18,8 +19,10 @@ import { previewImport, type SchoolSnapshot } from './portal.ts';
  *
  * Every call checks, on the server, that the caller is signed in and is their
  * school's admin; the sheets are checked here every time, whatever the
- * browser showed. A PIN is the new sign-in's password and leaves only in the
- * answer. Unlike the demo, a hosted commit is not one transaction: the auth
+ * browser showed. A PIN leaves only in the answer: the auth service is given
+ * the password made from it (pinGuard.ts), and the sign-in guard (0046) a
+ * verifier of it, so the PIN signs in through lms-signin and nowhere else.
+ * Unlike the demo, a hosted commit is not one transaction: the auth
  * service and the tables are separate calls. Should one fail part-way,
  * running the same sheet again creates nobody twice (people are found by
  * their ID) — but the PINs of those already created are not shown again,
@@ -37,6 +40,8 @@ export interface AdminDeps {
   store: ImportStore;
   /** The auth admin API: a sign-in's new password. */
   auth: { setPassword(userId: string, password: string): Promise<void> };
+  /** LMS_PIN_PEPPER, which a PIN's auth password and guard row are made with. */
+  pepper: string;
 }
 
 export interface AdminRequest {
@@ -99,7 +104,7 @@ async function importPeople(deps: AdminDeps, caller: string, req: Record<string,
   };
   if (req.commit !== true || !preview.plan) return checked;
   if (preview.warnings.length > 0 && req.acceptWarnings !== true) throw new Refused(400, 'Read and accept the warnings first.');
-  const result = await applyPlan(preview.plan, deps.store);
+  const result = await applyPlan(preview.plan, guardedStore(deps.store, deps.rpc, deps.pepper));
   if (result.created.length) {
     await deps.rpc('audit_by', {
       p_org: org,
@@ -132,7 +137,9 @@ async function resetPin(deps: AdminDeps, caller: string, req: Record<string, unk
   const who = (await deps.rpc('account_by_login', { p_org: org, p_login: id })) as Holder | null;
   if (!who) throw new Refused(404, `There is no one in your school with the ID ${id || '(none)'}.`);
   const pin = newPin(who.kind);
-  await deps.auth.setPassword(who.userId, pin);
+  await deps.auth.setPassword(who.userId, await authPassword(deps.pepper, id, pin));
+  // The guard's row next: the old PIN stops passing it, and any lock is cleared.
+  await guardPin(deps.rpc, deps.pepper, who.userId, id, pin);
   // Whoever held the old PIN is signed out everywhere.
   await deps.rpc('end_sessions', { p_user: who.userId });
   await deps.rpc('audit_by', { p_org: org, p_actor: caller, p_action: 'pin-reset', p_target: id });
@@ -149,7 +156,7 @@ async function addParent(deps: AdminDeps, caller: string, req: Record<string, un
   if (child.kind !== 'student' || child.leftAt) throw new Refused(400, `${studentId} is not a student at your school.`);
   const loginId = (await deps.rpc('next_parent_login', { p_org: org })) as string;
   const pin = newPin('parent');
-  await deps.store.createAccount({
+  await guardedStore(deps.store, deps.rpc, deps.pepper).createAccount({
     orgId: org,
     loginId,
     kind: 'parent',

@@ -18,17 +18,21 @@
 // every call and refuses anyone but their school's admin.
 //
 // Supabase supplies SUPABASE_URL, SUPABASE_ANON_KEY and
-// SUPABASE_SERVICE_ROLE_KEY by itself. The apps reach it at
+// SUPABASE_SERVICE_ROLE_KEY by itself. LMS_PIN_PEPPER is set by hand, once
+// for the project (supabase/functions/lms-signin says how): a new PIN's auth
+// password and sign-in guard row are made with it. The apps reach this at
 // <SUPABASE_URL>/functions/v1/lms-admin (supabaseBackend's adminUrl).
 
 import { createSupabaseVerifier } from '../../../packages/relay/src/auth.ts';
 import { handleAdmin } from '../../../tools/lms-import/src/admin.ts';
-import { supabaseRest, supabaseStore } from '../../../tools/lms-import/src/supabaseStore.ts';
+import { pepperProblem } from '../../../tools/lms-import/src/pinGuard.ts';
+import { lmsRpc, supabaseRest, supabaseStore } from '../../../tools/lms-import/src/supabaseStore.ts';
 
 const env = (name: string): string => Deno.env.get(name) ?? '';
 const SUPABASE_URL = env('SUPABASE_URL');
 const ANON_KEY = env('SUPABASE_ANON_KEY');
 const SERVICE_ROLE_KEY = env('SUPABASE_SERVICE_ROLE_KEY');
+const PEPPER = env('LMS_PIN_PEPPER');
 
 const CORS = {
   'access-control-allow-origin': '*',
@@ -41,13 +45,14 @@ const rest = supabaseRest(SUPABASE_URL, SERVICE_ROLE_KEY);
 const deps = {
   verify: createSupabaseVerifier(SUPABASE_URL, ANON_KEY),
   // 0046's functions answer one JSON value each.
-  rpc: (fn: string, args: Record<string, unknown>) => rest(`/rest/v1/rpc/${fn}`, { method: 'POST', profile: 'lms', body: args }),
+  rpc: lmsRpc(rest),
   store: supabaseStore(SUPABASE_URL, SERVICE_ROLE_KEY),
   auth: {
     async setPassword(userId: string, password: string) {
       await rest(`/auth/v1/admin/users/${userId}`, { method: 'PUT', body: { password } });
     },
   },
+  pepper: PEPPER,
 };
 
 Deno.serve(async (request: Request) => {
@@ -56,11 +61,13 @@ Deno.serve(async (request: Request) => {
     ['SUPABASE_URL', SUPABASE_URL],
     ['SUPABASE_ANON_KEY', ANON_KEY],
     ['SUPABASE_SERVICE_ROLE_KEY', SERVICE_ROLE_KEY],
+    ['LMS_PIN_PEPPER', PEPPER],
   ]
     .filter(([, value]) => !value)
     .map(([name]) => name);
-  if (missing.length > 0) {
-    return new Response(JSON.stringify({ error: `lms-admin is missing: ${missing.join(', ')}` }), {
+  const weak = missing.length === 0 ? pepperProblem(PEPPER) : null;
+  if (missing.length > 0 || weak) {
+    return new Response(JSON.stringify({ error: weak ? `lms-admin: ${weak}` : `lms-admin is missing: ${missing.join(', ')}` }), {
       status: 503,
       headers: { 'content-type': 'application/json', ...CORS },
     });

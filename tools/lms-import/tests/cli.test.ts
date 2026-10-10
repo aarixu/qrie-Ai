@@ -1,5 +1,7 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { run } from '../src/cli.ts';
+import { authPassword } from '../src/pinGuard.ts';
 
 const FILES: Record<string, string> = {
   'school.json': JSON.stringify({
@@ -68,5 +70,61 @@ describe('lms-import --apply', () => {
     const code = await run([...ARGS, '--apply'], t.deps);
     expect(code).toBe(1);
     expect(t.out.join('\n')).toMatch(/--out/);
+  });
+
+  it('refuses without LMS_PIN_PEPPER, or with one shorter than 32 characters, before writing anything', async () => {
+    for (const pepper of [undefined, 'too-short']) {
+      const calls: string[] = [];
+      const t = io(FILES, {
+        SUPABASE_URL: 'https://x',
+        SUPABASE_SERVICE_ROLE_KEY: 'k',
+        ...(pepper ? { LMS_PIN_PEPPER: pepper } : {}),
+      });
+      const code = await run([...ARGS, '--apply', '--out', 'slips.html'], {
+        ...t.deps,
+        fetchImpl: (async (url: string) => {
+          calls.push(url);
+          return new Response('[]');
+        }) as unknown as typeof fetch,
+      });
+      expect(code).toBe(1);
+      expect(t.out.join('\n')).toMatch(/LMS_PIN_PEPPER/);
+      expect(calls).toEqual([]);
+      expect(t.written).toEqual({});
+    }
+  });
+
+  it('gives the auth service a password made from each PIN, never the PIN, and writes each one’s sign-in guard', async () => {
+    const pepper = 'test-pepper-0123456789-abcdefghijklmnop';
+    const calls: { url: string; method: string; body: Record<string, unknown> | null }[] = [];
+    let n = 0;
+    const fetchImpl = (async (url: string, init?: RequestInit) => {
+      const method = init?.method ?? 'GET';
+      calls.push({ url, method, body: init?.body ? JSON.parse(String(init.body)) : null });
+      if (method === 'GET') return new Response('[]');
+      if (url.endsWith('/auth/v1/admin/users')) return new Response(JSON.stringify({ id: `user-${++n}` }));
+      if (url.includes('/rest/v1/rpc/')) return new Response(null, { status: 204 });
+      return new Response(JSON.stringify([{ id: `row-${++n}` }]), { status: 201 });
+    }) as unknown as typeof fetch;
+    const t = io(FILES, { SUPABASE_URL: 'https://x', SUPABASE_SERVICE_ROLE_KEY: 'k', LMS_PIN_PEPPER: pepper });
+    const code = await run([...ARGS, '--apply', '--out', 'slips.html'], { ...t.deps, fetchImpl });
+    expect(code).toBe(0);
+
+    const slips = [...t.written['slips.html'].matchAll(/<dt>Your ID<\/dt><dd>([^<]+)<\/dd>\s*<dt>Your PIN<\/dt><dd>(\d+)<\/dd>/g)];
+    expect(slips).toHaveLength(3);
+    const created = calls.filter((c) => c.url === 'https://x/auth/v1/admin/users');
+    const guards = calls.filter((c) => c.url === 'https://x/rest/v1/rpc/pin_guard_set');
+    expect(created).toHaveLength(3);
+    expect(guards).toHaveLength(3);
+    for (const [, loginId, pin] of slips) {
+      const auth = created.find((c) => c.body?.email === `${loginId.toLowerCase()}@login.qrie.invalid`)!;
+      expect(auth.body?.password).toBe(await authPassword(pepper, loginId, pin));
+      expect(guards.find((g) => g.body?.p_login === loginId)?.body).toMatchObject({
+        p_salt: expect.stringMatching(/^[0-9a-f]{32}$/),
+        p_verifier: expect.stringMatching(/^[0-9a-f]{64}$/),
+      });
+      // The PIN itself went nowhere but the slips page.
+      for (const c of calls) expect(JSON.stringify(c.body ?? '')).not.toContain(`"${pin}"`);
+    }
   });
 });

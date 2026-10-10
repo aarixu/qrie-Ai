@@ -1,10 +1,13 @@
 // @vitest-environment node
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { WRONG_PIN } from '../../../packages/lms-client/src/backend.ts';
 import { buildSchool, seat, type School } from '../../../supabase/tests/fixtures.ts';
 import { asService, freshDatabase } from '../../../supabase/tests/harness.ts';
 import { handleAdmin, type AdminDeps } from '../src/admin.ts';
 import { pgliteStore } from '../src/pgliteStore.ts';
+import { authPassword } from '../src/pinGuard.ts';
+import { handleSignIn } from '../src/signIn.ts';
 
 /**
  * THE HOSTED SCHOOL PORTAL'S ADMIN CALLS (supabase/functions/lms-admin,
@@ -16,13 +19,41 @@ import { pgliteStore } from '../src/pgliteStore.ts';
  * a parent a sign-in — checking every time, on the server, that the caller is
  * their school's admin. Here it runs over the real migrations, with a
  * stand-in for the identity service and the auth admin API.
+ *
+ * The auth service is never given a PIN: it is given the password made from
+ * it (pinGuard.ts), and the sign-in guard (0046) a verifier, so the PIN on the
+ * slip signs in through lms-signin and nowhere else.
  */
+
+const PEPPER = 'test-pepper-0123456789-abcdefghijklmnop';
 
 let db: PGlite;
 let one: School;
 const passwords = new Map<string, string>();
+const pins = new Map<string, string>();
 const rpcCalls: string[] = [];
 const tokens: Record<string, string> = {};
+
+async function rpc(fn: string, args: Record<string, unknown>): Promise<unknown> {
+  rpcCalls.push(fn);
+  const names = Object.keys(args);
+  return asService(db, async (tx) => {
+    const { rows } = await tx.query<{ v: unknown }>(
+      `select lms.${fn}(${names.map((n, i) => `${n} => $${i + 1}`).join(', ')}) as v`,
+      names.map((n) => args[n]),
+    );
+    return rows[0]?.v ?? null;
+  });
+}
+
+const signIn = (loginId: string, pin: string) =>
+  handleSignIn({ method: 'POST', body: JSON.stringify({ loginId, pin }) }, { rpc, pepper: PEPPER });
+
+/** The guard row's user, which must be the account's own. */
+const guardedUser = async (loginId: string) =>
+  (await db.query<{ user_id: string }>(`select user_id from lms.sign_in_guard where login_id = $1`, [loginId])).rows[0]?.user_id;
+const accountUser = async (loginId: string) =>
+  (await db.query<{ user_id: string }>(`select user_id from lms.account where login_id = $1`, [loginId])).rows[0].user_id;
 
 function deps(): AdminDeps {
   const base = pgliteStore(db);
@@ -31,17 +62,8 @@ function deps(): AdminDeps {
       const user = header?.startsWith('Bearer ') ? tokens[header.slice(7)] : undefined;
       return user ? { ok: true, user: { userId: user } } : { ok: false, status: 401, why: 'that sign-in is not valid' };
     },
-    rpc: async (fn, args) => {
-      rpcCalls.push(fn);
-      const names = Object.keys(args);
-      return asService(db, async (tx) => {
-        const { rows } = await tx.query<{ v: unknown }>(
-          `select lms.${fn}(${names.map((n, i) => `${n} => $${i + 1}`).join(', ')}) as v`,
-          names.map((n) => args[n]),
-        );
-        return rows[0]?.v ?? null;
-      });
-    },
+    rpc,
+    pepper: PEPPER,
     store: {
       ...base,
       async createAccount(a) {
@@ -91,7 +113,7 @@ describe('who may call', () => {
 });
 
 describe('adding people from the sheets', () => {
-  it('checks without creating anybody, then creates them with a PIN as their password', async () => {
+  it('checks without creating anybody, then creates them: the auth service gets a password made from the PIN, never the PIN', async () => {
     const sheet = { students: 'grade,section,roll,name\n8,A,5,Asha Rao\n8,B,6,Dev Singh\n' };
     const check = await call('/import', sheet);
     expect(check.status).toBe(200);
@@ -105,7 +127,14 @@ describe('adding people from the sheets', () => {
       ['HOS-8A-5', '8A'],
       ['HOS-8B-6', '8B'],
     ]);
-    for (const c of body.created) expect(passwords.get(c.loginId)).toBe(c.pin);
+    for (const c of body.created) {
+      pins.set(c.loginId, c.pin);
+      expect(passwords.get(c.loginId)).not.toBe(c.pin);
+      expect(passwords.get(c.loginId)).toBe(await authPassword(PEPPER, c.loginId, c.pin));
+      // Each has a guard row, so the PIN on the slip signs in through the guard.
+      expect(await guardedUser(c.loginId)).toBe(await accountUser(c.loginId));
+      expect(await signIn(c.loginId, c.pin)).toEqual({ status: 200, body: { password: passwords.get(c.loginId) } });
+    }
     const audit = await db.query<{ actor: string; action: string; target: string }>(
       `select actor, action, target from lms.audit_event where action = 'people-added'`,
     );
@@ -124,12 +153,17 @@ describe('adding people from the sheets', () => {
 });
 
 describe('a new PIN', () => {
-  it('replaces the password, ends every session, and is in the activity log', async () => {
+  it('replaces the password and the guard row, unlocks the ID, ends every session, and is in the activity log', async () => {
+    const old = pins.get('HOS-8A-5')!;
+    for (let i = 0; i < 5; i++) await signIn('HOS-8A-5', '000001');
+    expect((await signIn('HOS-8A-5', old)).status).toBe(401);
     const r = await call('/reset-pin', { loginId: 'hos-8a-5' });
     expect(r.status).toBe(200);
     const body = r.body as { loginId: string; displayName: string; pin: string };
     expect(body).toMatchObject({ loginId: 'HOS-8A-5', displayName: 'Asha Rao' });
-    expect(passwords.get('HOS-8A-5')).toBe(body.pin);
+    expect(passwords.get('HOS-8A-5')).toBe(await authPassword(PEPPER, 'HOS-8A-5', body.pin));
+    expect(await signIn('HOS-8A-5', body.pin)).toEqual({ status: 200, body: { password: passwords.get('HOS-8A-5') } });
+    if (body.pin !== old) expect(await signIn('HOS-8A-5', old)).toEqual({ status: 401, body: { error: WRONG_PIN } });
     expect(rpcCalls).toContain('end_sessions');
     const audit = await db.query(`select 1 from lms.audit_event where action = 'pin-reset' and target = 'HOS-8A-5' and actor = $1`, [one.admin]);
     expect(audit.rows).toHaveLength(1);
@@ -145,7 +179,9 @@ describe("a parent's sign-in", () => {
     const p = first.body as { loginId: string; displayName: string; pin: string };
     expect(p).toMatchObject({ loginId: 'HOS-P1', displayName: 'Sunita Sharma' });
     expect(p.pin).toMatch(/^[1-9]\d{7}$/);
-    expect(passwords.get('HOS-P1')).toBe(p.pin);
+    expect(passwords.get('HOS-P1')).toBe(await authPassword(PEPPER, 'HOS-P1', p.pin));
+    expect(await guardedUser('HOS-P1')).toBe(await accountUser('HOS-P1'));
+    expect(await signIn('HOS-P1', p.pin)).toEqual({ status: 200, body: { password: passwords.get('HOS-P1') } });
     const linked = await db.query(
       `select 1 from lms.guardian g join lms.account a on a.user_id = g.parent_user_id
         where a.login_id = 'HOS-P1' and a.kind = 'parent' and g.student_user_id = $1`,

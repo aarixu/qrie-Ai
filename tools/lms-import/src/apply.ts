@@ -23,7 +23,11 @@ export interface NewAccount {
   displayName: string;
   /** Internal only; nobody types it. See loginEmail. */
   email: string;
-  /** The PIN. Goes to the auth service and onto the slip, nowhere else. */
+  /**
+   * The PIN, as applyPlan hands it to the store; it goes onto the slip too.
+   * On the hosted project guardedStore (pinGuard.ts) gives the auth service
+   * the password made from it instead, never the PIN itself.
+   */
   password: string;
   /**
    * Service-role-only metadata. `provisioned_by: 'school'` is what 0021's

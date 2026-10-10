@@ -5,8 +5,10 @@ import { webcrypto } from 'node:crypto';
  * longer because a teacher's account sees a whole class.
  *
  * A PIN is printed on the slip and nowhere else: this module returns it, the
- * import writes it into the auth user's password and onto the slip, and no
- * table or log ever holds it.
+ * import puts it onto the slip, and no table or log ever holds it. What is
+ * kept is made from it: on the hosted project, a password for the auth
+ * service and a verifier in the sign-in guard, both made with a server
+ * secret (pinGuard.ts); in the demo, a hash in its own sign-in table.
  */
 export const PIN_LENGTH = { student: 6, teacher: 8, admin: 8, parent: 8 } as const;
 

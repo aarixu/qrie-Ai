@@ -1,23 +1,21 @@
 import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 import type { PGlite } from '@electric-sql/pglite';
-import { WRONG_PIN } from '../../../packages/lms-client/src/backend.ts';
+import { CLOSED, LOCKED, WRONG_PIN } from '../../../packages/lms-client/src/backend.ts';
 
 /**
  * School ID + PIN sign-in for the demo, standing in for Supabase Auth.
  *
  * What it does that a person will notice: a wrong PIN and an unknown ID get
- * the same answer (so the form never confirms which IDs exist), and five
- * wrong PINs in a row lock the ID for fifteen minutes, right PIN or not.
+ * the same answer, and five wrong PINs in a row lock the ID for fifteen
+ * minutes, right PIN or not. (An ID that has been locked answers LOCKED,
+ * which an unknown one never does.)
  *
- * NOT what production does. On the hosted project sign-in is Supabase Auth's,
- * which has no per-ID lockout; its rate limits (not checked for this project)
- * are the only brake. Carrying the lockout to production is open work (final
- * plan, L4).
+ * The hosted project's counterpart is the lms-signin edge function
+ * (tools/lms-import/src/signIn.ts): the same words and the same lockout,
+ * kept in lms.sign_in_guard (0046), in front of Supabase Auth.
  */
 
-export { WRONG_PIN };
-export const LOCKED = 'This ID is locked after too many wrong PINs. Try again in 15 minutes, or ask your teacher.';
-export const CLOSED = 'This account is closed. Ask your school office.';
+export { CLOSED, LOCKED, WRONG_PIN };
 const MAX_FAILURES = 5;
 
 // A demo of 87 accounts is rebuilt often; N=2^12 keeps that under a second.
