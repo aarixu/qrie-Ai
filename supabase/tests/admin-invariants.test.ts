@@ -210,6 +210,8 @@ describe('the admin schema', () => {
       ['admin', 'metric_family_money'],
       ['admin', 'metric_family_webhooks'],
       ['admin', 'metric_family_schools'],
+      ['admin', 'metric_family_learning'],
+      ['admin', 'metric_family_funnel'],
       ['public', 'keep_safety_event'],
     ]) {
       expect(await executable('authenticated', schema, name), `${schema}.${name}`).toBe(false);
