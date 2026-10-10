@@ -18,6 +18,7 @@ import { setRemindersEnabled, setStudyDays, setStudyMinute } from '../stores/sch
 import { askForNotifications } from '../lib/reminders';
 import { writeWorkspace, type EntryPath, type TutorLanguage } from '../lib/workspace';
 import { INTERESTS, setInterests } from '../lib/studentMemory';
+import { MEERA_IS_AN_AI } from '../lib/aboutMeera';
 
 const CLASSES = [6, 7, 8, 9, 10, 11, 12];
 
@@ -329,6 +330,9 @@ export function Onboarding() {
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
                 Just your first name is enough.
               </p>
+              {/* Where the child first meets her, the app says once what she
+                  is, so she never has to announce it (lib/aboutMeera.ts). */}
+              <p className="font-label-md text-label-md text-on-surface-variant mb-stack-md">{MEERA_IS_AN_AI}</p>
               {/* Capped in the handler as well as by maxLength, which stops
                   typing but not a value set by paste or autofill. */}
               <input

@@ -3,6 +3,7 @@ import { HELPLINES } from '@ai-tutor/safety';
 import { BRAND } from '../brand';
 import { Screen } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
+import { MEERA_IS_AN_AI } from '../lib/aboutMeera';
 
 /**
  * The questions students actually ask, answered in the app rather than in a
@@ -21,7 +22,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'What happens when I raise my hand?',
-    a: 'The class pauses at that exact moment and a live tutor takes over, already knowing which part of the lesson you were on. Ask your doubt in your own words. When it is sorted, the class carries on from the same spot — you never lose your place, and nothing is skipped.',
+    a: 'The class pauses at that exact moment and Meera answers you there and then, already knowing which part of the lesson you were on. Ask your doubt in your own words. When it is sorted, the class carries on from the same spot — you never lose your place, and nothing is skipped.',
   },
   {
     q: 'How does the streak work?',
@@ -95,12 +96,17 @@ export function Help() {
         <h2 className="font-headline-md text-[20px] leading-7 text-on-surface mb-stack-sm">
           How it works
         </h2>
+        {/* Until 2026-10-11 this said every class "was taught live once, to
+            real students, and recorded", which was true of none of them, and
+            that "a live tutor" took a raised hand. What is true: each class is
+            written ahead or made for you while you wait, and Meera, an AI,
+            teaches it on the board out loud (lib/aboutMeera.ts). */}
         <p className="font-body-md text-body-md text-on-surface-variant">
-          Every class here was taught live once, to real students, and recorded — so what you watch
-          is a real lesson, not a slideshow being read out. When you get stuck, raise your hand and
-          the recording pauses; a live tutor picks up from that exact moment, answers your doubt,
-          then hands you back to the class where it stopped. That is the whole idea behind{' '}
-          {BRAND.name}: the patience of a private tutor, at the speed of a recording you control.
+          {MEERA_IS_AN_AI} Every class is planned ahead, or made for you while you wait, and she
+          teaches it on the board, out loud. When you get stuck, raise your hand and the class
+          pauses; she answers your doubt from that exact moment, then carries on where it stopped.
+          That is the whole idea behind {BRAND.name}: the patience of a private tutor, at the speed
+          of a class you control.
         </p>
       </section>
 
