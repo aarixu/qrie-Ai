@@ -201,6 +201,10 @@ describe('the banned phrases', () => {
       expect.arrayContaining([
         'great job',
         'great question',
+        'good question',
+        'achha sawaal',
+        'good thinking',
+        'achha socha',
         'well done',
         'nice try',
         'as i said before',

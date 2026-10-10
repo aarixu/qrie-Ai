@@ -390,14 +390,14 @@ export const MALFORMED_REPLY_LINE =
 
 /** The same line for a child who chose Hinglish (overnight review #27). */
 export const MALFORMED_REPLY_LINE_HI =
-  'Sorry, bolte-bolte main thoda uljha gayi. Ek baar phir se puchoge, shayad alag shabdon mein?';
+  'Sorry, bolte-bolte main thoda uljha gayi. Ek baar phir se pucho, shayad alag shabdon mein?';
 
 /** How long a reply may take before she says she is thinking about it. */
 export const THINKING_ALOUD_MS = 1200;
 
 const THINKING: Record<'en' | 'hi-en', readonly string[]> = {
-  en: ['Hmm, let me think about that.', 'Good question — give me a second.', "Okay, let's see."],
-  'hi-en': ['Hmm, sochne do.', 'Achha sawaal — ek second.', 'Theek hai, dekhte hain.'],
+  en: ['Hmm, let me think about that.', 'One second, let me think.', "Okay, let's see."],
+  'hi-en': ['Hmm, sochne do.', 'Ek second, sochti hoon.', 'Theek hai, dekhte hain.'],
 };
 
 /** Her thinking-aloud line, varied by the question so it is not the same every time. */

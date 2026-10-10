@@ -50,7 +50,9 @@ describe('an opener the app sends for the child', () => {
     await flush();
     r.handoff.sendUserText('why four chambers?');
     await flush();
-    expect(r.said.some((l) => l.startsWith('Good question'))).toBe(true);
+    // The stand-in's answer to a first question (it no longer opens on "Good
+    // question": persona v3 bans praise that fits any question).
+    expect(r.said.some((l) => l.startsWith("It's completely natural to feel confused here."))).toBe(true);
     expect(r.handoff.state).toBe('LIVE');
   });
 

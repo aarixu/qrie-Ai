@@ -42,7 +42,7 @@ const ENTRY: ByLanguage<(topic: string) => string> = {
   ],
   'hi-en': [
     (t) => `Haan, bolo — achhi jagah pe roka. Hum '${t}' ke beech mein the. Kya doubt hai?`,
-    (t) => `Ek second, maine class pause kar di hai. Hum '${t}' dekh rahe the — batao, kahan atke?`,
+    (t) => `Ek second, maine class pause kar di hai. Hum '${t}' dekh rahe the — batao, kahan dikkat hui?`,
     (t) => `Aaram se, koi jaldi nahi. '${t}' thoda tricky lag sakta hai — pucho, kya samajh nahi aaya?`,
     (t) => `Haan haan, pucho — main isi liye toh hoon. Hum '${t}' pe the — kya jaanna hai?`,
   ],

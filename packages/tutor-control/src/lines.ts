@@ -69,9 +69,9 @@ const nudge: Fixed = {
     'No hurry. Even a first step is a good start — what would you try?',
   ],
   'hi-en': [
-    'Koi jaldi nahi hai — aaram se socho. Jo soch rahe ho batao, ya hint maang lo.',
-    'Socho, koi baat nahi. Bolke try karoge, ya main ek chhota sa hint doon?',
-    'Aaram se. Pehla step bhi bata do toh achha start hai — kya try karoge?',
+    'Koi jaldi nahi hai — aaram se socho. Jo dimaag mein hai woh batao, ya hint maang lo.',
+    'Socho, koi baat nahi. Bolke try karo, ya main ek chhota sa hint doon?',
+    'Aaram se. Pehla step bhi bata do toh achha start hai — kya try karna hai?',
   ],
 };
 
@@ -83,7 +83,7 @@ const haveAGo: Fixed = {
   ],
   'hi-en': [
     'Jo aata hai usse try karo — pehla step batao, chahe pakka na ho.',
-    'Kahin se bhi shuru karo — sabse pehle kya karoge?',
+    'Kahin se bhi shuru karo — sabse pehle kya karna hai?',
   ],
 };
 
@@ -94,7 +94,7 @@ const sayAgain: Fixed = {
     'I missed that. Could you tell me again?',
   ],
   'hi-en': [
-    'Sorry, theek se sunai nahi diya — phir se bologe?',
+    'Sorry, theek se sunai nahi diya — phir se bolo?',
     'Yeh miss ho gaya. Ek baar aur batao?',
   ],
 };
@@ -109,7 +109,7 @@ const afterFollowUp: Fixed = {
     'Okay, I see what you mean. Now try the question once more.',
   ],
   'hi-en': [
-    'Achha, samajh gayi tum kaise soch rahe ho. Ab sawaal phir se try karo.',
+    'Achha, tumhari soch samajh gayi. Ab sawaal phir se try karo.',
     'Theek hai, samajh aaya. Ab ek baar phir sawaal try karo.',
   ],
 };
@@ -143,18 +143,18 @@ const carryOn: Fixed = {
 
 /** Right, cold. Brief. */
 const praise: Fixed = {
-  en: ["Yes — that's right.", 'Exactly.', "That's it — well reasoned.", 'Right, nicely done.'],
-  'hi-en': ['Haan, bilkul sahi.', 'Ekdum sahi.', 'Sahi jawab — achha socha.', 'Haan, yahi hai. Badhiya.'],
+  en: ["Yes — that's right.", 'Exactly.', "That's it — well reasoned.", 'Right.'],
+  'hi-en': ['Haan, sahi hai.', 'Ekdum sahi.', 'Sahi jawab — yahi hai.', 'Haan, yahi hai.'],
 };
 
 /** Right, after help. Names the effort, not surprise. */
 const praiseAfterHelp: Fixed = {
   en: [
     'There you go — you worked it out.',
-    'Yes, you got there. Good thinking.',
-    "That's right — well done for sticking with it.",
+    'Yes, you got there.',
+    "That's right — you kept at it, and it came.",
   ],
-  'hi-en': ['Dekha? Tumne khud nikaal liya.', 'Haan, ho gaya! Achha socha.', 'Sahi — lage rahe, isliye ho gaya.'],
+  'hi-en': ['Dekha? Tumne khud nikaal liya.', 'Haan, ho gaya!', 'Sahi — mehnat se ho gaya.'],
 };
 
 /**

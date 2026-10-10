@@ -131,8 +131,8 @@ export function createStubAgent(options: { opening?: boolean } = {}): AgentAdapt
             enqueue(() =>
               io.say(
                 hi
-                  ? `Achha sawaal — yahan confuse hona bilkul normal hai. Board ko dhyaan se dekho: '${ctx.beatTopic}' ko aise socho, main step by step samjhaati hoon.`
-                  : `Good question — it's completely natural to feel confused here. Look at the board carefully: think of '${ctx.beatTopic}' this way, and I'll walk you through it step by step.`,
+                  ? `Yahan confuse hona bilkul normal hai. Board ko dhyaan se dekho: '${ctx.beatTopic}' ko aise socho, main step by step samjhaati hoon.`
+                  : `It's completely natural to feel confused here. Look at the board carefully: think of '${ctx.beatTopic}' this way, and I'll walk you through it step by step.`,
               ),
             );
           } else if (userMessages === 2) {

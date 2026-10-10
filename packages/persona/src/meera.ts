@@ -155,10 +155,15 @@ export const BANNED_PHRASES: readonly string[] = [
   'great job',
   'good job',
   'great question',
+  // Praise that fits any question or any answer, in both languages: the
+  // thinking-aloud line and the scripted stand-in opened on them.
+  'good question',
+  'achha sawaal',
   'well done',
   'nicely done',
   'nice try',
   'good thinking',
+  'achha socha',
   'as i said before',
   'obviously',
   'as you know',
