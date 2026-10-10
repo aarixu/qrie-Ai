@@ -58,7 +58,7 @@ export function tilesFor(t: Today): Tile[] {
       value: t.capture.distress === 'not-captured' ? 'Not captured' : 'Captured',
       detail:
         t.capture.distress === 'not-captured'
-          ? 'A flag is kept on the child\'s phone only, so this is unknown, not zero.'
+          ? 'No flag has reached the server and the day capture went live is not recorded on Safety, so this is unknown, not zero.'
           : 'Counted on the server.',
       tone: t.capture.distress === 'not-captured' ? 'grey' : 'ok',
     },

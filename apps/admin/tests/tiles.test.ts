@@ -26,6 +26,8 @@ describe('the home page tiles', () => {
     const d = tile(base, 'distress');
     expect(d.tone).toBe('grey');
     expect(d.value).toBe('Not captured');
+    // Plan 5 sends flags to the server (0065); 0070 reads them here. Until one arrives or the day is recorded, it is unknown.
+    expect(d.detail).toBe('No flag has reached the server and the day capture went live is not recorded on Safety, so this is unknown, not zero.');
     expect(tile({ ...base, capture: { distress: 'captured', lastPurge: 'x' } }, 'distress').tone).toBe('ok');
   });
 

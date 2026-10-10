@@ -411,9 +411,11 @@ import tool, refuse in their own code, which asks the database first
    with the tutor (`npm run build:site`), so it waits for the same merge.
 2. **Apply the migrations** with the rest of the console's, after plan 5's are
    merged: `npx supabase db push` applies 0062 to 0064 (and plan 5's 0065 to
-   0069). The tutor's admission check works with the relay that is live today.
-   System's migration level then reads the last number applied (0064 with this
-   plan's alone), no longer section 5's 0061.
+   0069, then the merge's 0070, which lets Today read distress capture as
+   captured once a flag arrives or you record the day). The tutor's admission
+   check works with the relay that is live today. System's migration level then
+   reads the last number applied (0070 with both plans), no longer section 5's
+   0061.
 3. **Deploy the two school services from the merged code**, after the
    migrations: `npx supabase functions deploy lms-admin --no-verify-jwt` and
    `npx supabase functions deploy admin-api --no-verify-jwt`. Until `lms-admin`
@@ -495,7 +497,7 @@ the local test database only, and the pages have not been opened in a browser.
    come, every school's decision stays "Not decided" and, on the hosted
    database, nobody can be added to a school.
 3. **Apply the migrations** (after plan 4's): `npx supabase db push` applies
-   0065 to 0069 with the rest. Nothing new to expose: the functions are in
+   0065 to 0069 and the merge's 0070 with the rest. Nothing new to expose: the functions are in
    `admin` (already exposed) and `lms.report_problem` in `lms`.
 4. **Redeploy `admin-api`** for its two new routes (`class-remove`, `erase`):
    `npx supabase functions deploy admin-api --no-verify-jwt`. No new secret.
