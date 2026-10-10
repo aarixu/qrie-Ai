@@ -12,8 +12,8 @@ import { keepFlag } from './safety-fixtures.ts';
  * A flag says that the tutor's screen recognised distress, whose words matched,
  * at which school, and when. It holds no user id, no session, no lesson and no
  * words. The console reads "not captured" until the first flag arrives or the
- * owner records the day capture went live, and the alarm counts the last 15
- * minutes of flags.
+ * owner records the day capture went live, and the alarm counts the flags
+ * received since its previous check (at least 15 minutes, at most a day).
  */
 
 const TOKEN = 'f'.repeat(40);
@@ -162,22 +162,50 @@ describe('what the console says about capture', () => {
 });
 
 describe('the alarm', () => {
-  it('the alarm counts distress flags of the last 15 minutes, and nothing else about them', async () => {
-    await db.transaction(async (tx) => {
+  const owner_ = async (sql: string, params: unknown[] = []) =>
+    db.transaction(async (tx) => {
       await tx.query(`select set_config('admin.session', 'on', true)`);
-      await tx.query(`delete from admin.safety_event`);
+      await tx.query(sql, params);
     });
-    const old = crypto.randomUUID();
-    expect(await keepFlag(db, school.kid8a)).toBe(true);
-    expect(await keepFlag(db, school.kid8a, { id: old })).toBe(true);
-    await db.transaction(async (tx) => {
-      await tx.query(`select set_config('admin.session', 'on', true)`);
-      await tx.query(`update admin.safety_event set received_at = now() - interval '20 minutes' where id = $1`, [old]);
-    });
-    const s = await db.transaction(async (tx) => {
+  const flagAged = async (minutes: number) => {
+    const id = crypto.randomUUID();
+    expect(await keepFlag(db, school.kid8a, { id })).toBe(true);
+    await owner_(`update admin.safety_event set received_at = now() - make_interval(mins => $2::int) where id = $1`, [id, minutes]);
+  };
+  /** The previous check was `minutes` ago, or never (null). */
+  const lastCheck = (minutes: number | null) =>
+    minutes === null
+      ? owner_(`delete from admin.setting where key = 'alert_last_seen'`)
+      : owner_(
+          `insert into admin.setting (key, value) values ('alert_last_seen', to_jsonb((now() - make_interval(mins => $1::int))::text))
+           on conflict (key) do update set value = excluded.value`,
+          [minutes],
+        );
+  const snapshot = () =>
+    db.transaction(async (tx) => {
       await tx.exec('set local role anon');
       return (await tx.query<{ s: Record<string, unknown> }>(`select public.alert_snapshot($1) as s`, [TOKEN])).rows[0].s;
     });
-    expect(s.distressFlags15m).toBe(1);
+
+  it('the alarm counts distress flags of the last 15 minutes when it checked more recently or never, and nothing else about them', async () => {
+    await owner_(`delete from admin.safety_event`);
+    await flagAged(0);
+    await flagAged(20);
+    await lastCheck(null);
+    expect(await snapshot()).toMatchObject({ distressFlags: 1, distressWindowMinutes: 15 });
+    await lastCheck(5);
+    expect(await snapshot()).toMatchObject({ distressFlags: 1, distressWindowMinutes: 15 });
+  });
+
+  it('a flag that arrived after a check is counted at the next check however late it runs, up to a day back', async () => {
+    await owner_(`delete from admin.safety_event`);
+    await flagAged(18);
+    await lastCheck(20);
+    expect(await snapshot()).toMatchObject({ distressFlags: 1, distressWindowMinutes: 20 });
+    await owner_(`delete from admin.safety_event`);
+    await flagAged(25 * 60);
+    await flagAged(23 * 60);
+    await lastCheck(30 * 60);
+    expect(await snapshot()).toMatchObject({ distressFlags: 1, distressWindowMinutes: 24 * 60 });
   });
 });

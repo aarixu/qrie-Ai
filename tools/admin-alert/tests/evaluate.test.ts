@@ -44,23 +44,24 @@ describe('safety', () => {
     expect(evaluate(old, NOT_DUE)).toEqual([]);
   });
 
-  it('speaks to the safety chat while a distress flag is under 15 minutes old, and to nobody else', () => {
-    const s = { ...quiet, distressFlags15m: 2 };
+  it('speaks to the safety chat on every run that counts a distress flag, with how far back it counted, and to nobody else', () => {
+    const s = { ...quiet, distressFlags: 2, distressWindowMinutes: 20 };
     for (const t of [START, NOT_DUE]) {
       expect(evaluate(s, t)).toEqual([
         {
           channel: 'safety',
           key: 'distress-flag',
-          text: 'Qrie safety: 2 distress flag(s) in the last 15 minutes. No words are kept. Open the Safety page.',
+          text: 'Qrie safety: 2 distress flag(s) in the last 20 minutes. No words are kept. Open the Safety page.',
         },
       ]);
     }
-    expect(evaluate({ ...quiet, distressFlags15m: 0 }, START)).toEqual([]);
+    expect(evaluate({ ...quiet, distressFlags: 0, distressWindowMinutes: 15 }, START)).toEqual([]);
   });
 
   it('is quiet when the database does not send the count', () => {
     const older: Snapshot = { ...quiet };
-    delete older.distressFlags15m;
+    delete older.distressFlags;
+    delete older.distressWindowMinutes;
     expect(evaluate(older, START)).toEqual([]);
   });
 });
@@ -111,7 +112,7 @@ describe('the checker itself', () => {
 
 describe('what a message may carry', () => {
   it('never names a school, a lesson, a child or a note, whatever the numbers', () => {
-    const worst = { ...quiet, halted: true, unsafeNewReports: 3, newReports: 5, oldestNewReportMinutes: 500, unitsToday: 99999, relayEvents5m: 100, relayFailures5m: 100, distressFlags15m: 2 };
+    const worst = { ...quiet, halted: true, unsafeNewReports: 3, newReports: 5, oldestNewReportMinutes: 500, unitsToday: 99999, relayEvents5m: 100, relayFailures5m: 100, distressFlags: 2, distressWindowMinutes: 15 };
     const text = [...evaluate(worst, START), ...evaluate(null, START)].map((a) => a.text).join(' ');
     expect(text.length).toBeGreaterThan(0);
     expect(text).not.toMatch(/school|lesson|student|child|note|class\b/i);

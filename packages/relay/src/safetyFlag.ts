@@ -30,7 +30,8 @@ import type { HandlerDeps } from './handler.ts';
  * answer, and still demands a verified sign-in and the per-minute window.
  *
  * NO WEBHOOK. The relay tells nobody; the outside alarm (tools/admin-alert)
- * reads the count of the last 15 minutes and tells the safety chat.
+ * reads the count of flags received since its previous check (at least the
+ * last 15 minutes) and tells the safety chat.
  */
 
 export interface SafetyFlag {

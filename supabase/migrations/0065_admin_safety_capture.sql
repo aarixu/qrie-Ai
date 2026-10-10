@@ -125,9 +125,13 @@ $$;
 revoke all on function admin.safety_capture_set(date, text, text) from public, anon;
 grant execute on function admin.safety_capture_set(date, text, text) to authenticated;
 
--- THE ALARM'S SNAPSHOT, AGAIN: 0051's body unchanged, plus one count,
--- distressFlags15m (flags received in the last 15 minutes). The snapshot
--- carries counts, ages and booleans only: never a name, note, school or word.
+-- THE ALARM'S SNAPSHOT, AGAIN: 0051's body unchanged, plus two numbers:
+-- distressFlags, the flags received since the previous good check (at least
+-- the last 15 minutes, at most the last 24 hours), and distressWindowMinutes,
+-- how far back that count reaches. A flag that arrives between two checks is
+-- counted by the next one however late the scheduler runs it; with runs every
+-- 5 minutes, one flag is counted by about three runs. The snapshot carries
+-- counts, ages and booleans only: never a name, note, school or word.
 create or replace function public.alert_snapshot(p_token text)
 returns jsonb
 language plpgsql volatile security definer
@@ -143,6 +147,8 @@ declare
   recent integer;
   failed integer;
   distress integer;
+  prev_seen timestamptz;
+  since timestamptz;
 begin
   -- A wrong token is ANSWERED, not raised: an exception would roll back the
   -- insert below, and the count of misses is how an attack becomes visible.
@@ -163,7 +169,14 @@ begin
   select count(*)::int into cls from public.prepared_class p where p.review_status = 'pending';
   select count(*)::int, count(*) filter (where e.status = 0 or e.status >= 500)::int
     into recent, failed from public.usage_event e where e.at > now() - interval '5 minutes';
-  select count(*)::int into distress from admin.safety_event e where e.received_at > now() - interval '15 minutes';
+  -- The previous good check, read before this one overwrites it below.
+  begin
+    select (s.value #>> '{}')::timestamptz into prev_seen from admin.setting s where s.key = 'alert_last_seen';
+  exception when others then
+    prev_seen := null;
+  end;
+  since := greatest(now() - interval '24 hours', least(coalesce(prev_seen, now()), now() - interval '15 minutes'));
+  select count(*)::int into distress from admin.safety_event e where e.received_at > since;
 
   insert into admin.setting (key, value) values ('alert_last_seen', to_jsonb(now()::text))
   on conflict (key) do update set value = excluded.value, updated_at = now();
@@ -179,7 +192,8 @@ begin
     'pendingClasses', cls,
     'relayEvents5m', recent,
     'relayFailures5m', failed,
-    'distressFlags15m', distress
+    'distressFlags', distress,
+    'distressWindowMinutes', round(extract(epoch from now() - since) / 60)::int
   );
 end;
 $$;
