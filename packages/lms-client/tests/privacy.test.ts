@@ -138,9 +138,14 @@ describe('the notice', () => {
     expect(said).toContain('out of phone backups');
   });
 
-  it('says what stays on the device stays after signing out, until it is handed in or sent, or the app’s data is cleared', () => {
+  it('says what stays on the device stays after signing out, until it is handed in from the device or sent, or the app’s data is cleared', () => {
     const said = section(privacyNotice(hosted), 'On your device');
-    expect(said).toContain('the answers chosen so far in a quiz or test are kept on the device until the quiz or test is handed in');
+    // Only a hand-in from this phone clears a quiz's picks: one the school's
+    // timer hands in, or one never handed in, keeps them.
+    expect(said).toContain(
+      'the answers a child has chosen so far in a quiz or test are kept on the device, for that child only, until they hand it in from this device'
+    );
+    expect(said).not.toContain('until the quiz or test is handed in');
     expect(said).toContain('work waiting for the internet (answers and photos) until it is sent or the school turns it down');
     expect(said).toContain('Signing out does not remove them; clearing the app’s data does.');
     expect(said).not.toContain('while they wait');

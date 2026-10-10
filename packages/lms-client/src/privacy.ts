@@ -127,7 +127,7 @@ export function privacyNotice(o: PrivacyOptions): PrivacyNotice {
         heading: 'On your device',
         paragraphs: [
           'The app keeps your sign-in on this device until you sign out or it expires.',
-          'In the Student and Parent app, the answers chosen so far in a quiz or test are kept on the device until the quiz or test is handed in, and work waiting for the internet (answers and photos) until it is sent or the school turns it down. Signing out does not remove them; clearing the app’s data does.',
+          'In the Student and Parent app, the answers a child has chosen so far in a quiz or test are kept on the device, for that child only, until they hand it in from this device, and work waiting for the internet (answers and photos) until it is sent or the school turns it down. Signing out does not remove them; clearing the app’s data does.',
           'The Android apps keep all of this out of phone backups and out of transfers to a new phone.',
         ],
       },

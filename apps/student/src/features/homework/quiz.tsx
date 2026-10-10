@@ -3,7 +3,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { isOffline, newKey, type MyAssignment } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
-import { useOutbox } from '@/lib/outbox'
+import { useAuthStore } from '@/stores/auth-store'
+// Relative: the tests' `@` is the teacher app's, which has no such file.
+import { useOutbox } from '../../lib/outbox'
 import { cn } from '@/lib/utils'
 import {
   AlertDialog,
@@ -21,42 +23,44 @@ const LETTERS = 'ABCDEF'
 
 // Answers so far, kept on this phone so a dropped connection or a closed
 // tab does not lose them. Only the chosen option numbers; never sent anywhere
-// until the child hands in.
-const draftKey = (id: string) => `qrie-answers-${id}`
-function loadDraft(id: string): Record<string, number> {
+// until the child hands in. Kept per child, as the outbox is: on a shared
+// phone the next child to open the quiz starts with nothing picked.
+const draftKey = (who: string, id: string) => `qrie-answers-${who}-${id}`
+function loadDraft(who: string, id: string): Record<string, number> {
   try {
-    const v = JSON.parse(localStorage.getItem(draftKey(id)) ?? '{}')
+    const v = JSON.parse(localStorage.getItem(draftKey(who, id)) ?? '{}')
     return v && typeof v === 'object' ? v : {}
   } catch {
     return {}
   }
 }
-function saveDraft(id: string, answers: Record<string, number> | null) {
+function saveDraft(who: string, id: string, answers: Record<string, number> | null) {
   try {
-    if (answers) localStorage.setItem(draftKey(id), JSON.stringify(answers))
-    else localStorage.removeItem(draftKey(id))
+    if (answers) localStorage.setItem(draftKey(who, id), JSON.stringify(answers))
+    else localStorage.removeItem(draftKey(who, id))
   } catch {
     /* this phone keeps nothing; the answers live only on screen */
   }
 }
 
-// The key this hand-in is sent under (0044), kept on the phone until it is
-// handed in, so sending it again — after a reload too — is the same hand-in.
-const keyKey = (id: string) => `qrie-hand-in-key-${id}`
-function handInKey(id: string): string {
+// The key this hand-in is sent under (0044), kept on the phone (per child)
+// until it is handed in, so sending it again — after a reload too — is the
+// same hand-in.
+const keyKey = (who: string, id: string) => `qrie-hand-in-key-${who}-${id}`
+function handInKey(who: string, id: string): string {
   try {
-    const kept = localStorage.getItem(keyKey(id))
+    const kept = localStorage.getItem(keyKey(who, id))
     if (kept) return kept
     const made = newKey()
-    localStorage.setItem(keyKey(id), made)
+    localStorage.setItem(keyKey(who, id), made)
     return made
   } catch {
     return newKey()
   }
 }
-function forgetKey(id: string) {
+function forgetKey(who: string, id: string) {
   try {
-    localStorage.removeItem(keyKey(id))
+    localStorage.removeItem(keyKey(who, id))
   } catch {
     /* nothing was kept */
   }
@@ -76,12 +80,14 @@ export function Quiz({
   onCancel: () => void
 }) {
   const queryClient = useQueryClient()
+  // The quiz is only ever open for a signed-in child.
+  const who = useAuthStore((s) => s.me?.userId) ?? 'nobody'
   const questions = useQuery({
     queryKey: ['questions', a.id],
     queryFn: () => api.assignmentQuestions(a.id),
   })
   const [at, setAt] = useState(0)
-  const [answers, setAnswers] = useState<Record<string, number>>(() => loadDraft(a.id))
+  const [answers, setAnswers] = useState<Record<string, number>>(() => loadDraft(who, a.id))
   const [checking, setChecking] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -119,7 +125,7 @@ export function Quiz({
     )
   }
 
-  useEffect(() => saveDraft(a.id, answers), [a.id, answers])
+  useEffect(() => saveDraft(who, a.id, answers), [who, a.id, answers])
 
   // The countdown. The server enforces the limit; this only shows it, and
   // hands in whatever is answered when it runs out.
@@ -136,11 +142,11 @@ export function Quiz({
     if (handedIn.current) return
     handedIn.current = true
     setBusy(true)
-    const key = handInKey(a.id)
+    const key = handInKey(who, a.id)
     try {
       const r = await api.submitMcq(a.id, answers, key)
-      saveDraft(a.id, null)
-      forgetKey(a.id)
+      saveDraft(who, a.id, null)
+      forgetKey(who, a.id)
       await queryClient.invalidateQueries({ queryKey: ['my-assignments'] })
       await queryClient.invalidateQueries({ queryKey: ['review', a.id] })
       await queryClient.invalidateQueries({ queryKey: ['my-progress'] })
@@ -155,8 +161,8 @@ export function Quiz({
         // No internet: the hand-in waits on the phone, under its key, and goes
         // by itself when the internet is back (components/outbox-banner.tsx).
         await box.add({ kind: 'mcq', assignmentId: a.id, title: a.title, answers, key })
-        saveDraft(a.id, null)
-        forgetKey(a.id)
+        saveDraft(who, a.id, null)
+        forgetKey(who, a.id)
         toast.info('No internet. Your answers are kept on this phone and will be handed in when it is back.')
         onDone()
         return
