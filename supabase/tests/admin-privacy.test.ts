@@ -5,6 +5,7 @@ import { aal2, anonymousChild, fresh, makeStaff, setEnvironment, type Staff } fr
 import { makeFinance, rpc, serviceRpc } from './billing-fixtures.ts';
 import { buildSchool, type School } from './fixtures.ts';
 import { createUser, freshDatabase, type JwtClaims } from './harness.ts';
+import { ledgerEvent } from './admin-school-fixtures.ts';
 import { keepFlag, populateChild } from './safety-fixtures.ts';
 
 /**
@@ -299,6 +300,22 @@ describe('what is kept', () => {
       expect(t.distressCapture.state).toBe('not-captured');
     }
     await expect(call(aal2(finance), 'retention_truth')).rejects.toThrow(/not allowed/);
+  });
+
+  it("the tutor's class and answer records are kept until the account is erased: the nightly purge deletes no event yet", async () => {
+    const user = await createUser(db);
+    await ledgerEvent(db, school.org, user, 100);
+    await db.query(`update public.learning_session set received_at = now() - interval '100 days' where user_id = $1`, [user]);
+    await db.query(`select * from public.purge_old_ledger(90)`);
+    expect((await one<{ n: number }>(`select count(*)::int as n from public.ledger_event where user_id = $1`, [user])).n).toBe(1);
+    expect((await one<{ n: number }>(`select count(*)::int as n from public.learning_session where user_id = $1`, [user])).n).toBe(1);
+    const t = await call<{ rows: { tables: string[]; kept: string; enforcedBy: string; job: unknown }[] }>(aal2(owner), 'retention_truth');
+    const row = t.rows.find((r) => r.tables.includes('public.ledger_event'))!;
+    expect(row.kept).toBe('until the account is erased (a sitting with no events goes after 90 days)');
+    expect(row.enforcedBy).toBe(
+      'nothing yet: job purge-old-ledger deletes no event until the server fold sets purge_safe_before, and nothing sets it (0021)',
+    );
+    expect(row.job).toBeNull();
   });
 
   it('the purge date is the owner\'s, with a fresh code, from tomorrow to two years ahead', async () => {

@@ -430,7 +430,10 @@ the local test database only, and the pages have not been opened in a browser.
    whether new classes wait for review before anyone sees them (now they are
    shared when kept); and the privacy page's line "Class and usage records are
    deleted automatically after 90 days" (`landing/app/privacy/page.tsx:80`),
-   which What is kept shows is not true of usage rows.
+   which What is kept shows is not true: class and answer records and usage
+   rows are kept until the account is erased (the nightly purge-old-ledger job
+   deletes no class or answer event until the server fold sets
+   `purge_safe_before`, and nothing sets it yet: 0021).
 
 ### Day to day
 

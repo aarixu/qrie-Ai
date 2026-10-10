@@ -437,8 +437,10 @@ begin
   for item in
     select * from (values
       (1, 'The tutor''s record of classes and answers', array['public.ledger_event', 'public.learning_session'],
-          'what each class and answer was, when, with the child''s user id', '90 days after the server received it',
-          'job purge-old-ledger (0007, 0009)', 'purge-old-ledger'),
+          'what each class and answer was, when, with the child''s user id',
+          'until the account is erased (a sitting with no events goes after 90 days)',
+          'nothing yet: job purge-old-ledger deletes no event until the server fold sets purge_safe_before, and nothing sets it (0021)',
+          null),
       (2, 'A child''s reports, with their words', array['public.student_report'],
           'the kind, the child''s note, the tutor''s line, the lesson and times, with the child''s user id',
           'until the account is erased', 'nothing', null),
