@@ -162,7 +162,13 @@ function LinkParentDialog({ loginId, name, onClose }: { loginId: string; name: s
         </DialogHeader>
         <div className='space-y-1.5'>
           <Label htmlFor='parent-id'>The parent’s ID</Label>
-          <Input id='parent-id' value={parentId} placeholder='DEMO-P1' onChange={(e) => setParentId(e.target.value)} />
+          <Input
+            id='parent-id'
+            value={parentId}
+            // The demo school's IDs are the example only in a build for the demo school.
+            placeholder={backend.mode === 'demo' ? 'DEMO-P1' : undefined}
+            onChange={(e) => setParentId(e.target.value)}
+          />
         </div>
         {link.isError && <p className='text-sm text-destructive'>{friendlyError(link.error)}</p>}
         <DialogFooter>

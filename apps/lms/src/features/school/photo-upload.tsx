@@ -3,7 +3,7 @@ import { friendlyError } from '@ai-tutor/lms-client'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Camera, CheckCircle2, ImagePlus, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import { api } from '@/lib/backend'
+import { api, backend } from '@/lib/backend'
 import { photoForUpload } from '@/lib/photos'
 import { Button } from '@/components/ui/button'
 import {
@@ -93,8 +93,10 @@ export function PhotoUploadButton() {
           <DialogHeader>
             <DialogTitle>Upload photos</DialogTitle>
             <DialogDescription>
-              Name each picture by the person's school ID, like DEMO-8A-1.jpg, and choose them all at once. Each is cut
-              to a square from its middle. Upload only photos your school may use, with parents' consent for children.
+              Name each picture by the person's school ID
+              {/* The demo school's IDs are the example only in a build for the demo school. */}
+              {backend.mode === 'demo' ? ', like DEMO-8A-1.jpg,' : ' (their ID, then .jpg)'} and choose them all at
+              once. Each is cut to a square from its middle. Upload only photos your school may use, with parents' consent for children.
             </DialogDescription>
           </DialogHeader>
           <label className='flex cursor-pointer items-center gap-3 rounded-lg border-2 border-dashed p-4 hover:bg-accent/50'>
