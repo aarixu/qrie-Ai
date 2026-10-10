@@ -361,6 +361,47 @@ describe('against a function that checks each event', () => {
     expect(store.ledgerOutbox.get().rejected).toBe(1);
   });
 
+  it('keeps and resends an event refused for a deadlock, a serialization failure or a lock, and bins the rest', async () => {
+    aClass();
+    const [opened, answered] = store.ledgerOutbox.get().pending;
+    record.mockImplementation((args: Sent) =>
+      Promise.resolve({
+        data: args.p_events.map((e) =>
+          e.id === opened.id
+            ? { id: e.id, status: 'refused', reason: 'error-40P01', received_at: null }
+            : { id: e.id, status: 'refused', reason: 'error-55P03', received_at: null },
+        ),
+        error: null,
+      }),
+    );
+    const first = await sync.drainLedger();
+    expect(first.refused).toBe(0);
+    expect(store.ledgerOutbox.get().pending.map((e) => e.id)).toEqual([opened.id, answered.id]);
+    expect(store.ledgerOutbox.get().rejected).toBe(0);
+
+    // A 40001 is kept too; a refusal about the row itself is still binned.
+    record.mockImplementation((args: Sent) =>
+      Promise.resolve({
+        data: args.p_events.map((e) =>
+          e.id === opened.id
+            ? { id: e.id, status: 'refused', reason: 'error-40001', received_at: null }
+            : { id: e.id, status: 'refused', reason: 'error-22P02', received_at: null },
+        ),
+        error: null,
+      }),
+    );
+    const second = await sync.drainLedger();
+    expect(second.refused).toBe(1);
+    expect(store.ledgerOutbox.get().pending.map((e) => e.id)).toEqual([opened.id]);
+
+    // The next drain sends it again, and it lands.
+    record.mockImplementation((args: Sent) => Promise.resolve(recordedAll(args)));
+    const third = await sync.drainLedger();
+    expect(lastSent().p_events.map((e) => e.id)).toEqual([opened.id]);
+    expect(third.sent).toBe(1);
+    expect(store.ledgerOutbox.get().pending).toHaveLength(0);
+  });
+
   it('keeps everything when the refusal is about the moment and not the row', async () => {
     // 42501 — the org may simply not be provisioned yet.
     record.mockResolvedValue({ data: null, error: { code: '42501', message: 'record_evidence: no organization yet' } });

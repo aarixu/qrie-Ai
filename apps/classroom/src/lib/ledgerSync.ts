@@ -227,6 +227,16 @@ interface EventAnswer {
 }
 
 /**
+ * A refusal about the moment, not the event: record_evidence's catch-all
+ * 'error-<sqlstate>' for class 40 (a serialization failure or a deadlock, as
+ * when two tabs drain overlapping batches in opposite order) or class 55 (a
+ * lock not available). The event is kept and sent again; every other refusal
+ * is about the event itself and is binned.
+ */
+const passes = (reason: string | null): boolean =>
+  reason !== null && (reason.startsWith('error-40') || reason.startsWith('error-55'));
+
+/**
  * Send a slice through record_evidence, and sort its answer.
  *
  * The drain used to be one insert of the whole slice, so a single malformed
@@ -236,7 +246,8 @@ interface EventAnswer {
  * against a `uuid` column, so this was the behaviour in production and 2,472
  * green tests had nothing to say about it. The function answers each event on
  * its own, so a refused event is quarantined and the rest are acknowledged in
- * the same request.
+ * the same request. An event refused for a deadlock or a lock (`passes`) is
+ * kept for the next drain instead.
  *
  * An error on the call itself is never about one event: an expired token, no
  * org yet (42501), a gateway, or a call it could not read (22023). All of them
@@ -250,7 +261,8 @@ async function send(db: NonNullable<ReturnType<typeof supabase>>, events: Ledger
   });
   if (error || !Array.isArray(data)) return { kind: 'transient' };
   const answers = data as EventAnswer[];
-  const refused = answers.filter((a) => a.status === 'refused');
+  // A refusal that passes is in neither list, so the event stays queued.
+  const refused = answers.filter((a) => a.status === 'refused' && !passes(a.reason));
   const ok = answers.filter((a) => a.status === 'recorded' || a.status === 'duplicate');
   return {
     kind: 'settled',
