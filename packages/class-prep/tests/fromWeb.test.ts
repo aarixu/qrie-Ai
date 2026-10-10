@@ -3,6 +3,7 @@ import { validateLesson } from '@ai-tutor/lesson-format';
 import {
   creditOf,
   DEFAULT_TRIES,
+  PHOTO_TRIES,
   findOnTheWeb,
   mayReuse,
   parseVerdict,
@@ -160,6 +161,8 @@ describe('reading a verdict', () => {
       hasText: false,
       count: 1,
       safe: true,
+      // This yes never said it is a photograph: absent is a no.
+      photo: false,
       saw: 'a kidney cross section',
     });
   });
@@ -206,6 +209,15 @@ describe('reading a verdict', () => {
     const v = parseVerdict(JSON.stringify({ right: true, text: false, count: 1 }));
     expect(v.safe).toBe(false);
     expect(refusalFor(v)).not.toBeNull();
+  });
+
+  it('asks the verifier whether it is a photograph, and refuses a drawing when only a photograph will do (heart class, 2026-10-08)', () => {
+    expect(VERIFIER_SYSTEM).toMatch(/"photo"/);
+    const drawing = parseVerdict(JSON.stringify({ right: true, text: false, count: 1, safe: true, photo: false, saw: 'a pictogram' }));
+    expect(refusalFor(drawing)).toBeNull();
+    expect(refusalFor(drawing, { photoOnly: true })).toMatch(/not a photograph/);
+    const unsaid = parseVerdict(JSON.stringify({ right: true, text: false, count: 1, safe: true }));
+    expect(refusalFor(unsaid, { photoOnly: true })).not.toBeNull();
   });
 
   it('asks the verifier whether a child may be shown it', () => {
@@ -483,6 +495,48 @@ describe('findOnTheWeb', () => {
       const web = webWithVideo([openly({ url: 'poster', video: loop })]);
       await findOnTheWeb({ ...moving, parts: ['cortex'] }, web, eyesSaying(yes, boxes));
       expect(web.searchVideo).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('a photograph and nothing else (heart class, 2026-10-08)', () => {
+    const photoYes = JSON.stringify({ saw: 'a person running in a race', right: true, text: false, count: 1, safe: true, photo: true });
+    const named = (name: string) => openly({ url: name, page: `https://commons.wikimedia.org/wiki/File:${name}` });
+
+    it('never looks at a file whose name says it is a drawing', async () => {
+      const eyes = { look: vi.fn(async () => photoYes) };
+      const web = webOf([
+        named('Speed_Maniac_poster.jpg'),
+        named('Cross_country_running_pictogram.jpg'),
+        named('Gillray-Maniac-1803_caricature.jpg'),
+        named('Running_race_in_Rennes.jpg'),
+      ]);
+      const { found } = await findOnTheWeb({ ...brief, parts: [] }, { ...web, fetch: async (u) => `${PNG}#${u}` }, eyes, { photoOnly: true });
+      expect(eyes.look).toHaveBeenCalledTimes(1);
+      expect(found?.src.endsWith('Rennes.jpg')).toBe(true);
+    });
+
+    it('looks further down the list for a photograph than for a picture', async () => {
+      const no = JSON.stringify({ saw: 'something else', right: false, text: false, count: 1, safe: true, photo: true });
+      const eyes = { look: vi.fn(async () => no) };
+      const many = Array.from({ length: 10 }, (_, i) => openly({ url: `u${i}` }));
+      await findOnTheWeb({ ...brief, parts: [] }, webOf(many), eyes, { photoOnly: true });
+      expect(eyes.look).toHaveBeenCalledTimes(PHOTO_TRIES);
+      expect(PHOTO_TRIES).toBeGreaterThan(DEFAULT_TRIES);
+    });
+
+    it('looks at a file so named when any picture will do: a picture may be a drawing', async () => {
+      const eyes = { look: vi.fn(async () => yes) };
+      await findOnTheWeb({ ...brief, parts: [] }, webOf([named('Heart_diagram.jpg')]), eyes);
+      expect(eyes.look).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('a picture that does not move (2026-10-07)', () => {
+    const loop = [{ src: 'https://upload.wikimedia.org/x/Heart.webm.480p.vp9.webm', type: 'video/webm' }];
+    const webWithVideo = (videos: WebCandidate[], stills: WebCandidate[] = [openly({ url: 'still' })]) => ({
+      search: vi.fn(async () => stills),
+      searchVideo: vi.fn(async () => videos),
+      fetch: async () => PNG,
     });
 
     it('never looks for a loop the lesson did not ask for', async () => {

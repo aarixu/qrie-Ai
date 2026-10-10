@@ -35,7 +35,7 @@ vi.mock('../src/lib/browserLlm', () => ({ createBrowserLlm: () => ({ complete: a
 vi.mock('../src/lib/browserImage', () => ({
   createBrowserImageArtist: () => ({ draw: async () => null }),
   createBrowserVision: () => ({
-    look: async () => JSON.stringify({ saw: 'a person running', right: true, text: false, count: 1, safe: true }),
+    look: async () => JSON.stringify({ saw: 'a person running', right: true, text: false, count: 1, safe: true, photo: true }),
   }),
 }));
 vi.mock('../src/lib/relay', () => ({ relayFetch: async () => new Response('{}') }));

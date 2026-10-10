@@ -95,12 +95,19 @@ function whatItNeeds(page: PageReport): string {
   return said.join(' ');
 }
 
-/** How large an element's writing is, and a few of its words to name it by. */
+/**
+ * How large an element's writing is, and a few of its words to name it by.
+ *
+ * A text with no letter or digit in it — a key point's "•" — is a mark, not
+ * writing to be read: at 11.5px it failed three lines of the heart class whose
+ * words were all large enough (2026-10-08).
+ */
 function writingOf(el: Element): { size: number; words: string } | null {
   switch (el.kind) {
     case 'handwrite':
       return { size: el.size ?? 26, words: el.text };
     case 'text':
+      if (!/[\p{L}\p{N}]/u.test(el.text)) return null;
       return { size: el.size ?? 20, words: el.text };
     case 'formula':
       return { size: 24, words: el.text };

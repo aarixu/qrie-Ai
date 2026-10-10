@@ -255,7 +255,8 @@ Answer with JSON and nothing else:
  "right":true|false,
  "text":true|false,
  "count":<how many of the subject are in it>,
- "safe":true|false}
+ "safe":true|false,
+ "photo":true|false}
 
 - "right" is true ONLY if the picture shows the subject the lesson asked for.
   Not something related to it, not something that shares its name, not a
@@ -274,6 +275,9 @@ Answer with JSON and nothing else:
   body, an organ cut out of a body, nudity, violence or a weapon, or anything
   meant to frighten. A model, a drawing, or a clean photograph of a living
   thing, a place or an object is fine.
+- "photo" is true ONLY if it is a photograph of a real thing (a real model
+  counts). False for a drawing, an illustration, a cartoon, a pictogram, an
+  icon, a diagram, a chart or a computer render.
 
 Say what you actually see in "saw" even when it is not what was asked for.`;
 
@@ -291,6 +295,8 @@ export interface Verdict {
   count: number;
   /** Whether a class of children may be shown it. Absent is a no. */
   safe: boolean;
+  /** Whether it is a photograph of a real thing. Absent is a no. */
+  photo: boolean;
   /** What the model said it saw, for a prep report to quote. */
   saw: string;
 }
@@ -303,7 +309,7 @@ export interface Verdict {
  * an unverified web image on a child's board, so it fails closed.
  */
 export function parseVerdict(raw: string): Verdict {
-  const no: Verdict = { right: false, hasText: false, count: 0, safe: false, saw: '' };
+  const no: Verdict = { right: false, hasText: false, count: 0, safe: false, photo: false, saw: '' };
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw.replace(/^\s*```(?:json)?\s*|\s*```\s*$/g, ''));
@@ -321,16 +327,21 @@ export function parseVerdict(raw: string): Verdict {
     // Unlike the count, NOT given the benefit of the doubt: a reply that did
     // not say a picture is fit for a class has not said it.
     safe: o.safe === true,
+    photo: o.photo === true,
     saw: typeof o.saw === 'string' ? o.saw : '',
   };
 }
 
 /** Why a candidate was turned down, in words a prep report can print. */
-export function refusalFor(v: Verdict): string | null {
+export function refusalFor(
+  v: Verdict,
+  rules: Pick<FindOptions, 'allowText' | 'photoOnly' | 'allowMany'> = {},
+): string | null {
   if (!v.right) return v.saw ? `it is ${v.saw}` : 'it is not the subject';
   if (!v.safe) return v.saw ? `it is not for a school child (${v.saw})` : 'it is not for a school child';
-  if (v.hasText) return 'it has words printed on it';
-  if (v.count >= 2) return `it has ${v.count} of the subject in it`;
+  if (rules.photoOnly && !v.photo) return v.saw ? `it is not a photograph (${v.saw})` : 'it is not a photograph';
+  if (v.hasText && !rules.allowText) return 'it has words printed on it';
+  if (v.count >= 2 && !rules.allowMany) return `it has ${v.count} of the subject in it`;
   return null;
 }
 
@@ -347,9 +358,46 @@ export interface FindOptions {
   searchLimit?: number;
   /** How long one look may take before it counts as a refusal. */
   lookTimeoutMs?: number;
+  /**
+   * Take a picture with words in it. The no-words rule is for a picture she
+   * labels part by part, whose printed labels would fight hers; a placed
+   * thing's photograph has none written on it, and a street sign or a race
+   * number behind a runner is no reason to refuse it (heart class,
+   * 2026-10-08). Commons' rules keep watermarks off its files.
+   */
+  allowText?: boolean;
+  /**
+   * Take only a photograph of the real thing. A placed thing's picture stands
+   * in for an icon, and the first "running person" the search found was a
+   * stick-figure pictogram — the very cartoon Aarav's rule replaces (heart
+   * class, 2026-10-08).
+   */
+  photoOnly?: boolean;
+  /**
+   * Take a picture with several of the subject in it. One-of-the-subject is
+   * for a picture she marks part by part; a placed thing's photograph of a
+   * race of runners is still a picture of running (heart class, 2026-10-08).
+   */
+  allowMany?: boolean;
 }
 
 export const DEFAULT_TRIES = 3;
+/**
+ * How many results to look at for a photograph only (`photoOnly`). More than
+ * for a picture: a keyword search on file names is crowded with posters, film
+ * stills and drawings, and the heart class's "running person" had its first
+ * real photograph of one fifth in the list (2026-10-08). They are looked at in
+ * waves of DEFAULT_TRIES, and a passing wave ends the search.
+ */
+export const PHOTO_TRIES = 6;
+
+/**
+ * A file whose own name says it is not a photograph. Dropped before it costs
+ * a download and a look, when only a photograph will do: the names Commons
+ * gives its drawings, posters, pictograms and material textures.
+ */
+const NOT_A_PHOTO =
+  /poster|pictogram|icon|logo|diagram|drawing|illustration|clip.?art|cartoon|caricature|painting|engraving|lithograph|etching|woodcut|sketch|\bmap\b|_map_|chart|texture|_8k_|\bsvg\b|coat.of.arms|\bflag\b/i;
 export const DEFAULT_SEARCH_LIMIT = 12;
 /**
  * A minute. A vision call has been seen to hang for more than five (board
@@ -431,7 +479,7 @@ async function firstThatPasses(
   eyes: VisionAdapter,
   options: FindOptions,
 ): Promise<Search> {
-  const tries = options.tries ?? DEFAULT_TRIES;
+  const tries = options.tries ?? (options.photoOnly ? PHOTO_TRIES : DEFAULT_TRIES);
   const refusals: string[] = [];
 
   let candidates: readonly WebCandidate[];
@@ -445,7 +493,8 @@ async function firstThatPasses(
   // none is no loop at all.
   const usable = candidates
     .map((c) => (c.video ? { ...c, video: keepableVideo(c.video) } : c))
-    .filter((c) => c.url && mayReuse(c.license) && (c.video === undefined || c.video.length > 0));
+    .filter((c) => c.url && mayReuse(c.license) && (c.video === undefined || c.video.length > 0))
+    .filter((c) => !options.photoOnly || !NOT_A_PHOTO.test(`${c.page ?? ''} ${c.title ?? ''}`));
   if (usable.length === 0) {
     refusals.push(
       candidates.length === 0
@@ -497,7 +546,9 @@ async function firstThatPasses(
   let looked = 0;
   let next = 0;
   while (looked < tries && next < usable.length) {
-    const wave = usable.slice(next, next + (tries - looked));
+    // At most DEFAULT_TRIES at once: a longer search (PHOTO_TRIES) goes on in
+    // a second wave only when the first found nothing.
+    const wave = usable.slice(next, next + Math.min(DEFAULT_TRIES, tries - looked));
     next += wave.length;
 
     const seen = await Promise.all(
@@ -514,7 +565,7 @@ async function firstThatPasses(
 
         try {
           const verdict = parseVerdict(await within(eyes.look(src, VERIFIER_SYSTEM, verifierUser(brief)), lookMs));
-          const refusal = refusalFor(verdict);
+          const refusal = refusalFor(verdict, options);
           if (refusal !== null || !candidate.frames?.length) return { candidate, src, refusal };
           // A clip: every frame looked at from its middle must pass as well.
           return { candidate, src, refusal: await framesRefusal(candidate.frames) };

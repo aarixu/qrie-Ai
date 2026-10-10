@@ -45,25 +45,42 @@ export async function findNounPhotos(
   });
   const looking = Promise.all(
     [...labelOf].map(async ([noun, label]) => {
-      try {
-        const { found: photo } = await findOnTheWeb(
-          {
-            id: noun,
-            // The search is a keyword search on file names: the noun alone.
-            brief: noun,
-            // What the verifier is told it will be read as: the name she writes
-            // under it and the class it is in, so a "runner" in a lesson on the
-            // heart is a person running and not a reindeer.
-            alt: label ? `${noun}, written on the board as "${label}", in a class on ${topic}` : `${noun}, in a class on ${topic}`,
-            parts: [],
-          },
-          web,
-          eyes,
-          options,
-        );
-        if (photo) found.set(noun, photo);
-      } catch {
-        // findOnTheWeb never throws; a noun with nothing found keeps its icon.
+      /**
+       * WHAT THE BOARD CALLS IT FIRST, THEN THE NOUN (heart class, 2026-10-08).
+       *
+       * The search is a keyword search on file names, and a bare noun is the
+       * vaguer of the two: "runner" on Commons is a wildebeest and a herd of
+       * reindeer before it is a person, and all three looks went on them. The
+       * name she writes under it — "running person" — is the thing she means,
+       * by the planner's own rule (a placed noun names what its label names).
+       * The noun is the second search, for a label too particular to match.
+       */
+      const subjects = [label.trim(), noun].filter((s, n, all) => s !== '' && all.findIndex((t) => t.toLowerCase() === s.toLowerCase()) === n);
+      for (const subject of subjects) {
+        try {
+          const { found: photo } = await findOnTheWeb(
+            {
+              id: noun,
+              brief: subject,
+              // What the verifier is told it will be read as: the name she
+              // writes under it and the class it is in, so a "runner" in a
+              // lesson on the heart is a person running and not a reindeer.
+              alt: label ? `${noun}, written on the board as "${label}", in a class on ${topic}` : `${noun}, in a class on ${topic}`,
+              parts: [],
+            },
+            web,
+            eyes,
+            // A photograph only, with words or several of the subject in it
+            // allowed (FindOptions).
+            { ...options, allowText: true, photoOnly: true, allowMany: true },
+          );
+          if (photo) {
+            found.set(noun, photo);
+            return;
+          }
+        } catch {
+          // findOnTheWeb never throws; a noun with nothing found keeps its icon.
+        }
       }
     }),
   );

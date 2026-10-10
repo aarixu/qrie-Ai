@@ -15,7 +15,7 @@ import { VERIFIER_SYSTEM, type WebCandidate, type WebImageAdapter } from '../src
 // A one-pixel PNG, so its shape can be read.
 const PNG =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
-const yes = JSON.stringify({ saw: 'a person running', right: true, text: false, count: 1, safe: true });
+const yes = JSON.stringify({ saw: 'a person running', right: true, text: false, count: 1, safe: true, photo: true });
 const no = JSON.stringify({ saw: 'a reindeer', right: false, text: false, count: 1, safe: true });
 
 const graphic = (id: string, noun: string, label?: string): Element => ({
@@ -52,11 +52,63 @@ describe('finding a photograph for each placed thing', () => {
 
     const photos = await findNounPhotos(l, 'The Human Heart', web, eyes);
 
-    expect(searched.sort()).toEqual(['lungs', 'runner']);
+    // By what the board calls each one, when it calls it something: found
+    // there, the noun is never searched.
+    expect(searched.sort()).toEqual(['Working muscles', 'lungs']);
     expect([...photos.keys()].sort()).toEqual(['lungs', 'runner']);
     const runnerAsk = asked.find((u) => u.includes('runner'))!;
     expect(runnerAsk).toContain('Working muscles');
     expect(runnerAsk).toContain('The Human Heart');
+  });
+
+  it('looks first for what the board calls it, then for the noun (heart class, 2026-10-08)', async () => {
+    // "runner" on Commons is a wildebeest and a herd of reindeer before it is a
+    // person; the board's own "running person" is the thing she means.
+    const searched: string[] = [];
+    const web: WebImageAdapter = {
+      search: async (q) => {
+        searched.push(q);
+        return [openly(`${q}.jpg`)];
+      },
+      fetch: async () => PNG,
+    };
+    const eyes = { look: async (_s: string, _sys: string, user: string) => (user.includes('asked for: runner') ? yes : no) };
+    const photos = await findNounPhotos(lesson([graphic('a', 'runner', 'running person')]), 't', web, eyes);
+    expect(searched).toEqual(['running person', 'runner']);
+    expect([...photos.keys()]).toEqual(['runner']);
+  });
+
+  it('takes a photograph with words in it, a street sign or a race number, which a placed thing may have (heart class, 2026-10-08)', async () => {
+    // The no-words rule is for a picture she labels part by part; a placed
+    // thing's photograph has no parts written on it.
+    const web: WebImageAdapter = { search: async (q) => [openly(`${q}.jpg`)], fetch: async () => PNG };
+    const withWords = JSON.stringify({ saw: 'a person running past a shop sign', right: true, text: true, count: 1, safe: true, photo: true });
+    const photos = await findNounPhotos(lesson([graphic('a', 'runner', 'running person')]), 't', web, { look: async () => withWords });
+    expect([...photos.keys()]).toEqual(['runner']);
+  });
+
+  it('takes a photograph of several of them, a race of runners, which a placed thing may show (heart class, 2026-10-08)', async () => {
+    // One-of-the-subject is for a picture she marks part by part.
+    const web: WebImageAdapter = { search: async (q) => [openly(`${q}.jpg`)], fetch: async () => PNG };
+    const race = JSON.stringify({ saw: 'runners in a street race', right: true, text: true, count: 3, safe: true, photo: true });
+    const photos = await findNounPhotos(lesson([graphic('a', 'runner', 'running person')]), 't', web, { look: async () => race });
+    expect([...photos.keys()]).toEqual(['runner']);
+  });
+
+  it('takes only a photograph, never a pictogram or a drawing in its place (heart class, 2026-10-08)', async () => {
+    // The search's first "running person" was a stick-figure pictogram: right
+    // subject, and exactly the cartoon this rule exists to replace.
+    const web: WebImageAdapter = { search: async (q) => [openly(`${q}.jpg`)], fetch: async () => PNG };
+    const pictogram = JSON.stringify({ saw: 'a stylized pictogram of a running person', right: true, text: false, count: 1, safe: true, photo: false });
+    const photos = await findNounPhotos(lesson([graphic('a', 'runner', 'running person')]), 't', web, { look: async () => pictogram });
+    expect(photos.size).toBe(0);
+  });
+
+  it('does not look twice when the board calls it by its noun', async () => {
+    const searched: string[] = [];
+    const web: WebImageAdapter = { search: async (q) => (searched.push(q), []), fetch: async () => PNG };
+    await findNounPhotos(lesson([graphic('a', 'lungs', 'Lungs')]), 't', web, { look: async () => no });
+    expect(searched).toEqual(['Lungs']);
   });
 
   it('leaves out a noun whose photographs were all wrong, for the icons to cover', async () => {

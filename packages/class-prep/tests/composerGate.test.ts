@@ -205,6 +205,14 @@ describe('phone-readable', () => {
     ]);
   });
 
+  it('does not read a bullet as writing (heart class, 2026-10-08)', () => {
+    // A key point's "•" is a mark, not a word: at 11.5px it failed three
+    // lines whose words were all large enough.
+    const BULLET: Element = { kind: 'text', id: 'dot', x: 500, y: 300, text: '•', size: 12 };
+    const bulleted = lessonOf([WIDE, BULLET], [{ id: 'b2_2', topic: 't', narration: 'Remember this.', show: ['w', 'dot'], frame: ['w', 'dot'] }]);
+    expect(composerRules({ pages: [], overview: [] }, bulleted)).toEqual([]);
+  });
+
   it('passes the same writing when the camera comes close', () => {
     const close = lessonOf([SMALL], [{ id: 'b2_2', topic: 't', narration: 'The lacteal takes fats.', show: ['s'], frame: ['s'] }]);
     expect(composerRules({ pages: [], overview: [] }, close)).toEqual([]);
