@@ -1,7 +1,7 @@
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import { AI_OFF } from '@ai-tutor/lms-client'
+import { AI_OFF, CANNOT_REACH, friendlyError, isOffline, isSignedOutError } from '@ai-tutor/lms-client'
 
 /**
  * WHICH SCHOOL THE TEACHER APP TALKS TO, decided when it is built. Written
@@ -21,6 +21,8 @@ const PROJECT = 'https://abcdefghijklmnopqrst.supabase.co'
 const ANON_KEY = 'anon-key-for-tests'
 
 const roots: Root[] = []
+/** Whether the faked network is down: every call then fails as fetch does with no signal. */
+const network = { offline: false }
 beforeAll(() => {
   ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 })
@@ -29,6 +31,8 @@ afterEach(() => {
   document.body.innerHTML = ''
   localStorage.clear()
   delete (window as { Capacitor?: unknown }).Capacitor
+  network.offline = false
+  vi.useRealTimers()
   vi.unstubAllEnvs()
   vi.unstubAllGlobals()
 })
@@ -68,19 +72,35 @@ function fakeProject() {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
     const body = typeof init.body === 'string' ? (JSON.parse(init.body) as Record<string, unknown>) : null
     calls.push({ url, method: init.method ?? 'GET', headers: new Headers(init.headers), body })
+    if (network.offline) {
+      // auth-js retries a refresh for up to 30 seconds by the clock; a minute
+      // passes with each failed try, so it gives up at once, as it would then.
+      vi.setSystemTime(Date.now() + 60_000)
+      throw new TypeError('Failed to fetch')
+    }
     const reply = (status: number, value: unknown) =>
       new Response(JSON.stringify(value), { status, headers: { 'content-type': 'application/json' } })
     if (url === `${PROJECT}/functions/v1/lms-signin`) return reply(200, { password: `password-for-${body?.loginId}` })
-    if (url === `${PROJECT}/auth/v1/token?grant_type=password`) {
-      const sub = `user-${body?.email}`
+    const token = /\/auth\/v1\/token\?grant_type=(password|refresh_token)$/.exec(url)
+    if (url.startsWith(PROJECT) && token) {
+      const sub = token[1] === 'password' ? `user-${body?.email}` : String(body?.refresh_token).replace(/^refresh-/, '')
       return reply(200, {
         access_token: accessToken(sub),
         token_type: 'bearer',
         expires_in: 3600,
         expires_at: now() + 3600,
         refresh_token: `refresh-${sub}`,
-        user: { id: sub, aud: 'authenticated', role: 'authenticated', email: body?.email, app_metadata: {}, user_metadata: {}, created_at: '2026-10-10T00:00:00Z' },
+        user: { id: sub, aud: 'authenticated', role: 'authenticated', email: sub.replace(/^user-/, ''), app_metadata: {}, user_metadata: {}, created_at: '2026-10-10T00:00:00Z' },
       })
+    }
+    // PostgREST runs an lms function for a signed-in person; called with the
+    // anon key, as from nobody, it refuses.
+    const rpc = /^\/rest\/v1\/rpc\/(\w+)$/.exec(url.startsWith(PROJECT) ? new URL(url).pathname : '')
+    if (rpc) {
+      if (new Headers(init.headers).get('authorization') === `Bearer ${ANON_KEY}`) {
+        return reply(401, { code: '42501', message: `permission denied for function ${rpc[1]}`, details: null, hint: null })
+      }
+      return reply(200, [])
     }
     if (url === `${PROJECT}/functions/v1/lms-admin/reset-pin`) return reply(200, { loginId: body?.loginId, displayName: 'Asha Verma', pin: '204816' })
     if (url === 'https://relay.example/functions/v1/relay/llm') return reply(200, { choices: [{ message: { content: 'drafted' } }] })
@@ -160,6 +180,62 @@ describe('the teacher app built for the hosted project', () => {
     await backend.signIn('DEMO-T01', '493817')
     expect(await backend.askAi(chat)).toBe('drafted')
     expect(calls.at(-1)?.url).toBe('https://relay.example/functions/v1/relay/llm')
+  })
+})
+
+describe('the teacher app built for the hosted project, on a network that drops', () => {
+  it('says it could not reach the school, and the failure is one the app retries', async () => {
+    hostedBuild()
+    fakeProject()
+    const { backend, api } = await teacherApp()
+    await backend.signIn('DEMO-T01', '493817')
+    network.offline = true
+    const error = await api.myClasses().then(() => null, (e: unknown) => e)
+    expect(error).toBeInstanceOf(TypeError)
+    expect(friendlyError(error)).toBe(CANNOT_REACH)
+    expect(isOffline(error)).toBe(true)
+  })
+
+  it('keeps a session it could not refresh, and sends nothing in its place when the network is back', async () => {
+    hostedBuild()
+    const calls = fakeProject()
+    const { backend, api } = await teacherApp()
+    await backend.signIn('DEMO-T01', '493817')
+    // The next morning, with no network: the access token is past its time
+    // and cannot be refreshed. The session is still the teacher's.
+    vi.setSystemTime(Date.now() + 12 * 3600_000)
+    network.offline = true
+    expect(await backend.hasSession()).toBe(true)
+    // The network back within the minute auth-js waits before it tries to
+    // refresh again: supabase-js has no token to send meanwhile.
+    network.offline = false
+    calls.length = 0
+    const error = await api.myClasses().then(() => null, (e: unknown) => e)
+    expect(error).toBeInstanceOf(TypeError)
+    expect(isSignedOutError(error)).toBe(false)
+    expect(calls).toEqual([])
+    // Once it tries again, the call goes with the teacher's own token.
+    vi.setSystemTime(Date.now() + 2 * 60_000)
+    expect(await api.myClasses()).toEqual([])
+    expect(calls.map((c) => new URL(c.url).pathname)).toEqual(['/auth/v1/token', '/rest/v1/rpc/my_classes'])
+    expect(calls[1].headers.get('authorization')).not.toBe(`Bearer ${ANON_KEY}`)
+  })
+
+  it('forgets the session on signing out, even when supabase-js cannot finish signing out', async () => {
+    hostedBuild()
+    fakeProject()
+    let { backend } = await teacherApp()
+    await backend.signIn('DEMO-T01', '493817')
+    // Hours later, with no network: the access token is past its time and
+    // cannot be refreshed, and supabase-js's own sign-out stops there.
+    vi.setSystemTime(Date.now() + 12 * 3600_000)
+    network.offline = true
+    await backend.signOut().catch(() => undefined)
+    // Back online, the app opened afresh by whoever uses the computer next.
+    network.offline = false
+    ;({ backend } = await teacherApp())
+    expect(await backend.hasSession()).toBe(false)
+    expect(Object.keys(localStorage).filter((k) => k.startsWith('qrie-teacher-auth'))).toEqual([])
   })
 })
 

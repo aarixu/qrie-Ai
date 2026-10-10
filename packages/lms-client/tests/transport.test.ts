@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { CANNOT_REACH, friendlyError } from '../src/errors.ts';
+import { isOffline } from '../src/outbox.ts';
 import { supabaseTransport, type RpcClient } from '../src/transport.ts';
 
 /**
@@ -48,5 +50,41 @@ describe('rows from the hosted project', () => {
   it('come back exactly a page long without a lost row', async () => {
     const { client } = fakeClient(1000);
     expect(await supabaseTransport(client).rows('school_students')).toHaveLength(1000);
+  });
+});
+
+/**
+ * A phone that loses its signal. postgrest-js (2.112) does not throw when
+ * fetch itself fails: it answers with status 0 and the fetch error's name and
+ * message as the error's message. Each call must still fail the way the
+ * browser's own fetch does, with a TypeError, because that is what tells a
+ * person "Could not reach your school", what the apps retry, and what keeps a
+ * child's work waiting in the outbox.
+ */
+describe('a call that never reaches the hosted project', () => {
+  const answering = (answer: unknown): RpcClient => ({
+    schema: () => ({
+      rpc: () => Object.assign(Promise.resolve(answer), { range: () => Promise.resolve(answer) }) as never,
+    }),
+  });
+  const failure = (call: Promise<unknown>) => call.then(() => null, (e: unknown) => e);
+
+  it('fails with a TypeError, read as "Could not reach your school"', async () => {
+    for (const message of ['TypeError: Failed to fetch', 'TypeError: fetch failed', 'FetchError: request to the project failed']) {
+      const client = answering({ data: null, error: { message, details: '', hint: '', code: '' }, status: 0, statusText: '' });
+      for (const error of [await failure(supabaseTransport(client).value('me')), await failure(supabaseTransport(client).rows('my_classes'))]) {
+        expect(error, message).toBeInstanceOf(TypeError);
+        expect(friendlyError(error)).toBe(CANNOT_REACH);
+        expect(isOffline(error)).toBe(true);
+      }
+    }
+  });
+
+  it('keeps a refusal from the school a plain Error in its own words', async () => {
+    const client = answering({ data: null, error: { message: 'this is not your class' }, status: 400, statusText: 'Bad Request' });
+    const error = await failure(supabaseTransport(client).value('class_marks'));
+    expect(error).toBeInstanceOf(Error);
+    expect(error).not.toBeInstanceOf(TypeError);
+    expect(friendlyError(error)).toBe('this is not your class');
   });
 });

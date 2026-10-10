@@ -2,7 +2,7 @@ import type { DraftChat } from './drafts.ts';
 import { createLmsClient, type LmsClient } from './api.ts';
 import { loginEmail } from './login.ts';
 import type { HeadingRead } from './sheets.ts';
-import { supabaseTransport, type RpcClient, type Transport } from './transport.ts';
+import { answerError, supabaseTransport, unreached, type AnsweredError, type RpcClient, type Transport } from './transport.ts';
 
 /**
  * Everything an app needs from the outside world: signing in with a school
@@ -168,9 +168,9 @@ export function workPath(orgId: string, assignmentId: string, studentUserId: str
 
 export interface SupabaseLike extends RpcClient {
   auth: {
-    signInWithPassword(c: { email: string; password: string }): PromiseLike<{ error: { message: string } | null }>;
+    signInWithPassword(c: { email: string; password: string }): PromiseLike<{ error: AnsweredError | null }>;
     signOut(): PromiseLike<unknown>;
-    getSession(): PromiseLike<{ data: { session: unknown } }>;
+    getSession(): PromiseLike<{ data: { session: unknown }; error?: AnsweredError | null }>;
   };
   storage: {
     from(bucket: string): {
@@ -178,11 +178,11 @@ export interface SupabaseLike extends RpcClient {
         path: string,
         file: Blob,
         opts: { contentType: string; upsert: false },
-      ): PromiseLike<{ error: { message: string } | null }>;
+      ): PromiseLike<{ error: AnsweredError | null }>;
       createSignedUrl(
         path: string,
         seconds: number,
-      ): PromiseLike<{ data: { signedUrl: string } | null; error: { message: string } | null }>;
+      ): PromiseLike<{ data: { signedUrl: string } | null; error: AnsweredError | null }>;
     };
   };
 }
@@ -196,16 +196,44 @@ export interface SupabaseLike extends RpcClient {
  * `signInUrl` is the lms-signin function's (supabase/functions/lms-signin):
  * signIn sends it the ID and PIN, and only for the right PIN does it answer
  * with the account's Supabase Auth password, which is not the PIN. Without
- * it, signIn refuses.
+ * it, signIn refuses. `forgetSession` removes the session from this device
+ * (forgetStoredSession, for supabase-js keeping it in localStorage): signOut
+ * calls it whatever supabase-js answers, because auth-js (2.112) leaves the
+ * session stored when it cannot load it first, as with a token past its time
+ * and no signal to refresh it, and the next person to open the app online
+ * would be signed in as this one.
  */
 export function supabaseBackend(
   supabase: SupabaseLike,
-  options: { relayUrl?: string; adminUrl?: string; signInUrl?: string } = {},
+  options: { relayUrl?: string; adminUrl?: string; signInUrl?: string; forgetSession?: () => void } = {},
 ): Backend {
+  // The session supabase-js holds: its token, or, when it holds one it could
+  // not load, the error that stopped it. auth-js (2.112) keeps a session
+  // whose token is past its time when the refresh gets no answer (status 0)
+  // or a 5xx (both an AuthRetryableFetchError), and answers "no session"
+  // with that error until a refresh gets through; for a minute after a
+  // failed one it does not try again.
+  const held = async (): Promise<{ token: string | null; notLoaded: AnsweredError | null }> => {
+    const { data, error } = await supabase.auth.getSession();
+    const token = (data.session as { access_token?: string } | null)?.access_token ?? null;
+    const kept = !token && error && (unreached(error) || error.name === 'AuthRetryableFetchError');
+    return { token, notLoaded: kept ? error : null };
+  };
+  // Meanwhile supabase-js would send each call with the anon key, as from
+  // nobody: the school answers "permission denied", which reads as signed
+  // out, and storage refuses a photo outright, which the outbox would take as
+  // a refusal and drop. Such a call is not sent; it fails as one that could
+  // not reach the school (a TypeError), which the apps retry and the outbox
+  // waits on.
+  const reachable = async () => {
+    const { notLoaded } = await held();
+    if (notLoaded) throw new TypeError(notLoaded.message);
+  };
   const token = async () => {
-    const session = (await supabase.auth.getSession()).data.session as { access_token?: string } | null;
-    if (!session?.access_token) throw new Error('Please sign in again.');
-    return session.access_token;
+    const { token: access, notLoaded } = await held();
+    if (notLoaded) throw new TypeError(notLoaded.message);
+    if (!access) throw new Error('Please sign in again.');
+    return access;
   };
   async function admin<T>(call: 'import' | 'reset-pin' | 'add-parent', body: unknown): Promise<T> {
     if (!options.adminUrl) throw new Error('Adding people and giving PINs from the portal is not set up for this school yet.');
@@ -234,24 +262,34 @@ export function supabaseBackend(
         throw new Error(typeof answer?.error === 'string' ? answer.error : `the school's server said ${res.status}`);
       }
       const { error } = await supabase.auth.signInWithPassword({ email: loginEmail(loginId.trim()), password: answer.password });
-      if (error) throw new Error(/invalid login credentials/i.test(error.message) ? NEEDS_NEW_PIN : error.message);
+      if (error) throw /invalid login credentials/i.test(error.message) ? new Error(NEEDS_NEW_PIN) : answerError(error);
     },
     async signOut() {
-      await supabase.auth.signOut();
+      try {
+        await supabase.auth.signOut();
+      } finally {
+        options.forgetSession?.();
+      }
     },
+    // A session held but not loaded is still this person's; the school says
+    // whether it takes it once a refresh gets through.
     async hasSession() {
-      return (await supabase.auth.getSession()).data.session != null;
+      const { token, notLoaded } = await held();
+      return token != null || notLoaded != null;
     },
-    api: createLmsClient(supabaseTransport(supabase)),
+    api: createLmsClient(supabaseTransport(supabase, reachable)),
     async uploadWork(objectName, file) {
+      await reachable();
       const { error } = await supabase.storage
         .from('lms-work')
         .upload(objectName, file, { contentType: file.type, upsert: false });
-      if (error) throw new Error(error.message);
+      if (error) throw answerError(error);
     },
     async workUrl(objectName) {
+      await reachable();
       const { data, error } = await supabase.storage.from('lms-work').createSignedUrl(objectName, 600);
-      if (error || !data) throw new Error(error?.message ?? 'no address for that photo');
+      if (error) throw answerError(error);
+      if (!data) throw new Error('no address for that photo');
       return data.signedUrl;
     },
     // Creating or changing a sign-in needs the service role, which only the
@@ -261,8 +299,8 @@ export function supabaseBackend(
     addParent: (request) => admin<{ loginId: string; displayName: string; pin: string }>('add-parent', request),
     async schoolBrand(code) {
       if (!SCHOOL_CODE.test(code)) return null;
-      const { data, error } = await supabase.schema('lms').rpc('school_brand', { p_code: code });
-      if (error) throw new Error(error.message);
+      const { data, error, status } = await supabase.schema('lms').rpc('school_brand', { p_code: code });
+      if (error) throw answerError(error, status);
       return publicBrand(Array.isArray(data) ? (data[0] as Record<string, unknown> | undefined) : undefined);
     },
     async askAi(chat) {
@@ -289,6 +327,22 @@ export const AI_OFF = 'Drafting with AI is not switched on for this school yet.'
 
 /** Said when the app was built without the sign-in guard's address. */
 export const SIGN_IN_OFF = 'Signing in is not set up for this school yet.';
+
+/**
+ * Removes from this browser's localStorage what supabase-js keeps there under
+ * `storageKey`: the session, and the "-user" and "-code-verifier" items
+ * auth-js may keep beside it. Where there is no localStorage, or it throws,
+ * it does nothing.
+ */
+export function forgetStoredSession(storageKey: string): void {
+  for (const key of [storageKey, `${storageKey}-user`, `${storageKey}-code-verifier`]) {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      /* no localStorage here */
+    }
+  }
+}
 
 // ---------------------------------------------------------------------------
 // The demo server.

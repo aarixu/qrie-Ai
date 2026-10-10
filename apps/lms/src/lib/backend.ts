@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import {
   browserSession,
   demoBackend,
+  forgetStoredSession,
   isSignedOutError,
   supabaseBackend,
   type Backend,
@@ -27,6 +28,8 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
 export const DEMO_URL =
   savedServer() ?? import.meta.env.VITE_QRIE_DEMO_URL ?? 'http://127.0.0.1:54400'
 
+const SESSION_KEY = 'qrie-teacher-auth'
+
 function hosted(url: string, anonKey: string): Backend {
   const project = url.replace(/\/+$/, '')
   const client = createClient(project, anonKey, {
@@ -34,13 +37,16 @@ function hosted(url: string, anonKey: string): Backend {
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: false,
-      storageKey: 'qrie-teacher-auth',
+      storageKey: SESSION_KEY,
     },
   })
   return supabaseBackend(client, {
     signInUrl: `${project}/functions/v1/lms-signin`,
     adminUrl: `${project}/functions/v1/lms-admin`,
     relayUrl: import.meta.env.VITE_QRIE_RELAY_URL,
+    // Signing out leaves nothing of the session on a shared computer, even
+    // when supabase-js could not finish signing out.
+    forgetSession: () => forgetStoredSession(SESSION_KEY),
   })
 }
 

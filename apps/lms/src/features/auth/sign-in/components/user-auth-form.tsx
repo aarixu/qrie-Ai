@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2, LogIn } from 'lucide-react'
+import { CANNOT_REACH } from '@ai-tutor/lms-client'
 import { api, backend } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { NOT_A_TEACHER, useAuthStore } from '@/stores/auth-store'
@@ -20,13 +21,22 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 
+// The demo school's IDs are the example only in a build for the demo school;
+// a build for a real school gives none, and the slip carries the ID.
+const DEMO = backend.mode === 'demo'
+
 // The shapes lms.account (0022) and the import's PINs (6-8 digits) allow.
 const formSchema = z.object({
   loginId: z
     .string()
     .trim()
     .min(1, 'Enter the ID on your sign-in slip.')
-    .regex(/^[A-Za-z0-9-]{3,40}$/, 'An ID is letters, digits and dashes, like DEMO-T01.'),
+    .regex(
+      /^[A-Za-z0-9-]{3,40}$/,
+      DEMO
+        ? 'An ID is letters, digits and dashes, like DEMO-T01.'
+        : 'An ID is letters, digits and dashes.'
+    ),
   pin: z
     .string()
     .min(1, 'Enter your PIN.')
@@ -73,7 +83,9 @@ export function UserAuthForm({
     } catch (e) {
       setProblem(
         e instanceof TypeError
-          ? 'Could not reach the school server. Is it running?'
+          ? DEMO
+            ? 'Could not reach the school server. Is it running?'
+            : CANNOT_REACH
           : (e as Error).message
       )
     } finally {
@@ -101,7 +113,7 @@ export function UserAuthForm({
               <FormLabel>School ID</FormLabel>
               <FormControl>
                 <Input
-                  placeholder='DEMO-T01'
+                  placeholder={DEMO ? 'DEMO-T01' : undefined}
                   autoComplete='username'
                   autoCapitalize='characters'
                   {...field}

@@ -12,6 +12,10 @@ import { useSignInSchool } from '@/lib/brand'
 import { DEMO_URL } from '@/lib/backend'
 import { ServerSetting } from '@/components/server-setting'
 
+// The demo school's IDs are the example only in a build for the demo school;
+// a build for a real school gives none, and points to the slip.
+const DEMO = backend.mode === 'demo'
+
 export function SignIn() {
   const navigate = useNavigate()
   const setMe = useAuthStore((s) => s.setMe)
@@ -27,7 +31,13 @@ export function SignIn() {
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     if (!idOk || !pinOk) {
-      setProblem(!idOk ? 'Type the ID on your slip, like DEMO-8A-1.' : 'Your PIN is the 6 or 8 digits on your slip.')
+      setProblem(
+        !idOk
+          ? DEMO
+            ? 'Type the ID on your slip, like DEMO-8A-1.'
+            : 'Type the ID on your slip.'
+          : 'Your PIN is the 6 or 8 digits on your slip.'
+      )
       return
     }
     setBusy(true)
@@ -76,7 +86,7 @@ export function SignIn() {
             className='h-12 text-lg uppercase'
             autoComplete='username'
             autoCapitalize='characters'
-            placeholder='DEMO-8A-1'
+            placeholder={DEMO ? 'DEMO-8A-1' : undefined}
             value={loginId}
             onChange={(e) => setLoginId(e.target.value)}
           />

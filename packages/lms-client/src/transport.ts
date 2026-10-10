@@ -19,7 +19,45 @@ export interface Transport {
   value(fn: string, args?: Record<string, unknown>): Promise<unknown>;
 }
 
-type RpcAnswer = { data: unknown; error: { message: string } | null };
+type RpcAnswer = { data: unknown; error: { message: string } | null; status?: number };
+
+/** What a supabase-js part answers with when a call fails, as far as this package reads it. */
+export interface AnsweredError {
+  message: string;
+  /** auth-js: the error's kind; AuthRetryableFetchError for no answer or a 5xx, which it retries. */
+  name?: string;
+  /** auth-js: the HTTP status, or 0 when no answer came back. */
+  status?: unknown;
+  /** storage-js: what fetch threw, when the call never reached the project. */
+  originalError?: unknown;
+}
+
+/**
+ * Whether an error a supabase-js part answered with is a call that never
+ * reached the project. supabase-js (2.112) does not throw fetch's own
+ * TypeError then: postgrest-js answers with status 0 and "TypeError: Failed
+ * to fetch" (or "FetchError: …") as the message, auth-js with status 0, and
+ * storage-js with the TypeError as originalError.
+ */
+export function unreached(error: AnsweredError, status?: number): boolean {
+  return (
+    status === 0 ||
+    error.status === 0 ||
+    error.originalError instanceof TypeError ||
+    /^(TypeError|FetchError)\b/.test(error.message)
+  );
+}
+
+/**
+ * The Error to throw for an error a supabase-js part answered with. A call
+ * that never reached the project (unreached) becomes a TypeError again, as
+ * plain fetch would throw, which is what friendlyError, both apps' retries
+ * and the outbox read as "could not reach the school". Anything else is the
+ * project's own refusal, an Error with its words.
+ */
+export function answerError(error: AnsweredError, status?: number): Error {
+  return unreached(error, status) ? new TypeError(error.message) : new Error(error.message);
+}
 
 /** The part of a supabase-js client this needs; keeps supabase-js out of the package. */
 export interface RpcClient {
@@ -34,10 +72,15 @@ export interface RpcClient {
 /** PostgREST's max-rows: the most one call hands back, the rest dropped without a word. */
 const PAGE = 1000;
 
-export function supabaseTransport(client: RpcClient): Transport {
+/**
+ * `ready`, when given, runs before each request; a request it throws for is
+ * not sent, and the call fails with what it threw.
+ */
+export function supabaseTransport(client: RpcClient, ready?: () => Promise<void>): Transport {
   const call = async (fn: string, args: Record<string, unknown> = {}): Promise<unknown> => {
-    const { data, error } = await client.schema('lms').rpc(fn, args);
-    if (error) throw new Error(error.message);
+    await ready?.();
+    const { data, error, status } = await client.schema('lms').rpc(fn, args);
+    if (error) throw answerError(error, status);
     return data;
   };
   return {
@@ -47,9 +90,10 @@ export function supabaseTransport(client: RpcClient): Transport {
     async rows(fn, args = {}) {
       const out: Record<string, unknown>[] = [];
       for (let from = 0; ; from += PAGE) {
+        await ready?.();
         const q = client.schema('lms').rpc(fn, args);
-        const { data, error } = await (q.range ? q.range(from, from + PAGE - 1) : q);
-        if (error) throw new Error(error.message);
+        const { data, error, status } = await (q.range ? q.range(from, from + PAGE - 1) : q);
+        if (error) throw answerError(error, status);
         const page = Array.isArray(data) ? (data as Record<string, unknown>[]) : [];
         out.push(...page);
         if (!q.range || page.length < PAGE) return out;
