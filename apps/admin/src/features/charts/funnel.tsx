@@ -1,7 +1,7 @@
 import type { ChartSeries } from '@ai-tutor/admin-client';
 import { ChartCard } from '@/components/charts/chart-card';
 import { ChartGrid, ChartsFrame, MetricCard, metricOf } from './frame';
-import { SUPPRESSED_TEXT } from './model';
+import { NOT_CAPTURED_TEXT, SUPPRESSED_TEXT } from './model';
 
 /**
  * The contest funnel: entries per day, and the window's entrants who had a
@@ -20,7 +20,10 @@ const STEPS = [
 ] as const;
 
 function FunnelBody({ series }: { series: ChartSeries }) {
-  const steps = STEPS.map((s) => ({ ...s, total: metricOf(series, s.key)?.total ?? null }));
+  const steps = STEPS.map((s) => {
+    const m = metricOf(series, s.key);
+    return { ...s, captured: m?.captured ?? false, total: m?.total ?? null };
+  });
   const entrants = steps[0].total;
   const base = entrants && !entrants.suppressed && entrants.value !== null ? entrants.value : null;
   return (
@@ -42,7 +45,7 @@ function FunnelBody({ series }: { series: ChartSeries }) {
                   <div className='flex items-baseline justify-between gap-2 text-sm'>
                     <span>{s.label}</span>
                     <span className='tabular-nums'>
-                      {s.total === null ? 'No figure yet' : s.total.suppressed ? SUPPRESSED_TEXT : v}
+                      {!s.captured ? NOT_CAPTURED_TEXT : s.total === null ? 'No figure yet' : s.total.suppressed ? SUPPRESSED_TEXT : v}
                       {share !== null && s.key !== 'funnel.cohort' ? ` (${share}%)` : ''}
                     </span>
                   </div>
