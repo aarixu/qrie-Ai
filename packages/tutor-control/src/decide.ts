@@ -39,6 +39,12 @@ export const FAST_WRONG_MS = 3000;
  * hint that contains the answer is refused, which is how the proof lesson's
  * 4-of-4 leaked asks would have been caught.
  *
+ * Every leak check reads its line in the child's language (`input.lang`): the
+ * fixed lines are in it, and the ask does not say what language its authored
+ * content is in. For a Hinglish child that reads an English hint as Hinglish
+ * too, which only adds refusals ("What do you get…" is refused when the answer
+ * is 2), so a rung may be skipped but the answer is never said (`leaks()`).
+ *
  * THE REST:
  *   - right, at any rung → brief, specific praise with the authored why; after
  *     any help, or cold against a weak unassisted record, a retest on a

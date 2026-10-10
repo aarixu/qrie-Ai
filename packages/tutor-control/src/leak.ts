@@ -190,8 +190,13 @@ function containsRun(haystack: readonly string[], needle: readonly string[]): bo
 
 /**
  * Whether `text` contains any of `mustNotReveal`, under the normalisation
- * above. `lang` is the language the line is in ('en' when left out); 'hi-en'
- * reads Hindi number words as numbers. Blank secrets are ignored; no secrets
+ * above. `lang` is the language the line is read in ('en' when left out);
+ * 'hi-en' reads Hindi number words as numbers as well, so every line that
+ * leaks read as 'en' also leaks read as 'hi-en'. A caller that does not know
+ * a line's language can read it as 'hi-en' and err toward a leak: `decide()`
+ * reads authored content (hint, alternates, worked example, follow-up) in the
+ * child's language, and for a Hinglish child an English hint with "do" in it
+ * is refused when the answer is 2. Blank secrets are ignored; no secrets
  * means nothing can leak.
  */
 export function leaks(text: string, mustNotReveal: readonly string[], lang: TutorLanguage = 'en'): boolean {

@@ -14,8 +14,11 @@ import type { TutorLanguage } from './types.ts';
  *     they managed it — and after help it names the sticking-with-it;
  *   - silence is thinking: the nudge offers a smaller step or a hint, never
  *     the answer, and never a re-explanation;
- *   - no number words in any fixed line, so a line can never collide with a
- *     numeric answer in the leak check.
+ *   - no number words in any fixed line, in either language, so a line can
+ *     never collide with a numeric answer in the leak check. In a Hinglish
+ *     line the leak check reads Hindi number words as numbers, everyday ones
+ *     included ("ek baar", "saath mein"), so those are not used either
+ *     (checked for every line in `tests/decide.test.ts`).
  *
  * 'hi-en' is Hinglish in ROMAN script, as a Class 6-10 student in India would
  * text it — the tutor's language is the child's onboarding choice
@@ -40,8 +43,8 @@ const rethink: Fixed = {
   ],
   'hi-en': [
     'Hmm, abhi thoda sa miss hua — board ko dhyaan se dekho, kya dikh raha hai?',
-    'Abhi nahi hua. Sawaal pe ek baar phir socho — asal mein kya pooch raha hai?',
-    'Ek second ruko. Board pe wapas dekho — yeh kis step se aata hai?',
+    'Abhi nahi hua. Sawaal pe phir se socho — asal mein kya pooch raha hai?',
+    'Zara ruko. Board pe wapas dekho — yeh kis step se aata hai?',
   ],
 };
 
@@ -70,8 +73,8 @@ const nudge: Fixed = {
   ],
   'hi-en': [
     'Koi jaldi nahi hai — aaram se socho. Jo soch rahe ho batao, ya hint maang lo.',
-    'Socho, koi baat nahi. Bolke try karoge, ya main ek chhota sa hint doon?',
-    'Aaram se. Pehla step bhi bata do toh achha start hai — kya try karoge?',
+    'Socho, koi baat nahi. Bolke try karoge, ya main chhota sa hint doon?',
+    'Aaram se. Pehla step bhi batao, woh bhi achha start hai — kya try karoge?',
   ],
 };
 
@@ -112,7 +115,7 @@ const sayAgain: Fixed = {
   ],
   'hi-en': [
     'Sorry, theek se sunai nahi diya — phir se bologe?',
-    'Yeh miss ho gaya. Ek baar aur batao?',
+    'Yeh miss ho gaya. Dobara batao?',
   ],
 };
 
@@ -127,7 +130,7 @@ const afterFollowUp: Fixed = {
   ],
   'hi-en': [
     'Achha, samajh gayi tum kaise soch rahe ho. Ab sawaal phir se try karo.',
-    'Theek hai, samajh aaya. Ab ek baar phir sawaal try karo.',
+    'Theek hai, samajh aaya. Ab sawaal dobara try karo.',
   ],
 };
 
@@ -150,7 +153,7 @@ const moveOn: Fixed = {
 const carryOn: Fixed = {
   en: [
     "Let's carry on for now — we'll come back to this question later.",
-    "Let's keep going, and try this one again another time.",
+    "Let's keep going, and try this question again another time.",
   ],
   'hi-en': [
     'Chalo, abhi aage badhte hain — yeh sawaal baad mein phir karenge.',
@@ -179,14 +182,14 @@ const praiseAfterHelp: Fixed = {
  * line here claims otherwise — it confirms, and says it will come round again.
  */
 const praiseAfterReveal: Fixed = {
-  en: ["Yes, that's it — hold on to that.", "That's the one. Keep it in mind; we'll see it again."],
+  en: ["Yes, that's it — hold on to that.", "Right, that's the answer. Keep it in mind; we'll see it again."],
   'hi-en': ['Haan, yahi hai — isse yaad rakhna.', 'Bilkul, yahi. Yaad rakhna, yeh phir aayega.'],
 };
 
 /** L3: the authored hint, framed. */
 const hint: Framed = {
   en: [(h) => `Here's a small hint: ${h}`, (h) => `A hint: ${h}`, (h) => `Think about this: ${h}`],
-  'hi-en': [(h) => `Ek chhota sa hint: ${h}`, (h) => `Yeh socho: ${h}`, (h) => `Hint: ${h}`],
+  'hi-en': [(h) => `Chhota sa hint: ${h}`, (h) => `Yeh socho: ${h}`, (h) => `Hint: ${h}`],
 };
 
 /** The hint again, when asked for again: restated, not climbed past. */
@@ -208,7 +211,7 @@ const workedExample: Framed = {
     (s) => `Watch me work a similar problem. ${s}`,
   ],
   'hi-en': [
-    (s) => `Chalo, pehle ek milta-julta sawaal saath mein karte hain. ${s}`,
+    (s) => `Chalo, pehle aisa hi milta-julta sawaal milkar karte hain. ${s}`,
     (s) => `Dekho, main aisa hi sawaal karke dikhati hoon. ${s}`,
   ],
 };
@@ -216,7 +219,7 @@ const workedExample: Framed = {
 /** L8: the answer, then the why. `content` is "answer. why". */
 const reveal: Framed = {
   en: [(a) => `Let's look at it together. The answer is ${a}`, (a) => `Here's how it goes: the answer is ${a}`],
-  'hi-en': [(a) => `Chalo, saath mein dekhte hain. Answer hai: ${a}`, (a) => `Dekho, answer yeh hai: ${a}`],
+  'hi-en': [(a) => `Chalo, milkar dekhte hain. Answer hai: ${a}`, (a) => `Dekho, answer yeh hai: ${a}`],
 };
 
 /**

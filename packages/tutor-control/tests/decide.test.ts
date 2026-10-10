@@ -1,8 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   FAST_WRONG_MS,
+  FRAMES,
   LINES,
+  RECOGNISE,
   decide,
+  leakTokens,
   leaks,
   type Action,
   type AskInput,
@@ -412,6 +415,46 @@ describe('decide: her language and her lines', () => {
         }
       }
     }
+  });
+
+  it('has no number word in any fixed line, read in either language (D27)', () => {
+    // A fixed line with a number in it would be refused whenever the answer is
+    // that number, and a moment can run out of lines (`say` left out). Hindi
+    // words such as "ek baar" or "saath mein" read as numbers in a hi-en line.
+    const moments: Array<[string, Record<string, readonly unknown[]>]> = [
+      ...Object.entries(LINES),
+      ...Object.entries(RECOGNISE),
+      ...Object.entries(FRAMES),
+    ];
+    for (const [moment, byLang] of moments) {
+      for (const lang of ['en', 'hi-en'] as const) {
+        byLang[lang].forEach((entry, i) => {
+          const line = typeof entry === 'function' ? (entry as (s: string) => string)('content') : String(entry);
+          const numbers = leakTokens(line, lang).filter((t) => /^\d/.test(t));
+          expect(numbers, `${moment} ${lang} #${i}: ${line}`).toEqual([]);
+        });
+      }
+    }
+  });
+
+  it('still speaks to a Hinglish child when the answer is 1 and a rethink line was just said (D27)', () => {
+    const ask: AskInput = { question: 'How many hearts does a human have?', expect: '1' };
+    for (const newest of LINES.rethink['hi-en']) {
+      const a = decide(base({ ask, lang: 'hi-en', recentLines: [newest] }));
+      expect(a.say, newest).toBeDefined();
+      expect(a.say).not.toBe(newest);
+    }
+  });
+
+  it('reads authored content in the child’s language: an English hint with "do" is refused for an answer of 2 in Hinglish (D27)', () => {
+    // The ask does not say what language its hint is in. Read as Hinglish, every
+    // line refused in English is refused too, so the check errs toward a leak:
+    // here the help is skipped, never the answer said.
+    const ask: AskInput = { question: 'Solve x + 3 = 5.', expect: 'x = 2', hint: 'What do you get when you take 3 from both sides?' };
+    const hi = decide(base({ ask, attempt: 2, rungSoFar: 1, lang: 'hi-en' }));
+    expect(hi.kind).not.toBe('hint');
+    expect(hi.because).toMatch(/the authored hint leaks the answer/);
+    expect(decide(base({ ask, attempt: 2, rungSoFar: 1 })).kind).toBe('hint');
   });
 
   it('is deterministic: the same input gives the same action', () => {
