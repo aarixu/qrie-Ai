@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Loading, Page, Problem } from '@/components/layout/page'
-import { MEASURE, band, pct } from '@/features/analytics/charts'
+import { MEASURE, NO_MASTERY, band, noMasteryIn, noMasteryYet, pct } from '@/features/analytics/charts'
 import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { PersonAvatar } from '@/components/person-avatar'
 import { hueFor } from '@/lib/palette'
@@ -119,7 +119,7 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
             <SelectItem value='help'>Needs help</SelectItem>
             <SelectItem value='there'>Getting there</SelectItem>
             <SelectItem value='secure'>Secure</SelectItem>
-            <SelectItem value='none'>No answers yet</SelectItem>
+            <SelectItem value='none'>{NO_MASTERY}</SelectItem>
           </SelectContent>
         </Select>
         <MasteryInfo className='self-center' />
@@ -133,6 +133,9 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
           name={section ? sections.find(([id]) => id === section)?.[1] ?? 'class' : 'all'}
         />
       </div>
+      {students.data && students.data.length > 0 && noMasteryIn(students.data) && (
+        <p className='mb-4 text-sm text-muted-foreground'>{noMasteryYet('the school’s')}</p>
+      )}
       {students.isPending ? (
         <Loading what='the students' />
       ) : students.isError ? (

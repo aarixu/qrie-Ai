@@ -14,6 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Loading, Problem } from '@/components/layout/page'
+import { noMasteryYet } from '@/features/analytics/charts'
 import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { LikelyMisconceptions } from './misconceptions'
 
@@ -54,10 +55,13 @@ export function Insights({ sectionId, subjectId }: { sectionId: string; subjectI
   if (shown.isError) return <Problem error={shown.error} />
   if (standing.isPending || shown.isPending) return <Loading what='the insights' />
   if (standing.data.length === 0) {
+    // No belief to show — but the misconceptions come from the answers
+    // themselves, not the model, so they are shown whenever there are any.
     return (
-      <p className='text-muted-foreground'>
-        No answers yet, so nothing to show. Insights appear once students hand in homework.
-      </p>
+      <div className='space-y-6'>
+        <p className='text-muted-foreground'>{noMasteryYet('this class’s')}</p>
+        <LikelyMisconceptions sectionId={sectionId} subjectId={subjectId} />
+      </div>
     )
   }
   return (

@@ -94,6 +94,52 @@ describe('lms-import --apply', () => {
     }
   });
 
+  describe('the addresses the slips print', () => {
+    const READY = {
+      SUPABASE_URL: 'https://x',
+      SUPABASE_SERVICE_ROLE_KEY: 'k',
+      LMS_PIN_PEPPER: 'test-pepper-0123456789-abcdefghijklmnop',
+      // The old setting, pointing at the tutor: never read again.
+      LMS_LOGIN_URL: 'https://qrie-ai.vercel.app/app',
+    };
+
+    async function refused(files: Record<string, string>, env: Record<string, string>) {
+      const calls: string[] = [];
+      const t = io(files, env);
+      const code = await run([...ARGS, '--apply', '--out', 'slips.html'], {
+        ...t.deps,
+        fetchImpl: (async (url: string) => {
+          calls.push(url);
+          return new Response('[]');
+        }) as unknown as typeof fetch,
+      });
+      expect(code).toBe(1);
+      expect(calls).toEqual([]);
+      expect(t.written).toEqual({});
+      return t.out.join('\n');
+    }
+
+    it('refuses without the Student app’s address when a student’s slip needs it, before writing anything', async () => {
+      const text = await refused(FILES, { ...READY, LMS_TEACHER_APP_URL: 'https://teacher.school.example' });
+      expect(text).toContain('--apply needs LMS_STUDENT_APP_URL');
+      expect(text).toContain('LMS_LOGIN_URL is no longer read');
+    });
+
+    it('refuses without the Teacher app’s address when a teacher’s slip needs it, before writing anything', async () => {
+      const text = await refused(FILES, { ...READY, LMS_STUDENT_APP_URL: 'https://student.school.example' });
+      expect(text).toContain('--apply needs LMS_TEACHER_APP_URL');
+    });
+
+    it('refuses an address that is not a web address', async () => {
+      const text = await refused(FILES, {
+        ...READY,
+        LMS_STUDENT_APP_URL: 'student.school.example',
+        LMS_TEACHER_APP_URL: 'https://teacher.school.example',
+      });
+      expect(text).toContain('LMS_STUDENT_APP_URL must be a web address starting https:// or http://');
+    });
+  });
+
   it('gives the auth service a password made from each PIN, never the PIN, and writes each one’s sign-in guard', async () => {
     const pepper = 'test-pepper-0123456789-abcdefghijklmnop';
     const calls: { url: string; method: string; body: Record<string, unknown> | null }[] = [];
@@ -106,9 +152,21 @@ describe('lms-import --apply', () => {
       if (url.includes('/rest/v1/rpc/')) return new Response(null, { status: 204 });
       return new Response(JSON.stringify([{ id: `row-${++n}` }]), { status: 201 });
     }) as unknown as typeof fetch;
-    const t = io(FILES, { SUPABASE_URL: 'https://x', SUPABASE_SERVICE_ROLE_KEY: 'k', LMS_PIN_PEPPER: pepper });
+    const t = io(FILES, {
+      SUPABASE_URL: 'https://x',
+      SUPABASE_SERVICE_ROLE_KEY: 'k',
+      LMS_PIN_PEPPER: pepper,
+      LMS_STUDENT_APP_URL: 'https://student.school.example',
+      LMS_TEACHER_APP_URL: 'https://teacher.school.example',
+    });
     const code = await run([...ARGS, '--apply', '--out', 'slips.html'], { ...t.deps, fetchImpl });
     expect(code).toBe(0);
+
+    // Two students' slips send them to the Student app, the teacher's to the Teacher app.
+    const page = t.written['slips.html'];
+    expect(page.match(/Log in at https:\/\/student\.school\.example with/g)).toHaveLength(2);
+    expect(page.match(/Log in at https:\/\/teacher\.school\.example with/g)).toHaveLength(1);
+    expect(page).not.toContain('qrie-ai.vercel.app');
 
     const slips = [...t.written['slips.html'].matchAll(/<dt>Your ID<\/dt><dd>([^<]+)<\/dd>\s*<dt>Your PIN<\/dt><dd>(\d+)<\/dd>/g)];
     expect(slips).toHaveLength(3);

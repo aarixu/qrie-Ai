@@ -149,7 +149,11 @@ function Stat({
   )
 }
 
-/** The chapter the child is weakest in that has questions to practise (lms.practice_chapters). */
+/**
+ * A chapter with questions to practise (lms.practice_chapters): the one the learning model believes the child
+ * weakest in, a chapter it holds no belief on counting as halfway — so with no mastery at all, the first open one.
+ * It says only "Practise now", never that the chapter is a weak one.
+ */
 function PractiseNow() {
   const chapters = useQuery({ queryKey: ['practice-chapters'], queryFn: api.practiceChapters })
   const open = (chapters.data ?? []).filter((c) => c.questions > 0)

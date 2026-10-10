@@ -25,7 +25,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Loading, Page, Problem } from '@/components/layout/page'
-import { TrendChart, band, pct } from '@/features/analytics/charts'
+import { TrendChart, band, noMasteryIn, noMasteryYet, pct } from '@/features/analytics/charts'
 import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { SubjectBadge } from '@/components/subject-icon'
 import { LikelyMisconceptions } from '@/features/class/misconceptions'
@@ -37,6 +37,9 @@ export function SchoolClassesPage() {
   const [open, setOpen] = useState<SchoolClass | null>(null)
   return (
     <Page title='Classes' description='Every section and subject, all work due so far. Open one for its trend and likely misconceptions.'>
+      {classes.data && classes.data.length > 0 && noMasteryIn(classes.data) && (
+        <p className='mb-4 text-sm text-muted-foreground'>{noMasteryYet('the school’s')}</p>
+      )}
       {classes.isPending ? (
         <Loading what='the classes' />
       ) : classes.isError ? (

@@ -187,8 +187,17 @@ interface Word {
   colour: string;
 }
 
+/**
+ * What a mastery that is not there is called, as in the apps: the learning
+ * model holds no belief from the student's answers yet. That is so before
+ * they answer and while their answers wait to be read, so it never says
+ * there are no answers.
+ */
+const NO_MASTERY = 'No mastery yet';
+const NO_MASTERY_YET = `${NO_MASTERY}. It appears once Qrie has worked through the student's answers in the app.`;
+
 function masteryBand(m: number | null): Word {
-  if (m === null) return { word: 'No answers yet', colour: MUTED };
+  if (m === null) return { word: NO_MASTERY, colour: MUTED };
   if (m < 0.4) return { word: 'Needs help', colour: RED };
   if (m < 0.7) return { word: 'Getting there', colour: AMBER };
   return { word: 'Secure', colour: GREEN };
@@ -505,10 +514,11 @@ function kpis(s: Sheet, subjects: StudentSubject[], attendance: ReportData['atte
       detailColour: band.colour,
     },
     {
+      // Counted from the model's beliefs, so with none it is not a count of 0.
       label: 'Chapters practised',
-      value: String(chapters),
+      value: chapters > 0 ? String(chapters) : '—',
       colour: accent,
-      detail: chapters > 0 ? `across ${plural(practised, 'subject')}` : 'None yet',
+      detail: chapters > 0 ? `across ${plural(practised, 'subject')}` : NO_MASTERY,
       detailColour: MUTED,
     },
   ];
@@ -691,7 +701,7 @@ function chaptersChart(s: Sheet, chapters: StudentChapter[]): void {
   const [rowH, noteH] = [6.5, 6];
   const title = 'Chapter by chapter';
   heading(s, title, shown.length ? 'Weakest first' : undefined, shown.length ? Math.min(3, shown.length) * rowH : 10);
-  if (!shown.length) return quiet(s, 'No answers yet.');
+  if (!shown.length) return quiet(s, NO_MASTERY_YET);
 
   const { doc } = s;
   const labelEnd = MARGIN + 74;

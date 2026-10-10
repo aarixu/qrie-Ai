@@ -36,11 +36,32 @@ export const SECURE = 0.7
 export const GETTING_THERE = 0.4
 
 /**
+ * What a mastery that is not there is called: the learning model holds no
+ * belief from answers for these students. That is so before anyone answers,
+ * and also while answers wait to be read by the model — so it never says
+ * there are no answers.
+ */
+export const NO_MASTERY = 'No mastery yet'
+
+/** The same, where a whole screen or chart has no mastery to show; `whose` as in "this class’s". */
+export function noMasteryYet(whose: string): string {
+  return `${NO_MASTERY}. It appears once Qrie has worked through ${whose} answers in the app.`
+}
+
+/**
+ * Whether not one of these rows has a mastery (an empty list included): no
+ * rows of belief, as against rows whose belief is low, which are real.
+ */
+export function noMasteryIn(rows: { mastery: number | null }[]): boolean {
+  return rows.every((r) => r.mastery === null)
+}
+
+/**
  * The three words a teacher reads a mastery by. The brain's belief is a
  * probability; these bands are only how it is shown.
  */
 export function band(m: number | null | undefined): { label: string; colour: string; text: string } {
-  if (m === null || m === undefined) return { label: 'No answers yet', colour: 'var(--muted-foreground)', text: 'text-muted-foreground' }
+  if (m === null || m === undefined) return { label: NO_MASTERY, colour: 'var(--muted-foreground)', text: 'text-muted-foreground' }
   if (m < GETTING_THERE) return { label: 'Needs help', colour: '#dc2626', text: 'text-red-600' }
   if (m < SECURE) return { label: 'Getting there', colour: '#d97706', text: 'text-amber-600' }
   return { label: 'Secure', colour: '#16a34a', text: 'text-green-600' }
@@ -213,10 +234,13 @@ export function ClassBars({
   )
 }
 
-/** Horizontal bars, one per row, coloured by band. */
-export function MasteryBars({ rows }: { rows: { label: string; mastery: number | null }[] }) {
-  if (rows.length === 0) return <p className='px-4 text-sm text-muted-foreground'>No answers yet, so nothing to show.</p>
-  const data = rows.map((r) => ({ label: r.label, Mastery: toPct(r.mastery) ?? 0, raw: r.mastery }))
+/**
+ * Horizontal bars, one per row, coloured by band. Every row is a real
+ * belief; with none, it says so for `whose` answers (noMasteryYet).
+ */
+export function MasteryBars({ rows, whose }: { rows: { label: string; mastery: number }[]; whose: string }) {
+  if (rows.length === 0) return <p className='px-4 text-sm text-muted-foreground'>{noMasteryYet(whose)}</p>
+  const data = rows.map((r) => ({ label: r.label, Mastery: Math.round(r.mastery * 100), raw: r.mastery }))
   return (
     <ResponsiveContainer width='100%' height={Math.max(120, data.length * 36 + 24)}>
       <BarChart data={data} layout='vertical' margin={{ top: 4, right: 24, left: 8, bottom: 4 }}>

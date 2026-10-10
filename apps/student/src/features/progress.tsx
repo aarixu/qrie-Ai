@@ -5,7 +5,8 @@ import type { StudentSubject, TimelineRow } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth-store'
-import { FEW_ANSWERS, GETTING_THERE, MasteryInfo, STRONG } from '@/components/mastery-info'
+// Relative: the tests' `@` is the teacher app's, which has no such file.
+import { FEW_ANSWERS, GETTING_THERE, MasteryInfo, STRONG } from '../components/mastery-info'
 import { SubjectBadge } from '@/components/subject-icon'
 import { MyReportCard } from './report-card'
 
@@ -14,9 +15,18 @@ export const chapterTitle = (slug: string) => {
   return words.charAt(0).toUpperCase() + words.slice(1)
 }
 
-/** Words for a child, not a number: the model's belief is a guide, not a grade. MasteryInfo says what they mean. */
-export function standingOf(mastery: number | null, answers: number): { word: string; tone: string; bar: string } {
-  if (mastery === null || answers < FEW_ANSWERS) return { word: 'Just started', tone: 'bg-muted text-muted-foreground', bar: 'bg-slate-400' }
+type Standing = { word: string; tone: string; bar: string }
+
+/**
+ * Words for a child, not a number: the model's belief is a guide, not a grade. MasteryInfo says what they mean.
+ * None without a belief: the model has not read any answers of theirs there yet, and "Just started" would say
+ * there were a few.
+ */
+export function standingOf(mastery: number, answers: number): Standing
+export function standingOf(mastery: number | null, answers: number): Standing | null
+export function standingOf(mastery: number | null, answers: number): Standing | null {
+  if (mastery === null) return null
+  if (answers < FEW_ANSWERS) return { word: 'Just started', tone: 'bg-muted text-muted-foreground', bar: 'bg-slate-400' }
   if (mastery >= STRONG) return { word: 'Strong', tone: 'bg-green-600/15 text-green-700', bar: 'bg-green-600' }
   if (mastery >= GETTING_THERE) return { word: 'Getting there', tone: 'bg-amber-500/15 text-amber-700', bar: 'bg-amber-500' }
   return { word: 'Needs practice', tone: 'bg-red-500/15 text-red-700', bar: 'bg-red-500' }
@@ -182,7 +192,7 @@ function SubjectCard({ s }: { s: StudentSubject }) {
           <p className='font-medium'>{s.subjectName}</p>
           {s.teacherName && <p className='text-xs text-muted-foreground'>{s.teacherName}</p>}
         </div>
-        <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-xs font-medium', st.tone)}>{st.word}</span>
+        {st && <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-xs font-medium', st.tone)}>{st.word}</span>}
       </div>
       <div className='mt-2 grid grid-cols-2 gap-3 text-xs'>
         <div>
@@ -225,8 +235,8 @@ function Chapters({ child }: { child?: ChildShown }) {
     return (
       <p className='rounded-xl bg-muted p-3 text-sm text-muted-foreground'>
         {child
-          ? `When ${child.displayName} hands in work or practises in Learn, their chapters show up here.`
-          : 'Hand in work or practise in Learn, and your chapters show up here.'}
+          ? `${child.displayName}’s chapters show up here once Qrie has worked through their answers in the app.`
+          : 'Your chapters show up here once Qrie has worked through your answers in the app.'}
       </p>
     )
   }

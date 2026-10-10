@@ -50,6 +50,7 @@ export function ClassAnalytics({ sectionId, subjectId }: { sectionId: string; su
             <Problem error={standing.error} />
           ) : (
             <MasteryBars
+              whose='this class’s'
               rows={[...chapters.entries()].map(([ch, ms]) => ({
                 label: chapterTitle(ch),
                 mastery: ms.reduce((a, b) => a + b, 0) / ms.length,

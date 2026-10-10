@@ -353,10 +353,26 @@ describe('reportCardPdf', () => {
     const { pages } = await readPdf(bytesOf([{ ...riya, subjects: empty, chapters: [], timeline: [] }]));
     expect(after(pages[0], 'Work handed in')).toEqual(['—']);
     expect(after(pages[0], 'Average mark')).toEqual(['—']);
-    expect(after(pages[0], 'Mastery', 2)).toEqual(['—', 'No answers yet']);
-    expect(after(pages[0], 'Chapters practised')).toEqual(['0']);
     expect(pages.flat()).toContain('Nothing marked yet.');
-    expect(pages.flat()).toContain('No answers yet.');
+  });
+
+  // With no mastery at all — nothing has folded the student's answers into
+  // the learning model yet — the card does not say "No answers yet" (there
+  // may be many) nor count 0 chapters practised.
+  it('says "No mastery yet" when the learning model holds no belief, and keeps a real 0% as 0%', async () => {
+    const none = subjects.map((s) => ({ ...s, mastery: null, chaptersSeen: 0 }));
+    const { pages } = await readPdf(bytesOf([{ ...riya, subjects: none, chapters: [] }]));
+    expect(after(pages[0], 'Mastery', 2)).toEqual(['—', 'No mastery yet']);
+    expect(after(pages[0], 'Chapters practised', 2)).toEqual(['—', 'No mastery yet']);
+    expect(after(pages.flat(), 'Mathematics', 5)).toEqual(['Neha Sharma', '3/4', '62%', '—', 'No mastery yet']);
+    expect(pages.flat()).toContain("No mastery yet. It appears once Qrie has worked through the student's answers in the app.");
+    expect(pages.flat().join(' ')).not.toContain('No answers yet');
+    expect(pages.flat()).not.toContain('Needs help');
+
+    const zero = subjects.map((s) => ({ ...s, mastery: 0, chaptersSeen: 1 }));
+    const low = await readPdf(bytesOf([{ ...riya, subjects: zero, chapters: [{ ...chapters[0], mastery: 0 }] }]));
+    expect(after(low.pages[0], 'Mastery', 2)).toEqual(['0%', 'Needs help']);
+    expect(after(low.pages[0], 'Chapters practised')).toEqual(['2']);
   });
 
   it('lists every subject with its teacher, hand-ins, mark and mastery', async () => {

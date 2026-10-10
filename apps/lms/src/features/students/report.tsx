@@ -27,7 +27,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Loading, Page, Problem } from '@/components/layout/page'
-import { ChartCard, Kpi, MEASURE, MasteryBars, band, pct } from '@/features/analytics/charts'
+import { ChartCard, Kpi, MEASURE, MasteryBars, NO_MASTERY, band, pct } from '@/features/analytics/charts'
 import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { kindLabel } from '@/features/homework/kinds'
 import { ResetPinButton } from '@/features/school/reset-pin'
@@ -167,8 +167,8 @@ export function StudentReport({ studentId }: { studentId: string }) {
                 <Kpi
                   label='Chapters practised'
                   icon={BookCheck}
-                  value={subjects.data.reduce((n, x) => n + x.chaptersSeen, 0)}
-                  hint='With answers the model has read'
+                  value={subjects.data.reduce((n, x) => n + x.chaptersSeen, 0) || '—'}
+                  hint={subjects.data.some((x) => x.chaptersSeen > 0) ? 'With answers the model has read' : NO_MASTERY}
                 />
               </div>
               <SubjectTable subjects={subjects.data} />
@@ -194,6 +194,7 @@ export function StudentReport({ studentId }: { studentId: string }) {
                 <Problem error={chapters.error} />
               ) : (
                 <MasteryBars
+                  whose='this student’s'
                   rows={chapters.data.map((c) => ({ label: `${chapterTitle(c.chapter)}`, mastery: c.mastery }))}
                 />
               )}

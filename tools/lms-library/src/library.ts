@@ -82,6 +82,59 @@ export function libraryItems(banks: Bank[]): LibraryItem[] {
   return out;
 }
 
+/**
+ * The classes whose banks were written from the old NCERT books, which the
+ * current syllabus has replaced: their questions and chapter lists are wrong
+ * for a class today. The library loader leaves them out unless asked
+ * (cli.ts, --include-old-books-6-9). The demo seed (tools/lms-demo) still
+ * loads every bank.
+ */
+export const OLD_BOOK_GRADES: readonly number[] = [6, 7, 8, 9];
+
+/** What withoutOldBooks left out of one class. */
+export interface SkippedGrade {
+  grade: number;
+  /** Probes on that class's outcomes: the library items not loaded. */
+  items: number;
+  outcomes: number;
+  /** The banks those came from. */
+  banks: string[];
+}
+
+/**
+ * The banks with every outcome of an old-book class taken out, and the
+ * probes on those outcomes with them; and what was left out, class by class.
+ * An outcome's class is its node's `klass` — the same field an item's grade
+ * comes from — not the bank's name. A probe whose node is missing is kept,
+ * so libraryItems still refuses it.
+ */
+export function withoutOldBooks(banks: Bank[]): { kept: Bank[]; skipped: SkippedGrade[] } {
+  const old = new Set(OLD_BOOK_GRADES);
+  const skipped = new Map<number, SkippedGrade>();
+  const tally = (grade: number, bank: string): SkippedGrade => {
+    const s = skipped.get(grade) ?? { grade, items: 0, outcomes: 0, banks: [] };
+    if (!s.banks.includes(bank)) s.banks.push(bank);
+    skipped.set(grade, s);
+    return s;
+  };
+  const kept: Bank[] = [];
+  for (const bank of banks) {
+    const gradeOf = new Map(bank.graph.nodes.map((n) => [n.id, n.klass]));
+    for (const n of bank.graph.nodes) if (old.has(n.klass)) tally(n.klass, bank.name).outcomes += 1;
+    for (const p of bank.probes.probes) {
+      const grade = gradeOf.get(p.nodeId);
+      if (grade !== undefined && old.has(grade)) tally(grade, bank.name).items += 1;
+    }
+    const nodes = bank.graph.nodes.filter((n) => !old.has(n.klass));
+    const probes = bank.probes.probes.filter((p) => !old.has(gradeOf.get(p.nodeId) ?? -1));
+    if (nodes.length === bank.graph.nodes.length && probes.length === bank.probes.probes.length) kept.push(bank);
+    else if (nodes.length || probes.length) {
+      kept.push({ name: bank.name, graph: { ...bank.graph, nodes }, probes: { ...bank.probes, probes } });
+    }
+  }
+  return { kept, skipped: [...skipped.values()].sort((a, b) => a.grade - b.grade) };
+}
+
 /** A row of lms.outcome (0027): where an outcome sits in the curriculum. */
 export interface Outcome {
   id: string;

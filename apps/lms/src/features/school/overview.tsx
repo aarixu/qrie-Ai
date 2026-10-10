@@ -19,7 +19,7 @@ import { api } from '@/lib/backend'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loading, Page, Problem } from '@/components/layout/page'
-import { ChartCard, ClassBars, Kpi, band, pct, shortClass } from '@/features/analytics/charts'
+import { ChartCard, ClassBars, Kpi, NO_MASTERY, band, noMasteryIn, noMasteryYet, pct, shortClass } from '@/features/analytics/charts'
 import { MasteryInfo } from '@/features/analytics/mastery-info'
 import { BrandHero, greeting } from '@/components/brand-hero'
 import { PersonAvatar } from '@/components/person-avatar'
@@ -104,7 +104,7 @@ export function SchoolOverviewPage() {
               label='Mastery'
               icon={Brain}
               value={pct(o.mastery)}
-              hint={`${band(o.mastery).label} — from every answer`}
+              hint={o.mastery === null ? noMasteryYet('the school’s') : `${band(o.mastery).label} — from every answer`}
               info={<MasteryInfo />}
             />
             <Kpi
@@ -217,11 +217,12 @@ function AtRiskList({ rows }: { rows: SchoolStudent[] }) {
 }
 
 function Bands({ rows }: { rows: SchoolStudent[] }) {
+  if (noMasteryIn(rows)) return <p className='px-4 text-sm text-muted-foreground'>{noMasteryYet('the school’s')}</p>
   const groups = [
     { name: 'Secure', colour: '#16a34a', n: rows.filter((r) => r.mastery !== null && r.mastery >= 0.7).length },
     { name: 'Getting there', colour: '#d97706', n: rows.filter((r) => r.mastery !== null && r.mastery >= 0.4 && r.mastery < 0.7).length },
     { name: 'Needs help', colour: '#dc2626', n: rows.filter((r) => r.mastery !== null && r.mastery < 0.4).length },
-    { name: 'No answers yet', colour: '#94a3b8', n: rows.filter((r) => r.mastery === null).length },
+    { name: NO_MASTERY, colour: '#94a3b8', n: rows.filter((r) => r.mastery === null).length },
   ].filter((g) => g.n > 0)
   return (
     <div>

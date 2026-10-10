@@ -6,7 +6,8 @@ import type { PracticeChapter } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { subjectHue } from '@/lib/palette'
-import { MasteryInfo } from '@/components/mastery-info'
+// Relative: the tests' `@` is the teacher app's, which has no such file.
+import { MasteryInfo } from '../../components/mastery-info'
 import { SubjectBadge } from '@/components/subject-icon'
 import { chapterTitle, standingOf } from '../progress'
 
@@ -104,14 +105,15 @@ function ChapterRow({ c, n }: { c: PracticeChapter; n: number }) {
         <p className='truncate font-medium'>{chapterTitle(c.chapter)}</p>
         {c.questions > 0 ? (
           <>
-            <div className='mt-1 h-1.5 overflow-hidden rounded-full bg-muted'>
-              <div
-                className={cn('h-full rounded-full', s.bar)}
-                style={{ width: `${Math.max(4, Math.round((c.mastery ?? 0) * 100))}%` }}
-              />
-            </div>
+            {/* No bar and no word while the model holds no belief here: an empty bar would read as 0. */}
+            {s && c.mastery !== null && (
+              <div className='mt-1 h-1.5 overflow-hidden rounded-full bg-muted'>
+                <div className={cn('h-full rounded-full', s.bar)} style={{ width: `${Math.max(4, Math.round(c.mastery * 100))}%` }} />
+              </div>
+            )}
             <p className='mt-1 text-xs text-muted-foreground'>
-              {s.word} · {c.questions} {c.questions === 1 ? 'question' : 'questions'}
+              {s && `${s.word} · `}
+              {c.questions} {c.questions === 1 ? 'question' : 'questions'}
             </p>
           </>
         ) : (

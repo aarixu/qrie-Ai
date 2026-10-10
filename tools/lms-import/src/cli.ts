@@ -1,7 +1,7 @@
 import { applyPlan, type ImportResult } from './apply.ts';
 import { planImport, type ImportPlan, type SchoolConfig } from './plan.ts';
 import { guardedStore, pepperProblem } from './pinGuard.ts';
-import { renderSlips } from './slips.ts';
+import { renderSlips, slipApp, SLIP_APP_NAME, type SlipApp } from './slips.ts';
 import { readStudents, readTeachers } from './sheet.ts';
 import { lmsRpc, supabaseRest, supabaseStore } from './supabaseStore.ts';
 
@@ -19,6 +19,11 @@ import { lmsRpc, supabaseRest, supabaseStore } from './supabaseStore.ts';
  * functions hold: the auth service is given the password made from each PIN
  * with it, never the PIN, and each new account's sign-in guard row is written
  * with it (pinGuard.ts).
+ *
+ * --apply also needs the address of each app the new slips send people to:
+ * LMS_STUDENT_APP_URL when the sheets have students, LMS_TEACHER_APP_URL when
+ * they have teachers or admins. Neither has a default, and a missing one stops
+ * the import before anything is written.
  */
 
 export interface CliDeps {
@@ -29,7 +34,41 @@ export interface CliDeps {
   fetchImpl?: typeof fetch;
 }
 
-const DEFAULT_LOGIN_URL = 'https://qrie-ai.vercel.app/app';
+/** Where each app's address comes from, and whose slips print it. */
+const APP_URL_ENV: Record<SlipApp, { env: string; whose: string }> = {
+  student: { env: 'LMS_STUDENT_APP_URL', whose: 'students' },
+  staff: { env: 'LMS_TEACHER_APP_URL', whose: 'teachers and admins' },
+};
+
+/**
+ * The address of every app the plan's slips name, or what is wrong: the
+ * first app with no address, or one that is not an http(s) address.
+ */
+function slipAddresses(
+  plan: ImportPlan,
+  env: CliDeps['env'],
+): { urls: Partial<Record<SlipApp, string>> } | { problem: string } {
+  const urls: Partial<Record<SlipApp, string>> = {};
+  for (const app of new Set(plan.people.map((p) => slipApp(p.kind)))) {
+    const { env: name, whose } = APP_URL_ENV[app];
+    const value = env[name]?.trim();
+    if (!value) {
+      const old = env.LMS_LOGIN_URL ? ' LMS_LOGIN_URL is no longer read.' : '';
+      return { problem: `--apply needs ${name}, the ${SLIP_APP_NAME[app]}'s address: the slips of ${whose} tell them to log in there.${old}` };
+    }
+    let url: URL | null = null;
+    try {
+      url = new URL(value);
+    } catch {
+      url = null;
+    }
+    if (!url || (url.protocol !== 'https:' && url.protocol !== 'http:')) {
+      return { problem: `${name} must be a web address starting https:// or http://, got "${value}".` };
+    }
+    urls[app] = value;
+  }
+  return { urls };
+}
 
 function flag(args: string[], name: string): string | undefined {
   const i = args.indexOf(name);
@@ -96,6 +135,13 @@ export async function run(args: string[], deps: CliDeps): Promise<number> {
     deps.log(`--apply needs LMS_PIN_PEPPER, the same secret the lms-signin function holds: ${problem}`);
     return 1;
   }
+  // Checked before anything is written: an import whose slips cannot be
+  // printed would leave PINs that nobody ever sees.
+  const addresses = slipAddresses(plan, deps.env);
+  if ('problem' in addresses) {
+    deps.log(addresses.problem);
+    return 1;
+  }
 
   let result: ImportResult;
   try {
@@ -112,7 +158,7 @@ export async function run(args: string[], deps: CliDeps): Promise<number> {
     renderSlips({
       schoolCode: school.code,
       schoolName: school.displayName,
-      loginUrl: deps.env.LMS_LOGIN_URL ?? DEFAULT_LOGIN_URL,
+      appUrls: addresses.urls,
       created: result.created,
     }),
   );

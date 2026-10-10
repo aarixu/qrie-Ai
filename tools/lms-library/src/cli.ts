@@ -1,15 +1,20 @@
-import { libraryItems, loadBanks, outcomes } from './library.ts';
+import { libraryItems, loadBanks, outcomes, withoutOldBooks, type Bank, type SkippedGrade } from './library.ts';
 import { supabaseLibraryStore, upsertOutcomes } from './supabaseLibraryStore.ts';
 import { syncLibrary } from './sync.ts';
 
 /**
  * Load the Qrie library into lms.item, and its maps' outcomes into
- * lms.outcome: `node tools/lms-library/src/cli.ts [--apply]`
+ * lms.outcome: `node tools/lms-library/src/cli.ts [--apply] [--include-old-books-6-9]`
  *
  * Without --apply it is a DRY RUN that reads the banks and counts them.
  * --apply writes with SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY from the
  * environment, adds only items not already stored, and reports — without
  * overwriting — any whose question or key has changed since.
+ *
+ * Classes 6-9 are left out, items and outcomes both, and counted class by
+ * class in the output: their banks come from the old NCERT books
+ * (OLD_BOOK_GRADES). --include-old-books-6-9 loads them too. Leaving them out
+ * removes nothing a project already holds.
  */
 
 export interface CliDeps {
@@ -18,8 +23,26 @@ export interface CliDeps {
   fetchImpl?: typeof fetch;
 }
 
+export const INCLUDE_OLD_BOOKS = '--include-old-books-6-9';
+
+function choose(all: Bank[], includeOld: boolean, log: (line: string) => void): Bank[] {
+  if (includeOld) {
+    log(`Including Classes 6-9 from the old NCERT books (${INCLUDE_OLD_BOOKS}).`);
+    return all;
+  }
+  const { kept, skipped } = withoutOldBooks(all);
+  if (skipped.length) {
+    log('Skipped Classes 6-9: their banks come from the old NCERT books, not the current syllabus.');
+    skipped.forEach((s: SkippedGrade) =>
+      log(`  Class ${s.grade}: ${s.items} items and ${s.outcomes} outcomes (${s.banks.join(', ')})`),
+    );
+    log(`  Run again with ${INCLUDE_OLD_BOOKS} to load them as well.`);
+  }
+  return kept;
+}
+
 export async function run(args: string[], deps: CliDeps): Promise<number> {
-  const banks = loadBanks();
+  const banks = choose(loadBanks(), args.includes(INCLUDE_OLD_BOOKS), deps.log);
   const items = libraryItems(banks);
   const rows = outcomes(banks);
 
