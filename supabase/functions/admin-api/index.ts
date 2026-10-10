@@ -8,7 +8,13 @@
 // the service role's REST calls (tools/lms-import supabaseRest/supabaseStore)
 // and the auth admin API. It has not run against a deployed project.
 //
-// Deploy after `supabase db push` has applied 0052 to 0055:
+// Routes: import, reset-pin, staff-invite, user-block (plan 2), and plan 5's
+// class-remove and erase (tools/admin-api/src/privacy.ts), which delete files
+// through the Storage API with the service role and then call
+// admin.class_files_removed or admin.erasure_complete with it.
+//
+// Deploy after `supabase db push` has applied 0052 to 0055 (and 0065 to 0069
+// for plan 5's two routes):
 //   supabase functions deploy admin-api --no-verify-jwt
 //   supabase secrets set ADMIN_ORIGIN=https://<the console's own address>
 // --no-verify-jwt as for lms-admin: the database checks every call as the
@@ -35,6 +41,7 @@ const CORS = {
 };
 
 const rest = supabaseRest(SUPABASE_URL, SERVICE_ROLE_KEY);
+const SERVICE_FUNCTIONS = ['class_files_removed', 'erasure_complete'];
 
 const deps = {
   async asCaller(authorization, fn, args) {
@@ -79,6 +86,19 @@ const deps = {
     async setBanned(userId, banned) {
       await rest(`/auth/v1/admin/users/${userId}`, { method: 'PUT', body: { ban_duration: banned ? '876000h' : 'none' } });
     },
+  },
+  files: {
+    // The Storage API's bulk delete, as supabase-js's remove() sends it; it
+    // answers the objects it deleted (UNVERIFIED against a deployed project).
+    async remove(bucket, names) {
+      if (names.length === 0) return 0;
+      const out = await rest(`/storage/v1/object/${bucket}`, { method: 'DELETE', body: { prefixes: names } });
+      return Array.isArray(out) ? out.length : 0;
+    },
+  },
+  serviceAdmin(fn, args) {
+    if (!SERVICE_FUNCTIONS.includes(fn)) throw new Error(`not a service function: ${fn}`);
+    return rest(`/rest/v1/rpc/${fn}`, { method: 'POST', profile: 'admin', body: args });
   },
 };
 

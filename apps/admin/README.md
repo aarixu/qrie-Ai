@@ -29,3 +29,15 @@ Edge Functions hold them. Running it: `docs/ops/admin-console.md` section 6.
 when, and what it does when it cannot; it and the line said before a switch changes
 (`describeFlagChange` in `src/lib/confirm.ts`) come from one list, `src/lib/app-readers.ts`.
 Running it: `docs/ops/admin-console.md` section 7.
+
+**Safety, classes and privacy (plan 5)** live in `src/features/safety/`,
+`src/features/classes/` and `src/features/privacy/`, reading and writing through
+`safety`, `classes` and `privacy` in `src/lib/client.ts`. The Safety page lists
+reports by kind, status and age, never their words; a child's words appear only on
+a case's own page (`/safety/cases/$caseId`), one report at a time, each reading
+logged by the database. The Classes pages publish, retract and reject (removal goes
+through `admin-api`'s `class-remove`, which deletes the files from Storage). The
+Privacy page holds erasure requests, each school's data-protection decision and
+what is kept; a request's own page (`/privacy/requests/$requestId`) is the only page
+with an Erase button, and erasing goes through `admin-api`'s `erase`. Running it:
+`docs/ops/admin-console.md` section 8.

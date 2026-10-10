@@ -17,12 +17,22 @@ describe('the sidebar follows the signed-in role', () => {
     expect(titles('owner')).toEqual(every);
   });
 
-  it('ops sees everything but Staff and audit', () => {
-    expect(titles('ops')).toEqual(every.filter((t) => t !== 'Staff and audit'));
+  it("ops sees everything but Staff and audit and Safety (a report's list and cases are the owner's and safety's)", () => {
+    expect(titles('ops')).toEqual(every.filter((t) => t !== 'Staff and audit' && t !== 'Safety'));
+    expect(titles('ops')).toEqual(expect.arrayContaining(['Classes', 'Privacy']));
   });
 
-  it('safety sees Today, Schools, Switches, Apps, System and Your account', () => {
-    expect(titles('safety')).toEqual(['Today', 'Schools', 'Switches', 'Apps', 'System', 'Your account']);
+  it('safety sees Today, Schools, Switches, Apps, System, Your account, Safety and Classes', () => {
+    expect(titles('safety')).toEqual(['Today', 'Schools', 'Switches', 'Apps', 'System', 'Your account', 'Safety', 'Classes']);
+  });
+
+  it("plan 5's Safety and privacy group goes through plan 4's role filter: safety sees Safety, finance sees none of the group", () => {
+    const group = (role: Me['role']) =>
+      navFor(role, sidebarData).find((g) => g.title === 'Safety and privacy')?.items.map((i) => i.title);
+    expect(group('owner')).toEqual(['Safety', 'Classes', 'Privacy']);
+    expect(group('safety')).toEqual(['Safety', 'Classes']);
+    expect(group('ops')).toEqual(['Classes', 'Privacy']);
+    expect(group('finance')).toBeUndefined();
   });
 
   it('finance sees Your account and the Billing pages, and nothing about children or switches', () => {

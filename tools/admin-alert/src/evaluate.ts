@@ -8,6 +8,13 @@
  * rule with no window fires on every run: an unread unsafe report, and a
  * checker that cannot reach the database, stay loud until somebody acts.
  *
+ * A distress flag (plan 5) also has no window: it speaks to the safety chat on
+ * every run whose snapshot counts one. The database counts the flags received
+ * since its previous good check (at least the last 15 minutes, at most the
+ * last 24 hours), so a flag that arrives between two runs is counted by the
+ * next run however late it comes, and one flag speaks on about three runs
+ * when runs are 5 minutes apart. The message says how far back it counted.
+ *
  * Messages carry counts and ages and nothing that names a school, a lesson, a
  * child or a word of what a child wrote. Safety and operations go to different
  * chats, with different people. A checker that cannot see goes to both, because
@@ -24,6 +31,10 @@ export interface Snapshot {
   pendingClasses: number;
   relayEvents5m: number;
   relayFailures5m: number;
+  /** Distress flags received since the previous good check, at least 15 minutes and at most 24 hours back (0065). Absent from a database before 0065. */
+  distressFlags?: number;
+  /** How many minutes back distressFlags counted. */
+  distressWindowMinutes?: number;
 }
 
 /** What the database answers: the snapshot, or `{ error }` for a refused token. */
@@ -78,6 +89,16 @@ export function evaluate(answer: SnapshotAnswer | null, nowMinutes: number): Ale
       channel: 'safety',
       key: 'old-report',
       text: `Qrie safety: ${answer.newReports} report(s) unread, the oldest ${answer.oldestNewReportMinutes} min.`,
+    });
+  }
+
+  const distress = answer.distressFlags ?? 0;
+  if (distress > 0) {
+    const minutes = answer.distressWindowMinutes ?? 15;
+    out.push({
+      channel: 'safety',
+      key: 'distress-flag',
+      text: `Qrie safety: ${distress} distress flag(s) in the last ${minutes} minutes. No words are kept. Open the Safety page.`,
     });
   }
 

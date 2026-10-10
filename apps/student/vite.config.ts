@@ -17,6 +17,7 @@ export default defineConfig({
       '@': path.resolve(import.meta.dirname, './src'),
       '@ai-tutor/lms-client': path.resolve(import.meta.dirname, '../../packages/lms-client/src/index.ts'),
       '@ai-tutor/lms-report': path.resolve(import.meta.dirname, '../../packages/lms-report/src/index.ts'),
+      '@ai-tutor/safety': path.resolve(import.meta.dirname, '../../packages/safety/src/index.ts'),
     },
   },
 })

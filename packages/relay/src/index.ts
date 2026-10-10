@@ -76,6 +76,17 @@ export {
   type StudentReport,
 } from './report.ts';
 
+// Plan 5: a distress flag carried to the server, with no words.
+export {
+  MAX_FLAG_BYTES,
+  createMemorySafetyEventStore,
+  createSupabaseSafetyEventStore,
+  handleSafetyFlag,
+  readSafetyFlag,
+  type SafetyEventStore,
+  type SafetyFlag,
+} from './safetyFlag.ts';
+
 export {
   MAX_CONTROL_BYTES,
   MAX_PREP_STATE_REFS,

@@ -61,15 +61,38 @@ describe('the admin schema', () => {
       'admin.billing_subscription_create',
       'admin.billing_subscriptions',
       'admin.billing_webhook_log',
+      'admin.case_close',
+      'admin.case_context',
+      'admin.case_detail',
+      'admin.case_open',
+      'admin.case_report',
+      'admin.cases',
+      'admin.class_detail',
+      'admin.class_publish',
+      'admin.class_remove_prepare',
+      'admin.classes',
+      'admin.contest_purge_set',
       'admin.direct_user',
       'admin.direct_user_block',
       'admin.direct_user_find',
       'admin.direct_users_summary',
+      'admin.erasure_intake',
+      'admin.erasure_prepare',
+      'admin.erasure_refuse',
+      'admin.erasure_request',
+      'admin.erasure_requests',
+      'admin.erasure_verify',
       'admin.flag_list',
       'admin.flag_set',
       'admin.me',
+      'admin.read_log_list',
       'admin.relay_status',
+      'admin.report_mark',
       'admin.restore_drill_set',
+      'admin.retention_truth',
+      'admin.safety_capture_set',
+      'admin.safety_overview',
+      'admin.safety_reports',
       'admin.school_activity',
       'admin.school_contact_remove',
       'admin.school_contact_set',
@@ -85,6 +108,8 @@ describe('the admin schema', () => {
       'admin.school_people',
       'admin.school_person',
       'admin.school_person_disable',
+      'admin.school_privacy_list',
+      'admin.school_privacy_set',
       'admin.school_quiet_set',
       'admin.school_set_licence',
       'admin.school_weekly',
@@ -116,6 +141,9 @@ describe('the admin schema', () => {
         'admin.billing_webhook_ingest',
         'admin.bootstrap_owner',
         'admin.bootstrap_status',
+        'admin.class_files_removed',
+        'admin.erasure_complete',
+        'admin.privacy_daily',
         'admin.revert_caps',
         'admin.set_environment',
       ]),
@@ -134,6 +162,9 @@ describe('the admin schema', () => {
       'admin.billing_webhook_ingest',
       'admin.bootstrap_owner',
       'admin.bootstrap_status',
+      'admin.class_files_removed',
+      'admin.erasure_complete',
+      'admin.privacy_daily',
       'admin.revert_caps',
       'admin.set_environment',
     ]) {
@@ -141,7 +172,36 @@ describe('the admin schema', () => {
     }
   });
 
-  it('exposes only four functions to the public schema for the apps and the outside checkers', async () => {
+  it('keeps the plan-5 internals and the flag door away from browsers', async () => {
+    const executable = async (role: string, schema: string, name: string) =>
+      (
+        await db.query<{ ok: boolean }>(
+          `select bool_or(has_function_privilege($1, p.oid, 'execute')) as ok
+             from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+            where n.nspname = $2 and p.proname = $3`,
+          [role, schema, name],
+        )
+      ).rows[0].ok;
+    for (const [schema, name] of [
+      ['admin', 'distress_capture'],
+      ['admin', 'privacy_import_refusal'],
+      ['admin', 'reads_today'],
+      ['admin', 'class_cost_for'],
+      ['admin', 'erasure_counts'],
+      ['admin', 'scrub_login'],
+      ['admin', 'activity_lines_naming'],
+      ['admin', 'erasure_row'],
+      ['admin', 'contest_purge_due'],
+      ['public', 'keep_safety_event'],
+    ]) {
+      expect(await executable('authenticated', schema, name), `${schema}.${name}`).toBe(false);
+      expect(await executable('anon', schema, name), `${schema}.${name}`).toBe(false);
+    }
+    expect(await executable('anon', 'lms', 'report_problem')).toBe(false);
+    expect(await executable('authenticated', 'lms', 'report_problem')).toBe(true);
+  });
+
+  it('exposes only three functions to the public schema for the apps and the outside checkers', async () => {
     const { rows } = await db.query<{ fn: string }>(
       `select p.proname as fn from pg_proc p join pg_namespace n on n.oid = p.pronamespace
         where n.nspname = 'public' and p.proname in ('app_config', 'alert_snapshot', 'audit_head', 'my_app_config')

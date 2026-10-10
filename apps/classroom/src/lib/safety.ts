@@ -67,7 +67,7 @@ export function fromStudent(text: string, lessonId?: string): Screened {
 export function toStudent(text: string, lessonId?: string): Screened {
   const verdict = screen(text, 'to-student');
   if (verdict.kind === 'support') {
-    recordFlag({ kind: 'distress', at: new Date().toISOString(), ...(lessonId ? { lessonId } : {}) });
+    recordFlag({ kind: 'distress', direction: 'to-student', at: new Date().toISOString(), ...(lessonId ? { lessonId } : {}) });
     return { text: null, say: verdict.say };
   }
   return { text, say: null };

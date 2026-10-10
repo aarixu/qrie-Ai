@@ -8,3 +8,6 @@ export * from './schools.ts';
 export * from './staff.ts';
 export * from './system.ts';
 export * from './users.ts';
+export * from './safety.ts';
+export * from './classes.ts';
+export * from './privacy.ts';

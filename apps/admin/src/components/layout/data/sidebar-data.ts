@@ -1,13 +1,16 @@
 import {
   Activity,
+  BookOpen,
   FileText,
   IndianRupee,
   KeyRound,
   LayoutDashboard,
   MonitorSmartphone,
+  Lock,
   Repeat,
   School,
   Settings,
+  ShieldAlert,
   ShieldCheck,
   Tags,
   ToggleRight,
@@ -25,10 +28,9 @@ const MONEY: Me['role'][] = ['owner', 'ops', 'finance'];
 
 /**
  * The console's navigation. Only pages that exist are listed: a later plan adds
- * its group here when its pages land (Safety, Classes, Privacy, Money;
- * see the design's roadmap). Each item names the staff roles whose database
- * reads let them use the page (the database refuses the rest anyway);
- * lib/nav.ts filters by the signed-in role.
+ * its group here when its pages land (Money; see the design's roadmap). Each
+ * item names the staff roles whose database reads let them use the page (the
+ * database refuses the rest anyway); lib/nav.ts filters by the signed-in role.
  */
 export const sidebarData: SidebarData = {
   navGroups: [
@@ -56,6 +58,14 @@ export const sidebarData: SidebarData = {
         { title: 'Staff and audit', url: '/staff', icon: ShieldCheck, roles: ['owner'] },
         // me: every role.
         { title: 'Your account', url: '/account', icon: KeyRound },
+      ],
+    },
+    {
+      title: 'Safety and privacy',
+      items: [
+        { title: 'Safety', url: '/safety', icon: ShieldAlert, roles: ['owner', 'safety'] },
+        { title: 'Classes', url: '/classes', icon: BookOpen, roles: ['owner', 'ops', 'safety'] },
+        { title: 'Privacy', url: '/privacy', icon: Lock, roles: ['owner', 'ops'] },
       ],
     },
     {

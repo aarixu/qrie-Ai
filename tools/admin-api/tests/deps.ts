@@ -8,7 +8,10 @@ import { CallerError, type AdminApiDeps } from '../src/handle.ts';
  * The staff service's world for tests, over the real migrations: callers are
  * named tokens whose claims run the admin functions as that caller; the LMS
  * lane's service-role calls run as the service role; the auth admin API is a
- * stand-in that records each password it is given and each ban it sets.
+ * stand-in that records each password it is given and each ban it sets;
+ * Storage is a stand-in that deletes the named storage.objects rows, as the
+ * Storage API would, and answers how many it deleted; the service-role admin
+ * functions run as the service role.
  * Shared by tools/admin-api/tests/handle.test.ts and the admin client's tests.
  */
 export interface ApiWorld {
@@ -22,6 +25,8 @@ export interface ApiWorld {
   rpcCalls: string[];
   /** The next ban fails, as the auth service would with a 500. */
   failNextBan(): void;
+  /** A Storage removal throws before deleting anything: the next one, or the one after `after` more succeed. */
+  failNextRemove(after?: number): void;
 }
 
 export function apiWorld(db: PGlite): ApiWorld {
@@ -30,6 +35,7 @@ export function apiWorld(db: PGlite): ApiWorld {
   const bans = new Map<string, boolean>();
   const rpcCalls: string[] = [];
   let banFailsOnce = false;
+  let removeFailsAfter: number | null = null;
 
   function deps(): AdminApiDeps {
     const base = pgliteStore(db);
@@ -92,6 +98,30 @@ export function apiWorld(db: PGlite): ApiWorld {
           bans.set(userId, banned);
         },
       },
+      files: {
+        async remove(bucket, names) {
+          if (removeFailsAfter !== null) {
+            if (removeFailsAfter === 0) {
+              removeFailsAfter = null;
+              throw new Error('storage 500');
+            }
+            removeFailsAfter -= 1;
+          }
+          const { rows } = await db.query<{ name: string }>(
+            `delete from storage.objects where bucket_id = $1 and name = any($2::text[]) returning name`,
+            [bucket, names],
+          );
+          return rows.length;
+        },
+      },
+      async serviceAdmin(fn, args) {
+        const names = Object.keys(args);
+        return asService(db, async (tx) =>
+          (await tx.query<{ v: unknown }>(
+            `select admin.${fn}(${names.map((n, i) => `${n} => $${i + 1}`).join(', ')}) as v`,
+            names.map((n) => args[n]),
+          )).rows[0]?.v ?? null);
+      },
     };
   }
 
@@ -103,6 +133,9 @@ export function apiWorld(db: PGlite): ApiWorld {
     rpcCalls,
     failNextBan() {
       banFailsOnce = true;
+    },
+    failNextRemove(after = 0) {
+      removeFailsAfter = after;
     },
   };
 }

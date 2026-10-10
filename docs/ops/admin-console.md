@@ -456,3 +456,146 @@ import tool, refuse in their own code, which asks the database first
   platform's is off, or its licence is suspended (Billing, that school).
 - **The console cannot be reached**: the apps keep their last values; nothing
   turns on by itself.
+
+## 8. Safety, classes and privacy (plan 5)
+
+Three pages under **Safety and privacy** in the console: **Safety** (reports,
+cases, the read log), **Classes** (review, retract, reject) and **Privacy**
+(erasure requests, each school's data-protection decision, what is kept). The
+plan is `docs/superpowers/plans/2026-10-08-super-admin-safety-classes-privacy.md`.
+Nothing in this section has been run against a hosted project: migrations 0065
+to 0069, the two new `admin-api` routes and the pages were built and tested on
+the local test database only, and the pages have not been opened in a browser.
+
+**Who may do what.** The database decides; the console only hides buttons.
+
+- **Safety:** reads the report list (kind, status, age, school, never the
+  words) and opens one report at a time with a case: a reason and a fresh
+  authenticator code. Inside the open case, each press of "Read the report"
+  shows the child's words once and is written to the read log; "Look at the
+  context" asks for its own reason and is logged too. At most 30 readings a
+  day per person, the owner included. Marks reports read, triaged or closed;
+  closes their own cases. Sees Classes, read only.
+- **Ops:** retracts a published class and rejects one waiting for review, each
+  with a fresh code (its files are deleted for good); records and verifies
+  erasure requests; reads what is kept. Never sees a child's words: the Safety
+  page answers "Your role cannot see this."
+- **Owner:** all of the above, and alone publishes a class waiting for review,
+  refuses or erases an erasure request (erasing with a fresh code), records a
+  school's decision (fresh code), sets the contest purge date (fresh code),
+  records the day distress capture went live, and reads the read log.
+- **Finance:** none of it.
+
+### Setup, once (Aarav's steps)
+
+1. **Name the backup safety reviewer** and add them on Staff and audit with the
+   role `safety` (the invitation flow of section 5). Without one, reports wait
+   for you alone.
+2. **Ask counsel** the questions at the end of this section. Until the answers
+   come, every school's decision stays "Not decided" and, on the hosted
+   database, nobody can be added to a school.
+3. **Apply the migrations** (after plan 4's): `npx supabase db push` applies
+   0065 to 0069 with the rest. Nothing new to expose: the functions are in
+   `admin` (already exposed) and `lms.report_problem` in `lms`.
+4. **Redeploy `admin-api`** for its two new routes (`class-remove`, `erase`):
+   `npx supabase functions deploy admin-api --no-verify-jwt`. No new secret.
+5. **Do not deploy the relay or the tutor app from this branch.**
+   **Nothing in `apps/classroom`, `packages/relay` or `supabase/functions/relay`
+   may be deployed from this branch until it is merged with `phase3-completion`
+   and `voice-stt-tts` (the live relay has 743c05a, 1dcfcfe and 18733af, which
+   this branch does not).** After that merge, deploy the relay with
+   `npm run relay:deploy` and the tutor app as usual; then, on the Safety page,
+   **record the day capture went live** (until a flag arrives or you record it,
+   the page says "Not captured").
+6. **Record each school's decision** on the Privacy page once counsel answers
+   (who the data fiduciary is, who is told, and what it rests on, for example
+   "counsel's letter of <date>").
+7. **Set the contest purge date** on the Privacy page once prizes are posted.
+8. **Decide (no build needed now):** whether a trial child's distress is
+   captured (now it is not, because the trial page promises nothing leaves);
+   whether new classes wait for review before anyone sees them (now they are
+   shared when kept); and the privacy page's line "Class and usage records are
+   deleted automatically after 90 days" (`landing/app/privacy/page.tsx:80`),
+   which What is kept shows is not true: class and answer records and usage
+   rows are kept until the account is erased (the nightly purge-old-ledger job
+   deletes no class or answer event until the server fold sets
+   `purge_safe_before`, and nothing sets it yet: 0021).
+
+### Day to day
+
+- **Open the Safety page every morning.** The tiles show unread reports (red
+  when one is unsafe), the oldest unread, the time to first look, open cases,
+  distress flags and your readings today.
+- **An unsafe unread report, or a distress alert in the safety chat, means open
+  the page now.** A distress alert carries a count and nothing else: no child,
+  no school, no words.
+- **Work one case at a time.** Open the case, read the report, look at the
+  context if you need it, act, then close it with an outcome. You can hold one
+  open case.
+- **Record a disclosure as "Disclosed to the agreed person" only after telling
+  that person.** The database accepts it only once the school's "who is told"
+  is decided, and never for a child who came on their own. Write in the reason
+  only that they were told; their name and number stay in the school's
+  contacts.
+- **Work erasure requests by due date** (30 days from the day received). A
+  school student must be marked as left first (by the school admin, or Disable
+  on their card). Verify, then the owner erases from the request's own page.
+
+### If something goes wrong
+
+- **A class must vanish now.** Classes, Retract (a fresh code). The class is
+  hidden from the catalogue at once; then its files are deleted from Storage
+  and its row goes. Open the class: "Files in Storage" should read 0. Copies
+  served by Storage's CDN may stay reachable for up to its cache lifetime
+  (UNVERIFIED).
+- **Retract answers that Storage did not remove all of the files.** The class
+  is already hidden; some of its files may be gone. Press Retract again (the
+  Removed tab lists it as hidden with its files still in Storage) to finish;
+  it is safe to repeat. The file count recorded at the end includes the files
+  the first press removed.
+- **An erasure stops with photos left** ("Some or none of the child's photos
+  were removed; nothing else was erased"). Some photos may already be gone for
+  good; no other record was touched. Press Erase again to finish. The photo
+  count recorded at the end includes the ones the first press removed.
+- **The safety chat counts hundreds of distress flags.** Probably a flood
+  from one account rather than hundreds of children. Past 1000 in an hour,
+  flags from that school (or from children who came on their own) are
+  refused and wait on the children's phones, which try again every 2
+  minutes; other schools' flags are still kept. The Safety page's counts
+  include the flood.
+- **The 30 readings a day are used up on a busy day.** The next India day
+  resets them; or change the constant in a reviewed migration.
+- **A contest entrant corrects their entry after the purge day.** Their
+  details are back in that row until the next night's purge (01:15 India time)
+  clears them again: the purge clears every entry made before the purge day
+  that holds any personal field.
+
+### What the panel will never do
+
+Show a child's words in a list, a tile or an alert; keep a child's id with a
+distress flag; export reports; erase from any page but a verified request's
+own page; delete a class's catalogue row before its files are gone from
+Storage.
+
+### Questions for counsel
+
+1. For a school's children, is the school the data fiduciary or Qrie (or both,
+   for different purposes)?
+2. Who receives a distress disclosure: the school's designated person, the
+   parent, both, someone else? May Qrie tell them which child, and how do we
+   verify them?
+3. May any child's words be kept (what a child writes in a report), for how
+   long, and may Qrie's safety reviewer read them? The same for the tutor's
+   line saved beside a report.
+4. Retention windows for each row of "What is kept", in particular reports,
+   usage rows that carry a user id, the phone numbers codes were sent to,
+   consent records and contest entries.
+5. Is a distress flag with a school and a time but no child id "tracking or
+   behavioural monitoring" under DPDP s.9(3)? Is a count per school allowed?
+6. Erasure: the timeline, the verification a parent's request needs, whether
+   staff logs (which keep ids and login IDs) must be scrubbed too, and what
+   happens to a school's data when its licence ends.
+7. May a trial child's distress be captured even though the trial page says
+   nothing about them is kept?
+8. May a parent file a report on a child's behalf? When a child is erased, does
+   the parent's own sign-in stay?

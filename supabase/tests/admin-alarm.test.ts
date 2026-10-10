@@ -16,7 +16,7 @@ import { asClaims, asService, freshDatabase } from './harness.ts';
 const TOKEN = 'a'.repeat(40);
 const SIGNALS = [
   'at', 'halted', 'ceilingUnits', 'unitsToday', 'newReports', 'unsafeNewReports',
-  'oldestNewReportMinutes', 'pendingClasses', 'relayEvents5m', 'relayFailures5m',
+  'oldestNewReportMinutes', 'pendingClasses', 'relayEvents5m', 'relayFailures5m', 'distressFlags', 'distressWindowMinutes',
 ];
 
 let db: PGlite;

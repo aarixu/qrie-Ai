@@ -11,6 +11,7 @@ import {
 import { admit, type Gate, type RelayName } from './gate.ts';
 import { handleReport, isUuid, type ReportStore } from './report.ts';
 import { handlePrep, type PrepLocks } from './prep.ts';
+import { handleSafetyFlag, type SafetyEventStore } from './safetyFlag.ts';
 import { handleEnroll, handleEnrollOtp, type ConsentStore, type OtpGate, type OtpProvider } from './enroll.ts';
 import { mintTicket, TICKET_TTL_MS } from './ticket.ts';
 import { readSavedClass } from './classStore.ts';
@@ -145,6 +146,12 @@ export interface HandlerDeps {
    */
   opsAlertWebhook?: string;
   /**
+   * Where a distress flag goes (plan 5, safetyFlag.ts): no words, no lesson,
+   * kept by public.keep_safety_event. Absent means the flag route answers
+   * 501, and the app keeps the flag to send again.
+   */
+  safetyEvents?: SafetyEventStore;
+  /**
    * The per-topic preparation lock (0017), so N students on one cold topic
    * pay for ONE preparation. Absent means 501: the dev host counts in
    * memory, the Edge Function calls the definer functions.
@@ -202,10 +209,11 @@ function sessionOf(req: RelayRequest, relay: RelayName): string | null {
 }
 
 /**
- * The route families beside the relays: a report, the prep lock, enrolment.
+ * The route families beside the relays: a report, a distress flag, the prep
+ * lock, enrolment.
  *
- * Matched exactly as written below, and the two rules differ: 'report' and
- * 'enroll' are named by their LAST SEGMENT, like the relays; the prep family
+ * Matched exactly as written below, and the two rules differ: 'report',
+ * 'flag' and 'enroll' are named by their LAST SEGMENT, like the relays; the prep family
  * and enroll/otp by their LAST TWO, because /api/prep/lock and some future
  * /api/other/lock must not collide. The looser pair means /api/anything/
  * report also routes here — harmless, since it still admits and validates,
@@ -215,6 +223,7 @@ function sessionOf(req: RelayRequest, relay: RelayName): string | null {
  */
 export type RouteName =
   | 'report'
+  | 'flag'
   | 'prep/lock'
   | 'prep/renew'
   | 'prep/release'
@@ -227,6 +236,7 @@ export function routeFor(url: string): RouteName | null {
   const last = parts[parts.length - 1];
   const prev = parts.length > 1 ? parts[parts.length - 2] : undefined;
   if (last === 'report') return 'report';
+  if (last === 'flag') return 'flag';
   if (prev === 'prep' && (last === 'lock' || last === 'renew' || last === 'release' || last === 'state')) {
     return `prep/${last}`;
   }
@@ -291,7 +301,7 @@ export async function handleTicket(req: RelayRequest, gate: Gate): Promise<Relay
  */
 export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise<RelayResponse> {
   /**
-   * ABOVE THE KILL SWITCH, AND ONLY THIS ONE. (Safety #4.)
+   * ABOVE THE KILL SWITCH: A REPORT, AND A DISTRESS FLAG. (Safety #4.)
    *
    * The switch exists to stop SPEND. A report spends nothing — no vendor is
    * called, no unit is claimed — and the moment somebody flips the switch is
@@ -306,6 +316,8 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
    */
   const early = routeFor(req.url);
   if (early === 'report') return handleReport(req, deps);
+  // A distress flag (plan 5) is admitted like a report, for the same reason.
+  if (early === 'flag') return handleSafetyFlag(req, deps);
 
   // Before everything else, including the ticket. A ticket outlives the
   // switch by its whole ten minutes, so minting one during an incident hands
@@ -334,8 +346,8 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   // The route families beside the relays. Each does its own admission —
   // identity plus the per-minute window, zero units. These ones DO sit
   // below the kill switch: preparing a class and enrolling can both wait
-  // for the incident to end. The report route is the exception and was
-  // dispatched above.
+  // for the incident to end. The report and flag routes are the exceptions
+  // and were dispatched above.
   const route = early;
   if (route === 'prep/lock' || route === 'prep/renew' || route === 'prep/release' || route === 'prep/state') {
     return handlePrep(route, req, deps);

@@ -25,6 +25,9 @@
       ],
       "@ai-tutor/lms-report": [
         "../../packages/lms-report/src/index.ts"
+      ],
+      "@ai-tutor/safety": [
+        "../../packages/safety/src/index.ts"
       ]
     },
     "strict": true,

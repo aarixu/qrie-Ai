@@ -1,5 +1,6 @@
 import type { SchoolBilling } from './app-config.ts';
 import type { QuestionDraft } from './drafts.ts';
+import { reportProblem, type ProblemReport } from './report.ts';
 import type { Transport } from './transport.ts';
 
 /**
@@ -812,6 +813,8 @@ export function createLmsClient(t: Transport) {
     async me(): Promise<Me | null> {
       return (await rows<Me>('me'))[0] ?? null;
     },
+    /** A student's report from the student app (plan 5); answers the report's id. */
+    reportProblem: (r: ProblemReport) => reportProblem(t, r),
 
     // --- a teacher -----------------------------------------------------------
     myClasses: () => rows<TaughtClass>('my_classes'),

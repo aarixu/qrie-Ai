@@ -3,6 +3,9 @@ import {
   billingApiFetch,
   createAdminClient,
   createBillingClient,
+  createClassesClient,
+  createPrivacyClient,
+  createSafetyClient,
   createSchoolsClient,
   createStaffClient,
   createSystemClient,
@@ -26,6 +29,11 @@ export const schools = createSchoolsClient(rpc, api);
 export const users = createUsersClient(rpc, api);
 export const staff = createStaffClient(rpc, api);
 export const system = createSystemClient(rpc);
+
+/** Plan 5: safety (reports, cases, the read log), classes and privacy; class removal and erasure go through admin-api. */
+export const safety = createSafetyClient(rpc);
+export const classes = createClassesClient(rpc, api);
+export const privacy = createPrivacyClient(rpc, api);
 
 /** Billing: the admin.billing_* functions, and billing-api (the only caller of Cashfree) with the session's token. */
 export const billing = createBillingClient(
