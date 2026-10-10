@@ -10,12 +10,13 @@ import { asClaims, asService, asUser, freshDatabase } from './harness.ts';
  * THE TUTOR'S ADMISSION OBEYS THE SCHOOL'S SWITCH (migration 0064). Written
  * first.
  *
- * public.claim_relay refuses a class, before the window and the budgets, when
- * the learner's effective tutor.enabled is false: their school's own value,
- * else the platform's, and false while the school is suspended. The refusal
- * reads 'halted' (R1), which the relay already shows as a pause and lets a
- * report through. public.my_app_config gives the tutor app its learner's own
- * school's config.
+ * public.claim_relay refuses a class, after the per-minute window (and counted
+ * in it) and before the budgets, when the learner's effective tutor.enabled is
+ * false: their school's own value, else the platform's, and false while the
+ * school is suspended. A school's teachers and admin are not refused by it.
+ * The refusal reads 'halted' (R1), which the relay already shows as a pause
+ * and lets a report through. public.my_app_config gives the tutor app its
+ * learner's own school's config.
  */
 
 let db: PGlite;
@@ -112,6 +113,36 @@ describe('the tutor admission', () => {
 
   it('a report gets the same halted answer, which the relay lets through (packages/relay/src/gate.ts:338-342)', async () => {
     expect(await claim(toff.kid8a, 'report', 0)).toMatchObject({ allowed: false, reason: 'halted' });
+  });
+
+  it('a report from a child whose tutor is off is still held to the per-minute limit', async () => {
+    // A fresh window that started now, so the 121 claims below fall in one minute.
+    await db.query(
+      `insert into public.relay_usage (user_id, day, day_units, window_start, window_count)
+       values ($1, (now() at time zone 'utc')::date, 0, now(), 0)
+       on conflict (user_id) do update set window_start = now(), window_count = 0`,
+      [toff.kid8b],
+    );
+    const reasons = new Set<string | null>();
+    for (let i = 0; i < 120; i += 1) reasons.add((await claim(toff.kid8b, 'report', 0)).reason);
+    expect([...reasons]).toEqual(['halted']);
+    expect(await claim(toff.kid8b, 'report', 0)).toMatchObject({ allowed: false, reason: 'rate' });
+  });
+
+  it("a teacher's and a school admin's Draft with AI is not refused by the school's switch, a suspension or the platform's switch", async () => {
+    for (const user of [toff.teacherA, toff.admin, tsus.teacherA, tsus.admin]) {
+      expect(await claim(user), user).toMatchObject({ allowed: true });
+    }
+    await setGlobal(false);
+    try {
+      expect(await claim(tgra.teacherB)).toMatchObject({ allowed: true });
+      expect(await claim(tgra.kid8b)).toMatchObject({ allowed: false, reason: 'halted' });
+    } finally {
+      await setGlobal(true);
+    }
+    // The stop refuses them as it refuses everyone.
+    await db.query(`update public.relay_control set halted = true`);
+    expect(await claim(toff.teacherA)).toEqual({ allowed: false, reason: 'halted', retry_after: 300 });
   });
 
   it('the stop still comes first', async () => {

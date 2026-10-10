@@ -7,12 +7,18 @@
 --    tutor.enabled is false: their school's own value, else the platform's,
 --    else the safe default, and false while the school is suspended (plan 3,
 --    0060), exactly as public.app_config says it to the apps. A learner with
---    no school reads the platform's value (R2).
+--    no school reads the platform's value (R2). A school's teachers and its
+--    admin are not learners and are not refused by it: their relay calls are
+--    the teacher app's "Draft with AI" for homework, which a pause and a
+--    suspension leave alone (spec section 10: "homework, marks and exports
+--    stay"). The stop (relay_control) still refuses everyone.
 --    The refusal reads 'halted' (R1): the deployed relay maps any reason it
 --    does not know to a rate limit and would then also refuse a child's
 --    report (packages/relay/src/gate.ts:234-235, 338-342), while 'halted' is
 --    shown as a pause and lets a report through. So this works with the relay
---    that is live today; a distinct reason waits for a relay change.
+--    that is live today; a distinct reason waits for a relay change. It is
+--    checked after the per-minute window and counted in it, so a report the
+--    relay lets through on 'halted' is still held to 120 a minute.
 -- 2. public.my_app_config(): public.app_config for the caller's own school,
 --    from their session, or the platform's. For the tutor app, which does not
 --    know its learner's school (R3).
@@ -26,19 +32,21 @@
 -- Whether the tutor is on for this learner: their school's effective
 -- tutor.enabled (its own value, else the platform's, else the safe default,
 -- and false while the school is suspended), exactly as public.app_config says
--- it to the apps. A learner with no school reads the platform's value.
+-- it to the apps. A learner with no school reads the platform's value. True
+-- for a school's teachers and admin, who are not learners (above).
 create or replace function admin.tutor_enabled_for(p_user uuid)
 returns boolean
 language sql stable security definer
 set search_path = admin, lms, public
 as $$
-  select (public.app_config((select s.code from lms.school s where s.org_id = public.org_of(p_user)))
+  select exists (select 1 from lms.account a where a.user_id = p_user and a.kind in ('teacher', 'admin'))
+      or (public.app_config((select s.code from lms.school s where s.org_id = public.org_of(p_user)))
           ->> 'tutor.enabled') is distinct from 'false'
 $$;
 revoke all on function admin.tutor_enabled_for(uuid) from public, anon, authenticated, service_role;
 
--- 0016's claim_relay, line for line, with one block added after the stop:
--- the school's switch (above).
+-- 0016's claim_relay, line for line, with one block added after the
+-- per-minute window: the school's switch (above).
 create or replace function public.claim_relay(
   p_user uuid,
   p_relay text,
@@ -89,16 +97,6 @@ begin
     return;
   end if;
 
-  -- THE SCHOOL'S SWITCH (0064). Answered as 'halted' on purpose: the relay
-  -- reads any reason it does not know as a rate limit and would then refuse a
-  -- child's report (packages/relay/src/gate.ts), while 'halted' is shown as a
-  -- pause and lets a report through. Before the window and the budgets, so a
-  -- refusal here spends nothing.
-  if not admin.tutor_enabled_for(p_user) then
-    return query select false, 'halted'::text, 300;
-    return;
-  end if;
-
   -- Seconds to the rollover of `today` above. Both budgets reset there, so both
   -- refusals point at it. Written "at time zone 'utc'" rather than a bare cast
   -- because a plain ::timestamptz reads the date in the SESSION's zone, which
@@ -133,6 +131,21 @@ begin
       false,
       'rate'::text,
       greatest(1, ceil(extract(epoch from (row_window_start + interval '1 minute' - now_at)))::integer);
+    return;
+  end if;
+
+  -- THE SCHOOL'S SWITCH (0064). Answered as 'halted' on purpose: the relay
+  -- reads any reason it does not know as a rate limit and would then refuse a
+  -- child's report (packages/relay/src/gate.ts), while 'halted' is shown as a
+  -- pause and lets a report through. After the window, and counted in it, so
+  -- a report let through on 'halted' is still held to requests_per_minute (a
+  -- school can stay switched off or suspended for weeks, unlike the stop).
+  -- Before the budgets, so a refusal here spends no units.
+  if not admin.tutor_enabled_for(p_user) then
+    update public.relay_usage
+       set window_count = window_count + 1
+     where user_id = p_user;
+    return query select false, 'halted'::text, 300;
     return;
   end if;
 
