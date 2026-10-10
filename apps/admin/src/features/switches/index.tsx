@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { admin } from '@/lib/client';
 import { checkWrite, describeFlagChange } from '@/lib/confirm';
+import { flagValueProblem } from '@/lib/flag-values';
 import { useMe } from '@/lib/me';
 import { canSetFlag } from '@/lib/roles';
 import { useGuarded } from '@/lib/stepup';
@@ -39,8 +40,10 @@ interface Pending {
 }
 
 /**
- * The remote switches the apps are to read (none does yet: plan 4 wires them to
- * public.app_config). Only the global value is edited here; a
+ * The remote switches the apps read through public.app_config (the Apps page
+ * says which app reads which, and what each does when it cannot). The database
+ * itself enforces tutor.enabled, the contest switches, and which schools may
+ * import people. Only the global value is edited here; a
  * school's own value is shown, and is set from that school's page (plan 2).
  * Touching a control changes nothing by itself: it opens a confirmation that says
  * what every app will do, and asks for this change's own reason and the typed
@@ -205,7 +208,7 @@ function ConfirmChange({ pending, onClose, onSaved }: { pending: Pending; onClos
 }
 
 function Editor({ kind, value, onPropose }: { kind: FlagRow['kind']; value: unknown; onPropose: (v: unknown) => void }) {
-  const [text, setText] = useState(typeof value === 'string' ? value : '');
+  const [text, setText] = useState(typeof value === 'string' || typeof value === 'number' ? String(value) : '');
   if (kind === 'bool') {
     return <Switch checked={value === true} onCheckedChange={(on) => onPropose(on)} aria-label='On or off' />;
   }
@@ -222,12 +225,26 @@ function Editor({ kind, value, onPropose }: { kind: FlagRow['kind']; value: unkn
       </Select>
     );
   }
+  // text, version and count: checked with admin.flag_valid's rules before Save.
+  const proposed: unknown = kind === 'count' ? (text.trim() === '' ? Number.NaN : Number(text)) : text;
+  const problem = flagValueProblem(kind, proposed);
   return (
-    <div className='flex justify-end gap-2'>
-      <Input value={text} onChange={(e) => setText(e.target.value)} maxLength={280} aria-label='Value' className='w-56' />
-      <Button variant='outline' onClick={() => onPropose(text)}>
-        Save
-      </Button>
+    <div className='flex flex-col items-end gap-1'>
+      <div className='flex justify-end gap-2'>
+        <Input
+          type={kind === 'count' ? 'number' : 'text'}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          maxLength={kind === 'text' ? 280 : undefined}
+          aria-label='Value'
+          aria-invalid={problem !== null}
+          className='w-56'
+        />
+        <Button variant='outline' disabled={problem !== null} onClick={() => onPropose(proposed)}>
+          Save
+        </Button>
+      </div>
+      {problem && <p className='text-xs text-destructive'>{problem}</p>}
     </div>
   );
 }

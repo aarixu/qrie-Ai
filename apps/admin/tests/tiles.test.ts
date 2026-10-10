@@ -8,7 +8,7 @@ const base: Today = {
   relay: { halted: false, haltedReason: null, ceilingUnits: 50000, unitsToday: 1000, studentsNow: 3 },
   reports: { newCount: 0, unsafeNew: 0, oldestNewMinutes: 0 },
   classes: { pendingCount: 0, oldestPendingHours: 0 },
-  contest: { entriesToday: 10, dailyCap: 2000 },
+  contest: { entriesToday: 10, dailyCap: 2000, entriesOpen: true },
   schools: [],
   prices: { modelPriceRows: 12 },
   alarm: { lastCheckMinutesAgo: 2 },
@@ -60,8 +60,16 @@ describe('the home page tiles', () => {
   });
 
   it('the contest turns amber at 80% of its daily limit and red at the limit', () => {
-    const at = (n: number) => tile({ ...base, contest: { entriesToday: n, dailyCap: 2000 } }, 'contest').tone;
+    const at = (n: number) => tile({ ...base, contest: { entriesToday: n, dailyCap: 2000, entriesOpen: true } }, 'contest').tone;
     expect([at(1599), at(1600), at(2000)]).toEqual(['ok', 'warn', 'bad']);
+  });
+
+  it('the contest tile says when entries are closed', () => {
+    expect(tile({ ...base, contest: { ...base.contest, entriesOpen: false } }, 'contest')).toMatchObject({
+      detail: 'entries are closed (contest.entries_open)',
+      tone: 'ok',
+    });
+    expect(tile(base, 'contest').detail).toBe('new entries stop for the day at the limit');
   });
 });
 

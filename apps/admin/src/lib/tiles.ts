@@ -73,8 +73,15 @@ export function tilesFor(t: Today): Tile[] {
       key: 'contest',
       label: "Today's contest entries",
       value: `${t.contest.entriesToday} of ${t.contest.dailyCap}`,
-      detail: 'the form closes for the day at the limit',
-      tone: share(t.contest.entriesToday, t.contest.dailyCap) >= 1 ? 'bad' : share(t.contest.entriesToday, t.contest.dailyCap) >= 0.8 ? 'warn' : 'ok',
+      // Closed: no new entry comes in while it is, so the count needs no watching.
+      detail: t.contest.entriesOpen ? 'new entries stop for the day at the limit' : 'entries are closed (contest.entries_open)',
+      tone: !t.contest.entriesOpen
+        ? 'ok'
+        : share(t.contest.entriesToday, t.contest.dailyCap) >= 1
+          ? 'bad'
+          : share(t.contest.entriesToday, t.contest.dailyCap) >= 0.8
+            ? 'warn'
+            : 'ok',
     },
     {
       key: 'prices',
