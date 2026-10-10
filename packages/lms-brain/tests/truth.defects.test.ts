@@ -40,9 +40,9 @@ import {
  * The 2026-10-06 truth test (workflow wf_a1a31d81-925, verdict PARTIAL) named
  * 29 defects, D01-D29. Each `it('Dnn: ...')` below is one defect this branch
  * set out to fix, asserting the behaviour the truth test expected there and
- * did not get. Where only part of a
- * defect is fixed, the title says which part, and an `it('Dnn open: ...')`
- * pins what is still as the truth test found it, so the scorecard
+ * did not get. Where only part of a defect is fixed, the title says which
+ * part, and for D04, D12 and D15 an `it('Dnn open: ...')` pins what is still
+ * as the truth test found it, so the scorecard
  * (docs/verify/2026-10-07-lam-one-brain-results.md) cannot overstate it.
  *
  * Not here, because this branch does not change them: D02 (the LMS lane's
@@ -290,7 +290,7 @@ describe('M2: one trusted brain', () => {
     expect(Number((await stateOf(claimant, IDENTITY))?.unassisted_mastery)).toBeGreaterThan(0.9);
   });
 
-  it('D05: the same answers read the same on the server whatever the phone’s clock said', async () => {
+  it('D05 (server part): the same answers read the same on the server whatever the phone’s clock said', async () => {
     const honest = await createUser(db);
     const clock2099 = await createUser(db);
     const answers: Answer[] = [
