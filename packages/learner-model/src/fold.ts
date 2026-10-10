@@ -537,8 +537,10 @@ function foldAnswer(
      * above skips anything unchanged — so ten cold wrong answers on the same
      * outcome used to leave `observations` at 2 while `unassistedObservations`
      * reached 10. A subset counter larger than the set it is a subset of is not
-     * a rounding problem, it is the record disagreeing with itself, and
-     * `chooseAsk` ranks on exactly this field.
+     * a rounding problem, it is the record disagreeing with itself, and the
+     * classroom's model store compares exactly this field to decide whether a
+     * rebuilt or server model covers what the device holds
+     * (apps/classroom/src/lib/learnerModel.ts).
      */
     const prev = states[nodeId] ?? emptyConceptState(nodeId);
     const updated: ConceptState = {
@@ -665,7 +667,7 @@ function foldConfused(model: LearnerModel, event: LedgerEvent): LearnerModel {
        * nothing". `evidenceSet` reads `answerObservations` and `doubtCount`:
        * a hand may open the evidence gate — it lowered belief, so a gap it
        * produces is legitimate — but it must never inflate the ANSWER counts
-       * that `chooseAsk` ranks on and the fold's arithmetic leans on.
+       * the fold's arithmetic leans on.
        */
       doubtCount: prev.doubtCount + 1,
       lastPracticedAt: event.at,

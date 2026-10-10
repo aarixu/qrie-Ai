@@ -14,10 +14,10 @@ The two new permanent files:
 
 - `packages/lms-brain/tests/acceptance.one-brain.test.ts` (33 tests): learners (a), (b), (c), each with a flipped
   twin, forgery and clock attempts, the SF8 oracles, and fetch plus every `packages/relay` export stubbed to throw.
-- `packages/lms-brain/tests/truth.defects.test.ts` (27 tests): the defects re-run; three `Dnn open` tests pin what
-  is still as the truth test found it.
+- `packages/lms-brain/tests/truth.defects.test.ts` (31 tests since Task 13): the defects re-run; four `Dnn open`
+  tests pin what is still as the truth test found it.
 
-Both pass: 60 of 60 (`.scratch/M3-acceptance-truth.json`; the truth file again after its last title change, 27 of 27, `.scratch/M3-truth-defects.json`, which the defect table below is read from).
+Both pass: 60 of 60 (`.scratch/M3-acceptance-truth.json`; the truth file again after its last title change, 27 of 27, `.scratch/M3-truth-defects.json`). After Task 13 the truth file is 31 of 31 (`.scratch/task13-truth-defects.json`), which the defect table below is read from.
 
 ## Scorecard: criterion by learner type
 
@@ -68,7 +68,7 @@ and, where a test can pin it, pinned), **deferred** (not changed on this branch,
 | D08 | Screens read blended mastery, help reads as Strong | fixed | `D08: thirty rights carried by help read "with help", to the child and to the teacher, never Strong`; `unassisted-standing.test.ts`; `m1-gate.test.ts` (3). |
 | D09 | Misconceptions never enter the model | fixed | `D09: the same wrong idea six times and six scattered wrong answers make different models`; `packages/learner-model/tests/misconception.test.ts`. |
 | D10 | Teacher misconception list not brain-driven, no repeat rule | fixed | `D10: the teacher’s list has a repeat rule and clears: a slip is not listed, a two-question repeat is, until two later rights`; `misconceptions-everywhere.test.ts` (tutor-only ideas, all three teacher functions). Not re-tested: the truth test's side note that open-homework questions are not offered for practice. |
-| D11 | Tutor controller pieces built but not wired | partial | `D11 (fixed part): a wrong answer to an idea shown before is not met as a first miss`; `apps/classroom/tests/askHistory.test.ts`. Open: `chooseAsk`, `createConductor`, `scheduleRetest` and `recordsFor` still have no caller in `apps/classroom/src` (grep, 2026-10-11); the `intervened` reason is still not filed. |
+| D11 | Tutor controller pieces built but not wired | partial | `D11 (fixed part): a wrong answer to an idea shown before is not met as a first miss`; `apps/classroom/tests/askHistory.test.ts`. Open: `createConductor`, `scheduleRetest` and `recordsFor` still have no caller in `apps/classroom/src` (grep, 2026-10-11); the `intervened` reason is still not filed. `chooseAsk` was deleted in Task 13 (D29). |
 | D12 | masteredAt orphaned, repeats inflate belief | partial | `D12 (fixed part): one lucky right is not "they already hold this"; the mastery rule is`. Open, pinned: `D12 open: one question answered right six times still lifts belief without mastering`. |
 | D13 | Fold ignores homework itemId | fixed | `D13: school homework on two distinct items a day apart earns mastered`; `think-v4.test.ts` (a homework itemId is keyed by its library id). |
 | D14 | Practice ignores the child's evidence | fixed | `D14: practice is picked from the child’s own evidence: the repeat’s opens on the idea, the right twin’s does not`; `practice-for-me.test.ts`; acceptance (a), (b). |
@@ -84,12 +84,12 @@ and, where a test can pin it, pinned), **deferred** (not changed on this branch,
 | D24 | Wheel-spin and hint-abuse reach no decision | partial | `D24 (fixed part): wheel-spinning and asking before trying change the next move`. Open: no teacher flag or production screen; `assistanceScore` still unused. |
 | D25 | Tutor lesson flow hides evidence from the child | partial | `D25 (fixed part): a due outcome failed cold is remedial; a due outcome held is maintenance review`; `apps/classroom/tests/lessonCompleteReview.test.tsx` (the remedial and check-first cards). Open: help on the live board (canvas session); lessons with no asks (content). |
 | D26 | Empty state reads "no data" | fixed | `D26: answers the brain has not read say "being worked out", not "no answers yet", to the child and the teacher`; `unassisted-standing.test.ts`. |
-| D27 | Leak check and help-request edge cases | deferred | Task 13. |
-| D28 | Identity, tenancy and fold hygiene | partial | `D28 (fixed part): no api source, no squatting another learner’s sitting, no recount of a replayed event`. Open: `lms.school_students` last-active still reads `ledger_event.at` (`0105_lam_on_their_own.sql:380`), Task 13. |
-| D29 | Dead exports, content hygiene, early-review counting | deferred | Task 13 (dead exports) and content. |
+| D27 | Leak check and help-request edge cases | partial | `D27 (fixed part): a Hinglish hint that says the answer as a Hindi number is not said`; `packages/tutor-control/tests/leak.test.ts` (Hindi number words 0-20, the tens and "sau", read only in a hi-en line), `decide.test.ts`, `apps/classroom/tests/doubtBoard.test.ts` (Task 13). Open, pinned: `D27 open: arithmetic that comes to the answer still passes the leak check`; paraphrase is not caught; repeated hint requests still restate the hint with no cap. |
+| D28 | Identity, tenancy and fold hygiene | fixed | `D28 (fixed part): no api source, no squatting another learner’s sitting, no recount of a replayed event`; `D28 (last active): the school’s student list reads when the server received an answer, not the phone’s clock` (`0112_lam_last_active_received.sql`, `supabase/tests/lam-last-active.test.ts`, Task 13). |
+| D29 | Dead exports, content hygiene, early-review counting | partial | `D29 (dead export): chooseAsk, which nothing called, is gone from the learner model` (Task 13). Open: content hygiene and early-review counting (content, not changed here). |
 
-Totals: **10 fixed** (D03, D07, D08, D09, D10, D13, D14, D20, D21, D26), **13 partial** (D01, D04, D05, D11,
-D12, D15, D16, D18, D22, D23, D24, D25, D28), **6 deferred** (D02, D06, D17, D19, D27, D29). Of the six
+Totals after Task 13: **11 fixed** (D03, D07, D08, D09, D10, D13, D14, D20, D21, D26, D28), **14 partial** (D01,
+D04, D05, D11, D12, D15, D16, D18, D22, D23, D24, D25, D27, D29), **4 deferred** (D02, D06, D17, D19). Of the six
 blockers: D01 partial (code done, deploy is Aarav's), D02 deferred here (done on `lms`), D03 fixed, D04 partial,
 D05 partial, D06 deferred.
 

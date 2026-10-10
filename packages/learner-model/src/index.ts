@@ -63,8 +63,6 @@ export {
   reviewAt,
 } from './memory.ts';
 
-export { chooseAsk, type AskChoice } from './ask.ts';
-
 export { gainPerLearningMinute, unassistedGain } from './metric.ts';
 
 // The 3.7 projections: pure functions over ledger events, shown only in the

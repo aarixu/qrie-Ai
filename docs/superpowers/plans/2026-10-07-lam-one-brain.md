@@ -165,7 +165,8 @@ vitest 4.
 D06/D17/D16-data (content generation and the Class 6-9 rebuild need model spend and review), D21 (retention needs
 a fold-forward snapshot), D25 (live-board display belongs to the canvas session), D19 (moot once the server is
 authoritative). Production steps (db push of 0100+, deploying `supabase/functions/brain`, the pg_cron schedule,
-setting the apps' env) are Aarav's.
+setting the apps' env) are Aarav's. The answer words a ledger event keeps stay until the 90-day purge deletes the
+event; removing them sooner is not changed on this branch (security review point, moved here from Task 13).
 
 
 ---
@@ -386,3 +387,22 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
 - Migration numbers corrected above and in spec section 8 (the renumber's search-and-replace had written
   "0100-0069" and admin's file names as 0100/0101); the runbook says to push the admin lane's migrations before
   this lane's 0100+, or to use `supabase db push --include-all` knowingly.
+
+## Task 13 as built (2026-10-11)
+
+- **D27, Hinglish numerals.** `leaks()`/`leakTokens()` (`packages/tutor-control/src/leak.ts`) take the line's
+  language; with `'hi-en'` the romanised Hindi words for 0-20, the tens and "sau" (common spellings, not the short
+  ones that are everyday Hindi words such as "tera" or "bara") read as digits on both sides. An English line is
+  unchanged ("do", "teen", "bees" and "sat" are English words). `decide()` passes the child's language at every
+  leak check, and so does the typed doubt board (`apps/classroom/src/lib/doubtBoard.ts`); the conductor stays on
+  English, as its plans are. Still open: arithmetic that comes to the answer (pinned by `D27 open` in
+  `truth.defects.test.ts`), paraphrase, and a cap on repeated hint requests.
+- **D29, dead export.** `chooseAsk` (`packages/learner-model/src/ask.ts`) had no caller and is deleted with its
+  test; the comments that said it ranked on `observations` now name what does read it (the classroom's model
+  store). `createConductor`, `scheduleRetest` and `recordsFor` stay: they are the tutor-control design, and wiring
+  them is D11's open part.
+- **D28, last active.** `0112_lam_last_active_received.sql`: `lms.school_students` reads a child's last activity
+  from `received_at` (the server's clock) instead of `at`, with an index on `(user_id, received_at desc)`. Test:
+  `supabase/tests/lam-last-active.test.ts`.
+- `truth.defects.test.ts` gains the four Task 13 tests; the results doc's D11, D27, D28, D29 rows and totals are
+  updated (11 fixed, 14 partial, 4 deferred).

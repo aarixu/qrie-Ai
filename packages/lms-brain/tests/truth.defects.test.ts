@@ -16,8 +16,9 @@ import {
   type FoldSession,
   type LearnerModel,
 } from '@ai-tutor/learner-model';
+import * as learnerModel from '@ai-tutor/learner-model';
 import { describeFactors } from '@ai-tutor/persona';
-import { decide, type AskInput, type DecideHistory } from '@ai-tutor/tutor-control';
+import { decide, leaks, type AskInput, type DecideHistory } from '@ai-tutor/tutor-control';
 import { buildSchool, seat, type School } from '../../../supabase/tests/fixtures.ts';
 import { asService, asUser, createUser, freshDatabase } from '../../../supabase/tests/harness.ts';
 import { askHistory } from '../../../apps/classroom/src/lib/askHistory.ts';
@@ -41,14 +42,15 @@ import {
  * 29 defects, D01-D29. Each `it('Dnn: ...')` below is one defect this branch
  * set out to fix, asserting the behaviour the truth test expected there and
  * did not get. Where only part of a defect is fixed, the title says which
- * part, and for D04, D12 and D15 an `it('Dnn open: ...')` pins what is still
- * as the truth test found it, so the scorecard
+ * part, and for D04, D12, D15 and D27 an `it('Dnn open: ...')` pins what is
+ * still as the truth test found it, so the scorecard
  * (docs/verify/2026-10-07-lam-one-brain-results.md) cannot overstate it.
  *
  * Not here, because this branch does not change them: D02 (the LMS lane's
  * 98167c5), D06/D17 (content), D16's data, D19 (moot once the server model is
- * the base), D25's board display (the canvas session), and D27/D28's
- * last-active/D29 (Task 13).
+ * the base), D25's board display (the canvas session), and D29's content
+ * hygiene and early-review counting (content). D27, D28's last-active and
+ * D29's dead export are Task 13's (the last describe).
  *
  * Real migrations on PGlite, the real fold, the real RPCs and decisions; no
  * model call.
@@ -627,5 +629,43 @@ describe('M1: the model and its decisions', () => {
     const cls = await teacher.classBrainStatus(one.s8a, one.maths);
     expect(cls?.studentsWaiting).toBeGreaterThan(0);
     expect(waitingText(cls, Date.parse(cls!.waitingSince!) + 60_000)).toMatch(/^Answers are in from \d+ students?\. /);
+  });
+});
+
+describe('Task 13: small leftovers', () => {
+  const FOUR: AskInput = { question: 'How many corners does a square have?', expect: '4', hint: 'Dekho, iske chaar kone hain.' };
+
+  it('D27 (fixed part): a Hinglish hint that says the answer as a Hindi number is not said', () => {
+    const hinglish = decide({ verdict: 'wrong', attempt: 2, rungSoFar: 1, ask: FOUR, lang: 'hi-en', now: 0 });
+    expect(hinglish.kind).not.toBe('hint');
+    expect(hinglish.say ?? '').not.toContain('chaar');
+    expect(leaks('char hai', ['4'], 'hi-en')).toBe(true);
+  });
+
+  it('D27 open: arithmetic that comes to the answer still passes the leak check', () => {
+    expect(leaks('8 divided by 2', ['4'], 'hi-en')).toBe(false);
+    expect(leaks('2 squared', ['4'], 'hi-en')).toBe(false);
+  });
+
+  it('D28 (last active): the school’s student list reads when the server received an answer, not the phone’s clock', async () => {
+    const late = await child('late');
+    const received = new Date(Date.now() - 2 * 3_600_000);
+    const session = crypto.randomUUID();
+    await db.query(
+      `insert into public.learning_session (id, org_id, user_id, source, started_at, received_at)
+       values ($1, $2, $3, 'class', '2099-01-01T00:00:00Z', $4)`,
+      [session, one.org, late, received.toISOString()],
+    );
+    await db.query(
+      `insert into public.ledger_event (id, org_id, user_id, session_id, seq, at, received_at, kind, source, surface)
+       values (gen_random_uuid(), $1, $2, $3, 0, '2099-01-01T00:00:00Z', $4, 'answered', 'class', 'tap')`,
+      [one.org, late, session, received.toISOString()],
+    );
+    const [row] = (await as(one.admin).schoolStudents(one.s8a)).filter((r) => r.userId === late);
+    expect(Date.parse(row.lastActive!)).toBe(received.getTime());
+  });
+
+  it('D29 (dead export): chooseAsk, which nothing called, is gone from the learner model', () => {
+    expect('chooseAsk' in learnerModel).toBe(false);
   });
 });

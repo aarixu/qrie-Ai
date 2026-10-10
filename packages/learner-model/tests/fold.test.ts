@@ -147,7 +147,7 @@ describe('foldSession', () => {
    * A belief pinned at the floor stops moving, and the region loop skips
    * anything unchanged — so the asked node used to stop being counted while
    * `unassistedObservations` kept rising. A subset counter larger than its own
-   * superset is the record disagreeing with itself, and `chooseAsk` ranks on it.
+   * superset is the record disagreeing with itself.
    */
   it('counts the asked outcome even once its belief has stopped moving', () => {
     seq = 0;
@@ -541,7 +541,7 @@ describe('a beat that checks more than one outcome', () => {
 
   it('never lets observations exceed the answers and lessons that produced them', () => {
     // A counter larger than the set it counts is the record disagreeing with
-    // itself, and `chooseAsk` ranks on exactly this field.
+    // itself.
     const m = fold(['b', 'c']);
 
     for (const state of Object.values(m.states)) {
