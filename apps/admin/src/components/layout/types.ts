@@ -1,9 +1,12 @@
 import { type LinkProps } from '@tanstack/react-router'
+import type { Me } from '@ai-tutor/admin-client'
 
 type BaseNavItem = {
   title: string
   badge?: string
   icon?: React.ElementType
+  /** Which staff roles see this item; absent means every role. Plan 4 filters the sidebar by it. */
+  roles?: Me['role'][]
 }
 
 type NavLink = BaseNavItem & {
