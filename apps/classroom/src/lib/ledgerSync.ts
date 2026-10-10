@@ -1,4 +1,5 @@
 import { batch, type LedgerEvent } from '@ai-tutor/ledger';
+import { rememberSent } from './sentLog';
 import { onAccountChange, supabase } from './supabase';
 import { track } from './telemetry';
 import { claimOutbox, forgetRefused, forgetSent, ledgerOutbox } from '../stores/ledger';
@@ -183,6 +184,15 @@ async function run(): Promise<DrainResult> {
   // already there and the repeat comes back 'duplicate'. An event the server
   // gave no answer for is neither, and stays queued too.
   const acknowledged = outcome.ok.filter((id) => !held.has(id));
+  // Kept, with their receipts, until the brain has read them (sentLog.ts):
+  // before the outbox lets them go, so no event is in neither.
+  const done = new Set(acknowledged);
+  rememberSent(
+    userId,
+    slice
+      .filter((e) => done.has(e.id) && outcome.receipts.has(e.id))
+      .map((event) => ({ event, receivedAt: outcome.receipts.get(event.id)! })),
+  );
   forgetSent(acknowledged);
   if (outcome.poison.length > 0) {
     forgetRefused(outcome.poison);
@@ -202,13 +212,18 @@ async function run(): Promise<DrainResult> {
 
 type SendOutcome =
   | { kind: 'transient' }
-  | { kind: 'settled'; ok: string[]; poison: string[]; code?: string };
+  | { kind: 'settled'; ok: string[]; poison: string[]; code?: string; receipts: Map<string, string> };
 
-/** record_evidence's answer for one event (0107). */
+/**
+ * record_evidence's answer for one event (0107). `received_at` is when the
+ * server received it — for a duplicate, the first time — and null for a
+ * refused one.
+ */
 interface EventAnswer {
   id: string;
   status: 'recorded' | 'duplicate' | 'refused';
   reason: string | null;
+  received_at?: string | null;
 }
 
 /**
@@ -236,11 +251,13 @@ async function send(db: NonNullable<ReturnType<typeof supabase>>, events: Ledger
   if (error || !Array.isArray(data)) return { kind: 'transient' };
   const answers = data as EventAnswer[];
   const refused = answers.filter((a) => a.status === 'refused');
+  const ok = answers.filter((a) => a.status === 'recorded' || a.status === 'duplicate');
   return {
     kind: 'settled',
-    ok: answers.filter((a) => a.status === 'recorded' || a.status === 'duplicate').map((a) => a.id),
+    ok: ok.map((a) => a.id),
     poison: refused.map((a) => a.id),
     code: refused[0]?.reason ?? undefined,
+    receipts: new Map(ok.filter((a) => typeof a.received_at === 'string').map((a) => [a.id, a.received_at as string])),
   };
 }
 

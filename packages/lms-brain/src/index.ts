@@ -17,6 +17,18 @@ export {
   type DrainResult,
 } from './drain.ts';
 export {
+  heldByServer,
+  modelFromServer,
+  onServerModel,
+  receiptMs,
+  type OnServer,
+  type OnServerInput,
+  type ReceiptKey,
+  type SentEvent,
+  type ServerCursor,
+  type ServerModel,
+} from './serverModel.ts';
+export {
   MISCONCEPTIONS_MAX_BYTES,
   SETTLE_DUE,
   SNAPSHOT_LAG_SECONDS,

@@ -24,7 +24,13 @@ import { profileStore } from '../stores/profile';
 import { progressStore } from '../stores/progress';
 import { outcomeStore } from '../stores/outcomes';
 import { createOutcomeLookup } from '../lib/outcomeLookup';
-import { masteredFromModel, masteryFromModel, settled } from '../lib/learnerModel';
+import {
+  LESSON_START_WAIT_MS,
+  masteredFromModel,
+  masteryFromModel,
+  refreshFromServer,
+  settled,
+} from '../lib/learnerModel';
 import { studentLinesForPlanner } from '../lib/student';
 import { outcomesForTopic } from '../lib/topicOutcomes';
 import { lastClassBefore } from '../lib/lastClass';
@@ -706,6 +712,10 @@ export function LiveClassRoute() {
        * same topic opens differently for different students. Nothing known,
        * nothing said: the anonymous class is the honest default.
        */
+      // The server's model first (lam-one-brain Task 11), homework and other
+      // devices included, for at most LESSON_START_WAIT_MS; then this device's.
+      await refreshFromServer({ waitMs: LESSON_START_WAIT_MS });
+      if (cancelled) return;
       // The MODEL's belief, not the placement blob: the doubt tutor marks a
       // prerequisite "secure" from what every class and quiz since has shown,
       // not from what one test found the day the student installed the app.

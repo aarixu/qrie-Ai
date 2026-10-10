@@ -301,12 +301,18 @@ export interface History {
  * (two that began in the same millisecond keep one order however they were
  * listed), each sitting's events by seq. What a caller does when a fold
  * reports `needsRebuild`, and the order the classroom's ledger rebuild reads.
+ *
+ * `start` folds them on top of a model instead of nothing: the classroom's
+ * events the server had not read yet, on top of the server's model
+ * (lam-one-brain Task 11). Its cursor must not be ahead of these sittings —
+ * the classroom passes one with no cursor — or the fold skips them.
  */
 export function foldHistory(
   sittings: readonly FoldSession[],
   events: readonly LedgerEvent[],
   index: GraphIndex,
   params: ModelParams,
+  start: LearnerModel = emptyModel(),
 ): History {
   const bySession = new Map<string, LedgerEvent[]>();
   for (const e of events) {
@@ -319,7 +325,7 @@ export function foldHistory(
   const order = [...sittings].sort(
     (x, y) => Date.parse(x.startedAt) - Date.parse(y.startedAt) || (x.id < y.id ? -1 : x.id > y.id ? 1 : 0),
   );
-  let model = emptyModel();
+  let model = start;
   const folded: LedgerEvent[] = [];
   for (const sitting of order) {
     const own = bySession.get(sitting.id);

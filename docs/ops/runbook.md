@@ -197,7 +197,7 @@ for the next call). Until it runs on a schedule, nothing on the hosted project w
 `purge_old_ledger` can delete answers the model never kept.
 
 ```bash
-supabase db push                                     # 0100-0108 first; read what is pending
+supabase db push                                     # 0100-0109 first; read what is pending
 supabase secrets set BRAIN_SECRET=<a long random string>
 supabase functions deploy brain --no-verify-jwt     # the secret header is its auth
 ```
@@ -224,6 +224,11 @@ the brain failed on five times running (their error is in `brain_queue.last_erro
 new answer, or `update public.brain_queue set attempts = 0`, gives them another try).
 A call without the right `x-brain-secret` gets 401, and every call gets 503 while
 `BRAIN_SECRET` is unset.
+
+The tutor reads what the brain wrote through `public.my_learner_model()` (0109) at
+sign-in and at the start of a lesson. Until 0109 is pushed that read fails, and until
+the brain runs the server's model is behind the phone; either way the tutor keeps the
+phone's own model, as before.
 
 ---
 

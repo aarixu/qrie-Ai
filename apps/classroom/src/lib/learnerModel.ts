@@ -11,7 +11,9 @@ import {
 } from '@ai-tutor/learner-model';
 import type { LearningSession, LedgerEvent } from '@ai-tutor/ledger';
 import { createLocalStore } from '../stores/localStore';
+import type { ServerRead } from './brainModel';
 import type { Rebuild } from './rebuildModel';
+import { forgetHeld, sentFor } from './sentLog';
 
 /**
  * THE DEVICE'S COPY OF WHAT WE BELIEVE ABOUT THIS STUDENT.
@@ -30,12 +32,15 @@ import type { Rebuild } from './rebuildModel';
  * is not the in-order fold of what it was given (`needsRebuild`), the store
  * folds its ledger again in order (`rebuildFromLedger`, with the outbox).
  *
- * The server folds the same ledger in its own order of receipt
- * (packages/lms-brain think.ts), and this device does not read that model
- * yet. When it does, it must take the server's model and fold only its own
- * unsent events on top rather than continue this cursor: the two orders are
- * not the same order, and a cursor carried across them would skip whatever
- * fell between them.
+ * THE SERVER'S MODEL IS THE BASE (lam-one-brain Task 11). The server folds
+ * the same ledger, and the school's homework with it, in its own order of
+ * receipt (packages/lms-brain think.ts). At sign-in and at the start of a
+ * lesson this store reads that model (`refreshFromServer`) and takes it with
+ * only this device's events the server's brain had not read folded on top,
+ * rather than continuing its own cursor: the two orders are not the same
+ * order, and a cursor carried across them would skip whatever fell between
+ * them. The merged model starts with no cursor, and everything recorded
+ * after it is folded on top as before.
  */
 const modelStore = createLocalStore<LearnerModel>('ai-tutor:learner-model', emptyModel());
 
@@ -176,7 +181,7 @@ async function bringForward(): Promise<void> {
     .catch(() => null);
   // Another fold already brought it forward while the ledger was being read.
   if (modelStore.get() !== stored) return;
-  if (accountsFor(rebuilt, stored)) take(rebuilt);
+  if (accountsFor(rebuilt, stored)) take(rebuilt.model, rebuilt.ledger.map((e) => e.id));
   else modelStore.set(migrateModel(stored));
 }
 
@@ -198,8 +203,9 @@ function accountsFor(rebuilt: Rebuild | string | null, stored: LearnerModel): re
 }
 
 /**
- * The events the last rebuild this store took had folded, and how many it has
- * taken. A fold that was already waiting when a rebuild was taken skips those
+ * The events the last rebuild this store took holds, and how many it has
+ * taken — a ledger rebuild, or the server's model with this device's events
+ * on top. A fold that was already waiting when a rebuild was taken skips those
  * events: placed where they arrived, they would be ahead of the rebuilt cursor
  * whenever their sitting is not the last one the rebuild folded, and counted
  * twice. A fold asked for after the rebuild was taken is not filtered.
@@ -207,9 +213,9 @@ function accountsFor(rebuilt: Rebuild | string | null, stored: LearnerModel): re
 let rebuiltIds: ReadonlySet<string> = new Set();
 let rebuildsTaken = 0;
 
-function take(rebuilt: Rebuild): void {
-  modelStore.set(rebuilt.model);
-  rebuiltIds = new Set(rebuilt.ledger.map((e) => e.id));
+function take(model: LearnerModel, holds: Iterable<string>): void {
+  modelStore.set(model);
+  rebuiltIds = new Set(holds);
   rebuildsTaken += 1;
 }
 
@@ -253,6 +259,10 @@ async function rebuildInOrder(): Promise<void> {
   if (rebuilding || Date.now() < retryAt) return;
   rebuilding = true;
   try {
+    // The server's model is the whole history folded in order, so taking it
+    // (with this device's unread events on top) is the rebuild. The ledger is
+    // read here only when that model cannot be taken.
+    if ((await refreshFromServer()) === 'taken') return;
     const stored = modelStore.get();
     // The outbox is read for its unsent events only; stores/ledger.ts imports
     // this file, so it is reached at run time rather than at load.
@@ -268,17 +278,123 @@ async function rebuildInOrder(): Promise<void> {
       retryAt = Date.now() + REBUILD_RETRY_MS;
       return;
     }
-    take(rebuilt);
-    wantRebuild(false);
-    // Everything recorded is in the model now, whatever was missed before.
-    try {
-      localStorage.removeItem(UNFOLDED_KEY);
-    } catch {
-      // The count is a diagnostic, not the record.
-    }
+    take(rebuilt.model, rebuilt.ledger.map((e) => e.id));
+    caughtUp();
   } finally {
     rebuilding = false;
   }
+}
+
+/** A rebuild was taken: everything recorded is in the model now, whatever was missed before. */
+function caughtUp(): void {
+  wantRebuild(false);
+  try {
+    localStorage.removeItem(UNFOLDED_KEY);
+  } catch {
+    // The count is a diagnostic, not the record.
+  }
+}
+
+/**
+ * WHAT A READ OF THE SERVER'S MODEL CAME TO.
+ *
+ *   taken          the store now holds it, with this device's unread events on top;
+ *   kept           it was short of this device on some outcome (`coversDevice`),
+ *                  so the store kept its own;
+ *   other-version  its rows were folded by another MODEL_VERSION;
+ *   unavailable    nothing to read: no project, nobody signed in, offline, an error;
+ *   waiting        not answered within the caller's `waitMs`; the read goes on,
+ *                  and is taken if it lands.
+ */
+export type ServerRefresh = 'taken' | 'kept' | 'other-version' | 'unavailable' | 'waiting';
+
+/**
+ * How long the start of a lesson waits for the server's model before it goes
+ * on with the device's own. The read goes on and is taken if it lands.
+ */
+export const LESSON_START_WAIT_MS = 1_500;
+
+let refreshing: Promise<ServerRefresh> | null = null;
+
+/**
+ * HOW THE SERVER'S MODEL IS READ: set at app start (brainModel.ts
+ * `startServerModel`, from main.tsx). Until then, and in a screen rendered on
+ * its own, there is nothing to read and a refresh answers 'unavailable' at
+ * once, without loading the network code or the graph.
+ */
+let readServer: (() => Promise<ServerRead | null>) | null = null;
+
+export function readServerWith(reader: (() => Promise<ServerRead | null>) | null): void {
+  readServer = reader;
+}
+
+/**
+ * READ THE SERVER'S MODEL AND BUILD ON IT (lam-one-brain Task 11, review SF4).
+ *
+ * Called at sign-in (brainModel.ts `startServerModel`), at the start of a
+ * lesson (ClassRoom's warm-up, LiveClass's plan) and when a fold asks for a
+ * rebuild. One read at a time; a caller that cannot wait passes `waitMs`.
+ * Never rejects: the class goes on with the device's own model.
+ */
+export function refreshFromServer(opts: { waitMs?: number } = {}): Promise<ServerRefresh> {
+  const reader = readServer;
+  if (!reader) return Promise.resolve('unavailable');
+  refreshing ??= pullServerModel(reader)
+    .catch((): ServerRefresh => 'unavailable')
+    .finally(() => {
+      refreshing = null;
+    });
+  const pull = refreshing;
+  if (opts.waitMs === undefined) return pull;
+  return Promise.race([
+    pull,
+    new Promise<ServerRefresh>((resolve) => setTimeout(() => resolve('waiting'), opts.waitMs)),
+  ]);
+}
+
+async function pullServerModel(reader: () => Promise<ServerRead | null>): Promise<ServerRefresh> {
+  const read = await reader();
+  if (!read) return 'unavailable';
+  // The brain's own merge, graph and parameters (packages/lms-brain
+  // serverModel.ts), loaded only now: the graph is every syllabus map.
+  const [{ onServerModel }, { ledgerOutbox }] = await Promise.all([
+    import('@ai-tutor/lms-brain'),
+    import('../stores/ledger'),
+  ]);
+
+  // Nothing below awaits, so no fold lands between reading the store and
+  // setting it; a fold already on its way skips what this takes (`take`).
+  const stored = migrateModel(modelStore.get());
+  const outbox = ledgerOutbox.get();
+  // A queue claimed by someone else is not this learner's (ledgerSync claims it at sign-in).
+  const unsent = outbox.ownerId === null || outbox.ownerId === read.owner ? outbox.pending : [];
+  const merged = onServerModel({
+    server: read.server,
+    sent: sentFor(read.owner),
+    unsent,
+    openSitting: outbox.session ? { id: outbox.session.id, startedAt: outbox.session.startedAt } : null,
+  });
+  if (!merged) return 'other-version';
+  forgetHeld(read.owner, merged.held);
+  if (!coversDevice(merged.model, stored)) return 'kept';
+  take(merged.model, [...merged.folded.map((e) => e.id), ...merged.held]);
+  caughtUp();
+  return 'taken';
+}
+
+/**
+ * The server's model, with this device's unread events on top, has every
+ * outcome this device holds with at least as many observations and raised
+ * hands. When it does not, the brain has not read something this device
+ * folded — it is not deployed or not running yet, or an event this device
+ * sent is no longer in the sent log (sentLog.ts) — and taking it would forget
+ * what the child did here until it has.
+ */
+function coversDevice(merged: LearnerModel, stored: LearnerModel): boolean {
+  return Object.entries(stored.states ?? {}).every(([id, st]) => {
+    const m = merged.states[id];
+    return (m?.observations ?? 0) >= (st?.observations ?? 0) && (m?.doubtCount ?? 0) >= (st?.doubtCount ?? 0);
+  });
 }
 
 export function recordLocally(

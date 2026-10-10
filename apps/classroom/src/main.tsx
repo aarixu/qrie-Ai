@@ -6,6 +6,7 @@ import './fonts';
 import './index.css';
 import App from './App';
 import { startAccountSync } from './lib/account';
+import { startServerModel } from './lib/brainModel';
 import { drainLedger, startLedgerDrain } from './lib/ledgerSync';
 import { ensureIdentity } from './lib/relay';
 import { nudgeIfDue, watchScheduleForNative } from './lib/reminders';
@@ -137,6 +138,15 @@ startAccountSync();
  * a network.
  */
 startLedgerDrain();
+
+/**
+ * Read what the server's brain knows about this student at sign-in, the
+ * session restored at start-up included: the school's homework and their
+ * other devices reach this one's learner model here (lib/learnerModel.ts
+ * refreshFromServer). Nothing waits on it, and with no project configured
+ * or nobody signed in nothing is read.
+ */
+startServerModel();
 
 /**
  * And give the ledger somewhere to drain TO.

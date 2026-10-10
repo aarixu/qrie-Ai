@@ -471,6 +471,8 @@ export default defineConfig(({ mode }) => {
         '@ai-tutor/tutor-control': pkg('tutor-control'),
         '@ai-tutor/action-player': pkg('action-player'),
         '@ai-tutor/maic-adapter': pkg('maic-adapter'),
+        // The brain's merge and graph, loaded lazily by lib/learnerModel.ts.
+        '@ai-tutor/lms-brain': pkg('lms-brain'),
       },
     },
     server: {

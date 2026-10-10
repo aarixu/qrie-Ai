@@ -306,3 +306,29 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   `finalize_tests`; the seed drains instead of calling `think()`.
 - Not run here: two drains at once on a real Postgres (`think.pg.test.ts`, gated on `LAM_PG_URL`), and the
   function under Deno. Deploy, secret and schedule: `docs/ops/runbook.md`, "The brain" (Aarav's step).
+
+## Task 11 as built (2026-10-10)
+
+- `public.my_learner_model()` (0109, security invoker): the signed-in learner's concept_state rows and the
+  brain's cursor (`learner_model.folded_through_at`/`_seq`, and the sitting of `folded_through_id`) in one
+  statement, so the two come from the same run of the brain. Not for anon.
+- `packages/lms-brain/src/serverModel.ts`: `modelFromServer` (rows back to a v4 model, no cursor),
+  `heldByServer` (think()'s order of receipt: received_at to the millisecond, sitting, seq) and
+  `onServerModel`, which folds on top, with `libraryIndex` and `emptyParams` (SF4), the device's events the
+  brain had not read: the outbox, and the acknowledged events after the cursor. `helped` events the brain
+  had read are folded again in a sitting folded on top, so an answer after them is not counted as cold.
+  `foldHistory` takes a start model for it.
+- The classroom keeps each acknowledged event with record_evidence's `received_at` (`lib/sentLog.ts`,
+  this device only, at most 500, let go once the cursor passes it). `refreshFromServer`
+  (`lib/learnerModel.ts`) reads the server's model, through the reader main.tsx wires in
+  (`lib/brainModel.ts` `startServerModel`; nothing is read without it), at sign-in, at
+  lesson start (ClassRoom's warm-up, LiveClass's plan, waiting at most 1.5 s) and as the rebuild a fold
+  asks for (Task 8's flag), and takes it only when it covers every outcome the device holds (observations
+  and raised hands); otherwise, offline, or with rows of another model version, the device keeps its own.
+  The next activity, the warm-up and decide() read the store, so they read the merged model.
+- Tests: `supabase/tests/lam-my-learner-model.test.ts`; `packages/lms-brain/tests/server-model.test.ts` (SF4:
+  E1-E3 sent and thought, E4-E5 unsent; the phone equals the server after they are sent and thought, on
+  every field the sitting's clock does not time); `apps/classroom/tests/serverModelRead.test.ts` (homework
+  remedial on X comes first in the tutor, and not when flipped; offline the tutor goes on).
+- Limit: a write that began before the cursor's event and committed after the brain read the ledger reads
+  as held on the phone until the next read of the server's model.

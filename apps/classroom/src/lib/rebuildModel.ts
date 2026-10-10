@@ -29,7 +29,8 @@ import { supabase } from './supabase';
  *
  * Given the outbox (`pending`), it folds the events the server has not had yet
  * too: that is the device's whole ledger, which the model store rebuilds from
- * when its fold reports `needsRebuild` (learnerModel.ts, lam-one-brain Task 8).
+ * when its fold reports `needsRebuild` and the server's model cannot be taken
+ * (learnerModel.ts, lam-one-brain Tasks 8 and 11).
  */
 
 /**

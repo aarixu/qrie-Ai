@@ -35,7 +35,13 @@ import {
   recordDoubtAtBeat,
   recordLessonTaught,
 } from '../stores/outcomes';
-import { loadModel, masteredFromModel, masteryFromModel } from '../lib/learnerModel';
+import {
+  LESSON_START_WAIT_MS,
+  loadModel,
+  masteredFromModel,
+  masteryFromModel,
+  refreshFromServer,
+} from '../lib/learnerModel';
 import { askHistory, askMastery, wrongOptionText } from '../lib/askHistory';
 import { currentSessionId } from '../stores/ledger';
 import { useClassLedger } from '../lib/classLedger';
@@ -1844,7 +1850,12 @@ export function ClassRoom({
    */
   const warmUpReady = useRef<Promise<WarmUpQuestion[]> | null>(null);
   useEffect(() => {
-    warmUpReady.current = warmUpFor(lesson.topicRef, outcomesOf(lesson));
+    // The server's model first (lam-one-brain Task 11), for at most
+    // LESSON_START_WAIT_MS: a review the brain found due — homework included —
+    // is in the warm-up, and decide() reads the same merged model later.
+    warmUpReady.current = refreshFromServer({ waitMs: LESSON_START_WAIT_MS }).then(() =>
+      warmUpFor(lesson.topicRef, outcomesOf(lesson)),
+    );
   }, [lesson]);
 
   /** Runs the warm-up if one is due; whether it ran. */

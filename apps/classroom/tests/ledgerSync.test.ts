@@ -46,6 +46,7 @@ vi.mock('../src/lib/supabase', () => ({
 
 let store: typeof import('../src/stores/ledger');
 let sync: typeof import('../src/lib/ledgerSync');
+let sentLog: typeof import('../src/lib/sentLog');
 
 beforeEach(async () => {
   vi.resetModules();
@@ -58,6 +59,7 @@ beforeEach(async () => {
   localStorage.clear();
   store = await import('../src/stores/ledger');
   sync = await import('../src/lib/ledgerSync');
+  sentLog = await import('../src/lib/sentLog');
   store.resetLedgerOutbox();
   sync.resetLedgerSync();
 });
@@ -146,6 +148,38 @@ describe('a successful drain', () => {
     const result = await sync.drainLedger();
     expect(result.sent).toBe(2);
     expect(store.ledgerOutbox.get().pending).toHaveLength(0);
+  });
+});
+
+describe('what the server took, kept until its brain has read it (Task 11)', () => {
+  it('keeps each acknowledged event with the receipt the server answered, for the learner who sent it', async () => {
+    aClass();
+    const queued = store.ledgerOutbox.get().pending.map((e) => e.id);
+    await sync.drainLedger();
+    const kept = sentLog.sentFor('student-1');
+    expect(kept.map((e) => e.event.id)).toEqual(queued);
+    expect(kept.every((e) => e.receivedAt === '2026-10-08T00:00:00Z')).toBe(true);
+    expect(sentLog.sentFor('someone-else')).toEqual([]);
+  });
+
+  it('keeps nothing the server refused, and nothing from a call that failed', async () => {
+    aClass();
+    record.mockResolvedValueOnce({ data: null, error: { message: 'nope' } });
+    await sync.drainLedger();
+    expect(sentLog.sentFor('student-1')).toEqual([]);
+
+    record.mockImplementationOnce((args: Sent) =>
+      Promise.resolve({
+        data: args.p_events.map((e, i) =>
+          i === 0
+            ? { id: e.id, status: 'refused', reason: 'bad-payload', received_at: null }
+            : { id: e.id, status: 'recorded', reason: null, received_at: '2026-10-08T00:00:01Z' },
+        ),
+        error: null,
+      }),
+    );
+    await sync.drainLedger();
+    expect(sentLog.sentFor('student-1').map((e) => e.receivedAt)).toEqual(['2026-10-08T00:00:01Z']);
   });
 });
 

@@ -259,6 +259,16 @@ describe('shuffled delivery', () => {
     expect(one.folded.map((e) => e.id)).toEqual(['aaa-e0', 'bbb-e0']);
   });
 
+  it('folds on top of a model it is given, as if that model had folded the earlier sittings (Task 11)', () => {
+    // The phone's merge: the server's model as the start, its own sittings on top.
+    const base = foldHistory([S1], [answer(S1, 0, ['b'], false)], index, params).model;
+    const start = { ...base, foldedThrough: null, helpInFlight: null };
+    const onTop = foldHistory([S2], [answer(S2, 0, ['b'], true)], index, params, start);
+    const whole = foldHistory([S1, S2], [answer(S1, 0, ['b'], false), answer(S2, 0, ['b'], true)], index, params);
+    expect(onTop.model.states).toEqual(whole.model.states);
+    expect(onTop.folded.map((e) => e.id)).toEqual(['s2-e0']);
+  });
+
   it('counts events whose sitting it was not given instead of folding them', () => {
     const lost: FoldSession = { id: 'zz', startedAt: S1.startedAt };
     const out = foldHistory([S1], [answer(S1, 0, ['b'], true), answer(lost, 0, ['b'], true)], index, params);

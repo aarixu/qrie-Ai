@@ -310,8 +310,11 @@ export function writableMisconceptions(
   return out;
 }
 
-/** Every ConceptState field but its id, and the column and type it is written as. */
-const COLUMNS: [Exclude<keyof ConceptState, 'outcomeId'>, string, string][] = [
+/**
+ * Every ConceptState field but its id, and the column and type it is written
+ * as. serverModel.ts reads the rows back by the same list.
+ */
+export const COLUMNS: readonly [Exclude<keyof ConceptState, 'outcomeId'>, string, string][] = [
   ['mastery', 'mastery', 'real'],
   ['unassistedMastery', 'unassisted_mastery', 'real'],
   ['assistedPerformance', 'assisted_performance', 'real'],
