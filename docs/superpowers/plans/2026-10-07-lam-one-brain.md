@@ -332,3 +332,20 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   remedial on X comes first in the tutor, and not when flipped; offline the tutor goes on).
 - Limit: a write that began before the cursor's event and committed after the brain read the ledger reads
   as held on the phone until the next read of the server's model.
+
+## Task 10: skipped, the LMS lane did it (2026-10-10)
+
+- SF9 says skip Task 10 if the LMS lane already did it. It has: branch `lms` 98167c5 ("both apps talk to the
+  hosted project when built with its address and anon key", on top of 08df960, the hosted sign-in guard). With
+  `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` both set, `apps/student` and `apps/lms` each build a
+  supabase-js client and hand it to `supabaseBackend` with the lms-signin guard's address; otherwise the demo
+  school as before. It comes with `apps/*/tests/backend-choice.test.tsx`. A copy here would be a weaker one
+  (no sign-in guard) and a merge conflict, so this branch adds none.
+- Checked: since the merge base (314612e) this branch has not changed `apps/student/src/lib`,
+  `apps/lms/src/lib` or `packages/lms-client/src/{backend,transport,errors}.ts`, so that commit merges in
+  without touching LAM code. When this was written, 98167c5 was on the local `lms` branch and not yet on
+  `origin/lms` (1751c56).
+- What a hosted build needs from this lane: the 0100+ migrations pushed and the brain function deployed
+  with its schedule (`docs/ops/runbook.md`, "The brain"). Until it runs, a hosted child's answers are kept
+  and queued but their labels, practice and review do not change; the demo server drains after every call,
+  the hosted project only on the brain's schedule.
