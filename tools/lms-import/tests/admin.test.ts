@@ -199,4 +199,26 @@ describe('a school that may not import', () => {
     await db.query(`insert into admin.school_profile (org_id, offboarded_at) values ($1, now())`, [off.org]);
     expect(await call('/import', { students: SHEET }, 'hof-admin')).toEqual({ status: 409, body: { error: OFFBOARDED } });
   });
+
+  it("the admin of a suspended or an offboarded school cannot give a parent a sign-in, and is told why", async () => {
+    const su = await buildSchool(db, 'HPS');
+    tokens['hps-admin'] = su.admin;
+    await setLicence(db, 'HPS', 100, -20);
+    const off = await buildSchool(db, 'HPO');
+    tokens['hpo-admin'] = off.admin;
+    await db.query(`insert into admin.school_profile (org_id, offboarded_at) values ($1, now())`, [off.org]);
+    const before = [await accounts(su.org), await accounts(off.org)];
+    rpcCalls.length = 0;
+    expect(await call('/add-parent', { studentLoginId: 'HPS-101', displayName: 'Sunita Sharma' }, 'hps-admin')).toEqual({
+      status: 409,
+      body: { error: LAPSED },
+    });
+    expect(await call('/add-parent', { studentLoginId: 'HPO-101', displayName: 'Sunita Sharma' }, 'hpo-admin')).toEqual({
+      status: 409,
+      body: { error: OFFBOARDED },
+    });
+    expect([await accounts(su.org), await accounts(off.org)]).toEqual(before);
+    expect(rpcCalls).toContain('import_refusal');
+    expect(rpcCalls).not.toContain('next_parent_login');
+  });
 });

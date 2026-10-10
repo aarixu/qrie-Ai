@@ -5,7 +5,7 @@ import { setLicence } from '../../../supabase/tests/admin-school-fixtures.ts';
 import { buildSchool, type School } from '../../../supabase/tests/fixtures.ts';
 import { demoBackend } from '../../../packages/lms-client/src/index.ts';
 import { openDemoDatabase } from '../src/database.ts';
-import { ImportRefused, importForAdmin } from '../src/import.ts';
+import { addParentForAdmin, ImportRefused, importForAdmin } from '../src/import.ts';
 import { startDemoServer, type DemoServer } from '../src/server.ts';
 
 /**
@@ -48,6 +48,19 @@ describe('the demo import', () => {
       (e: unknown) => e,
     );
     expect(commit).toMatchObject({ status: 409, message: LAPSED });
+    const after = (await db.query<{ n: number }>(`select count(*)::int as n from lms.account where org_id = $1`, [school.org]))
+      .rows[0].n;
+    expect(after).toBe(before);
+  });
+
+  it('the demo admin of a suspended school cannot give a parent a sign-in, and is told why', async () => {
+    const before = (await db.query<{ n: number }>(`select count(*)::int as n from lms.account where org_id = $1`, [school.org]))
+      .rows[0].n;
+    const refused = await addParentForAdmin(db, school.admin, { studentLoginId: 'DSU-101', displayName: 'Sunita Sharma' }).catch(
+      (e: unknown) => e,
+    );
+    expect(refused).toBeInstanceOf(ImportRefused);
+    expect(refused).toMatchObject({ status: 409, message: LAPSED });
     const after = (await db.query<{ n: number }>(`select count(*)::int as n from lms.account where org_id = $1`, [school.org]))
       .rows[0].n;
     expect(after).toBe(before);

@@ -18,7 +18,8 @@ import { previewImport, type SchoolSnapshot } from './portal.ts';
  *
  * Every call checks, on the server, that the caller is signed in and is their
  * school's admin; the sheets are checked here every time, whatever the
- * browser showed. A PIN is the new sign-in's password and leaves only in the
+ * browser showed. An import and a parent's sign-in first ask
+ * lms.import_refusal (0063) whether the school may take new people. A PIN is the new sign-in's password and leaves only in the
  * answer. Unlike the demo, a hosted commit is not one transaction: the auth
  * service and the tables are separate calls. Should one fail part-way,
  * running the same sheet again creates nobody twice (people are found by
@@ -178,6 +179,10 @@ async function resetPin(deps: AdminDeps, caller: string, req: Record<string, unk
 
 async function addParent(deps: AdminDeps, caller: string, req: Record<string, unknown>) {
   const org = await adminSchool(deps, caller, 'give a parent a sign-in');
+  // A parent's sign-in is a new person too: the same question as an import
+  // (0063, lms.import_refusal), asked before anything is read or made.
+  const refusal = await deps.rpc('import_refusal', { p_org: org });
+  if (typeof refusal === 'string' && refusal) throw new Refused(409, refusal);
   const name = typeof req.displayName === 'string' ? req.displayName.trim().replace(/\s+/g, ' ') : '';
   if (name.length < 1 || name.length > 80) throw new Refused(400, "Write the parent's name, up to 80 letters.");
   const studentId = typeof req.studentLoginId === 'string' ? req.studentLoginId.trim().toUpperCase() : '';
