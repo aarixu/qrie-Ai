@@ -5,7 +5,7 @@ import { __resetAppConfigForTests, applyAppConfig } from '../src/lib/appConfig';
 import { AppConfigGate } from '../src/ui/AppConfigGate';
 
 /**
- * WHAT A CHILD SEES OF QRIE CONTROL IN THE TUTOR (plan 4). Written first.
+ * WHAT A CHILD SEES OF QRIE CONTROL IN THE TUTOR. Written first.
  *
  * A banner above the app as plain text; an old build asked to update; the
  * tutor switched off shown as a pause. Both full-screen cards carry the

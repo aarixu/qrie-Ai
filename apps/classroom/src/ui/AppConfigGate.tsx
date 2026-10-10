@@ -3,7 +3,7 @@ import { HELPLINES } from '@ai-tutor/safety';
 import { CLASSROOM_BUILD, isBelowMinimum, useAppConfig } from '../lib/appConfig';
 
 /**
- * WHAT QRIE CONTROL SAYS, IN FRONT OF THE APP (plan 4).
+ * WHAT QRIE CONTROL SAYS, IN FRONT OF THE APP.
  *
  *   - An older build than app.min_version.classroom: a full-screen card asking
  *     to update, and nothing else but the helplines.

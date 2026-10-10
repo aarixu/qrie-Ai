@@ -73,9 +73,9 @@ time they are done.
 - **Stop the tutor** is one tap for anyone on staff. **Resume** is the owner's,
   with a fresh authenticator code. The big red tile "Tutor: Stopped" stays until
   somebody resumes.
-- **Switches** are the remote switches the apps are to read; no app reads them
-  yet (plan 4 wires them). A guarded one asks for a fresh code. A switch nobody
-  has set uses its safe default.
+- **Switches** are what the apps obey (section 7 says which app reads which,
+  and what the database enforces itself). A guarded one asks for a fresh code.
+  A switch nobody has set uses its safe default.
 - Every change is in the audit log with who did it and why. The log cannot be
   edited, even with the service-role key.
 
@@ -143,12 +143,12 @@ Nothing in this section has been run against the hosted project yet.
    jobs should say "Succeeded" or "Never run", not "Not captured"; the
    migration level should be 0061 (plan 2's 0052 to 0055, billing's 0056 to
    0060, and 0061, which joins the two).
-8. **What the switches do today.** No app reads a switch yet (plan 4 wires
-   them), so "Turn the tutor switch off" and "Offboard" record your decision
-   but do not stop the tutor for anyone; to stop it now, use "Stop the tutor"
-   on System. An offboarded school's own admin can still add people in the
-   teacher app. Only you (the owner) can turn a tutor switch back on; a
-   teacher's or a school admin's new PIN, and a teachers sheet, are yours too.
+8. **What the switches do.** See section 7: once 0062 to 0064 are applied,
+   the database refuses tutor classes at a school whose tutor switch is off or
+   that is suspended, and refuses new people for an offboarded or suspended
+   school; the apps show the rest only from the builds named there. Only you
+   (the owner) can turn a tutor switch back on; a teacher's or a school admin's
+   new PIN, and a teachers sheet, are yours too.
 
 ## 6. Billing with Cashfree (plan 3)
 
@@ -370,3 +370,55 @@ owner does from Payments); never changes a licence on a refund or a reversal
 (change it on the school's page if needed); and never charges a mandate before
 plan 7.
 No child appears anywhere in billing.
+
+## 7. The apps obey the console (plan 4)
+
+What reads what is on the console's **Apps** page. In short: the tutor, student
+and teacher apps show the banner and ask an old build to update; the tutor
+shows a pause when its switch is off and follows "only prepared"; the student
+app shows a suspended school's notice; the school admin sees grace, suspension
+and invoices due; the contest form says when entries are closed. Three things
+are refused by the database itself, whatever an app shows: a tutor class at a
+school whose tutor switch is off or that is suspended (children see the relay's
+"Qrie is having a rest" sentence until their app refreshes, and can still send
+a report), a new contest entry when entries are closed or the day's limit
+(India's day) is reached, and new people at an offboarded, suspended or ended
+school (the school admin, staff and the founder's import tool are told why).
+
+### What you do (Aarav's steps)
+
+1. **Do not deploy the tutor or the relay from this branch.** `apps/classroom`,
+   `packages/relay` and `supabase/functions/relay` here are older than the live
+   tutor (`phase3-completion`, `voice-stt-tts`; the live relay has `743c05a`,
+   `1dcfcfe`, `18733af`). The tutor's part of plan 4 goes live only after this
+   branch is merged with those branches. The contest site is built together
+   with the tutor (`npm run build:site`), so it waits for the same merge.
+2. **Apply the migrations** with the rest of the console's, after plan 5's are
+   merged: `npx supabase db push` applies 0062 to 0064 (and plan 5's 0065 to
+   0069). The tutor's admission check works with the relay that is live today.
+   System's migration level then reads the last number applied (0064 with this
+   plan's alone), no longer section 5's 0061.
+3. **Until the new contest site is live**, leave `contest.entries_open` on: the
+   old form shows "We could not save that. Please try again in a moment." to a
+   parent when entries are closed.
+4. **Build and deploy the student and teacher apps as you do today.** They read
+   the switches from the server they already use (the demo school today, the
+   hosted project once it serves them).
+5. **Set a minimum build only to a build that exists.** The first builds that
+   read it are tutor 0.1.0, student 0.1.0, teacher 2.3.0; older builds ignore it.
+6. **Try it on TEST:** set a banner and see it in each app within five minutes;
+   switch the tutor off for a test school and start a class as one of its test
+   children (refused, then the pause notice); close entries and open the
+   contest form; set the daily limit to 1 and enter twice; suspend a test
+   school's licence (end it more than 14 days ago) and try Add people as its
+   school admin.
+
+### If something goes wrong
+
+- **An app shows a pause or an old-build screen it should not**: check the
+  switch's value on Switches (a school's own value on its page). Set
+  `app.min_version.*` back to `0.0.0` to release everyone.
+- **A school's children cannot start a class**: its tutor switch is off, the
+  platform's is off, or its licence is suspended (Billing, that school).
+- **The console cannot be reached**: the apps keep their last values; nothing
+  turns on by itself.

@@ -9,7 +9,7 @@ import {
 } from '../src/app-config.ts';
 
 /**
- * WHAT THE STUDENT AND TEACHER APPS READ FROM QRIE CONTROL (plan 4). Written
+ * WHAT THE STUDENT AND TEACHER APPS READ FROM QRIE CONTROL. Written
  * first.
  *
  * A version is three whole numbers; a build is below the minimum only when

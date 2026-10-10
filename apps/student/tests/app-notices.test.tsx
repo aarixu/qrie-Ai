@@ -9,7 +9,7 @@ import { AppNotices } from '../src/components/app-notices'
 import { STUDENT_BUILD } from '../src/lib/build'
 
 /**
- * WHAT A STUDENT OR PARENT SEES OF QRIE CONTROL (plan 4). Written first.
+ * WHAT A STUDENT OR PARENT SEES OF QRIE CONTROL. Written first.
  *
  * The banner as plain text, one notice for a suspended school (grace shows
  * nothing to a child or parent, R14), and an old build asked to update.

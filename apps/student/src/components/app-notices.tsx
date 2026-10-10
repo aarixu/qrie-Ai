@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { isBelowMinimum, type SchoolAppConfig } from '@ai-tutor/lms-client'
 
 /**
- * What Qrie control says, in front of the student app (plan 4): an older
+ * What Qrie control says, in front of the student app: an older
  * build than app.min_version.student is asked to update and shown nothing
  * else; otherwise the banner as plain text, then, for a suspended school, one
  * notice that the tutor is off and the rest is as usual; then the app. A

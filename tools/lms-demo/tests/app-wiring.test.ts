@@ -9,7 +9,7 @@ import { ImportRefused, importForAdmin } from '../src/import.ts';
 import { startDemoServer, type DemoServer } from '../src/server.ts';
 
 /**
- * THE DEMO SERVER OBEYS QRIE CONTROL (plan 4). Written first.
+ * THE DEMO SERVER OBEYS QRIE CONTROL. Written first.
  *
  * The demo school's admin import asks lms.import_refusal (0063) before it
  * reads anything, and the demo answers public.app_config unsigned, as the

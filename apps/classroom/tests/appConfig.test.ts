@@ -17,7 +17,7 @@ import {
 import { PROTOTYPE_ONLY_PREPARED, isFrozen } from '../src/lib/prototype';
 
 /**
- * THE TUTOR READS QRIE CONTROL (plan 4). Written first.
+ * THE TUTOR READS QRIE CONTROL. Written first.
  *
  * A module-level store of what public.my_app_config said, parsed key by key
  * with a safe default for each; a failed read keeps the last good values, and
