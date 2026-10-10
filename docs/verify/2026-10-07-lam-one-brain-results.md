@@ -5,7 +5,7 @@ the Task 12 tests. **Spec:** `docs/superpowers/specs/2026-10-07-lam-one-brain-de
 `docs/superpowers/plans/2026-10-07-lam-one-brain.md`.
 
 **Before** is the 2026-10-06 truth test (workflow `wf_a1a31d81-925`, verdict PARTIAL, 29 defects D01-D29).
-**After** is what this branch's tests show, run locally on PGlite with every migration (0001-0111), the real fold,
+**After** is what this branch's tests show, run locally on PGlite with every migration (0001-0111; 0001-0112 since Task 13), the real fold,
 the real RPCs and the real decision functions. Nothing here ran on the hosted project, and nothing called a model.
 The LLM re-run of the truth test was not repeated (SF6 makes it optional; its probe files no longer exist); the
 re-run is `packages/lms-brain/tests/truth.defects.test.ts`, one `it` per in-scope defect.
@@ -42,7 +42,7 @@ After, per learner type. Every cell names the test that shows it; "acceptance" i
 |---|---|---|---|
 | **C1** | **pass.** Remedial next activity on both outcomes, a targeted re-explanation, practice opening on a wrong idea; the twin gets none of the three (acceptance (a) C1, C1/C4). | **pass.** Teacher's list, practice and standing differ from the twin's (acceptance (b) C1/C4, C1). | **pass.** Remedial next activity and targeted re-explanation vs the twin's `next`/`rethink`; review comes back when due (acceptance (c) C1, C1/C4). |
 | **C2** | **partial.** Refused: LMS-only sources, direct inserts, a forged org/learner, a 2099 clock, a day-long backdate (acceptance (a) C2 x4). Open: a tutor answer's correctness is the phone's word (truth `D04 open`, MF4). | **partial.** The child's own evidence (homework) is server-marked and server-timed (acceptance (b) C2 homework timed; truth D13) and the model cannot be written (acceptance (b) C2). The same token can still send tutor answers whose correctness is its own word (truth `D04 open`). | **partial.** Same refusals (acceptance (c) C2 x4); every answer it gives is tutor evidence, so correctness is the phone's word (truth `D04 open`). |
-| **C3** | **pass, in tests only (SF13).** One server model holds homework and tutor answers and is what the tutor, the student app and the teacher read (acceptance (a) C3, C4, C1; `apps/classroom/tests/serverModelRead.test.ts`). Hosted: needs the 0100-0111 push, the brain function deployed and scheduled, and the LMS lane's D02 fix. | **pass, in tests only.** One model from homework alone, read by the student app, the teacher, and the tutor's server read (acceptance (b) C3). Hosted: as (a). | **pass.** The tutor's evidence is folded on the server and read back as its base model (acceptance (c); truth D03; `packages/lms-brain/tests/server-model.test.ts`). Hosted: needs the brain deployed. |
+| **C3** | **pass, in tests only (SF13).** One server model holds homework and tutor answers and is what the tutor, the student app and the teacher read (acceptance (a) C3, C4, C1; `apps/classroom/tests/serverModelRead.test.ts`). Hosted: needs the 0100-0112 push, the brain function deployed and scheduled, and the LMS lane's D02 fix. | **pass, in tests only.** One model from homework alone, read by the student app, the teacher, and the tutor's server read (acceptance (b) C3). Hosted: as (a). | **pass.** The tutor's evidence is folded on the server and read back as its base model (acceptance (c); truth D03; `packages/lms-brain/tests/server-model.test.ts`). Hosted: needs the brain deployed. |
 | **C4** | **pass.** Teacher summary counts both sources and names both ideas, for this child only, without answer text (acceptance (a) C4, SF8 (a)); "with help" labels (truth D08). | **pass.** Teacher list and practice "watch out for" (acceptance (b) C1/C4); "Checking your answers" instead of "no answers yet" (truth D26). | **pass** for what the tutor shows from the model: remedial and check-first cards (`apps/classroom/tests/lessonCompleteReview.test.tsx`), review when due (acceptance (c)). Help drawn on the live board is D25, not this branch. |
 | **C5** | **pass** for the loop: write, drain, read, decide, nextActivity, practice_for_me ran with 0 fetch and 0 relay calls (acceptance C5, with a live-stub guard). Unchanged: judging a typed answer to an ask with only `expect`/`hint` needs a model (truth test B2: 22 of 31 bundled asks); that is content. | **pass** (acceptance C5). | **pass** for the loop (acceptance C5); the same typed-answer caveat as (a). |
 
@@ -108,6 +108,9 @@ D05 partial, D06 deferred.
   same way run alone, and this branch has changed no attendance code (the Task 12 commit adds two test files
   only). It belongs to the LMS lane's test, not to the brain.
 - **Typecheck:** `npm run typecheck` passes (`.scratch/M3-typecheck.txt`).
+- **After Task 13** (`8dd761f`, started 2026-10-11 02:00 IST, `.scratch/task13-full.json`): 6,004 tests, 20 failed,
+  5,980 passed, 4 skipped. The same 20 as above: 17 baseline ids and the same 3 `attendance.test.ts` tests (the run
+  again started between 00:00 and 05:30 IST). Typecheck passes.
 
 ## What this does not show
 
