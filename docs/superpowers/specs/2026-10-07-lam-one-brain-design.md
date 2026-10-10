@@ -131,8 +131,10 @@ demo covers (b) and (c).
 
 ## 8. Coordination with the other lanes
 
-- Migrations for this lane are numbered **0100-0069**; the LMS lane is at 0046 and the super-admin plan uses
-  0047-0051. Before each migration the numbers in both lanes are checked again.
+- Migrations for this lane are numbered **0100-0199**; the LMS lane holds up to 0046 and the admin lane holds
+  0047-0069 (it has `0060_billing_states.sql` and `0061_admin_wave1_merge.sql`). This lane moved from 0060-0068
+  to 0100-0108 in 9d89478 so the two never collide. Before each migration the numbers in the lanes are checked
+  again.
 - Nothing is written in another session's worktree. Merging `lam-one-brain` back into `phase3-completion` and
   `lms` is a later, explicit step.
 

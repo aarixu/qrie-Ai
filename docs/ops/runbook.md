@@ -206,7 +206,16 @@ until the phone updates. So:
    last one before 0110; `db push` takes every pending file in the folder);
 2. deploy the classroom build that sends through `record_evidence`, and wait until the
    phones are on it;
-3. then push 0110 from the branch.
+3. then push 0110 from the branch (with it goes 0111, which only bounds what one
+   `record_evidence` event may name).
+
+**Order across lanes.** This branch carries none of the admin lane's migrations
+(0047-0069 on branch `admin` today). If this lane's 0100+ reaches the hosted project
+first, a later push of admin's files sorts before the newest applied migration and
+`supabase db push` refuses it unless given `--include-all`. So push the admin lane's
+migrations before this lane's 0100+, or use
+`supabase db push --include-all` knowingly: this lane depends only on lms 0021-0046
+and is valid applied after admin (9d89478).
 
 ```bash
 supabase db push                                     # see the order above; read what is pending

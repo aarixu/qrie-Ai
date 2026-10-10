@@ -27,7 +27,7 @@ vitest 4.
    false.
 5. One commit per task, message `lam: <what changed>` with the trailer
    `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
-6. Migrations: next free number in **0100-0069**; re-check `supabase/migrations/` in this worktree and on
+6. Migrations: next free number in **0100-0199** (the admin lane holds 0047-0069); re-check `supabase/migrations/` in this worktree and on
    `origin/lms` before naming. Every migration gets a PGlite test.
 
 ## Milestone M1 — visibly adaptive (the "medium version"; must land)
@@ -250,8 +250,9 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   remedial would put nearly every due outcome there (mastered needs two cold rights a day apart) and would show
   the remedial card's "It tripped you up last time" for something that never went wrong. Test:
   `packages/learner-model/tests/next.test.ts`.
-- **Migration numbers.** Branch `admin` has `0100_billing_states.sql` and `0101_admin_wave1_merge.sql`; this lane
-  owns 0100-0069 (spec section 8). The admin lane renumbers before either merges or pushes;
+- **Migration numbers.** Branch `admin` has `0060_billing_states.sql` and `0061_admin_wave1_merge.sql` and holds
+  0047-0069; this lane owns 0100-0199 (spec section 8). This lane did the renumber (9d89478: its 0060-0068 became
+  0100-0108), so neither lane has to renumber again before it merges or pushes;
   `supabase/tests/harness.test.ts` now fails on two migrations with one number.
 
 ## Task 7a as built (2026-10-08)
@@ -367,3 +368,21 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   run here: it needs the hosted project).
 - Rollout (SF2): push 0100-0109, deploy the classroom build that sends through record_evidence, then push 0110
   (`docs/ops/runbook.md`, "The brain").
+
+## Review fixes after M2 (2026-10-10)
+
+- `onServerModel` always counts the outbox's open sitting among the sittings it folds on top, so the help the
+  brain had already read in that sitting is folded again even when nothing of the sitting is unread; the
+  sitting's next answer is no longer scored cold (`packages/lms-brain/tests/server-model.test.ts`).
+- `0111_lam_record_evidence_limits.sql`: record_evidence refuses an event with more than 32 outcome ids or one
+  over 200 characters (`bad-outcomes`), a topicRef over 200 characters on the event or the sitting it would
+  open (`bad-topic`), and a call with more than 500 sittings (22023). Test:
+  `supabase/tests/lam-record-evidence-limits.test.ts`.
+- `ledgerSync` keeps an event refused with `error-40*` (serialization failure, deadlock) or `error-55*` (lock not
+  available) and sends it again; every other refusal is still binned (`apps/classroom/tests/ledgerSync.test.ts`).
+- The two writers Task 7b missed, `tools/bin/model-metric.mjs`'s seed and the sitting of
+  `tools/measure/tests/measure-class.test.ts`, now write through `rpc/record_evidence` (not run here: both need the
+  hosted project).
+- Migration numbers corrected above and in spec section 8 (the renumber's search-and-replace had written
+  "0100-0069" and admin's file names as 0100/0101); the runbook says to push the admin lane's migrations before
+  this lane's 0100+, or to use `supabase db push --include-all` knowingly.
