@@ -1,7 +1,16 @@
 export { libraryIndex } from './graph.ts';
 export { loadOutcomes } from './outcomes.ts';
 export {
+  DRAIN_DEFAULTS,
+  MAX_ATTEMPTS,
+  drainBrainQueue,
+  queueSettleDue,
+  type DrainOptions,
+  type DrainResult,
+} from './drain.ts';
+export {
   MISCONCEPTIONS_MAX_BYTES,
+  SETTLE_DUE,
   SNAPSHOT_LAG_SECONDS,
   foldLedger,
   jsonbTextBytes,

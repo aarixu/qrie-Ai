@@ -428,8 +428,16 @@ export async function thinkLearner(tx: Tx, user: string, opts: ThinkOptions = {}
  * It must run between an answer's first hour and the purge's cutoff.
  */
 export async function settleDue(db: Sql, opts: ThinkOptions = {}): Promise<{ students: number; events: number }> {
-  const { rows } = await db.query<{ user_id: string }>(
-    `select distinct e.user_id
+  const { rows } = await db.query<{ user_id: string }>(SETTLE_DUE.sql, SETTLE_DUE.params());
+  return think(db, rows.map((r) => r.user_id), opts);
+}
+
+/**
+ * The learners the settle pass is for, as one query: `select user_id`, one
+ * row each, in user order. drain.ts queueSettleDue queues the same learners.
+ */
+export const SETTLE_DUE = {
+  sql: `select distinct e.user_id
        from public.ledger_event e
        left join public.learner_model lm on lm.user_id = e.user_id
       where date_trunc('milliseconds', e.received_at)
@@ -441,10 +449,8 @@ export async function settleDue(db: Sql, opts: ThinkOptions = {}): Promise<{ stu
                    (lm.snapshot #>> '{model,foldedThrough,sessionId}')::uuid,
                    (lm.snapshot #>> '{model,foldedThrough,seq}')::int))
       order by e.user_id`,
-    [SNAPSHOT_LAG_SECONDS, String(MODEL_VERSION)],
-  );
-  return think(db, rows.map((r) => r.user_id), opts);
-}
+  params: (): unknown[] => [SNAPSHOT_LAG_SECONDS, String(MODEL_VERSION)],
+};
 
 /** Each learner in their own transaction, one after another. */
 export async function think(
