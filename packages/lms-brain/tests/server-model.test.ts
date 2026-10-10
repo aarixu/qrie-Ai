@@ -1,11 +1,19 @@
 // @vitest-environment node
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { MODEL_VERSION, type ConceptState, type LearnerModel } from '@ai-tutor/learner-model';
+import { emptyParams } from '@ai-tutor/knowledge-graph';
+import {
+  MODEL_VERSION,
+  foldSessionReport,
+  placeOnArrival,
+  type ConceptState,
+  type LearnerModel,
+} from '@ai-tutor/learner-model';
 import type { LedgerEvent } from '@ai-tutor/ledger';
 import { asUser, createUser, freshDatabase } from '../../../supabase/tests/harness.ts';
 import {
   heldByServer,
+  libraryIndex,
   modelFromServer,
   onServerModel,
   think,
@@ -138,6 +146,41 @@ describe('the phone on top of the server (SF4)', () => {
     await send(kid, s, s.events.slice(4));
     await think(db, [kid]);
     expectSame(phone!.model, modelFromServer(await read(kid)));
+  });
+
+  it("keeps the open sitting's help the brain already read when nothing of that sitting is unread", async () => {
+    const kid = await createUser(db);
+    const s = sitting();
+    // E1 opens the sitting and help is given on p2 (E3 renumbered to seq 1); the brain reads both.
+    const help = { ...s.events[2], seq: 1 } as LedgerEvent;
+    const sent = await send(kid, s, [s.events[0], help]);
+    await think(db, [kid]);
+
+    // The phone takes the server's model mid-sitting with nothing unread.
+    const merged = onServerModel({
+      server: await read(kid),
+      sent,
+      unsent: [],
+      openSitting: { id: s.id, startedAt: s.startedAt },
+    });
+    expect(merged!.model.helpInFlight).toMatchObject({ sessionId: s.id });
+
+    // The sitting's next answer, folded as the classroom folds it (learnerModel.ts recordLocally).
+    const answer = { ...s.events[3], seq: 2 } as LedgerEvent;
+    const phone = foldSessionReport(
+      merged!.model,
+      placeOnArrival(merged!.model, { id: s.id, startedAt: s.startedAt }),
+      [answer],
+      libraryIndex(),
+      emptyParams(),
+    ).model;
+
+    await send(kid, s, [answer]);
+    await think(db, [kid]);
+    const after = modelFromServer(await read(kid));
+    expect(after.states[DEFINE].unassistedObservations).toBe(0);
+    expect(phone.states[DEFINE].unassistedObservations).toBe(after.states[DEFINE].unassistedObservations);
+    expect(Math.abs(phone.states[DEFINE].unassistedMastery - after.states[DEFINE].unassistedMastery)).toBeLessThan(1e-5);
   });
 
   it('takes a learner the brain never wrote as an empty model and folds everything the phone has', async () => {

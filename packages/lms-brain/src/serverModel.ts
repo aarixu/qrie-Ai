@@ -123,7 +123,10 @@ export interface OnServerInput {
   sent: readonly SentEvent[];
   /** Events the server has not acknowledged (the outbox). */
   unsent: readonly LedgerEvent[];
-  /** The outbox's open sitting, which times its events when its `session-started` is not among them. */
+  /**
+   * The outbox's open sitting, which times its events when its `session-started`
+   * is not among them, and whose help the brain had read is folded again.
+   */
   openSitting?: { id: string; startedAt: string } | null;
   index?: GraphIndex;
   params?: ModelParams;
@@ -145,8 +148,10 @@ export interface OnServer {
  * Each unread event's sitting is placed and timed by the phone: its
  * `session-started` event's time, else the outbox's open sitting, else its
  * first event's. `helped` events the brain had read are folded again in any
- * sitting folded here: help moves no belief, and an answer the brain had not
- * read that came after it in the same sitting is not an answer given alone.
+ * sitting folded here and in the outbox's open sitting, even when nothing of
+ * that sitting is unread: help moves no belief, and an answer that comes after
+ * it in the same sitting (unread here, or folded later as the sitting goes on)
+ * is not an answer given alone.
  */
 export function onServerModel(input: OnServerInput): OnServer | null {
   const { server } = input;
@@ -161,6 +166,7 @@ export function onServerModel(input: OnServerInput): OnServer | null {
   for (const event of input.unsent) if (!held.has(event.id)) fresh.set(event.id, event);
 
   const sessions = new Set([...fresh.values()].map((e) => e.sessionId));
+  if (input.openSitting) sessions.add(input.openSitting.id);
   const help = input.sent
     .map((s) => s.event)
     .filter((e) => e.kind === 'helped' && held.has(e.id) && sessions.has(e.sessionId));
