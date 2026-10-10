@@ -93,9 +93,9 @@ const sittingsOf = (events: readonly LedgerEvent[]) =>
  * Close the sittings whose `session-ended` event the server now holds.
  * Returns the ids of those events that must NOT be acknowledged this drain.
  *
- * Closing goes through the RPC rather than an update, because there is no
- * update policy on the table — append-only is enforced by its absence, and
- * ended_at/active_ms are the one legitimate exception. It runs after
+ * Closing goes through the RPC rather than an update, because a phone may not
+ * update the table: there is no update policy, and since 0110 no update grant
+ * either. ended_at/active_ms are the one legitimate exception. It runs after
  * record_evidence because a close of a sitting the server has no row for
  * closes nothing.
  *

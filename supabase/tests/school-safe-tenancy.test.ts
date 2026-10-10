@@ -243,18 +243,39 @@ describe('the backfill, against accounts that predate the migration', () => {
 });
 
 describe('what the ledger accepts', () => {
-  // The constraint takes every LMS source; since 0034 a phone may write only
-  // the tutor's own (and 'api'): homework, test and practice evidence comes
-  // from the school's functions alone (packages/lms-client/tests/safety.test.ts).
-  it.each(['homework', 'test', 'practice'])('accepts a %s session from the school’s own functions, not a phone', async (source) => {
-    const student = await createUser(db);
-    const insert = (tx: Parameters<Parameters<typeof asUser>[2]>[0]) =>
+  // The constraint takes every LMS source; since 0034 a phone could write only
+  // the tutor's own (and 'api'), and since 0110 a phone writes nothing directly:
+  // its evidence comes in through public.record_evidence (0107), which takes
+  // the tutor's sources only. Homework, test and practice evidence comes from
+  // the school's functions alone (packages/lms-client/tests/safety.test.ts).
+  const phoneSession = (student: string, source: string) =>
+    asUser(db, student, (tx) =>
       tx.query(
         `insert into public.learning_session (id, org_id, user_id, source, started_at)
          select $1, org_id, $2, $3, now() from public.membership where user_id = $2`,
         [crypto.randomUUID(), student, source],
-      );
-    await expect(asUser(db, student, insert)).rejects.toThrow(/row-level security/);
+      ),
+    );
+
+  const throughRecordEvidence = async (student: string, source: string): Promise<{ status: string; reason: string | null }> => {
+    const session = crypto.randomUUID();
+    const at = new Date().toISOString();
+    const { rows } = await asUser(db, student, (tx) =>
+      tx.query<{ status: string; reason: string | null }>(
+        `select status, reason from public.record_evidence($1::jsonb, $2::jsonb)`,
+        [
+          JSON.stringify([{ id: session, source, startedAt: at }]),
+          JSON.stringify([{ id: crypto.randomUUID(), sessionId: session, seq: 0, at, kind: 'answered', source, surface: 'tap' }]),
+        ],
+      ),
+    );
+    return rows[0];
+  };
+
+  it.each(['homework', 'test', 'practice'])('accepts a %s session from the school’s own functions, not a phone', async (source) => {
+    const student = await createUser(db);
+    await expect(phoneSession(student, source)).rejects.toThrow(/permission denied/);
+    expect(await throughRecordEvidence(student, source)).toEqual({ status: 'refused', reason: 'source' });
     await db.query(
       `insert into public.learning_session (id, org_id, user_id, source, started_at)
        select $1, org_id, $2, $3, now() from public.membership where user_id = $2`,
@@ -262,10 +283,15 @@ describe('what the ledger accepts', () => {
     );
   });
 
-  it.each(['api'])('accepts a %s session and its events', async (source) => {
+  // Until 0107/0110 a phone could write 'api' evidence itself. Nothing in the
+  // tutor sends it, so it is refused from a phone now; the constraint still
+  // takes it from the service role.
+  it.each(['api'])('accepts a %s session and its events from the service role, not a phone', async (source) => {
     const student = await createUser(db);
+    await expect(phoneSession(student, source)).rejects.toThrow(/permission denied/);
+    expect(await throughRecordEvidence(student, source)).toEqual({ status: 'refused', reason: 'source' });
     const session = crypto.randomUUID();
-    await asUser(db, student, async (tx) => {
+    await asService(db, async (tx) => {
       await tx.query(
         `insert into public.learning_session (id, org_id, user_id, source, started_at)
          select $1, org_id, $2, $3, now() from public.membership where user_id = $2`,
@@ -282,7 +308,7 @@ describe('what the ledger accepts', () => {
   it('GUARD: still rejects a source nobody defined', async () => {
     const student = await createUser(db);
     await expect(
-      asUser(db, student, (tx) =>
+      asService(db, (tx) =>
         tx.query(
           `insert into public.learning_session (id, org_id, user_id, source, started_at)
            select $1, org_id, $2, 'made-up', now() from public.membership where user_id = $2`,
@@ -290,6 +316,7 @@ describe('what the ledger accepts', () => {
         ),
       ),
     ).rejects.toThrow(/check/i);
+    expect(await throughRecordEvidence(student, 'made-up')).toEqual({ status: 'refused', reason: 'source' });
   });
 });
 

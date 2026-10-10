@@ -350,3 +350,20 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   and queued but what reads the brain's model (labels, practice ranked by weak spots and wrong ideas, review
   due) does not change; the demo server drains after every call,
   the hosted project only on the brain's schedule.
+
+## Task 7b as built (2026-10-10)
+
+- `0110_lam_evidence_only_through_functions.sql`: anon loses everything on `ledger_event` and `learning_session`;
+  authenticated loses insert, update, delete and truncate (it keeps select, under the 0006 own-rows policies). The
+  0006/0034 "append your own" insert policies are dropped, since no phone can use them now. Writers left: the
+  service role, the owner, and the security definer functions (record_evidence, close_learning_session, the LMS's
+  hand-in, test and practice functions, the purge). Test: `supabase/tests/lam-revoke-direct-inserts.test.ts`.
+- SF1, ported with no `it()` deleted: `ledger-integrity` (record_evidence refuses `too-big`/`answer-too-long`, the
+  0021 checks still stand behind it for the owner, a direct insert is `permission denied`); `school-safe-tenancy`
+  ('api' from a phone was accepted and is now refused; the service role still writes it; a made-up source is still
+  a check violation); `lms-client` `safety` (homework/test/practice refused both ways, the tutor's quiz evidence
+  through record_evidence only); `lam-brain-queue` (a direct insert is refused and queues nothing);
+  `tools/bin/ledger-live-test.mjs` sends through `rpc/record_evidence` and checks a direct insert is refused (not
+  run here: it needs the hosted project).
+- Rollout (SF2): push 0100-0109, deploy the classroom build that sends through record_evidence, then push 0110
+  (`docs/ops/runbook.md`, "The brain").

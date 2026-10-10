@@ -10,7 +10,8 @@ import { asUser, createUser, freshDatabase } from './harness';
  *
  * Run as the real roles: a student's token calls it as `authenticated`, and
  * the function decides the org, the learner and the server's clock itself.
- * Direct inserts are still open until Task 7b revokes them; nothing here
+ * Since 0110 (Task 7b) it is the phone's only way in: direct inserts are
+ * refused (supabase/tests/lam-revoke-direct-inserts.test.ts). Nothing here
  * depends on that.
  */
 

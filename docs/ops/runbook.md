@@ -196,8 +196,20 @@ for the next call). Until it runs on a schedule, nothing on the hosted project w
 `concept_state` (the standing, reviews and wrong ideas the apps read from it), and the nightly
 `purge_old_ledger` can delete answers the model never kept.
 
+**Order matters for 0110.** From 0110 on a phone may write evidence only through
+`public.record_evidence` (0107): direct inserts into `ledger_event` and
+`learning_session` are refused, so a classroom build older than Task 7a (it inserts
+directly) gets `permission denied` and its outbox keeps retrying, sending nothing,
+until the phone updates. So:
+
+1. push 0100-0109 (`supabase db push` from commit `6dc52ee` of `lam-one-brain`, the
+   last one before 0110; `db push` takes every pending file in the folder);
+2. deploy the classroom build that sends through `record_evidence`, and wait until the
+   phones are on it;
+3. then push 0110 from the branch.
+
 ```bash
-supabase db push                                     # 0100-0109 first; read what is pending
+supabase db push                                     # see the order above; read what is pending
 supabase secrets set BRAIN_SECRET=<a long random string>
 supabase functions deploy brain --no-verify-jwt     # the secret header is its auth
 ```

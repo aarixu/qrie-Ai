@@ -158,9 +158,41 @@ describe("the school's evidence", () => {
       );
     });
 
+  /** The phone's one door since 0107/0110: record_evidence, answering per event. */
+  const record = async (source: string, session: string = crypto.randomUUID()): Promise<{ status: string; reason: string | null }> => {
+    const at = new Date().toISOString();
+    const { rows } = await asUser(db, one.kid8a, (tx) =>
+      tx.query<{ status: string; reason: string | null }>(
+        `select status, reason from public.record_evidence($1::jsonb, $2::jsonb)`,
+        [
+          JSON.stringify([{ id: session, source, startedAt: at }]),
+          JSON.stringify([
+            {
+              id: crypto.randomUUID(),
+              sessionId: session,
+              seq: 1,
+              at,
+              kind: 'answered',
+              source,
+              surface: 'tap',
+              payload: { correct: true },
+            },
+          ]),
+        ],
+      ),
+    );
+    return rows[0];
+  };
+
+  const eventsOf = async (): Promise<number> =>
+    (await db.query<{ n: number }>(`select count(*)::int as n from public.ledger_event where user_id = $1`, [one.kid8a]))
+      .rows[0].n;
+
   it('cannot be written from a phone as homework, test or practice: neither a session nor an event', async () => {
     for (const source of ['homework', 'test', 'practice']) {
-      await expect(insert(source)).rejects.toThrow(/row-level security/);
+      const before = await eventsOf();
+      await expect(insert(source)).rejects.toThrow(/permission denied/);
+      expect(await record(source)).toEqual({ status: 'refused', reason: 'source' });
       // An event of that source, even into a session the school's own functions opened.
       const session = crypto.randomUUID();
       await db.query(
@@ -175,7 +207,8 @@ describe("the school's evidence", () => {
             [crypto.randomUUID(), one.org, one.kid8a, session, source],
           ),
         ),
-      ).rejects.toThrow(/row-level security/);
+      ).rejects.toThrow(/permission denied/);
+      expect(await record(source, session)).toEqual({ status: 'refused', reason: 'source' });
       // And a session alone.
       await expect(
         asUser(db, one.kid8a, (tx) =>
@@ -184,12 +217,14 @@ describe("the school's evidence", () => {
             [crypto.randomUUID(), one.org, one.kid8a, source],
           ),
         ),
-      ).rejects.toThrow(/row-level security/);
+      ).rejects.toThrow(/permission denied/);
+      expect(await eventsOf()).toBe(before);
     }
   });
 
-  it("still takes the tutor's own evidence", async () => {
-    await expect(insert('quiz')).resolves.toBeUndefined();
+  it("still takes the tutor's own evidence, through record_evidence only", async () => {
+    await expect(insert('quiz')).rejects.toThrow(/permission denied/);
+    expect(await record('quiz')).toEqual({ status: 'recorded', reason: null });
   });
 });
 

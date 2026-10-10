@@ -8,21 +8,25 @@
  *
  *   1. Postgres provisioned the org and the membership from a TRIGGER, before
  *      the student's first event. Doing this in app code would race a slow phone.
- *   2. An event inserts at all.
+ *   2. An event lands at all, through public.record_evidence (0107), the one
+ *      door a phone has since 0110; an insert straight into the table is
+ *      refused.
  *   3. REPLAY IS FREE. The id is minted on the device and is the primary key,
- *      so re-sending a batch whose response was lost is a no-op rather than a
- *      duplicate answer inflating mastery.
- *   4. APPEND-ONLY. There is no update or delete policy, deliberately: the
- *      learner model is rebuilt from these rows.
+ *      so re-sending a batch whose response was lost is answered 'duplicate'
+ *      rather than becoming a second answer inflating mastery.
+ *   4. APPEND-ONLY. There is no update or delete policy, and since 0110 no
+ *      update or delete grant, deliberately: the learner model is rebuilt from
+ *      these rows.
  *   5. A second student cannot read the first one's rows.
  *   6. THE OUTBOX'S OWN EVENTS LAND — not a row typed out here that happens to
  *      look like one. This is the check whose absence cost the most: the id of
  *      the event opening every sitting was derived as `<sessionId>:0`, which
  *      `ledger_event.id` (a `uuid` column) refuses with 22P02, and because a
- *      batch is sent as ONE statement the refusal took every other event with
+ *      batch was sent as ONE statement the refusal took every other event with
  *      it, on every drain, for the life of the install. Checks 1-5 were all
  *      green, because check 2 hand-minted its own id and never touched the
- *      code the app runs.
+ *      code the app runs. record_evidence now answers each event on its own,
+ *      so this checks that every one of them comes back 'recorded'.
  *
  * It mints a throwaway anonymous account, like tools/bin/live-test.mjs.
  * Run: node tools/bin/ledger-live-test.mjs
@@ -74,33 +78,46 @@ show('Postgres provisioned an org and a membership before any app code ran',
      `${membership.length} row(s), role=${membership?.[0]?.role}`);
 if (!org) process.exit(1);
 
-// 2. An event lands.
+// 2. An event lands, through the function; the table itself is shut to a phone.
+const rpc = (token, name, args) => fetch(`${URL_}/rest/v1/rpc/${name}`, {
+  method: 'POST', headers: as(token), body: JSON.stringify(args),
+});
 const sessionId = crypto.randomUUID();
 const eventId = crypto.randomUUID();
+// Five minutes back, so the sitting's span holds the 92 s of time on task
+// closed below (close_learning_session bounds time on task by the span).
+const startedAt = new Date(Date.now() - 5 * 60_000).toISOString();
+const sitting = { id: sessionId, source: 'quiz', topicRef: 'class10-science/life-processes/respiration', startedAt };
 const event = {
-  id: eventId, org_id: org, user_id: student.id, session_id: sessionId, seq: 0,
-  at: new Date().toISOString(), kind: 'answered', source: 'quiz', surface: 'tap',
-  outcome_ids: ['sci10-lp-respiration-equation'], topic_ref: 'class10-science/life-processes/respiration',
+  id: eventId, sessionId, seq: 0, at: new Date().toISOString(), kind: 'answered', source: 'quiz', surface: 'tap',
+  outcomeIds: ['sci10-lp-respiration-equation'], topicRef: 'class10-science/life-processes/respiration',
   payload: { correct: true, ms: 4200, attempt: 1, assistanceRung: 0, hintsShown: 0 },
 };
-const ins = await fetch(`${URL_}/rest/v1/ledger_event`, {
-  method: 'POST', headers: { ...as(student.token), prefer: 'return=representation' },
-  body: JSON.stringify(event),
+const ins = await rpc(student.token, 'record_evidence', { p_sessions: [sitting], p_events: [event] });
+const insBody = ins.ok ? await ins.json() : await ins.text();
+show('an answer reaches the database through record_evidence',
+     ins.ok && insBody?.[0]?.status === 'recorded', `HTTP ${ins.status} ${JSON.stringify(insBody).slice(0, 90)}`);
+
+const direct = await fetch(`${URL_}/rest/v1/ledger_event`, {
+  method: 'POST', headers: { ...as(student.token), prefer: 'return=minimal' },
+  body: JSON.stringify({
+    id: crypto.randomUUID(), org_id: org, user_id: student.id, session_id: sessionId, seq: 1,
+    at: new Date().toISOString(), kind: 'answered', source: 'quiz', surface: 'tap', payload: { correct: true },
+  }),
 });
-const insBody = await ins.text();
-show('an answer reaches the database', ins.ok, `HTTP ${ins.status} ${insBody.slice(0, 70)}`);
+const directBody = direct.ok ? '' : await direct.text();
+show('an insert straight into the table is refused',
+     !direct.ok && /permission denied/i.test(directBody), `HTTP ${direct.status} ${directBody.slice(0, 70)}`);
 
 // 3. Replay is free — the whole offline outbox depends on this.
-const again = await fetch(`${URL_}/rest/v1/ledger_event`, {
-  method: 'POST',
-  headers: { ...as(student.token), prefer: 'resolution=ignore-duplicates,return=minimal' },
-  body: JSON.stringify(event),
-});
+const again = await rpc(student.token, 'record_evidence', { p_sessions: [sitting], p_events: [event] });
+const againBody = again.ok ? await again.json() : [];
 const readBack = await (await fetch(
   `${URL_}/rest/v1/ledger_event?select=id,payload&id=eq.${eventId}`, { headers: as(student.token) },
 )).json();
-show('re-sending the same event is a no-op, not a duplicate',
-     again.ok && readBack.length === 1, `HTTP ${again.status}, ${readBack.length} row(s)`);
+show('re-sending the same event is a duplicate, not a second answer',
+     again.ok && againBody?.[0]?.status === 'duplicate' && readBack.length === 1,
+     `HTTP ${again.status}, ${againBody?.[0]?.status}, ${readBack.length} row(s)`);
 show('the payload survived the round trip',
      readBack?.[0]?.payload?.assistanceRung === 0 && readBack?.[0]?.payload?.ms === 4200,
      JSON.stringify(readBack?.[0]?.payload ?? {}).slice(0, 70));
@@ -131,12 +148,8 @@ const theirs = await (await fetch(
 show('a second student cannot read the first one\'s rows',
      Array.isArray(theirs) && theirs.length === 0, `${theirs.length ?? '?'} row(s) visible`);
 
-// And the session close, through the function rather than an update.
-await fetch(`${URL_}/rest/v1/learning_session`, {
-  method: 'POST', headers: as(student.token),
-  body: JSON.stringify({ id: sessionId, org_id: org, user_id: student.id, source: 'quiz',
-                         started_at: new Date().toISOString() }),
-});
+// And the session close, through the function rather than an update. The
+// sitting is the one record_evidence opened in check 2.
 await fetch(`${URL_}/rest/v1/rpc/close_learning_session`, {
   method: 'POST', headers: as(student.token),
   body: JSON.stringify({ p_session: sessionId, p_ended_at: new Date().toISOString(), p_active_ms: 92000 }),
@@ -149,9 +162,6 @@ show('time on task is recorded by closing the session',
 
 // 6. The events the OUTBOX produces, through the shape the drain sends.
 const fresh = await signUp();
-const freshOrg = (await (await fetch(
-  `${URL_}/rest/v1/membership?select=org_id`, { headers: as(fresh.token) },
-)).json())?.[0]?.org_id;
 
 const mint = () => crypto.randomUUID();
 const realSession = mint();
@@ -168,28 +178,24 @@ outbox = endSession(outbox, {
   id: mint(), at: new Date().toISOString(), activeMs: 240000, completed: true,
 });
 
-// Exactly lib/ledgerSync.ts's rowOf, and the same one-statement batch.
-const rows = batch(outbox).map((e) => ({
-  id: e.id, org_id: freshOrg, user_id: fresh.id, session_id: e.sessionId, seq: e.seq,
-  at: e.at, kind: e.kind, source: e.source, surface: e.surface,
-  outcome_ids: e.outcomeIds, topic_ref: e.topicRef ?? null, payload: e.payload,
-}));
-await fetch(`${URL_}/rest/v1/learning_session`, {
-  method: 'POST', headers: as(fresh.token),
-  body: JSON.stringify({ id: realSession, org_id: freshOrg, user_id: fresh.id,
-                         source: 'class', started_at: new Date().toISOString() }),
-});
-const drain = await fetch(`${URL_}/rest/v1/ledger_event`, {
-  method: 'POST', headers: { ...as(fresh.token), prefer: 'resolution=ignore-duplicates,return=minimal' },
-  body: JSON.stringify(rows),
-});
-const drainBody = drain.ok ? '' : await drain.text();
+// Exactly lib/ledgerSync.ts's send: the outbox's own events, and the sittings
+// their session-started events open (its sittingsOf), in one call.
+const rows = batch(outbox);
+const sittings = rows
+  .filter((e) => e.kind === 'session-started')
+  .map((e) => ({ id: e.sessionId, source: e.source, topicRef: e.topicRef ?? null, startedAt: e.at }));
+const drain = await rpc(fresh.token, 'record_evidence', { p_sessions: sittings, p_events: rows });
+const answers = drain.ok ? await drain.json() : [];
+const drainBody = drain.ok
+  ? answers.filter((r) => r.status !== 'recorded').map((r) => `${r.status}:${r.reason}`).join(' ')
+  : await drain.text();
 const landed = await (await fetch(
   `${URL_}/rest/v1/ledger_event?select=id,kind,seq&session_id=eq.${realSession}&order=seq`,
   { headers: as(fresh.token) },
 )).json();
-show('a whole sitting, built by the real outbox, lands in one statement',
-     drain.ok && landed.length === rows.length,
+show('a whole sitting, built by the real outbox, lands in one call',
+     drain.ok && answers.length === rows.length && answers.every((r) => r.status === 'recorded')
+       && landed.length === rows.length,
      `HTTP ${drain.status}, ${landed.length}/${rows.length} row(s) ${drainBody.slice(0, 90)}`);
 show('the sitting opens with session-started at seq 0, in order',
      landed?.[0]?.kind === 'session-started' && landed?.[0]?.seq === 0
@@ -200,4 +206,4 @@ if (failed > 0) {
   console.log(`\n${failed} check${failed === 1 ? '' : 's'} failed.`);
   process.exit(1);
 }
-console.log('\nThe ledger is live: a student\'s answer reaches Postgres, replays harmlessly, and cannot be rewritten.');
+console.log('\nThe ledger is live: a student\'s answer reaches Postgres through record_evidence, replays harmlessly, and cannot be rewritten.');

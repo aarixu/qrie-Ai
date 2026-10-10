@@ -104,7 +104,7 @@ describe('0108 brain_queue', () => {
     expect(second.last_error).toBeNull();
   });
 
-  it("queues a student's own answer though the student cannot touch the queue (record_evidence, and the direct insert 7b closes)", async () => {
+  it("queues a student's own answer though the student cannot touch the queue (record_evidence; a direct insert is refused since 0110)", async () => {
     await clear();
     const session = crypto.randomUUID();
     const result = await asUser(db, school.kid8b, async (tx) =>
@@ -132,18 +132,20 @@ describe('0108 brain_queue', () => {
 
     await clear();
     const own = crypto.randomUUID();
-    await asUser(db, school.kid8a, async (tx) => {
-      await tx.query(
-        `insert into public.learning_session (id, org_id, user_id, source, started_at) values ($1, $2, $3, 'quiz', now())`,
-        [own, school.org, school.kid8a],
-      );
-      await tx.query(
-        `insert into public.ledger_event (id, org_id, user_id, session_id, seq, at, kind, source, surface, payload)
-         values (gen_random_uuid(), $1, $2, $3, 1, now(), 'answered', 'quiz', 'tap', '{}'::jsonb)`,
-        [school.org, school.kid8a, own],
-      );
-    });
-    expect(await queued(school.kid8a)).toBeDefined();
+    await db.query(
+      `insert into public.learning_session (id, org_id, user_id, source, started_at) values ($1, $2, $3, 'quiz', now())`,
+      [own, school.org, school.kid8a],
+    );
+    await expect(
+      asUser(db, school.kid8a, (tx) =>
+        tx.query(
+          `insert into public.ledger_event (id, org_id, user_id, session_id, seq, at, kind, source, surface, payload)
+           values (gen_random_uuid(), $1, $2, $3, 1, now(), 'answered', 'quiz', 'tap', '{}'::jsonb)`,
+          [school.org, school.kid8a, own],
+        ),
+      ),
+    ).rejects.toThrow(/permission denied/);
+    expect(await queued(school.kid8a)).toBeUndefined();
   });
 
   it('is shut to anon and to a signed-in student: no reading, adding, changing or removing', async () => {
