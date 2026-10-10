@@ -71,6 +71,7 @@ describe('the admin schema', () => {
       'admin.class_publish',
       'admin.class_remove_prepare',
       'admin.classes',
+      'admin.content_view',
       'admin.contest_purge_set',
       'admin.direct_user',
       'admin.direct_user_block',
@@ -212,6 +213,9 @@ describe('the admin schema', () => {
       ['admin', 'metric_family_schools'],
       ['admin', 'metric_family_learning'],
       ['admin', 'metric_family_funnel'],
+      ['admin', 'metric_family_content'],
+      ['admin', 'metric_family_safety'],
+      ['admin', 'content_counts'],
       ['public', 'keep_safety_event'],
     ]) {
       expect(await executable('authenticated', schema, name), `${schema}.${name}`).toBe(false);
