@@ -1,0 +1,8 @@
+# The files below run on the Linux VM. Keep LF line endings in every checkout,
+# including Windows with core.autocrlf=true; with CRLF, bash fails on "\r".
+*.sh        text eol=lf
+*.service   text eol=lf
+*.timer     text eol=lf
+*.template  text eol=lf
+*.sql       text eol=lf
+*.example   text eol=lf

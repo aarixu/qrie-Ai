@@ -1,0 +1,62 @@
+# QRIE site "__SITE__" at __HOST__.
+# Written by qrie-render-sites from deploy/azure/nginx/site.conf.template:
+# change the template and render again; changes made here are overwritten.
+
+# Port 80: Let's Encrypt's checks, and a redirect to https for everything else.
+server {
+    listen 80;
+    listen [::]:80;
+    server_name __HOST__;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/letsencrypt;
+        default_type text/plain;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+#@TLS-BEGIN
+
+# Port 443: the app. Present only once /etc/letsencrypt/live/__HOST__/ exists.
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name __HOST__;
+
+    ssl_certificate     /etc/letsencrypt/live/__HOST__/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/__HOST__/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_session_cache shared:qrie_tls:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    root /var/www/qrie/__SITE__/current;
+    index index.html;
+
+    # nginx drops the server's add_header lines in any location that has
+    # add_header lines of its own, so each such location includes the
+    # headers again.
+    include /etc/nginx/snippets/qrie-__SITE__-headers.conf;
+
+    # Vite names these files by their content, so a name never changes meaning.
+    # A missing one is a 404, not the app's page served as a script.
+    location ^~ /assets/ {
+        include /etc/nginx/snippets/qrie-__SITE__-headers.conf;
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
+        try_files $uri =404;
+    }
+
+    # The page that names the current files: never kept by a browser or proxy.
+    location = /index.html {
+        include /etc/nginx/snippets/qrie-__SITE__-headers.conf;
+        add_header Cache-Control "no-store" always;
+    }
+
+    # Every other path is a screen of the app (the router reads the address).
+    location / {
+        try_files $uri /index.html;
+    }
+}
+#@TLS-END

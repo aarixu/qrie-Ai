@@ -1,0 +1,13 @@
+# QRIE: start qrie-backup.service every night at 02:30 India time.
+# Installed by deploy/azure/setup-server.sh, switched on once
+# /etc/qrie/backup.env exists (README.md, "Backups").
+[Unit]
+Description=Nightly QRIE database backup, 02:30 India time
+
+[Timer]
+OnCalendar=*-*-* 02:30:00 Asia/Kolkata
+# If the VM was off at 02:30, run once when it is next up.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

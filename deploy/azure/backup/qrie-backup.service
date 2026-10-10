@@ -1,0 +1,26 @@
+# QRIE: the nightly database backup (/usr/local/sbin/qrie-backup).
+# Installed by deploy/azure/setup-server.sh; started by qrie-backup.timer.
+[Unit]
+Description=QRIE database backup to Azure Blob Storage
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+# systemd reads this root-only file itself and hands its values to the script.
+# A missing file fails the service, which is what should happen.
+EnvironmentFile=/etc/qrie/backup.env
+ExecStart=/usr/local/sbin/qrie-backup
+# Runs as a user systemd makes for the run and drops after it: not root, no
+# access to home folders, and the file system read-only apart from its own
+# private /tmp and /var/lib/qrie-backup.
+DynamicUser=yes
+StateDirectory=qrie-backup
+StateDirectoryMode=0700
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+TimeoutStartSec=2h
+Nice=10
