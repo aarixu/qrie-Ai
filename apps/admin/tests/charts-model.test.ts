@@ -2,6 +2,7 @@ import type { Metric, MetricPoint } from '@ai-tutor/admin-client';
 import { describe, expect, it } from 'vitest';
 import {
   CHART_PAGES,
+  chartSearch,
   daysBetween,
   dimsOf,
   floorWord,
@@ -12,6 +13,7 @@ import {
   NOT_CAPTURED_TEXT,
   perStudentHourPaise,
   quietGrid,
+  ratioSeries,
   recomputeBlast,
   recomputeCheck,
   seriesFor,
@@ -183,6 +185,27 @@ describe('reading the figures', () => {
       { school: 'BIG', days: [{ day: '2026-10-01', active: true }, { day: '2026-10-02', active: false }] },
       { school: 'SML', days: [{ day: '2026-10-01', active: null }, { day: '2026-10-02', active: true }] },
     ]);
+  });
+});
+
+describe('derived lines and the page address', () => {
+  it("ratioSeries divides day by day, and a day either side lacks keeps that side's state", () => {
+    const top = seriesFor(metric({ points: [pt('2026-10-01', 300), pt('2026-10-02', 100), pt('2026-10-04', 50)] }));
+    const bottom = seriesFor(metric({ points: [pt('2026-10-01', 1_800_000), pt('2026-10-02', 0), pt('2026-10-03', 10), pt('2026-10-04', null)] }));
+    expect(ratioSeries(top, bottom, perStudentHourPaise)).toEqual([
+      { day: '2026-10-01', value: 600, state: 'value' },
+      { day: '2026-10-02', value: null, state: 'no-figure' },
+      { day: '2026-10-03', value: null, state: 'no-figure' },
+      { day: '2026-10-04', value: null, state: 'suppressed' },
+      { day: '2026-10-05', value: null, state: 'no-figure' },
+    ]);
+  });
+
+  it('chartSearch keeps 7 or 30 days (7 otherwise) and a school code when one is given', () => {
+    expect(chartSearch({})).toEqual({ days: 7 });
+    expect(chartSearch({ days: 30 })).toEqual({ days: 30 });
+    expect(chartSearch({ days: '30', school: 'BIG' })).toEqual({ days: 30, school: 'BIG' });
+    expect(chartSearch({ days: 14, school: '' })).toEqual({ days: 7 });
   });
 });
 

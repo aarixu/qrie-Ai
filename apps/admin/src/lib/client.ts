@@ -3,6 +3,7 @@ import {
   billingApiFetch,
   createAdminClient,
   createBillingClient,
+  createChartsClient,
   createClassesClient,
   createPrivacyClient,
   createSafetyClient,
@@ -34,6 +35,9 @@ export const system = createSystemClient(rpc);
 export const safety = createSafetyClient(rpc);
 export const classes = createClassesClient(rpc, api);
 export const privacy = createPrivacyClient(rpc, api);
+
+/** Plan 6: the chart pages (admin.metric_series, money_view, content_view) and the owner's recompute. */
+export const charts = createChartsClient(rpc);
 
 /** Billing: the admin.billing_* functions, and billing-api (the only caller of Cashfree) with the session's token. */
 export const billing = createBillingClient(

@@ -13,6 +13,10 @@ import { BillingSchoolsPage } from '@/features/billing/schools';
 import { SettingsPage } from '@/features/billing/settings';
 import { SubscriptionsPage } from '@/features/billing/subscriptions';
 import { WebhooksPage } from '@/features/billing/webhooks';
+import { chartSearch } from '@/features/charts/model';
+import { ChartsMoney } from '@/features/charts/money';
+import { ChartsOverview } from '@/features/charts/overview';
+import { ChartsSafety } from '@/features/charts/safety';
 import { Classes } from '@/features/classes';
 import { ClassPage } from '@/features/classes/class-page';
 import { Privacy } from '@/features/privacy';
@@ -71,6 +75,13 @@ const classPage = createRoute({ getParentRoute: () => root, path: '/classes/$cla
 const privacyPage = createRoute({ getParentRoute: () => root, path: '/privacy', component: Privacy });
 const requestPage = createRoute({ getParentRoute: () => root, path: '/privacy/requests/$requestId', component: RequestPage });
 
+// The chart pages (plan 6): ?days=7|30, and on Schools and Learning ?school=<code>.
+const chartRoute = <P extends string>(path: P, component: () => React.ReactNode) =>
+  createRoute({ getParentRoute: () => root, path, validateSearch: chartSearch, component });
+const chartsOverview = chartRoute('/charts/overview', ChartsOverview);
+const chartsMoney = chartRoute('/charts/money', ChartsMoney);
+const chartsSafety = chartRoute('/charts/safety', ChartsSafety);
+
 export const router = createRouter({
   routeTree: root.addChildren([
     today,
@@ -99,6 +110,9 @@ export const router = createRouter({
     classPage,
     privacyPage,
     requestPage,
+    chartsOverview,
+    chartsMoney,
+    chartsSafety,
   ]),
 });
 

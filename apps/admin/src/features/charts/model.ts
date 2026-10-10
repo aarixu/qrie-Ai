@@ -191,3 +191,30 @@ export function recomputeBlast(from: string, to: string): string {
 export function utcNote(m: Metric): string | null {
   return m.dayKind === 'utc' ? "By UTC day, the ceiling's own day; this line ends a day earlier." : null;
 }
+
+const STATE_RANK: Record<DayState, number> = { 'not-captured': 3, suppressed: 2, 'no-figure': 1, value: 0 };
+
+/**
+ * One line made from two, day by day (Rs per student-hour from spend and
+ * time, say). A day where either side is not a value keeps that side's
+ * state (not captured before fewer than 10 children before no figure); a day
+ * where `f` gives null has no figure.
+ */
+export function ratioSeries(top: DayPoint[], bottom: DayPoint[], f: (a: number, b: number) => number | null): DayPoint[] {
+  return top.map((t, i) => {
+    const b = bottom[i] ?? { day: t.day, value: null, state: 'no-figure' as const };
+    if (t.state !== 'value' || b.state !== 'value' || t.value === null || b.value === null) {
+      const state = STATE_RANK[t.state] >= STATE_RANK[b.state] ? t.state : b.state;
+      return { day: t.day, value: null, state: state === 'value' ? 'no-figure' : state };
+    }
+    const v = f(t.value, b.value);
+    return v === null ? { day: t.day, value: null, state: 'no-figure' } : { day: t.day, value: v, state: 'value' };
+  });
+}
+
+/** A chart page's address: ?days= 7 or 30 (7 otherwise) and, on Schools and Learning, ?school=<code>. */
+export function chartSearch(search: Record<string, unknown>): { days: 7 | 30; school?: string } {
+  const days = search.days === 30 || search.days === '30' ? 30 : 7;
+  const school = typeof search.school === 'string' && search.school.trim() !== '' ? search.school.trim().toUpperCase() : undefined;
+  return school ? { days, school } : { days };
+}
