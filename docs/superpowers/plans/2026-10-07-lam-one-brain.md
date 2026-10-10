@@ -406,3 +406,21 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
   `supabase/tests/lam-last-active.test.ts`.
 - `truth.defects.test.ts` gains the four Task 13 tests; the results doc's D11, D27, D28, D29 rows and totals are
   updated (11 fixed, 14 partial, 4 deferred).
+
+## Review fixes after M3 (2026-10-11)
+
+- **Fixed lines and Hindi numbers (D27).** Task 13's hi-en reading refused the Hinglish fixed lines that used
+  number words in their everyday sense ("ek baar", "Ek second", "ek chhota sa hint", "bata do", "saath mein"),
+  so a Hinglish child could hear nothing when the answer was 1, 2 or 60. They are reworded, as are two English
+  lines that held "one"; `tutor-control/tests/decide.test.ts` runs every LINES, RECOGNISE and FRAMES entry in both
+  languages through `leakTokens` and asserts no number token.
+- **Authored content is read in the child's language.** The ask does not say what language its hint, alternates,
+  worked example or follow-up are in, so `decide()` reads them in the child's; for a Hinglish child that only adds
+  refusals (an English hint with "do" is refused when the answer is 2), stated in `leak.ts` and `decide.ts` and
+  pinned in `decide.test.ts`. Task 13's "an English line is unchanged" holds for a line read as `'en'`.
+- **D28, active this week.** `0113_lam_active_this_week_received.sql`: `lms.school_overview` counts "active in the
+  last 7 days" by `received_at`, as 0112 does for the student list. Test:
+  `supabase/tests/lam-school-overview-active.test.ts`.
+- **Tests that prove what they claim.** The acceptance suite's forgery tests name another school's org (`TWO`)
+  for all three learners and check it differs from the learner's own; the truth test's D22 fails a write inside
+  `think()` itself (a trigger on the second concept_state row), which a non-transactional `think()` fails.

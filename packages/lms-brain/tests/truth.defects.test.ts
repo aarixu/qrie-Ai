@@ -31,7 +31,6 @@ import {
   loadOutcomes,
   modelFromServer,
   think,
-  thinkLearner,
   type ServerModel,
 } from '../src/index.ts';
 
@@ -377,14 +376,38 @@ describe('M2: one trusted brain', () => {
 
   it('D22 (fixed part): one learner’s think is one transaction: a failed run leaves the last good model, and a rerun changes nothing', async () => {
     const before = await allStates(kid.repeat);
-    await expect(
-      db.transaction(async (tx) => {
-        await thinkLearner(tx, kid.repeat, { rebuild: true });
-        await tx.query(`delete from public.concept_state where user_id = $1`, [kid.repeat]);
-        throw new Error('the run fails after writing');
-      }),
-    ).rejects.toThrow(/fails after writing/);
+    const modelRow = async () =>
+      (
+        await db.query<{ row: unknown }>(
+          `select to_jsonb(lm) - 'updated_at' as row from public.learner_model lm where user_id = $1`,
+          [kid.repeat],
+        )
+      ).rows[0]?.row;
+    const beforeModel = await modelRow();
+    expect(before.length).toBeGreaterThanOrEqual(2);
+    // The run fails inside think() itself, called as the brain calls it: after
+    // their concept_state rows are deleted, on the second row written back. A
+    // think() that wrote outside one transaction would leave them half-gone.
+    await db.exec(`
+      create sequence d22_rows;
+      create function d22_fail() returns trigger language plpgsql as $f$
+      begin
+        if new.user_id = tg_argv[0]::uuid and nextval('d22_rows') >= 2 then
+          raise exception 'the second row fails';
+        end if;
+        return new;
+      end
+      $f$;
+      create trigger d22_fail before insert on public.concept_state
+        for each row execute function d22_fail('${kid.repeat}');
+    `);
+    try {
+      await expect(think(db, [kid.repeat], { rebuild: true })).rejects.toThrow(/second row fails/);
+    } finally {
+      await db.exec(`drop trigger d22_fail on public.concept_state; drop function d22_fail(); drop sequence d22_rows;`);
+    }
     expect(await allStates(kid.repeat)).toEqual(before);
+    expect(await modelRow()).toEqual(beforeModel);
     await think(db, [kid.repeat], { rebuild: true });
     expect(await allStates(kid.repeat)).toEqual(before);
   });

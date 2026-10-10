@@ -71,6 +71,8 @@ const FUTURE = '2099-01-01T00:00:00.000Z';
 
 let db: PGlite;
 let one: School;
+/** Another school, whose org the forgery tests name: never the forger's own. */
+let two: School;
 let teacher: LmsClient;
 let admin: LmsClient;
 let homework = '';
@@ -232,6 +234,7 @@ beforeAll(async () => {
   });
 
   one = await buildSchool(db, 'ONE');
+  two = await buildSchool(db, 'TWO');
   teacher = as(one.teacherA);
   admin = as(one.admin);
   for (const [n, k] of (['a', 'aTwin', 'b', 'bTwin'] as const).entries()) {
@@ -303,6 +306,9 @@ function forgeryAndClock(who: () => string, ownOrg: () => Promise<string>, other
   });
 
   it('C2: an org, a learner and a clock in the input are not the ones stored', async () => {
+    // The org named in the input must be another one, or an ignored org could
+    // not be told from a used one.
+    expect(otherOrg()).not.toBe(await ownOrg());
     const forged = sitting('quiz', [{ outcome: IDENTITY, probe: 'probe-one-clock', chosen: 0 }], FUTURE, {
       orgId: otherOrg(),
       userId: kid.aTwin === who() ? kid.a : kid.aTwin,
@@ -380,7 +386,7 @@ describe('(a) a school child with homework and tutor evidence', () => {
     for (const r of await as(kid.aTwin).practiceForMe('Mathematics', 20)) expect(r.reason).not.toBe('misconception');
   });
 
-  forgeryAndClock(() => kid.a, () => orgOf(kid.a), () => one.org);
+  forgeryAndClock(() => kid.a, () => orgOf(kid.a), () => two.org);
 });
 
 describe('(b) a school child with homework only', () => {
@@ -434,7 +440,7 @@ describe('(b) a school child with homework only', () => {
     ).rejects.toThrow(/permission denied/);
   });
 
-  forgeryAndClock(() => kid.b, () => orgOf(kid.b), () => one.org);
+  forgeryAndClock(() => kid.b, () => orgOf(kid.b), () => two.org);
 });
 
 describe('(c) an independent tutor learner (anonymous, solo org)', () => {
@@ -469,7 +475,7 @@ describe('(c) an independent tutor learner (anonymous, solo org)', () => {
     expect(nextFor(model, later)).toMatchObject({ kind: 'review', outcomeIds: [CLOSURE] });
   });
 
-  forgeryAndClock(() => kid.c, () => orgOf(kid.c), () => one.org);
+  forgeryAndClock(() => kid.c, () => orgOf(kid.c), () => two.org);
 });
 
 describe('oracles (SF8)', () => {
