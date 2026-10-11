@@ -6,7 +6,8 @@ import { base32Decode, checkTotp, newTotpSecret, otpauthUri, totp, TOTP_STEP_SEC
 /**
  * THE LOCAL DEMO'S STAND-IN FOR SUPABASE AUTH (GoTrue), in the shapes
  * supabase-js 2.x reads: e-mail and password sign-in for staff accounts,
- * sessions with refresh tokens, and authenticator-app (TOTP) factors.
+ * sessions with refresh tokens, authenticator-app (TOTP) factors, and a
+ * signed-in person's change of their own password.
  *
  * Where it keeps things:
  *   auth.mfa_factors, auth.mfa_challenges  made here under the hosted
@@ -167,6 +168,8 @@ export interface DemoAuth {
   /** As verifyAccessToken, and the session must still be open (what GoTrue checks). */
   caller(authorization: string | undefined): Promise<Caller>;
   user(userId: string): Promise<UserJson>;
+  /** PUT /auth/v1/user: the signed-in person's own new password, the one change the console makes there. */
+  updateUser(c: Caller, body: Record<string, unknown>): Promise<UserJson>;
   enrol(c: Caller, body: Record<string, unknown>): Promise<unknown>;
   challenge(c: Caller, factorId: string): Promise<{ id: string; type: 'totp'; expires_at: number }>;
   verify(c: Caller, factorId: string, body: Record<string, unknown>): Promise<SessionJson>;
@@ -384,6 +387,28 @@ export async function demoAuth(db: PGlite, opts: { issuer: string; now?: () => n
     },
 
     user,
+
+    async updateUser(c, body) {
+      // supabase-js also sends its PKCE fields (null in this console's flow); they change nothing.
+      const other = Object.keys(body).filter((k) => k !== 'password' && !(k.startsWith('code_challenge') && body[k] == null));
+      if (other.length || typeof body.password !== 'string') {
+        throw new AuthError(422, 'validation_failed', 'This demo changes the password only');
+      }
+      const password = body.password;
+      // Supabase Auth's default minimum; the console itself asks for 12 (lib/account.ts).
+      if (password.length < 6) throw new AuthError(422, 'weak_password', 'Password should be at least 6 characters.');
+      // An account with an authenticator changes its password only after a code (aal2).
+      const verified = await one(`select 1 from auth.mfa_factors where user_id = $1 and status = 'verified'`, [c.userId]);
+      if (verified && c.claims.aal !== 'aal2') {
+        throw new AuthError(401, 'insufficient_aal', 'AAL2 session is required to update email or password when MFA is enabled.');
+      }
+      const old = await one<{ salt: string; hash: string }>(`select salt, hash from admin_demo.password where user_id = $1`, [c.userId]);
+      if (old && timingSafeEqual(await hashPassword(password, old.salt), Buffer.from(old.hash, 'hex'))) {
+        throw new AuthError(422, 'same_password', 'New password should be different from the old password.');
+      }
+      await setPassword(c.userId, password);
+      return user(c.userId);
+    },
 
     async enrol(c, body) {
       if (body.factor_type !== 'totp') throw new AuthError(422, 'validation_failed', 'This demo enrols authenticator apps (totp) only');

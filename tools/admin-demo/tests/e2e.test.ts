@@ -168,6 +168,43 @@ describe('the owner signs in as apps/admin does', () => {
   });
 });
 
+describe('Your account: a member of staff changes their own password, as apps/admin does', () => {
+  const NEW_PASSWORD = 'demo-walk-new-pass-1';
+
+  it('needs aal2 when the account has an authenticator', async () => {
+    const sb = newClient();
+    await sb.auth.signInWithPassword({ email: DEMO_STAFF.safety.email, password: DEMO_PASSWORD });
+    const r = await sb.auth.updateUser({ password: NEW_PASSWORD });
+    expect(r.error?.code).toBe('insufficient_aal');
+    expect((await newClient().auth.signInWithPassword({ email: DEMO_STAFF.safety.email, password: DEMO_PASSWORD })).error).toBeNull();
+  });
+
+  it('refuses the same password and changes it to a new one, which then signs in while the old one does not', async () => {
+    const sb = await signedInAal2(DEMO_STAFF.safety.email);
+    const same = await sb.auth.updateUser({ password: DEMO_PASSWORD });
+    expect(same.error?.code).toBe('same_password');
+
+    const changed = await sb.auth.updateUser({ password: NEW_PASSWORD });
+    expect(changed.error).toBeNull();
+    expect(changed.data.user?.email).toBe(DEMO_STAFF.safety.email);
+
+    expect((await newClient().auth.signInWithPassword({ email: DEMO_STAFF.safety.email, password: DEMO_PASSWORD })).error?.message).toBe(
+      'Invalid login credentials',
+    );
+    expect((await newClient().auth.signInWithPassword({ email: DEMO_STAFF.safety.email, password: NEW_PASSWORD })).error).toBeNull();
+
+    // Back to the README's password for the rest of the run.
+    expect((await sb.auth.updateUser({ password: DEMO_PASSWORD })).error).toBeNull();
+  });
+
+  it('changes nothing but the password', async () => {
+    const sb = await signedInAal2(DEMO_STAFF.safety.email);
+    const r = await sb.auth.updateUser({ email: 'someone-else@qrie-demo.example' });
+    expect(r.error?.status).toBe(422);
+    expect((await sb.auth.getUser()).data.user?.email).toBe(DEMO_STAFF.safety.email);
+  });
+});
+
 describe('a new member of staff: enrol, then wait to be switched on', () => {
   it('ops enrols an authenticator, is refused until the owner switches them on, then gets in', async () => {
     const sb = newClient();

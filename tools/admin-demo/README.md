@@ -5,8 +5,8 @@ with no Supabase project and no Docker.
 
 `npm run admin:demo` starts a small Node server on **http://127.0.0.1:54329**
 that answers the part of Supabase's HTTP API the console uses (sign-in with a
-password, authenticator codes, `admin` function calls, and the two edge
-functions). Behind it is an in-memory Postgres (PGlite) built with **every
+password, authenticator codes, changing your own password under "Your
+account", `admin` function calls, and the two edge functions). Behind it is an in-memory Postgres (PGlite) built with **every
 migration**, exactly as the tests build it, then filled with a made-up but
 realistic demo. Every database decision (who is staff, aal2, the fresh-code
 rule, the environment check, every refusal) is the real migrations' own.
@@ -102,7 +102,7 @@ of the key being set up.
 
 | Hosted piece | Here |
 |---|---|
-| Supabase Auth (GoTrue) | `src/auth.ts`: password sign-in for staff accounts, sessions, refresh, TOTP factors (RFC 6238, checked against the RFC's own test values). Tokens are signed with a key made fresh on every start. |
+| Supabase Auth (GoTrue) | `src/auth.ts`: password sign-in for staff accounts, sessions, refresh, your own password change (after a code, never the same password; nothing else on the account changes), TOTP factors (RFC 6238, checked against the RFC's own test values). Tokens are signed with a key made fresh on every start. |
 | PostgREST | `src/rest.ts`: calls functions only (`/rest/v1/rpc/…`), as PostgREST does: the caller's role, their claims, PostgREST's error body and status. No table reads. |
 | The anon key | a dummy shaped like one (role anon), in `apps/admin/.env.demo`; no secret. |
 | admin-api | the real handler (`tools/admin-api`), in-process, with a **fake Auth admin** (accounts in the demo's auth; an invited person can sign in with the temporary password the console shows once) and a **fake Storage** (removing a file removes its row; there are no files). New PINs go into the LMS demo's PIN table. |

@@ -12,6 +12,7 @@ import { callRpc, type Caller } from './rest.ts';
  *
  *   POST   /auth/v1/token?grant_type=password|refresh_token   a session
  *   GET    /auth/v1/user                                       the user and their factors
+ *   PUT    /auth/v1/user                                       their own new password (nothing else)
  *   POST   /auth/v1/factors                                    enrol an authenticator
  *   POST   /auth/v1/factors/:id/challenge, /verify             a code, and aal2
  *   DELETE /auth/v1/factors/:id
@@ -169,6 +170,9 @@ export async function startAdminDemoServer(opts: {
         if (route === '/auth/v1/user' && req.method === 'GET') {
           const c = await w.auth.caller(authz);
           return send(res, 200, await w.auth.user(c.userId));
+        }
+        if (route === '/auth/v1/user' && req.method === 'PUT') {
+          return send(res, 200, await w.auth.updateUser(await w.auth.caller(authz), json()));
         }
         if (route === '/auth/v1/logout' && req.method === 'POST') {
           const c = await w.auth.caller(authz);
