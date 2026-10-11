@@ -424,3 +424,60 @@ Order: **Task 0 -> 1 -> 2 -> 2b -> 3 -> 4 -> 5 -> 6 -> 6b (M1 gate) | 7a -> 8 ->
 - **Tests that prove what they claim.** The acceptance suite's forgery tests name another school's org (`TWO`)
   for all three learners and check it differs from the learner's own; the truth test's D22 fails a write inside
   `think()` itself (a trigger on the second concept_state row), which a non-transactional `think()` fails.
+
+---
+
+## Phase 2 (Aarav, 2026-10-11): the three remaining parts
+
+Aarav: the brief's metric needs no screen, the system computes it for its own understanding; then finish the
+rest: content (a second question per outcome), the server grading tutor answers, and deploy. Same rules as above
+(test first, one commit per task, push after every commit, never merge). Migrations: next free number in
+0100-0199.
+
+### Task 14: the brief's metric, inside the system (no screen)
+- The brain computes, per learner, unassisted gain and learning minutes and their ratio with
+  `packages/learner-model/src/metric.ts` (`unassistedGain`, `gainPerLearningMinute`) and stores it with the model
+  (in `learner_model`, e.g. a `metrics jsonb` column, or inside the snapshot). Minutes come from server-bounded
+  time on task: tutor sittings' `active_ms` (already bounded by 0107), and homework time from server timestamps
+  if the LMS tables have them (an attempt's start and submit); if they do not, record homework time through an
+  optional, bounded, backward-compatible parameter rather than inventing a number. Never estimate minutes.
+- `learnerProfile` reports it (`gainPerMinute`, `learningMinutes`), and the summary sentence does not show it.
+- Tests: a learner who gains on their own over N minutes has the ratio computed exactly; no minutes means no
+  ratio (null, not 0); help-only gains do not count.
+
+### Task 15: the server grades tutor answers it has a key for (C2)
+- `public.record_evidence` grades every answer whose question the server knows: an event naming a bank probe
+  (`payload.probeId` that matches `lms.item.library_ref`) and a `chosenIndex` gets `correct` set from the item's
+  key, not the phone's, and is marked server-graded (e.g. `payload.graded = 'server'`). Every other answer is
+  marked `graded = 'phone'`. Existing payload fields keep their meaning.
+- The fold: an answer graded on the phone still adapts the lesson, but **`masteredAt` and the teacher's
+  on-their-own figures count only server-graded cold answers** (homework is already server-marked by
+  `lms.submit_mcq`). Model version bump if the fold's arithmetic changes; the server rebuilds.
+- Tests: six phone-claimed "rights" on a bank probe with the wrong option chosen are folded as wrongs; phone-graded
+  class answers never set `masteredAt`; a server-graded retest on a different bank probe 24h later does; the
+  truth test's `D04 open` test turns into a passing `D04` test for bank-backed answers, and a new `open` test pins
+  that class-lesson answers remain phone-graded.
+
+### Task 16: more than one question per outcome (tooling, no spend)
+- `tools/gen-graph`: a mode that adds questions to nodes that already have one, each with a `role`
+  (`retest` | `review` | `transfer`), never repeating an existing stem (normalised), same probe shape
+  (`question`, `options`, `correctIndex`, `misconceptions` aligned by index), resumable like the other modes.
+  An independent reviewer call checks each new item's key and distractor labels and drops what it cannot confirm.
+  Tests with a fake LLM adapter; no real model call in tests.
+- Everything that reads the bank accepts several probes per node: `packages/knowledge-graph` probe tests,
+  `tools/lms-library` (one `lms.item` per probe), the placement and quiz selection, and the warm-up/review picker
+  (`apps/classroom/src/lib/warmUp.ts`), which must prefer a probe the learner has not answered, so a review is a
+  different question when one exists.
+- Tests: a node with two probes gives a review on the second after the first was answered; the library loads both.
+
+### Task 17: generate the questions (real model spend, run by the lead, not an agent)
+- Scope: the maps on the current NCERT books only: class6-mathematics, class10-mathematics, class10-science,
+  class11-biology, class11-chemistry, class11-mathematics (2,102 outcomes). Class 7-9 and class6-science wait for
+  the syllabus rebuild on the new books (D17). Two new questions per outcome (retest + review/transfer).
+- Measure the cost on one chapter first; hard cap Rs 1,000 for the whole run; stop and report if the measured
+  rate would cross it.
+
+### Deploy (Aarav's project, prepared here)
+- No Docker on this machine, so no local Supabase stack. Needs a staging Supabase project from Aarav; then: push
+  migrations in lane order, load the library, deploy `supabase/functions/brain`, set `BRAIN_SECRET` and the
+  schedule, run the smoke test, then production only with his yes (runbook "The brain", docs/architecture/lam.md).
