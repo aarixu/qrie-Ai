@@ -317,6 +317,9 @@ function boardBrief(board: DoubtBoard, ctx: DoubtContext): string[] {
     '',
     'THE BOARD. You teach like a real tutor at a whiteboard: while you talk, you WRITE and MARK on the board. What is on it now (id, kind: text):',
     ...(onScreen.length > 0 ? onScreen : ['  (nothing yet)']),
+    // The prepared class's rule since 2026-10-01; doubtBoard.ts drops written
+    // ink with a '?' as well, and this line is the guard where there is none.
+    'A question you ask is only SPOKEN: never write, note or list it, and no options. The board shows what you teach, not what you ask.',
     ...(holding
       ? [`The class is paused on this question, which the student must answer themselves: "${holding}". Do NOT give its answer, not in words and not on the board — guide with a smaller question or a hint.`]
       : []),

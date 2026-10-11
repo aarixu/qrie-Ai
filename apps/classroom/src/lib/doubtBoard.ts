@@ -412,7 +412,37 @@ export function prepareDoubtTurn(input: TurnInput): PreparedTurn {
     if (screened.say !== null) return { kind: 'halt', say: screened.say };
   }
 
-  let steps = parsed.steps;
+  // 2b. A QUESTION IS ONLY SPOKEN (integration audit, 2026-10-11). The
+  // prepared class has written no question since 2026-10-01; here the tutor
+  // is told to guide "with a smaller question" while it writes. Ink that asks
+  // (a '?' in anything it writes) goes, and the step's sentence is still said:
+  // a worked solution loses only its asking line, an arrow only its label.
+  // After the screen, so distress written as ink still halts; before the leak
+  // check, so a step does not lose its sentence over ink it should not have
+  // written. A Hinglish question written without a '?' is not caught here;
+  // the board brief's line is the guard for that.
+  const asks = (text: string): boolean => text.includes('?');
+  const unask = (op: BoardOp, at: string): BoardOp[] => {
+    const say = (): void => void dropped.push({ at, reason: 'a question is only spoken, never written' });
+    if (op.op === 'work') {
+      const lines = op.steps.filter((s) => !asks(s.line));
+      if (lines.length < op.steps.length) say();
+      return lines.length > 0 ? [{ ...op, steps: lines }] : [];
+    }
+    if (op.op === 'arrow') {
+      if (op.label === undefined || !asks(op.label)) return [op];
+      say();
+      const { label: _asked, ...rest } = op;
+      return [rest];
+    }
+    if (writtenStrings(op).some(asks)) {
+      say();
+      return [];
+    }
+    return [op];
+  };
+
+  let steps = parsed.steps.map((step, i) => ({ ...step, ink: step.ink.flatMap((op) => unask(op, `step ${i}`)) }));
   let leaked = 0;
   let maths = 0;
   let inkLostInChecks = false;
