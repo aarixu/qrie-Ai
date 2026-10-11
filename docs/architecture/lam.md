@@ -19,7 +19,7 @@ sees a summary only, never a child's answers.
 
 | Step | Now | What is still missing |
 |---|---|---|
-| Observe | yes | An answer to a bank question is graded by the server (0115); a class lesson's answer is still graded on the phone, so it counts toward neither "mastered" nor the figures on their own (C2 partial). |
+| Observe | yes | An answer to a bank question is graded by the server (0115); a class lesson's answer is still graded on the phone, so it counts toward neither "mastered" nor the figures on their own (C2 partial). Which option was chosen is still the phone's word and the key ships in the app, so a scripted token can still answer bank questions right. |
 | Diagnose | partly | Wrong ideas are counted and confirmed (2+ questions); a shaky prerequisite is found several steps back. No 9-class error taxonomy; wrong-idea labels are free text. |
 | Teach | partly | The help ladder reads history (a repeated wrong idea gets the targeted explanation; hint-abuse and wheel-spin change the next move). No per-learner strategy adaptation. |
 | Test (alone, later, a different question) | code yes, content no | "Mastered" needs 2 different questions, 24h apart, alone. The bank, the library, placement, the quiz and the warm-up take several questions per outcome, and a review asks one the learner has not answered (Task 16); the bank has no outcome with 2 questions yet (`tools/gen-graph --more-probes` writes them; Task 17 spends on it). |
@@ -76,7 +76,9 @@ Where to get the model: the tutor already holds the merged model (`learnerModel.
 brain works it out (`packages/learner-model/src/metric.ts`, `packages/lms-brain/src/think.ts`, Task 14):
 
 - **Gain:** per sitting, `unassistedGain` over the model before and after it: movement in mastery on their own,
-  only where a new answer given with no help stands behind it. Help-only gains count nothing.
+  only where a new answer given with no help stands behind it. Help-only gains count nothing. It reads
+  `unassistedMastery`, so it counts cold answers whoever graded them, including a class lesson's answers graded on
+  the phone (Task 15), which never make "mastered" or the figures on their own.
 - **Minutes:** only the time on task the server holds, `learning_session.active_ms`: a tutor sitting's from
   `close_learning_session` (bounded by the sitting, 0107); a test's from its start to its hand-in on the server's
   clock, at most its time limit, or three hours when it has none (0114, 0117); homework's from the time the student
@@ -84,8 +86,10 @@ brain works it out (`packages/learner-model/src/metric.ts`, `packages/lms-brain/
   publishing (0114). Never estimated.
 - **Ratio:** gain in sittings with measured time over their minutes. Gain in a sitting that ended with no time
   (practice, a hand-in from an older app) is `untimedGain`, outside the ratio; a sitting still open waits
-  (`openSittings`). The tally lives in the snapshot, so the 90-day purge keeps the minutes; closing a sitting
-  queues the learner so its time is counted.
+  (`openSittings`). The tally lives in the snapshot, so the 90-day purge keeps the minutes until a rebuild: a
+  forced rebuild, or any model version change (v5 and v6 both were), recounts the metric from the ledger the
+  server still holds, and the minutes of purged sittings drop out (`packages/lms-brain/tests/metric.test.ts`).
+  Closing a sitting queues the learner so its time is counted.
 
 **Not done on purpose:** the profile is not sent into any LLM prompt. Putting a child's learning profile into a
 Vertex prompt is a privacy decision (DPDP, and Google Cloud's under-18 clause) for Aarav; until then it feeds the
@@ -121,7 +125,11 @@ screens and the deterministic decisions only.
 - Not deployed; nothing runs on the hosted project.
 - A class lesson's answer is graded on the phone (no key on the server covers a lesson's beat); it adapts the lesson
   but counts toward neither `masteredAt` nor the figures on their own (Task 15, 0115).
+- Which option was chosen is still the phone's word, and the key ships in the app, so a scripted token can still
+  answer bank questions right; closing this needs server-issued asks (a nonce per question served) or keys kept off
+  the client (truth `D04 open: which option was chosen ...`).
 - The bank has one question per outcome at most until Task 17 runs `--more-probes`, so "a different question
   later" rarely exists yet (content).
 - Two brain runs at once are proven only by `think.pg.test.ts`, which needs a real Postgres (`LAM_PG_URL`).
 - The brief's metric is on no screen (by design); practice has no time on task, so its gain stays outside the ratio.
+  A rebuild recounts it from the ledger the server still holds (above).

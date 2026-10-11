@@ -324,6 +324,25 @@ describe('M2: one trusted brain', () => {
     expect(row).toMatchObject({ unassistedMastery: null, unassistedObservations: 0 });
   });
 
+  it('D04 open: which option was chosen is still the phone’s word, so a bank question nobody asked can be answered right', async () => {
+    // The key ships in the classroom bundle (quiz.ts, warmUp.ts), and the
+    // server holds no record of which question it served. A token that sends
+    // the key's option for a library probe it was never asked is graded
+    // right by the server and counts as verified. Closing this needs
+    // server-issued asks (a nonce per question served) or keys kept off the client.
+    const scripted = await child('scripted');
+    expect((await send(scripted, sitting('quiz', [{ outcome: DEFINE, probe: 'probe-td-s0', chosen: 0 }]))).map((r) => r.status))
+      .toEqual(['recorded', 'recorded']);
+    const { rows } = await db.query<{ graded: string; correct: boolean }>(
+      `select payload ->> 'graded' as graded, (payload ->> 'correct')::boolean as correct
+         from public.ledger_event where user_id = $1 and kind = 'answered'`,
+      [scripted],
+    );
+    expect(rows).toEqual([{ graded: 'server', correct: true }]);
+    await think(db, [scripted]);
+    expect(await stateOf(scripted, DEFINE)).toMatchObject({ verified_observations: 1 });
+  });
+
   it('D05 (server part): the same answers read the same on the server whatever the phone’s clock said', async () => {
     const honest = await createUser(db);
     const clock2099 = await createUser(db);

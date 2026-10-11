@@ -89,6 +89,12 @@ export interface SittingTime {
  * hand-in sent without it, practice) or is no longer held, it goes to
  * `untimedGain`, which is never in the ratio: dividing gain made in unmeasured
  * time by the minutes of other sittings would overstate it.
+ *
+ * The tally outlives the purge only while the snapshot does. A rebuild (a
+ * forced one, or any snapshot of another MODEL_VERSION, think.ts
+ * `usableSnapshot`) starts again from `emptyTally` over the ledger the server
+ * still holds, so the gain and minutes of sittings already purged are gone
+ * from the figure after it (packages/lms-brain/tests/metric.test.ts).
  */
 export interface MetricTally {
   /** Unassisted gain in sittings whose time on task is counted. */
@@ -140,7 +146,13 @@ export function settleSittings(tally: MetricTally, held: readonly SittingTime[])
   return next;
 }
 
-/** What the brain writes (learner_model.metrics) and learnerProfile reports. */
+/**
+ * What the brain writes (learner_model.metrics) and learnerProfile reports.
+ * The gain is `unassistedGain`, which reads `unassistedMastery`: it counts
+ * cold answers whoever graded them, so a class lesson's answers the phone
+ * graded (Task 15) are in it, though they never make `masteredAt` or the
+ * teacher's figures on their own.
+ */
 export interface LearningMetric {
   /** Unassisted gain in sittings with measured time on task. */
   gain: number;

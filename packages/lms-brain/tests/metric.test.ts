@@ -156,6 +156,18 @@ describe('unassisted gain per learning minute, worked out by the brain', () => {
     await think(db, [kid]);
     expect((await metrics(kid)).learningMinutes).toBe(10);
   });
+
+  it('a rebuild (forced, or a model version change) recounts from what the server still holds: purged minutes go', async () => {
+    const kid = await createUser(db);
+    await sitting(kid, ago(100 * 24), [quiz('a1', 0)], 4 * MIN);
+    await think(db, [kid]);
+    await asService(db, (tx) => tx.query(`select public.purge_old_ledger(90)`));
+    await sitting(kid, ago(0), [quiz('a2', 0)], 6 * MIN);
+    await think(db, [kid]);
+    expect((await metrics(kid)).learningMinutes).toBe(10);
+    await think(db, [kid], { rebuild: true });
+    expect((await metrics(kid)).learningMinutes).toBe(6);
+  });
 });
 
 describe('homework in the metric', () => {

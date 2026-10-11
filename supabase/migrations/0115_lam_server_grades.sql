@@ -30,6 +30,13 @@
 --    Their columns keep their names. "With help" still averages the outcomes
 --    answered with help (answer_observations > unassisted_observations): a
 --    phone-graded cold answer is counted as an answer alone there, as it was.
+--
+-- Still open: this stops a phone, honest or buggy, from claiming a wrong
+-- option as right; it does not stop forgery. Which option was chosen is still
+-- the phone's word, and the key ships in the app, so a scripted token can
+-- still answer bank questions right, asked or not (truth test
+-- `D04 open: which option was chosen ...`). Closing this needs server-issued
+-- asks (a nonce per question served) or keys kept off the client.
 
 alter table public.concept_state
   add column if not exists verified_mastery real not null default 0.5,
