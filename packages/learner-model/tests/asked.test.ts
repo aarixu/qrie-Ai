@@ -73,6 +73,26 @@ describe('the questions an outcome was asked by', () => {
     expect(m.states.a.observations).toBe(2);
   });
 
+  it('measures a key in bytes, as concept_state does: eight long multibyte keys stay inside its 4 KB line', () => {
+    // As concept_state.asked_items::text spells the list (0116's check):
+    // UTF-8, each key quoted and escaped, ", " between them.
+    const bytes = (keys: string[]) => new TextEncoder().encode(`[${keys.map((k) => JSON.stringify(k)).join(', ')}]`).length;
+    // 240 Devanagari letters are 241 characters, under 256, but 720 bytes:
+    // eight of them were past 4096 and broke the learner's brain run.
+    const tooLong = Array.from({ length: ASKED_ITEMS_LIMIT }, (_, n) => answer({ probeId: `${n}${'अ'.repeat(240)}` }));
+    const dropped = fold(tooLong);
+    expect(dropped.states.a.askedItems).toEqual([]);
+    expect(dropped.states.a.observations).toBe(ASKED_ITEMS_LIMIT);
+    // Short enough in bytes: kept, and the list still fits.
+    const fits = Array.from({ length: ASKED_ITEMS_LIMIT }, (_, n) => answer({ probeId: `${n}${'अ'.repeat(80)}` }));
+    const kept = fold(fits);
+    expect(kept.states.a.askedItems).toHaveLength(ASKED_ITEMS_LIMIT);
+    expect(bytes(kept.states.a.askedItems)).toBeLessThanOrEqual(4096);
+    // A key that needs escaping counts its escapes.
+    const quoted = fold([answer({ probeId: '"'.repeat(125) })]);
+    expect(quoted.states.a.askedItems).toEqual([]);
+  });
+
   it('keeps the latest ASKED_ITEMS_LIMIT and lets the oldest go', () => {
     const many = Array.from({ length: ASKED_ITEMS_LIMIT + 3 }, (_, i) => answer({ probeId: `p${i}` }));
     const m = fold(many);

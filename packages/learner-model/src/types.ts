@@ -168,8 +168,8 @@ export interface ConceptState {
    * Item keys (`itemKey` in fold.ts: `probe:`, `item:` or `beat:`) of every
    * answer on this outcome, right or wrong, at any rung and graded by anyone,
    * the latest last; a question asked again moves to the end. An answer that
-   * names no question, or one whose key is longer than `ASKED_ITEM_KEY_MAX`,
-   * adds nothing. At most `ASKED_ITEMS_LIMIT`, the oldest
+   * names no question, or one whose key takes more than `ASKED_ITEM_KEY_MAX`
+   * bytes, adds nothing. At most `ASKED_ITEMS_LIMIT`, the oldest
    * let go first. Read by the class warm-up (apps/classroom warmUp.ts), so a
    * review asks a question the learner has not answered when the bank holds
    * one. It moves no belief.
@@ -219,9 +219,12 @@ export const MODEL_VERSION = 6;
 export const ASKED_ITEMS_LIMIT = 8;
 
 /**
- * The longest item key `askedItems` keeps. A bank probe's is under 150
- * characters; a longer one is left out, so the list stays inside
- * concept_state's size line (0116).
+ * The longest item key `askedItems` keeps, in UTF-8 bytes of its JSON form
+ * (quoted, escapes included), the way concept_state measures the list. A bank
+ * probe's is under 150; a longer one is left out, so eight of them, with the
+ * brackets and separators, stay inside concept_state's 4096-byte line (0116).
+ * Counted in characters, a key of non-Latin letters or one full of escapes
+ * could pass and the eight could not (P2 review).
  */
 export const ASKED_ITEM_KEY_MAX = 256;
 

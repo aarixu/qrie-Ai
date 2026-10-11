@@ -5,7 +5,8 @@
 -- probes.ts). A review should ask one the learner has not answered, so
 -- learner-model version 6 keeps, per outcome, the item keys of the latest
 -- questions its answers were to (`askedItems`, packages/learner-model
--- types.ts): at most 8, each at most 256 characters, the latest last.
+-- types.ts): at most 8, each at most 256 bytes as JSON spells it (quoted,
+-- UTF-8, escapes included), the latest last.
 --
 -- 1. concept_state.asked_items: a jsonb array, empty by default (what
 --    emptyConceptState holds), under 4 KB. think() writes it with every

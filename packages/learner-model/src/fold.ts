@@ -364,13 +364,21 @@ function itemKey(event: LedgerEvent, payload: AnsweredPayload): string {
 /**
  * `askedItems` after this answer (v6, Task 16): its question moved to the
  * end, the oldest let go past `ASKED_ITEMS_LIMIT`. The `outcomes:` fallback
- * of `itemKey` names no question, and a key past `ASKED_ITEM_KEY_MAX` is
- * no bank question's, so either leaves the list alone.
+ * of `itemKey` names no question, and a key whose JSON form is past
+ * `ASKED_ITEM_KEY_MAX` UTF-8 bytes is no bank question's, so either leaves
+ * the list alone.
  */
 function recordAsked(asked: readonly string[], event: LedgerEvent, payload: AnsweredPayload): string[] {
   const key = itemKey(event, payload);
-  if (key.startsWith('outcomes:') || key.length > ASKED_ITEM_KEY_MAX) return [...asked];
+  if (key.startsWith('outcomes:') || jsonBytes(key) > ASKED_ITEM_KEY_MAX) return [...asked];
   return [...asked.filter((k) => k !== key), key].slice(-ASKED_ITEMS_LIMIT);
+}
+
+const utf8 = new TextEncoder();
+
+/** The UTF-8 bytes of `key` as JSON spells it: quoted, escapes included. */
+function jsonBytes(key: string): number {
+  return utf8.encode(JSON.stringify(key)).length;
 }
 
 /**
