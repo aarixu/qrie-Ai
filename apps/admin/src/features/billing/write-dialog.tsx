@@ -17,12 +17,14 @@ import { Label } from '@/components/ui/label';
  * inside useGuarded: when the database wants a fresh authenticator code it is
  * asked for, and the write runs once more. A guarded write says so up front.
  * An error from the fields (onConfirm throwing) or from the server is shown in
- * the dialog, which stays open.
+ * the dialog, which stays open. While `ready` is false (a read the write
+ * depends on is still out), it cannot be confirmed.
  */
 export function WriteDialog({
   title,
   blast,
   guarded,
+  ready = true,
   children,
   confirmLabel,
   onConfirm,
@@ -31,6 +33,7 @@ export function WriteDialog({
   title: string;
   blast: ReactNode;
   guarded?: boolean;
+  ready?: boolean;
   children?: ReactNode;
   confirmLabel: string;
   onConfirm: (v: { env: string; reason: string }) => Promise<void>;
@@ -45,6 +48,7 @@ export function WriteDialog({
   const shownEnv = EXPECTED_ENV || me.environment;
 
   async function confirm() {
+    if (!ready) return;
     const verdict = checkWrite({ expectedEnv: EXPECTED_ENV, databaseEnv: me.environment, typed, reason });
     if (!verdict.ok) {
       setError(verdict.error);
@@ -97,7 +101,7 @@ export function WriteDialog({
             <Button type='button' variant='outline' onClick={onClose} disabled={busy}>
               Cancel
             </Button>
-            <Button type='submit' disabled={busy}>
+            <Button type='submit' disabled={busy || !ready}>
               {busy ? 'Working…' : confirmLabel}
             </Button>
           </DialogFooter>

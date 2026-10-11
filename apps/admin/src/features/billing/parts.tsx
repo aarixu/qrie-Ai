@@ -206,10 +206,13 @@ export function RecordPaymentDialog({ invoiceId, orgId, onClose }: { invoiceId?:
       title='Record a payment'
       blast={blast}
       guarded
+      ready={!detail.loading && d !== null && d.id === chosen}
       confirmLabel='Record it'
       onClose={onClose}
       onConfirm={async ({ env, reason }) => {
         if (!d) throw new Error('Choose an invoice.');
+        // The invoice read is keyed by the choice (use-load.ts); post only to the one chosen.
+        if (d.id !== chosen) throw new Error('The invoice is still loading. Try again in a moment.');
         if (!parsed.ok) throw new Error(parsed.error);
         const input = { invoiceId: d.id, source, amountPaise: parsed.paise, receivedOn, reference, reason, env };
         // With a payment link open, billing-api cancels it at Cashfree before the payment is recorded.
