@@ -126,4 +126,25 @@ describe('learnerProfile', () => {
     const p = learnerProfile(many, { now: NOW, limit: 3 });
     expect(p.needsWork.map((o) => o.outcomeId)).toEqual(['o00', 'o01', 'o02']);
   });
+
+  it("reports the brief's metric when the brain has it, and keeps it out of the sentence", () => {
+    const metric = { gain: 0.4, learningMinutes: 10, gainPerMinute: 0.04, untimedGain: 0.1, openSittings: 0 };
+    const p = learnerProfile(riya, { now: NOW, titleOf, metric });
+    expect(p.gainPerMinute).toBe(0.04);
+    expect(p.learningMinutes).toBe(10);
+    expect(p.summary).toBe(learnerProfile(riya, { now: NOW, titleOf }).summary);
+    expect(p.summary).not.toMatch(/minute|0\.04|gain/i);
+  });
+
+  it('has no metric without one, and no ratio without minutes (null, not 0)', () => {
+    const none = learnerProfile(riya, { now: NOW, titleOf });
+    expect(none.gainPerMinute).toBeNull();
+    expect(none.learningMinutes).toBeNull();
+    const untimed = learnerProfile(riya, {
+      now: NOW,
+      metric: { gain: 0, learningMinutes: 0, gainPerMinute: null, untimedGain: 0.3, openSittings: 0 },
+    });
+    expect(untimed.gainPerMinute).toBeNull();
+    expect(untimed.learningMinutes).toBe(0);
+  });
 });

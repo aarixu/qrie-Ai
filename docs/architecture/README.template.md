@@ -383,7 +383,7 @@ Correct, tested code that **nothing calls**. Read this before assuming a feature
 | event source `doubt` | legal everywhere; **never emitted** — a raised hand files `confused` inside the class sitting |
 | event surface `text` | legal; every emitter passes `tap` or `voice` |
 | `replayCounters` / `Counters` | exported and tested; **no production importer**. The counters it rebuilds are still written directly by `ClassRoom.tsx` |
-| `unassistedGain` / `gainPerLearningMinute` | no **product** caller — but there *is* a wired operator runner: `npm run model:metric` → `tools/bin/model-metric.mjs`, which folds the metric off PostgREST |
+| `unassistedGain` / `gainPerLearningMinute` | `unassistedGain` is called per sitting by the server brain on branch `lam-one-brain` (`packages/lms-brain` think.ts writes `learner_model.metrics`, migration 0114; not deployed); `gainPerLearningMinute` has no **product** caller. The operator runner `npm run model:metric` → `tools/bin/model-metric.mjs` folds the metric off PostgREST |
 | `/api/icons` in production | hard 501. Its `UNITS` entry and CHECK-constraint value can never be reached |
 | `session_cost(uuid)` | no application caller; probed only to prove it is closed |
 | `publicUrlFor` | no production caller — the browser rebuilds the URL itself |

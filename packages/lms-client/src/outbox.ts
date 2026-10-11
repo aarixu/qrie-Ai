@@ -28,6 +28,8 @@ export interface McqJob {
   title: string;
   answers: Record<string, number>;
   key: string;
+  /** The time the child spent on it, as the phone measured it (0114); absent when it did not. */
+  activeMs?: number;
 }
 
 export interface PhotosJob {
@@ -49,7 +51,7 @@ export type NewOutboxJob = Omit<AnswerJob, 'id'> | Omit<McqJob, 'id'> | Omit<Pho
 /** How the outbox reaches the school: the app's api and storage. */
 export interface OutboxSend {
   saveTestAnswer(assignmentId: string, itemId: string, chosen: number | null): Promise<void>;
-  submitMcq(assignmentId: string, answers: Record<string, number>, key: string): Promise<McqResult>;
+  submitMcq(assignmentId: string, answers: Record<string, number>, key: string, activeMs?: number): Promise<McqResult>;
   uploadWork(objectName: string, file: Blob): Promise<void>;
   submitPhotos(assignmentId: string, objectNames: string[], key: string): Promise<string>;
 }
@@ -125,7 +127,7 @@ export function createOutbox(store: OutboxStore) {
   async function sendOne(job: OutboxJob, send: OutboxSend, keep: (j: OutboxJob) => Promise<void>): Promise<void> {
     if (job.kind === 'answer') return send.saveTestAnswer(job.assignmentId, job.itemId, job.chosen);
     if (job.kind === 'mcq') {
-      await send.submitMcq(job.assignmentId, job.answers, job.key);
+      await send.submitMcq(job.assignmentId, job.answers, job.key, job.activeMs);
       return;
     }
     for (let i = job.uploaded; i < job.pages.length; i += 1) {

@@ -26,7 +26,7 @@ sees a summary only, never a child's answers.
 | Update the model | yes | One server model for all surfaces. |
 | Next best action | yes | Remedial before maintenance review, prerequisite checks, practice from weak spots and wrong ideas. |
 | Revisit later | yes | Spaced review on the server's clock; no teacher "due" view yet. |
-| The brief's metric (unassisted gain per learning minute) | no | Computed by a pure function, shown on no screen; homework has no time on task. |
+| The brief's metric (unassisted gain per learning minute) | yes, inside the system | The brain works it out per learner into `learner_model.metrics` (0114); no screen shows it, on purpose. Practice has no time on task, and a hand-in from an older student app has none, so their gain is kept apart from the ratio. |
 
 Engagement, metacognition, the learning scientist and live answer verification are not built.
 
@@ -43,7 +43,7 @@ Engagement, metacognition, the learning scientist and live answer verification a
 **Think.** An insert on `ledger_event` puts the learner on `public.brain_queue` (0108). `drainBrainQueue` /
 `runBrain` (`packages/lms-brain/src/drain.ts`, `run.ts`) fold each queued learner in one locked transaction and
 write `concept_state` (v4 columns, 0100) and `learner_model.snapshot` (0101), folding forward from the last
-answer read. On the hosted project they run as the Edge Function `supabase/functions/brain` on a schedule
+answer read, and the brief's metric to `learner_model.metrics` (0114, below). On the hosted project they run as the Edge Function `supabase/functions/brain` on a schedule
 (deploy steps: `docs/ops/runbook.md`, "The brain"). Locally the demo server (`tools/lms-demo`) runs the same drain.
 
 **Read (everyone reads the same model).**
@@ -70,6 +70,22 @@ give the same answer. It returns:
 Where to get the model: the tutor already holds the merged model (`learnerModel.ts`); on the server it is
 `learner_model.snapshot.model`. `titleOf` can come from the graph (`libraryIndex()` in `@ai-tutor/lms-brain`).
 
+**The brief's metric.** Pass `metric` (the server's `learner_model.metrics`) and the profile also reports
+`gainPerMinute` (unassisted gain per learning minute) and `learningMinutes`; both are null without it, and
+`gainPerMinute` is null, not 0, when no minutes are measured. The summary sentence never mentions them. How the
+brain works it out (`packages/learner-model/src/metric.ts`, `packages/lms-brain/src/think.ts`, Task 14):
+
+- **Gain:** per sitting, `unassistedGain` over the model before and after it: movement in mastery on their own,
+  only where a new answer given with no help stands behind it. Help-only gains count nothing.
+- **Minutes:** only the time on task the server holds, `learning_session.active_ms`: a tutor sitting's from
+  `close_learning_session` (bounded by the sitting, 0107); a test's from its start to its hand-in on the server's
+  clock; homework's from the time the student app measured while the work was on screen, sent with the hand-in and
+  capped at three hours and at the time since publishing (0114). Never estimated.
+- **Ratio:** gain in sittings with measured time over their minutes. Gain in a sitting that ended with no time
+  (practice, a hand-in from an older app) is `untimedGain`, outside the ratio; a sitting still open waits
+  (`openSittings`). The tally lives in the snapshot, so the 90-day purge keeps the minutes; closing a sitting
+  queues the learner so its time is counted.
+
 **Not done on purpose:** the profile is not sent into any LLM prompt. Putting a child's learning profile into a
 Vertex prompt is a privacy decision (DPDP, and Google Cloud's under-18 clause) for Aarav; until then it feeds the
 screens and the deterministic decisions only.
@@ -79,8 +95,8 @@ screens and the deterministic decisions only.
 1. **Merge** `lam-one-brain` (only with Aarav's yes). It already contains `lms` up to `314612e`; the lms lane has
    the same attendance-date test fix (7753863), so take lms's version if that line conflicts.
 2. **Staging Supabase first:** push migrations in number order: lms (up to 0046), admin (0047-0069), then this lane
-   (0100-0113). The roll-out inside this lane is in the runbook: 0100-0109, then the classroom build that sends
-   through `record_evidence`, then 0110-0113.
+   (0100-0114). The roll-out inside this lane is in the runbook: 0100-0109, then the classroom build that sends
+   through `record_evidence`, then 0110-0114 (0114 before the brain function and the student app built from this branch).
 3. **Deploy the brain:** `supabase/functions/brain`, set `BRAIN_SECRET`, add the schedule (runbook, "The brain").
    Until it runs, nothing on the hosted project writes `concept_state` and the apps show "checking your answers".
 4. **Apps:** the school apps pick the hosted project from their build env (`VITE_SUPABASE_URL`,
@@ -105,4 +121,4 @@ screens and the deterministic decisions only.
 - A tutor answer's correctness is the phone's word (until the server grades tutor questions).
 - The bank has one question per outcome at most, so "a different question later" rarely exists yet (content).
 - Two brain runs at once are proven only by `think.pg.test.ts`, which needs a real Postgres (`LAM_PG_URL`).
-- The brief's metric is on no screen; homework has no time on task.
+- The brief's metric is on no screen (by design); practice has no time on task, so its gain stays outside the ratio.

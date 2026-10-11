@@ -1235,11 +1235,20 @@ export function createLmsClient(t: Transport) {
     /**
      * With `key` (one the phone made for this hand-in), sending it again
      * answers as the first time and makes no second attempt (0044).
+     * `activeMs`, the time the child spent on homework as the phone measured
+     * it, is the hand-in's time on task for the brain's metric; the school
+     * bounds it, and a test is timed by the school's own clock instead (0114).
      */
-    async submitMcq(assignmentId: string, answers: Record<string, number>, key?: string): Promise<McqResult> {
+    async submitMcq(
+      assignmentId: string,
+      answers: Record<string, number>,
+      key?: string,
+      activeMs?: number,
+    ): Promise<McqResult> {
+      const p_active_ms = activeMs === undefined ? undefined : Math.round(activeMs);
       const [r] = key
-        ? await rows<McqResult>('submit_mcq_once', { p_assignment: assignmentId, p_answers: answers, p_key: key })
-        : await rows<McqResult>('submit_mcq', { p_assignment: assignmentId, p_answers: answers });
+        ? await rows<McqResult>('submit_mcq_once', { p_assignment: assignmentId, p_answers: answers, p_key: key, p_active_ms })
+        : await rows<McqResult>('submit_mcq', { p_assignment: assignmentId, p_answers: answers, p_active_ms });
       return r;
     },
     async submitPhotos(assignmentId: string, objectNames: string[], key?: string): Promise<string> {

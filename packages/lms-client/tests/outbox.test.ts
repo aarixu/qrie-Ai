@@ -70,6 +70,22 @@ describe('the outbox', () => {
     expect(await box.pending()).toEqual([]);
   });
 
+  it('sends a hand-in with the time the child spent on it, when the phone measured one (0114)', async () => {
+    const box = createOutbox(memoryOutboxStore());
+    await box.add({ ...mcq('hw1'), activeMs: 300_000 });
+    await box.add(mcq('hw2'));
+    const spent: (number | undefined)[] = [];
+    await box.flush(
+      fakeSend({
+        submitMcq: async (_a, _answers, _key, activeMs) => {
+          spent.push(activeMs);
+          return { submissionId: 's1', correct: 1, total: 2 };
+        },
+      }),
+    );
+    expect(spent).toEqual([300_000, undefined]);
+  });
+
   it('keeps everything, in order, while the school cannot be reached, and sends it later', async () => {
     const box = createOutbox(memoryOutboxStore());
     await box.add(mcq('hw1'));

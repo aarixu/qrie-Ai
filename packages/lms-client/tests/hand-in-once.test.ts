@@ -130,6 +130,26 @@ describe('multiple-choice work sent twice with one key', () => {
     expect(await attempts(fresh, one.kid8a)).toBe(0);
   });
 
+  it("carries the time the child spent, for the brain's metric (0114), with a key or without", async () => {
+    const MIN = 60_000;
+    const spentOn = async (work: string) =>
+      (
+        await db.query<{ active_ms: number | null }>(
+          `select s.active_ms from public.ledger_event e join public.learning_session s on s.id = e.session_id
+            where e.payload ->> 'assignmentId' = $1 limit 1`,
+          [work],
+        )
+      ).rows[0].active_ms;
+    const withKey = await mcqWork('homework', 1);
+    const without = await mcqWork('homework', 1);
+    // Published a day ago: the time spent is capped at the time since publishing.
+    await db.query(`update lms.assignment set published_at = now() - interval '1 day' where id = any($1)`, [[withKey, without]]);
+    await riya.submitMcq(withKey, { [q1]: 1 }, key(), 5 * MIN);
+    await riya.submitMcq(without, { [q1]: 1 }, undefined, 7 * MIN);
+    expect(await spentOn(withKey)).toBe(5 * MIN);
+    expect(await spentOn(without)).toBe(7 * MIN);
+  });
+
   it('still hands in without a key, as before', async () => {
     const fresh = await mcqWork('homework', 1);
     expect(await riya.submitMcq(fresh, { [q1]: 1 })).toMatchObject({ correct: 1, total: 2 });

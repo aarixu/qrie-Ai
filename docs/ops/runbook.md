@@ -208,8 +208,14 @@ until the phone updates. So:
    phones are on it;
 3. then push 0110 from the branch (with it go 0111, which only bounds what one
    `record_evidence` event may name, 0112, which only makes the school's
-   student list read "last active" from the server's clock, and 0113, which does
-   the same for the school overview's "active in the last 7 days").
+   student list read "last active" from the server's clock, 0113, which does
+   the same for the school overview's "active in the last 7 days", and 0114, the
+   brief's metric: `learner_model.metrics` and a hand-in's time on task).
+
+**0114 before the brain and the student app that need it.** The brain function from
+`lam-one-brain` at or after Task 14 writes `learner_model.metrics`, and the student
+app from then sends a homework hand-in's time (`p_active_ms`); a database without 0114
+refuses both. Push 0114 first; older student builds keep handing in as before.
 
 **Order across lanes.** This branch carries none of the admin lane's migrations
 (0047-0069 on branch `admin` today). If this lane's 0100+ reaches the hosted project

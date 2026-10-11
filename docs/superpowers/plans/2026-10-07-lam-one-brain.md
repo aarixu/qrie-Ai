@@ -445,6 +445,32 @@ rest: content (a second question per outcome), the server grading tutor answers,
 - Tests: a learner who gains on their own over N minutes has the ratio computed exactly; no minutes means no
   ratio (null, not 0); help-only gains do not count.
 
+### Task 14 as built (2026-10-11)
+- **Per sitting, as `model:metric` does.** `packages/learner-model/src/metric.ts`: `tallySitting` adds a
+  sitting's `unassistedGain` (model before and after it) to a `MetricTally`; `settleSittings` counts it with the
+  sitting's `learning_session.active_ms` once that is above zero, or moves it to `untimedGain` when the sitting
+  ended with no time or is gone; `learningMetric` gives `{gain, learningMinutes, gainPerMinute, untimedGain,
+  openSittings}`, `gainPerMinute` null when there are no minutes. Untimed gain is kept out of the ratio, because
+  dividing it by other sittings' minutes would overstate it. A sitting already counted is remembered (while the
+  server holds it) so a late answer adds its gain without adding its time twice.
+- **The brain.** `think.ts` folds with a per-batch hook (`foldLedger`'s `onBatch`), keeps the tally in
+  `learner_model.snapshot.metric` (a snapshot without one is rebuilt), and writes `learner_model.metrics`. A run
+  with nothing new to fold still counts the time of a sitting closed since, writing only the tally and the figures.
+- **0114_lam_learning_time.sql:** `learner_model.metrics`; `lms.grade_mcq`, `lms.submit_mcq`,
+  `lms.submit_mcq_once` gain an optional `p_active_ms` (old calls still work). A test is timed by the server from
+  `lms.test_start` to the hand-in, never past `lms.test_ends_at`; homework takes the phone's time, capped at three
+  hours and at the time since publishing or the previous hand-in; none sent records none. The hand-in's sitting
+  spans its time on task. `close_learning_session` also queues the learner for the brain. Practice still has no
+  time on task.
+- **Phone side:** `apps/student/src/lib/timeOnTask.ts` counts time with the quiz on screen and the app in front;
+  the quiz sends it with the hand-in and with an outbox job (`McqJob.activeMs`); `lms-client` `submitMcq` takes it.
+- `learnerProfile` takes `metric` and reports `gainPerMinute` and `learningMinutes`; the summary does not.
+- Tests: `packages/learner-model/tests/metric.test.ts` (tally), `profile.test.ts`,
+  `packages/lms-brain/tests/metric.test.ts` (exact ratio over N minutes, null without minutes, help-only gains
+  count nothing, forward equals rebuild, purge keeps minutes, homework with and without time),
+  `supabase/tests/lam-learning-time.test.ts`, `lms-client` `outbox.test.ts` and `hand-in-once.test.ts`,
+  `apps/student/tests/time-on-task.test.ts`.
+
 ### Task 15: the server grades tutor answers it has a key for (C2)
 - `public.record_evidence` grades every answer whose question the server knows: an event naming a bank probe
   (`payload.probeId` that matches `lms.item.library_ref`) and a `chosenIndex` gets `correct` set from the item's

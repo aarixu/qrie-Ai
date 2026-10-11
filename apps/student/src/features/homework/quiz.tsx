@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import { isOffline, newKey, type MyAssignment } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { useOutbox } from '@/lib/outbox'
+import { createTimeOnTask } from '@/lib/timeOnTask'
 import { cn } from '@/lib/utils'
 import {
   AlertDialog,
@@ -121,6 +122,19 @@ export function Quiz({
 
   useEffect(() => saveDraft(a.id, answers), [a.id, answers])
 
+  // Time on task, sent with the hand-in for the brain's metric (0114): only
+  // while this screen is in front.
+  const time = useRef<ReturnType<typeof createTimeOnTask> | null>(null)
+  if (time.current === null) {
+    time.current = createTimeOnTask(Date.now, typeof document === 'undefined' || document.visibilityState !== 'hidden')
+  }
+  useEffect(() => {
+    const t = time.current!
+    const onVisibility = () => (document.visibilityState === 'hidden' ? t.pause() : t.resume())
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => document.removeEventListener('visibilitychange', onVisibility)
+  }, [])
+
   // The countdown. The server enforces the limit; this only shows it, and
   // hands in whatever is answered when it runs out.
   const [now, setNow] = useState(() => Date.now())
@@ -137,8 +151,9 @@ export function Quiz({
     handedIn.current = true
     setBusy(true)
     const key = handInKey(a.id)
+    const activeMs = Math.round(time.current!.spent())
     try {
-      const r = await api.submitMcq(a.id, answers, key)
+      const r = await api.submitMcq(a.id, answers, key, activeMs)
       saveDraft(a.id, null)
       forgetKey(a.id)
       await queryClient.invalidateQueries({ queryKey: ['my-assignments'] })
@@ -154,7 +169,7 @@ export function Quiz({
       if (isOffline(e) && box) {
         // No internet: the hand-in waits on the phone, under its key, and goes
         // by itself when the internet is back (components/outbox-banner.tsx).
-        await box.add({ kind: 'mcq', assignmentId: a.id, title: a.title, answers, key })
+        await box.add({ kind: 'mcq', assignmentId: a.id, title: a.title, answers, key, activeMs })
         saveDraft(a.id, null)
         forgetKey(a.id)
         toast.info('No internet. Your answers are kept on this phone and will be handed in when it is back.')

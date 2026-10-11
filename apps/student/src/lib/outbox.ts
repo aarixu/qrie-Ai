@@ -71,7 +71,7 @@ export function outboxFor(userId: string): Outbox {
 /** The school, as the outbox reaches it. */
 export const outboxSend: OutboxSend = {
   saveTestAnswer: (a, item, chosen) => api.saveTestAnswer(a, item, chosen),
-  submitMcq: (a, answers, key) => api.submitMcq(a, answers, key),
+  submitMcq: (a, answers, key, activeMs) => api.submitMcq(a, answers, key, activeMs),
   uploadWork: (name, file) => backend.uploadWork(name, file),
   submitPhotos: (a, names, key) => api.submitPhotos(a, names, key),
 }

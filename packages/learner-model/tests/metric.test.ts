@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
   emptyConceptState,
   emptyModel,
+  emptyTally,
   gainPerLearningMinute,
+  learningMetric,
+  settleSittings,
+  tallySitting,
   unassistedGain,
 } from '../src/index';
 
@@ -104,5 +108,101 @@ describe('gainPerLearningMinute', () => {
     const after = modelWith('n', 0.8, 2);
     expect(gainPerLearningMinute(before, after, 0)).toBe(0);
     expect(gainPerLearningMinute(before, after, -1)).toBe(0);
+  });
+});
+
+/**
+ * THE BRIEF'S METRIC, KEPT BY THE BRAIN (lam-one-brain Task 14).
+ *
+ * Unassisted gain per learning minute for one learner over everything the
+ * server has folded: each sitting's gain (unassistedGain before and after it)
+ * is held open until the server knows the sitting's time on task, then
+ * counted with that time, or, when the sitting ended with no measured time,
+ * kept apart and never put in the ratio.
+ */
+describe('the metric tally', () => {
+  const MIN = 60_000;
+  const helpedOnly = () => {
+    const m = emptyModel();
+    m.states.n = { ...emptyConceptState('n'), assistedPerformance: 0.9, answerObservations: 3, unassistedObservations: 0 };
+    return m;
+  };
+
+  it('computes the ratio exactly for a learner who gains on their own over N minutes', () => {
+    let t = emptyTally();
+    t = tallySitting(t, 's1', emptyModel(), modelWith('n', 0.78, 1));
+    t = tallySitting(t, 's2', modelWith('n', 0.78, 1), modelWith('n', 0.9, 2));
+    t = settleSittings(t, [
+      { id: 's1', activeMs: 4 * MIN, ended: true },
+      { id: 's2', activeMs: 6 * MIN, ended: true },
+    ]);
+    const m = learningMetric(t);
+    expect(m.learningMinutes).toBe(10);
+    expect(m.gain).toBeCloseTo(0.4, 10);
+    expect(m.gainPerMinute).toBeCloseTo(0.04, 10);
+    expect(m.untimedGain).toBe(0);
+    expect(m.openSittings).toBe(0);
+  });
+
+  it('gives no ratio (null, not 0) when no minutes are measured', () => {
+    expect(learningMetric(emptyTally()).gainPerMinute).toBeNull();
+    let t = tallySitting(emptyTally(), 'hw', emptyModel(), modelWith('n', 0.78, 1));
+    // A hand-in with no time on task: over, and nobody measured it.
+    t = settleSittings(t, [{ id: 'hw', activeMs: null, ended: true }]);
+    const m = learningMetric(t);
+    expect(m.gainPerMinute).toBeNull();
+    expect(m.learningMinutes).toBe(0);
+    expect(m.gain).toBe(0);
+    expect(m.untimedGain).toBeCloseTo(0.28, 10);
+  });
+
+  it('does not count gains made only with help', () => {
+    let t = tallySitting(emptyTally(), 's1', emptyModel(), helpedOnly());
+    t = settleSittings(t, [{ id: 's1', activeMs: 5 * MIN, ended: true }]);
+    const m = learningMetric(t);
+    expect(m.gain).toBe(0);
+    expect(m.learningMinutes).toBe(5);
+    expect(m.gainPerMinute).toBe(0);
+  });
+
+  it('keeps a sitting open until its time is known, and counts its minutes even when it gained nothing', () => {
+    let t = tallySitting(emptyTally(), 'class', emptyModel(), emptyModel());
+    t = settleSittings(t, [{ id: 'class', activeMs: null, ended: false }]);
+    expect(learningMetric(t)).toMatchObject({ learningMinutes: 0, gainPerMinute: null, openSittings: 1 });
+    t = settleSittings(t, [{ id: 'class', activeMs: 3 * MIN, ended: true }]);
+    expect(learningMetric(t)).toMatchObject({ learningMinutes: 3, gain: 0, gainPerMinute: 0, openSittings: 0 });
+  });
+
+  it('never counts a sitting\'s minutes twice when a late answer arrives after they were counted', () => {
+    let t = tallySitting(emptyTally(), 's1', emptyModel(), modelWith('n', 0.78, 1));
+    t = settleSittings(t, [{ id: 's1', activeMs: 2 * MIN, ended: true }]);
+    t = tallySitting(t, 's1', modelWith('n', 0.78, 1), modelWith('n', 0.9, 2));
+    t = settleSittings(t, [{ id: 's1', activeMs: 2 * MIN, ended: true }]);
+    const m = learningMetric(t);
+    expect(m.learningMinutes).toBe(2);
+    expect(m.gain).toBeCloseTo(0.4, 10);
+  });
+
+  it('counts the gain of a sitting the server no longer holds apart, as untimed', () => {
+    let t = tallySitting(emptyTally(), 'gone', emptyModel(), modelWith('n', 0.78, 1));
+    t = settleSittings(t, []);
+    expect(learningMetric(t)).toMatchObject({ gain: 0, learningMinutes: 0, openSittings: 0 });
+    expect(learningMetric(t).untimedGain).toBeCloseTo(0.28, 10);
+  });
+
+  it('forgets a counted sitting once the server no longer holds it, keeping its minutes', () => {
+    let t = tallySitting(emptyTally(), 's1', emptyModel(), modelWith('n', 0.78, 1));
+    t = settleSittings(t, [{ id: 's1', activeMs: 2 * MIN, ended: true }]);
+    expect(t.counted).toEqual(['s1']);
+    t = settleSittings(t, []);
+    expect(t.counted).toEqual([]);
+    expect(learningMetric(t).learningMinutes).toBe(2);
+  });
+
+  it('does not change the tally it is given', () => {
+    const t = emptyTally();
+    tallySitting(t, 's1', emptyModel(), modelWith('n', 0.78, 1));
+    settleSittings(t, [{ id: 's1', activeMs: MIN, ended: true }]);
+    expect(t).toEqual(emptyTally());
   });
 });

@@ -63,7 +63,19 @@ export {
   reviewAt,
 } from './memory.ts';
 
-export { gainPerLearningMinute, unassistedGain } from './metric.ts';
+// The brief's metric: unassisted gain per learning minute, and the tally the
+// brain keeps of it between runs.
+export {
+  emptyTally,
+  gainPerLearningMinute,
+  learningMetric,
+  settleSittings,
+  tallySitting,
+  unassistedGain,
+  type LearningMetric,
+  type MetricTally,
+  type SittingTime,
+} from './metric.ts';
 
 // A basic understanding of one learner, read off the model: secure, needs
 // work, only with help, wrong ideas, due for review, and one plain sentence.

@@ -3,13 +3,19 @@ import {
   MISCONCEPTION_LIMITS,
   MODEL_VERSION,
   emptyModel,
+  emptyTally,
   foldSession,
   isConfirmed,
+  learningMetric,
   normaliseMisconception,
+  settleSittings,
+  tallySitting,
   type ConceptState,
   type FoldCursor,
   type LearnerModel,
+  type MetricTally,
   type Misconception,
+  type SittingTime,
 } from '@ai-tutor/learner-model';
 import type { LedgerEvent } from '@ai-tutor/ledger';
 import { libraryIndex } from './graph.ts';
@@ -71,6 +77,16 @@ import { libraryIndex } from './graph.ts';
  * own, and `thinkLearner` runs inside one it is handed, under a lock on that
  * learner, so two runs over one child take turns and a reader sees the last
  * model or the next one, never half of one.
+ *
+ * THE BRIEF'S METRIC (Task 14, 0114). Each fold over a batch of a sitting
+ * adds the batch's unassisted gain to that sitting in a tally
+ * (packages/learner-model metric.ts), and the sitting's time on task, its
+ * learning_session.active_ms, is counted once the server has it. The tally
+ * lives in the snapshot, beside the model, so the purge deleting a sitting
+ * does not take its minutes; the figures (`learningMetric`) are written to
+ * learner_model.metrics. A run with nothing new to fold still counts the
+ * time of a sitting closed since (close_learning_session queues the
+ * learner), and writes only those two.
  *
  * Writes as the database owner or service role — concept_state has no
  * browser write policy (0013). WHERE THIS RUNS: drain.ts, for every learner
@@ -211,13 +227,15 @@ export async function readLedger(tx: Tx, user: string, after: FoldCursor | null 
  * Ledger rows in readLedger's order, folded onto `start` (from nothing by
  * default): one fold call per batch, a batch being the events of one sitting
  * the server received in the same millisecond. Each batch is placed in the
- * cursor by its receipt and timed by its sitting.
+ * cursor by its receipt and timed by its sitting. `onBatch`, if given, sees
+ * each batch's sitting and the model before and after it.
  */
 export function foldLedger(
   rows: readonly LedgerRow[],
   index: GraphIndex,
   params: ModelParams,
   start: LearnerModel = emptyModel(),
+  onBatch?: (sessionId: string, before: LearnerModel, after: LearnerModel) => void,
 ): LearnerModel {
   let model = start;
   let i = 0;
@@ -229,9 +247,38 @@ export function foldLedger(
     while (i < rows.length && rows[i].session_id === session && iso(rows[i].order_at) === orderAt) {
       events.push(toEvent(rows[i++]));
     }
+    const before = model;
     model = foldSession(model, { id: session, startedAt, orderAt }, events, index, params);
+    onBatch?.(session, before, model);
   }
   return model;
+}
+
+/** Ledger rows folded onto `start`, each batch's unassisted gain added to its sitting in `tally`. */
+function foldTallied(
+  rows: readonly LedgerRow[],
+  index: GraphIndex,
+  params: ModelParams,
+  start: LearnerModel,
+  tally: MetricTally,
+): { model: LearnerModel; tally: MetricTally } {
+  let t = tally;
+  const model = foldLedger(rows, index, params, start, (session, before, after) => {
+    t = tallySitting(t, session, before, after);
+  });
+  return { model, tally: t };
+}
+
+/** The sittings of `tally` the server still holds, with their time on task. */
+async function heldSittings(tx: Tx, user: string, tally: MetricTally): Promise<SittingTime[]> {
+  const ids = [...new Set([...Object.keys(tally.open), ...tally.counted])];
+  if (ids.length === 0) return [];
+  const { rows } = await tx.query<{ id: string; active_ms: number | null; ended: boolean }>(
+    `select id, active_ms, ended_at is not null as ended
+       from public.learning_session where user_id = $1 and id = any($2::uuid[])`,
+    [user, ids],
+  );
+  return rows.map((r) => ({ id: r.id, activeMs: r.active_ms === null ? null : Number(r.active_ms), ended: r.ended }));
 }
 
 /**
@@ -341,19 +388,27 @@ const INSERT_STATES = `insert into public.concept_state (org_id, user_id, outcom
   select $1, $2, x.outcome_id, ${COLUMNS.map(([, c]) => `x.${c}`).join(', ')}
     from jsonb_to_recordset($3::jsonb) as x(outcome_id text, ${COLUMNS.map(([, c, t]) => `${c} ${t}`).join(', ')})`;
 
-/** What learner_model.snapshot holds (0101). */
+/** What learner_model.snapshot holds (0101, 0114). */
 interface Snapshot {
   model: LearnerModel;
   /** Each wrong-idea label the bank gave this learner's answers: its id to the bank's wording (bankLabels). */
   bank: Record<string, string>;
+  /** The metric's tally over the same events as `model`. */
+  metric: MetricTally;
 }
 
-/** A snapshot this fold can build on: present, and of this model version. */
+const isRecord = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
+
+/**
+ * A snapshot this fold can build on: present, of this model version, and
+ * holding the metric's tally (one written before 0114 is rebuilt).
+ */
 function usableSnapshot(stored: unknown): Snapshot | null {
   const s = stored as Partial<Snapshot> | null | undefined;
-  if (!s || typeof s !== 'object' || !s.model || s.model.version !== MODEL_VERSION || !s.bank || typeof s.bank !== 'object' || Array.isArray(s.bank)) {
-    return null;
-  }
+  if (!isRecord(s) || !s.model || s.model.version !== MODEL_VERSION || !isRecord(s.bank)) return null;
+  const t = s.metric as Partial<MetricTally> | undefined;
+  if (!isRecord(t) || !isRecord(t.open) || !Array.isArray(t.counted)) return null;
+  if (![t.timedGain, t.timedMs, t.untimedGain].every((n) => typeof n === 'number' && Number.isFinite(n))) return null;
   return s as Snapshot;
 }
 
@@ -380,19 +435,32 @@ export async function thinkLearner(tx: Tx, user: string, opts: ThinkOptions = {}
   );
   const snapshot = opts.rebuild ? null : usableSnapshot(held[0]?.snapshot);
   const rows = await readLedger(tx, user, snapshot?.model.foldedThrough ?? null);
-  if (rows.length === 0) return 0;
+  if (rows.length === 0) {
+    if (snapshot) await settleMetric(tx, user, snapshot);
+    return 0;
+  }
 
   const index = opts.index ?? libraryIndex();
   const params = opts.params ?? emptyParams();
   // The settled rows come first: `settled` is decided on the same millisecond
   // readLedger orders by.
   const settled = rows.filter((r) => r.settled);
-  const kept = foldLedger(settled, index, params, snapshot?.model ?? emptyModel());
+  const keptFold = foldTallied(settled, index, params, snapshot?.model ?? emptyModel(), snapshot?.metric ?? emptyTally());
+  const kept = keptFold.model;
   const keptBank = bankLabels(settled, new Map(Object.entries(snapshot?.bank ?? {})));
-  const next: Snapshot | null =
-    settled.length > 0 ? { model: kept, bank: Object.fromEntries([...keptBank].sort(([a], [b]) => (a < b ? -1 : 1))) } : snapshot;
   const recent = rows.slice(settled.length);
-  const model = foldLedger(recent, index, params, kept);
+  const fold = foldTallied(recent, index, params, kept, keptFold.tally);
+  const model = fold.model;
+  const sittings = await heldSittings(tx, user, fold.tally);
+  const next: Snapshot | null =
+    settled.length > 0
+      ? {
+          model: kept,
+          bank: Object.fromEntries([...keptBank].sort(([a], [b]) => (a < b ? -1 : 1))),
+          metric: settleSittings(keptFold.tally, sittings),
+        }
+      : snapshot;
+  const metrics = learningMetric(settleSittings(fold.tally, sittings));
   const bank = bankLabels(recent, new Map(keptBank));
   const last = rows[rows.length - 1];
   const states = Object.entries(model.states).map(([outcome, s]) => {
@@ -406,19 +474,34 @@ export async function thinkLearner(tx: Tx, user: string, opts: ThinkOptions = {}
   if (states.length) await tx.query(INSERT_STATES, [last.org_id, user, JSON.stringify(states)]);
   await tx.query(
     `insert into public.learner_model (user_id, org_id, folded_through_at, folded_through_seq, version, snapshot,
-                                       folded_through_received_at, folded_through_id, updated_at)
-     values ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, now())
+                                       folded_through_received_at, folded_through_id, metrics, updated_at)
+     values ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9::jsonb, now())
      on conflict (user_id) do update set
        org_id = excluded.org_id, folded_through_at = excluded.folded_through_at,
        folded_through_seq = excluded.folded_through_seq, version = excluded.version,
        snapshot = excluded.snapshot, folded_through_received_at = excluded.folded_through_received_at,
-       folded_through_id = excluded.folded_through_id, updated_at = now()`,
+       folded_through_id = excluded.folded_through_id, metrics = excluded.metrics, updated_at = now()`,
     [
       user, last.org_id, iso(last.order_at), last.seq, MODEL_VERSION, next ? JSON.stringify(next) : null,
-      last.received_at, last.id,
+      last.received_at, last.id, JSON.stringify(metrics),
     ],
   );
   return rows.length;
+}
+
+/**
+ * Nothing new to fold, so the snapshot holds every event and its tally is the
+ * learner's whole tally. Counts the time of any of its sittings the server
+ * now has (one closed since the last run) and, if that changes the tally,
+ * writes it and the figures. concept_state and the cursor stay as they are.
+ */
+async function settleMetric(tx: Tx, user: string, snapshot: Snapshot): Promise<void> {
+  const tally = settleSittings(snapshot.metric, await heldSittings(tx, user, snapshot.metric));
+  if (JSON.stringify(tally) === JSON.stringify(snapshot.metric)) return;
+  await tx.query(
+    `update public.learner_model set snapshot = $2::jsonb, metrics = $3::jsonb, updated_at = now() where user_id = $1`,
+    [user, JSON.stringify({ ...snapshot, metric: tally }), JSON.stringify(learningMetric(tally))],
+  );
 }
 
 /**

@@ -1,3 +1,4 @@
+import type { LearningMetric } from './metric.ts';
 import { confirmedMisconceptions } from './misconception.ts';
 import type { ConceptState, LearnerModel } from './types.ts';
 
@@ -52,7 +53,15 @@ export interface LearnerProfile {
   dueForReview: ProfileOutcome[];
   /** The latest time they practised anything (the model's own clock). */
   lastActiveAt: string | null;
-  /** One plain English sentence of all of the above. */
+  /**
+   * The brief's metric, unassisted gain per learning minute, from the
+   * brain's figures (`ProfileOptions.metric`); null without them, and null,
+   * not 0, when no learning minutes are measured. Not in the summary.
+   */
+  gainPerMinute: number | null;
+  /** Measured time on task, in minutes; null without the brain's figures. */
+  learningMinutes: number | null;
+  /** One plain English sentence of the lists above (not the metric). */
   summary: string;
 }
 
@@ -63,6 +72,8 @@ export interface ProfileOptions {
   titleOf?: (outcomeId: string) => string | undefined;
   /** At most this many entries per list (default 5). */
   limit?: number;
+  /** The brain's figures for the metric (learner_model.metrics, learningMetric). */
+  metric?: LearningMetric | null;
 }
 
 /** Under this, on their own, an outcome needs work. */
@@ -148,14 +159,19 @@ export function learnerProfile(model: LearnerModel, opts: ProfileOptions): Learn
     dueForReview: due,
     lastActiveAt,
   };
-  return { ...profile, summary: summarise(profile) };
+  return {
+    ...profile,
+    gainPerMinute: opts.metric?.gainPerMinute ?? null,
+    learningMinutes: opts.metric?.learningMinutes ?? null,
+    summary: summarise(profile),
+  };
 }
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 const nameOf = (o: { outcomeId: string; title: string | null }) => o.title ?? o.outcomeId;
 const list = (os: { outcomeId: string; title: string | null }[]) => os.map(nameOf).join(', ');
 
-function summarise(p: Omit<LearnerProfile, 'summary'>): string {
+function summarise(p: Omit<LearnerProfile, 'summary' | 'gainPerMinute' | 'learningMinutes'>): string {
   if (p.answersTotal === 0) return 'No answers yet.';
   const parts = [
     `Answered ${plural(p.answersTotal, 'question', 'questions')} (${p.answersOnOwn} on their own) across ${plural(p.outcomesSeen, 'topic', 'topics')}.`,
