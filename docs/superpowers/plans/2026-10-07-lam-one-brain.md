@@ -560,6 +560,21 @@ rest: content (a second question per outcome), the server grading tutor answers,
   `replay.test.ts` (sixth deliberate change); `supabase/tests/lam-asked-items.test.ts`; `tools/lms-library` library
   and sync tests (the library loads both); `tools/gen-graph/tests/moreProbes.test.ts` (fake LLM adapter only).
 
+### Review fixes after phase 2 (2026-10-11)
+- **0117_lam_test_time_ceiling.sql:** a test's time on task is also at most its time limit, or three hours when it
+  has none. A test with no limit ends at its due time, so a span past 2^31 ms made 0114's hand-in (and
+  `finalize_tests`) fail with "integer out of range" (`supabase/tests/lam-learning-time.test.ts`).
+- **askedItems in bytes:** `ASKED_ITEM_KEY_MAX` is UTF-8 bytes of the key's JSON form, as 0116's check measures
+  the list; eight long non-Latin probe ids no longer stop a learner's brain run (`asked.test.ts`,
+  `packages/lms-brain/tests/asked-items.test.ts`).
+- **A v4 model brought forward** (`migrateModel`): an outcome it had stamped keeps the stamp with its belief alone
+  as the verified one, so a phone-graded right leaves it; one it had not stamped brings no cold wins (`graded.test.ts`).
+- **Homework's time across a reload:** the student app keeps the count with the answers and carries on from it;
+  answers kept with no count send no time (`apps/student/tests/time-on-task.test.ts`).
+- **Said, not changed:** the chosen option is still the phone's word and the key ships in the app (truth
+  `D04 open: which option was chosen ...`, 0115 header, lam.md, results doc); a rebuild recounts the metric from
+  the ledger still held (`metric.test.ts`); the metric's gain counts phone-graded cold answers (metric.ts, lam.md).
+
 ### Task 17: generate the questions (real model spend, run by the lead, not an agent)
 - Scope: the maps on the current NCERT books only: class6-mathematics, class10-mathematics, class10-science,
   class11-biology, class11-chemistry, class11-mathematics (2,102 outcomes). Class 7-9 and class6-science wait for
