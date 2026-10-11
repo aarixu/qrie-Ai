@@ -11,7 +11,7 @@
  * the child's language, refuses any authored content that leaks the answer,
  * and says what the ledger must get for every action (E3).
  *
- * E1a of the plan, wired into the classroom's taps, hint chip, spoken answers
+ * E1a of the plan, wired into the classroom's typed and spoken answers, hint requests
  * and silence nudges (apps/classroom/src/screens/ClassRoom.tsx). Every `say`
  * goes out only through the app's safety screen, with `haltSession()`
  * covering the path.

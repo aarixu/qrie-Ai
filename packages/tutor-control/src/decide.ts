@@ -22,7 +22,7 @@ export const FAST_WRONG_MS = 3000;
  * write or record — the caller does all three, in the order `recordsFor`
  * gives, and speaks `say` only through the app's safety screen
  * (`screenedSpeech` / `toStudent`) with a halted result going to
- * `haltSession()`. Wired into the classroom's taps, hint chip, spoken answers
+ * `haltSession()`. Wired into the classroom's typed and spoken answers, hint requests
  * and silence nudges (apps/classroom/src/screens/ClassRoom.tsx).
  *
  * THE LADDER (TD1), on a wrong or unmatched answer, one delivered step per
@@ -467,7 +467,7 @@ function headOf(input: DecideInput, floor: AssistanceRung): string {
 /**
  * The diagnostic follow-up for a wrong option: its own, else the why-probe
  * option with the same words. Class-prep writes follow-ups on the probe's
- * distractors, and a child taps the ask's own chips — without this no
+ * distractors, and a child's answer is matched to the ask's own options — without this no
  * prepared class ever asked one (second review, 2026-09-29).
  */
 function followUpFor(ask: AskInput, matched: AskOption | undefined): string | undefined {

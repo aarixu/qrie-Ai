@@ -546,7 +546,7 @@ export function Enrol({ initialStep = 'student' }: { initialStep?: EnrolStep }) 
                   teaching can follow where they are.
                 </p>
                 <p>
-                  {/* WHAT ACTUALLY HAPPENS TO THE CHILD'S WORDS. lib/ear.ts:205
+                  {/* WHAT ACTUALLY HAPPENS TO THE CHILD'S WORDS. lib/ear.ts postAnswer
                       posts every spoken answer to our relay to be transcribed —
                       that file's own docblock says "the relay hears
                       everything" — and a typed doubt goes the same way to be

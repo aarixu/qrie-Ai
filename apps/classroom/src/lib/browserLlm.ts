@@ -42,7 +42,7 @@ export function createBrowserLlm(
     prepId?: string;
     /**
      * Give up after this long. For a call a student is waiting on in class
-     * (the judge): a hung call left the chips hidden and the class frozen
+     * (the judge): a hung call left the class frozen
      * (overnight review #31). Class prep sets none — its calls are long.
      */
     timeoutMs?: number;

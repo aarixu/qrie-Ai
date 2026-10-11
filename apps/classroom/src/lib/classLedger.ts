@@ -520,8 +520,8 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
           answerNormalised: normaliseAnswer(input.answerText, { flagged: input.flagged }),
         });
         /**
-         * A wrong answer does not end the question — the chips stay and the
-         * next try is attempt n+1.
+         * A wrong answer does not end the question — the question stays open
+         * and the next try is attempt n+1.
          *
          * The clock is moved to the moment THEIR answer landed, not to now.
          * Now is the judge's return, which would put its two-to-four-second

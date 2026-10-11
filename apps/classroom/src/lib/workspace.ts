@@ -297,7 +297,7 @@ export function mayPersist(): boolean {
  * place a bare link lands.
  *
  * NOT VERIFIED that this is the cheapest trial available end to end: the
- * answer path (lib/ear.ts:205 posts spoken answers to /api/hear) is unmetered
+ * answer path (lib/ear.ts postAnswer posts spoken answers to /api/hear) is unmetered
  * by anything this phase owns, and refusing the streaming relay adapter while
  * !mayPersist() is a one-branch change in lib/lessonVoice.ts, which this phase
  * does not own. It is a handoff in this phase's report, not a claim here.

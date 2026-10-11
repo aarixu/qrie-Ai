@@ -3,7 +3,7 @@ import type { TutorLanguage } from '@ai-tutor/persona';
 /**
  * THE SOCRATIC JUDGE — one spoken answer, weighed.
  *
- * The chips judge themselves: a tap names an option. A SPOKEN answer arrives in
+ * A tap named an option when there were chips; none are shown since 2026-10-01. A SPOKEN answer arrives in
  * the student's own words, in English or Hindi or both, and only a model can
  * hear "wo chhote kano me ghus jaati hai" as option B.
  *

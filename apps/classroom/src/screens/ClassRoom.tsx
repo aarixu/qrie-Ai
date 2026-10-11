@@ -600,7 +600,7 @@ export function ClassRoom({
    * phone it does not: two refusals on Android and one on iOS and the prompt
    * never appears again. So the student meets a sentence they understand
    * before they meet a system dialog, and "not now" is a real answer that
-   * costs nothing — the chips under her question still work.
+   * costs nothing — the typed box under the board still takes the answer.
    */
   /**
    * One ask at a time: a second card must not replace the first — the first
@@ -2326,7 +2326,7 @@ export function ClassRoom({
           : 'idle';
 
   // The class has halted. The room is replaced rather than covered, so no
-  // control under it — play, raise hand, the answer chips — can be reached by
+  // control under it — raise hand, the typed answer, the mic — can be reached by
   // a stray tap or a keyboard. Its one way out is the way out of the class.
   if (support !== null) return <SupportScreen line={support} onLeave={onExit} />;
 
