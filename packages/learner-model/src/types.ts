@@ -157,8 +157,9 @@ export interface ConceptState {
    * Every wrong answer that names an idea (its label) or, failing that, a wrong
    * option on an item, is kept here with the items and sittings it came up in.
    * One is a slip; `confirmedMisconceptions` returns those shown on two
-   * distinct items or in two sittings, and two later cold right answers on
-   * distinct items clear one. Bounded by `MISCONCEPTION_LIMITS`.
+   * distinct items or in two sittings, and two later cold right answers the
+   * server graded, on distinct items, clear one (a phone-graded right never
+   * does, P2 security review F4). Bounded by `MISCONCEPTION_LIMITS`.
    */
   misconceptions: Record<string, Misconception>;
 
@@ -219,7 +220,8 @@ export interface ConceptState {
  * is the ledger's own `graded_by` (0118, `LedgerEvent.gradedBy`), and the
  * 'api' source is no longer trusted as the LMS's mark. A v6 model's shape is
  * unchanged, so one brought forward keeps every number until a rebuild from
- * the ledger replaces it; the server rebuilds every learner.
+ * the ledger replaces it; the server rebuilds every learner. And only a
+ * server-graded cold right steps toward clearing a wrong idea (F4).
  */
 export const MODEL_VERSION = 7;
 

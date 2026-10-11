@@ -230,3 +230,39 @@ describe('version 5', () => {
     expect(after.states.a.masteredAt).toBeNull();
   });
 });
+
+describe('only a server-graded cold right clears a wrong idea (F4)', () => {
+  const ev = (s: { id: string }, source: string, payload: Record<string, unknown>): LedgerEvent =>
+    ({
+      id: `f4-${seq}`, sessionId: s.id, seq: seq++, at: '2026-09-01T10:00:00.000Z', kind: 'answered', source,
+      surface: 'tap', outcomeIds: ['a'],
+      payload: { ms: 4000, attempt: 1, assistanceRung: 0, hintsShown: 0, ...payload },
+    }) as unknown as LedgerEvent;
+  const idea = 'adds the denominators';
+
+  it('phone-graded rights leave a confirmed idea standing; the server’s clear it', () => {
+    seq = 0;
+    const d0 = day(0);
+    const d1 = day(1);
+    const d2 = day(2);
+    let m = foldSession(emptyModel(), d0, [
+      ev(d0, 'homework', { itemId: 'i1', correct: false, chosenIndex: 1, misconceptionId: idea }),
+      ev(d0, 'homework', { itemId: 'i2', correct: false, chosenIndex: 1, misconceptionId: idea }),
+    ], index, params);
+    const id = Object.keys(m.states.a.misconceptions)[0];
+    expect(m.states.a.misconceptions[id]).toMatchObject({ clearedAt: null, items: ['item:i1', 'item:i2'] });
+
+    m = foldSession(m, d1, [
+      ev(d1, 'class', { beatId: 'x1', correct: true }),
+      ev(d1, 'class', { beatId: 'x2', correct: true }),
+    ], index, params);
+    expect(m.states.a.misconceptions[id].clearedAt).toBeNull();
+    expect(m.states.a.misconceptions[id].clearing).toEqual([]);
+
+    m = foldSession(m, d2, [
+      ev(d2, 'quiz', { probeId: 'p1', correct: true, chosenIndex: 0, graded: 'server' }),
+      ev(d2, 'quiz', { probeId: 'p2', correct: true, chosenIndex: 0, graded: 'server' }),
+    ], index, params);
+    expect(m.states.a.misconceptions[id].clearedAt).toBe(d2.startedAt);
+  });
+});

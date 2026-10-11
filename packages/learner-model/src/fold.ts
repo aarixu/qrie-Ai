@@ -612,9 +612,12 @@ function foldAnswer(
         updated.lastUnassistedSuccessAt = event.at;
         // Right after being shown it, in this same session, is listening,
         // not remembering: no cold win toward `masteredAt` (F1-F3), and no
-        // step toward clearing a wrong idea either.
-        if (!exposedThisSession(prev, session.startedAt)) {
-          if (verified) updated.coldWins = recordColdWin(prev.coldWins, itemKey(event, payload), session.startedAt);
+        // step toward clearing a wrong idea either. Clearing a wrong idea is
+        // a give, like a cold win, so only a right the server graded makes
+        // either (P2 security review F4): two phone-graded "rights" must not
+        // take a confirmed idea off the teacher's list.
+        if (!exposedThisSession(prev, session.startedAt) && verified) {
+          updated.coldWins = recordColdWin(prev.coldWins, itemKey(event, payload), session.startedAt);
           updated.misconceptions = recordColdRight(prev.misconceptions ?? {}, itemKey(event, payload), session.startedAt);
         }
       }

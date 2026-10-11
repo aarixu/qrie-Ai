@@ -254,7 +254,7 @@ describe('misconceptions in the model', () => {
     expect(confirmedMisconceptions(m.states.b)).toEqual([]);
   });
 
-  it('clears after two later cold right answers on distinct items, and comes back if the idea does', () => {
+  it('clears after two later cold right answers the server graded, on distinct items, and comes back if the idea does', () => {
     seq = 0;
     const d0 = sitting(0);
     const d1 = sitting(30);
@@ -264,15 +264,16 @@ describe('misconceptions in the model', () => {
       answer(d0, { correct: false, item: 'i1', label: INVERSE }),
       answer(d0, { correct: false, item: 'i2', label: INVERSE }),
     ]);
+    // Rights the LMS marked: only a server-graded right clears (P2 security review F4).
     m = fold(m, d1, [
-      answer(d1, { correct: true, item: 'i3' }),
-      answer(d1, { correct: true, item: 'i3' }), // the same item twice is one
-      answer(d1, { correct: true, item: 'i4', rung: 3 }), // with help is not cold
+      answer(d1, { correct: true, item: 'i3', source: 'homework' }),
+      answer(d1, { correct: true, item: 'i3', source: 'homework' }), // the same item twice is one
+      answer(d1, { correct: true, item: 'i4', rung: 3, source: 'homework' }), // with help is not cold
     ]);
     expect(m.states.a.misconceptions[id].clearedAt).toBeNull();
     expect(confirmedMisconceptions(m.states.a)).toHaveLength(1);
 
-    m = fold(m, d2, [answer(d2, { correct: true, item: 'i5' })]);
+    m = fold(m, d2, [answer(d2, { correct: true, item: 'i5', source: 'homework' })]);
     expect(m.states.a.misconceptions[id].clearedAt).toBe(d2.startedAt);
     expect(confirmedMisconceptions(m.states.a)).toEqual([]);
 

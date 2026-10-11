@@ -25,9 +25,9 @@ export interface Misconception {
   /** Session clock of the first and the latest wrong answer that showed it. */
   firstAt: string;
   lastAt: string;
-  /** When two later cold right answers on distinct items cleared it; null while it stands. */
+  /** When two later cold right answers the server graded, on distinct items, cleared it; null while it stands. */
   clearedAt: string | null;
-  /** Distinct items answered right cold since `lastAt`, toward clearing it. */
+  /** Distinct items answered right cold, and graded by the server, since `lastAt`, toward clearing it. */
   clearing: string[];
 }
 
@@ -44,7 +44,7 @@ export const MISCONCEPTION_LIMITS = {
 /** Two labels whose content words overlap at least this much name one idea. */
 export const SIMILAR_LABELS = 0.5;
 
-/** Cold right answers on distinct items, after the last wrong one, that clear an idea. */
+/** Cold right answers the server graded, on distinct items, after the last wrong one, that clear an idea. */
 export const CLEARING_RIGHTS = 2;
 
 /**
@@ -209,8 +209,9 @@ export function recordWrongIdea(ideas: Ideas, wrong: WrongIdea): Ideas {
 /**
  * A cold right answer on `itemKey`: a step toward clearing every idea still
  * standing on this outcome, and the clearing itself at the second distinct
- * item. The caller decides what is cold (rung 0, and not straight after being
- * shown it). Pure.
+ * item. The caller decides what counts: cold (rung 0, and not straight after
+ * being shown it) and graded by the server (fold.ts, P2 security review F4).
+ * Pure.
  */
 export function recordColdRight(ideas: Ideas, itemKey: string, at: string): Ideas {
   let next: Ideas | null = null;
