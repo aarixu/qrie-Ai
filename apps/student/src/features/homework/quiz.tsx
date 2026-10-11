@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import { isOffline, newKey, type MyAssignment } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { useOutbox } from '@/lib/outbox'
-import { createTimeOnTask } from '@/lib/timeOnTask'
+import { createTimeOnTask, keepTimeOnTask, resumeTimeOnTask } from '@/lib/timeOnTask'
 import { cn } from '@/lib/utils'
 import {
   AlertDialog,
@@ -83,6 +83,8 @@ export function Quiz({
   })
   const [at, setAt] = useState(0)
   const [answers, setAnswers] = useState<Record<string, number>>(() => loadDraft(a.id))
+  // Whether this screen opened on answers kept from before (a reload, a killed app).
+  const [answersKept] = useState(() => Object.keys(answers).length > 0)
   const [checking, setChecking] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -120,20 +122,49 @@ export function Quiz({
     )
   }
 
-  useEffect(() => saveDraft(a.id, answers), [a.id, answers])
+  const handedIn = useRef(false)
 
   // Time on task, sent with the hand-in for the brain's metric (0114): only
-  // while this screen is in front.
+  // while this screen is in front. Kept on the phone with the answers, so a
+  // reload carries on from it; answers kept with no count send no time
+  // (lib/timeOnTask.ts resumeTimeOnTask).
   const time = useRef<ReturnType<typeof createTimeOnTask> | null>(null)
+  const timed = useRef(true)
   if (time.current === null) {
-    time.current = createTimeOnTask(Date.now, typeof document === 'undefined' || document.visibilityState !== 'hidden')
+    const start = resumeTimeOnTask(a.id, answersKept)
+    timed.current = start.timed
+    time.current = createTimeOnTask(
+      Date.now,
+      typeof document === 'undefined' || document.visibilityState !== 'hidden',
+      start.already
+    )
+  }
+  const keepTime = () => {
+    if (timed.current && !handedIn.current) keepTimeOnTask(a.id, time.current!.spent())
   }
   useEffect(() => {
     const t = time.current!
-    const onVisibility = () => (document.visibilityState === 'hidden' ? t.pause() : t.resume())
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') {
+        t.pause()
+        keepTime()
+      } else {
+        t.resume()
+      }
+    }
     document.addEventListener('visibilitychange', onVisibility)
-    return () => document.removeEventListener('visibilitychange', onVisibility)
-  }, [])
+    window.addEventListener('pagehide', keepTime)
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('pagehide', keepTime)
+      keepTime()
+    }
+  }, [a.id])
+
+  useEffect(() => {
+    saveDraft(a.id, answers)
+    keepTime()
+  }, [a.id, answers])
 
   // The countdown. The server enforces the limit; this only shows it, and
   // hands in whatever is answered when it runs out.
@@ -144,17 +175,17 @@ export function Quiz({
     return () => clearInterval(t)
   }, [endsAt])
   const left = endsAt ? new Date(endsAt).getTime() - now : null
-  const handedIn = useRef(false)
 
   async function handIn() {
     if (handedIn.current) return
     handedIn.current = true
     setBusy(true)
     const key = handInKey(a.id)
-    const activeMs = Math.round(time.current!.spent())
+    const activeMs = timed.current ? Math.round(time.current!.spent()) : undefined
     try {
       const r = await api.submitMcq(a.id, answers, key, activeMs)
       saveDraft(a.id, null)
+      keepTimeOnTask(a.id, null)
       forgetKey(a.id)
       await queryClient.invalidateQueries({ queryKey: ['my-assignments'] })
       await queryClient.invalidateQueries({ queryKey: ['review', a.id] })
@@ -171,6 +202,7 @@ export function Quiz({
         // by itself when the internet is back (components/outbox-banner.tsx).
         await box.add({ kind: 'mcq', assignmentId: a.id, title: a.title, answers, key, activeMs })
         saveDraft(a.id, null)
+        keepTimeOnTask(a.id, null)
         forgetKey(a.id)
         toast.info('No internet. Your answers are kept on this phone and will be handed in when it is back.')
         onDone()
