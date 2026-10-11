@@ -12,7 +12,9 @@ import { askReconcile, type ReconcileResult } from './reconcile.ts';
  * with Cashfree (reconcile.ts), after the sends, whether or not they worked;
  * the database paces that to once an hour.
  *
- * A failed send throws, so the scheduled job turns red and somebody sees it.
+ * A failed send throws once every alert has been tried, so the scheduled job
+ * turns red and somebody sees it, and one chat refusing never silences the
+ * other.
  */
 export interface Env {
   SUPABASE_URL: string;
@@ -66,9 +68,19 @@ export async function runOnce(
   const alerts = evaluate(await fetchSnapshot(env, fetchImpl), nowMinutes);
   let reconcile: ReconcileResult | null = null;
   try {
+    // Each alert is tried on its own: a chat that refuses (a removed bot, a
+    // group whose id changed) must not keep the other chat from hearing. The
+    // first failure is thrown once every alert has been tried.
+    const failures: unknown[] = [];
     for (const a of alerts) {
-      await sendTelegram(env.TELEGRAM_BOT_TOKEN, a.channel === 'safety' ? env.TELEGRAM_CHAT_SAFETY : env.TELEGRAM_CHAT_OPS, a.text, fetchImpl);
+      try {
+        await sendTelegram(env.TELEGRAM_BOT_TOKEN, a.channel === 'safety' ? env.TELEGRAM_CHAT_SAFETY : env.TELEGRAM_CHAT_OPS, a.text, fetchImpl);
+      } catch (e) {
+        failures.push(e);
+        console.error(`could not send ${a.key} to the ${a.channel} chat: ${(e as Error).message}`);
+      }
     }
+    if (failures.length > 0) throw failures[0];
   } finally {
     const token = env.BILLING_RECONCILE_TOKEN;
     if (token) {

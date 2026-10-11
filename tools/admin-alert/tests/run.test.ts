@@ -75,6 +75,26 @@ describe('one run', () => {
     expect(calls.filter((c) => c.url.includes('telegram'))).toHaveLength(0);
   });
 
+  it("one chat refusing does not silence the other: every alert is tried, then the run still fails so the job turns red", async () => {
+    const snapshot = { ...SNAPSHOT, unsafeNewReports: 0, newReports: 0, ceilingUnits: 100, unitsToday: 100, distressFlags: 1, distressWindowMinutes: 15 };
+    for (const broken of ['safety-chat', 'ops-chat']) {
+      const { calls, fetchImpl } = stub(() => ({ ok: true, status: 200, json: snapshot }));
+      const refusing = (async (url: string, init: { body: string; headers: Record<string, string> }) => {
+        if (url.includes('telegram') && JSON.parse(init.body).chat_id === broken) {
+          calls.push({ url, body: JSON.parse(init.body), headers: init.headers });
+          return { ok: false, status: 400, json: async () => ({}) };
+        }
+        return fetchImpl(url as unknown as RequestInfo, init as unknown as RequestInit);
+      }) as unknown as typeof fetch;
+      const err = await failure(runOnce(env, START, refusing));
+      expect(err.message, broken).toBe('telegram refused the message (400)');
+      const tried = calls.filter((c) => c.url.includes('telegram')).map((c) => c.body.chat_id);
+      expect(tried, broken).toEqual(expect.arrayContaining(['safety-chat', 'ops-chat']));
+      // halted, ceiling reached and the distress flag: three messages, each tried once.
+      expect(tried, broken).toHaveLength(3);
+    }
+  });
+
   it('throws when a message cannot be sent, so the scheduled job turns red, without the bot token in the error', async () => {
     const { fetchImpl } = stub((url) => (url.includes('telegram') ? { ok: false, status: 401 } : { ok: true, status: 200, json: SNAPSHOT }));
     const err = await failure(runOnce(env, START, fetchImpl));
