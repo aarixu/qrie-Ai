@@ -103,9 +103,15 @@ jobs:
       - name: Admin console build
         run: npm run admin:build
 
+      # The student and teacher apps hold the Supabase key too (they read
+      # app_config). Each build ends with the scan of its own dist; the step
+      # below scans them again with the others.
+      - name: Student and teacher app builds
+        run: npm run build --workspace @ai-tutor/student && npm run build --workspace @ai-tutor/lms
+
       # Must follow the build: the scan walks apps/classroom/dist and fails
       # loudly if it is not there, which is the correct behaviour — a scan
       # that "passes" on an empty directory is the lie this file exists to
       # prevent.
       - name: No secret may reach the bundle
-        run: node tools/bin/check-bundle-secrets.mjs apps/classroom/dist apps/admin/dist
+        run: node tools/bin/check-bundle-secrets.mjs apps/classroom/dist apps/admin/dist apps/student/dist apps/lms/dist

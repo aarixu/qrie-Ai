@@ -53,7 +53,7 @@ export function describeFlagChange(key: string, value: unknown): string {
       return 'Saved, but nothing changes for children: no screen in this build reads it until the board composer is merged.';
     case 'contest.entries_open':
       return value === false
-        ? 'The contest form says entries are closed, and the database refuses new entries. An entry already made can still be corrected.'
+        ? 'The contest form says entries are closed and shows no form, so nobody can make or change an entry from it; the database refuses new entries.'
         : 'The contest form takes new entries again, up to the daily limit.';
     case 'contest.daily_limit':
       return `The database takes at most ${String(value)} new contest entries in one India day; after that, the form says entries are full until midnight.`;

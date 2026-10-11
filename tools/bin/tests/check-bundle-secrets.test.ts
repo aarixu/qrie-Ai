@@ -69,3 +69,22 @@ describe('the bundle guard', () => {
     expect(r.status).toBe(0);
   });
 });
+
+describe('every browser app is scanned', () => {
+  const repo = path.resolve(import.meta.dirname, '../../..');
+  const buildScript = (app: string) =>
+    (JSON.parse(fs.readFileSync(path.join(repo, 'apps', app, 'package.json'), 'utf8')) as { scripts: { build: string } }).scripts.build;
+
+  it("the console, student and teacher builds end with the scan of their own dist (spec section 6: 'in every build')", () => {
+    for (const app of ['admin', 'student', 'lms']) {
+      expect(buildScript(app), app).toMatch(/&& node \.\.\/\.\.\/tools\/bin\/check-bundle-secrets\.mjs dist$/);
+    }
+  });
+
+  it('CI builds and scans the tutor, console, student and teacher apps', () => {
+    const ci = fs.readFileSync(path.join(repo, '.github', 'workflows', 'ci.yml'), 'utf8');
+    expect(ci).toMatch(/npm run build --workspace @ai-tutor\/student/);
+    expect(ci).toMatch(/npm run build --workspace @ai-tutor\/lms/);
+    expect(ci).toMatch(/check-bundle-secrets\.mjs apps\/classroom\/dist apps\/admin\/dist apps\/student\/dist apps\/lms\/dist/);
+  });
+});

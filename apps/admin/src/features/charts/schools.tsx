@@ -86,7 +86,7 @@ function SchoolsBody({ series, school }: { series: ChartSeries; school: string |
 
       <ChartCard
         title='Activation and hand-ins by school'
-        description='The latest night: students who have done anything, and who handed in work in the 7 days before. A school with fewer than 10 students is not shown.'
+        description='The latest night: students who have done anything, and who handed in work in the 7 days before. A school with fewer than 10 students shows its student count but not these two figures.'
       >
         {codes.length === 0 ? (
           <p className='px-4 text-sm text-muted-foreground'>No figure for this window yet.</p>

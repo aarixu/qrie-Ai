@@ -59,7 +59,7 @@ describe('what a switch change will touch, said before it happens', () => {
 
   it('the contest switches: the form says so and the database refuses', () => {
     expect(describeFlagChange('contest.entries_open', false)).toBe(
-      'The contest form says entries are closed, and the database refuses new entries. An entry already made can still be corrected.',
+      'The contest form says entries are closed and shows no form, so nobody can make or change an entry from it; the database refuses new entries.',
     );
     expect(describeFlagChange('contest.entries_open', true)).toBe('The contest form takes new entries again, up to the daily limit.');
     expect(describeFlagChange('contest.daily_limit', 500)).toBe(

@@ -1,4 +1,5 @@
 import type { BillingOverview as Overview } from '@ai-tutor/admin-client';
+import { Link } from '@tanstack/react-router';
 import { billing } from '@/lib/client';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -84,7 +85,13 @@ export function BillingOverviewPage() {
               </Card>
             ))}
           </section>
-          <p className='text-sm text-muted-foreground'>Cost to serve and margin arrive with the money charts (plan 6).</p>
+          <p className='text-sm text-muted-foreground'>
+            Each school's AI spend and margin are on{' '}
+            <Link to='/charts/money' search={{ days: 30 }} className='underline underline-offset-4'>
+              Charts: Money
+            </Link>
+            .
+          </p>
         </div>
       )}
     </AdminPage>
