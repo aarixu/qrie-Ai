@@ -1,0 +1,49 @@
+# THE ALARM'S CHECKER.
+#
+# Every five minutes, from outside the Supabase project it watches, it asks the
+# database one question (public.alert_snapshot, migration 0051) and tells a
+# person on Telegram when the answer needs one. If the project is down, this
+# still runs, and says so. If THIS stops running, the home page of the admin
+# console shows "Alarm checker: silent N min" in red.
+#
+# It holds the public anon key and one long random token: no service-role key.
+# Safety and operations go to two different chats (tools/admin-alert/src/run.ts).
+#
+# GitHub may delay a scheduled run by several minutes at busy times and pauses
+# scheduled workflows in a repository with no activity for 60 days (UNVERIFIED
+# here, from GitHub's documentation); the dead-checker tile is why that is safe.
+name: Admin alert
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: admin-alert
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: tools/admin-alert
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check and tell
+        run: node --experimental-strip-types tools/admin-alert/src/run.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          ALERT_TOKEN: ${{ secrets.ALERT_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_OPS: ${{ secrets.TELEGRAM_CHAT_OPS }}
+          TELEGRAM_CHAT_SAFETY: ${{ secrets.TELEGRAM_CHAT_SAFETY }}

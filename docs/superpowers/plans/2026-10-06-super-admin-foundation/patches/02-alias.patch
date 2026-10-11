@@ -1,0 +1,30 @@
+diff --git a/tsconfig.json b/tsconfig.json
+index 5373989..5fc1d2b 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -17,6 +17,8 @@
+   ],
+   "exclude": [
+     "apps/lms/**",
++    "apps/admin/**",
+     "apps/student/**"
+   ]
+ }
++
+diff --git a/vitest.config.ts b/vitest.config.ts
+index f89af6e..7deaaca 100644
+--- a/vitest.config.ts
++++ b/vitest.config.ts
+@@ -31,6 +31,7 @@ export default defineConfig({
+       '@ai-tutor/lms-client': pkg('lms-client'),
+       '@ai-tutor/lms-brain': pkg('lms-brain'),
+       '@ai-tutor/lms-report': pkg('lms-report'),
++      '@ai-tutor/admin-client': pkg('admin-client'),
+       // The teacher app's own alias (apps/lms uses @/ for its src).
+       '@': fileURLToPath(new URL('./apps/lms/src', import.meta.url)),
+     },
+@@ -62,3 +63,4 @@ export default defineConfig({
+     ],
+   },
+ });
++

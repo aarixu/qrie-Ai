@@ -1,0 +1,43 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 475b01b..ed6bd09 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -98,9 +98,14 @@ jobs:
+       - name: Production build
+         run: npm run build
+ 
++      # The admin console is a second app with its own bundle; it is built here so
++      # the scan below can read it too.
++      - name: Admin console build
++        run: npm run admin:build
++
+       # Must follow the build: the scan walks apps/classroom/dist and fails
+       # loudly if it is not there, which is the correct behaviour — a scan
+       # that "passes" on an empty directory is the lie this file exists to
+       # prevent.
+       - name: No secret may reach the bundle
+-        run: node tools/bin/check-bundle-secrets.mjs
++        run: node tools/bin/check-bundle-secrets.mjs apps/classroom/dist apps/admin/dist
+diff --git a/package.json b/package.json
+index cf7e4c4..979db3e 100644
+--- a/package.json
++++ b/package.json
+@@ -12,13 +12,17 @@
+     "build:site": "node tools/bin/build-site.mjs",
+     "test": "vitest run",
+     "test:watch": "vitest",
+-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p apps/lms/tsconfig.app.json --noEmit && tsc -p apps/student/tsconfig.app.json --noEmit",
++    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p apps/lms/tsconfig.app.json --noEmit && tsc -p apps/student/tsconfig.app.json --noEmit && tsc -p apps/admin/tsconfig.json --noEmit",
+     "style-card": "node tools/teacher-clone/src/style-card.ts",
+     "demo": "node tools/lms-demo/src/cli.ts",
+     "demo:all": "node tools/lms-demo/src/all.ts",
+     "founder": "node tools/lms-demo/src/founder-cli.ts",
+     "lms": "npm run dev --workspace @ai-tutor/lms",
+     "student": "npm run dev --workspace @ai-tutor/student",
++    "admin": "npm run dev --workspace @ai-tutor/admin",
++    "admin:build": "npm run build --workspace @ai-tutor/admin",
++    "admin:bootstrap": "node --experimental-strip-types tools/admin-bootstrap/src/cli.ts",
++    "admin:alert": "node --experimental-strip-types tools/admin-alert/src/run.ts",
+     "app:sync": "npm run build && npm run --workspace @ai-tutor/classroom cap:sync",
+     "app:android": "npm run app:sync && npm run --workspace @ai-tutor/classroom cap:android",
+     "app:icons": "node tools/bin/make-app-icons.mjs && npm run --workspace @ai-tutor/classroom cap:assets",
