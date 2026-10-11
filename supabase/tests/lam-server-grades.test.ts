@@ -158,11 +158,11 @@ describe('every other answer is the phone’s word, and says so', () => {
     expect((await stored(e.id)).payload.graded).toBe('phone');
   });
 
-  it('only answers carry a grade', async () => {
+  it('only answers carry a grade: one sent on anything else is dropped (0118)', async () => {
     const s = sitting('class');
     const e = event(s, 0, 'taught', { lessonId: 'l1', graded: 'server' });
     await record(school.kid8a, [s], [e]);
-    expect((await stored(e.id)).payload).toEqual({ lessonId: 'l1', graded: 'server' });
+    expect((await stored(e.id)).payload).toEqual({ lessonId: 'l1' });
   });
 
   it('a payload the grade would push past the ledger’s limit is refused as too big', async () => {

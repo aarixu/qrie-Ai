@@ -73,6 +73,11 @@ import { libraryIndex } from './graph.ts';
  * label for it, not the phone's. A wrong idea named only by the phone is kept
  * by its id, with no text, in what is written.
  *
+ * WHO GRADED IT (P2 security review F1, 0118). Each answer goes to the fold
+ * with ledger_event.graded_by as its `gradedBy`, and the fold trusts that
+ * alone: not the source, not a payload's `graded`, either of which a token
+ * could write before 0110.
+ *
  * ONE LEARNER, ONE TRANSACTION (review MF9): `think` gives each learner their
  * own, and `thinkLearner` runs inside one it is handed, under a lock on that
  * learner, so two runs over one child take turns and a reader sees the last
@@ -120,6 +125,8 @@ export interface LedgerRow {
   outcome_ids: string[] | null;
   topic_ref: string | null;
   payload: unknown;
+  /** Who graded an answer (ledger_event.graded_by, 0118): the only word the fold takes on it. */
+  graded_by: 'server' | 'phone';
   /** When the server received this event (ledger_event.received_at). */
   received_at: string | Date;
   /** received_at to the millisecond: this event's place in the order of receipt. */
@@ -172,6 +179,7 @@ const toEvent = (r: LedgerRow): LedgerEvent =>
     outcomeIds: r.outcome_ids ?? [],
     ...(r.topic_ref ? { topicRef: r.topic_ref } : {}),
     payload: bankPayload(r),
+    gradedBy: r.graded_by,
   }) as LedgerEvent;
 
 /** How far behind the newest evidence the snapshot stays (see the top of this file). */
@@ -190,7 +198,7 @@ export async function readLedger(tx: Tx, user: string, after: FoldCursor | null 
   const { rows } = await tx.query<LedgerRow>(
     `select e.id, e.user_id, e.org_id, e.session_id, e.seq,
             least(greatest(e.at, e.received_at - interval '7 days'), e.received_at + interval '5 minutes') as at,
-            e.kind, e.source, e.surface, e.outcome_ids, e.topic_ref, e.payload,
+            e.kind, e.source, e.surface, e.outcome_ids, e.topic_ref, e.payload, e.graded_by,
             e.received_at,
             date_trunc('milliseconds', e.received_at) as order_at,
             date_trunc('milliseconds', coalesce(s.received_at, e.received_at)) as session_at,

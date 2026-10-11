@@ -49,11 +49,25 @@ describe('serverGraded', () => {
     serverGraded({ source } as LedgerEvent, { graded } as never);
 
   it('trusts what the LMS marked and what record_evidence graded, nothing else', () => {
-    for (const source of ['homework', 'test', 'practice', 'api']) expect(of(source)).toBe(true);
+    for (const source of ['homework', 'test', 'practice']) expect(of(source)).toBe(true);
     expect(of('quiz', 'server')).toBe(true);
     expect(of('quiz', 'phone')).toBe(false);
     // The phone's own events, and every answer recorded before 0115.
     for (const source of ['class', 'quiz', 'diagnostic', 'doubt', 'lesson']) expect(of(source)).toBe(false);
+  });
+
+  it('does not trust the api source: nothing of the server writes it, and a token could (F1)', () => {
+    expect(serverGraded({ source: 'api' } as LedgerEvent, {} as never)).toBe(false);
+  });
+
+  it('on the server, the ledger’s own graded_by is the only word on it (F1, 0118)', () => {
+    const on = (source: string, gradedBy: 'server' | 'phone', graded?: string) =>
+      serverGraded({ source, gradedBy } as LedgerEvent, { graded } as never);
+    // A row a token planted before 0110: a school source, or a payload that says 'server'.
+    expect(on('homework', 'phone')).toBe(false);
+    expect(on('class', 'phone', 'server')).toBe(false);
+    expect(on('quiz', 'server')).toBe(true);
+    expect(on('homework', 'server')).toBe(true);
   });
 });
 

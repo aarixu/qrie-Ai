@@ -63,12 +63,12 @@ describe('0116 asked_items', () => {
     ).rejects.toThrow(/permission denied/);
   });
 
-  it('starts a learner_model row at version 6, the version the server fold writes', async () => {
-    expect(MODEL_VERSION).toBe(6);
+  it('starts a learner_model row at the version the server fold writes (6 or later)', async () => {
+    expect(MODEL_VERSION).toBeGreaterThanOrEqual(6);
     const { rows } = await db.query<{ column_default: string }>(
       `select column_default from information_schema.columns
         where table_schema = 'public' and table_name = 'learner_model' and column_name = 'version'`,
     );
-    expect(Number(rows[0].column_default)).toBe(6);
+    expect(Number(rows[0].column_default)).toBe(MODEL_VERSION);
   });
 });

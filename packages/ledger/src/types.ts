@@ -115,6 +115,15 @@ export interface LedgerEvent {
   outcomeIds: string[];
   topicRef?: string;
   payload: EventPayload;
+  /**
+   * Who decided an answer's `correct`, as the server's ledger records it
+   * (`ledger_event.graded_by`, 0118). Only the server's brain sets it
+   * (packages/lms-brain think.ts), from that column, which only the server's
+   * own functions write; it is absent on the phone's own events. When present
+   * it is the only word on who graded the answer (learner-model
+   * `serverGraded`), whatever the source or the payload say.
+   */
+  gradedBy?: 'server' | 'phone';
 }
 
 export type EventPayload =
@@ -171,8 +180,10 @@ export interface AnsweredPayload {
    * phone sent: 'server' when the answer names a bank probe the server holds
    * (`lms.item.library_ref`) and a `chosenIndex`, and `correct` was set from
    * the probe's key; 'phone' otherwise. Absent on the phone's own events
-   * before they are sent, on answers recorded before 0115, and on the LMS's
-   * homework, tests and practice, which it marks itself.
+   * before they are sent, and on the LMS's homework, tests and practice,
+   * which it marks itself. The server's brain does not read it: it reads
+   * `LedgerEvent.gradedBy` (0118), because a token could write this field
+   * before 0110.
    */
   graded?: 'server' | 'phone';
   /** Time from the question surfacing to the answer landing. */

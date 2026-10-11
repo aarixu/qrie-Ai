@@ -206,6 +206,12 @@ describe('replay', () => {
    * to, in the order answered: `a` was asked B2 (with `b`) and B4, `b` was
    * asked B1, B2 and B3. Nothing else moved.
    */
+  /**
+   * And a seventh time on 2026-10-11, deliberately (MODEL_VERSION 7, the P2
+   * security review). Only `version` 6 -> 7: on the server who graded an
+   * answer is now the ledger's own column, and this fixture's answers carry
+   * the payload grade a phone folds by. Nothing else moved.
+   */
   it('reproduces the known state byte for byte', () => {
     // The invariant the old fixture violated, asserted here so a future fold
     // cannot quietly reintroduce it: a node is observed once per event that
@@ -294,7 +300,7 @@ describe('replay', () => {
       },
       foldedThrough: { at: '2026-09-15T10:00:00.000Z', sessionId: 's2', seq: 2 },
       helpInFlight: { sessionId: 's2', byAsk: {} },
-      version: 6,
+      version: 7,
     });
   });
 });

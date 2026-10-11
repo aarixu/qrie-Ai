@@ -104,14 +104,14 @@ describe('the questions an outcome was asked by', () => {
 
 describe('version 6', () => {
   it('is the version that holds them', () => {
-    expect(MODEL_VERSION).toBe(6);
+    expect(MODEL_VERSION).toBeGreaterThanOrEqual(6);
   });
 
   it('a v5 model brought forward has asked nothing yet, and keeps every number', () => {
     const v5 = { version: 5, foldedThrough: null, helpInFlight: null, states: { a: { ...emptyConceptState('a'), observations: 4 } } };
     delete (v5.states.a as Partial<ReturnType<typeof emptyConceptState>>).askedItems;
     const m = migrateModel(v5);
-    expect(m.version).toBe(6);
+    expect(m.version).toBe(MODEL_VERSION);
     expect(m.states.a.observations).toBe(4);
     expect(m.states.a.askedItems).toEqual([]);
   });

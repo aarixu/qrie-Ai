@@ -35,7 +35,7 @@ const orgOf = async (user: string): Promise<string> =>
   (await db.query<{ org_id: string }>(`select org_id from public.membership where user_id = $1`, [user])).rows[0]
     .org_id;
 
-/** One tutor sitting written straight into the ledger, as the database owner. */
+/** One tutor sitting written straight into the ledger, as the database owner, graded as record_evidence would (0118). */
 async function tutorSitting(
   user: string,
   answers: { outcome: string; rung: number; correct: boolean; graded?: 'server' | 'phone' }[],
@@ -48,8 +48,9 @@ async function tutorSitting(
   );
   for (const [n, a] of answers.entries()) {
     await db.query(
-      `insert into public.ledger_event (id, org_id, user_id, session_id, seq, at, kind, source, surface, outcome_ids, payload)
-       values ($1, $2, $3, $4, $5, now(), 'answered', 'class', 'tap', $6, $7::jsonb)`,
+      `insert into public.ledger_event
+         (id, org_id, user_id, session_id, seq, at, kind, source, surface, outcome_ids, payload, graded_by)
+       values ($1, $2, $3, $4, $5, now(), 'answered', 'class', 'tap', $6, $7::jsonb, case when 'class' in ('homework', 'test', 'practice') or $7::jsonb ->> 'graded' = 'server' then 'server' else 'phone' end)`,
       [
         crypto.randomUUID(), org, user, session, n + 1, [a.outcome],
         JSON.stringify({

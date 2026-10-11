@@ -76,8 +76,8 @@ export interface ConceptState {
    *
    * `unassistedMastery` moved by rung-0 answers whose correctness the server
    * knows (`serverGraded` in rung.ts: the LMS's homework, tests and practice,
-   * and a tutor answer record_evidence graded against a bank probe's key)
-   * and by no other. A class lesson's answer is graded on the phone, so it
+   * and a tutor answer record_evidence graded against a bank probe's key; on
+   * the server, as the ledger's own graded_by says, 0118) and by no other. A class lesson's answer is graded on the phone, so it
    * moves `unassistedMastery`, which the lesson's decisions read, and not
    * these. They are what the school's reports show as "on their own" (0115)
    * and what the mastery rule (`stampMastery`) needs to be at the line.
@@ -214,8 +214,14 @@ export interface ConceptState {
  * asked by, so a review can ask another. No belief moves differently. A
  * migrated v5 model starts every outcome with none until a rebuild from the
  * ledger fills them.
+ *
+ * 7 (2026-10-11, P2 security review): on the server, who graded an answer
+ * is the ledger's own `graded_by` (0118, `LedgerEvent.gradedBy`), and the
+ * 'api' source is no longer trusted as the LMS's mark. A v6 model's shape is
+ * unchanged, so one brought forward keeps every number until a rebuild from
+ * the ledger replaces it; the server rebuilds every learner.
  */
-export const MODEL_VERSION = 6;
+export const MODEL_VERSION = 7;
 
 /** How many of an outcome's latest questions `askedItems` keeps. */
 export const ASKED_ITEMS_LIMIT = 8;

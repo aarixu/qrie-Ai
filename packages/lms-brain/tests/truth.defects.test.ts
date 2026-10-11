@@ -154,7 +154,11 @@ async function send(user: string, ...sittings: Sitting[]): Promise<Receipt[]> {
   );
 }
 
-/** A sitting the server received at `receivedAt`, written by the database owner (the past cannot be sent today). */
+/**
+ * A sitting the server received at `receivedAt`, written by the database owner
+ * (the past cannot be sent today), graded as the server's functions would
+ * grade it (graded_by, 0118).
+ */
 async function receivedAt(user: string, source: string, at: string, payloads: { outcome: string; payload: object }[]): Promise<void> {
   const org = (await db.query<{ org: string }>(`select public.org_of($1) as org`, [user])).rows[0].org;
   const session = crypto.randomUUID();
@@ -164,8 +168,9 @@ async function receivedAt(user: string, source: string, at: string, payloads: { 
   );
   for (const [n, p] of payloads.entries()) {
     await db.query(
-      `insert into public.ledger_event (id, org_id, user_id, session_id, seq, at, received_at, kind, source, surface, outcome_ids, payload)
-       values (gen_random_uuid(), $1, $2, $3, $4, $5, $5, 'answered', $6, 'tap', $7, $8::jsonb)`,
+      `insert into public.ledger_event
+         (id, org_id, user_id, session_id, seq, at, received_at, kind, source, surface, outcome_ids, payload, graded_by)
+       values (gen_random_uuid(), $1, $2, $3, $4, $5, $5, 'answered', $6, 'tap', $7, $8::jsonb, case when $6::text in ('homework', 'test', 'practice') or $8::jsonb ->> 'graded' = 'server' then 'server' else 'phone' end)`,
       [org, user, session, n + 1, at, source, [p.outcome], JSON.stringify(p.payload)],
     );
   }

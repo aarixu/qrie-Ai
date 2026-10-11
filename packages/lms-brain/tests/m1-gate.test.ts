@@ -62,7 +62,10 @@ async function enrolIn8a(user: string, roll: string): Promise<void> {
   );
 }
 
-/** One tutor sitting written straight into the ledger, as the database owner. */
+/**
+ * One tutor sitting written straight into the ledger, as the database owner,
+ * graded as record_evidence would grade it (graded_by, 0118).
+ */
 async function tutorSitting(
   user: string,
   source: 'class' | 'quiz',
@@ -75,8 +78,9 @@ async function tutorSitting(
   );
   for (const [n, a] of answers.entries()) {
     await db.query(
-      `insert into public.ledger_event (id, org_id, user_id, session_id, seq, at, kind, source, surface, outcome_ids, payload)
-       values ($1, $2, $3, $4, $5, now(), 'answered', $6, 'tap', $7, $8::jsonb)`,
+      `insert into public.ledger_event
+         (id, org_id, user_id, session_id, seq, at, kind, source, surface, outcome_ids, payload, graded_by)
+       values ($1, $2, $3, $4, $5, now(), 'answered', $6, 'tap', $7, $8::jsonb, case when $6 in ('homework', 'test', 'practice') or $8::jsonb ->> 'graded' = 'server' then 'server' else 'phone' end)`,
       [
         crypto.randomUUID(), one.org, user, session, n + 1, source, [a.outcome],
         JSON.stringify({

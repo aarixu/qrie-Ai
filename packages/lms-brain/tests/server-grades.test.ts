@@ -100,3 +100,48 @@ describe('masteredAt counts only answers the server graded', () => {
     expect((await state(kid)).mastered_at).toBeNull();
   });
 });
+
+/**
+ * F1 (P2 security review): trust in an answer comes from the ledger's own
+ * graded_by (0118), which only the server's functions write, never from a
+ * field a phone could write before 0110 closed direct inserts: the 'api'
+ * source, or a payload that says `graded: 'server'`. Rows like these are
+ * inserted here as the table owner, exactly as a student's token could have
+ * written them under the 0006/0034 policies.
+ */
+describe('rows a token could have written before 0110 earn nothing verified (F1)', () => {
+  async function planted(user: string, source: 'api' | 'class', payload: Record<string, unknown>, hoursAgo: number[]) {
+    const org = (await db.query<{ org_id: string }>(`select org_id from public.membership where user_id = $1`, [user]))
+      .rows[0].org_id;
+    for (const [n, hours] of hoursAgo.entries()) {
+      const session = crypto.randomUUID();
+      const when = `now() - interval '${hours} hours'`;
+      await db.query(
+        `insert into public.learning_session (id, org_id, user_id, source, started_at, received_at)
+         values ($1, $2, $3, 'class', ${when}, ${when})`,
+        [session, org, user],
+      );
+      await db.query(
+        `insert into public.ledger_event
+           (id, org_id, user_id, session_id, seq, at, received_at, kind, source, surface, outcome_ids, payload)
+         values (gen_random_uuid(), $1, $2, $3, 0, ${when}, ${when}, 'answered', $4, 'tap', array[$5], $6::jsonb)`,
+        [org, user, session, source, DEFINE,
+         JSON.stringify({ correct: true, chosenIndex: 0, probeId: `p${n + 1}`, attempt: 1, assistanceRung: 0, ...payload })],
+      );
+    }
+  }
+
+  it('an api-sourced right, two days apart, is the phone’s word', async () => {
+    const kid = await createUser(db);
+    await planted(kid, 'api', {}, [49, 1]);
+    await think(db, [kid], { rebuild: true });
+    expect(await state(kid)).toMatchObject({ verified_observations: 0, mastered_at: null });
+  });
+
+  it('a class answer whose payload says graded: server is the phone’s word', async () => {
+    const kid = await createUser(db);
+    await planted(kid, 'class', { graded: 'server' }, [49, 1]);
+    await think(db, [kid], { rebuild: true });
+    expect(await state(kid)).toMatchObject({ verified_observations: 0, mastered_at: null });
+  });
+});

@@ -43,9 +43,9 @@ export function deriveRung(
  * THE TUTOR'S RULE, NOT THE SCHOOL'S (v4). On the school's sources `attempt`
  * is never a try at one question: the LMS's submit (0024, 0030) writes it on
  * homework and tests as the number of the whole HAND-IN, a new sitting in
- * which nobody helped; practice (0031) writes none, and nothing writes 'api'
- * today. Any other source, including one this code does not know, keeps the
- * rule: when unsure, call it help.
+ * which nobody helped; practice (0031) writes none. Any other source,
+ * including 'api' (nothing of the server writes it) and one this code does
+ * not know, keeps the rule: when unsure, call it help.
  *
  * Shared by the fold and by `eachAnswerWithRung`, so the model and the
  * projections cannot disagree about which answers were cold.
@@ -56,23 +56,34 @@ export function atLeastANudge(rung: AssistanceRung, attempt: number, source?: Ev
 }
 
 /**
- * Sources the LMS writes, where `attempt` numbers a hand-in (see
- * `atLeastANudge`) and `correct` is the server's own mark (see `serverGraded`).
+ * Sources the LMS's own functions write, where `attempt` numbers a hand-in
+ * (see `atLeastANudge`) and `correct` is the LMS's mark (see `serverGraded`).
+ * Not 'api': nothing of the server writes it, and before 0110 a student's
+ * token could (P2 security review F1).
  */
-const SCHOOL_SOURCES: ReadonlySet<EventSource> = new Set<EventSource>(['homework', 'test', 'practice', 'api']);
+const SCHOOL_SOURCES: ReadonlySet<EventSource> = new Set<EventSource>(['homework', 'test', 'practice']);
 
 /**
  * WHETHER THE SERVER, NOT THE PHONE, SAID THIS ANSWER WAS RIGHT OR WRONG
- * (lam-one-brain Task 15, C2).
+ * (lam-one-brain Task 15, C2; P2 security review F1).
  *
- * The LMS's own functions mark homework, tests and practice against the
- * school's key, and record_evidence (0115) grades a tutor answer to a bank
- * probe against the probe's key and writes `graded: 'server'`. Every other
- * answer is the phone's word: a class lesson's answer, which no key on the
- * server covers, an answer recorded before 0115, and the phone's own events
- * before they are sent. Same direction as `deriveRung`: when unsure, it is the
- * phone's.
+ * On the server the ledger says it: `event.gradedBy`, which the brain takes
+ * from ledger_event.graded_by (0118), written only by the server's own
+ * functions (record_evidence when it graded the answer against a bank
+ * probe's key, the LMS's hand-in and practice). When it is there it is the
+ * only word: a row a token planted before 0110 is the phone's, whatever its
+ * source or payload claim.
+ *
+ * Without it (an event the phone folds itself), the LMS's own sources or a
+ * payload record_evidence marked `graded: 'server'`. Every other answer is
+ * the phone's word: a class lesson's answer, which no key on the server
+ * covers, and the phone's own events before they are sent. Same direction as
+ * `deriveRung`: when unsure, it is the phone's.
  */
-export function serverGraded(event: Pick<LedgerEvent, 'source'>, payload: Pick<AnsweredPayload, 'graded'>): boolean {
+export function serverGraded(
+  event: Pick<LedgerEvent, 'source' | 'gradedBy'>,
+  payload: Pick<AnsweredPayload, 'graded'>,
+): boolean {
+  if (event.gradedBy !== undefined) return event.gradedBy === 'server';
   return SCHOOL_SOURCES.has(event.source) || payload.graded === 'server';
 }

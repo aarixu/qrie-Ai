@@ -46,7 +46,7 @@ type Ev = ReturnType<typeof quiz>;
 
 const ago = (hours: number): string => new Date(Date.now() - hours * 3_600_000).toISOString();
 
-/** Events added to a sitting, each received by the server at `receivedAt`. Returns their ids. */
+/** Events added to a sitting, each received by the server at `receivedAt`, graded as record_evidence would (0118). Returns their ids. */
 async function batch(user: string, session: string, receivedAt: string, firstSeq: number, events: Ev[]): Promise<string[]> {
   const org = await orgOf(user);
   const ids: string[] = [];
@@ -55,8 +55,8 @@ async function batch(user: string, session: string, receivedAt: string, firstSeq
     ids.push(id);
     await db.query(
       `insert into public.ledger_event
-         (id, org_id, user_id, session_id, seq, at, received_at, kind, source, surface, outcome_ids, payload)
-       values ($1, $2, $3, $4, $5, $6, $6, 'answered', 'quiz', 'tap', $7, $8::jsonb)`,
+         (id, org_id, user_id, session_id, seq, at, received_at, kind, source, surface, outcome_ids, payload, graded_by)
+       values ($1, $2, $3, $4, $5, $6, $6, 'answered', 'quiz', 'tap', $7, $8::jsonb, case when 'quiz' in ('homework', 'test', 'practice') or $8::jsonb ->> 'graded' = 'server' then 'server' else 'phone' end)`,
       [id, org, user, session, firstSeq + i, receivedAt, [e.outcome], JSON.stringify(e.payload)],
     );
   }

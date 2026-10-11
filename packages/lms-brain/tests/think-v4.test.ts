@@ -67,6 +67,7 @@ interface Ev {
  * One sitting written straight into the ledger, as the database owner. A
  * received time is set only where a test needs the server's clock in the
  * past; otherwise Postgres stamps now(), as it does for every real write.
+ * Graded as the server's functions would grade it (graded_by, 0118).
  */
 async function sitting(
   user: string,
@@ -84,9 +85,9 @@ async function sitting(
   for (const [seq, e] of events.entries()) {
     await db.query(
       `insert into public.ledger_event
-         (id, org_id, user_id, session_id, seq, at, received_at, kind, source, surface, outcome_ids, payload)
+         (id, org_id, user_id, session_id, seq, at, received_at, kind, source, surface, outcome_ids, payload, graded_by)
        values ($1, $2, $3, $4, $5, coalesce($6::timestamptz, $7::timestamptz, now()), coalesce($7::timestamptz, now()),
-               $8, $9, 'tap', $10, $11::jsonb)`,
+               $8, $9, 'tap', $10, $11::jsonb, case when $9::text in ('homework', 'test', 'practice') or $11::jsonb ->> 'graded' = 'server' then 'server' else 'phone' end)`,
       [
         crypto.randomUUID(), org, user, session, seq + 1, e.at ?? null, opts.receivedAt ?? null,
         e.kind ?? 'answered', source, [e.outcome], JSON.stringify(e.payload),
