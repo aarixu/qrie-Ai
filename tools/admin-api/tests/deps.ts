@@ -90,6 +90,9 @@ export function apiWorld(db: PGlite): ApiWorld {
           passwords.set(email, password);
           return rows[0].id;
         },
+        async deleteStaffUser(userId) {
+          await db.query(`delete from auth.users where id = $1`, [userId]);
+        },
         async setBanned(userId, banned) {
           if (banFailsOnce) {
             banFailsOnce = false;

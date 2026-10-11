@@ -198,6 +198,30 @@ describe('new PINs', () => {
     }
   });
 
+  it('an ID that is not plain letters, digits and hyphens is refused before anything is asked or reset, so a look-alike cannot slip past R22', async () => {
+    await buildSchool(db, 'STJ');
+    const asked = (await adminAudit('pin-reset-requested')).length;
+    // 'ﬆ' (U+FB06) upper-cases to 'ST' in JavaScript but stays itself in Postgres.
+    for (const loginId of ['ﬆJ-T1', 'ﬆJ-A1', 'STß-T1', 'STJ‐T1', 'STJ T1']) {
+      for (const token of ['ops-fresh', 'owner-fresh']) {
+        const r = await send('reset-pin', { code: 'STJ', loginId, reason: 'forgot it', env: 'TEST' }, token);
+        expect(r, `${token} ${loginId}`).toMatchObject({ status: 400, body: { code: 'other' } });
+      }
+    }
+    expect(world.passwords.has('STJ-T1')).toBe(false);
+    expect(world.passwords.has('STJ-A1')).toBe(false);
+    expect((await adminAudit('pin-reset-requested')).length).toBe(asked);
+    // The plain ID is still the owner's alone, whatever its case.
+    expect(await send('reset-pin', { code: 'STJ', loginId: 'stj-t1', reason: 'forgot it', env: 'TEST' }, 'ops-fresh')).toMatchObject({
+      status: 403,
+      body: { code: 'not-allowed' },
+    });
+    const r = await send('reset-pin', { code: 'STJ', loginId: ' stj-t1 ', reason: 'forgot it', env: 'TEST' }, 'owner-fresh');
+    expect(r.status).toBe(200);
+    expect(r.body.pin).toBe(world.passwords.get('STJ-T1'));
+    expect((await adminAudit('pin-reset-requested')).at(-1)?.details).toEqual({ loginId: 'STJ-T1' });
+  });
+
   it("a new PIN for an unknown ID is a 404, and the request is in the platform's log", async () => {
     const r = await send('reset-pin', { code: 'API', loginId: 'API-999', reason: 'parent called', env: 'TEST' }, 'ops-fresh');
     expect(r.status).toBe(404);
@@ -248,6 +272,32 @@ describe('staff invitations', () => {
     const again = await send('staff-invite', invite, 'owner-fresh');
     expect(again.status).toBe(409);
     expect(again.body.error).toMatch(/already exists/);
+  });
+
+  it('an invite that fails after the sign-in is made takes the sign-in back, so the address can be invited again', async () => {
+    const users = (email: string) => count(`select count(*)::int as n from auth.users where email = $1`, [email]);
+    // admin.staff_invite refuses a role api_gate does not check: the account made for it is deleted.
+    const badRole = await send('staff-invite', { ...invite, email: 'role@example.com', role: 'auditor' }, 'owner-fresh');
+    expect(badRole.status).toBe(400);
+    expect(await users('role@example.com')).toBe(0);
+    // The database fails after the account is made.
+    const logged = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const d = deps();
+      const broken: AdminApiDeps = {
+        ...d,
+        asCaller: (a, fn, args) => (fn === 'staff_invite' ? Promise.reject(new Error('connection reset')) : d.asCaller(a, fn, args)),
+      };
+      const r = await send('staff-invite', { ...invite, email: 'blip@example.com' }, 'owner-fresh', broken);
+      expect(r.status).toBe(500);
+      expect(JSON.stringify(r.body)).not.toContain(world.passwords.get('blip@example.com') ?? 'no password was made');
+      expect(await users('blip@example.com')).toBe(0);
+    } finally {
+      logged.mockRestore();
+    }
+    const retry = await send('staff-invite', { ...invite, email: 'blip@example.com' }, 'owner-fresh');
+    expect(retry.status).toBe(200);
+    expect(await users('blip@example.com')).toBe(1);
   });
 });
 

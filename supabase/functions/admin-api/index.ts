@@ -83,6 +83,9 @@ const deps = {
       if (typeof user?.id !== 'string') throw new Error('the auth service made the account but returned no id');
       return user.id;
     },
+    async deleteStaffUser(userId) {
+      await rest(`/auth/v1/admin/users/${userId}`, { method: 'DELETE' });
+    },
     async setBanned(userId, banned) {
       await rest(`/auth/v1/admin/users/${userId}`, { method: 'PUT', body: { ban_duration: banned ? '876000h' : 'none' } });
     },

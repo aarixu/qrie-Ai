@@ -46,6 +46,8 @@ export interface AdminApiDeps {
   /** The auth admin API, with the service role. */
   authAdmin: {
     createStaffUser(email: string, password: string): Promise<string>;
+    /** Takes back an account staffInviteRoute made when the invitation then fails. */
+    deleteStaffUser(userId: string): Promise<void>;
     setBanned(userId: string, banned: boolean): Promise<void>;
   };
   password?: () => string;
@@ -89,9 +91,22 @@ async function importRoute(deps: AdminApiDeps, auth: string, b: Record<string, u
   });
 }
 
+/**
+ * A sign-in ID as lms.account stores it (0022: ^[A-Z0-9-]{3,40}$), checked
+ * BEFORE it is upper-cased. JavaScript's toUpperCase turns some letters into
+ * two ('ﬆ' into 'ST', 'ß' into 'SS') where Postgres's upper() leaves them, so
+ * a look-alike could pass admin.api_gate's R22 check as nobody and then reach
+ * a teacher's account here. Only the one normalised string goes on, to the
+ * gate and to the reset alike.
+ */
+const LOGIN_ID = /^[A-Za-z0-9-]{3,40}$/;
+
 async function resetPinRoute(deps: AdminApiDeps, auth: string, b: Record<string, unknown>) {
-  const g = await gate(deps, auth, 'pin-reset', b, text(b.loginId));
-  return resetPinForSchool(deps.lms, g.orgId as string, g.actor, b.loginId);
+  const raw = text(b.loginId);
+  if (!LOGIN_ID.test(raw)) throw new Refused(400, 'A sign-in ID is letters, digits and hyphens, such as DPS-8A-12.');
+  const loginId = raw.toUpperCase();
+  const g = await gate(deps, auth, 'pin-reset', b, loginId);
+  return resetPinForSchool(deps.lms, g.orgId as string, g.actor, loginId);
 }
 
 async function staffInviteRoute(deps: AdminApiDeps, auth: string, b: Record<string, unknown>) {
@@ -100,9 +115,20 @@ async function staffInviteRoute(deps: AdminApiDeps, auth: string, b: Record<stri
   await gate(deps, auth, 'staff-invite', b, email);
   const password = (deps.password ?? newStaffPassword)();
   const userId = await deps.authAdmin.createStaffUser(email, password);
-  await deps.asCaller(auth, 'staff_invite', {
-    p_user: userId, p_role: text(b.role), p_name: text(b.displayName), p_reason: text(b.reason), p_env: text(b.env),
-  });
+  try {
+    await deps.asCaller(auth, 'staff_invite', {
+      p_user: userId, p_role: text(b.role), p_name: text(b.displayName), p_reason: text(b.reason), p_env: text(b.env),
+    });
+  } catch (e) {
+    // Nobody will ever see this account's password: take the account back so
+    // the address can be invited again. If that fails too, the log says so.
+    try {
+      await deps.authAdmin.deleteStaffUser(userId);
+    } catch (undo) {
+      console.error('admin-api', 'staff-invite could not take back the account it made', userId, undo);
+    }
+    throw e;
+  }
   return { userId, email, temporaryPassword: password };
 }
 
