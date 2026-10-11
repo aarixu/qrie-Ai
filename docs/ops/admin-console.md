@@ -8,12 +8,218 @@ Nothing here has been run against the hosted project yet. Lines marked
 **UNVERIFIED** are from documentation or memory and must be confirmed the first
 time they are done.
 
+## 0. Your steps, in order
+
+The steps of the sections below, as one list in the order to do them; each
+names the section that has the detail. None of
+it has been done against the hosted project, Cashfree, Telegram or GitHub
+Actions, so every step is UNVERIFIED until you have done it once; the marks
+below flag what is most likely to differ.
+
+**Before anything goes live**
+
+1. **Push the branch.** From `.claude/worktrees/admin`: `git push -u origin admin`.
+   It is **not** merged into `lms` or `master` until every test passes on it
+   (the full suite, with `VITE_SUPABASE_URL=http://127.0.0.1:54321` and
+   `VITE_SUPABASE_ANON_KEY=test-anon` set:
+   `npx vitest run --exclude "tools/measure/**" --exclude "**/node_modules/**"`)
+   and you say so.
+2. **Never deploy the tutor, the relay or the contest site from this branch.**
+   `apps/classroom`, `packages/relay` and `supabase/functions/relay` here are
+   older than the live tutor (`phase3-completion` and `voice-stt-tts`; the live
+   relay has `743c05a`, `1dcfcfe` and `18733af`), and the contest site is built
+   with the tutor (`npm run build:site`). They go live only from a branch merged
+   with those two (step 23). Everything else in this list does not need that
+   merge: the migrations' tutor admission check works with the relay that is
+   live today (section 7).
+
+**The database**
+
+3. **Look before you push.** Link the project the console will run on
+   (`npx supabase login`, then `npx supabase link --project-ref <ref>`; the
+   tutor's own project is the one `npm run relay:link` links), then
+   `npx supabase migration list --linked`. The hosted project had nothing past
+   0025 on 2026-10-03 (STALE: check). If it lists a version that is not in this
+   branch's `supabase/migrations`, stop and merge the branch that has it first
+   (the push refuses then; its wording is UNVERIFIED).
+4. **Push the migrations, on a quiet hour.** `npx supabase db push` applies
+   0026 to 0075 together, every pending migration in one go. 0047 replaces the
+   sign-up trigger on `auth.users`, and 0064 changes the tutor's admission
+   check (`claim_relay`). Afterwards
+   `select jobname, schedule from cron.job;` should list `admin-revert-caps`, `billing-states`, `admin-privacy-daily` and
+   `admin-metrics-nightly` (that `pg_cron` runs them on the hosted project is
+   UNVERIFIED). Migrations 0100 and up belong to the `lam-one-brain` lane, not
+   this branch.
+5. **Expose the `admin` schema** (section 1 step 2): Project settings, API,
+   Exposed schemas, add `admin` beside `public` and `lms` (the dashboard's
+   wording is UNVERIFIED). No other schema: `billing` is reached only through
+   `admin`'s functions.
+6. **Turn on authenticator codes** (TOTP) in Authentication, Multi-factor; do
+   not enable SMS. Leave email sign-up as it is (section 1 step 4).
+
+**The console and its first owner**
+
+7. **Host the console on its own address** (section 1 step 6): a Vercel project
+   whose Root Directory is `apps/admin`, so `apps/admin/vercel.json` applies its
+   security headers (that Vercel installs the workspace from the repository
+   root then is UNVERIFIED). Its environment: `VITE_SUPABASE_URL`,
+   `VITE_SUPABASE_ANON_KEY` and `VITE_ADMIN_ENV=HOSTED`. Not
+   `qrie-ai.vercel.app`, where children's sessions live. Add the address to
+   Supabase Auth's allowed redirect URLs. Check the headers:
+   `curl -sI https://<console>/ | grep -i content-security-policy`.
+8. **Tell the functions the console's address:**
+   `npx supabase secrets set ADMIN_ORIGIN=https://<the console's address>`
+   (the origin only, no path or trailing slash; `admin-api` and `billing-api`
+   both read it).
+9. **Make the first owner** (section 1 step 5): write the five values into a
+   file outside the repository with a text editor (never `echo` or a command
+   line, so nothing lands in your shell history), load it, run the bootstrap,
+   delete the file. Then sign in to the console and **enrol your authenticator
+   at once**: until you do, anyone who learns the password could enrol theirs.
+10. **Deploy the staff service** (section 5 step 2):
+    `npx supabase functions deploy admin-api --no-verify-jwt`. It needs only
+    `ADMIN_ORIGIN` (step 8); Supabase supplies `SUPABASE_URL`,
+    `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY`.
+11. **Deploy the school admin's service from this branch** (section 7 step 3),
+    after step 4: `npx supabase functions deploy lms-admin --no-verify-jwt`. No
+    secret of its own. If `git log admin..lms` lists commits, merge `lms` into
+    this branch first (tests green, your yes), so an older `lms-admin` does not
+    replace a newer one.
+
+**The alarm and the audit copy**
+
+12. **Telegram** (section 1 step 7): a bot from `@BotFather` (its token), two
+    private chats (operations; safety, with your backup reviewer in it), the bot
+    in both, each chat's id.
+13. **The alarm's token:** `openssl rand -hex 24`, stored in the dashboard's SQL
+    editor: `select admin.alert_token_set('<token>');`.
+14. **Where the checker runs.** GitHub runs a scheduled workflow, and shows its
+    "Run workflow" button, only from the default branch (`master`), and both
+    workflows check out `tools/admin-alert` from it; `master` has neither file
+    today. So `.github/workflows/admin-alert.yml` and `admin-audit-copy.yml`
+    run only once this branch reaches `master` (after your yes). Then: GitHub,
+    Settings, Secrets, Actions: `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
+    `ALERT_TOKEN`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_OPS`,
+    `TELEGRAM_CHAT_SAFETY` (and `BILLING_RECONCILE_TOKEN`, step 20); the
+    Variables tab: `ADMIN_ALERT_ENABLED` = `true`. **Cost:** on a public
+    repository, free; on a private one the alarm (every 5 minutes, each run
+    billed at least a minute) is about 8,600 job-minutes a month and the audit
+    copy about 720, more than the free allowance. Until then, or on a private
+    repository, run `npm run admin:alert` every 5 minutes and
+    `node --experimental-strip-types tools/admin-alert/src/audit-copy.ts` every
+    hour (with `AUDIT_HEADS_FILE` set to a file that survives between runs)
+    from the cron of a server you already pay for, with the same values in its
+    environment, and leave `ADMIN_ALERT_ENABLED` unset.
+15. **See it work:** Today's "Alarm checker" tile turns green, System's "Wrong
+    tokens" reads "None in the last hour", and the ops chat gets the audit
+    copy's line.
+16. **Outside protection** (section 1 steps 8 and 9): an uptime monitor on the
+    relay and the console; authenticator or hardware-key MFA on Supabase,
+    Vercel, GitHub, Google Cloud, the domain registrar and your mailbox; a
+    second person who can stop the tutor and a second alarm phone.
+
+**People and safety**
+
+17. **Your backup safety reviewer** (sections 5 and 8): Staff and audit, Invite
+    a person, role `safety`; phone them the temporary password; once they have
+    an authenticator, call back, check it is them, press Turn on.
+18. **A restore drill** (section 5 step 5), then System, "Record a restore
+    drill". Then the first checks in a browser: section 5 step 7 on the
+    console, and section 7 step 8 on a TEST project (a minimum build is set
+    only to a build that exists, section 7 step 7).
+
+**Money**
+
+19. **Cashfree, before any key** (section 6 steps 1 to 4): business KYC and the
+    settlement account (the exact list is UNVERIFIED); the policy pages on the
+    website (terms, refund and cancellation, privacy, contact, pricing), the
+    privacy page naming **Cashfree, GitHub (Actions runs the alarm) and
+    Telegram (carries its messages)** as sub-processors (spec section 6); the
+    CA's decisions in Billing, Settings (GSTIN or none, the SAC code, the GST
+    rate, the invoice title, the numbering, CGST plus SGST against IGST, the
+    rounding); and your plan prices in Billing, Plans.
+20. **Sandbox first, on a TEST or STAGING project** (section 6 steps 6 to 10;
+    `billing-api` refuses sandbox keys against a HOSTED database). That project
+    needs the migrations, an owner made with `--env STAGING` (or `TEST`) and
+    a console built with the same `VITE_ADMIN_ENV`. Write
+    `CASHFREE_CLIENT_ID`, `CASHFREE_CLIENT_SECRET`, `CASHFREE_ENV=sandbox`,
+    `CASHFREE_API_VERSION=2026-01-01` (from Cashfree's documentation,
+    UNVERIFIED) and `BILLING_RECONCILE_TOKEN=<openssl rand -hex 24>` into a
+    file outside the repository with a text editor, then
+    `npx supabase secrets set --env-file <file>` and delete the file; set
+    `ADMIN_ORIGIN` there too. Deploy `billing-api` (it reads all six) and
+    `cashfree-webhook` (it reads `CASHFREE_CLIENT_SECRET`), each with
+    `--no-verify-jwt`. In Cashfree's dashboard, the webhook URL
+    `https://<project>.supabase.co/functions/v1/cashfree-webhook`, version
+    `2025-01-01` or later, payment-link and refund events, and the same URL on
+    the Subscriptions tab (the names are UNVERIFIED). Put the same
+    `BILLING_RECONCILE_TOKEN` where the alarm runs (step 14). Then work through
+    section 6 step 10.
+21. **Go live** (section 6 step 11): production keys and
+    `CASHFREE_ENV=production` on the HOSTED project only, the production webhook
+    URL, one real Re 1 invoice to yourself, then refund it.
+
+**The charts**
+
+22. **Prices, then the past** (section 9): check `tools/sql/model_price.sql`
+    against your providers' prices today, then
+    `node tools/bin/apply-prices.mjs` (it shows the difference; it reads
+    `VITE_SUPABASE_URL` from the repository's `.env.local` and needs
+    `SUPABASE_SERVICE_ROLE_KEY` in the environment: load it from a file as in
+    step 9) and the same with `--yes` to insert. Then on any chart page,
+    Recompute (owner, fresh code) the 92 days ending yesterday, and the 92
+    before if you want them. On System,
+    `admin-metrics-nightly` should read Succeeded after the first night.
+
+**After the tutor merge**
+
+23. **Merge this branch with the live tutor branches** (`phase3-completion`,
+    `voice-stt-tts`), tests green, your yes. Then from the merged branch: the
+    relay (`npm run relay:deploy`) and the tutor app and contest site as today;
+    on the Safety page, record the day distress capture went live. Restart the
+    demo server (`npm run demo -- --reset`) before deploying the student and
+    teacher apps (section 7 steps 4 to 6). Keep `contest.entries_open` on until
+    the new contest site is live.
+
+**Counsel, and the decisions that are yours**
+
+24. **Ask counsel** the ten questions at the end of section 8. **Until each
+    school's decision is recorded on the Privacy page, nobody can be added to
+    that school on the hosted database.** Then set the contest purge date once
+    prizes are posted.
+25. **Decide (no build needed now):**
+    - Plan 2: a new PIN needs a fresh code; a PIN staff make is shown once, to
+      them; schools work Monday to Saturday (attendance on time when marked
+      within 2 days); the safety reviewer sees the schools list and health but
+      not people, users or the audit log; ops give students and parents new
+      PINs and add students (a teacher's or school admin's is yours, R22).
+    - Plan 3: whether `app_config` should tell the apps more than ok, grace and
+      suspended; whether a refund should shorten a licence (now never); whether
+      scans of offline payment proof are needed; what "ended" means for a
+      school's data (counsel).
+    - Plan 4: whether a parent also sees "grace"; whether the banner shows on
+      the contest site; whether the relay should enforce "only prepared".
+    - Plan 5: whether a trial child's distress is captured (now not); whether
+      new classes wait for review before anyone sees them (now shared when
+      kept); the privacy page's untrue line "Class and usage records are
+      deleted automatically after 90 days" (`landing/app/privacy/page.tsx:80`).
+    - Plan 6: if counsel answers question 9 "no", a reviewed migration turns
+      sign-ins per school and the contest funnel off.
+    - The final review (plan 6's rulings F1 to F8): the principal's
+      co-signature on destructive actions (spec section 13) waits for plan 7,
+      and meanwhile you get the school admin's written agreement before a
+      school student's erasure request is verified; raising
+      `contest.daily_limit` stays with owner and ops; removing a lost
+      authenticator stays a service-role step (section 3).
+
 ## 1. Setup, once (Aarav's steps)
 
 1. **Hosted migrations.** The hosted project had nothing past 0025 on 2026-10-03.
    `npx supabase migration list --linked` shows what is applied. Then
-   `npx supabase db push` applies 0026 to 0051 together. Do it on a quiet hour;
-   0047 replaces the sign-up trigger on `auth.users`.
+   `npx supabase db push` applies every migration this branch has past that,
+   0026 to 0075, every pending one in one go. Do it on a quiet hour;
+   0047 replaces the sign-up trigger on `auth.users`. The later sections'
+   "apply the migrations" steps are this one push.
 2. **Expose the `admin` schema.** Dashboard, Project settings, API, "Exposed
    schemas": add `admin` beside `public` and `lms`. Without it the panel's calls
    return 404. (UNVERIFIED: the dashboard's wording.)
@@ -26,22 +232,59 @@ time they are done.
    it off, open the tutor in a fresh private window, start a class. Only if that
    works, do the same on the live project, and check again the same way. The
    console does not depend on it: staff are added by an owner, never by sign-up.
-5. **Make the first owner**, from your laptop:
+5. **Make the first owner**, from your laptop. The service-role key passes every
+   check in the console, so it never goes on a command line (where your shell
+   history keeps it). Write these five lines into a file outside the repository
+   with a text editor, for example `~/qrie-owner.env`:
 
    ```bash
-   SUPABASE_URL=https://<project>.supabase.co \
-   SUPABASE_SERVICE_ROLE_KEY=<from the encrypted bundle> \
-   ADMIN_OWNER_EMAIL=<your email> ADMIN_OWNER_PASSWORD=<12+ characters> ADMIN_OWNER_NAME="Aarav" \
-   npm run admin:bootstrap -- --env HOSTED
+   SUPABASE_URL=https://<project>.supabase.co
+   SUPABASE_SERVICE_ROLE_KEY=<from the encrypted bundle>
+   ADMIN_OWNER_EMAIL=<your email>
+   ADMIN_OWNER_PASSWORD=<12 or more characters>
+   ADMIN_OWNER_NAME=Aarav
    ```
+
+   Then, in Git Bash from the repository:
+
+   ```bash
+   set -a; . ~/qrie-owner.env; set +a
+   npm run admin:bootstrap -- --env HOSTED
+   rm ~/qrie-owner.env
+   ```
+
+   The tool reads only these environment variables
+   (`tools/admin-bootstrap/src/cli.ts`); close the terminal afterwards so they
+   do not stay in it.
 
    Then **open the panel and enrol your authenticator app straight away**. Until
    you do, anyone who learns the password could enrol their own.
 6. **Host the panel on its own origin**, not `qrie-ai.vercel.app` (children's
    sessions live there). Build with `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
-   and `VITE_ADMIN_ENV=HOSTED`, serve `apps/admin/dist`, and add the new address
-   to Supabase Auth's allowed redirect URLs.
+   and `VITE_ADMIN_ENV=HOSTED` (`npm run admin:build` ends with the bundle
+   secret scan), serve `apps/admin/dist`, and add the new address to Supabase
+   Auth's allowed redirect URLs.
+
+   **The headers come with the host.** Spec section 6's own-origin
+   Content-Security-Policy and no framing are in `apps/admin/vercel.json`, which
+   applies only to a Vercel project whose Root Directory is `apps/admin`; deploy
+   it that way (that Vercel then installs the workspace from the repository root
+   is UNVERIFIED). On any other host, set the same headers yourself:
+   `Content-Security-Policy: default-src 'self'; script-src 'self'; style-src
+   'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'
+   https://*.supabase.co; base-uri 'none'; form-action 'self'; frame-ancestors
+   'none'`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`,
+   `X-Content-Type-Options: nosniff`, `Permissions-Policy: camera=(),
+   microphone=(), geolocation=()` and `Cache-Control: no-store` (a meta tag
+   cannot set `frame-ancestors`). Check:
+   `curl -sI https://<console>/ | grep -i content-security-policy`.
 7. **The alarm.**
+   - **The default branch first.** GitHub runs a scheduled workflow, and shows its
+     "Run workflow" button, only from the default branch (`master`), and both
+     `admin-alert.yml` and `admin-audit-copy.yml` check out `tools/admin-alert`
+     from it. Neither is on `master` yet, so they run only once this branch has
+     reached `master` (after every test passes and you say so). Until then, run
+     the checker from a server's cron as the cost line below describes.
    - Telegram: message `@BotFather`, `/newbot`, keep the token. Make two private
      chats, one for operations and one for safety (a different person is in the
      safety chat: your backup reviewer). Add the bot to both and read each chat's
@@ -75,16 +318,31 @@ time they are done.
   somebody resumes.
 - **Switches** are what the apps obey (section 7 says which app reads which,
   and what the database enforces itself). A guarded one asks for a fresh code.
-  A switch nobody has set uses its safe default.
+  A switch nobody has set uses its safe default. Turning the tutor back on and
+  turning class preparation back on (`tutor.only_prepared` off) are the
+  owner's (0075). A school's own tutor switch wins over the platform's: a
+  school paused on its own is resumed by clearing its value, so it follows the
+  platform's switch again ("Follow the platform" on its Switches tab; the
+  school page's "Turn the tutor switch back on" does this when the platform is
+  on). A school turned on while the platform is off keeps a value of its own
+  and ignores the platform's switch until that value is cleared.
 - Every change is in the audit log with who did it and why. The log cannot be
   edited, even with the service-role key.
 
 ## 3. If something goes wrong
 
-- **You lost your authenticator.** As the service role, remove your factor so you
-  can enrol a new one: `delete from auth.mfa_factors where user_id = '<your id>';`
-  (UNVERIFIED: the table name; check `\dt auth.*`). Then sign in and enrol at once.
-  Another owner can do it for you; one owner alone relies on this.
+- **Someone lost their authenticator** (you, or any member of staff). The console
+  cannot remove a factor (spec 5.8's "another owner removes the factor" is not
+  built; plan 6's ruling F7), so it is always this, as the service role in the
+  dashboard's SQL editor: `delete from auth.mfa_factors where user_id = '<their
+  id>';` (UNVERIFIED: the table name; check `\dt auth.*`). Then they sign in and
+  enrol at once. A second owner on staff cannot do it from the console either.
+- **System shows wrong alarm tokens.** "Wrong tokens" counts the last hour's
+  calls to the alarm or the audit copy with a token that does not match (0075).
+  One or two after you rotated the token mean a checker still has the old one;
+  a steady count means someone with the public key is guessing: rotate the
+  token (`select admin.alert_token_set('<new token>');`) and update the
+  checker's secret.
 - **The panel is down and the tutor must stop.** `supabase secrets set
   RELAY_DISABLED=1` stops the relay with no database and no panel (and
   `supabase secrets unset RELAY_DISABLED` resumes). That is the second, separate
@@ -104,8 +362,8 @@ emergency tool; keep its login behind a hardware key.
 
 Nothing in this section has been run against the hosted project yet.
 
-1. **Migrations 0052 to 0055.** After plan 1's, `npx supabase db push` applies
-   them. 0053 replaces `lms.audit_log` so a Qrie staff action shows as "Qrie
+1. **Migrations 0052 to 0055.** The one push of section 1 step 1 applies
+   them with the rest. 0053 replaces `lms.audit_log` so a Qrie staff action shows as "Qrie
    staff" in a school's activity log; 0055 chains every audit row written
    before it.
 2. **Deploy the staff service.** `npx supabase functions deploy admin-api
@@ -117,7 +375,8 @@ Nothing in this section has been run against the hosted project yet.
    UNVERIFIED); everything else works.
 3. **Rebuild the console** with the same three values as before and publish it.
 4. **The audit copy.** It uses the alarm's secrets and the same
-   `ADMIN_ALERT_ENABLED` variable. Run the "Admin audit copy" workflow once by
+   `ADMIN_ALERT_ENABLED` variable, and runs only from `master` (section 1 step
+   7). Run the "Admin audit copy" workflow once by
    hand: the ops chat gets "Audit log on DATE: N entries, chain intact, head …".
    On a private repository it costs about 720 job-minutes a month. If the
    alarm runs from a server instead, run
@@ -141,16 +400,17 @@ Nothing in this section has been run against the hosted project yet.
    and add a test person (each asks for a fresh code), block and unblock a test
    direct user, invite and turn on a test staff member, and look at System:
    jobs should say "Succeeded" or "Never run", not "Not captured"; the
-   migration level should be 0061 (plan 2's 0052 to 0055, billing's 0056 to
-   0060, and 0061, which joins the two).
+   migration level should read the highest migration pushed (0075 from this
+   branch, or higher once another lane's are applied).
 8. **What the switches do.** See section 7: once 0062 to 0064 are applied,
    the database refuses tutor classes to the children of a school whose tutor
    switch is off or that is suspended, and refuses staff's imports for an
    offboarded or suspended school (the school admin's are refused by the
    import code, once deployed as section 7 says); the apps show the rest only
    from the builds named there. Only you
-   (the owner) can turn a tutor switch back on; a teacher's or a school admin's
-   new PIN, and a teachers sheet, are yours too.
+   (the owner) can turn a tutor switch back on, or clear a school's own value
+   when that brings its tutor back on; a teacher's or a school admin's new PIN,
+   and a teachers sheet, are yours too.
 
 ## 6. Billing with Cashfree (plan 3)
 
@@ -172,10 +432,10 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
 - **Finance:** reads billing, records money received by hand (with a fresh code,
   because a payment can set a licence), prints invoices. Nothing about children,
   switches or Today. Like everyone on staff, a finance member may stop the
-  tutor (0061: your ruling on spec section 3), but cannot resume it; the stop
-  button is on Today and System, which finance cannot open, so for now that
-  stop has no button of its own in the console. A finance member is added like
-  any staff member, with the role `finance`.
+  tutor (0061: your ruling on spec section 3), but cannot resume it: every page
+  finance can open shows a Stop control in its header (Today and System, where
+  the others stop it, are not finance's). A finance member is added like any
+  staff member, with the role `finance`.
 - **Safety:** no billing.
 
 ### Setup, once (Aarav's steps, in this order)
@@ -184,8 +444,10 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
    the director's KYC; the exact list is UNVERIFIED), add and verify the
    settlement bank account, and get Payment Gateway with Payment Links enabled.
 2. **Policy pages on the website** (landing): terms, refund and cancellation,
-   privacy (listing Cashfree as a sub-processor, spec section 6), contact, and
-   pricing. Payment gateways ask for them during activation; which ones Cashfree
+   privacy, contact, and pricing. The privacy page names the sub-processors spec
+   section 6 lists: Cashfree (payments), GitHub (its Actions run the alarm and
+   the audit copy) and Telegram (carries the alarm's messages); today it names
+   none of them (`landing/app/privacy/page.tsx`). Payment gateways ask for them during activation; which ones Cashfree
    requires is UNVERIFIED.
 3. **The CA's decisions**, entered by you in Billing, Settings: whether Qrie is
    GST-registered (the GSTIN, or empty for none), the SAC code, the GST rate, the
@@ -198,18 +460,27 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
 4. **Prices**, entered by you in Billing, Plans: each plan's code, name, months
    and price per seat. No plan may be called `pilot`, and a price of 0 cannot be
    invoiced (a trial is a `pilot` licence set from the school's page).
-5. **Apply the migrations** (after plan 2's): `npx supabase db push` applies 0056
-   to 0060 with the rest. No new schema needs exposing: billing's browser
+5. **Apply the migrations:** the one push of section 1 step 1 applies 0056 to
+   0060 with the rest. No new schema needs exposing: billing's browser
    functions are in `admin`, already exposed in section 1 step 2. 0060 schedules
    the daily job `billing-states` at 00:10 India time; that `pg_cron` runs it on
    the hosted project is UNVERIFIED (after the push, `select jobname, schedule
    from cron.job;` should list it).
-6. **Sandbox keys into Supabase secrets**, never on a command line:
+6. **Sandbox keys into Supabase secrets**, never on a command line. Make the
+   token with `openssl rand -hex 24`, then write a file outside the repository
+   with a text editor (not `printf` or `echo`, which leave the values in your
+   shell history), for example `~/cf.env`:
 
    ```bash
-   # a file outside the repo, deleted after
-   printf 'CASHFREE_CLIENT_ID=%s\nCASHFREE_CLIENT_SECRET=%s\nCASHFREE_ENV=sandbox\nCASHFREE_API_VERSION=2026-01-01\nBILLING_RECONCILE_TOKEN=%s\n' "<id>" "<secret>" "$(openssl rand -hex 24)" > /tmp/cf.env
-   npx supabase secrets set --env-file /tmp/cf.env && rm /tmp/cf.env
+   CASHFREE_CLIENT_ID=<id>
+   CASHFREE_CLIENT_SECRET=<secret>
+   CASHFREE_ENV=sandbox
+   CASHFREE_API_VERSION=2026-01-01
+   BILLING_RECONCILE_TOKEN=<the token>
+   ```
+
+   ```bash
+   npx supabase secrets set --env-file ~/cf.env && rm ~/cf.env
    ```
 
    Keep the same reconciliation token for step 9. `billing-api` also reads
@@ -260,9 +531,7 @@ line about Cashfree is from its documentation, read 2026-10-07 (the plan,
 11. **Go live:** production keys and `CASHFREE_ENV=production`, set the same way
     as step 6, on the HOSTED project only; the production webhook URL in the
     production dashboard; one real Re 1 invoice to yourself, then refund it.
-12. **Decide later (no build needed now):** where a finance member's stop
-    button goes (decided: finance may stop, 0061; the button is on Today and
-    System, which finance cannot open); whether
+12. **Decide later (no build needed now):** whether
     `app_config` should tell the apps more than ok, grace and suspended; whether
     a refund should also shorten a licence (now: never automatically); whether
     scans of offline payment proof are needed (deferred; the reference number is
@@ -409,13 +678,12 @@ import tool, refuse in their own code, which asks the database first
    `1dcfcfe`, `18733af`). The tutor's part of plan 4 goes live only after this
    branch is merged with those branches. The contest site is built together
    with the tutor (`npm run build:site`), so it waits for the same merge.
-2. **Apply the migrations** with the rest of the console's, after plan 5's are
-   merged: `npx supabase db push` applies 0062 to 0064 (and plan 5's 0065 to
-   0069, then the merge's 0070, which lets Today read distress capture as
-   captured once a flag arrives or you record the day). The tutor's admission
-   check works with the relay that is live today. System's migration level then
-   reads the last number applied (0070 with both plans), no longer section 5's
-   0061.
+2. **Apply the migrations:** the one push of section 1 step 1 applies 0062 to
+   0064 with the rest (and plan 5's 0065 to 0069, the merge's 0070, which lets
+   Today read distress capture as captured once a flag arrives or you record the
+   day, plan 6's 0071 to 0074 and the final review's 0075). The tutor's
+   admission check works with the relay that is live today. System's migration
+   level reads the highest number applied.
 3. **Deploy the two school services from the merged code**, after the
    migrations: `npx supabase functions deploy lms-admin --no-verify-jwt` and
    `npx supabase functions deploy admin-api --no-verify-jwt`. Until `lms-admin`
@@ -454,8 +722,11 @@ import tool, refuse in their own code, which asks the database first
 - **An app shows a pause or an old-build screen it should not**: check the
   switch's value on Switches (a school's own value on its page). Set
   `app.min_version.*` back to `0.0.0` to release everyone.
-- **A school's children cannot start a class**: its tutor switch is off, the
-  platform's is off, or its licence is suspended (Billing, that school).
+- **A school's children cannot start a class**: its own tutor switch is off,
+  the platform's is off and the school has no value of its own on, or its
+  licence is suspended (Billing, that school).
+- **A school keeps teaching while the platform's switch is off**: it has a
+  value of its own, on. Its Switches tab, "Follow the platform", clears it.
 - **The console cannot be reached**: the apps keep their last values; nothing
   turns on by itself.
 
@@ -496,8 +767,8 @@ the local test database only, and the pages have not been opened in a browser.
 2. **Ask counsel** the questions at the end of this section. Until the answers
    come, every school's decision stays "Not decided" and, on the hosted
    database, nobody can be added to a school.
-3. **Apply the migrations** (after plan 4's): `npx supabase db push` applies
-   0065 to 0069 and the merge's 0070 with the rest. Nothing new to expose: the functions are in
+3. **Apply the migrations:** the one push of section 1 step 1 applies 0065 to
+   0069 and the merge's 0070 with the rest. Nothing new to expose: the functions are in
    `admin` (already exposed) and `lms.report_problem` in `lms`.
 4. **Redeploy `admin-api`** for its two new routes (`class-remove`, `erase`):
    `npx supabase functions deploy admin-api --no-verify-jwt`. No new secret.
@@ -542,6 +813,10 @@ the local test database only, and the pages have not been opened in a browser.
 - **Work erasure requests by due date** (30 days from the day received). A
   school student must be marked as left first (by the school admin, or Disable
   on their card). Verify, then the owner erases from the request's own page.
+  Spec section 13's co-signature by the school's principal is not built yet
+  (plan 6's ruling F1, plan 7): until it is, get the school admin's written
+  agreement before verifying a school student's request, and name it in the
+  reason ("school admin agreed in writing, <date>").
 
 ### If something goes wrong
 
@@ -614,6 +889,12 @@ Storage.
    spend per school, for a school with few active children) describe those
    few children's use together, with no identity; are these allowed, or
    must they be hidden like the learning figures?
+10. Spec section 13 asks for the principal's co-signature on destructive
+    actions on a school's data (erasing a child, offboarding). Until it is built
+    (plan 7), Qrie staff can erase a school child's records with the school
+    admin's written agreement as the only check outside Qrie. Is that enough if
+    the school is the data fiduciary (question 1), and what must the
+    co-signature be (who signs, in which app, before which step)?
 
 ## 9. The charts (plan 6)
 
@@ -691,9 +972,9 @@ merged with `phase3-completion` and `voice-stt-tts` (743c05a, 1dcfcfe,
 
 ### Setup, once (Aarav's steps)
 
-1. **Apply the migrations:** `npx supabase db push` applies 0071 to 0074 with
-   the rest (the hosted project had nothing past 0025 on 2026-10-03, STALE:
-   0026 to 0070 go first). Nothing new to expose: every function is in
+1. **Apply the migrations:** the one push of section 1 step 1 applies 0071 to
+   0074 with the rest (the hosted project had nothing past 0025 on 2026-10-03,
+   STALE). Nothing new to expose: every function is in
    `admin`.
 2. **Check the job:** on the System page, `admin-metrics-nightly` appears with
    the schedule `50 18 * * *`; after the first night its last run should read
