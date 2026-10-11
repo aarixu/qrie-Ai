@@ -528,6 +528,37 @@ describe('the mic goes off by itself', () => {
     expect(ear.listens).toBe(listens);
   });
 
+  /**
+   * A DOUBT RAISED AT THE QUESTION THE MIC WAS TURNED ON FOR (integration
+   * audit, 2026-10-11). After "Got it" she re-speaks that beat, and the mic
+   * stayed lit through her teaching because it still named that beat. The
+   * re-spoken narration is held here, or the question is held again in the
+   * same microtask and the test proves nothing.
+   */
+  it('once a doubt raised at the question it was turned on for is over, while she re-teaches that beat', async () => {
+    let n = 0;
+    const host = await openClass(asking, sayAll((t) => t.endsWith(asking.beats[0].narration) && ++n === 2));
+    expect(questionHeld(host)).toBe(true);
+    await tapMic(host); // nothing queued
+    expect(micLabel(host)).toBe('Turn the mic off');
+    await act(async () => {
+      host.querySelector<HTMLElement>('[aria-label="Raise hand and ask a doubt"]')!.click();
+    });
+    await tick(12);
+    expect(inDoubt(host)).toBe(true);
+    expect(ear.open).toBe(true); // the doubt keeps the mic
+    await act(async () => {
+      host.querySelector<HTMLElement>('[aria-label="Got it — back to the class"]')!.click();
+    });
+    await tick(16);
+    expect(inDoubt(host)).toBe(false);
+    expect(spoken.filter((s) => s.endsWith(asking.beats[0].narration))).toHaveLength(2); // mid re-teach
+    expect(questionHeld(host)).toBe(false);
+    expect(ear.open).toBe(false);
+    expect(micLabel(host)).toBe('Turn the mic on');
+    expect(ear.speech).toBeNull();
+  });
+
   it('once the doubt it was turned on for is over and the class is back', async () => {
     const host = await openClass(teaching);
     ear.queued = ['wait, why is blood red?', 'haan samajh aa gaya'];
@@ -540,6 +571,38 @@ describe('the mic goes off by itself', () => {
     const listens = ear.listens;
     await tick(12);
     expect(ear.listens).toBe(listens);
+  });
+});
+
+/**
+ * THE BOARD WRITES AS SHE SPEAKS, FROM THE FIRST LINE (integration audit,
+ * 2026-10-11). The board used to draw beat 0 the moment the room mounted, so
+ * she greeted the student over a board already written and the first line's
+ * ink never appeared while she said it.
+ */
+describe('the first line is written as she says it', () => {
+  it('shows a blank board while she greets, and beat 0 draws in as she starts it', async () => {
+    let release: () => void = () => undefined;
+    const tts: TtsAdapter = {
+      speak(text) {
+        spoken.push(text);
+        if (/^(Hi|Welcome back)\b/.test(text)) return new Promise<void>((resolve) => (release = resolve));
+        return new Promise<void>(() => undefined);
+      },
+      cancel() {
+        release();
+      },
+    };
+    const host = await openClass(teaching, tts);
+    const board = (): HTMLElement => host.querySelector('section') as HTMLElement;
+    expect(spoken.some((s) => /^(Hi|Welcome back)\b/.test(s)), 'she is greeting').toBe(true);
+    expect(board().querySelectorAll('[data-element-id]')).toHaveLength(0);
+    await act(async () => {
+      release();
+    });
+    await tick(12);
+    expect(spoken[spoken.length - 1]).toContain(teaching.beats[0].narration);
+    for (const id of teaching.beats[0].show) expect(board().querySelector(`[data-element-id="${id}"]`), id).not.toBeNull();
   });
 });
 

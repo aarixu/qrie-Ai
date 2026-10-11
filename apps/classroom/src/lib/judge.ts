@@ -37,8 +37,8 @@ export { parseVerdict, parseFollowUp } from '@ai-tutor/tutor-judge';
  * The planner's model, through the same relay.
  *
  * It was 'google/gemini-3-flash-preview' — an OpenRouter-era name the relay's
- * allow-list REFUSES with a 400. The class swallows a failed judge on purpose
- * ("says nothing and leaves the chips standing"), so every spoken answer in
+ * allow-list REFUSES with a 400. The class swallowed a failed judge on purpose
+ * ("says nothing and leaves the chips standing", when there were chips), so every spoken answer in
  * production was silently never judged. Found by measuring the cost of a class,
  * not by a test.
  *

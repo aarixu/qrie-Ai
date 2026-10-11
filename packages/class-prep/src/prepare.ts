@@ -1327,13 +1327,19 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   // board — and it would be spent recovering a word we already have.
   for (const beat of blueprint.beats) beat.topic ||= blueprint.title;
 
-  // A composed board is taught line by line (sayLines.ts): a beat the planner
-  // wrote as one narration is written again as its sentences.
+  // Every board is taught line by line (sayLines.ts): a beat the planner wrote
+  // as one narration is written again as its sentences, so its ink arrives as
+  // she says each one. Stacked classes too since 2026-10-11: every live class
+  // is stacked while COMPOSE_LIVE_CLASSES is off, and a one-narration beat was
+  // one moment (all its ink in two seconds, then a still board). A split beat
+  // has lines, so the line rules (classMustAsk, saidButNotWritten, echo) now
+  // reach it and can ask for the one repair round.
   const asLines = (plan: Blueprint, who: string): void => {
-    if (!opts.composed) return;
     const split = splitNarrations(plan.beats, plan.visuals);
     if (split > 0) issues.push(`Wrote ${split} beat(s) of the ${who} as lines: the planner gave each one narration and no line.`);
-    // And what each line talks about is marked as she says it (marks.ts).
+    // What each line talks about is marked as she says it (marks.ts): the
+    // composed board's annotation, not the stacked board's.
+    if (!opts.composed) return;
     const marked = addMarks(plan.beats, plan.visuals);
     if (marked > 0) issues.push(`Marked ${marked} thing(s) in the ${who} as the lines talk about them.`);
   };

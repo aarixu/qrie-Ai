@@ -436,6 +436,23 @@ export async function prepareLiveClass(
   // photographs too (below): the student is watching that copy.
   let draftLesson: Lesson | null = null;
 
+  /**
+   * THE NOUNS ARE LOOKED FOR AS SOON AS THE DRAFT EXISTS (integration audit,
+   * 2026-10-11). prepareClass waits on every main picture, and the student is
+   * already in the room on the draft, where a placed thing with no photo yet
+   * is a dashed word box: for tens of seconds, sometimes minutes. So the
+   * search starts with the draft, alongside the main pictures, and the draft
+   * is dressed the moment it lands. Same number of looks, earlier. The final
+   * lesson is dressed from the same finds (photos are keyed by noun); a noun
+   * the final lesson added gets an icon, as every unfound noun does.
+   */
+  const photoSearch = ask.web === null ? null : (ask.web ?? NOUN_PHOTO_SEARCH);
+  const lookFor = (lesson: Lesson): Promise<Map<string, FoundPicture>> =>
+    photoSearch
+      ? findNounPhotos(lesson, ask.topic, photoSearch, createBrowserVision(VISION_MODEL)).catch(() => new Map<string, FoundPicture>())
+      : Promise.resolve(new Map<string, FoundPicture>());
+  let early: Promise<Map<string, FoundPicture>> | null = null;
+
   const result = await prepareClass({
     topic: ask.topic,
     language,
@@ -470,6 +487,13 @@ export async function prepareLiveClass(
           onDraft: (draft: { lesson: Lesson; assets: Record<string, string> }) => {
             draftLesson = draft.lesson;
             warm.onDraft(draft);
+            early = lookFor(draft.lesson);
+            void early.then((photos) => {
+              if (photos.size === 0) return;
+              // Into the record the room is drawing from, then a redraw.
+              Object.assign(draft.assets, dressNounPhotos(draft.lesson, photos));
+              warm.onArt();
+            });
           },
           onAsset: () => warm.onArt(),
         }
@@ -495,15 +519,9 @@ export async function prepareLiveClass(
    * library, the picker and the icon artist; the rest go on exactly as before.
    * `web: null` turns this off with the picture search.
    */
-  let photos = new Map<string, FoundPicture>();
-  const photoSearch = ask.web === null ? null : (ask.web ?? NOUN_PHOTO_SEARCH);
-  if (photoSearch) {
-    try {
-      photos = await findNounPhotos(result.lesson, ask.topic, photoSearch, createBrowserVision(VISION_MODEL));
-    } catch {
-      // Icons for every noun, as before.
-    }
-  }
+  // Started with the draft when there was one (above); otherwise now. A
+  // search that fails leaves every noun to its icon, as before.
+  const photos = await ((early as Promise<Map<string, FoundPicture>> | null) ?? lookFor(result.lesson));
   const photoAssets = dressNounPhotos(result.lesson, photos);
   const watching = draftLesson as Lesson | null;
   if (watching && watching !== result.lesson) dressNounPhotos(watching, photos);

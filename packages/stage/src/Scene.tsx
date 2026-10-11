@@ -506,9 +506,10 @@ function renderBox(el: Extract<Element, { kind: 'box' }>): ReactElement {
  * a student scanning the board for "left ventricle" should find it without
  * reading the sentence around it.
  *
- * In the tutor's printed hand rather than her written one. Her handwriting is
- * for the two or three sentences she wants remembered; four definitions in
- * cursive on a phone screen is a paragraph nobody reads.
+ * Set as board text, not written out stroke by stroke: her written lines (the
+ * same Quicksand face since 2026-10-07, no longer a handwriting) are for the
+ * two or three sentences she wants remembered; four definitions written out
+ * stroke by stroke on a phone screen is a paragraph nobody waits for.
  *
  * New on the board, its items arrive one after another, all within
  * SEQUENCE_CAP_MS; already there, it is drawn complete.

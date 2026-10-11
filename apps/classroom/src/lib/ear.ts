@@ -20,7 +20,8 @@ import { relayFetch } from './relay';
  * micLevelOf's 0..1 loudness, where speech sits roughly 0.12-0.9:
  *
  *   waiting    nobody has spoken yet. Give up after graceMs - an unanswered
- *              question is the chips' job, not a mic held open forever.
+ *              question is the room's nudge-and-hint ladder's job (ClassRoom 'THE EAR'),
+ *              not a mic held open forever.
  *   listening  speech has started. A dip below stopLevel is only the end
  *              after silenceMs of it - students breathe mid-answer.
  *   heard      the answer is over (trailing silence, or the hard cap).
@@ -137,7 +138,8 @@ export interface Heard {
  * Open the mic, take one spoken answer, close the mic, transcribe.
  *
  * Never throws: a silent room, a denied mic and a dead network are all
- * ordinary outcomes - the chips under the question carry those cases.
+ * ordinary outcomes - her nudge and hint at a held question, and the typed box
+ * (keyboard button) while the mic is off, carry those cases.
  */
 /**
  * A mic that has delivered nothing for this long is not a quiet room — the

@@ -247,8 +247,9 @@ export class PlayerController {
     if (correct) {
       this._pendingAsk = null;
       this.askAnswered = true;
-      // Announced like any state change: the room renders the held question,
-      // so resolving it silently would leave the chips on screen.
+      // Announced like any state change: the room reads pendingAsk (the held
+      // question and her listening shape), so resolving it silently would
+      // leave the room waiting on a question that is over.
       this.emit('statechange');
       this.askGate?.();
     }

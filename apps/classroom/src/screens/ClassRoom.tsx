@@ -602,7 +602,7 @@ export function ClassRoom({
    * phone it does not: two refusals on Android and one on iOS and the prompt
    * never appears again. So the student meets a sentence they understand
    * before they meet a system dialog, and "not now" is a real answer that
-   * costs nothing — the chips under her question still work.
+   * costs nothing — the typed box under the board still takes the answer.
    */
   /**
    * One ask at a time: a second card must not replace the first — the first
@@ -918,6 +918,11 @@ export function ClassRoom({
         // spoken doubt left behind may reach the next one.
         pendingSpokenDoubt.current = null;
         studentHasFloor.current = false;
+        // The mic turned on for a question does not outlive a doubt raised at
+        // it: she re-speaks that beat now, which is her teaching, and the
+        // effect after `talk` closes the mic for it (integration audit,
+        // 2026-10-11). She re-asks with the mic off; a tap opens it again.
+        micBeat.current = null;
         setTextLines([]);
         setTranscript([]);
         setMuted(false);
@@ -1883,6 +1888,12 @@ export function ClassRoom({
           setAnswerOpen(true);
         }
         setAnswerOpen(false);
+        // The mic goes off with the warm-up it was turned on for, once its last
+        // question is answered: before her verdict and her greeting, so a lit
+        // button never sits through her talking into the class (integration
+        // audit, 2026-10-11). Between two questions it stays on: one tap
+        // answers the whole warm-up, and she is not teaching in between.
+        if (step === items.length - 1 && earReadyRef.current) closeClassEar();
         if (done()) break;
         const answer = options[question.correctIndex];
         if (chosen !== null) ledger.warmedUp(question, chosen, Date.now() - clockFrom);
@@ -1905,6 +1916,8 @@ export function ClassRoom({
     } finally {
       setAnswerOpen(false);
       setWarmingUp(false);
+      // And on every way out of the warm-up (a break, a halt).
+      if (earReadyRef.current) closeClassEar();
     }
     return true;
   };
@@ -2124,7 +2137,8 @@ export function ClassRoom({
    * than the one whose question it was turned on for (`micBeat`) — it closes,
    * so a noisy room never stops her. A next beat that asks too is her teaching
    * first: the mic does not carry into it, nor from the warm-up into the
-   * first beat.
+   * first beat. The `micBeat` exception does not survive a doubt: when one
+   * ends she re-speaks the beat, and that is her teaching too.
    */
   useEffect(() => {
     if (earReady && player.state === 'playing' && !inDoubt && !heldAskBeat && (player.beat?.id ?? null) !== micBeat.current) {
@@ -2316,7 +2330,7 @@ export function ClassRoom({
           : 'idle';
 
   // The class has halted. The room is replaced rather than covered, so no
-  // control under it — play, raise hand, the answer chips — can be reached by
+  // control under it — raise hand, the typed answer, the mic — can be reached by
   // a stray tap or a keyboard. Its one way out is the way out of the class.
   if (support !== null) return <SupportScreen line={support} onLeave={onExit} />;
 
@@ -2326,11 +2340,20 @@ export function ClassRoom({
       style={sideways ? STAGE_FIT : undefined}
       className={`relative bg-white overflow-hidden ${sideways ? '' : 'w-full aspect-video flex-shrink-0'}`}
     >
-      <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
+      {/* THE BOARD WRITES AS SHE SPEAKS, FROM THE FIRST LINE (integration
+          audit, 2026-10-11). Mounted only once the class has begun: before,
+          beat 0 drew in while the room was joining and she greeted the student
+          over a board already written. Mounted on play(), the Scene draws beat
+          0 in as she starts saying it, and its camera lands on beat 0 at once
+          (an empty set would frame the whole board and pan from it). A resumed
+          class plays and seeks in one run, so it mounts on its beat. */}
+      {classStarted && (
+        <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
+      )}
 
       {/* Whose pictures these are, with the links their licences ask for: a
           small control in the corner, opened on a tap (review, 2026-10-08). */}
-      {!joining && creditsOf(board.sceneLesson).length > 0 && (
+      {!joining && classStarted && creditsOf(board.sceneLesson).length > 0 && (
         <div className="absolute left-2 bottom-2 z-10 max-w-[75%]">
           {showCredits ? (
             <div className="rounded-md bg-white/95 p-2 shadow">
@@ -2343,7 +2366,7 @@ export function ClassRoom({
             <button
               type="button"
               onClick={() => setShowCredits(true)}
-              className="rounded bg-white/80 px-1.5 py-0.5 text-[10px] text-slate-600"
+              className="min-h-8 rounded bg-white/80 px-2.5 text-[11px] text-slate-600"
             >
               Picture credits
             </button>

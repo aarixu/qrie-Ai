@@ -471,6 +471,10 @@ export default defineConfig(({ mode }) => {
         '@ai-tutor/tutor-control': pkg('tutor-control'),
         '@ai-tutor/action-player': pkg('action-player'),
         '@ai-tutor/maic-adapter': pkg('maic-adapter'),
+        // Without it the bundle took packages/teacher-clone through
+        // node_modules, which in a worktree is a junction to the main
+        // checkout: another checkout's files, bundled silently (2026-10-11).
+        '@ai-tutor/teacher-clone': pkg('teacher-clone'),
       },
     },
     server: {

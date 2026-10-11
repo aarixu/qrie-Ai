@@ -567,17 +567,16 @@ export interface Beat {
   /**
    * BOARD KEPT CLEAR BESIDE THE HELD QUESTION, for the student's working.
    *
-   * Present only on a beat that carries an `ask`, and only when the layout
-   * found room for it on the question's own page (board-layout's layoutBeat
-   * reserves it; class-prep's overlap gate checks no prepared ink is inside
-   * it). Absent is an ordinary state: every lesson written before this field
-   * existed has none, and a live board that wants to write there opens a
-   * fresh page instead.
+   * Present only on a beat that carries an `ask`, and only in classes kept
+   * between 2026-09-29 and 2026-10-01: board-layout no longer reserves one
+   * (an asked question writes nothing on the board since 2026-10-01;
+   * board-layout tests/heldAsk.test.ts). Absent is an ordinary state, and a
+   * live board that wants to write there opens a fresh page instead.
    *
    * `id` names the area, so a later writer and an overlap report can refer to
-   * it; the box is in the same canvas units as every element. NOTHING READS
-   * THIS AT PLAYBACK YET — it is the prepared half of a live board that does
-   * not exist in this checkout.
+   * it; the box is in the same canvas units as every element. At playback the
+   * classroom's BoardSession.writeHeld reads it, for the kept classes that
+   * have one: her hint and answer notes go there while the question is held.
    *
    * Optional and unvalidated on purpose: the classroom validates every lesson
    * it loads, and a new load-time rule would take kept classes offline.

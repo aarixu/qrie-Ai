@@ -14,7 +14,7 @@ import {
   prepareDoubtTurn,
   type TurnInput,
 } from '../src/lib/doubtBoard';
-import { MALFORMED_REPLY_LINE, MALFORMED_REPLY_LINE_HI } from '../src/lib/geminiAgent';
+import { MALFORMED_REPLY_LINE, MALFORMED_REPLY_LINE_HI, buildDoubtSystemPrompt } from '../src/lib/geminiAgent';
 import { flagStore, recentFlags } from '../src/stores/flags';
 
 /**
@@ -179,6 +179,44 @@ describe('every string is screened before anything is said or drawn', () => {
   it('distress written as ink halts it too', () => {
     const out = prepareDoubtTurn(input([{ say: 'Look.', ink: [{ op: 'write', text: 'i want to kill myself' }] }]));
     expect(out.kind).toBe('halt');
+  });
+});
+
+/**
+ * A QUESTION IS ONLY SPOKEN, IN A DOUBT TOO (integration audit, 2026-10-11).
+ * The prepared class has written no question since 2026-10-01; the doubt
+ * tutor is told to guide "with a smaller question" while it writes, and
+ * nothing stopped that question landing on the board. Its sentence is still
+ * said; only the written question goes.
+ */
+describe('a question she asks in a doubt is said, never written', () => {
+  const texts = (out: ReturnType<typeof prepareDoubtTurn>): string[] =>
+    out.kind === 'turn' && out.laid ? out.laid.state.elements.map((el) => JSON.stringify(el)) : [];
+
+  it('drops written ink that asks, keeps the sentence and the rest of the ink', () => {
+    const out = prepareDoubtTurn(
+      input([
+        { say: 'What do you think happens to the water?', ink: [{ op: 'write', text: 'What happens to the water?' }] },
+        { say: 'Ice is lighter than water.', ink: [{ op: 'note', text: 'Ice floats: less dense' }] },
+      ]),
+    );
+    if (out.kind !== 'turn') throw new Error('expected a turn');
+    expect(out.lines.map((l) => l.say)).toEqual(['What do you think happens to the water?', 'Ice is lighter than water.']);
+    expect(texts(out).some((t) => t.includes('?'))).toBe(false);
+    expect(texts(out).some((t) => t.includes('Ice floats: less dense'))).toBe(true);
+    expect(out.dropped.some((d) => d.reason === 'a question is only spoken, never written')).toBe(true);
+  });
+
+  it('keeps an arrow and drops only its asking label; keeps a worked solution and drops only its asking line', () => {
+    const out = prepareDoubtTurn(
+      input([
+        { say: 'Look at this part.', ink: [MARK_B3_2, { op: 'arrow', fromId: 'b3_2', toId: 'b3_2', label: 'why?' }] },
+        { say: 'Work it through.', ink: [{ op: 'work', steps: [{ say: 'Open it.', line: '7(3 - 2y) = 21 - 14y' }, { say: 'And?', line: 'x = ?' }] }] },
+      ]),
+    );
+    if (out.kind !== 'turn') throw new Error('expected a turn');
+    expect(texts(out).some((t) => t.includes('?'))).toBe(false);
+    expect(texts(out).some((t) => t.includes('21 - 14y'))).toBe(true);
   });
 });
 
@@ -417,6 +455,12 @@ describe('createDoubtBoard', () => {
     expect(r.session.canvas(at3_2).visible).toContain('live1_copy');
     expect(r.session.canvas(at3_2).frame).toContain('live1_copy');
     expect(r.session.doubt).toEqual({ hasPage: true, subject: 'b3_2' });
+  });
+
+  it('tells her a question she asks is only spoken (the guard a missing "?" relies on)', () => {
+    const r = rig();
+    const brief = buildDoubtSystemPrompt(r.ctx, { klass: 10 }, r.board);
+    expect(brief).toContain('A question you ask is only SPOKEN');
   });
 
   it('what she is told is on the board includes the ink she has drawn, as hers', () => {

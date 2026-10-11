@@ -94,7 +94,7 @@ describe('the enrolment flow', () => {
   });
 
   it('does not tell a parent that typed or spoken words stay on the device', () => {
-    // lib/ear.ts:205 posts every spoken answer to /api/hear and says so in its
+    // lib/ear.ts postAnswer posts every spoken answer to /api/hear and says so in its
     // own docblock; the doubt agent posts typed turns to /api/llm. A consent
     // taken on a false statement of processing is the one defect on this
     // screen with a legal edge as well as an honesty one.

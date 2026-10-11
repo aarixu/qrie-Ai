@@ -126,7 +126,7 @@ declare global {
 
 /*
  * One download and one parse per page, however many tiles mount: the phone
- * PiP unmounts whenever answer chips are up and mounts again after, and
+ * PiP unmounted whenever answer chips were up (there are none since 2026-10-01) and mounted again after, and
  * reloading her on every return would stall the class each time. Each tile
  * wears its own skinned clone of the shared template.
  */

@@ -337,8 +337,19 @@ describe('prepareClass, given a plan written as narrations', () => {
     expect(lesson.beats.map((b) => b.narration)).toEqual(sentencesOf(corrected.beats[0].narration));
   });
 
-  it('leaves a class that is not composed as the planner wrote it', async () => {
-    const { lesson } = await run(false);
-    expect(lesson.beats).toHaveLength(1);
+  /**
+   * A STACKED CLASS IS TAUGHT LINE BY LINE TOO (integration audit,
+   * 2026-10-11). Every live class is stacked (COMPOSE_LIVE_CLASSES is off), and
+   * a beat the planner wrote as one narration was one moment: all its ink
+   * arrived in the first two seconds while she talked for fifteen. Never seen
+   * on the stacked prompt yet (every stacked-prepared lesson came back with
+   * lines), so this closes a door rather than fixing a seen class. Only the
+   * composed board adds marks.
+   */
+  it('teaches a class that is not composed line by line too, and adds no marks', async () => {
+    const { lesson, report } = await run(false);
+    expect(lesson.beats.map((b) => b.narration)).toEqual(sentencesOf(PLAN.beats[0].narration));
+    expect(report.issues.some((i) => /as lines/.test(i))).toBe(true);
+    expect(report.issues.some((i) => /Marked \d+ thing/.test(i))).toBe(false);
   });
 });

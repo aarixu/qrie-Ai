@@ -19,8 +19,9 @@ export interface Preferences {
    */
   voice: boolean;
   /**
-   * Show what she says as text, in a strip beside the board — never on it
-   * (screens/ClassRoom.tsx). Off by default since 2026-10-01: Aarav's board
+   * Show what she says as text, in a strip under the board; on a sideways
+   * phone, where the full-screen board leaves no room under it, along its
+   * bottom edge (screens/ClassRoom.tsx). Off by default since 2026-10-01: Aarav's board
    * carries no subtitles, and captions stay only as this setting.
    */
   captions: boolean;

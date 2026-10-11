@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { relayFetch, relayUrl } from './relay';
-import { createBrowserTts, type TtsAdapter } from '@ai-tutor/player';
+import { createBrowserTts, estimateSpeechMs, type TtsAdapter } from '@ai-tutor/player';
 import { MANIFEST_FILE, createPcmStreamTts, createRecordedTts, parseManifest } from '@ai-tutor/voice';
 import { tutorLanguage } from './workspace';
 import type { Lesson } from '@ai-tutor/lesson-format';
@@ -47,8 +47,8 @@ export function useLessonVoice(
     if (title === undefined) return;
 
     // Voice off is not the browser voice at low volume — it is no voice. The
-    // player still needs an adapter to time the beats, and the timer adapter
-    // inside createBrowserTts does exactly that when speech is unavailable.
+    // player still needs an adapter to time the beats, and createSilentTts
+    // (below) times each line as long as it would take to say.
     if (!enabled) {
       // Announces each line as it is asked for, so the board's ink still
       // appears with its sentence when the voice is switched off.
@@ -146,11 +146,38 @@ export function useLessonVoice(
   return tts;
 }
 
-/** Silence that still advances the class: no sound, no waiting on a voice. */
-function createSilentTts(): TtsAdapter {
+/**
+ * SILENCE THAT TAKES THE TIME A LINE TAKES.
+ *
+ * No sound, but each line still lasts as long as it would take to say
+ * (`estimateSpeechMs`), so the board writes and the captions, which are on
+ * whenever the voice is off, show each line for as long as it would be heard.
+ * It used to resolve at once, and every beat without a question advanced in a
+ * microtask: the class raced to the next question or the end (integration
+ * audit, 2026-10-11). Cancelled, or followed by the next line, it settles at
+ * once: the same contract as the player's own timer voice.
+ */
+export function createSilentTts(): TtsAdapter {
+  let pendingFinish: (() => void) | null = null;
   return {
-    speak: () => Promise.resolve(),
-    cancel: () => undefined,
+    speak(text: string): Promise<void> {
+      pendingFinish?.();
+      return new Promise<void>((resolve) => {
+        let settled = false;
+        const finish = (): void => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          if (pendingFinish === finish) pendingFinish = null;
+          resolve();
+        };
+        pendingFinish = finish;
+        const timer = setTimeout(finish, estimateSpeechMs(text));
+      });
+    },
+    cancel(): void {
+      pendingFinish?.();
+    },
   };
 }
 

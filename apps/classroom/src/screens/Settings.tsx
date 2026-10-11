@@ -38,7 +38,7 @@ const PLAYBACK: { key: BooleanPreference; icon: string; label: string; hint: str
     icon: 'closed_caption',
     label: 'Captions',
     // Where ClassRoom puts them, and when it shows them anyway (stores/preferences.ts showCaptions).
-    hint: 'Show what the tutor is saying as text, beside the board. Always on while her voice is off.',
+    hint: 'Show what the tutor is saying as text, under the board (along its bottom edge when your phone is sideways). Always on while her voice is off.',
   },
   {
     key: 'autoplayNext',
