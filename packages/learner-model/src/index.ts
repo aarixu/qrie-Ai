@@ -65,6 +65,18 @@ export {
 
 export { gainPerLearningMinute, unassistedGain } from './metric.ts';
 
+// A basic understanding of one learner, read off the model: secure, needs
+// work, only with help, wrong ideas, due for review, and one plain sentence.
+export {
+  NEEDS_WORK_BELOW,
+  WITH_HELP_FROM,
+  learnerProfile,
+  type LearnerProfile,
+  type ProfileOptions,
+  type ProfileOutcome,
+  type ProfileWrongIdea,
+} from './profile.ts';
+
 // The 3.7 projections: pure functions over ledger events, shown only in the
 // inspector. Assistance-blended score (ASSISTments), hint abuse, and
 // wheel-spinning — the last computable only on the surfaces that ask cold.
