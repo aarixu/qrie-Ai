@@ -14,6 +14,24 @@ then http://localhost:5182. `tools/admin-demo/README.md` has the demo logins
 and says what is fake there (Auth, Cashfree, Storage); it is local only and
 never deployed.
 
+**Where it runs today (2026-10-11): a separate project, not the live tutor's.**
+The console is at https://qrie-control.vercel.app (Vercel project
+`qrie-control`, a static deploy of `apps/admin` built with
+`VITE_ADMIN_ENV=STAGING`). Its database is the Supabase project "Qrie Control"
+(`nwlbwqlmmwmdrgxnjubq`, Mumbai), made for it: migrations 0001 to 0075 pushed;
+the `admin` schema exposed (`lms` is not); sign-up off; passwords of 12 or more
+characters; TOTP on; `admin-api` and `billing-api` deployed with
+`ADMIN_ORIGIN=https://qrie-control.vercel.app`. `billing-api` answers 503 until
+the Cashfree keys are set (section 6). The live tutor's project ("Qrie Ai") was
+not touched. Its database password is in `~/.qrie-secrets` on the laptop that
+made it, not in this repository. **Your step:** make the owner with
+`powershell -ExecutionPolicy Bypass -File tools/admin-bootstrap/make-owner.ps1 -ProjectRef nwlbwqlmmwmdrgxnjubq -Environment STAGING`,
+then sign in at the address above and enrol your authenticator at once. To
+redeploy after a change: build with the same three `VITE_` values and deploy
+`apps/admin/dist` with `apps/admin/vercel.json`'s headers and rewrite (no
+build step on Vercel). Moving it to a subdomain later: add the domain to the
+Vercel project, then update `ADMIN_ORIGIN` and the Auth site URL to match.
+
 ## 0. Your steps, in order
 
 The steps of the sections below, as one list in the order to do them; each
