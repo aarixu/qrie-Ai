@@ -22,8 +22,8 @@ describe('the sidebar follows the signed-in role', () => {
     expect(titles('ops')).toEqual(expect.arrayContaining(['Classes', 'Privacy']));
   });
 
-  it('safety sees Today, Schools, Switches, Apps, System, Your account, Safety and Classes', () => {
-    expect(titles('safety')).toEqual(['Today', 'Schools', 'Switches', 'Apps', 'System', 'Your account', 'Safety', 'Classes']);
+  it('safety sees Today, Schools, Switches, Apps, System, Your account, Safety, Classes and Charts', () => {
+    expect(titles('safety')).toEqual(['Today', 'Schools', 'Switches', 'Apps', 'System', 'Your account', 'Safety', 'Classes', 'Charts']);
   });
 
   it("plan 5's Safety and privacy group goes through plan 4's role filter: safety sees Safety, finance sees none of the group", () => {
@@ -35,7 +35,7 @@ describe('the sidebar follows the signed-in role', () => {
     expect(group('finance')).toBeUndefined();
   });
 
-  it('finance sees Your account and the Billing pages, and nothing about children or switches', () => {
+  it('finance sees Your account, the Billing pages and the Money chart, and nothing about children or switches', () => {
     expect(titles('finance')).toEqual([
       'Your account',
       'Billing',
@@ -46,8 +46,37 @@ describe('the sidebar follows the signed-in role', () => {
       'Webhook log',
       'Plans',
       'Settings',
+      'Charts',
     ]);
-    expect(navFor('finance', sidebarData).map((g) => g.title)).toEqual(['Platform', 'Billing']);
+    expect(navFor('finance', sidebarData).map((g) => g.title)).toEqual(['Platform', 'Billing', 'Charts']);
+  });
+
+  it('the Charts pages follow the role: owner all eight, ops all but Safety, safety Safety only, finance Money only', () => {
+    const charts = (role: Me['role']) =>
+      navFor(role, sidebarData)
+        .find((g) => g.title === 'Charts')
+        ?.items.flatMap((i) => (i.items ?? []).map((s) => s.title));
+    expect(every[every.length - 1]).toBe('Charts');
+    expect(charts('owner')).toEqual(['Overview', 'Money', 'Schools', 'Learning', 'Content', 'Reliability', 'Funnel', 'Safety']);
+    expect(charts('ops')).toEqual(['Overview', 'Money', 'Schools', 'Learning', 'Content', 'Reliability', 'Funnel']);
+    expect(charts('safety')).toEqual(['Safety']);
+    expect(charts('finance')).toEqual(['Money']);
+  });
+
+  it('a collapsible left with no sub-items is dropped', () => {
+    const data = {
+      navGroups: [
+        {
+          title: 'G',
+          items: [
+            { title: 'Open', url: '/x' },
+            { title: 'Folder', items: [{ title: 'Owner only', url: '/y', roles: ['owner' as const] }] },
+          ],
+        },
+      ],
+    };
+    expect(navFor('ops', data).flatMap((g) => g.items.map((i) => i.title))).toEqual(['Open']);
+    expect(navFor('owner', data).flatMap((g) => g.items.map((i) => i.title))).toEqual(['Open', 'Folder']);
   });
 
   it('an item without roles is for every role', () => {

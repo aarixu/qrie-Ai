@@ -11,3 +11,4 @@ export * from './users.ts';
 export * from './safety.ts';
 export * from './classes.ts';
 export * from './privacy.ts';
+export * from './charts.ts';

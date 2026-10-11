@@ -71,6 +71,7 @@ describe('the admin schema', () => {
       'admin.class_publish',
       'admin.class_remove_prepare',
       'admin.classes',
+      'admin.content_view',
       'admin.contest_purge_set',
       'admin.direct_user',
       'admin.direct_user_block',
@@ -85,6 +86,9 @@ describe('the admin schema', () => {
       'admin.flag_list',
       'admin.flag_set',
       'admin.me',
+      'admin.metric_recompute',
+      'admin.metric_series',
+      'admin.money_view',
       'admin.read_log_list',
       'admin.relay_status',
       'admin.report_mark',
@@ -143,6 +147,7 @@ describe('the admin schema', () => {
         'admin.bootstrap_status',
         'admin.class_files_removed',
         'admin.erasure_complete',
+        'admin.metric_nightly',
         'admin.privacy_daily',
         'admin.revert_caps',
         'admin.set_environment',
@@ -164,6 +169,7 @@ describe('the admin schema', () => {
       'admin.bootstrap_status',
       'admin.class_files_removed',
       'admin.erasure_complete',
+      'admin.metric_nightly',
       'admin.privacy_daily',
       'admin.revert_caps',
       'admin.set_environment',
@@ -172,7 +178,7 @@ describe('the admin schema', () => {
     }
   });
 
-  it('keeps the plan-5 internals and the flag door away from browsers', async () => {
+  it('keeps the internals of plans 5 and 6 and the flag door away from browsers', async () => {
     const executable = async (role: string, schema: string, name: string) =>
       (
         await db.query<{ ok: boolean }>(
@@ -192,6 +198,26 @@ describe('the admin schema', () => {
       ['admin', 'activity_lines_naming'],
       ['admin', 'erasure_row'],
       ['admin', 'contest_purge_due'],
+      ['admin', 'ist_start'],
+      ['admin', 'metric_min_group'],
+      ['admin', 'metric_block_end'],
+      ['admin', 'chart_roles'],
+      ['admin', 'signins_readable'],
+      ['admin', 'metric_json'],
+      ['admin', 'metric_compute'],
+      ['admin', 'ceiling_on'],
+      ['admin', 'metric_family_tutor'],
+      ['admin', 'metric_family_spend'],
+      ['admin', 'metric_family_relay'],
+      ['admin', 'metric_family_calls'],
+      ['admin', 'metric_family_money'],
+      ['admin', 'metric_family_webhooks'],
+      ['admin', 'metric_family_schools'],
+      ['admin', 'metric_family_learning'],
+      ['admin', 'metric_family_funnel'],
+      ['admin', 'metric_family_content'],
+      ['admin', 'metric_family_safety'],
+      ['admin', 'content_counts'],
       ['public', 'keep_safety_event'],
     ]) {
       expect(await executable('authenticated', schema, name), `${schema}.${name}`).toBe(false);
