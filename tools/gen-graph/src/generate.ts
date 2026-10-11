@@ -204,54 +204,10 @@ function validateProbes(raw: unknown, nodes: LearningNode[]): { value: Probe[] |
     if (seen.has(probe.nodeId)) errors.push(`${where}: a second probe for the same node`);
     seen.add(probe.nodeId);
 
-    if (!isStr(probe.question)) errors.push(`${where}: needs a non-empty question`);
-
-    if (!Array.isArray(probe.options) || probe.options.length !== 4 || !probe.options.every(isStr)) {
-      errors.push(`${where}: options must be exactly 4 non-empty strings`);
-      return;
-    }
-    if (new Set(probe.options.map((o) => o.trim().toLowerCase())).size !== 4) {
-      errors.push(`${where}: options must all be different`);
-    }
-    for (const banned of ['all of the above', 'none of the above']) {
-      if (probe.options.some((o) => o.trim().toLowerCase().includes(banned))) {
-        errors.push(`${where}: "${banned}" is not allowed as an option`);
-      }
-    }
-    if (
-      typeof probe.correctIndex !== 'number' ||
-      !Number.isInteger(probe.correctIndex) ||
-      probe.correctIndex < 0 ||
-      probe.correctIndex > 3
-    ) {
-      errors.push(`${where}: correctIndex must be an integer from 0 to 3`);
-      return;
-    }
-    if (probe.misconceptions !== undefined) {
-      if (!Array.isArray(probe.misconceptions) || probe.misconceptions.length !== 4) {
-        errors.push(`${where}: misconceptions must have exactly 4 entries, aligned to options`);
-      } else if (String(probe.misconceptions[probe.correctIndex] ?? '').trim() !== '') {
-        errors.push(`${where}: misconceptions[correctIndex] must be an empty string`);
-      } else if (
-        // Long enough to be a sentence about the student's thinking. The
-        // committed-bank test enforces the same floor, and a generator that
-        // accepts what the repo rejects just moves the failure downstream:
-        // "foam" names an option, not the mistake behind choosing it.
-        probe.misconceptions.some(
-          (m, idx) => idx !== probe.correctIndex && String(m ?? '').trim().length <= 4,
-        )
-      ) {
-        errors.push(
-          `${where}: each wrong option needs a misconception saying WHY a student would pick it, not just a word`,
-        );
-      } else if (
-        probe.misconceptions.some((m, idx) => idx !== probe.correctIndex && !isStr(m))
-      ) {
-        errors.push(`${where}: every wrong option needs a named misconception`);
-      }
-    }
-
-    probes.push(probe as unknown as Probe);
+    errors.push(...probeShapeErrors(probe, where, false));
+    // Only a question with four options and a key in range is measured for
+    // the length leak below; the others are already refused.
+    if (answerable(probe)) probes.push(probe as unknown as Probe);
   });
 
   const missing = nodes.filter((n) => !seen.has(n.id)).map((n) => n.id);
@@ -261,6 +217,84 @@ function validateProbes(raw: unknown, nodes: LearningNode[]): { value: Probe[] |
   if (leak !== null) errors.push(leak);
 
   return errors.length > 0 ? { value: null, errors } : { value: probes, errors: [] };
+}
+
+/** Four non-empty options and a key in range: enough to measure the batch by. */
+function answerable(probe: Record<string, unknown>): boolean {
+  return (
+    Array.isArray(probe.options) &&
+    probe.options.length === 4 &&
+    probe.options.every(isStr) &&
+    typeof probe.correctIndex === 'number' &&
+    Number.isInteger(probe.correctIndex) &&
+    probe.correctIndex >= 0 &&
+    probe.correctIndex <= 3
+  );
+}
+
+/**
+ * What is wrong with one question's own shape: a question, four distinct
+ * options with none of the banned ones, a key in range, and (required when
+ * `needMisconceptions`, else checked when present) a sentence per wrong option
+ * with a blank at the key. Shared by the first-question and the
+ * further-question validators, so the two hold every question to one shape.
+ */
+export function probeShapeErrors(
+  probe: Record<string, unknown>,
+  where: string,
+  needMisconceptions: boolean,
+): string[] {
+  const errors: string[] = [];
+  if (!isStr(probe.question)) errors.push(`${where}: needs a non-empty question`);
+
+  if (!Array.isArray(probe.options) || probe.options.length !== 4 || !probe.options.every(isStr)) {
+    errors.push(`${where}: options must be exactly 4 non-empty strings`);
+    return errors;
+  }
+  if (new Set(probe.options.map((o) => o.trim().toLowerCase())).size !== 4) {
+    errors.push(`${where}: options must all be different`);
+  }
+  for (const banned of ['all of the above', 'none of the above']) {
+    if (probe.options.some((o) => o.trim().toLowerCase().includes(banned))) {
+      errors.push(`${where}: "${banned}" is not allowed as an option`);
+    }
+  }
+  if (
+    typeof probe.correctIndex !== 'number' ||
+    !Number.isInteger(probe.correctIndex) ||
+    probe.correctIndex < 0 ||
+    probe.correctIndex > 3
+  ) {
+    errors.push(`${where}: correctIndex must be an integer from 0 to 3`);
+    return errors;
+  }
+  if (needMisconceptions && probe.misconceptions === undefined) {
+    errors.push(`${where}: needs "misconceptions", one per option, blank at the key`);
+  }
+  if (probe.misconceptions !== undefined) {
+    if (!Array.isArray(probe.misconceptions) || probe.misconceptions.length !== 4) {
+      errors.push(`${where}: misconceptions must have exactly 4 entries, aligned to options`);
+    } else if (String(probe.misconceptions[probe.correctIndex] ?? '').trim() !== '') {
+      errors.push(`${where}: misconceptions[correctIndex] must be an empty string`);
+    } else if (
+      // Long enough to be a sentence about the student's thinking. The
+      // committed-bank test enforces the same floor, and a generator that
+      // accepts what the repo rejects just moves the failure downstream:
+      // "foam" names an option, not the mistake behind choosing it.
+      probe.misconceptions.some(
+        (m, idx) => idx !== probe.correctIndex && String(m ?? '').trim().length <= 4,
+      )
+    ) {
+      errors.push(
+        `${where}: each wrong option needs a misconception saying WHY a student would pick it, not just a word`,
+      );
+    } else if (
+      probe.misconceptions.some((m, idx) => idx !== probe.correctIndex && !isStr(m))
+    ) {
+      errors.push(`${where}: every wrong option needs a named misconception`);
+    }
+  }
+  return errors;
 }
 
 /**
@@ -289,7 +323,7 @@ const LENGTH_LEAK_SHARE = 0.5;
 /** Below this many questions the share is noise, not a habit. */
 const LENGTH_LEAK_MIN_BATCH = 6;
 
-function lengthLeak(probes: readonly Probe[]): string | null {
+export function lengthLeak(probes: readonly Probe[]): string | null {
   if (probes.length < LENGTH_LEAK_MIN_BATCH) return null;
   // STRICTLY longer, not tied for longest: four options of the same length is
   // the shape being asked for, and counting a tie as a leak would reject it.
@@ -430,7 +464,7 @@ export function mergeIntoGraph(
  * Parse the reply, then hand it to a validator. A parse failure is reported the
  * same way a validation failure is, so both take the same repair path.
  */
-function parse<T>(
+export function parse<T>(
   raw: string,
   validate: (json: unknown) => { value: T | null; errors: string[] },
 ): Outcome<T> {

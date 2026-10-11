@@ -6,6 +6,7 @@ export type {
   KnowledgeGraph,
   Probe,
   ProbeBank,
+  ProbeRole,
   Mastery,
   Answer,
   Gap,
@@ -38,6 +39,9 @@ export {
 } from './calibration.ts';
 
 export { loadGraph, GraphIndex, type FilterOptions } from './graph.ts';
+
+// Several questions per outcome (lam-one-brain Task 16).
+export { bankProblems, normaliseStem, primaryFirst, PROBE_ROLES } from './probes.ts';
 
 export {
   initialMastery,

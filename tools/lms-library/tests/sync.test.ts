@@ -50,6 +50,17 @@ describe('syncLibrary', () => {
     expect(rows[0].k).toBe(1);
   });
 
+  it('loads every question of a node that has several (Task 16)', async () => {
+    const first = item(7, { libraryRef: 'probe-node-7' });
+    const retest = item(7, { libraryRef: 'probe-node-7-retest', stem: 'Question 7, asked again?' });
+    const r = await syncLibrary([first, retest], pgliteLibraryStore(db));
+    expect(r).toEqual({ inserted: 2, unchanged: 0, changed: [] });
+    const { rows } = await db.query<{ ref: string }>(
+      `select library_ref as ref from lms.item where org_id is null and outcome_ids = array['node-7'] order by library_ref`,
+    );
+    expect(rows.map((x) => x.ref)).toEqual(['probe-node-7', 'probe-node-7-retest']);
+  });
+
   it('keeps library items out of a student’s sight (0023)', async () => {
     const school = await buildSchool(db, 'LIB');
     const { rows } = await asUser(db, school.kid8a, (tx) => tx.query(`select 1 from lms.item`));

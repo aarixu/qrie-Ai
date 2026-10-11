@@ -179,7 +179,7 @@ describe('every other answer is the phone’s word, and says so', () => {
 });
 
 describe('the verified figures (0115)', () => {
-  it('concept_state holds them, unverified by default, and the model is version 5', async () => {
+  it('concept_state holds them, unverified by default, and the model is version 5 or later', async () => {
     const { rows } = await db.query<{ column_name: string; column_default: string }>(
       `select column_name, column_default from information_schema.columns
         where table_schema = 'public' and table_name = 'concept_state'
@@ -192,6 +192,7 @@ describe('the verified figures (0115)', () => {
       `select column_default from information_schema.columns
         where table_schema = 'public' and table_name = 'learner_model' and column_name = 'version'`,
     );
-    expect(Number(v.rows[0].column_default)).toBe(5);
+    // 0116 moved it on to 6 (Task 16); lam-asked-items.test.ts pins that.
+    expect(Number(v.rows[0].column_default)).toBeGreaterThanOrEqual(5);
   });
 });

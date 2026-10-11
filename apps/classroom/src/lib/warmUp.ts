@@ -16,8 +16,14 @@ import { learnerModelStore } from './learnerModel';
  * overdue first — but taken over every due outcome, not `nextActivity`'s top
  * three: three the bank has no question for stopped every warm-up for good
  * (second review). This keeps at most two, never on what the class is about
- * to teach. The probe turns with the outcome's retrieval count, so the next
- * review of the same outcome asks a different question when the bank has one.
+ * to teach.
+ *
+ * WHICH QUESTION (lam-one-brain Task 16). A node may hold several (its first,
+ * a retest, a review, a transfer). The review asks one the learner has not
+ * answered (`askedItems`, the questions the model saw this outcome asked by,
+ * learner-model v6), turning among those by the outcome's retrieval count;
+ * when every one has been answered, the one answered longest ago. So a review
+ * is a different question whenever the bank has one.
  */
 
 export const WARM_UP_MAX = 2;
@@ -96,7 +102,14 @@ export function pickWarmUp(input: {
       .filter((p) => p.nodeId === id && p.options.length > 1 && p.options[p.correctIndex] !== undefined)
       .sort((a, b) => a.id.localeCompare(b.id));
     if (!node || own.length === 0) continue;
-    const probe = own[(input.model.states[id]?.retrievalCount ?? 0) % own.length];
+    const state = input.model.states[id];
+    const asked = state?.askedItems ?? [];
+    const answeredAt = (p: Probe) => asked.indexOf(`probe:${p.id}`);
+    const fresh = own.filter((p) => answeredAt(p) < 0);
+    const probe =
+      fresh.length > 0
+        ? fresh[(state?.retrievalCount ?? 0) % fresh.length]
+        : [...own].sort((a, b) => answeredAt(a) - answeredAt(b))[0];
     picked.push({
       id: probe.id,
       nodeId: id,

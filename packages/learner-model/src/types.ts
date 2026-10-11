@@ -161,6 +161,20 @@ export interface ConceptState {
    * distinct items clear one. Bounded by `MISCONCEPTION_LIMITS`.
    */
   misconceptions: Record<string, Misconception>;
+
+  /**
+   * THE QUESTIONS THIS OUTCOME WAS ASKED BY (v6, lam-one-brain Task 16).
+   *
+   * Item keys (`itemKey` in fold.ts: `probe:`, `item:` or `beat:`) of every
+   * answer on this outcome, right or wrong, at any rung and graded by anyone,
+   * the latest last; a question asked again moves to the end. An answer that
+   * names no question, or one whose key is longer than `ASKED_ITEM_KEY_MAX`,
+   * adds nothing. At most `ASKED_ITEMS_LIMIT`, the oldest
+   * let go first. Read by the class warm-up (apps/classroom warmUp.ts), so a
+   * review asks a question the learner has not answered when the bank holds
+   * one. It moves no belief.
+   */
+  askedItems: string[];
 }
 
 /**
@@ -193,8 +207,23 @@ export interface ConceptState {
  * as the decision belief, so a phone-graded answer can take the stamp away
  * and never give it. A migrated v4 model starts every outcome with nothing
  * verified until a rebuild from the ledger fills it.
+ *
+ * 6 (2026-10-11, Task 16): `askedItems`, the questions each outcome was
+ * asked by, so a review can ask another. No belief moves differently. A
+ * migrated v5 model starts every outcome with none until a rebuild from the
+ * ledger fills them.
  */
-export const MODEL_VERSION = 5;
+export const MODEL_VERSION = 6;
+
+/** How many of an outcome's latest questions `askedItems` keeps. */
+export const ASKED_ITEMS_LIMIT = 8;
+
+/**
+ * The longest item key `askedItems` keeps. A bank probe's is under 150
+ * characters; a longer one is left out, so the list stays inside
+ * concept_state's size line (0116).
+ */
+export const ASKED_ITEM_KEY_MAX = 256;
 
 /** B8's line: unassisted belief at or above this, on spaced distinct items. */
 export const MASTERY_LINE = 0.8;
@@ -299,6 +328,7 @@ export const emptyConceptState = (outcomeId: string): ConceptState => ({
   retrievalCount: 0,
   retrievalAccuracy: 0,
   misconceptions: {},
+  askedItems: [],
 });
 
 export const emptyModel = (): LearnerModel => ({

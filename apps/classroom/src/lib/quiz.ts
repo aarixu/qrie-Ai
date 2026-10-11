@@ -1,4 +1,4 @@
-import type { KnowledgeGraph, LearningNode, Probe, ProbeBank } from '@ai-tutor/knowledge-graph';
+import { primaryFirst, type KnowledgeGraph, type LearningNode, type Probe, type ProbeBank } from '@ai-tutor/knowledge-graph';
 // Same reason as lib/diagnosticData.ts: Vite serves `content/` as publicDir, so
 // `packages/` is never reachable over HTTP. The map and the probe bank have to
 // be bundled, and a quiz has to be in hand the instant the lesson ends.
@@ -140,9 +140,10 @@ const SOURCES: { graph: KnowledgeGraph; bank: ProbeBank }[] = [
   },
 ];
 
-interface Catalogue {
+/** The maps' nodes and every question about them; `buildQuiz` reads the shipped ones. */
+export interface Catalogue {
   node(id: string): LearningNode | undefined;
-  probes: Probe[];
+  probes: readonly Probe[];
 }
 
 // Built once: the join is over every probe in every map, and buildQuiz runs on
@@ -170,9 +171,13 @@ function load(): Catalogue {
  * retrying after a bad score deserves the same test back, not a different one.
  * There is no Math.random in this file, deliberately.
  */
-export function buildQuiz(lessonRef: string, options: QuizOptions = {}): QuizQuestion[] | null {
+export function buildQuiz(
+  lessonRef: string,
+  options: QuizOptions = {},
+  from: Catalogue = load(),
+): QuizQuestion[] | null {
   const { limit = DEFAULT_LENGTH, minimum = MIN_QUESTIONS, topicRef } = options;
-  const { node, probes } = load();
+  const { node, probes } = from;
 
   /**
    * Does this lesson teach that node?
@@ -191,11 +196,17 @@ export function buildQuiz(lessonRef: string, options: QuizOptions = {}): QuizQue
   };
 
   const available: QuizQuestion[] = [];
-  for (const probe of probes) {
+  // One question per node, its first (Task 16): a node may also hold a retest
+  // or a review question, which are for later, and two questions on one
+  // outcome would weigh it twice in the score.
+  const asked = new Set<string>();
+  for (const probe of [...probes].sort(primaryFirst)) {
+    if (asked.has(probe.nodeId)) continue;
     const learningNode = node(probe.nodeId);
     // A probe whose node this lesson does not teach is a question about
     // something the student was never shown.
     if (!learningNode || !teaches(learningNode)) continue;
+    asked.add(probe.nodeId);
     available.push({
       id: probe.id,
       nodeId: probe.nodeId,

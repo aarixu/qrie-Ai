@@ -26,6 +26,10 @@ GEMINI_API_KEY=... node tools/gen-graph/src/cli.ts \
   --syllabus class10-science --chapter all \
   --out packages/knowledge-graph/data/class10-science.json --probes-only
 
+# A retest and a review question for every node that has its first one
+LLM_PROVIDER=vertex node tools/gen-graph/src/cli.ts \
+  --syllabus class10-science --chapter all --more-probes --roles retest,review
+
 # Topics with NO outcomes, inside chapters that already have some
 LLM_PROVIDER=vertex node tools/gen-graph/src/cli.ts \
   --syllabus all --topic-gaps --probes
@@ -36,6 +40,8 @@ LLM_PROVIDER=vertex node tools/gen-graph/src/cli.ts \
 | `--count` | target nodes per chapter (default 40) |
 | `--probes` | also write `<out-basename>.probes.json` |
 | `--probes-only` | skip node generation; write questions for nodes that lack one |
+| `--more-probes` | further questions for nodes that already have one: one per role in `--roles` (default `retest,review`), checked by a second reader, resumable |
+| `--roles` | comma-separated, from `retest`, `review`, `transfer` |
 | `--topic-gaps` | outcomes for topics that hold none, inside chapters that already have nodes. `--count` is per TOPIC here (default 4) |
 | `--dry-run` | print prompts, write nothing, and don't require a key |
 
@@ -82,6 +88,19 @@ hand-authored nodes in chapters the syllabus has not been written up yet;
 `--chapter all --probes-only` covers them too. Without that, those nodes are
 invisible to the diagnostic — a gap that only shows up as a student who can
 never be told what they actually got wrong.
+
+**A second question is checked by a second reader.** `--more-probes`
+(`src/moreProbes.ts`) gives a node that has its first question further ones,
+each with a `role`: `retest` (the same outcome in other words and numbers),
+`review` (asked back at a spaced review) or `transfer` (applied somewhere
+new), at most one per role, ids `<first id>-<role>`. A batch is validated like
+the first-question pass (shape, the length leak) and also refuses a stem the
+node already has once case, spacing and punctuation are set aside, with one
+repair retry. Then two calls that share nothing with the writer: one answers
+each question without the key or the labels, the other reads each wrong
+option's label against the key. A question either does not confirm is
+dropped and logged; the next run asks for it again, because the plan is
+always the roles a node still lacks in the bank on disk.
 
 ## Growing to 10,000 nodes
 

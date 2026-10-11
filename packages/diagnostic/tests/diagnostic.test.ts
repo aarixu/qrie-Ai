@@ -101,6 +101,43 @@ describe('selectNextProbe', () => {
     expect(chapters.size).toBeGreaterThan(1);
   });
 
+  // Task 16: a node may hold its first question and further ones. Placement
+  // asks each node once, by its first question; the further ones are for
+  // later (a retest, a review). Their ids sort first here on purpose.
+  describe('with several questions per node', () => {
+    const several = () => {
+      const { index, bank } = fixture();
+      const extra = bank.probes.map((p) => ({
+        ...p,
+        id: `0-${p.nodeId}-retest`,
+        question: `Another way to ask about ${p.nodeId}?`,
+        role: 'retest' as const,
+      }));
+      return { index, bank: { version: 1 as const, probes: [...extra, ...bank.probes] } };
+    };
+
+    it('asks a node by its first question, and only once', () => {
+      const { index, bank } = several();
+      let s = startSession(index, bank, { klass: 10, subjects: ['Science'] });
+      const asked: Probe[] = [];
+      for (let i = 0; i < 10; i++) {
+        const next = selectNextProbe(s, index, bank);
+        if (!next) break;
+        asked.push(next);
+        s = answerProbe(s, index, next, 0);
+      }
+      expect(asked.length).toBeGreaterThan(0);
+      expect(asked.every((p) => p.role === undefined)).toBe(true);
+      expect(new Set(asked.map((p) => p.nodeId)).size).toBe(asked.length);
+    });
+
+    it('counts the nodes it could still ask, not the questions', () => {
+      const { index, bank } = several();
+      const s = startSession(index, bank, { klass: 10, subjects: ['Science'] });
+      expect(availableProbeCount(s, index, bank)).toBe(6);
+    });
+  });
+
   it('skips nodes outside the chosen class or subjects', () => {
     const { index, bank } = fixture();
     const s = startSession(index, bank, { klass: 9, subjects: ['Science'] });

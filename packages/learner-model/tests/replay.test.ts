@@ -200,6 +200,12 @@ describe('replay', () => {
    * to the unassisted pair because the server graded every cold answer.
    * Nothing else moved.
    */
+  /**
+   * And a sixth time on 2026-10-11, deliberately (MODEL_VERSION 6, the one-brain
+   * plan's Task 16). Each state gains `askedItems`, the beats its answers were
+   * to, in the order answered: `a` was asked B2 (with `b`) and B4, `b` was
+   * asked B1, B2 and B3. Nothing else moved.
+   */
   it('reproduces the known state byte for byte', () => {
     // The invariant the old fixture violated, asserted here so a future fold
     // cannot quietly reintroduce it: a node is observed once per event that
@@ -249,6 +255,7 @@ describe('replay', () => {
               clearing: [],
             },
           },
+          askedItems: ['beat:/B2', 'beat:/B4'],
         },
         b: {
           outcomeId: 'b',
@@ -282,11 +289,12 @@ describe('replay', () => {
           retrievalCount: 2,
           retrievalAccuracy: 1,
           misconceptions: {},
+          askedItems: ['beat:/B1', 'beat:/B2', 'beat:/B3'],
         },
       },
       foldedThrough: { at: '2026-09-15T10:00:00.000Z', sessionId: 's2', seq: 2 },
       helpInFlight: { sessionId: 's2', byAsk: {} },
-      version: 5,
+      version: 6,
     });
   });
 });

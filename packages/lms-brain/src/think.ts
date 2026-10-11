@@ -384,6 +384,7 @@ export const COLUMNS: readonly [Exclude<keyof ConceptState, 'outcomeId'>, string
   ['retrievalCount', 'retrieval_count', 'int'],
   ['retrievalAccuracy', 'retrieval_accuracy', 'real'],
   ['misconceptions', 'misconceptions', 'jsonb'],
+  ['askedItems', 'asked_items', 'jsonb'],
 ];
 
 const INSERT_STATES = `insert into public.concept_state (org_id, user_id, outcome_id, ${COLUMNS.map(([, c]) => c).join(', ')})

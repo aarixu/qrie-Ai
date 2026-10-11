@@ -20,6 +20,8 @@ import { recordColdWin, stampMastery } from './mastered.ts';
 import { recordColdRight, recordWrongIdea } from './misconception.ts';
 import { atLeastANudge, deriveRung, serverGraded } from './rung.ts';
 import {
+  ASKED_ITEM_KEY_MAX,
+  ASKED_ITEMS_LIMIT,
   MAX_CURSOR_GAPS,
   MODEL_VERSION,
   emptyConceptState,
@@ -360,6 +362,18 @@ function itemKey(event: LedgerEvent, payload: AnsweredPayload): string {
 }
 
 /**
+ * `askedItems` after this answer (v6, Task 16): its question moved to the
+ * end, the oldest let go past `ASKED_ITEMS_LIMIT`. The `outcomes:` fallback
+ * of `itemKey` names no question, and a key past `ASKED_ITEM_KEY_MAX` is
+ * no bank question's, so either leaves the list alone.
+ */
+function recordAsked(asked: readonly string[], event: LedgerEvent, payload: AnsweredPayload): string[] {
+  const key = itemKey(event, payload);
+  if (key.startsWith('outcomes:') || key.length > ASKED_ITEM_KEY_MAX) return [...asked];
+  return [...asked.filter((k) => k !== key), key].slice(-ASKED_ITEMS_LIMIT);
+}
+
+/**
  * A number `applyEvidence` will read as an ANSWER rather than as a skip. Never
  * an option index — no surface has one — and never used for anything but the
  * null test at mastery.ts:157.
@@ -559,6 +573,7 @@ function foldAnswer(
       // evidence gate, and attendance must never reach it.
       answerObservations: prev.answerObservations + 1,
       lastPracticedAt: event.at,
+      askedItems: recordAsked(prev.askedItems ?? [], event, payload),
     };
 
     /**

@@ -2,6 +2,7 @@ import {
   GraphIndex,
   informationValue,
   PRIOR,
+  primaryFirst,
   type Probe,
   type ProbeBank,
 } from '@ai-tutor/knowledge-graph';
@@ -85,7 +86,9 @@ export function selectNextProbe(
     const difficultyFit = 1 - difficultyPull * (Math.abs(node.difficulty - targetDifficulty) / 4);
 
     const score = information * spread * difficultyFit;
-    if (!best || score > best.score || (score === best.score && probe.id < best.probe.id)) {
+    // A node may hold several questions (Task 16) and they score alike: its
+    // first question is asked, the further ones are kept for later.
+    if (!best || score > best.score || (score === best.score && primaryFirst(probe, best.probe) < 0)) {
       best = { probe, score };
     }
   }
@@ -98,8 +101,10 @@ export function selectNextProbe(
 const clampDifficulty = (d: number): number => Math.min(5, Math.max(1, d));
 
 /**
- * Which probes could still be asked. Useful for authoring checks — a subject
- * with no probes cannot be diagnosed, and that should fail a lint, not a student.
+ * How many questions could still be asked: nodes in scope with a question,
+ * not yet asked — one each, however many questions a node holds. Useful for
+ * authoring checks — a subject with no probes cannot be diagnosed, and that
+ * should fail a lint, not a student.
  */
 export function availableProbeCount(
   session: DiagnosticSession,
@@ -107,14 +112,15 @@ export function availableProbeCount(
   bank: ProbeBank,
 ): number {
   const subjects = new Set(session.config.subjects);
-  return bank.probes.filter((probe) => {
+  const askable = bank.probes.filter((probe) => {
     if (session.askedNodeIds.has(probe.nodeId)) return false;
     const node = index.node(probe.nodeId);
     if (!node) return false;
     if (node.klass > session.config.klass) return false;
     if (node.klass < session.config.klass - (session.config.lookBack ?? 0)) return false;
     return subjects.size === 0 || subjects.has(node.subject);
-  }).length;
+  });
+  return new Set(askable.map((probe) => probe.nodeId)).size;
 }
 
 /** Beliefs default to PRIOR for nodes never mentioned — exported for tests. */

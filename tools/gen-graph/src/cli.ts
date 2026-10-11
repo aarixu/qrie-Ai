@@ -12,6 +12,9 @@ import type { ClassLinks } from '../../../packages/knowledge-graph/src/types.ts'
 import { createAdapterFromEnv, loadEnvFiles, type LlmAdapter } from './llm.ts';
 import { generateNodes, generateProbes, mergeIntoGraph } from './generate.ts';
 import { foundationOf, generateLinks } from './link.ts';
+import { addMoreProbes, planMoreProbes } from './moreProbes.ts';
+import { PROBE_ROLES } from '../../../packages/knowledge-graph/src/probes.ts';
+import type { ProbeRole } from '../../../packages/knowledge-graph/src/types.ts';
 import { assignTopics } from './topics.ts';
 
 /**
@@ -30,6 +33,10 @@ import { assignTopics } from './topics.ts';
  * Topics with no outcomes at all, inside chapters that already have some — the
  * hole the two passes above cannot see between them:
  *   node tools/gen-graph/src/cli.ts --syllabus all --topic-gaps --probes
+ *
+ * Further questions for nodes that have one — a retest and a review each by
+ * default, each checked by a second reader before it is kept (Task 16):
+ *   node tools/gen-graph/src/cli.ts --syllabus class10-science --chapter all --more-probes [--roles retest,review]
  *
  * Generation EXTENDS its out-file rather than replacing it, and in all-mode a
  * chapter that already holds nodes is SKIPPED — so the run is resumable: kill
@@ -62,6 +69,11 @@ Usage:
   --count      target nodes per chapter (default ${DEFAULT_COUNT})
   --probes     also write <out-basename>.probes.json
   --probes-only  skip node generation; write probes for nodes in --out that lack one
+  --more-probes  further questions for nodes that already have one, one per role
+               in --roles (default ${DEFAULT_ROLES.join(',')}), each checked by a
+               second reader (key and wrong-option labels) and dropped unless
+               confirmed. Resumable: a node is asked only for the roles it lacks.
+  --roles      comma-separated, from ${PROBE_ROLES.join(', ')}
   --topic-gaps generate outcomes for syllabus topics that hold NONE, inside
                chapters that already have nodes — the hole --chapter all cannot
                see, because it skips a chapter that is already started.
@@ -89,6 +101,57 @@ Env (read from .env.local at the repo root, or the shell):
   GEMINI_BASE_URL           override both, e.g. a regional Vertex host
   GEMINI_THINKING           thinking budget, default 1024`);
   process.exit(2);
+}
+
+/** Task 17's ask: a retest and a review for every outcome. */
+const DEFAULT_ROLES: readonly ProbeRole[] = ['retest', 'review'];
+
+/**
+ * THE FURTHER-QUESTIONS PASS (Task 16). The plan is what the bank on disk
+ * lacks, and each confirmed batch is written straight back through
+ * writeProbeBank, so killing the run loses at most the batch in flight.
+ */
+async function moreProbes(
+  syllabus: SubjectSyllabus,
+  adapter: LlmAdapter,
+  opts: Pick<RunOptions, 'out' | 'dryRun' | 'chapterArg'> & { roles: readonly ProbeRole[] },
+): Promise<RunTally> {
+  const tally: RunTally = { added: 0, probesAdded: 0, failed: 0 };
+  const graph = readGraph(opts.out);
+  const probeFile = opts.out.replace(/\.json$/, '.probes.json');
+  const bank = readProbeBank(probeFile);
+  const inScope = (chapterId: string) => opts.chapterArg === 'all' || opts.chapterArg === chapterId;
+
+  if (opts.dryRun) {
+    const plan = planMoreProbes(graph, bank.probes, opts.roles, inScope);
+    const asked = plan.reduce((n, r) => n + r.roles.length, 0);
+    console.log(`  ${plan.length} node(s) need ${asked} further question(s). Nothing generated (--dry-run).`);
+    if (plan.length > 0) {
+      const { buildMoreProbesPrompt } = await import('./prompt.ts');
+      const { system, user } = buildMoreProbesPrompt(plan.slice(0, 2), { klass: syllabus.klass, subject: syllabus.subject });
+      console.log(`\n=== SYSTEM ===\n${system}\n\n=== USER (first two nodes) ===\n${user}`);
+    }
+    return tally;
+  }
+
+  const result = await addMoreProbes({
+    graph,
+    probes: bank.probes,
+    roles: opts.roles,
+    inScope,
+    adapter,
+    klass: syllabus.klass,
+    subject: syllabus.subject,
+    save: (incoming) => {
+      writeProbeBank(probeFile, incoming, graph);
+    },
+  });
+  tally.probesAdded = result.added;
+  tally.failed = result.failed;
+  console.log(
+    `  ${path.relative(process.cwd(), probeFile)}: ${result.added} of ${result.requested} further question(s) added, ${result.dropped} dropped by the check.`,
+  );
+  return tally;
 }
 
 const flag = (argv: string[], name: string): string | undefined => {
@@ -741,6 +804,11 @@ async function main(): Promise<void> {
   const linkClasses = argv.includes('--link-classes');
   const wantTopics = argv.includes('--map-topics');
   const topicGaps = argv.includes('--topic-gaps');
+  const wantMore = argv.includes('--more-probes');
+  const roles = (flag(argv, '--roles') ?? DEFAULT_ROLES.join(',')).split(',').map((r) => r.trim()) as ProbeRole[];
+  if (roles.length === 0 || roles.some((r) => !PROBE_ROLES.includes(r))) {
+    usage(`--roles takes ${PROBE_ROLES.join(', ')}, comma-separated.`);
+  }
   const targetCount = Number(
     flag(argv, '--count') ?? (topicGaps ? DEFAULT_PER_TOPIC : DEFAULT_COUNT),
   );
@@ -769,7 +837,9 @@ async function main(): Promise<void> {
 
     console.log(`\n════ ${syllabus.subject} — Class ${syllabus.klass} (${id}) ════`);
     const out = path.resolve(process.cwd(), outArg ?? path.join(GRAPH_DIR, `${id}.json`));
-    const tally = topicGaps
+    const tally = wantMore
+      ? await moreProbes(syllabus, adapter, { out, dryRun, chapterArg: chapterArg!, roles })
+      : topicGaps
       ? await fillTopicGaps(syllabus, adapter, {
           out,
           dryRun,

@@ -1,4 +1,4 @@
-import type { LearningNode } from '../../../packages/knowledge-graph/src/types.ts';
+import type { LearningNode, Probe, ProbeRole } from '../../../packages/knowledge-graph/src/types.ts';
 import type { Chapter } from '../../../packages/syllabus/src/syllabus.ts';
 
 /**
@@ -286,4 +286,95 @@ export function buildProbesPrompt(
   }
 
   return { system, user: lines.join('\n') };
+}
+
+// ---------------------------------------------------------------------------
+// More than one question per outcome (lam-one-brain Task 16)
+// ---------------------------------------------------------------------------
+
+/** One node that needs further questions: what it has, and the roles it lacks. */
+export interface MoreProbesRequest {
+  node: LearningNode;
+  /** The node's questions already in the bank, its first one among them. */
+  existing: readonly Probe[];
+  roles: readonly ProbeRole[];
+}
+
+const ROLE_MEANING: Record<ProbeRole, string> = {
+  retest:
+    '"retest": the same outcome asked again on another day, at the same difficulty, with different wording, numbers or example, so a right answer cannot be remembered from the first question.',
+  review:
+    '"review": the outcome asked back at a spaced review, weeks later: plain recall or one step of use of its core idea, nothing that leans on the lesson\'s exact words.',
+  transfer:
+    '"transfer": the outcome applied in a setting the first question did not use (a new context, a reversed question, a real-life case), still testing this outcome and nothing else.',
+};
+
+export function buildMoreProbesPrompt(
+  requests: readonly MoreProbesRequest[],
+  opts: ProbesPromptOptions,
+): { system: string; user: string } {
+  const system = [
+    'You write FURTHER diagnostic questions for a Learning Outcome Map. Each node already has a question; you write more for it, each in a named role. Each question tests ONE node and nothing else.',
+    `THE ROLES\n${(Object.keys(ROLE_MEANING) as ProbeRole[]).map((r) => `- ${ROLE_MEANING[r]}`).join('\n')}`,
+    'NEVER REPEAT A QUESTION. A new question must not be the node\'s existing question reworded by a word or two, and two new questions for one node must not be the same question. A repeat is REJECTED MECHANICALLY.',
+    MISCONCEPTIONS,
+    `EACH QUESTION IS EXACTLY THIS SHAPE:
+{
+  "nodeId": "<the node it tests>",
+  "role": "<retest | review | transfer, as asked>",
+  "question": "<one clear question>",
+  "options": ["<a>", "<b>", "<c>", "<d>"],          exactly 4, all distinct
+  "correctIndex": <0..3>,
+  "misconceptions": ["", "<why b is tempting>", "<why c>", "<why d>"]
+}`,
+    `AUDIENCE: Class ${opts.klass} ${opts.subject}. Question and options must read at that level: plain sentences, no trick phrasing, no double negatives.`,
+    'Reply with ONLY a JSON object of the form {"probes": [ ... ]}. No markdown fences, no commentary.',
+  ].join('\n\n');
+
+  const lines = ['Write exactly one question for each role asked of each node below.', ''];
+  for (const { node, existing, roles } of requests) {
+    lines.push(`- node "${node.id}" (difficulty ${node.difficulty})`);
+    lines.push(`  outcome: ${node.outcome}`);
+    lines.push(`  roles to write: ${roles.join(', ')}`);
+    for (const p of existing) lines.push(`  already asked${p.role ? ` (${p.role})` : ''}: ${p.question}`);
+  }
+  return { system, user: lines.join('\n') };
+}
+
+/**
+ * THE KEY, CHECKED BY A SECOND READER WHO IS NOT TOLD IT.
+ *
+ * The solver sees each question and its options and nothing else: no key,
+ * no wrong-option labels (the blank label is the key), no id (an id names
+ * the node and the role). Refs are opaque.
+ */
+export function buildSolvePrompt(probes: readonly Probe[], opts: ProbesPromptOptions): { system: string; user: string } {
+  const system = [
+    `You check a question bank by answering it yourself. The questions are for Class ${opts.klass} ${opts.subject}.`,
+    'For each question give the index (0 to 3) of the one correct option. If no option is correct, or more than one is, give null.',
+    'Reply with ONLY a JSON object of the form {"answers": [{"ref": "<ref>", "answerIndex": <0..3 or null>}, ...]}, one entry per question. No markdown fences, no commentary.',
+  ].join('\n\n');
+  const items = probes.map((p, i) => ({ ref: `q${i + 1}`, question: p.question, options: p.options }));
+  return { system, user: `Questions:\n${JSON.stringify(items, null, 2)}` };
+}
+
+/** The wrong-option labels, checked against the key the writer gave. */
+export function buildLabelCheckPrompt(
+  probes: readonly Probe[],
+  opts: ProbesPromptOptions,
+): { system: string; user: string } {
+  const system = [
+    `You check the wrong-option labels of a question bank for Class ${opts.klass} ${opts.subject}.`,
+    'Each question has a key (correctIndex) and, for every wrong option, a label saying what mistake leads a student to choose it. A label is bad when it does not explain choosing THAT option, names no real mistake, or the option it labels is in fact correct.',
+    'For each question list the indexes of the bad labels; an empty list when every label holds.',
+    'Reply with ONLY a JSON object of the form {"reviews": [{"ref": "<ref>", "bad": [<indexes>]}, ...]}, one entry per question. No markdown fences, no commentary.',
+  ].join('\n\n');
+  const items = probes.map((p, i) => ({
+    ref: `q${i + 1}`,
+    question: p.question,
+    options: p.options,
+    correctIndex: p.correctIndex,
+    misconceptions: p.misconceptions ?? [],
+  }));
+  return { system, user: `Questions:\n${JSON.stringify(items, null, 2)}` };
 }

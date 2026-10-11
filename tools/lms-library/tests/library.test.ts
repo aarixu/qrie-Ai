@@ -64,6 +64,17 @@ describe('libraryItems', () => {
   });
 });
 
+describe('a node with several questions (Task 16)', () => {
+  it('gives one library item per question, both filed under the node', () => {
+    const retest = { ...probes.probes[0], id: 'probe-sci8-x-retest', question: 'Why, again?', role: 'retest' };
+    const items = libraryItems([{ name: 'class8-science', graph, probes: { probes: [probes.probes[0], retest] } }]);
+    expect(items.map((i) => [i.libraryRef, i.outcomeIds, i.stem])).toEqual([
+      ['probe-sci8-x', ['sci8-x'], 'Why?'],
+      ['probe-sci8-x-retest', ['sci8-x'], 'Why, again?'],
+    ]);
+  });
+});
+
 describe('the real banks', () => {
   it('load as 4,697 items across all 13 banks, each with a unique ref', () => {
     const items = libraryItems(loadBanks());

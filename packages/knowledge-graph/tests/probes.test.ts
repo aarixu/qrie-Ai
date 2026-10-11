@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { GraphIndex, loadGraph } from '../src/graph';
+import { bankProblems } from '../src/probes';
 import type { ProbeBank } from '../src/types';
 
 /**
@@ -35,10 +36,11 @@ describe('committed probe banks', () => {
     expect(dangling).toEqual([]);
   });
 
-  it.each(banks)('%s one probe per node, no duplicates', (file) => {
+  // A node may hold several questions (Task 16): its first, and at most one
+  // per role, none repeating another's stem.
+  it.each(banks)('%s one first question per node, one per role, no repeats', (file) => {
     const { bank } = load(file);
-    const nodeIds = bank.probes.map((p) => p.nodeId);
-    expect(new Set(nodeIds).size).toBe(nodeIds.length);
+    expect(bankProblems(bank.probes)).toEqual([]);
   });
 
   it.each(banks)('%s every probe is answerable', (file) => {
@@ -108,7 +110,8 @@ describe('committed probe banks', () => {
 
   it.each(banks)('%s has enough probes to run a diagnostic at all', (file) => {
     const { bank } = load(file);
-    // The placement test asks up to twenty questions and never repeats a node.
-    expect(bank.probes.length).toBeGreaterThanOrEqual(20);
+    // The placement test asks up to twenty questions and never repeats a node,
+    // so it is nodes with a question that count, not questions.
+    expect(new Set(bank.probes.map((p) => p.nodeId)).size).toBeGreaterThanOrEqual(20);
   });
 });

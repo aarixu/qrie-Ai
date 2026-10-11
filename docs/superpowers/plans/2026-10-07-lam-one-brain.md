@@ -529,6 +529,37 @@ rest: content (a second question per outcome), the server grading tutor answers,
   different question when one exists.
 - Tests: a node with two probes gives a review on the second after the first was answered; the library loads both.
 
+### Task 16 as built (2026-10-11)
+- **The bank's shape.** `Probe.role?: 'retest' | 'review' | 'transfer'` (`packages/knowledge-graph` types.ts);
+  `probes.ts`: `PROBE_ROLES`, `normaliseStem` (case, spacing, punctuation), `primaryFirst`, and `bankProblems`
+  (ids unique; per node one first question, at most one per role, a further one only beside a first, no repeated
+  stem). The committed-bank lint uses it in place of "one probe per node", and counts nodes, not questions, for
+  "enough to run a diagnostic".
+- **gen-graph `--more-probes [--roles retest,review]`** (`src/moreProbes.ts`): plans the roles each node with a
+  first question lacks (in scope), writes them in batches of six nodes with the first pass's shape rules
+  (`probeShapeErrors`, extracted from `validateProbes`, misconceptions required here), refuses a stem the node
+  has or another new question repeats, one repair retry; ids `<first id>-<role>` (numbered on if taken),
+  positions dealt by id. Then the second reader, two calls: a solver shown only the question and options (opaque
+  refs) and a label checker shown the key and labels; a question either does not confirm, or a check that fails,
+  is dropped and logged. Each confirmed batch is written through `writeProbeBank`; a rerun asks only what is still
+  missing. `--dry-run` prints the count and a sample prompt with no key.
+- **Readers.** Placement (`packages/diagnostic` select.ts) asks a node once, by its first question
+  (`primaryFirst` on equal scores), and `availableProbeCount` counts nodes. The lesson quiz (`apps/classroom`
+  quiz.ts `buildQuiz`, now with an optional catalogue) asks each node once, by its first question.
+  `tools/lms-library` already made one `lms.item` per probe; tests pin it for a node with two.
+- **The warm-up prefers a question not answered.** learner-model v6: `ConceptState.askedItems`, the item keys
+  of the latest 8 answers on the outcome (any rung, any grader; a key over 256 characters or the `outcomes:`
+  fallback adds nothing), moved to the end when asked again. `pickWarmUp` turns among the node's questions not
+  in it by the retrieval count, else asks the one answered longest ago. **0116_lam_asked_items.sql**:
+  `concept_state.asked_items jsonb not null default '[]'` (an array, under 4 KB), version default 6; think.ts
+  COLUMNS writes it, `my_learner_model` returns it, `modelFromServer` reads it. The server rebuilds every learner
+  (version change); a migrated v5 model on a phone starts with none, so its first review turns as before.
+- Tests: `packages/knowledge-graph/tests/bank.test.ts`, `probes.test.ts`; `packages/diagnostic/tests/diagnostic.test.ts`
+  (several questions per node); `apps/classroom/tests/quiz.test.ts`, `warmUp.test.ts` (a node with two probes
+  gives a review on the second after the first was answered, through the real fold); `packages/learner-model/tests/asked.test.ts`,
+  `replay.test.ts` (sixth deliberate change); `supabase/tests/lam-asked-items.test.ts`; `tools/lms-library` library
+  and sync tests (the library loads both); `tools/gen-graph/tests/moreProbes.test.ts` (fake LLM adapter only).
+
 ### Task 17: generate the questions (real model spend, run by the lead, not an agent)
 - Scope: the maps on the current NCERT books only: class6-mathematics, class10-mathematics, class10-science,
   class11-biology, class11-chemistry, class11-mathematics (2,102 outcomes). Class 7-9 and class6-science wait for

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { GraphIndex, type Probe } from '@ai-tutor/knowledge-graph';
-import { emptyConceptState, emptyModel } from '@ai-tutor/learner-model';
+import { GraphIndex, emptyParams, type Probe } from '@ai-tutor/knowledge-graph';
+import type { LedgerEvent } from '@ai-tutor/ledger';
+import { emptyConceptState, emptyModel, foldSession } from '@ai-tutor/learner-model';
 import { pickWarmUp, WARM_UP_MAX } from '../src/lib/warmUp';
 
 const node = (id: string) => ({
@@ -76,5 +77,51 @@ describe('the class-start warm-up (E6-E8)', () => {
       },
     };
     expect(pickWarmUp({ model, index: wide, probes, now, justDone: [] }).map((q) => q.nodeId)).toEqual(['a']);
+  });
+
+  /**
+   * Task 16: a node may hold several questions. A review asks one the learner
+   * has not answered (`askedItems`, learner-model v6), so it is a different
+   * question when the bank has one; the retrieval count only turns among
+   * questions not yet answered.
+   */
+  describe('a node with several questions', () => {
+    const two = [probe('a-1', 'a'), probe('a-2', 'a')];
+
+    it('gives a review on the second after the first was answered', () => {
+      // The class taught `a` and its quiz asked a-1 straight after: listening,
+      // not a retrieval, so the retrieval count stays 0 and turning by it
+      // alone would ask a-1 again at the review.
+      const at = '2026-09-20T10:00:00.000Z';
+      const ev = (seq: number, kind: string, source: string, payload: object) =>
+        ({ id: `e${seq}`, sessionId: 's1', seq, at, kind, source, surface: 'tap', outcomeIds: ['a'], payload }) as unknown as LedgerEvent;
+      const model = foldSession(
+        emptyModel(),
+        { id: 's1', startedAt: at },
+        [
+          ev(0, 'taught', 'class', { beatId: 'b1' }),
+          ev(1, 'answered', 'quiz', { probeId: 'a-1', correct: true, chosenIndex: 2, ms: 3000, attempt: 1, assistanceRung: 0, hintsShown: 0 }),
+        ],
+        index,
+        emptyParams(),
+      );
+      expect(model.states.a.retrievalCount).toBe(0);
+      expect(model.states.a.nextReviewAt).not.toBeNull();
+      expect(model.states.a.askedItems).toEqual(['probe:a-1']);
+      const [review] = pickWarmUp({ model, index, probes: two, now, justDone: [] });
+      expect(review.id).toBe('a-2');
+    });
+
+    it('asks the one answered longest ago once every question has been answered', () => {
+      const state = { ...due('a', '2026-09-20T10:00:00.000Z', 0), askedItems: ['probe:a-2', 'probe:x-9', 'probe:a-1'] };
+      const [review] = pickWarmUp({ model: { ...emptyModel(), states: { a: state } }, index, probes: two, now, justDone: [] });
+      expect(review.id).toBe('a-2');
+    });
+
+    it('still asks the only question there is, answered or not', () => {
+      const state = { ...due('b', '2026-09-20T10:00:00.000Z'), askedItems: ['probe:b-1'] };
+      const [review] = pickWarmUp({ model: { ...emptyModel(), states: { b: state } }, index, probes, now, justDone: [] });
+      expect(review.id).toBe('b-1');
+    });
   });
 });

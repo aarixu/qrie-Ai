@@ -109,7 +109,7 @@ export function modelFromServer(server: ServerModel): LearnerModel {
       const value = row[column];
       if (value === undefined) continue;
       if (type === 'timestamptz') state[field] = value === null ? null : new Date(receiptMs(String(value))).toISOString();
-      else if (type === 'jsonb') state[field] = value ?? {};
+      else if (type === 'jsonb') state[field] = value ?? state[field];
       else state[field] = value;
     }
     states[id] = state as unknown as ConceptState;

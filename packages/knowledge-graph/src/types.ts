@@ -58,11 +58,22 @@ export interface KnowledgeGraph {
   nodes: LearningNode[];
 }
 
-/** One diagnostic question. Probes exactly one node. */
+/**
+ * What a further question on a node is for (lam-one-brain Task 16). A node's
+ * first question has no role; the others are written by gen-graph
+ * `--more-probes`, at most one per role per node (`bankProblems`, probes.ts):
+ * `retest` asks the same outcome again in other words and numbers, `review`
+ * asks for it back at a spaced review, `transfer` applies it somewhere new.
+ */
+export type ProbeRole = 'retest' | 'review' | 'transfer';
+
+/** One diagnostic question. Probes exactly one node; a node may have several. */
 export interface Probe {
   id: string;
   /** The node this question is evidence about. */
   nodeId: string;
+  /** Absent on a node's first question; see `ProbeRole`. */
+  role?: ProbeRole;
   question: string;
   /** Exactly 4 options. */
   options: string[];

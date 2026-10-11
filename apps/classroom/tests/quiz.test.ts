@@ -291,3 +291,33 @@ describe('quizHistory', () => {
     });
   });
 });
+
+/**
+ * Task 16: a node may hold its first question and further ones (a retest, a
+ * review). A lesson's quiz asks each node once, by its first question: two
+ * questions on one outcome would weigh it twice and leave room for fewer.
+ */
+describe('a lesson quiz over nodes with several questions', () => {
+  const at = (id: string, difficulty: number): LearningNode => ({
+    id, klass: 8, subject: 'Science', chapter: 'c', title: id, outcome: id, prerequisites: [], difficulty, topicRef: 'x/c/t',
+  });
+  const q = (id: string, nodeId: string, role?: 'retest' | 'review') => ({
+    id, nodeId, question: `${id}?`, options: ['a', 'b', 'c', 'd'], correctIndex: 0, misconceptions: ['', 'm1', 'm2', 'm3'],
+    ...(role ? { role } : {}),
+  });
+  const nodes = new Map([at('n1', 1), at('n2', 2), at('n3', 3)].map((n) => [n.id, n]));
+  const catalogue = {
+    node: (id: string) => nodes.get(id),
+    probes: [q('a-n1-retest', 'n1', 'retest'), q('p-n1', 'n1'), q('a-n2-review', 'n2', 'review'), q('p-n2', 'n2'), q('p-n3', 'n3')],
+  };
+
+  it('asks each node once, by its first question', () => {
+    const quiz = buildQuiz('some-lesson', { topicRef: 'x/c/t' }, catalogue);
+    expect(quiz?.map((x) => x.id)).toEqual(['p-n1', 'p-n2', 'p-n3']);
+  });
+
+  it('a node is one question toward the minimum, however many it holds', () => {
+    const two = { node: catalogue.node, probes: catalogue.probes.filter((p) => p.nodeId !== 'n3') };
+    expect(buildQuiz('some-lesson', { topicRef: 'x/c/t' }, two)).toBeNull();
+  });
+});

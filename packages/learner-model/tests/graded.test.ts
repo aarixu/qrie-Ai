@@ -154,7 +154,7 @@ describe('a phone-graded answer adapts the lesson and counts for nothing a teach
 
 describe('version 5', () => {
   it('starts every outcome unverified', () => {
-    expect(MODEL_VERSION).toBe(5);
+    expect(MODEL_VERSION).toBeGreaterThanOrEqual(5);
     expect(emptyConceptState('x').verifiedMastery).toBe(0.5);
     expect(emptyConceptState('x').verifiedObservations).toBe(0);
   });
@@ -164,7 +164,7 @@ describe('version 5', () => {
     delete (v4.states.a as Partial<ReturnType<typeof emptyConceptState>>).verifiedMastery;
     delete (v4.states.a as Partial<ReturnType<typeof emptyConceptState>>).verifiedObservations;
     const m = migrateModel(v4);
-    expect(m.version).toBe(5);
+    expect(m.version).toBe(MODEL_VERSION);
     expect(m.states.a.unassistedObservations).toBe(3);
     expect(m.states.a.verifiedObservations).toBe(0);
     expect(m.states.a.verifiedMastery).toBe(0.5);
