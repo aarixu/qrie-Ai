@@ -249,20 +249,44 @@ async function check(deps: BillingApiDeps, auth: string, body: Record<string, un
   return { status: 200, body: { checked, changed } };
 }
 
+const IN_FLIGHT = fail(
+  409,
+  `A payment link for this invoice may still be on its way to Cashfree; nothing was changed. Try again in ${IN_FLIGHT_MINUTES} minutes.`,
+);
+
 /**
  * Closes an invoice's open links at Cashfree before a void or a payment by
  * hand, and records what Cashfree says of each. 'paid' as soon as one turns
  * out to have money on it (that payment is recorded and nothing more is
  * done); otherwise the number of links Cashfree cancelled.
+ *
+ * A link still being made that Cashfree does not have is marked failed only
+ * once it is no longer in flight, as observe() and /reconcile do: a younger
+ * one may yet appear at Cashfree, active, and be paid after the invoice was
+ * settled by hand or voided. Then the whole call answers 409 and changes
+ * nothing. The invoice's own read (admin.billing_invoice, which every caller
+ * of /void and /record may make) says each link's state and age.
  */
-async function closeLinks(deps: BillingApiDeps, openLinks: string[]): Promise<{ paid: true } | { paid: false; cancelled: number }> {
+async function closeLinks(
+  deps: BillingApiDeps,
+  auth: string,
+  invoiceId: string,
+  openLinks: string[],
+): Promise<{ paid: true } | { paid: false; cancelled: number }> {
   let cancelled = 0;
+  if (openLinks.length === 0) return { paid: false, cancelled };
+  const detail = (await deps.userRpc(auth, 'billing_invoice', { p_invoice: invoiceId })) as {
+    links: { linkId: string; status: string; createdAt: string }[];
+  };
+  const known = new Map(detail.links.map((l) => [l.linkId, l]));
   for (const linkId of openLinks) {
     let cf: CashfreeLink;
     try {
       cf = await deps.cashfree.getLink(linkId);
     } catch (e) {
       if (e instanceof CashfreeError && e.status === 404) {
+        const row = known.get(linkId);
+        if (row && row.status === 'creating' && minutesSince(row.createdAt) < IN_FLIGHT_MINUTES) throw new Refusal(IN_FLIGHT);
         await deps.serviceRpc('billing_link_failed', { p_link_id: linkId, p_why: 'not at Cashfree' });
         continue;
       }
@@ -297,7 +321,7 @@ async function voidInvoice(deps: BillingApiDeps, auth: string, body: Record<stri
   const args = { p_invoice: invoiceId, p_reason: text(body.reason), p_env: text(body.env) };
   // Every check the void makes, the fresh code included, before Cashfree is asked anything.
   const plan = (await deps.userRpc(auth, 'billing_invoice_void', { ...args, p_commit: false })) as { openLinks: string[] };
-  if ((await closeLinks(deps, plan.openLinks)).paid) {
+  if ((await closeLinks(deps, auth, invoiceId, plan.openLinks)).paid) {
     return fail(409, 'Money arrived on this link; the invoice was not voided. Refund it from Payments if needed.');
   }
   await deps.userRpc(auth, 'billing_invoice_void', { ...args, p_commit: true });
@@ -322,7 +346,7 @@ async function recordPayment(deps: BillingApiDeps, auth: string, body: Record<st
   };
   // Every check the payment makes, the fresh code included, before Cashfree is asked anything.
   const plan = (await deps.userRpc(auth, 'billing_payment_record', { ...args, p_commit: false })) as { openLinks: string[] };
-  const closed = await closeLinks(deps, plan.openLinks);
+  const closed = await closeLinks(deps, auth, invoiceId, plan.openLinks);
   if (closed.paid) {
     return fail(
       409,

@@ -303,6 +303,28 @@ describe('/record', () => {
     expect(made.link_amount).toBe(680);
   });
 
+  it('/record and /void wait while a link is still on its way to Cashfree, instead of marking it failed and going on', async () => {
+    const IN_FLIGHT = 'A payment link for this invoice may still be on its way to Cashfree; nothing was changed. Try again in 10 minutes.';
+    const inv = await raise(10_000);
+    const cf = fakeCashfree();
+    cf.failNext(0, 'network');
+    expect((await call(deps(cf), 'link', 'ops', { invoiceId: inv.invoiceId, reason: 'send the link', env: 'TEST' })).status).toBe(502);
+    const linkId = inv.number.replaceAll('/', '-');
+    expect((await linkRow(linkId)).status).toBe('creating');
+    const record = await call(deps(cf), 'record', 'finance-fresh', recordBody(inv.invoiceId, 11_800, 'UTR-FLIGHT-1'));
+    expect(record).toEqual({ status: 409, body: { error: IN_FLIGHT } });
+    const voided = await call(deps(cf), 'void', 'owner-fresh', { invoiceId: inv.invoiceId, reason: 'raised twice', env: 'TEST' });
+    expect(voided).toEqual({ status: 409, body: { error: IN_FLIGHT } });
+    expect((await linkRow(linkId)).status).toBe('creating');
+    expect(await invoiceStatus(inv.invoiceId)).toBe('unpaid');
+    expect(await handPayments(inv.invoiceId)).toBe(0);
+    // Once it is no longer in flight and Cashfree still does not have it, it failed: the payment is recorded.
+    await db.query(`update billing.payment_link set created_at = now() - interval '11 minutes' where link_id = $1`, [linkId]);
+    const later = await call(deps(cf), 'record', 'finance-fresh', recordBody(inv.invoiceId, 11_800, 'UTR-FLIGHT-1'));
+    expect(later).toMatchObject({ status: 200, body: { invoiceStatus: 'paid' } });
+    expect((await linkRow(linkId)).status).toBe('failed');
+  });
+
   it('/record with no open link records it without asking Cashfree', async () => {
     const inv = await raise(10_000);
     const cf = fakeCashfree();
