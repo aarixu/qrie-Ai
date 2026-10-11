@@ -11,7 +11,7 @@ import { asService, asUser, freshDatabase } from './harness';
  * only from public.learning_session.active_ms, which the server bounds. A
  * tutor sitting's comes from close_learning_session (0107). A hand-in's comes
  * from here: a test's from its own start to its hand-in, on the server's
- * clock; homework's from an optional time the phone sends with the hand-in,
+ * clock, at most its time limit or three hours (0117); homework's from an optional time the phone sends with the hand-in,
  * bounded, and none when it sends none. Never estimated.
  */
 
@@ -24,12 +24,23 @@ const MIN = 60_000;
 const id = async (sql: string, params: unknown[] = []): Promise<string> =>
   (await db.query<{ id: string }>(sql, params)).rows[0].id;
 
-async function work(kind: 'homework' | 'test', opts: { publishedAgo?: string; limit?: number } = {}): Promise<string> {
+async function work(
+  kind: 'homework' | 'test',
+  opts: { publishedAgo?: string; limit?: number | null; dueIn?: string } = {},
+): Promise<string> {
   const a = await id(
     `insert into lms.assignment (org_id, section_id, subject_id, created_by, kind, title, due_at, attempts_allowed,
                                  answer_types, time_limit_minutes)
-     values ($1, $2, $3, $4, $5, 'Work', now() + interval '2 days', 3, '{mcq}', $6) returning id`,
-    [one.org, one.s8a, one.maths, one.teacherA, kind, kind === 'test' ? (opts.limit ?? 30) : null],
+     values ($1, $2, $3, $4, $5, 'Work', now() + $7::interval, 3, '{mcq}', $6) returning id`,
+    [
+      one.org,
+      one.s8a,
+      one.maths,
+      one.teacherA,
+      kind,
+      kind === 'test' ? (opts.limit === undefined ? 30 : opts.limit) : null,
+      opts.dueIn ?? '2 days',
+    ],
   );
   await db.query(`insert into lms.assignment_item (assignment_id, item_id, position) values ($1, $2, 1), ($1, $3, 2)`, [
     a,
@@ -48,7 +59,7 @@ const answers = () => JSON.stringify({ [q1]: 1, [q2]: 0 });
 /** The sitting a hand-in made, by its submission. */
 async function sittingOf(submission: string): Promise<{ active_ms: number | null; span_ms: number; source: string }> {
   const { rows } = await db.query<{ active_ms: number | null; span_ms: number; source: string }>(
-    `select s.active_ms, (extract(epoch from (s.ended_at - s.started_at)) * 1000)::bigint::int as span_ms, s.source
+    `select s.active_ms, (extract(epoch from (s.ended_at - s.started_at)) * 1000)::float8 as span_ms, s.source
        from public.ledger_event e join public.learning_session s on s.id = e.session_id
       where e.payload ->> 'submissionId' = $1
       limit 1`,
@@ -175,6 +186,32 @@ describe('test time on task, on the server\'s clock', () => {
       [t, one.kid8a],
     );
     expect((await sittingOf(rows[0].id)).active_ms).toBe(30 * MIN);
+  });
+
+  it('a test with no time limit counts at most three hours, however long ago it was started (0117)', async () => {
+    // Its end is its due time, which has no cap: 26 days is past 2^31 ms, which
+    // made 0114's hand-in fail with "integer out of range".
+    const t = await work('test', { limit: null, dueIn: '10 days', publishedAgo: '30 days' });
+    await asUser(db, one.kid8a, (tx) => tx.query(`select * from lms.start_test($1)`, [t]));
+    await db.query(
+      `update lms.test_start set started_at = now() - interval '26 days' where assignment_id = $1 and student_user_id = $2`,
+      [t, one.kid8a],
+    );
+    const s = await sittingOf(await handIn(t));
+    expect(s.source).toBe('test');
+    expect(s.active_ms).toBe(180 * MIN);
+  });
+
+  it('a test with a time limit still counts at most its limit', async () => {
+    const t = await work('test', { limit: 300, dueIn: '10 days', publishedAgo: '30 days' });
+    await asUser(db, one.kid8a, (tx) => tx.query(`select * from lms.start_test($1)`, [t]));
+    await db.query(
+      `update lms.test_start set started_at = now() - interval '4 hours' where assignment_id = $1 and student_user_id = $2`,
+      [t, one.kid8a],
+    );
+    const s = await sittingOf(await handIn(t));
+    expect(s.active_ms).toBeGreaterThanOrEqual(240 * MIN);
+    expect(s.active_ms).toBeLessThan(241 * MIN);
   });
 });
 

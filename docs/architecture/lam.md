@@ -79,8 +79,9 @@ brain works it out (`packages/learner-model/src/metric.ts`, `packages/lms-brain/
   only where a new answer given with no help stands behind it. Help-only gains count nothing.
 - **Minutes:** only the time on task the server holds, `learning_session.active_ms`: a tutor sitting's from
   `close_learning_session` (bounded by the sitting, 0107); a test's from its start to its hand-in on the server's
-  clock; homework's from the time the student app measured while the work was on screen, sent with the hand-in and
-  capped at three hours and at the time since publishing (0114). Never estimated.
+  clock, at most its time limit, or three hours when it has none (0114, 0117); homework's from the time the student
+  app measured while the work was on screen, sent with the hand-in and capped at three hours and at the time since
+  publishing (0114). Never estimated.
 - **Ratio:** gain in sittings with measured time over their minutes. Gain in a sitting that ended with no time
   (practice, a hand-in from an older app) is `untimedGain`, outside the ratio; a sitting still open waits
   (`openSittings`). The tally lives in the snapshot, so the 90-day purge keeps the minutes; closing a sitting
@@ -95,8 +96,8 @@ screens and the deterministic decisions only.
 1. **Merge** `lam-one-brain` (only with Aarav's yes). It already contains `lms` up to `314612e`; the lms lane has
    the same attendance-date test fix (7753863), so take lms's version if that line conflicts.
 2. **Staging Supabase first:** push migrations in number order: lms (up to 0046), admin (0047-0069), then this lane
-   (0100-0114). The roll-out inside this lane is in the runbook: 0100-0109, then the classroom build that sends
-   through `record_evidence`, then 0110-0114 (0114 before the brain function and the student app built from this branch).
+   (0100-0117). The roll-out inside this lane is in the runbook: 0100-0109, then the classroom build that sends
+   through `record_evidence`, then 0110-0117 (0114 before the brain function and the student app built from this branch).
 3. **Deploy the brain:** `supabase/functions/brain`, set `BRAIN_SECRET`, add the schedule (runbook, "The brain").
    Until it runs, nothing on the hosted project writes `concept_state` and the apps show "checking your answers".
 4. **Apps:** the school apps pick the hosted project from their build env (`VITE_SUPABASE_URL`,
