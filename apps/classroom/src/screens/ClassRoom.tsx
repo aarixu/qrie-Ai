@@ -1901,7 +1901,7 @@ export function ClassRoom({
         const said = await sayLine(
           chosen === question.correctIndex
             ? hi
-              ? 'Bilkul sahi — tumhe yaad tha!'
+              ? 'Haan, sahi — tumhe yaad tha!'
               : "That's right — you remembered it!"
             : chosen !== null
               ? hi

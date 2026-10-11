@@ -425,6 +425,10 @@ describe('SupportScreen', () => {
   const html = renderToString(<SupportScreen line={SUPPORT_REPLY} onLeave={() => {}} />);
   const text = html.replace(/<[^>]+>/g, ' ');
 
+  it('shows her as Bloub, still, as every other screen does (not an icon)', () => {
+    expect(html).toContain('data-bloub="idle"');
+  });
+
   it('is a dialog a screen reader announces', () => {
     expect(html).toContain('role="alertdialog"');
     expect(html).toContain('aria-modal="true"');

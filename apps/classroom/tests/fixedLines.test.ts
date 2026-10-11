@@ -11,6 +11,7 @@ import {
   thinkingLine,
 } from '../src/lib/geminiAgent';
 import { REDIRECT_REPLY_HI } from '../src/lib/safety';
+import { POINTS_AT_INK } from '../src/lib/doubtBoard';
 
 /**
  * THE FIXED LINES ARE HELD TO HER OWN BANS (persona v3, handoff 2026-10-11
@@ -89,6 +90,49 @@ const escape = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
  * "karte ho"). Her own first person ("samjhaungi", "rahi hoon") is not these.
  */
 const GENDERED_FOR_THEM = [/\b[a-z]{2,}o(?:ge|gi)\b/i, /\b(?:rahe|rahi)\s+ho\b/i, /\b[a-z]+(?:te|ti)\s+ho\b/i];
+
+/**
+ * THE LINES THE ROOM WRITES FOR HER ITSELF (the warm-up's verdict, its lead-in)
+ * live as string literals inside the screen. They are held to the same list by
+ * reading the source: every quoted sentence (a literal with a space in it).
+ */
+/**
+ * THE STAND-IN WRITES NOTHING, SO IT POINTS AT NOTHING (integration audit,
+ * 2026-10-11). When the relay fails, every doubt falls to the scripted
+ * stand-in, which told the student to look at the board for a step-by-step
+ * walk-through it never wrote.
+ */
+describe('the scripted stand-in, answering a doubt with no ink', () => {
+  it.each(LANGS)('in %s, never points at the board', async (lang) => {
+    const said: string[] = [];
+    const session = createStubAgent({ opening: false }).start(ctxFor(lang), {
+      say: async (text) => void said.push(text),
+      recall: () => {},
+      done: () => {},
+    });
+    session.sendUserText('why four?');
+    session.sendUserText('ok');
+    for (let i = 0; i < 10; i += 1) await new Promise((r) => setTimeout(r, 0));
+    expect(said.length).toBeGreaterThan(0);
+    for (const line of said) expect(line).not.toMatch(POINTS_AT_INK);
+  });
+});
+
+describe('the lines the classroom writes for her itself', () => {
+  it('use none of the phrases she never says', async () => {
+    const { readFileSync } = await import('node:fs');
+    const source = readFileSync('apps/classroom/src/screens/ClassRoom.tsx', 'utf8');
+    const literals = [...source.matchAll(/'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)"|`((?:[^`\\]|\\.)*)`/g)]
+      .map((m) => m[1] ?? m[2] ?? m[3] ?? '')
+      .filter((s) => s.includes(' '));
+    expect(literals.length).toBeGreaterThan(20);
+    for (const line of literals) {
+      for (const phrase of BANNED_PHRASES) {
+        expect({ line, phrase, found: new RegExp(`\\b${escape(phrase)}\\b`, 'i').test(line) }).toEqual({ line, phrase, found: false });
+      }
+    }
+  });
+});
 
 describe.each(LANGS)('every fixed line she says, in %s', (lang) => {
   it('uses none of the phrases she never says', async () => {

@@ -128,11 +128,14 @@ export function createStubAgent(options: { opening?: boolean } = {}): AgentAdapt
           if (opts?.opener) return;
           userMessages += 1;
           if (userMessages === 1) {
+            // It writes no ink, so it points at none (integration audit,
+            // 2026-10-11): it asks for their words, the one reply the script
+            // expects next, rather than promising a walk-through on the board.
             enqueue(() =>
               io.say(
                 hi
-                  ? `Yahan confuse hona bilkul normal hai. Board ko dhyaan se dekho: '${ctx.beatTopic}' ko aise socho, main step by step samjhaati hoon.`
-                  : `It's completely natural to feel confused here. Look at the board carefully: think of '${ctx.beatTopic}' this way, and I'll walk you through it step by step.`,
+                  ? `'${ctx.beatTopic}' mein confuse hona bilkul normal hai. Apne shabdon mein batao, tumhe abhi tak kya samajh aaya?`
+                  : `It's completely natural to feel confused about '${ctx.beatTopic}'. Tell me in your own words what you think it means so far.`,
               ),
             );
           } else if (userMessages === 2) {
