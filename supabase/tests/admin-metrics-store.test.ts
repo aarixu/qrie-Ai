@@ -5,17 +5,19 @@ import { aal2, anonymousChild, makeStaff, setEnvironment, type Staff } from './a
 import { makeFinance } from './billing-fixtures.ts';
 import { buildSchool, type School } from './fixtures.ts';
 import { freshDatabase } from './harness.ts';
-import { istDay, metricDef, metricOf, putMetric, series } from './metrics-fixtures.ts';
+import { istDay, lastBlock, lastWeek, metricDef, metricOf, putMetric, series } from './metrics-fixtures.ts';
 
 /**
  * THE CHART STORE AND ITS ONE READ (0071). Written first.
  *
  * admin.metric_daily holds one whole number per India day, metric, school (or
- * the platform) and dimension, and the size of the group of children behind
- * it, which never leaves the database. admin.metric_series is the only read:
- * it checks the page's roles, hides a learning figure for fewer than 10
- * children, marks what this database cannot see as not captured, and gives
- * no point for a day nobody rolled up.
+ * the platform) and dimension, and the sizes of the groups of children behind
+ * it, which never leave the database. admin.metric_series is the chart
+ * pages' read: it checks the page's roles, hides a child figure for fewer
+ * than 10 children (and what would let one be worked out:
+ * admin-metrics-small-groups.test.ts runs the attacks), marks what this
+ * database cannot see as not captured, and gives no point for a day nobody
+ * rolled up.
  */
 
 let db: PGlite;
@@ -44,12 +46,12 @@ afterAll(async () => {
 const PAGES = ['overview', 'money', 'schools', 'learning', 'content', 'reliability', 'funnel', 'safety'];
 
 describe('the chart store', () => {
-  it('the store holds a day, a metric, a school, a dimension, a whole number and a group size, and nothing that names a person', async () => {
+  it('the store holds a day, a metric, a school, a dimension, a whole number and group sizes, and nothing that names a person', async () => {
     const { rows } = await db.query<{ column_name: string }>(
       `select column_name from information_schema.columns
         where table_schema = 'admin' and table_name = 'metric_daily' order by column_name collate "C"`,
     );
-    expect(rows.map((r) => r.column_name)).toEqual(['children', 'computed_at', 'day', 'dim', 'id', 'metric', 'org_id', 'value']);
+    expect(rows.map((r) => r.column_name)).toEqual(['children', 'computed_at', 'day', 'dim', 'id', 'metric', 'org_id', 'rest_children', 'value']);
     for (const role of ['anon', 'authenticated', 'service_role']) {
       for (const t of ['admin.metric_def', 'admin.metric_daily', 'admin.metric_run', 'admin.metric_family']) {
         const { rows: p } = await db.query<{ ok: boolean }>(
@@ -101,7 +103,7 @@ describe('the chart store', () => {
     expect(m.captured).toBe(true);
   });
 
-  it('a child figure for fewer than 10 children is suppressed, at 10 it is shown, and the total follows the same rule', async () => {
+  it('a child figure for fewer than 10 children is suppressed, at 10 it is shown, and a total is hidden when any row it adds up is', async () => {
     await metricDef(db, { key: 'test.kids', childFigure: true, total: 'sum' });
     await putMetric(db, { day: await day(2), metric: 'test.kids', value: 3, children: 9 });
     await putMetric(db, { day: await day(1), metric: 'test.kids', value: 5, children: 10 });
@@ -111,13 +113,39 @@ describe('the chart store', () => {
       { value: null, suppressed: true },
       { value: 5, suppressed: false },
     ]);
-    expect(m.total).toEqual({ value: 8, suppressed: false });
-    expect(JSON.stringify(s)).not.toContain('"children"');
+    // A total of 8 minus the shown 5 would give the hidden 3.
+    expect(m.total).toEqual({ value: null, suppressed: true });
+    expect(JSON.stringify(s)).not.toContain('children');
+
+    await metricDef(db, { key: 'test.all', childFigure: true, total: 'sum' });
+    await putMetric(db, { day: await day(2), metric: 'test.all', value: 4, children: 10 });
+    await putMetric(db, { day: await day(1), metric: 'test.all', value: 5, children: 12 });
+    const all = metricOf(await series(db, aal2(owner), 'overview', 7), 'test.all');
+    expect(all.total).toEqual({ value: 9, suppressed: false });
 
     await metricDef(db, { key: 'test.few', childFigure: true, total: 'sum' });
     await putMetric(db, { day: await day(2), metric: 'test.few', value: 3, children: 9 });
     const few = metricOf(await series(db, aal2(owner), 'overview', 7), 'test.few');
     expect(few.total).toEqual({ value: null, suppressed: true });
+  });
+
+  it('a platform row is hidden when the children it counts outside the shown schools are 1 to 9, and shown at 0 or 10', async () => {
+    await metricDef(db, { key: 'test.rest', pages: ['learning'], scope: 'both', childFigure: true, total: 'none' });
+    for (const [n, rest] of [
+      [1, 0],
+      [2, 1],
+      [3, 9],
+      [4, 10],
+    ] as const) {
+      await putMetric(db, { day: await day(n), metric: 'test.rest', value: 50 + n, children: 25, rest });
+    }
+    const m = metricOf(await series(db, aal2(owner), 'learning', 7), 'test.rest');
+    expect(m.points.map((p) => [p.value, p.suppressed])).toEqual([
+      [54, false],
+      [null, true],
+      [null, true],
+      [51, false],
+    ]);
   });
 
   it("a one-school view reads that school's rows; the platform view reads the platform's rows, or every school's for a school-only metric", async () => {
@@ -163,13 +191,47 @@ describe('the chart store', () => {
     expect(m.points.map((p) => [p.day, p.value])).toEqual([[await day(2), 12]]);
   });
 
-  it('a cohort metric is returned as a total only', async () => {
+  it('a cohort metric is returned per complete India week, the latest one or four, never as a total, and a week under 10 is hidden', async () => {
     await metricDef(db, { key: 'test.cohort', kind: 'cohort', childFigure: true, total: 'sum' });
-    await putMetric(db, { day: await day(2), metric: 'test.cohort', value: 4, children: 6 });
-    await putMetric(db, { day: await day(1), metric: 'test.cohort', value: 3, children: 5 });
-    const m = metricOf(await series(db, aal2(owner), 'overview', 7), 'test.cohort');
-    expect(m.points).toEqual([]);
-    expect(m.total).toEqual({ value: 7, suppressed: false });
+    const { ago } = await lastWeek(db);
+    // The latest complete week: 2 entrants a day (14). The week before: 1 a
+    // day (7). The week before that: a day missing, so not complete.
+    for (let k = 0; k < 7; k++) {
+      await putMetric(db, { day: await day(ago - k), metric: 'test.cohort', value: 1, children: 2 });
+      await putMetric(db, { day: await day(ago + 7 - k), metric: 'test.cohort', value: 1, children: 1 });
+      if (k > 0) await putMetric(db, { day: await day(ago + 14 - k), metric: 'test.cohort', value: 1, children: 2 });
+    }
+    // A day after the latest complete week is not read.
+    if (ago > 7) await putMetric(db, { day: await day(1), metric: 'test.cohort', value: 1, children: 30 });
+
+    const seven = metricOf(await series(db, aal2(owner), 'overview', 7), 'test.cohort');
+    expect(seven.total).toBeNull();
+    expect(seven.from).toBe(await day(ago));
+    expect(seven.to).toBe(await day(ago - 6));
+    expect(seven.points).toEqual([{ day: await day(ago), dim: '', school: null, value: 7, suppressed: false }]);
+
+    const thirty = metricOf(await series(db, aal2(owner), 'overview', 30), 'test.cohort');
+    expect(thirty.total).toBeNull();
+    expect(thirty.from).toBe(await day(ago + 21));
+    expect(thirty.to).toBe(await day(ago - 6));
+    expect(thirty.points).toEqual([
+      { day: await day(ago + 7), dim: '', school: null, value: null, suppressed: true },
+      { day: await day(ago), dim: '', school: null, value: 7, suppressed: false },
+    ]);
+  });
+
+  it('a block metric is returned for the latest 30-day block that has ended, whatever the frame, never as a total', async () => {
+    await metricDef(db, { key: 'test.block', kind: 'block', childFigure: true, total: 'sum' });
+    const { end, ago } = await lastBlock(db);
+    await putMetric(db, { day: end, metric: 'test.block', value: 6, children: 12 });
+    await putMetric(db, { day: await day(ago + 30), metric: 'test.block', value: 5, children: 12 });
+    for (const days of [7, 30]) {
+      const m = metricOf(await series(db, aal2(owner), 'overview', days), 'test.block');
+      expect(m.from, `${days} days`).toBe(await day(ago + 29));
+      expect(m.to, `${days} days`).toBe(end);
+      expect(m.total, `${days} days`).toBeNull();
+      expect(m.points, `${days} days`).toEqual([{ day: end, dim: '', school: null, value: 6, suppressed: false }]);
+    }
   });
 
   it('a hand-made change to the store leaves an unmanaged-change row', async () => {

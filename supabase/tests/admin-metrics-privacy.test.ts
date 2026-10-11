@@ -6,7 +6,7 @@ import { addStudents, handIn, publish } from './admin-school-fixtures.ts';
 import { rpc } from './billing-fixtures.ts';
 import { buildSchool, type School } from './fixtures.ts';
 import { freshDatabase } from './harness.ts';
-import { addSignInColumn, answer, atIst, istDay, nightly, series, sitting, usage } from './metrics-fixtures.ts';
+import { addSignInColumn, answer, atIst, istDay, lastBlock, nightly, series, sitting, usage } from './metrics-fixtures.ts';
 import { keepFlag, report, setReport } from './safety-fixtures.ts';
 
 /**
@@ -53,6 +53,9 @@ beforeAll(async () => {
     `insert into public.model_price (provider, model, unit, inr_per_unit, effective_from) values ('vertex', 'gemini-x', 'prompt_token', 0.001, '2026-01-01')`,
   );
   const hw = await publish(db, swp, 2);
+  // Misconceptions and outcomes answered are written for 30-day blocks only,
+  // so the practice answers go on the latest block's last day.
+  const block = await lastBlock(db);
   for (const kid of kids) {
     const s = await sitting(db, { org: swp.org, user: kid, receivedSql: atIst(1, '10:00'), activeMs: 600000, topic: 'sci/swp' });
     await answer(db, { org: swp.org, user: kid, receivedSql: atIst(1, '10:05'), outcomes: ['swp-o1'], session: s });
@@ -62,7 +65,7 @@ beforeAll(async () => {
       org: swp.org,
       user: kid,
       source: 'practice',
-      receivedSql: atIst(1, '17:00'),
+      receivedSql: atIst(block.ago, '17:00'),
       outcomes: ['swp-o1'],
       payload: { correct: false, chosenIndex: 1, itemId: item, assistanceRung: 0 },
     });
@@ -198,6 +201,8 @@ describe('never a child', () => {
         'metric_family_tutor',
         'metric_family_webhooks',
         'metric_json',
+        'metric_min_group',
+        'metric_block_end',
         'metric_nightly',
         'signins_readable',
       ]),

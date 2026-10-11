@@ -8,10 +8,11 @@ import { ChartGrid, ChartsFrame, MetricCard, metricOf } from './frame';
 import { latestPoints, SUPPRESSED_TEXT } from './model';
 
 /**
- * Learning in aggregate: outcomes answered in 30 days by class and subject,
- * misconceptions from library questions (the platform only), and practice
- * answers per day. Every figure is hidden for fewer than 10 children; no
- * child is listed or ranked.
+ * Learning in aggregate: outcomes answered by class and subject and
+ * misconceptions from library questions (the platform only), both for the
+ * latest fixed 30-day block (ruling R18), and practice answers per day. The
+ * database hides every figure by its small-group rule; no child is listed or
+ * ranked.
  */
 export function ChartsLearning() {
   return (
@@ -51,7 +52,7 @@ function LearningBody({ series, totals, school }: { series: ChartSeries; totals:
     <div className='space-y-6'>
       <ChartCard
         title='Outcomes answered in 30 days, by class and subject'
-        description={`${rows[0] ? `The 30 days ending ${rows[0].day}` : 'The latest 30 days'}: outcomes of the syllabus map anyone${school ? ` at ${school}` : ''} answered, from the tutor, practice and homework.`}
+        description={`${covered ? `The 30 days from ${covered.from} to ${covered.to}` : 'The latest 30 days'}: outcomes of the syllabus map anyone${school ? ` at ${school}` : ''} answered, from the tutor, practice and homework. The 30 days are a fixed block; the next block is shown once it has ended.`}
       >
         {rows.length === 0 ? (
           <p className='px-4 text-sm text-muted-foreground'>No figure for this window yet.</p>
@@ -89,7 +90,7 @@ function LearningBody({ series, totals, school }: { series: ChartSeries; totals:
         {!school && (
           <ChartCard
             title='Misconceptions, 30 days'
-            description='Wrong options chosen on library questions, by the label the library gives that option. A school’s own questions are left out.'
+            description={`${misconceptions ? `The 30 days from ${misconceptions.from} to ${misconceptions.to}` : 'The latest 30 days'}: wrong options chosen on library questions, by the label the library gives that option. A school’s own questions are left out.`}
           >
             {wrong.length === 0 ? (
               <p className='px-4 text-sm text-muted-foreground'>No figure for this window yet.</p>

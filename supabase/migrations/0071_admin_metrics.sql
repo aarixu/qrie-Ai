@@ -4,10 +4,23 @@
 -- India day, metric, school (or the platform) and dimension. A dimension is a
 -- fixed word (a relay, a model, a report kind, a status, a level) or a
 -- curriculum label of a library question; no column can hold a person's id.
--- Roll-up functions (one per family, listed in admin.metric_family) fill it;
--- admin.metric_series is the only read. A learning figure for fewer than 10
--- children leaves the database as null; a source this database does not hold
--- is marked not captured with its reason; a day nobody rolled up has no point.
+-- Roll-up functions (one per family, listed in admin.metric_family) fill it.
+-- admin.metric_series is the chart pages' read and applies the small-group
+-- rule (admin.metric_json); admin.money_view (0072) also sums the spend rows,
+-- which are not figures about children, for margin per school.
+--
+-- The small-group rule (ruling R2): no child figure leaves the database, on
+-- its own or by adding or subtracting figures metric_series returns for
+-- either frame, the platform or any school, on any day, as a figure about 1
+-- to 9 children, as long as the records behind them are not changed (a
+-- figure rolled up again after records were erased or purged differs by
+-- those records; R2 states that cost). A row for fewer than 10 children is
+-- null; a platform row is also null when the children it counts outside the
+-- shown school rows are 1 to 9; a child figure's total is null when any row
+-- it adds up is null; learning windows are fixed 30-day blocks and the
+-- funnel's cohorts complete India weeks, so no two figures of the same kind
+-- cover overlapping days. A source this database does not hold is marked not
+-- captured with its reason; a day nobody rolled up has no point.
 
 create table if not exists admin.metric_def (
   key text primary key check (key ~ '^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+$'),
@@ -18,10 +31,13 @@ create table if not exists admin.metric_def (
   unit text not null check (unit in ('count', 'paise', 'ms', 'minutes', 'units')),
   -- 'utc' only for the meter's units and the ceiling (ruling R4).
   day_kind text not null default 'india' check (day_kind in ('india', 'utc')),
-  -- daily: that day; window: the 7 or 30 days ending that day (the key says
-  -- which); snapshot: as seen by the nightly run, never recomputed (R7);
-  -- cohort: people who entered that day, returned as window totals only (R19).
-  kind text not null check (kind in ('daily', 'window', 'snapshot', 'cohort')),
+  -- daily: that day; window: the 7 days ending that day (a school's hand-ins,
+  -- whose group is the school's students); block: the fixed 30-day block
+  -- ending that day, written only on a block's last day
+  -- (admin.metric_block_end) and returned for the latest block only (R18);
+  -- snapshot: as seen by the nightly run, never recomputed (R7); cohort:
+  -- people who entered that day, returned per complete India week only (R19).
+  kind text not null check (kind in ('daily', 'window', 'block', 'snapshot', 'cohort')),
   scope text not null check (scope in ('platform', 'school', 'both')),
   -- A figure about children's learning or use: suppressed under 10 (R2, R3).
   child_figure boolean not null default false,
@@ -45,6 +61,11 @@ create table if not exists admin.metric_daily (
   -- How many children the figure describes; read only by admin.metric_json's
   -- small-group rule and never returned.
   children integer check (children is null or children >= 0),
+  -- On a platform row of a figure also kept per school: the children whose
+  -- part of it is in no school row of 10 or more children (the same day,
+  -- metric and dimension), so what the platform adds to the shown schools.
+  -- Read only by admin.metric_json and never returned.
+  rest_children integer check (rest_children is null or rest_children >= 0),
   computed_at timestamptz not null default now()
 );
 create unique index if not exists metric_daily_one
@@ -98,6 +119,27 @@ as $$
   select p_day::timestamp at time zone 'Asia/Kolkata'
 $$;
 
+-- The small-group rule's threshold: a child figure for fewer children is
+-- never returned (R2).
+create or replace function admin.metric_min_group()
+returns integer
+language sql immutable
+set search_path = admin, public
+as $$
+  select 10
+$$;
+
+-- The last day of the latest fixed 30-day block on or before p_day. Blocks
+-- run back to back from 2026-01-01 (the first is 2026-01-01 to 2026-01-30),
+-- so two blocks never share a day (R18).
+create or replace function admin.metric_block_end(p_day date)
+returns date
+language sql immutable
+set search_path = admin, public
+as $$
+  select p_day - ((((p_day - date '2026-01-01' - 29) % 30) + 30) % 30)
+$$;
+
 -- The roles besides the owner that may read a chart page (ruling R9). An
 -- unknown page gives none: only the owner gets past require_staff, and is then
 -- told the page does not exist.
@@ -133,15 +175,27 @@ as $$
 $$;
 
 -- One metric's figures between two days, as the console draws them. A UTC
--- metric's window ends a day earlier (R4). A child figure whose group is
--- under 10 comes back null and suppressed (R2); the group size itself is
--- never returned. A cohort comes back as its total only (R19).
+-- metric's window ends a day earlier (R4). The small-group rule (R2), with
+-- the threshold of admin.metric_min_group(), on child figures only:
+--   a row whose group is under 10 comes back null and suppressed;
+--   a platform row whose rest_children is 1 to 9 does too, so the platform
+--     minus the shown schools never isolates a direct child or a small school;
+--   a total is null and suppressed when any row it adds up is, or when its
+--     rows' groups add up to under 10, so a total minus the shown rows
+--     isolates nothing;
+--   a block figure (R18) comes back for the latest 30-day block ending on or
+--     before the frame's last day only, whatever the frame, with no total;
+--   a cohort (R19) comes back per complete India week (Monday to Sunday,
+--     every day of it rolled up): the latest week for 7 days, the latest four
+--     for 30, each hidden under 10 entrants, with no total.
+-- The group sizes themselves are never returned.
 create or replace function admin.metric_json(d admin.metric_def, p_from date, p_to date, p_org uuid, p_one_school boolean)
 returns jsonb
 language plpgsql stable security definer
 set search_path = admin, lms, public
 as $$
 declare
+  g integer := admin.metric_min_group();
   f date := case when d.day_kind = 'utc' then p_from - 1 else p_from end;
   t date := case when d.day_kind = 'utc' then p_to - 1 else p_to end;
   since date;
@@ -149,6 +203,13 @@ declare
   pts jsonb;
   tot jsonb;
 begin
+  if d.kind = 'block' then
+    t := admin.metric_block_end(t);
+    f := t - 29;
+  elsif d.kind = 'cohort' then
+    t := t - (extract(isodow from t)::int % 7);
+    f := t - (case when p_to - p_from + 1 >= 28 then 28 else 7 end) + 1;
+  end if;
   if d.since_setting is not null then
     select (s.value #>> '{}')::date into since from admin.setting s where s.key = d.since_setting;
     ok := ok and since is not null;
@@ -160,35 +221,54 @@ begin
     return jsonb_build_object('key', d.key, 'label', d.label, 'unit', d.unit, 'dayKind', d.day_kind, 'kind', d.kind,
       'captured', false, 'why', d.why, 'capturedSince', null, 'from', f, 'to', t, 'total', null, 'points', '[]'::jsonb);
   end if;
+
+  if d.kind = 'cohort' then
+    select coalesce(jsonb_agg(jsonb_build_object('day', w.week, 'dim', '', 'school', null,
+             'value', case when w.hidden then null else w.value end, 'suppressed', w.hidden) order by w.week), '[]'::jsonb)
+      into pts
+      from (
+        select m.day - (extract(isodow from m.day)::int - 1) as week,
+               sum(m.value) as value,
+               d.child_figure and coalesce(sum(m.children), 0) < g as hidden,
+               count(distinct m.day) as days
+          from admin.metric_daily m
+         where m.metric = d.key and m.day between f and t and m.dim = '' and m.org_id is null
+           and (since is null or m.day >= since)
+         group by 1
+      ) w
+     where w.days = 7;
+    return jsonb_build_object('key', d.key, 'label', d.label, 'unit', d.unit, 'dayKind', d.day_kind, 'kind', d.kind,
+      'captured', true, 'why', null, 'capturedSince', since, 'from', f, 'to', t, 'total', null, 'points', pts);
+  end if;
+
   with r as (
     select m.day, m.dim, s.code as school, m.value, m.children,
-           d.child_figure and coalesce(m.children, 0) < 10 as hidden
+           d.child_figure and (coalesce(m.children, 0) < g or coalesce(m.rest_children, 0) between 1 and g - 1) as hidden
       from admin.metric_daily m
       left join lms.school s on s.org_id = m.org_id
-     where m.metric = d.key and m.day between f and t
+     where m.metric = d.key
+       and case when d.kind = 'block' then m.day = t else m.day between f and t end
        and (since is null or m.day >= since)
        and case when p_one_school then m.org_id = p_org
                 when d.scope = 'school' then m.org_id is not null
                 else m.org_id is null end
   )
   select
-    case when d.kind = 'cohort' then '[]'::jsonb else coalesce((
+    coalesce((
       select jsonb_agg(jsonb_build_object('day', r.day, 'dim', r.dim, 'school', r.school,
                'value', case when r.hidden then null else r.value end, 'suppressed', r.hidden)
              order by r.day, r.school nulls first, r.dim)
-        from r), '[]'::jsonb) end,
-    case d.total
-      when 'none' then null
-      when 'sum' then (
-        select jsonb_build_object(
-                 'value', case when d.child_figure and coalesce(sum(r.children), 0) < 10 then null else coalesce(sum(r.value), 0) end,
-                 'suppressed', d.child_figure and coalesce(sum(r.children), 0) < 10)
-          from r where r.dim = '')
+        from r), '[]'::jsonb),
+    case when d.kind = 'block' or d.total = 'none' then null
       else (
-        select jsonb_build_object(
-                 'value', case when d.child_figure and coalesce(sum(r.children), 0) < 10 then null else sum(r.value) end,
-                 'suppressed', d.child_figure and coalesce(sum(r.children), 0) < 10)
-          from r where r.dim = '' and r.day = (select max(x.day) from r x where x.dim = ''))
+        select jsonb_build_object('value', case when x.hide then null else x.value end, 'suppressed', x.hide)
+          from (
+            select case when d.total = 'sum' then coalesce(sum(r.value), 0) else sum(r.value) end as value,
+                   d.child_figure and (coalesce(sum(r.children), 0) < g or coalesce(bool_or(r.hidden), false)) as hide
+              from r
+             where r.dim = ''
+               and (d.total = 'sum' or r.day = (select max(x.day) from r x where x.dim = ''))
+          ) x)
     end
   into pts, tot;
   return jsonb_build_object('key', d.key, 'label', d.label, 'unit', d.unit, 'dayKind', d.day_kind, 'kind', d.kind,
@@ -272,6 +352,8 @@ $cat$;
 -- ---------------------------------------------------------------------------
 
 revoke all on function admin.ist_start(date) from public, anon, authenticated, service_role;
+revoke all on function admin.metric_min_group() from public, anon, authenticated, service_role;
+revoke all on function admin.metric_block_end(date) from public, anon, authenticated, service_role;
 revoke all on function admin.chart_roles(text) from public, anon, authenticated, service_role;
 revoke all on function admin.signins_readable() from public, anon, authenticated, service_role;
 revoke all on function admin.metric_json(admin.metric_def, date, date, uuid, boolean) from public, anon, authenticated, service_role;
@@ -283,7 +365,7 @@ grant execute on function admin.metric_series(text, integer, text) to authentica
 -- ---------------------------------------------------------------------------
 
 -- Rolls up one India day. Rows of that day that a recompute may rebuild are
--- deleted first (daily and window figures on the India day; daily UTC figures
+-- deleted first (daily, window and block figures on the India day; daily UTC figures
 -- on the day before, because the run for India day D writes UTC day D - 1:
 -- ruling R4); snapshots are deleted and rewritten only by the nightly run
 -- (R7). Cohorts are each family's own (the funnel's, 0073). Returns the rows
@@ -301,7 +383,7 @@ begin
   perform set_config('admin.session', 'on', true);
   delete from admin.metric_daily m using admin.metric_def d
    where d.key = m.metric
-     and ((d.day_kind = 'india' and d.kind in ('daily', 'window') and m.day = p_day)
+     and ((d.day_kind = 'india' and d.kind in ('daily', 'window', 'block') and m.day = p_day)
        or (d.day_kind = 'utc' and d.kind = 'daily' and m.day = p_day - 1)
        or (p_nightly and d.kind = 'snapshot' and m.day = p_day));
   for f in select x.fn from admin.metric_family x order by x.position loop

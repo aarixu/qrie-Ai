@@ -6,10 +6,13 @@ import type { AdminTransport } from './transport.ts';
 /**
  * The chart pages (migrations 0071 to 0074): one page's daily figures for the
  * 7 or 30 India days ending yesterday, margin and renewals, the content lists,
- * and the owner's recompute. A figure the database hides for fewer than 10
- * children arrives as null with suppressed true; a figure the database cannot
- * see arrives with captured false and its reason; a day with no roll-up has no
- * point at all.
+ * and the owner's recompute. A figure the database hides by its small-group
+ * rule (fewer than 10 children, or a figure that would let so small a group
+ * be worked out) arrives as null with suppressed true; a figure the database
+ * cannot see arrives with captured false and its reason; a day with no
+ * roll-up has no point at all. A 'block' metric arrives for its latest fixed
+ * 30-day block only (its from and to are the block's), and a 'cohort' metric
+ * per complete India week, one point per week on its Monday.
  */
 
 export type ChartPage = 'overview' | 'money' | 'schools' | 'learning' | 'content' | 'reliability' | 'funnel' | 'safety';
@@ -29,7 +32,7 @@ export interface Metric {
   label: string;
   unit: MetricUnit;
   dayKind: 'india' | 'utc';
-  kind: 'daily' | 'window' | 'snapshot' | 'cohort';
+  kind: 'daily' | 'window' | 'block' | 'snapshot' | 'cohort';
   captured: boolean;
   why: string | null;
   capturedSince: string | null;

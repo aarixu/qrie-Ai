@@ -4,9 +4,10 @@ import { formatPaise } from '../billing/money.ts';
 /**
  * What the chart pages draw, decided in one pure place (tested in
  * tests/charts-model.test.ts). A day is drawn as a value only when the
- * database gave a value for it: a day nobody rolled up, a figure hidden for
- * fewer than 10 children, and a figure the database cannot see each keep
- * their own state and are never drawn as 0.
+ * database gave a value for it: a day nobody rolled up, a figure the
+ * database hid by its small-group rule (fewer than 10 children, or a figure
+ * that would let so small a group be worked out), and a figure the database
+ * cannot see each keep their own state and are never drawn as 0.
  */
 
 /** The eight pages, with the roles admin.chart_roles gives each (ruling R9); the owner reads every page. */
@@ -21,7 +22,7 @@ export const CHART_PAGES: { page: ChartPage; title: string; url: string; roles: 
   { page: 'safety', title: 'Safety', url: '/charts/safety', roles: ['owner', 'safety'] },
 ];
 
-export const SUPPRESSED_TEXT = 'Fewer than 10 children: not shown.';
+export const SUPPRESSED_TEXT = 'Hidden to protect a group of fewer than 10 children.';
 export const NO_FIGURE_TEXT = 'No figure for this day yet.';
 export const NOT_CAPTURED_TEXT = 'Not captured';
 
@@ -53,7 +54,7 @@ export function daysBetween(from: string, to: string): string[] {
  * with `school`, one school's) points with dimension `dim` (default '').
  *
  * Not captured: the metric, or the days before it was first captured. A
- * suppressed point: hidden for fewer than 10 children. No point: no figure,
+ * suppressed point: hidden by the small-group rule. No point: no figure,
  * except that a dimension missing on a day whose '' point exists is a 0 for
  * that day, because every family that writes a '' row with dimensions
  * writes each dimension that had anything (admin.metric_family_*).
@@ -183,6 +184,7 @@ export function recomputeBlast(from: string, to: string): string {
   return (
     `The figures of ${from} to ${to} are worked out again from the records as they are now. ` +
     'Health, seats, activation, sign-ins, classes by status and the question bank keep the values seen on their night. ' +
+    "The contest funnel's cohorts are worked out again a whole week at a time. " +
     'Records erased or purged since are not counted.'
   );
 }
@@ -197,7 +199,7 @@ const STATE_RANK: Record<DayState, number> = { 'not-captured': 3, suppressed: 2,
 /**
  * One line made from two, day by day (Rs per student-hour from spend and
  * time, say). A day where either side is not a value keeps that side's
- * state (not captured before fewer than 10 children before no figure); a day
+ * state (not captured before hidden before no figure); a day
  * where `f` gives null has no figure.
  */
 export function ratioSeries(top: DayPoint[], bottom: DayPoint[], f: (a: number, b: number) => number | null): DayPoint[] {
@@ -222,7 +224,7 @@ export function chartSearch(search: Record<string, unknown>): { days: 7 | 30; sc
 /**
  * A school-by-school metric added up per day (dimension ''): seats, homework
  * published. A day with no point has no figure; a day where any point is
- * hidden for fewer than 10 children is hidden as a whole.
+ * hidden by the small-group rule is hidden as a whole.
  */
 export function totalByDay(m: Metric): DayPoint[] {
   return daysBetween(m.from, m.to).map((day) => {
@@ -239,4 +241,33 @@ export function latestPoints(m: Metric, school: string | null = null): Metric['p
   const mine = m.points.filter((p) => p.school === school);
   const last = mine.reduce<string | null>((d, p) => (d === null || p.day > d ? p.day : d), null);
   return last === null ? [] : mine.filter((p) => p.day === last);
+}
+
+export interface FunnelWeek {
+  /** The week's Monday (YYYY-MM-DD). */
+  week: string;
+  /** One per step metric given, in the same order. */
+  steps: { value: number | null; state: DayState }[];
+}
+
+/**
+ * The contest funnel by complete India week (Monday to Sunday), latest week
+ * first: each step's figure for the week. The database returns a cohort only
+ * per complete week (ruling R19), hidden under 10 entrants; a week with no
+ * point was not rolled up in full; a step the database does not capture is
+ * not captured. The weeks are those of the first step given.
+ */
+export function funnelWeeks(steps: (Metric | undefined)[]): FunnelWeek[] {
+  const first = steps.find((m): m is Metric => m !== undefined);
+  if (!first) return [];
+  const mondays = daysBetween(first.from, first.to).filter((_, i) => i % 7 === 0);
+  return mondays.reverse().map((week) => ({
+    week,
+    steps: steps.map((m): FunnelWeek['steps'][number] => {
+      if (!m || !m.captured) return { value: null, state: 'not-captured' };
+      const p = m.points.find((x) => x.day === week && x.dim === '' && x.school === null);
+      if (!p) return { value: null, state: 'no-figure' };
+      return p.suppressed || p.value === null ? { value: null, state: 'suppressed' } : { value: p.value, state: 'value' };
+    }),
+  }));
 }

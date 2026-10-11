@@ -133,30 +133,33 @@ revoke all on function admin.metric_family_schools(date, boolean) from public, a
 -- LEARNING IN AGGREGATE AND THE CONTEST FUNNEL (plan 6, the Learning and
 -- Funnel chart pages).
 --
--- learn.outcomes_covered_30d  outcomes answered in the 30 days ending that
---   day, by class and subject (dim '<grade>|<subject>'), from answers in the
---   ledger (the tutor and practice) and homework MCQ answers; the platform
---   writes every class and subject of the syllabus map (0 when nobody
---   answered), each school only those its children answered. Children = who
---   answered.
+-- learn.outcomes_covered_30d  outcomes answered in a fixed 30-day block
+--   (admin.metric_block_end; written only on a block's last day, R18), by
+--   class and subject (dim '<grade>|<subject>'), from answers in the ledger
+--   (the tutor and practice) and homework MCQ answers; the platform writes
+--   every class and subject of the syllabus map (0 when nobody answered),
+--   each school only those its children answered. Children = who answered.
 -- learn.outcomes_total  outcomes in the syllabus map (lms.outcome) by class
 --   and subject.
--- learn.misconceptions_30d  wrong answers in the 30 days ending that day on
---   LIBRARY questions only (R18: a school's own labels are its teacher's
---   words), from homework MCQ answers and practice answers, by class,
---   subject and the label at the chosen option (as 0040 and 0031 read it);
---   the platform only. Children = who chose it.
+-- learn.misconceptions_30d  wrong answers in a fixed 30-day block on LIBRARY
+--   questions only (R18: a school's own labels are its teacher's words),
+--   from homework MCQ answers and practice answers, by class, subject and
+--   the label at the chosen option (as 0040 and 0031 read it); the platform
+--   only. Children = who chose it.
 -- learn.practice_answers  practice answers the server received that day, at
 --   the platform and per school. Children = who practised.
 -- funnel.*  contest entries by India day; and cohorts by entry day (R19):
 --   entrants, those with a consent record, those with a class sitting, and
 --   those with sittings on two India days. Every cohort row carries the
---   cohort's size as its group, and admin.metric_json returns cohorts as
---   window totals only. A recompute rewrites the one cohort of its day; the
---   nightly run rewrites the last 30.
+--   cohort's size as its group, and admin.metric_json returns cohorts per
+--   complete India week only. Cohorts are rewritten a whole week at a time:
+--   a recompute rewrites the week of its day, the nightly run the current
+--   week and the four before it.
 --
 -- Every learning and cohort figure is hidden at read for fewer than 10
--- children (R2, R3).
+-- children (R2, R3). A platform row of a figure also kept per school carries
+-- rest_children: the children with a part of it outside every school row of
+-- 10 or more children, which admin.metric_json hides at 1 to 9.
 -- ---------------------------------------------------------------------------
 
 create or replace function admin.metric_family_learning(p_day date, p_nightly boolean)
@@ -165,13 +168,24 @@ language plpgsql volatile security definer
 set search_path = admin, lms, public
 as $$
 declare
+  g integer := admin.metric_min_group();
   day_start timestamptz := admin.ist_start(p_day);
   day_end timestamptz := admin.ist_start(p_day + 1);
-  win_start timestamptz := admin.ist_start(p_day + 1) - interval '30 days';
+  win_start timestamptz := admin.ist_start(p_day - 29);
   n integer;
   total integer := 0;
 begin
-  -- Outcomes answered, and the syllabus map's size.
+  -- The syllabus map's size, every day.
+  insert into admin.metric_daily (day, metric, org_id, dim, value, children)
+  select p_day, 'learn.outcomes_total', null::uuid, o.grade || '|' || o.subject, count(*), null::int
+    from lms.outcome o
+   group by o.grade, o.subject;
+  get diagnostics n = row_count;
+  total := total + n;
+
+  -- Outcomes answered and misconceptions: a block's figures, written on its
+  -- last day only.
+  if p_day = admin.metric_block_end(p_day) then
   with answers as materialized (
     select le.user_id, le.org_id, unnest(le.outcome_ids) as outcome
       from public.ledger_event le
@@ -182,28 +196,31 @@ begin
       join lms.submission_answer sa on sa.submission_id = s.id
       join lms.item i on i.id = sa.item_id
      where s.submitted_at >= win_start and s.submitted_at < day_end
-  ), g as materialized (
-    select a.user_id, a.org_id, o.id as outcome, o.grade || '|' || o.subject as gs,
-           exists (select 1 from lms.school sc where sc.org_id = a.org_id) as at_school
-      from answers a
-      join lms.outcome o on o.id = a.outcome
+  ), a as materialized (
+    select x.user_id, x.org_id, o.id as outcome, o.grade || '|' || o.subject as gs,
+           exists (select 1 from lms.school sc where sc.org_id = x.org_id) as at_school
+      from answers x
+      join lms.outcome o on o.id = x.outcome
+  ), per as (
+    select a.org_id, a.gs, count(distinct a.outcome) as covered, count(distinct a.user_id)::int as kids
+      from a where a.at_school
+     group by a.org_id, a.gs
+  ), flagged as (
+    -- Whether each answer is in a school row of 10 or more children.
+    select a.*, coalesce(per.kids, 0) >= g as in_shown
+      from a left join per on per.org_id = a.org_id and per.gs = a.gs
   ), syllabus as (
-    select o.grade || '|' || o.subject as gs, count(*) as outcomes
-      from lms.outcome o
-     group by o.grade, o.subject
+    select distinct o.grade || '|' || o.subject as gs from lms.outcome o
   )
-  insert into admin.metric_daily (day, metric, org_id, dim, value, children)
+  insert into admin.metric_daily (day, metric, org_id, dim, value, children, rest_children)
   select p_day, 'learn.outcomes_covered_30d', null::uuid, sy.gs,
-         (select count(distinct g.outcome) from g where g.gs = sy.gs),
-         (select count(distinct g.user_id) from g where g.gs = sy.gs)::int
+         (select count(distinct f.outcome) from flagged f where f.gs = sy.gs),
+         (select count(distinct f.user_id) from flagged f where f.gs = sy.gs)::int,
+         (select count(distinct f.user_id) from flagged f where f.gs = sy.gs and not f.in_shown)::int
     from syllabus sy
   union all
-  select p_day, 'learn.outcomes_covered_30d', g.org_id, g.gs, count(distinct g.outcome), count(distinct g.user_id)::int
-    from g where g.at_school
-   group by g.org_id, g.gs
-  union all
-  select p_day, 'learn.outcomes_total', null::uuid, sy.gs, sy.outcomes, null::int
-    from syllabus sy;
+  select p_day, 'learn.outcomes_covered_30d', per.org_id, per.gs, per.covered, per.kids, null::int
+    from per;
   get diagnostics n = row_count;
   total := total + n;
 
@@ -241,6 +258,7 @@ begin
    group by l.gs || '|' || left(l.label, 120);
   get diagnostics n = row_count;
   total := total + n;
+  end if;
 
   -- Practice answers that day.
   with p as materialized (
@@ -249,23 +267,45 @@ begin
       from public.ledger_event le
      where le.kind = 'answered' and le.source = 'practice'
        and le.received_at >= day_start and le.received_at < day_end
+  ), per as (
+    select p.org_id, count(*) as answers, count(distinct p.user_id)::int as kids
+      from p where p.at_school
+     group by p.org_id
+  ), flagged as (
+    -- Whether each answer is in a school row of 10 or more children.
+    select p.user_id, coalesce(per.kids, 0) >= g as in_shown
+      from p left join per on per.org_id = p.org_id
   )
-  insert into admin.metric_daily (day, metric, org_id, dim, value, children)
-  select p_day, 'learn.practice_answers', null::uuid, '', count(*), count(distinct p.user_id)::int from p
+  insert into admin.metric_daily (day, metric, org_id, dim, value, children, rest_children)
+  select p_day, 'learn.practice_answers', null::uuid, '', count(*), count(distinct f.user_id)::int,
+         (count(distinct f.user_id) filter (where not f.in_shown))::int
+    from flagged f
   union all
-  select p_day, 'learn.practice_answers', p.org_id, '', count(*), count(distinct p.user_id)::int
-    from p where p.at_school group by p.org_id;
+  select p_day, 'learn.practice_answers', per.org_id, '', per.answers, per.kids, null::int
+    from per;
   get diagnostics n = row_count;
   return total + n;
 end;
 $$;
 
+-- Contest entries on p_day, and the cohorts of whole India weeks (Monday to
+-- Sunday, up to yesterday): the week of p_day, and for the nightly run the
+-- four weeks before it too, which are all the weeks admin.metric_json can
+-- return. A week is rewritten whole, so a figure of a complete week changes
+-- only as all its entrants are counted again, never as some days' are. A week
+-- already rewritten in the same transaction (a recompute of a range, or the
+-- nightly run's six days before yesterday) is not rewritten again; the
+-- transaction-local setting admin.metric_funnel_weeks lists them.
 create or replace function admin.metric_family_funnel(p_day date, p_nightly boolean)
 returns integer
 language plpgsql volatile security definer
 set search_path = admin, lms, public
 as $$
 declare
+  wk date := p_day - (extract(isodow from p_day)::int - 1);
+  y date := lms.india_today() - 1;
+  done text := coalesce(current_setting('admin.metric_funnel_weeks', true), '');
+  w date;
   c date;
   n integer;
   total integer := 0;
@@ -277,35 +317,40 @@ begin
   get diagnostics n = row_count;
   total := total + n;
 
-  for c in
-    select p_day - k from generate_series(0, case when p_nightly then 29 else 0 end) k
+  for w in
+    select wk - 7 * k from generate_series(0, case when p_nightly then 4 else 0 end) k
   loop
-    delete from admin.metric_daily m
-     where m.day = c and m.metric in ('funnel.cohort', 'funnel.verified', 'funnel.first_class', 'funnel.second_day');
-    with ent as materialized (
-      select cs.user_id
-        from public.contest_signup cs
-       where cs.created_at >= admin.ist_start(c) and cs.created_at < admin.ist_start(c + 1)
-    ), f as (
-      select count(*)::bigint as entrants,
-             (count(*) filter (where exists (select 1 from public.consent_record cr where cr.user_id = ent.user_id)))::bigint as verified,
-             (count(*) filter (where exists (select 1 from public.learning_session ls
-                                             where ls.user_id = ent.user_id and ls.source = 'class')))::bigint as first_class,
-             (count(*) filter (where (select count(distinct (ls.received_at at time zone 'Asia/Kolkata')::date)
-                                        from public.learning_session ls where ls.user_id = ent.user_id) >= 2))::bigint as second_day
-        from ent
-    )
-    insert into admin.metric_daily (day, metric, dim, value, children)
-    select c, x.metric, '', x.value, f.entrants::int
-      from f
-     cross join lateral (values
-       ('funnel.cohort', f.entrants),
-       ('funnel.verified', f.verified),
-       ('funnel.first_class', f.first_class),
-       ('funnel.second_day', f.second_day)) as x(metric, value);
-    get diagnostics n = row_count;
-    total := total + n;
+    continue when position(w::text in done) > 0;
+    for c in select w + k from generate_series(0, 6) k where w + k <= y loop
+      delete from admin.metric_daily m
+       where m.day = c and m.metric in ('funnel.cohort', 'funnel.verified', 'funnel.first_class', 'funnel.second_day');
+      with ent as materialized (
+        select cs.user_id
+          from public.contest_signup cs
+         where cs.created_at >= admin.ist_start(c) and cs.created_at < admin.ist_start(c + 1)
+      ), f as (
+        select count(*)::bigint as entrants,
+               (count(*) filter (where exists (select 1 from public.consent_record cr where cr.user_id = ent.user_id)))::bigint as verified,
+               (count(*) filter (where exists (select 1 from public.learning_session ls
+                                               where ls.user_id = ent.user_id and ls.source = 'class')))::bigint as first_class,
+               (count(*) filter (where (select count(distinct (ls.received_at at time zone 'Asia/Kolkata')::date)
+                                          from public.learning_session ls where ls.user_id = ent.user_id) >= 2))::bigint as second_day
+          from ent
+      )
+      insert into admin.metric_daily (day, metric, dim, value, children)
+      select c, x.metric, '', x.value, f.entrants::int
+        from f
+       cross join lateral (values
+         ('funnel.cohort', f.entrants),
+         ('funnel.verified', f.verified),
+         ('funnel.first_class', f.first_class),
+         ('funnel.second_day', f.second_day)) as x(metric, value);
+      get diagnostics n = row_count;
+      total := total + n;
+    end loop;
+    done := done || w::text || ' ';
   end loop;
+  perform set_config('admin.metric_funnel_weeks', done, true);
   return total;
 end;
 $$;
@@ -320,15 +365,15 @@ begin
 perform set_config('admin.session', 'on', true);
 insert into admin.metric_def (key, position, pages, label, unit, day_kind, kind, scope, child_figure, total)
 values
-  ('learn.outcomes_covered_30d', 400, array['learning'], 'Outcomes answered in 30 days', 'count', 'india', 'window', 'both', true, 'none'),
+  ('learn.outcomes_covered_30d', 400, array['learning'], 'Outcomes answered in 30 days', 'count', 'india', 'block', 'both', true, 'none'),
   ('learn.outcomes_total', 401, array['learning'], 'Outcomes in the syllabus map', 'count', 'india', 'daily', 'platform', false, 'none'),
-  ('learn.misconceptions_30d', 410, array['learning'], 'Answers showing a misconception, 30 days', 'count', 'india', 'window', 'platform', true, 'none'),
+  ('learn.misconceptions_30d', 410, array['learning'], 'Answers showing a misconception, 30 days', 'count', 'india', 'block', 'platform', true, 'none'),
   ('learn.practice_answers', 420, array['learning'], 'Practice answers', 'count', 'india', 'daily', 'both', true, 'none'),
   ('funnel.entries', 450, array['funnel'], 'Contest entries', 'count', 'india', 'daily', 'platform', false, 'sum'),
-  ('funnel.cohort', 451, array['funnel'], 'Entrants', 'count', 'india', 'cohort', 'platform', true, 'sum'),
-  ('funnel.verified', 452, array['funnel'], 'A parent verified', 'count', 'india', 'cohort', 'platform', true, 'sum'),
-  ('funnel.first_class', 453, array['funnel'], 'Had a first class', 'count', 'india', 'cohort', 'platform', true, 'sum'),
-  ('funnel.second_day', 454, array['funnel'], 'Came back on a second day', 'count', 'india', 'cohort', 'platform', true, 'sum')
+  ('funnel.cohort', 451, array['funnel'], 'Entrants', 'count', 'india', 'cohort', 'platform', true, 'none'),
+  ('funnel.verified', 452, array['funnel'], 'A parent verified', 'count', 'india', 'cohort', 'platform', true, 'none'),
+  ('funnel.first_class', 453, array['funnel'], 'Had a first class', 'count', 'india', 'cohort', 'platform', true, 'none'),
+  ('funnel.second_day', 454, array['funnel'], 'Came back on a second day', 'count', 'india', 'cohort', 'platform', true, 'none')
 on conflict (key) do update set position = excluded.position, pages = excluded.pages, label = excluded.label,
   unit = excluded.unit, day_kind = excluded.day_kind, kind = excluded.kind, scope = excluded.scope,
   child_figure = excluded.child_figure, total = excluded.total;

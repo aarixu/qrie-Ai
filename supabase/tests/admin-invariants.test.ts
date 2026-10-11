@@ -199,6 +199,8 @@ describe('the admin schema', () => {
       ['admin', 'erasure_row'],
       ['admin', 'contest_purge_due'],
       ['admin', 'ist_start'],
+      ['admin', 'metric_min_group'],
+      ['admin', 'metric_block_end'],
       ['admin', 'chart_roles'],
       ['admin', 'signins_readable'],
       ['admin', 'metric_json'],

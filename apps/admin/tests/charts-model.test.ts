@@ -7,6 +7,7 @@ import {
   dimsOf,
   floorWord,
   formatValue,
+  funnelWeeks,
   healthByDay,
   latestBySchool,
   latestPoints,
@@ -161,7 +162,7 @@ describe('reading the figures', () => {
     expect(formatValue('count', null, 'suppressed')).toBe(SUPPRESSED_TEXT);
     expect(formatValue('count', null, 'no-figure')).toBe(NO_FIGURE_TEXT);
     expect(formatValue('count', null, 'not-captured')).toBe(NOT_CAPTURED_TEXT);
-    expect(SUPPRESSED_TEXT).toBe('Fewer than 10 children: not shown.');
+    expect(SUPPRESSED_TEXT).toBe('Hidden to protect a group of fewer than 10 children.');
     expect(NO_FIGURE_TEXT).toBe('No figure for this day yet.');
     expect(NOT_CAPTURED_TEXT).toBe('Not captured');
   });
@@ -238,6 +239,56 @@ describe('derived lines and the page address', () => {
     expect(latestPoints(metric())).toEqual([]);
   });
 
+  it("funnelWeeks gives each complete week's steps, latest first, a hidden week as hidden and a week not rolled up as no figure", () => {
+    const step = (key: string, points: MetricPoint[], over: Partial<Metric> = {}) =>
+      metric({ key, kind: 'cohort', from: '2026-09-14', to: '2026-10-11', points, ...over });
+    const weeks = funnelWeeks([
+      step('funnel.cohort', [pt('2026-09-21', null), pt('2026-10-05', 12), pt('2026-09-28', 0)]),
+      step('funnel.verified', [pt('2026-09-21', null), pt('2026-10-05', 6), pt('2026-09-28', 0)]),
+      step('funnel.first_class', [], { captured: false }),
+      undefined,
+    ]);
+    expect(weeks).toEqual([
+      {
+        week: '2026-10-05',
+        steps: [
+          { value: 12, state: 'value' },
+          { value: 6, state: 'value' },
+          { value: null, state: 'not-captured' },
+          { value: null, state: 'not-captured' },
+        ],
+      },
+      {
+        week: '2026-09-28',
+        steps: [
+          { value: 0, state: 'value' },
+          { value: 0, state: 'value' },
+          { value: null, state: 'not-captured' },
+          { value: null, state: 'not-captured' },
+        ],
+      },
+      {
+        week: '2026-09-21',
+        steps: [
+          { value: null, state: 'suppressed' },
+          { value: null, state: 'suppressed' },
+          { value: null, state: 'not-captured' },
+          { value: null, state: 'not-captured' },
+        ],
+      },
+      {
+        week: '2026-09-14',
+        steps: [
+          { value: null, state: 'no-figure' },
+          { value: null, state: 'no-figure' },
+          { value: null, state: 'not-captured' },
+          { value: null, state: 'not-captured' },
+        ],
+      },
+    ]);
+    expect(funnelWeeks([undefined])).toEqual([]);
+  });
+
   it('chartSearch keeps 7 or 30 days (7 otherwise) and a school code when one is given', () => {
     expect(chartSearch({})).toEqual({ days: 7 });
     expect(chartSearch({ days: 30 })).toEqual({ days: 30 });
@@ -258,6 +309,7 @@ describe('the recompute', () => {
     expect(recomputeBlast('2026-10-01', '2026-10-10')).toBe(
       'The figures of 2026-10-01 to 2026-10-10 are worked out again from the records as they are now. ' +
         'Health, seats, activation, sign-ins, classes by status and the question bank keep the values seen on their night. ' +
+        "The contest funnel's cohorts are worked out again a whole week at a time. " +
         'Records erased or purged since are not counted.',
     );
   });

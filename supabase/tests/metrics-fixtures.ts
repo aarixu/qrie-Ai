@@ -51,20 +51,47 @@ export async function metricDef(db: PGlite, over: Partial<MetricDefOver> = {}): 
   return d.key;
 }
 
-/** One figure in the store, replacing any already there. `day` is a date as text (YYYY-MM-DD). */
+/**
+ * One figure in the store, replacing any already there. `day` is a date as
+ * text (YYYY-MM-DD); `rest` is the row's rest_children.
+ */
 export async function putMetric(
   db: PGlite,
-  row: { day: string; metric: string; org?: string | null; dim?: string; value: number; children?: number | null },
+  row: { day: string; metric: string; org?: string | null; dim?: string; value: number; children?: number | null; rest?: number | null },
 ): Promise<void> {
   await db.transaction(async (tx) => {
     await tx.query(`select set_config('admin.session', 'on', true)`);
     await tx.query(
-      `insert into admin.metric_daily (day, metric, org_id, dim, value, children) values ($1::date, $2, $3, $4, $5, $6)
+      `insert into admin.metric_daily (day, metric, org_id, dim, value, children, rest_children) values ($1::date, $2, $3, $4, $5, $6, $7)
        on conflict (day, metric, coalesce(org_id, '00000000-0000-0000-0000-000000000000'::uuid), dim)
-       do update set value = excluded.value, children = excluded.children`,
-      [row.day, row.metric, row.org ?? null, row.dim ?? '', row.value, row.children ?? null],
+       do update set value = excluded.value, children = excluded.children, rest_children = excluded.rest_children`,
+      [row.day, row.metric, row.org ?? null, row.dim ?? '', row.value, row.children ?? null, row.rest ?? null],
     );
   });
+}
+
+/**
+ * The latest fixed 30-day learning block that has ended by yesterday
+ * (admin.metric_block_end): its last day (YYYY-MM-DD) and how many days
+ * before today that was.
+ */
+export async function lastBlock(db: PGlite): Promise<{ end: string; ago: number }> {
+  const { rows } = await db.query<{ end: string; ago: number }>(
+    `select admin.metric_block_end(lms.india_today() - 1)::text as end,
+            (lms.india_today() - admin.metric_block_end(lms.india_today() - 1))::int as ago`,
+  );
+  return rows[0];
+}
+
+/** The Monday of the latest India week (Monday to Sunday) that has ended by yesterday, and how many days before today that was. */
+export async function lastWeek(db: PGlite): Promise<{ monday: string; ago: number }> {
+  const { rows } = await db.query<{ monday: string; ago: number }>(
+    `with y as (select lms.india_today() - 1 as d)
+     select (y.d - (extract(isodow from y.d)::int % 7) - 6)::text as monday,
+            (lms.india_today() - (y.d - (extract(isodow from y.d)::int % 7) - 6))::int as ago
+       from y`,
+  );
+  return rows[0];
 }
 
 /** SQL text for the instant hh:mm India time on the India day `daysAgo` days before today. */

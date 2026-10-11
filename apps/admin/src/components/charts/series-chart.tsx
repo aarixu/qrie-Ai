@@ -43,7 +43,7 @@ function tick(unit: MetricUnit, v: number): string {
 /**
  * Daily figures on a shared day axis. A day where no line has a value is a
  * grey band, and every day that is not a value is listed under the chart by
- * its state (no figure, fewer than 10 children, not captured): a gap is never
+ * its state (no figure, hidden by the small-group rule, not captured): a gap is never
  * drawn as 0. Lines leave a gap there; bars are not drawn.
  */
 export function SeriesChart({
