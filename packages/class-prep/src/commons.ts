@@ -62,6 +62,19 @@ export const SEARCH_TIMEOUT_MS = 15_000;
 export const FILE_TIMEOUT_MS = 20_000;
 
 /**
+ * A signal that aborts after `ms`. AbortSignal.timeout where the browser has
+ * it; an AbortController and a timer where it does not (before Chrome 103 and
+ * Safari 16, and in older Android WebViews), where calling it threw and the
+ * search read as "unreachable": no photo at all, silently (2026-10-11).
+ */
+export function timeoutSignal(ms: number): AbortSignal {
+  if (typeof AbortSignal.timeout === 'function') return AbortSignal.timeout(ms);
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), ms);
+  return controller.signal;
+}
+
+/**
  * The licences this may build on, as Commons states them in `License`: its
  * machine code, not the short name written for people. Public domain, CC0,
  * and CC BY or CC BY-SA at any version or port ("cc-by-sa-3.0-pl"). A short
@@ -321,7 +334,7 @@ export function createCommonsSearch(options: CommonsOptions = {}): WebImageAdapt
 
       const response = await doFetch(url.toString(), {
         headers: agentHeaders(),
-        signal: AbortSignal.timeout(SEARCH_TIMEOUT_MS),
+        signal: timeoutSignal(SEARCH_TIMEOUT_MS),
       });
       if (!response.ok) return [];
       return candidatesFrom(await response.json());
@@ -365,7 +378,7 @@ export function createCommonsSearch(options: CommonsOptions = {}): WebImageAdapt
       url.searchParams.set('viurlwidth', String(width));
       const response = await doFetch(url.toString(), {
         headers: agentHeaders(),
-        signal: AbortSignal.timeout(SEARCH_TIMEOUT_MS),
+        signal: timeoutSignal(SEARCH_TIMEOUT_MS),
       });
       if (!response.ok) return [];
       return videoCandidatesFrom(await response.json());
@@ -374,7 +387,7 @@ export function createCommonsSearch(options: CommonsOptions = {}): WebImageAdapt
     async fetch(url) {
       // From a script, say who is asking here too: upload.wikimedia.org holds
       // file downloads to the same User-Agent policy as the API.
-      const response = await doFetch(url, { headers: agentHeaders(), signal: AbortSignal.timeout(FILE_TIMEOUT_MS) });
+      const response = await doFetch(url, { headers: agentHeaders(), signal: timeoutSignal(FILE_TIMEOUT_MS) });
       if (!response.ok) return null;
 
       const type = response.headers.get('content-type') ?? 'image/jpeg';

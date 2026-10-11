@@ -85,6 +85,38 @@ describe('a placed thing on a live class', () => {
     expect(watched!.b1__body).toBe(PNG);
   });
 
+  /**
+   * WHILE THE MAIN PICTURES ARE STILL BEING MADE (integration audit,
+   * 2026-10-11). The nouns were looked for only after prepareClass finished,
+   * which waits on every main picture; the student, already in the room on
+   * the draft, watched dashed word boxes for tens of seconds or minutes. The
+   * search now starts when the draft arrives.
+   */
+  it('dresses the draft while the class is still being prepared', async () => {
+    const draft = lessonWithARunner();
+    const final = lessonWithARunner();
+    const assets: Record<string, string> = {};
+    let finish: () => void = () => undefined;
+    let arts = 0;
+    prepared.fn.mockImplementation(async (opts: { onDraft?: (d: unknown) => void }) => {
+      opts.onDraft?.({ lesson: draft, assets });
+      await new Promise<void>((resolve) => (finish = resolve)); // the main pictures, still being made
+      return { lesson: final, assets, report: { topic: 'T', totalMs: 1, planMs: 1, visualsMs: 1, issues: [], visuals: [] } };
+    });
+    const making = prepareLiveClass({ topic: 'The Human Heart', klass: 10, minutes: 3, web }, () => {}, {
+      onDraft: () => {},
+      onArt: () => void (arts += 1),
+    });
+    for (let i = 0; i < 20; i += 1) await new Promise((r) => setTimeout(r, 0));
+    expect((draft.elements[0] as { credit?: unknown }).credit, 'the draft has its photo before the class is done').toBeDefined();
+    expect(assets.b1__body).toBe(PNG);
+    expect(arts).toBeGreaterThan(0);
+    finish();
+    const made = await making;
+    expect((made.lesson.elements[0] as { credit?: unknown }).credit).toBeDefined();
+    expect(made.assets.b1__body).toBe(PNG);
+  });
+
   it('looks for none when the search is turned off', async () => {
     web.search.mockClear();
     prepared.fn.mockImplementation(async () => ({

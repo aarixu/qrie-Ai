@@ -112,7 +112,7 @@ describe('preferences store', () => {
   });
 
   // A silent class with no words on screen says nothing at all: with her
-  // voice off, what she says is shown beside the board whatever the switch.
+  // voice off, what she says is shown with the board whatever the switch.
   it('shows captions when the student asked for them, or when her voice is off', () => {
     expect(showCaptions({ ...shipped, captions: false, voice: true })).toBe(false);
     expect(showCaptions({ ...shipped, captions: true, voice: true })).toBe(true);
@@ -174,8 +174,11 @@ describe('Settings', () => {
   });
 
   // The switch is the only place captions are turned on (2026-10-01).
-  it('says where captions go: beside the board, never on it', () => {
-    expect(html).toContain('beside the board');
+  // Under the board upright, along its bottom edge sideways, where the full-screen
+  // board leaves no 'beside' (integration audit, 2026-10-11).
+  it('says where captions go: under the board, along its bottom edge when the phone is sideways', () => {
+    expect(html).toContain('under the board (along its bottom edge when your phone is sideways)');
+    expect(html).not.toContain('beside the board');
   });
 
   it('reports each switch as checked exactly when the stored preference is on', () => {

@@ -2362,7 +2362,7 @@ export function ClassRoom({
             <button
               type="button"
               onClick={() => setShowCredits(true)}
-              className="rounded bg-white/80 px-1.5 py-0.5 text-[10px] text-slate-600"
+              className="min-h-8 rounded bg-white/80 px-2.5 text-[11px] text-slate-600"
             >
               Picture credits
             </button>

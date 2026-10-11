@@ -446,3 +446,28 @@ describe('a moving picture on Commons (2026-10-07)', () => {
     expect(got).toHaveLength(1);
   });
 });
+
+/**
+ * AN OLDER PHONE STILL GETS PHOTOS (integration audit, 2026-10-11).
+ * AbortSignal.timeout is missing before Chrome 103 and Safari 16 (and in older
+ * Android WebViews); there it threw, the search read as "unreachable", and the
+ * class silently had no photo at all.
+ */
+describe('timeoutSignal', () => {
+  it('aborts after the time given, with or without AbortSignal.timeout', async () => {
+    const { timeoutSignal } = await import('../src/commons');
+    const real = AbortSignal.timeout;
+    try {
+      (AbortSignal as unknown as { timeout?: unknown }).timeout = undefined;
+      const signal = timeoutSignal(20);
+      expect(signal.aborted).toBe(false);
+      await new Promise((r) => setTimeout(r, 40));
+      expect(signal.aborted).toBe(true);
+    } finally {
+      (AbortSignal as unknown as { timeout: typeof real }).timeout = real;
+    }
+    const native = timeoutSignal(20);
+    await new Promise((r) => setTimeout(r, 40));
+    expect(native.aborted).toBe(true);
+  });
+});
