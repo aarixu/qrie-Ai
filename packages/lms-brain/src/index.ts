@@ -10,7 +10,9 @@ export {
 } from './run.ts';
 export {
   DRAIN_DEFAULTS,
+  INTERRUPTED,
   MAX_ATTEMPTS,
+  THINK_STATEMENT_TIMEOUT_MS,
   drainBrainQueue,
   queueSettleDue,
   type DrainOptions,

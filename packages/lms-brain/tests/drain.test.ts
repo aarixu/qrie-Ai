@@ -3,7 +3,9 @@ import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createUser, freshDatabase } from '../../../supabase/tests/harness.ts';
 import {
+  INTERRUPTED,
   MAX_ATTEMPTS,
+  THINK_STATEMENT_TIMEOUT_MS,
   drainBrainQueue,
   queueSettleDue,
   think,
@@ -218,6 +220,114 @@ describe('draining the brain queue', () => {
     await answers(bad, 1);
     expect(await drainBrainQueue(db)).toMatchObject({ thought: 1, failed: 0, stuck: 0 });
     expect(await queued()).toEqual([]);
+  });
+});
+
+/**
+ * F2 (P2 security review): one learner who keeps answering, or whose think is
+ * slow or killed, must not hold every other learner back.
+ */
+describe('one learner cannot starve the queue (F2)', () => {
+  /** The database, with `during` run inside a learner's transaction just before their row is taken off. */
+  function duringThink(during: (tx: Tx, user: string) => Promise<void>): Sql {
+    const wrap = (tx: Tx): Tx => ({
+      query: async <R>(text: string, params?: unknown[]) => {
+        if (/^\s*delete from public\.brain_queue/.test(text)) await during(tx, String(params?.[0]));
+        return tx.query<R>(text, params);
+      },
+    });
+    return {
+      query: (text, params) => db.query(text, params),
+      transaction: (fn) => db.transaction((tx) => fn(wrap(tx as unknown as Tx))),
+    } as Sql;
+  }
+
+  /** A new answer of `user`'s, landing inside the brain's transaction: it takes a new ticket. */
+  async function lands(tx: Tx, user: string): Promise<void> {
+    const session = crypto.randomUUID();
+    // Read inside the transaction: PGlite has one connection, and the brain holds it.
+    const org = (await tx.query<{ org_id: string }>(`select org_id from public.membership where user_id = $1`, [user]))
+      .rows[0].org_id;
+    await tx.query(
+      `insert into public.learning_session (id, org_id, user_id, source, started_at) values ($1, $2, $3, 'quiz', now())`,
+      [session, org, user],
+    );
+    await tx.query(
+      `insert into public.ledger_event (id, org_id, user_id, session_id, seq, at, kind, source, surface, outcome_ids, payload)
+       values (gen_random_uuid(), $1, $2, $3, 1, now(), 'answered', 'quiz', 'tap', array[$4],
+               '{"correct": true, "chosenIndex": 0, "probeId": "p-again", "attempt": 1, "assistanceRung": 0}'::jsonb)`,
+      [org, user, session, DEFINE],
+    );
+  }
+
+  it('a learner who answers while being thought about goes to the back, so the next is reached', async () => {
+    const a = await createUser(db);
+    const b = await createUser(db);
+    await answers(a, 1, ago(0));
+    await answers(b, 1, ago(0));
+    await db.query(`update public.brain_queue set enqueued_at = now() - interval '1 minute' where user_id = $1`, [a]);
+    const keepsAnswering = duringThink(async (tx, user) => {
+      if (user === a) await lands(tx, a);
+    });
+    for (let run = 0; run < 3; run++) await drainBrainQueue(keepsAnswering, { maxMs: 0 });
+    expect((await states(b)).length).toBeGreaterThan(0);
+    expect(await queued()).toContain(a);
+  });
+
+  it('counts a run before it thinks, so a run killed mid-think still counts, and clears it when it finishes', async () => {
+    const kid = await createUser(db);
+    await answers(kid, 1);
+    let during: { attempts: number; last_error: string | null } | undefined;
+    const watching = duringThink(async (tx, user) => {
+      if (user !== kid) return;
+      during = (
+        await tx.query<{ attempts: number; last_error: string | null }>(
+          `select attempts, last_error from public.brain_queue where user_id = $1`,
+          [kid],
+        )
+      ).rows[0];
+      await lands(tx, kid);
+    });
+    await drainBrainQueue(watching);
+    expect(during).toEqual({ attempts: 1, last_error: INTERRUPTED });
+    // It finished, so the count is cleared, and the answer that landed keeps them queued.
+    const { rows } = await db.query<{ attempts: number; last_error: string | null }>(
+      `select attempts, last_error from public.brain_queue where user_id = $1`,
+      [kid],
+    );
+    expect(rows[0]).toEqual({ attempts: 0, last_error: null });
+  });
+
+  it('a new answer does not wipe the count of a run that never finished', async () => {
+    const kid = await createUser(db);
+    await answers(kid, 1);
+    // As a run killed mid-think leaves it.
+    await db.query(`update public.brain_queue set attempts = 3, last_error = $2 where user_id = $1`, [kid, INTERRUPTED]);
+    await answers(kid, 1);
+    const { rows } = await db.query<{ attempts: number }>(`select attempts from public.brain_queue where user_id = $1`, [kid]);
+    expect(rows[0].attempts).toBe(3);
+    // An ordinary failure is still forgiven by a new answer.
+    await db.query(`update public.brain_queue set attempts = 3, last_error = 'the fold broke' where user_id = $1`, [kid]);
+    await answers(kid, 1);
+    const { rows: after } = await db.query<{ attempts: number }>(`select attempts from public.brain_queue where user_id = $1`, [kid]);
+    expect(after[0].attempts).toBe(0);
+  });
+
+  it('thinks about each learner under a statement timeout, so a slow one fails as an error the drain can count', async () => {
+    const kid = await createUser(db);
+    await answers(kid, 1);
+    let timeout: string | undefined;
+    const watching = duringThink(async (tx, user) => {
+      if (user !== kid) return;
+      // In milliseconds, however Postgres prints it.
+      timeout = (
+        await tx.query<{ t: string }>(
+          `select (extract(epoch from current_setting('statement_timeout')::interval) * 1000)::bigint::text as t`,
+        )
+      ).rows[0].t;
+    });
+    await drainBrainQueue(watching);
+    expect(timeout).toBe(String(THINK_STATEMENT_TIMEOUT_MS));
   });
 });
 
