@@ -35,8 +35,10 @@ import { estimateSpeechMs } from '@ai-tutor/player';
  */
 
 const env = Object.fromEntries(
-  fs
-    .readFileSync(path.resolve(process.cwd(), '.env.local'), 'utf8')
+  // Absent on a fresh checkout or worktree; the live suite below is skipped there anyway.
+  (fs.existsSync(path.resolve(process.cwd(), '.env.local'))
+    ? fs.readFileSync(path.resolve(process.cwd(), '.env.local'), 'utf8')
+    : '')
     .split(/\r?\n/)
     .filter((l) => l.includes('=') && !l.trimStart().startsWith('#'))
     .map((l) => [l.slice(0, l.indexOf('=')).trim(), l.slice(l.indexOf('=') + 1).trim()]),

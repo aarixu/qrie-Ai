@@ -33,6 +33,15 @@ const resetPasswordForEmail = vi.fn();
 const signOut = vi.fn();
 const rpc = vi.fn();
 
+/**
+ * lib/supabase.ts builds its client only when the project's URL and key are set, and reads them once
+ * at import. createClient is mocked below, so any non-empty values do; a real .env keeps its own.
+ */
+vi.hoisted(() => {
+  process.env.VITE_SUPABASE_URL ||= 'https://test-project.supabase.co';
+  process.env.VITE_SUPABASE_ANON_KEY ||= 'test-anon-key';
+});
+
 let client: unknown;
 
 vi.mock('@supabase/supabase-js', () => ({

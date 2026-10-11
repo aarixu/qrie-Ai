@@ -21,8 +21,11 @@ let teacherA: LmsClient;
 let teacherB: LmsClient;
 let riya: LmsClient;
 let arjun: LmsClient;
-const today = new Date().toISOString().slice(0, 10);
-const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString().slice(0, 10);
+// "Today" is India's date, as the database decides it (0036: now() at time zone 'Asia/Kolkata').
+// A UTC date is a day behind between 00:00 and 05:30 IST, which failed this file at night.
+const indiaDate = (ms: number) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date(ms));
+const today = indiaDate(Date.now());
+const daysAgo = (n: number) => indiaDate(Date.now() - n * 86_400_000);
 
 beforeAll(async () => {
   db = await freshDatabase();
