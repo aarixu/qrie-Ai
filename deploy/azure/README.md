@@ -264,8 +264,8 @@ The CLI is the repository's own (`npx supabase`). Sign in once with
 `supabase link --project-ref ueemqirxyrltdmqgnidy`). The other commands name
 the project themselves.
 
-1. **Migrations 0026 to 0046.** The apps call functions these migrations make,
-   and both edge functions need 0046. On 2026-10-10 the hosted project had only
+1. **Migrations 0026 to 0046, and 0076.** The apps call functions these migrations make,
+   and both edge functions need 0046 and 0076 (the sign-in guard). On 2026-10-10 the hosted project had only
    migrations up to about 0025 (not checked again for this kit). Read before
    you push:
 

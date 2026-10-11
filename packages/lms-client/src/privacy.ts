@@ -3,7 +3,7 @@
  * security review, part 2: "Notice").
  *
  * One text, for a parent and for a teacher alike. What it lists is the data
- * map of that review, checked against the schema (migrations 0021-0046) and
+ * map of that review, checked against the schema (migrations 0021-0046 and 0076) and
  * the apps. It says only what the code does today: it names no keeping
  * period, no automatic deletion and no country of hosting, because none is
  * built or confirmed. A sentence that is true of one build only — the demo

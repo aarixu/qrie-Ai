@@ -16,7 +16,7 @@ import type { ImportStore } from './apply.ts';
  * therefore gets nowhere for any account made or given a PIN through this
  * file (one made before keeps its PIN as its password until it gets a new
  * one). The way in is lms-signin (signIn.ts), which checks the PIN against
- * the ID's guard row (migration 0046) — five wrong in a row lock the ID for
+ * the ID's guard row (migration 0076) — five wrong in a row lock the ID for
  * fifteen minutes — and only for the right PIN sends this password back.
  *
  * The guard row keeps a verifier: PBKDF2-SHA256, 100,000 rounds, 16-byte
@@ -95,7 +95,7 @@ export async function pinMatches(pepper: string, loginId: string, pin: string, s
   return differ === 0;
 }
 
-/** One of 0046's lms functions, called with the service role; its JSON answer. */
+/** One of 0076's guard functions, called with the service role; its JSON answer. */
 export type LmsRpc = (fn: string, args: Record<string, unknown>) => Promise<unknown>;
 
 /** Writes an ID's guard row for a new PIN, replacing any old one: the count of wrong PINs and any lock are cleared. */

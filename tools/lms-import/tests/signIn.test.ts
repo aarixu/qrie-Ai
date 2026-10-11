@@ -8,7 +8,7 @@ import { authPassword, guardPin } from '../src/pinGuard.ts';
 import { callerKey, handleSignIn, MAX_BODY, serveSignIn, type SignInDeps } from '../src/signIn.ts';
 
 /**
- * THE HOSTED SIGN-IN'S GUARD (supabase/functions/lms-signin, migration 0046).
+ * THE HOSTED SIGN-IN'S GUARD (supabase/functions/lms-signin, migration 0076).
  * Written first.
  *
  * Supabase Auth has no per-ID lockout, so on the hosted project the browser

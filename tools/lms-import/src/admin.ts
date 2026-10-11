@@ -20,7 +20,7 @@ import { previewImport, type SchoolSnapshot } from './portal.ts';
  * Every call checks, on the server, that the caller is signed in and is their
  * school's admin; the sheets are checked here every time, whatever the
  * browser showed. A PIN leaves only in the answer: the auth service is given
- * the password made from it (pinGuard.ts), and the sign-in guard (0046) a
+ * the password made from it (pinGuard.ts), and the sign-in guard (0076) a
  * verifier of it, so the PIN signs in through lms-signin and nowhere else.
  * Unlike the demo, a hosted commit is not one transaction: the auth
  * service and the tables are separate calls. Should one fail part-way,
@@ -34,7 +34,7 @@ export interface AdminDeps {
   verify(
     authorization: string | undefined,
   ): Promise<{ ok: true; user: { userId: string } } | { ok: false; status: number; why: string }>;
-  /** One of 0046's lms functions, with the service role; its JSON answer. */
+  /** One of 0046's (or 0076's guard) lms functions, with the service role; its JSON answer. */
   rpc(fn: string, args: Record<string, unknown>): Promise<unknown>;
   /** Accounts, classes and teaching, with the service role (supabaseStore). */
   store: ImportStore;

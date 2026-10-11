@@ -12,7 +12,7 @@
 // admin API for a new password. It has not yet run against a deployed
 // project: deploy it, then try each call once from the portal.
 //
-// Deploy, after `supabase db push` has applied migration 0046:
+// Deploy, after `supabase db push` has applied migrations 0046 and 0076:
 //   supabase functions deploy lms-admin --no-verify-jwt
 // --no-verify-jwt as for the relay: handleAdmin checks the caller's token on
 // every call and refuses anyone but their school's admin.

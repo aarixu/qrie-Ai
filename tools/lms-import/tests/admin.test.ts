@@ -21,7 +21,7 @@ import { handleSignIn } from '../src/signIn.ts';
  * stand-in for the identity service and the auth admin API.
  *
  * The auth service is never given a PIN: it is given the password made from
- * it (pinGuard.ts), and the sign-in guard (0046) a verifier, so the PIN on the
+ * it (pinGuard.ts), and the sign-in guard (0076) a verifier, so the PIN on the
  * slip signs in through lms-signin and nowhere else.
  */
 

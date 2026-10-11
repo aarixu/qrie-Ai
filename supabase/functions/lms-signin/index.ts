@@ -10,10 +10,10 @@
 // covered by the repo's tests (tools/lms-import/tests/signIn.test.ts, over the
 // real migrations). This file is the Deno adapter: it reads the environment,
 // answers OPTIONS and a missing setup, and hands every other request to
-// serveSignIn with the service role's calls to 0046's guard functions. It has
+// serveSignIn with the service role's calls to 0076's guard functions. It has
 // not yet run against a deployed project.
 //
-// Deploy, after `supabase db push` has applied migration 0046:
+// Deploy, after `supabase db push` has applied migration 0076:
 //   npx supabase secrets set LMS_PIN_PEPPER=<at least 32 random characters>
 //   npx supabase functions deploy lms-signin --no-verify-jwt
 // --no-verify-jwt because whoever is signing in has no token yet.

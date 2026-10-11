@@ -12,7 +12,7 @@ import { CLOSED, LOCKED, WRONG_PIN } from '../../../packages/lms-client/src/back
  *
  * The hosted project's counterpart is the lms-signin edge function
  * (tools/lms-import/src/signIn.ts): the same words and the same lockout,
- * kept in lms.sign_in_guard (0046), in front of Supabase Auth.
+ * kept in lms.sign_in_guard (0076), in front of Supabase Auth.
  */
 
 export { CLOSED, LOCKED, WRONG_PIN };

@@ -17,7 +17,7 @@ import { authPassword, pinMatches, type LmsRpc } from './pinGuard.ts';
  * wrong PIN; a locked ID gets LOCKED, right PIN or not; the right PIN clears
  * the count and, for an account that has been closed, gets CLOSED; a wrong
  * one counts towards the lock. Five in a row lock the ID for fifteen minutes.
- * The count is kept in lms.sign_in_guard (0046) and taken before the PIN is
+ * The count is kept in lms.sign_in_guard (0076) and taken before the PIN is
  * checked, so tries sent at the same moment get no more than five guesses.
  *
  * On top, a caller address that has had 200 tries not proven right in its
@@ -33,7 +33,7 @@ import { authPassword, pinMatches, type LmsRpc } from './pinGuard.ts';
  */
 
 export interface SignInDeps {
-  /** One of 0046's lms functions, with the service role; its JSON answer. */
+  /** One of 0076's guard functions, with the service role; its JSON answer. */
   rpc: LmsRpc;
   /** LMS_PIN_PEPPER. */
   pepper: string;
@@ -75,7 +75,7 @@ export interface HeaderSource {
   get(name: string): string | null;
 }
 
-/** The longest key lms.sign_in_ip keeps (0046 cuts a longer one short). */
+/** The longest key lms.sign_in_ip keeps (0076 cuts a longer one short). */
 const KEY_MAX = 64;
 
 const utf8 = new TextEncoder();
