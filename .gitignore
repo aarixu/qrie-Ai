@@ -20,6 +20,10 @@ venv/
 .env
 .env.*
 !.env.example
+# The console's local-demo settings: a local address and a dummy anon-shaped
+# key, no secret (tools/admin-demo/src/anon-key.ts). Kept in git so
+# `npm run demo --workspace @ai-tutor/admin` works from a fresh clone.
+!apps/admin/.env.demo
 *.blend1
 *.blend@
 assets/raw/

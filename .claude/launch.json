@@ -52,6 +52,26 @@
         "@ai-tutor/admin"
       ],
       "port": 5182
+    },
+    {
+      "name": "admin-demo-console",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "demo",
+        "--workspace",
+        "@ai-tutor/admin"
+      ],
+      "port": 5182
+    },
+    {
+      "name": "admin-demo-server",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "admin:demo"
+      ],
+      "port": 54329
     }
   ]
 }

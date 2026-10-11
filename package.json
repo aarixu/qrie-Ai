@@ -23,6 +23,8 @@
     "admin:build": "npm run build --workspace @ai-tutor/admin",
     "admin:bootstrap": "node --experimental-strip-types tools/admin-bootstrap/src/cli.ts",
     "admin:alert": "node --experimental-strip-types tools/admin-alert/src/run.ts",
+    "admin:demo": "node --experimental-strip-types tools/admin-demo/src/cli.ts",
+    "admin:demo-code": "node --experimental-strip-types tools/admin-demo/src/code-cli.ts",
     "app:sync": "npm run build && npm run --workspace @ai-tutor/classroom cap:sync",
     "app:android": "npm run app:sync && npm run --workspace @ai-tutor/classroom cap:android",
     "app:icons": "node tools/bin/make-app-icons.mjs && npm run --workspace @ai-tutor/classroom cap:assets",

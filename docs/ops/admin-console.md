@@ -8,6 +8,12 @@ Nothing here has been run against the hosted project yet. Lines marked
 **UNVERIFIED** are from documentation or memory and must be confirmed the first
 time they are done.
 
+**To see the console working on this laptop first**, with no Supabase project
+and no Docker: `npm run admin:demo`, then `npm run demo --workspace @ai-tutor/admin`,
+then http://localhost:5182. `tools/admin-demo/README.md` has the demo logins
+and says what is fake there (Auth, Cashfree, Storage); it is local only and
+never deployed.
+
 ## 0. Your steps, in order
 
 The steps of the sections below, as one list in the order to do them; each

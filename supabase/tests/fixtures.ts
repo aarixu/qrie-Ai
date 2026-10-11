@@ -1,5 +1,5 @@
 import type { PGlite } from '@electric-sql/pglite';
-import { createSchool, createUser, enrol } from './harness';
+import { createSchool, createUser, enrol } from './harness.ts';
 
 /**
  * One school as the LMS tests need it: a year, sections 8A and 8B, Maths and
