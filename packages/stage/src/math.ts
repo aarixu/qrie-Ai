@@ -10,8 +10,8 @@ import { hasMath } from '@ai-tutor/lesson-format';
  * Aarav, looking at a held question on production: "this should be written
  * as an equation — why is it in English? Use LaTeX." A board line carries its
  * maths in LaTeX between `$…$`, and this turns it into HTML the stage can
- * place inside a `foreignObject`: the words stay in her handwriting, the maths
- * is typeset by KaTeX.
+ * place inside a `foreignObject`: the words stay in her board face (Quicksand),
+ * the maths is typeset by KaTeX.
  *
  * SAFE BY CONSTRUCTION. Board text is written by a model, so every character
  * outside the maths is HTML-escaped, and KaTeX runs with `trust: false` (its

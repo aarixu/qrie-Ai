@@ -57,10 +57,9 @@ import type { BoardOp, Cursor, Dropped, LiveState, LiveStep, LiveTarget, MarkSha
  * overlap gate use (`boxOf`, `textWidth`, `wrapLines` in lesson-format; marks
  * and arrows from board-layout's `annotateElement` and `connectElements`), so
  * "no overlap" here is the same claim the prep gate makes. It is an estimate
- * all the same: Scene's own note (renderHandwrite) says the handwriting face
- * runs wider than the ruler, so a long handwritten line can draw a little past
- * its measured box — by how much on a real phone is UNVERIFIED, exactly as it
- * is for prepared ink. Every element is an existing lesson-format kind; a turn
+ * all the same: her written lines are measured with lesson-format's per-glyph
+ * Quicksand ruler (HAND_EMS), and how close it runs on a real phone is
+ * UNVERIFIED, exactly as it is for prepared ink. Every element is an existing lesson-format kind; a turn
  * adds no new kind for the renderer to learn.
  *
  * Pure and deterministic: no DOM, no clock, no randomness, no model.
