@@ -28,7 +28,8 @@ export function migrateModel(stored: unknown): LearnerModel {
   const states: Record<string, ConceptState> = {};
   for (const [id, raw] of Object.entries(model.states)) {
     if (!raw || typeof raw !== 'object') continue;
-    states[id] = { ...emptyConceptState(id), ...(raw as Partial<ConceptState>), outcomeId: id };
+    const state = { ...emptyConceptState(id), ...(raw as Partial<ConceptState>), outcomeId: id };
+    states[id] = model.version < 5 ? beforeGrading(state) : state;
   }
   return {
     states,
@@ -36,4 +37,20 @@ export function migrateModel(stored: unknown): LearnerModel {
     helpInFlight: null,
     version: MODEL_VERSION,
   };
+}
+
+/**
+ * A state from before v5, when the fold did not know who graded an answer.
+ * Its cold wins may be the phone's word, so an outcome it had not stamped
+ * starts with none, and with nothing verified (`emptyConceptState`): it needs
+ * two server-graded cold rights a day apart, as any v5 outcome does. An
+ * outcome it HAD stamped keeps the stamp with what stood behind it (its cold
+ * wins, and its belief alone as the verified one), so a phone-graded right
+ * leaves the stamp alone and only a cold miss takes it away, as under v5.
+ * Like a v1 model's full-weight hints, that kept credit stays until a rebuild
+ * from the ledger replaces it.
+ */
+function beforeGrading(state: ConceptState): ConceptState {
+  if (!state.masteredAt) return { ...state, coldWins: {} };
+  return { ...state, verifiedMastery: state.unassistedMastery, verifiedObservations: state.unassistedObservations };
 }

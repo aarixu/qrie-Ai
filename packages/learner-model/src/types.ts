@@ -205,8 +205,10 @@ export interface ConceptState {
  * `verifiedObservations` added; only a server-graded cold right answer is a
  * cold win, and `masteredAt` needs the verified belief at the line as well
  * as the decision belief, so a phone-graded answer can take the stamp away
- * and never give it. A migrated v4 model starts every outcome with nothing
- * verified until a rebuild from the ledger fills it.
+ * and never give it. A migrated v4 model starts every outcome it had not
+ * stamped with nothing verified and no cold wins, and keeps a stamp it had
+ * with its belief alone as the verified one (`migrateModel`), until a rebuild
+ * from the ledger replaces both.
  *
  * 6 (2026-10-11, Task 16): `askedItems`, the questions each outcome was
  * asked by, so a review can ask another. No belief moves differently. A
