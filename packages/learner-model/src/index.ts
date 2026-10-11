@@ -23,7 +23,7 @@ export {
 // `masteryView` is the blended picture, for display only.
 export { evidenceSet, masteryView, unassistedEvidence, unassistedView } from './project.ts';
 
-export { deriveRung } from './rung.ts';
+export { deriveRung, serverGraded } from './rung.ts';
 
 // Task 8: a fold says what it could not fold in order, the phone places a
 // sitting where it arrived, and a whole history folds again in order.

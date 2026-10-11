@@ -50,7 +50,9 @@ const ev = (
     source: 'quiz',
     surface,
     outcomeIds,
-    payload,
+    // Every answer here counts as server-graded (v5), so this fixture keeps
+    // exercising the mastery rule; graded.test.ts covers the phone-graded path.
+    payload: kind === 'answered' ? { ...(payload as object), graded: 'server' } : payload,
   }) as unknown as LedgerEvent;
 
 /**
@@ -191,6 +193,13 @@ describe('replay', () => {
    * slip and not confirmed. `b` was never answered wrong: `{}`. Nothing else
    * moved: every belief, count, date and box is byte for byte what it was.
    */
+  /**
+   * And a fifth time on 2026-10-11, deliberately (MODEL_VERSION 5, the one-brain
+   * plan's Task 15). Every answer in the fixture is marked server-graded, and
+   * each state gains `verifiedMastery` and `verifiedObservations`, equal here
+   * to the unassisted pair because the server graded every cold answer.
+   * Nothing else moved.
+   */
   it('reproduces the known state byte for byte', () => {
     // The invariant the old fixture violated, asserted here so a future fold
     // cannot quietly reintroduce it: a node is observed once per event that
@@ -213,6 +222,8 @@ describe('replay', () => {
           answerObservations: 2,
           doubtCount: 0,
           unassistedObservations: 2,
+          verifiedMastery: 0.32432432432432434,
+          verifiedObservations: 2,
           taughtCount: 1,
           lastPracticedAt: '2026-09-15T10:00:00.000Z',
           lastUnassistedSuccessAt: '2026-09-14T10:00:00.000Z',
@@ -248,6 +259,8 @@ describe('replay', () => {
           answerObservations: 3,
           doubtCount: 1,
           unassistedObservations: 2,
+          verifiedMastery: 0.9283667621776505,
+          verifiedObservations: 2,
           taughtCount: 0,
           lastPracticedAt: '2026-09-15T10:00:00.000Z',
           lastUnassistedSuccessAt: '2026-09-15T10:00:00.000Z',
@@ -273,7 +286,7 @@ describe('replay', () => {
       },
       foldedThrough: { at: '2026-09-15T10:00:00.000Z', sessionId: 's2', seq: 2 },
       helpInFlight: { sessionId: 's2', byAsk: {} },
-      version: 4,
+      version: 5,
     });
   });
 });

@@ -1,4 +1,4 @@
-import type { AssistanceRung, EventSource } from '@ai-tutor/ledger';
+import type { AnsweredPayload, AssistanceRung, EventSource, LedgerEvent } from '@ai-tutor/ledger';
 
 /**
  * WHICH RUNG WAS REALLY IN FORCE WHEN THIS ANSWER WAS GIVEN.
@@ -55,5 +55,24 @@ export function atLeastANudge(rung: AssistanceRung, attempt: number, source?: Ev
   return attempt > 1 && rung < 1 ? 1 : rung;
 }
 
-/** Sources the LMS writes, where `attempt` numbers a hand-in (see `atLeastANudge`). */
+/**
+ * Sources the LMS writes, where `attempt` numbers a hand-in (see
+ * `atLeastANudge`) and `correct` is the server's own mark (see `serverGraded`).
+ */
 const SCHOOL_SOURCES: ReadonlySet<EventSource> = new Set<EventSource>(['homework', 'test', 'practice', 'api']);
+
+/**
+ * WHETHER THE SERVER, NOT THE PHONE, SAID THIS ANSWER WAS RIGHT OR WRONG
+ * (lam-one-brain Task 15, C2).
+ *
+ * The LMS's own functions mark homework, tests and practice against the
+ * school's key, and record_evidence (0115) grades a tutor answer to a bank
+ * probe against the probe's key and writes `graded: 'server'`. Every other
+ * answer is the phone's word: a class lesson's answer, which no key on the
+ * server covers, an answer recorded before 0115, and the phone's own events
+ * before they are sent. Same direction as `deriveRung`: when unsure, it is the
+ * phone's.
+ */
+export function serverGraded(event: Pick<LedgerEvent, 'source'>, payload: Pick<AnsweredPayload, 'graded'>): boolean {
+  return SCHOOL_SOURCES.has(event.source) || payload.graded === 'server';
+}

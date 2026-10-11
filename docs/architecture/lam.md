@@ -10,7 +10,7 @@ skipped, 0 failed; typecheck clean). **Not merged and not deployed.** Design:
 One brain for every Qrie surface: the AI tutor (standalone today, inside the student app later), the school
 student app and the teacher/school app. Every answer is written to the server through a server function, on the
 server's clock. A queue wakes the brain, which folds each learner's answers with ONE fold
-(`packages/learner-model`, model version 4) into `public.concept_state`, keeping help apart from work done alone,
+(`packages/learner-model`, model version 5) into `public.concept_state`, keeping help apart from work done alone,
 the wrong ideas answers keep showing, and when each topic is due for review. Every surface reads that same model.
 No model (LLM) call is on this path. A school account and an independent tutor account are never linked; a teacher
 sees a summary only, never a child's answers.
@@ -19,7 +19,7 @@ sees a summary only, never a child's answers.
 
 | Step | Now | What is still missing |
 |---|---|---|
-| Observe | yes | A tutor answer's right/wrong is still decided on the phone (C2 partial). |
+| Observe | yes | An answer to a bank question is graded by the server (0115); a class lesson's answer is still graded on the phone, so it counts toward neither "mastered" nor the figures on their own (C2 partial). |
 | Diagnose | partly | Wrong ideas are counted and confirmed (2+ questions); a shaky prerequisite is found several steps back. No 9-class error taxonomy; wrong-idea labels are free text. |
 | Teach | partly | The help ladder reads history (a repeated wrong idea gets the targeted explanation; hint-abuse and wheel-spin change the next move). No per-learner strategy adaptation. |
 | Test (alone, later, a different question) | code yes, content no | "Mastered" needs 2 different questions, 24h apart, alone. The bank has no outcome with 2 questions yet (content work). |
@@ -118,7 +118,8 @@ screens and the deterministic decisions only.
 ## 7. Known limits (true today)
 
 - Not deployed; nothing runs on the hosted project.
-- A tutor answer's correctness is the phone's word (until the server grades tutor questions).
+- A class lesson's answer is graded on the phone (no key on the server covers a lesson's beat); it adapts the lesson
+  but counts toward neither `masteredAt` nor the figures on their own (Task 15, 0115).
 - The bank has one question per outcome at most, so "a different question later" rarely exists yet (content).
 - Two brain runs at once are proven only by `think.pg.test.ts`, which needs a real Postgres (`LAM_PG_URL`).
 - The brief's metric is on no screen (by design); practice has no time on task, so its gain stays outside the ratio.

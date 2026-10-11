@@ -72,6 +72,20 @@ export interface ConceptState {
    */
   unassistedObservations: number;
   /**
+   * THE COLD ANSWERS THE SERVER GRADED (v5, lam-one-brain Task 15, C2).
+   *
+   * `unassistedMastery` moved by rung-0 answers whose correctness the server
+   * knows (`serverGraded` in rung.ts: the LMS's homework, tests and practice,
+   * and a tutor answer record_evidence graded against a bank probe's key)
+   * and by no other. A class lesson's answer is graded on the phone, so it
+   * moves `unassistedMastery`, which the lesson's decisions read, and not
+   * these. They are what the school's reports show as "on their own" (0115)
+   * and what the mastery rule (`stampMastery`) needs to be at the line.
+   * `verifiedMastery` means nothing while `verifiedObservations` is 0.
+   */
+  verifiedMastery: number;
+  verifiedObservations: number;
+  /**
    * How many times this outcome has been TAUGHT. `applyTaught` saturates on
    * this count, so it has to be durable rather than per-session: the placement
    * screen applies attendance twice today (Diagnostic.tsx:102-105) precisely
@@ -87,15 +101,16 @@ export interface ConceptState {
    * WHEN THE ONE MASTERY RULE LAST BECAME TRUE, or null while it does not hold
    * (B8).
    *
-   * The rule: `unassistedMastery` at or above `MASTERY_LINE` (0.8), with right
-   * answers given COLD on at least two DISTINCT items at least
-   * `MASTERY_SPACING_MS` (24 h) apart. One lucky answer is not mastery; the
-   * same question twice is memory of that question; two items in one sitting
-   * are one sitting.
+   * The rule: `verifiedMastery` and `unassistedMastery` both at or above
+   * `MASTERY_LINE` (0.8), with right answers given COLD and graded by the
+   * server on at least two DISTINCT items at least `MASTERY_SPACING_MS`
+   * (24 h) apart (v5: a phone's "right" never makes up one of the two). One
+   * lucky answer is not mastery; the same question twice is memory of that
+   * question; two items in one sitting are one sitting.
    *
-   * It is a statement about NOW, so it is taken away again when a cold miss
-   * drops unassisted belief below the line — a stamp that outlived its evidence
-   * would tell a planner to skip what the student just showed they cannot do.
+   * It is a statement about NOW, so it is taken away again when a cold miss,
+   * the phone's or the server's, drops either belief below the line — a
+   * stamp that outlived its evidence would tell a planner to skip what the student just showed they cannot do.
    * While the rule keeps holding the first stamp is kept.
    *
    * The time is the SESSION's `startedAt` (see `FoldSession`), which is also
@@ -108,7 +123,8 @@ export interface ConceptState {
    *
    * Per item (`itemKey` in fold.ts: probe id, else school item id, else beat
    * id), the session time of
-   * its first and latest right answer at rung 0. The rule asks whether ANY two
+   * its first and latest right answer at rung 0 that the server graded (v5,
+   * `serverGraded`). The rule asks whether ANY two
    * distinct items are a day apart, and the widest such pair always uses one of
    * the two items with the earliest first win and one of the two with the latest
    * last win — so only those (at most four) are kept, and the record cannot grow
@@ -170,8 +186,15 @@ export interface ConceptState {
  * second-attempt nudge is kept to the tutor's own sources, because a homework
  * `attempt` numbers a whole new hand-in. A migrated v3 model starts every
  * outcome with no misconceptions until a rebuild from the ledger fills them.
+ *
+ * 5 (2026-10-11, Task 15): who graded an answer counts. `verifiedMastery` and
+ * `verifiedObservations` added; only a server-graded cold right answer is a
+ * cold win, and `masteredAt` needs the verified belief at the line as well
+ * as the decision belief, so a phone-graded answer can take the stamp away
+ * and never give it. A migrated v4 model starts every outcome with nothing
+ * verified until a rebuild from the ledger fills it.
  */
-export const MODEL_VERSION = 4;
+export const MODEL_VERSION = 5;
 
 /** B8's line: unassisted belief at or above this, on spaced distinct items. */
 export const MASTERY_LINE = 0.8;
@@ -261,6 +284,8 @@ export const emptyConceptState = (outcomeId: string): ConceptState => ({
   answerObservations: 0,
   doubtCount: 0,
   unassistedObservations: 0,
+  verifiedMastery: PRIOR,
+  verifiedObservations: 0,
   taughtCount: 0,
   lastPracticedAt: null,
   lastUnassistedSuccessAt: null,

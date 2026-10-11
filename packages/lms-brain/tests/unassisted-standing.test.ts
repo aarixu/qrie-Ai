@@ -26,6 +26,7 @@ let one: School;
 let helped: string; // 30 right answers, every one on the tutor's rung 7; none alone
 let waiting: string; // handed in homework the brain has not read yet
 let mixed: string; // one outcome answered alone, another only with help
+let phoneOnly: string; // answered alone, in class lessons only: graded by the phone
 let teacher: LmsClient;
 let hw: string;
 let items: string[];
@@ -35,7 +36,10 @@ const orgOf = async (user: string): Promise<string> =>
     .org_id;
 
 /** One tutor sitting written straight into the ledger, as the database owner. */
-async function tutorSitting(user: string, answers: { outcome: string; rung: number; correct: boolean }[]): Promise<void> {
+async function tutorSitting(
+  user: string,
+  answers: { outcome: string; rung: number; correct: boolean; graded?: 'server' | 'phone' }[],
+): Promise<void> {
   const org = await orgOf(user);
   const session = crypto.randomUUID();
   await db.query(
@@ -50,7 +54,7 @@ async function tutorSitting(user: string, answers: { outcome: string; rung: numb
         crypto.randomUUID(), org, user, session, n + 1, [a.outcome],
         JSON.stringify({
           correct: a.correct, chosenIndex: a.correct ? 0 : 1, probeId: `probe-helped-${session}-${n}`,
-          attempt: 1, assistanceRung: a.rung,
+          attempt: 1, assistanceRung: a.rung, ...(a.graded ? { graded: a.graded } : {}),
         }),
       ],
     );
@@ -72,9 +76,11 @@ beforeAll(async () => {
   helped = await seat(db, one.org, 'student', 'UNA-103', 'Kabir');
   waiting = await seat(db, one.org, 'student', 'UNA-104', 'Meera');
   mixed = await seat(db, one.org, 'student', 'UNA-105', 'Asha');
+  phoneOnly = await seat(db, one.org, 'student', 'UNA-106', 'Dev');
   await enrolIn8a(helped, '3');
   await enrolIn8a(waiting, '4');
   await enrolIn8a(mixed, '5');
+  await enrolIn8a(phoneOnly, '6');
 
   items = [];
   for (const [n, outcome] of [DEFINE, DEFINE, CLOSURE].entries()) {
@@ -104,14 +110,17 @@ beforeAll(async () => {
   for (let s = 0; s < 3; s++) {
     await tutorSitting(helped, Array.from({ length: 10 }, () => ({ outcome: DEFINE, rung: 7, correct: true })));
   }
-  // Asha: two cold rights on one outcome, two helped rights on the other, one chapter.
+  // Asha: two cold rights on one outcome (bank questions, graded by the server,
+  // 0115), two helped rights on the other, one chapter.
   await tutorSitting(mixed, [
-    { outcome: DEFINE, rung: 0, correct: true },
-    { outcome: DEFINE, rung: 0, correct: true },
+    { outcome: DEFINE, rung: 0, correct: true, graded: 'server' },
+    { outcome: DEFINE, rung: 0, correct: true, graded: 'server' },
     { outcome: CLOSURE, rung: 7, correct: true },
     { outcome: CLOSURE, rung: 7, correct: true },
   ]);
-  await think(db, [one.kid8a, helped, mixed]);
+  // Dev: three cold rights in a class lesson, which the phone graded.
+  await tutorSitting(phoneOnly, Array.from({ length: 3 }, () => ({ outcome: DEFINE, rung: 0, correct: true, graded: 'phone' as const })));
+  await think(db, [one.kid8a, helped, mixed, phoneOnly]);
   // Meera hands in after the brain ran.
   await createLmsClient(pgliteTransport(db, waiting)).submitMcq(hw, { [items[0]]: 0, [items[1]]: 1, [items[2]]: 0 });
 });
@@ -181,6 +190,24 @@ describe('a child carried by help does not read as knowing it', () => {
     const [mine] = await createLmsClient(pgliteTransport(db, mixed)).myProgress();
     expect(mine.unassistedMastery).toBeCloseTo(define.unassisted_mastery, 6);
     expect(mine.assistedPerformance).toBeCloseTo(closure.assisted_performance, 6);
+  });
+
+  it('answers only the phone graded: the lesson adapted to them, but no figure alone and no help figure (0115, C2)', async () => {
+    const { rows } = await db.query<{ unassisted_observations: number; verified_observations: number; mastered_at: string | null }>(
+      `select unassisted_observations, verified_observations, mastered_at from public.concept_state
+        where user_id = $1 and outcome_id = $2`,
+      [phoneOnly, DEFINE],
+    );
+    expect(rows[0]).toMatchObject({ unassisted_observations: 3, verified_observations: 0, mastered_at: null });
+    const dev = (await teacher.classInsights(one.s8a, one.maths)).find((r) => r.studentUserId === phoneOnly)!;
+    expect(dev).toMatchObject({ answers: 3, unassistedMastery: null, unassistedObservations: 0, assistedPerformance: null });
+    expect(dev.mastery).toBeGreaterThan(0.5);
+    const [mine] = await createLmsClient(pgliteTransport(db, phoneOnly)).myProgress();
+    expect(mine).toMatchObject({ answers: 3, unassistedMastery: null, unassistedObservations: 0, assistedPerformance: null });
+    const admin = createLmsClient(pgliteTransport(db, one.admin));
+    expect((await admin.schoolStudents(one.s8a)).find((s) => s.userId === phoneOnly)).toMatchObject({
+      unassistedMastery: null, unassistedObservations: 0, assistedPerformance: null,
+    });
   });
 
   it("the child's report, for the teacher and for the child, carries the same three figures", async () => {

@@ -484,6 +484,39 @@ rest: content (a second question per outcome), the server grading tutor answers,
   truth test's `D04 open` test turns into a passing `D04` test for bank-backed answers, and a new `open` test pins
   that class-lesson answers remain phone-graded.
 
+### Task 15 as built (2026-10-11)
+- **0115_lam_server_grades.sql.** `record_evidence` is 0111's with one step for every `answered` event: a
+  `probeId` the library holds (`lms.item.library_ref`, mcq with a key) and a numeric `chosenIndex` give `correct`
+  from the key, `verdict` (when sent) to match, `misconceptionId` from the item's label for the option chosen
+  (dropped when it has none or the answer is right), the item's `outcome_ids` in place of the phone's (a right
+  answer to an easy probe cannot be filed under another outcome), and `graded = 'server'`. Every other answer
+  gets `graded = 'phone'`, over anything the phone wrote. A payload the grade pushes past 4096 bytes is refused
+  `too-big`. `ledger` `AnsweredPayload.graded` documents it.
+- **The fold (learner-model v5).** `serverGraded(event, payload)` (`rung.ts`): the LMS's sources (homework,
+  test, practice, api) or `graded === 'server'`; absent on a tutor source reads as the phone's (old rows, and the
+  phone's own events before they are sent). A phone-graded cold answer still moves `unassistedMastery`, which the
+  lesson's decisions, `practice_for_me` and the phone read, so the lesson adapts. New `verifiedMastery` and
+  `verifiedObservations` move only on server-graded cold answers; only those are cold wins; `stampMastery` needs
+  both beliefs at the line, and a phone-graded answer may take `masteredAt` away, never give it (as an answer
+  after an exposure in the same sitting). Misconception clearing and the review ladder still read every cold
+  answer (they adapt the lesson). `MODEL_VERSION` 5; the server rebuilds every learner (the settle pass queues
+  any snapshot of another version), and a migrated v4 model on a phone starts with nothing verified.
+- **Teacher's figures.** concept_state gains `verified_mastery`/`verified_observations` (think.ts COLUMNS);
+  the eight reports of 0105/0112/0113 (`my_progress`, `class_insights`, `student_chapters`,
+  `practice_chapters`, `student_subjects`, `school_overview`, `school_classes`, `school_students`) read "on their
+  own" from them, columns unchanged. "With help" keeps `answer_observations > unassisted_observations`, so an
+  outcome answered only by phone-graded cold answers shows neither figure.
+- Tests: `packages/learner-model/tests/graded.test.ts`; `supabase/tests/lam-server-grades.test.ts` (six
+  phone-claimed rights with the wrong option stored as wrongs, the outcome and wrong idea from the item, a
+  phone's own `graded: 'server'` overruled, the size bound); `packages/lms-brain/tests/server-grades.test.ts`
+  (class answers over three days never set `masteredAt`; a server-graded retest on another bank probe 24 h
+  later does; a phone-graded right cannot be the first of the pair); `unassisted-standing.test.ts` (an outcome
+  answered only on the phone shows no figure alone and no help figure); truth `D04` now passes for bank-backed
+  answers and `D04 open` pins that class-lesson answers stay phone-graded. Tests that wrote bank answers straight
+  into the ledger as the owner now write them as record_evidence would (`graded: 'server'`).
+- Limits: answers recorded before 0115 count as the phone's (no backfill); the brief's metric (Task 14) still
+  reads `unassistedMastery`, so it counts phone-graded gains.
+
 ### Task 16: more than one question per outcome (tooling, no spend)
 - `tools/gen-graph`: a mode that adds questions to nodes that already have one, each with a `role`
   (`retest` | `review` | `transfer`), never repeating an existing stem (normalised), same probe shape

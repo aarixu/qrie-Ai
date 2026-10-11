@@ -1,7 +1,7 @@
 // @vitest-environment node
 import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { normaliseMisconception } from '@ai-tutor/learner-model';
+import { MODEL_VERSION, normaliseMisconception } from '@ai-tutor/learner-model';
 import { asService, createUser, freshDatabase } from '../../../supabase/tests/harness.ts';
 import { SNAPSHOT_LAG_SECONDS, settleDue, think } from '../src/index.ts';
 
@@ -39,7 +39,8 @@ const orgOf = async (user: string): Promise<string> =>
 /** A tutor quiz answer to library question `name`: right when option 0 is chosen. */
 const quiz = (name: string, chosen: number) => ({
   outcome: name.startsWith('a') ? DEFINE : CLOSURE,
-  payload: { correct: chosen === 0, chosenIndex: chosen, probeId: ref[name], attempt: 1, assistanceRung: 0 },
+  // A bank probe with an option chosen: record_evidence grades it (0115).
+  payload: { correct: chosen === 0, chosenIndex: chosen, probeId: ref[name], attempt: 1, assistanceRung: 0, graded: 'server' },
 });
 type Ev = ReturnType<typeof quiz>;
 
@@ -115,7 +116,7 @@ describe('folding forward from the snapshot', () => {
     await sitting(kid, ago(48), [quiz('a2', 0)]);
     expect(await think(db, [kid])).toEqual({ students: 1, events: 3 });
     const snap = (await modelRow(kid)).snapshot;
-    expect(snap?.model.version).toBe(4);
+    expect(snap?.model.version).toBe(MODEL_VERSION);
 
     await sitting(kid, ago(0), [quiz('a3', 0), quiz('b2', 2)]);
     // Only the two new answers are read: the three before are in the snapshot.
@@ -325,7 +326,7 @@ describe('a sitting thought only once, the moment it was handed in (review M1)',
     const kid = await createUser(db);
     await sitting(kid, ago(2), [quiz('a1', 0)]);
     await settleDue(db);
-    expect((await modelRow(kid)).snapshot?.model.version).toBe(4);
+    expect((await modelRow(kid)).snapshot?.model.version).toBe(MODEL_VERSION);
   });
 
   it('GUARD: without a settle pass the purge takes a sitting the snapshot never held', async () => {
@@ -359,8 +360,8 @@ describe('a model of another version', () => {
     expect(await think(db, [kid])).toEqual({ students: 1, events: 2 });
     expect(await stored(kid)).toEqual(built);
     const row = await modelRow(kid);
-    expect(row.version).toBe(4);
-    expect(row.snapshot!.model.version).toBe(4);
+    expect(row.version).toBe(MODEL_VERSION);
+    expect(row.snapshot!.model.version).toBe(MODEL_VERSION);
     expect(row.snapshot!.model.states).not.toHaveProperty('planted-outcome');
   });
 });

@@ -665,7 +665,8 @@ describe('mastered (B8)', () => {
       source: 'quiz',
       surface: 'tap',
       outcomeIds: ['b'],
-      payload: { probeId, correct, ms: 4000, attempt: 1, assistanceRung: rung, hintsShown: 0, chosenIndex: 0 },
+      // Graded by the server (v5): only such answers can make up the rule's pair.
+      payload: { probeId, correct, ms: 4000, attempt: 1, assistanceRung: rung, hintsShown: 0, chosenIndex: 0, graded: 'server' },
     }) as unknown as LedgerEvent;
 
   it('starts unmastered', () => {

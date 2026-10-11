@@ -90,11 +90,11 @@ const SCATTERED = [
 ];
 
 describe('the model version', () => {
-  it('is 4, and a v3 model is brought forward with no misconceptions rather than wiped', () => {
-    expect(MODEL_VERSION).toBe(4);
+  it('is past 4, and a v3 model is brought forward with no misconceptions rather than wiped', () => {
+    expect(MODEL_VERSION).toBeGreaterThan(4);
     const { misconceptions: _m, ...v3 } = emptyConceptState('a');
     const migrated = migrateModel({ version: 3, foldedThrough: null, helpInFlight: null, states: { a: { ...v3, mastery: 0.7 } } });
-    expect(migrated.version).toBe(4);
+    expect(migrated.version).toBe(MODEL_VERSION);
     expect(migrated.states.a.mastery).toBe(0.7);
     expect(migrated.states.a.misconceptions).toEqual({});
   });
@@ -102,7 +102,7 @@ describe('the model version', () => {
   it('rebuilds rather than folds into a v3 model', () => {
     const old = { ...emptyModel(), version: 3, states: { a: { ...emptyConceptState('a'), observations: 40 } } };
     const m = fold(old as LearnerModel, sitting(0), [answer(sitting(0), { correct: true, item: 'i1' })]);
-    expect(m.version).toBe(4);
+    expect(m.version).toBe(MODEL_VERSION);
     expect(m.states.a.observations).toBe(1);
   });
 });

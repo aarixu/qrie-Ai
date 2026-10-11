@@ -36,9 +36,10 @@ import {
  * evidence or its clock (C2). C5: fetch and every export of packages/relay
  * are stubbed to throw, and the whole loop must run without touching them.
  *
- * What this file does not prove: a tutor answer's correctness is the phone's
- * word (record_evidence does not grade), so C2 for the tutor's evidence stays
- * partial; and nothing here runs on the hosted project.
+ * What this file does not prove: a class lesson's answer is still the
+ * phone's word (record_evidence grades only bank questions, 0115; truth D04
+ * and D04 open), so C2 for the tutor's evidence stays partial; and nothing
+ * here runs on the hosted project.
  */
 
 // --- C5: no model call. Every relay export and fetch throw, and are counted. ---

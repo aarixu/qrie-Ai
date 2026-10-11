@@ -165,6 +165,16 @@ export interface AnsweredPayload {
   /** null is a skip, which is weak evidence AGAINST rather than no evidence. */
   chosenIndex?: number | null;
   correct: boolean;
+  /**
+   * Who decided `correct` (lam-one-brain Task 15). Written by the server's
+   * `public.record_evidence` (0115) on every tutor answer, over anything the
+   * phone sent: 'server' when the answer names a bank probe the server holds
+   * (`lms.item.library_ref`) and a `chosenIndex`, and `correct` was set from
+   * the probe's key; 'phone' otherwise. Absent on the phone's own events
+   * before they are sent, on answers recorded before 0115, and on the LMS's
+   * homework, tests and practice, which it marks itself.
+   */
+  graded?: 'server' | 'phone';
   /** Time from the question surfacing to the answer landing. */
   ms: number;
   attempt: number;

@@ -57,7 +57,9 @@ numbers the learner's decisions use.
    from the caller (never from input), rung and payload checked, idempotent on event id. Direct `insert` on `ledger_event` and
    `learning_session` is then revoked from the `authenticated` role. A child's token can no longer forge a source,
    a clock, a session, an org or another learner. **A tutor answer's correctness stays client-asserted** until the
-   server grades tutor asks itself; the results list that as C2 partial.
+   server grades tutor asks itself; the results list that as C2 partial. (Phase 2, Task 15, 0115: the server now
+   grades an answer to a bank question by its key, and only server-graded cold answers count toward `masteredAt`
+   and the figures on their own; a class lesson's answer stays the phone's word.)
 2. **Think.** An `after insert` trigger on `ledger_event` puts the learner in `brain_queue`. A worker drains the
    queue: per learner, inside one transaction with an advisory lock, it rebuilds the model from that learner's
    whole ledger with the ONE fold (`packages/learner-model`, now version 4) and writes every model field to

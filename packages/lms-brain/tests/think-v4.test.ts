@@ -3,6 +3,7 @@ import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { emptyParams } from '@ai-tutor/knowledge-graph';
 import {
+  MODEL_VERSION,
   emptyConceptState,
   isConfirmed,
   normaliseMisconception,
@@ -103,7 +104,8 @@ const homework = (name: string, chosen: number): Ev => ({
 });
 const quiz = (name: string, chosen: number, extra: Record<string, unknown> = {}): Ev => ({
   outcome: name.startsWith('a') ? DEFINE : CLOSURE,
-  payload: { correct: chosen === 0, chosenIndex: chosen, probeId: ref[name], attempt: 1, assistanceRung: 0, ...extra },
+  // A bank probe with an option chosen: record_evidence grades it (0115).
+  payload: { correct: chosen === 0, chosenIndex: chosen, probeId: ref[name], attempt: 1, assistanceRung: 0, graded: 'server', ...extra },
 });
 
 type Stored = Record<string, unknown> & { outcome_id: string };
@@ -194,7 +196,7 @@ describe('every v4 field reaches concept_state (Task 2)', () => {
     const { rows } = await db.query<{ version: number }>(`select version from public.learner_model where user_id = $1`, [
       riya,
     ]);
-    expect(rows[0].version).toBe(4);
+    expect(rows[0].version).toBe(MODEL_VERSION);
   });
 });
 

@@ -368,6 +368,8 @@ export const COLUMNS: readonly [Exclude<keyof ConceptState, 'outcomeId'>, string
   ['observations', 'observations', 'int'],
   ['answerObservations', 'answer_observations', 'int'],
   ['unassistedObservations', 'unassisted_observations', 'int'],
+  ['verifiedMastery', 'verified_mastery', 'real'],
+  ['verifiedObservations', 'verified_observations', 'int'],
   ['taughtCount', 'taught_count', 'int'],
   ['doubtCount', 'doubt_count', 'int'],
   ['lastPracticedAt', 'last_practiced_at', 'timestamptz'],

@@ -18,7 +18,7 @@ import type {
 import { askKey, defaultCredit } from './assistance.ts';
 import { recordColdWin, stampMastery } from './mastered.ts';
 import { recordColdRight, recordWrongIdea } from './misconception.ts';
-import { atLeastANudge, deriveRung } from './rung.ts';
+import { atLeastANudge, deriveRung, serverGraded } from './rung.ts';
 import {
   MAX_CURSOR_GAPS,
   MODEL_VERSION,
@@ -417,6 +417,12 @@ function foldAnswer(
     event.source,
   );
   const unassisted = rung === 0;
+  /**
+   * WHO SAID IT WAS RIGHT (v5, Task 15). A phone-graded answer moves the
+   * belief the lesson's decisions read like any other; only a server-graded
+   * one moves the verified belief, earns a cold win, or gives `masteredAt`.
+   */
+  const verified = serverGraded(event, payload);
 
   /**
    * HELP IS DISCOUNTED, AND ONLY WHERE IT FLATTERS (B4).
@@ -574,21 +580,27 @@ function foldAnswer(
       const moved = applyEvidence({ [nodeId]: prev.unassistedMastery }, index, answer, { params });
       updated.unassistedMastery = moved[nodeId] ?? prev.unassistedMastery;
       updated.unassistedObservations = prev.unassistedObservations + 1;
+      if (verified) {
+        const checked = applyEvidence({ [nodeId]: prev.verifiedMastery }, index, answer, { params });
+        updated.verifiedMastery = checked[nodeId] ?? prev.verifiedMastery;
+        updated.verifiedObservations = prev.verifiedObservations + 1;
+      }
       if (payload.correct) {
         updated.lastUnassistedSuccessAt = event.at;
         // Right after being shown it, in this same session, is listening,
         // not remembering: no cold win toward `masteredAt` (F1-F3), and no
         // step toward clearing a wrong idea either.
         if (!exposedThisSession(prev, session.startedAt)) {
-          updated.coldWins = recordColdWin(prev.coldWins, itemKey(event, payload), session.startedAt);
+          if (verified) updated.coldWins = recordColdWin(prev.coldWins, itemKey(event, payload), session.startedAt);
           updated.misconceptions = recordColdRight(prev.misconceptions ?? {}, itemKey(event, payload), session.startedAt);
         }
       }
       // B8, on the session clock: the stamp and the spacing read the same time.
-      // Shown it this session: the stamp may be taken away by a miss, never
-      // given (F1-F3; sixth review, 2026-09-29).
+      // Shown it this session, or graded only by the phone (v5): the stamp may
+      // be taken away by a miss, never given (F1-F3; sixth review, 2026-09-29).
       const stamped = stampMastery(updated, session.startedAt);
-      updated.masteredAt = exposedThisSession(prev, session.startedAt) && stamped !== null ? prev.masteredAt : stamped;
+      const mayGive = verified && !exposedThisSession(prev, session.startedAt);
+      updated.masteredAt = !mayGive && stamped !== null ? prev.masteredAt : stamped;
     } else {
       const moved = applyEvidence({ [nodeId]: prev.assistedPerformance }, index, answer, { params });
       updated.assistedPerformance = moved[nodeId] ?? prev.assistedPerformance;

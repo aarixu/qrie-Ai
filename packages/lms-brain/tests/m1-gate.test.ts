@@ -66,7 +66,7 @@ async function enrolIn8a(user: string, roll: string): Promise<void> {
 async function tutorSitting(
   user: string,
   source: 'class' | 'quiz',
-  answers: { outcome: string; probe: string; correct: boolean; rung?: number }[],
+  answers: { outcome: string; probe: string; correct: boolean; rung?: number; graded?: 'server' }[],
 ): Promise<void> {
   const session = crypto.randomUUID();
   await db.query(
@@ -81,6 +81,7 @@ async function tutorSitting(
         crypto.randomUUID(), one.org, user, session, n + 1, source, [a.outcome],
         JSON.stringify({
           correct: a.correct, chosenIndex: a.correct ? 0 : 1, probeId: a.probe, attempt: 1, assistanceRung: a.rung ?? 0,
+          ...(a.graded ? { graded: a.graded } : {}),
         }),
       ],
     );
@@ -151,11 +152,13 @@ beforeAll(async () => {
   await db.query(`update lms.assignment set due_at = now() - interval '1 hour' where id = $1`, [hw]);
 
   // B: thirty right answers on defining, in three sittings: each after the
-  // tutor walked them to it (rung 7), or each alone.
+  // tutor walked them to it (rung 7), or each alone. Graded by the server, as
+  // record_evidence grades a bank question (0115): only those count as their
+  // own (learner-model v5).
   for (let s = 0; s < 3; s++) {
     for (const [who, rung] of [[kid.bHelped, 7], [kid.bAlone, 0]] as const) {
       await tutorSitting(who, 'class', Array.from({ length: 10 }, (_, n) => ({
-        outcome: DEFINE, probe: `probe-mog-b-${s}-${n}`, correct: true, rung,
+        outcome: DEFINE, probe: `probe-mog-b-${s}-${n}`, correct: true, rung, graded: 'server',
       })));
     }
   }

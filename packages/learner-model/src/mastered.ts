@@ -62,11 +62,15 @@ export function spacedOnDistinctItems(wins: ColdWins): boolean {
  * Holds → keep the existing stamp, or stamp `at`. Does not hold → null. Only
  * the fold's rung-0 path calls this, because only a cold answer can move
  * `unassistedMastery` or `coldWins`; a hinted answer can neither grant nor
- * take away mastery.
+ * take away mastery. Both beliefs must be at the line (v5): the verified one,
+ * so the phone's word cannot carry it there, and the decision one, so a cold
+ * miss the phone graded still takes the stamp away. The fold never lets a
+ * phone-graded answer GIVE a stamp this returns (fold.ts).
  */
 export function stampMastery(state: ConceptState, at: string): string | null {
   const holds =
-    state.unassistedObservations > 0 &&
+    state.verifiedObservations > 0 &&
+    state.verifiedMastery >= MASTERY_LINE &&
     state.unassistedMastery >= MASTERY_LINE &&
     spacedOnDistinctItems(state.coldWins);
   if (!holds) return null;

@@ -19,6 +19,15 @@ let db: PGlite;
 
 beforeAll(async () => {
   db = await freshDatabase();
+  // The questions are the library's, so the server grades the answers (0115);
+  // only a server-graded right can count toward mastered (learner-model v5).
+  for (const ref of ['probe-rev-1', 'probe-rev-2']) {
+    await db.query(
+      `insert into lms.item (library_ref, outcome_ids, grade, subject, kind, stem, options, correct_index)
+       values ($1, $2, 8, 'Mathematics', 'mcq', $1, '["right","wrong"]'::jsonb, 0)`,
+      [ref, [DEFINE]],
+    );
+  }
 });
 afterAll(async () => {
   await db.close();

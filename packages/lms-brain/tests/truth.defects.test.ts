@@ -282,13 +282,46 @@ describe('M2: one trusted brain', () => {
     expect(rows).toEqual([]);
   });
 
-  it('D04 open: a tutor answer’s correctness is still the phone’s word', async () => {
-    // MF4: record_evidence does not grade tutor answers. Six rights a phone
-    // claims on questions it never asked still lift the figure a teacher sees.
+  it('D04: a tutor answer to a bank question is graded by the server, not the phone (Task 15)', async () => {
+    // Six rights a phone claims on a bank probe, the wrong option chosen each
+    // time: record_evidence (0115) grades them by the probe's key, so they are
+    // folded as six wrongs, and the teacher sees the wrong idea, not mastery.
     const claimant = await child('claimant');
-    await send(claimant, sitting('quiz', Array.from({ length: 6 }, (_, n) => ({ outcome: IDENTITY, probe: `probe-td-claim-${n}` }))));
+    const claims = sitting('quiz', Array.from({ length: 6 }, () => ({ outcome: DEFINE, probe: 'probe-td-s0', chosen: 1, correct: true })));
+    expect((await send(claimant, claims)).every((r) => r.status === 'recorded')).toBe(true);
     await think(db, [claimant]);
-    expect(Number((await stateOf(claimant, IDENTITY))?.unassisted_mastery)).toBeGreaterThan(0.9);
+    const state = (await stateOf(claimant, DEFINE))!;
+    expect(state).toMatchObject({ answer_observations: 6, unassisted_observations: 6, verified_observations: 6, mastered_at: null });
+    expect(Number(state.unassisted_mastery)).toBeLessThan(0.5);
+    expect(Number(state.verified_mastery)).toBeLessThan(0.5);
+    const row = (await teacher.classInsights(one.s8a, one.maths)).find((r) => r.studentUserId === claimant)!;
+    expect(row.unassistedObservations).toBe(6);
+    expect(row.unassistedMastery!).toBeLessThan(0.5);
+    // The bank's wrong idea for the option chosen, six times on one item.
+    const ideas = Object.values(state.misconceptions as Record<string, { label: string | null; count: number }>);
+    expect(ideas).toContainEqual(expect.objectContaining({ label: SCATTERED[0], count: 6 }));
+  });
+
+  it('D04 open: a class lesson’s answers are still graded on the phone', async () => {
+    // No key on the server covers a question the library does not hold, as a
+    // lesson's beat is not: six rights a phone claims there are kept as sent
+    // and marked graded 'phone'. They move the belief the lesson's decisions
+    // read, and nothing a teacher reads as "on their own", nor masteredAt.
+    const claimant = await child('lesson-claimant');
+    const claims = sitting('class', Array.from({ length: 6 }, (_, n) => ({ outcome: IDENTITY, probe: `probe-td-claim-${n}` })));
+    await send(claimant, claims);
+    await think(db, [claimant]);
+    const { rows } = await db.query<{ graded: string; correct: boolean }>(
+      `select payload ->> 'graded' as graded, (payload ->> 'correct')::boolean as correct
+         from public.ledger_event where user_id = $1 and kind = 'answered'`,
+      [claimant],
+    );
+    expect(rows).toEqual(Array.from({ length: 6 }, () => ({ graded: 'phone', correct: true })));
+    const state = (await stateOf(claimant, IDENTITY))!;
+    expect(Number(state.unassisted_mastery)).toBeGreaterThan(0.9);
+    expect(state).toMatchObject({ verified_observations: 0, mastered_at: null });
+    const row = (await teacher.classInsights(one.s8a, one.maths)).find((r) => r.studentUserId === claimant)!;
+    expect(row).toMatchObject({ unassistedMastery: null, unassistedObservations: 0 });
   });
 
   it('D05 (server part): the same answers read the same on the server whatever the phone’s clock said', async () => {
@@ -446,7 +479,7 @@ describe('M2: one trusted brain', () => {
 });
 
 describe('M1: the model and its decisions', () => {
-  it('D07: the server folds with the tutor’s arithmetic: version 4, help discounted, a retry not cold, every v4 field kept', async () => {
+  it('D07: the server folds with the tutor’s arithmetic: the model’s version, help discounted, a retry not cold, every v4 field kept', async () => {
     const helped = await createUser(db);
     const alone = await createUser(db);
     const retried = await createUser(db);
@@ -466,7 +499,7 @@ describe('M1: the model and its decisions', () => {
     }
     expect(a.box).not.toBeNull();
     const { rows } = await db.query<{ version: number }>(`select version from public.learner_model where user_id = $1`, [alone]);
-    expect(rows[0].version).toBe(4);
+    expect(rows[0].version).toBe(learnerModel.MODEL_VERSION);
   });
 
   it('D08: thirty rights carried by help read "with help", to the child and to the teacher, never Strong', async () => {
@@ -600,7 +633,8 @@ describe('M1: the model and its decisions', () => {
     const learner = await createUser(db);
     const right = (ref: string) => ({
       outcome: DEFINE,
-      payload: { correct: true, chosenIndex: 0, probeId: ref, attempt: 1, assistanceRung: 0 },
+      // Bank questions: record_evidence graded them when they came in (0115).
+      payload: { correct: true, chosenIndex: 0, probeId: ref, attempt: 1, assistanceRung: 0, graded: 'server' },
     });
     await receivedAt(learner, 'quiz', ago(100 * 24), [right('probe-td-z1'), right('probe-td-z2')]);
     await receivedAt(learner, 'quiz', ago(99 * 24), [right('probe-td-z3')]);

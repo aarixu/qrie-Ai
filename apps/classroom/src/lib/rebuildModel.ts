@@ -123,6 +123,8 @@ const FIELDS: readonly (keyof ConceptState)[] = [
   'observations',
   'answerObservations',
   'unassistedObservations',
+  'verifiedMastery',
+  'verifiedObservations',
   'taughtCount',
   'doubtCount',
   'lastPracticedAt',
