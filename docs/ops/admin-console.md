@@ -602,14 +602,18 @@ Storage.
 8. May a parent file a report on a child's behalf? When a child is erased, does
    the parent's own sign-in stay?
 9. Plan 6's figures: are per-school daily sign-in counts, and the contest
-   funnel (entered, a parent verified, a first class, a second day, as 7- and
-   30-day totals with groups under 10 hidden), outside DPDP s.9(3)'s
+   funnel (entered, a parent verified, a first class, a second day, for each
+   complete week, with weeks under 10 entrants hidden), outside DPDP s.9(3)'s
    "tracking or behavioural monitoring" of children? Until you have the
    answer they are built with the small-group rule; if the answer is no, a
    reviewed migration sets `captured` to false on those catalogue rows
    (`school.signins`, and `funnel.cohort`, `funnel.verified`,
    `funnel.first_class`, `funnel.second_day`), and the pages read them
-   "Not captured" (section 9).
+   "Not captured" (section 9). And: on a day with fewer than 10 learners,
+   Overview's minutes on task, classes served and AI spend (and Money's
+   spend per school, for a school with few active children) describe those
+   few children's use together, with no identity; are these allowed, or
+   must they be hidden like the learning figures?
 
 ## 9. The charts (plan 6)
 
@@ -637,7 +641,8 @@ merged with `phase3-completion` and `voice-stt-tts` (743c05a, 1dcfcfe,
   `admin.metric_daily`, filled by the job `admin-metrics-nightly` at 18:50 UTC
   (00:20 India time): it rolls up yesterday, with the snapshots, and works out
   the six days before again (sittings close and phones sync late, so a day's
-  figures can still rise for six days). The owner can work out up to 92 days
+  figures can still rise for six days), and the contest funnel's cohorts of
+  the current week and the four before it. The owner can work out up to 92 days
   ending yesterday again with the **Recompute** button (a fresh authenticator
   code, a reason and the environment typed).
 - **Live tiles** at the top of Overview, Money, Safety and Reliability come
@@ -654,12 +659,29 @@ merged with `phase3-completion` and `voice-stt-tts` (743c05a, 1dcfcfe,
 - **A child.** No chart lists, ranks or follows a child; the table behind them
   has no column that can hold a person's id, and no read returns an id, a
   login ID, a name, a report's words, a phone number or an address.
-- **A learning figure for fewer than 10 children.** Each school's activation,
-  hand-ins and sign-ins, every learning figure (outcomes answered,
-  misconceptions, practice) and the funnel read "Fewer than 10 children: not
-  shown." The funnel is shown only as the window's totals, so no small day can
-  be picked out. Misconceptions come from the library's questions only, never
-  a school's own.
+- **A figure about fewer than 10 children, alone or by subtraction.** Each
+  school's activation, hand-ins and sign-ins (for a school with fewer than 10
+  students), every learning figure (outcomes answered, misconceptions,
+  practice) for fewer than 10 children, and a funnel week with fewer than 10
+  entrants read "Hidden to protect a group of fewer than 10 children." The
+  database also hides a figure that, added to or subtracted from another the
+  console shows, would single out fewer than 10 children: the platform's
+  practice (or outcomes answered) when 1 to 9 of the children behind it are
+  outside the schools shown, and the all-schools total of a school figure
+  while any school is hidden. Outcomes answered and misconceptions are shown
+  for fixed 30-day blocks, and the funnel for each complete India week on its
+  own with no total, so no two of these figures cover overlapping days.
+  Misconceptions come from the library's questions only, never a school's
+  own. The tests that try these subtractions are in
+  `supabase/tests/admin-metrics-small-groups.test.ts`.
+- **What this does not cover.** A figure rolled up again after records were
+  erased or purged (or recomputed after that) differs from the one shown
+  before by those records: anyone who wrote the old one down can subtract.
+  The school health card (section 5) still shows each school's activation and
+  hand-in percentages, a small school's too, and the direct-user lookup shows
+  a user's contest entry and consent. On a day with fewer than 10 learners,
+  Overview's minutes, classes and spend describe those few children's use
+  together (counsel question 9).
 - **A zero for something not captured.** These read grey "Not captured", with
   the reason: the relay's refusals by reason (`claim_relay` keeps no record of
   them), the time a call took (no column records it), the alarm's history (only
@@ -694,7 +716,9 @@ merged with `phase3-completion` and `voice-stt-tts` (743c05a, 1dcfcfe,
 ### Day to day
 
 - The figures run through yesterday (India time); each page says when they
-  were last rolled up.
+  were last rolled up. Outcomes answered and misconceptions change once every
+  30 days, when a block ends (blocks run back to back from 2026-01-01); the
+  funnel's newest row is the last complete week, Monday to Sunday.
 - "No figure" means no roll-up ran for that day yet.
 - The meter's units and the ceiling are kept by UTC day, the ceiling's own
   day, so those two lines end a day earlier than the others.
