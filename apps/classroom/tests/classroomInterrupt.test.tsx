@@ -156,10 +156,15 @@ function sayAll(holds: (text: string) => boolean = () => false): TtsAdapter {
   };
 }
 
+/**
+ * Each hop waits a few real milliseconds, not a bare 0: the fake ear polls on a
+ * 10 ms interval and the room's doubt loop pauses 150 ms on her turn, so a
+ * count of 0 ms hops ran out before them on a slower machine.
+ */
 async function tick(times = 8): Promise<void> {
   for (let i = 0; i < times; i += 1) {
     await act(async () => {
-      await new Promise((r) => setTimeout(r, 0));
+      await new Promise((r) => setTimeout(r, 5));
     });
   }
 }
