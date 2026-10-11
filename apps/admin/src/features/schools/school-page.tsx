@@ -2,7 +2,8 @@ import { useNavigate, useParams, useSearch as useRouteSearch } from '@tanstack/r
 import { useState } from 'react';
 import { admin, schools } from '@/lib/client';
 import { useMe } from '@/lib/me';
-import { canOperate, canSetFlag, isOwner } from '@/lib/roles';
+import { canClearFlag, canOperate, canSetFlag, isOwner } from '@/lib/roles';
+import { schoolTutorAction } from '@/lib/tutor-switch';
 import { useLoad } from '@/lib/use-load';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -31,16 +32,22 @@ export function SchoolPage() {
   const { code } = useParams({ from: '/schools/$code' });
   const { tab } = useRouteSearch({ from: '/schools/$code' });
   const detail = useLoad(() => schools.detail(code), [code]);
-  // The school's own tutor switch, for the pause button: its value here, else the global one, else the safe default.
+  // The tutor switch, for the pause button: the school's own value (none: it
+  // follows the platform's) and the platform's (else the safe default).
   const flags = useLoad(() => admin.flagList(), [code]);
   const [doing, setDoing] = useState<Doing>(null);
 
-  const tutorOn = (() => {
+  const tutor = (() => {
     if (flags.view.state !== 'ready') return null;
     const of = flags.view.data.filter((f) => f.key === 'tutor.enabled');
-    const mine = of.find((f) => f.scope === 'school' && f.scopeId === code);
-    const global = of.find((f) => f.scope === 'global');
-    return (mine ?? global)?.value ?? of[0]?.safeDefault ?? true;
+    const own = of.find((f) => f.scope === 'school' && f.scopeId === code)?.value;
+    const platform = of.find((f) => f.scope === 'global')?.value ?? of[0]?.safeDefault ?? true;
+    const action = schoolTutorAction(own, platform);
+    const allowed =
+      action.write.kind === 'clear'
+        ? canClearFlag(me.role, 'tutor.enabled', own, platform)
+        : canSetFlag(me.role, 'tutor.enabled', action.write.value);
+    return { platformOn: platform !== false, action, allowed };
   })();
 
   const refresh = () => {
@@ -57,9 +64,9 @@ export function SchoolPage() {
           <Button variant='outline' onClick={() => setDoing('import')} disabled={ready.offboardedAt !== null}>
             Add people
           </Button>
-          {tutorOn !== null && canSetFlag(me.role, 'tutor.enabled', tutorOn === false) && (
+          {tutor !== null && tutor.allowed && (
             <Button variant='outline' onClick={() => setDoing('pause')}>
-              {tutorOn === false ? 'Turn the tutor switch back on' : 'Turn the tutor switch off'}
+              {tutor.action.label}
             </Button>
           )}
         </>
@@ -121,7 +128,16 @@ export function SchoolPage() {
               </TabsContent>
             </Tabs>
             <ImportPeople code={d.code} open={doing === 'import'} onOpenChange={close} onDone={refresh} />
-            <PauseTutor code={d.code} enabled={tutorOn === false} open={doing === 'pause'} onOpenChange={close} onDone={refresh} />
+            {tutor !== null && (
+              <PauseTutor
+                code={d.code}
+                action={tutor.action}
+                platformOn={tutor.platformOn}
+                open={doing === 'pause'}
+                onOpenChange={close}
+                onDone={refresh}
+              />
+            )}
             <SetLicence
               code={d.code}
               current={d.licence}

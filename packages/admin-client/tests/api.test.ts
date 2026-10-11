@@ -3,6 +3,7 @@ import type { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { aal2, anonymousChild, fresh, makeStaff, setEnvironment, staleAmr, type Staff } from '../../../supabase/tests/admin-fixtures.ts';
 import { makeFinance } from '../../../supabase/tests/billing-fixtures.ts';
+import { bareSchool } from '../../../supabase/tests/admin-school-fixtures.ts';
 import { freshDatabase } from '../../../supabase/tests/harness.ts';
 import { AdminError, createAdminClient, pgliteAdminTransport, type AdminClaims } from '../src/index.ts';
 
@@ -110,6 +111,20 @@ describe('writing', () => {
     const config = (await db.query<{ c: Record<string, unknown> }>(`select public.app_config(null) as c`)).rows[0].c;
     expect(config['tutor.enabled']).toBe(false);
     expect(config['banner.message']).toBe('Back at 7 pm');
+  });
+
+  it("flagClear() removes a school's own value, so the school follows the platform's again (0075)", async () => {
+    await bareSchool(db, 'FCL');
+    await as(fresh(owner)).flagSet({ key: 'tutor.enabled', scope: 'global', value: false, reason: 'pause', env: 'TEST' });
+    await as(fresh(owner)).flagSet({ key: 'tutor.enabled', scope: 'school', scopeId: 'FCL', value: true, reason: 'pilot', env: 'TEST' });
+    const config = async () =>
+      (await db.query<{ c: Record<string, unknown> }>(`select public.app_config('FCL') as c`)).rows[0].c['tutor.enabled'];
+    expect(await config()).toBe(true);
+    await as(fresh(ops)).flagClear({ key: 'tutor.enabled', scopeId: 'FCL', reason: 'follow the platform', env: 'TEST' });
+    expect(await config()).toBe(false);
+    const err = await as(fresh(ops)).flagClear({ key: 'tutor.enabled', scopeId: 'FCL', reason: 'again', env: 'TEST' }).catch((e) => e);
+    expect(err).toBeInstanceOf(AdminError);
+    expect(err.message).toMatch(/FCL has no value of its own/);
   });
 
   it('staffList() and staffSet() work for an owner and are refused for ops', async () => {

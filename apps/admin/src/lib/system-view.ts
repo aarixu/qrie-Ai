@@ -42,6 +42,15 @@ export function checkedLine(minutesAgo: number | null, staleAfter: number): Line
   return { text: `Last checked ${plural(minutesAgo, 'minute', 'minutes')} ago`, tone: minutesAgo > staleAfter ? 'bad' : 'ok' };
 }
 
+/**
+ * Wrong tokens given to the alarm or the audit copy in the last hour (0075). A
+ * guess at the token from someone holding the public key reads amber; so does
+ * a checker whose own token was rotated without updating its secret.
+ */
+export function tokenMissLine(misses: number): Line {
+  return misses > 0 ? { text: `${misses} in the last hour`, tone: 'warn' } : { text: 'None in the last hour', tone: 'ok' };
+}
+
 export function chainLine(c: SystemHealth['auditChain']): Line {
   const parts: string[] = [];
   if (c.firstBreakSeq !== null) parts.push(`Broken at entry ${c.firstBreakSeq}`);

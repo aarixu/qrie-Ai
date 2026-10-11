@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blastAddExisting, blastCeiling, blastLicence, blastOffboard, blastPause, blastResetPin, blastSchoolSwitch } from '../src/lib/blast.ts';
+import { blastAddExisting, blastCeiling, blastFollow, blastLicence, blastOffboard, blastPause, blastResetPin, blastSchoolSwitch } from '../src/lib/blast.ts';
 
 /** What a write will do, said before it is confirmed. Written first. */
 
@@ -31,7 +31,14 @@ describe('blast-radius lines', () => {
         ' Homework, marks and the student and teacher apps carry on.',
     );
     expect(blastPause('KV22', true)).toBe(
-      "KV22's tutor switch is set on: KV22's children can take tutor classes again, unless its licence is suspended.",
+      "KV22's tutor switch is set on: KV22's children can take tutor classes again, unless its licence is suspended." +
+        " From now on KV22 ignores the platform-wide tutor switch, until its own value is cleared on its Switches tab (Follow the platform).",
+    );
+    expect(blastFollow('KV22', true)).toBe(
+      "KV22 follows the platform-wide tutor switch again, which is on: KV22's children can take tutor classes again, unless its licence is suspended.",
+    );
+    expect(blastFollow('KV22', false)).toBe(
+      "KV22 follows the platform-wide tutor switch again, which is off: the database refuses new tutor classes for KV22's children.",
     );
     expect(blastSchoolSwitch('KV22')).toBe(
       "Saved for KV22: this value replaces the platform's for KV22 in every app and check that reads the switch.",

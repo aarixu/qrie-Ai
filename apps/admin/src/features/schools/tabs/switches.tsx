@@ -1,9 +1,9 @@
 import type { FlagRow, Me } from '@ai-tutor/admin-client';
 import { useState } from 'react';
-import { blastPause, blastSchoolSwitch } from '@/lib/blast';
+import { blastFollow, blastPause, blastSchoolSwitch } from '@/lib/blast';
 import { admin } from '@/lib/client';
 import { useMe } from '@/lib/me';
-import { canOperate, canSetFlag } from '@/lib/roles';
+import { canClearFlag, canOperate, canSetFlag } from '@/lib/roles';
 import { useLoad } from '@/lib/use-load';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,11 +21,17 @@ interface Row {
   mine: unknown;
 }
 
-/** The switches a school can have its own value for (admin.flag_list; set with admin.flag_set for this school). */
+/**
+ * The switches a school can have its own value for (admin.flag_list; set with
+ * admin.flag_set for this school). A school's own value wins over the
+ * platform's; Follow the platform clears it (admin.flag_clear, 0075), so the
+ * platform's switch applies to the school again.
+ */
 export function SwitchesTab({ code, onChanged }: { code: string; onChanged(): void }) {
   const me = useMe();
   const { view, reload } = useLoad(() => admin.flagList(), [code]);
   const [pending, setPending] = useState<{ row: Row; value: unknown } | null>(null);
+  const [following, setFollowing] = useState<Row | null>(null);
 
   return (
     <>
@@ -72,7 +78,14 @@ export function SwitchesTab({ code, onChanged }: { code: string; onChanged(): vo
                           {r.mine === undefined ? (
                             <span className='text-muted-foreground'>Not set: the global value applies</span>
                           ) : (
-                            <span className='font-mono text-xs'>{JSON.stringify(r.mine)}</span>
+                            <div className='flex flex-wrap items-center gap-2'>
+                              <span className='font-mono text-xs'>{JSON.stringify(r.mine)}</span>
+                              {canClearFlag(me.role, r.def.key, r.mine, r.global) && (
+                                <Button variant='outline' size='sm' onClick={() => setFollowing(r)}>
+                                  Follow the platform
+                                </Button>
+                              )}
+                            </div>
                           )}
                         </TableCell>
                         <TableCell className='text-end align-top'>
@@ -109,6 +122,28 @@ export function SwitchesTab({ code, onChanged }: { code: string; onChanged(): vo
         }}
         onDone={() => {
           setPending(null);
+          reload();
+          onChanged();
+        }}
+      />
+      <WriteDialog
+        open={following !== null}
+        onOpenChange={(o) => !o && setFollowing(null)}
+        title={following ? `Clear ${code}'s own ${following.def.key}?` : ''}
+        blast={
+          following
+            ? following.def.key === 'tutor.enabled'
+              ? blastFollow(code, following.global !== false)
+              : `${code} follows the platform's value again: ${JSON.stringify(following.global)}.`
+            : ''
+        }
+        guarded={following?.def.guarded ?? false}
+        confirmLabel='Follow the platform'
+        onConfirm={async (w) => {
+          if (following) await admin.flagClear({ key: following.def.key, scopeId: code, ...w });
+        }}
+        onDone={() => {
+          setFollowing(null);
           reload();
           onChanged();
         }}

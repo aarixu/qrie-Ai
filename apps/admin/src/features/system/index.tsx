@@ -12,6 +12,7 @@ import {
   drillLine,
   jobLine,
   migrationLine,
+  tokenMissLine,
   type Line,
 } from '@/lib/system-view';
 import { ALARM_STALE_MINUTES, type Tone } from '@/lib/tiles';
@@ -42,9 +43,10 @@ const Said = ({ line }: { line: Line }) => <span className={TEXT[line.tone]}>{li
 /**
  * The platform's own health (admin.system_health) and the tutor's switch and
  * ceiling (admin.relay_status), two reads that stand apart as on Today: the
- * stop button and the ceiling appear even when the other read fails. Every
- * staff role sees it; the ceiling is the owner's, a restore drill is recorded
- * by owner or ops.
+ * stop button and the ceiling appear even when the other read fails. Owner,
+ * ops and safety see it (finance's stop is in the header, HeaderStop); the
+ * ceiling is the owner's, a restore drill is recorded by owner or ops. Wrong
+ * tokens are the guesses at the alarm's token counted in the last hour (0075).
  */
 export function System() {
   const health = useLoad(() => system.health(), []);
@@ -145,6 +147,10 @@ function HealthCards({ h, onChanged }: { h: SystemHealth; onChanged(): void }) {
           <dt className='text-muted-foreground'>Alarm</dt>
           <dd>
             <Said line={checkedLine(h.alarm.lastCheckMinutesAgo, ALARM_STALE_MINUTES)} />
+          </dd>
+          <dt className='text-muted-foreground'>Wrong tokens</dt>
+          <dd>
+            <Said line={tokenMissLine(h.alarm.tokenMisses1h)} />
           </dd>
           <dt className='text-muted-foreground'>Audit copy</dt>
           <dd>

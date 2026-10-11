@@ -26,12 +26,24 @@ export function blastOffboard(code: string, offboard: boolean): string {
         ' Its tutor switch stays off until the owner turns it on.';
 }
 
-/** `enabled` is the tutor.enabled value being set for the school. */
+/**
+ * `enabled` is the tutor.enabled value being set for the school. A school's
+ * own value wins over the platform's (public.app_config), so a school set on
+ * keeps running when the platform-wide switch is turned off.
+ */
 export function blastPause(code: string, enabled: boolean): string {
   return enabled
-    ? `${code}'s tutor switch is set on: ${code}'s children can take tutor classes again, unless its licence is suspended.`
+    ? `${code}'s tutor switch is set on: ${code}'s children can take tutor classes again, unless its licence is suspended.` +
+        ` From now on ${code} ignores the platform-wide tutor switch, until its own value is cleared on its Switches tab (Follow the platform).`
     : `${code}'s tutor switch is set off: the database refuses new tutor classes for ${code}'s children and the tutor app shows them a pause notice.` +
         ' Homework, marks and the student and teacher apps carry on.';
+}
+
+/** The school's own tutor.enabled value is cleared (admin.flag_clear, 0075); `platformOn` is the value it then follows. */
+export function blastFollow(code: string, platformOn: boolean): string {
+  return platformOn
+    ? `${code} follows the platform-wide tutor switch again, which is on: ${code}'s children can take tutor classes again, unless its licence is suspended.`
+    : `${code} follows the platform-wide tutor switch again, which is off: the database refuses new tutor classes for ${code}'s children.`;
 }
 
 /** Any other switch set for one school. */

@@ -23,7 +23,8 @@ export interface SystemHealth {
   generatedAt: string;
   relay: { halted: boolean; haltedReason: string | null; events5m: number; failures5m: number };
   jobs: JobRun[];
-  alarm: { lastCheckMinutesAgo: number | null };
+  /** tokenMisses1h: wrong tokens given to the alarm or the audit copy in the last hour (0075). */
+  alarm: { lastCheckMinutesAgo: number | null; tokenMisses1h: number };
   auditCopy: { lastCheckMinutesAgo: number | null };
   /** The highest applied migration, or 'not-captured'. */
   migrations: { level: string };

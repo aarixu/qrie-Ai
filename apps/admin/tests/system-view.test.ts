@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cashfreeLines, chainLine, checkedLine, drillLine, jobLine, migrationLine } from '../src/lib/system-view.ts';
+import { cashfreeLines, chainLine, checkedLine, drillLine, jobLine, migrationLine, tokenMissLine } from '../src/lib/system-view.ts';
 
 /** What the System page says about each part of the platform. Written first. */
 
@@ -19,6 +19,12 @@ describe('the System page', () => {
     expect(checkedLine(90, 90).tone).toBe('ok');
     expect(checkedLine(91, 90).tone).toBe('bad');
     expect(checkedLine(null, 15)).toEqual({ text: 'Never', tone: 'grey' });
+  });
+
+  it('wrong alarm tokens in the last hour read amber when there are any (0075)', () => {
+    expect(tokenMissLine(0)).toEqual({ text: 'None in the last hour', tone: 'ok' });
+    expect(tokenMissLine(1)).toEqual({ text: '1 in the last hour', tone: 'warn' });
+    expect(tokenMissLine(12)).toEqual({ text: '12 in the last hour', tone: 'warn' });
   });
 
   it('the audit chain reads intact with its head, or red at its first break or with entries outside it', () => {

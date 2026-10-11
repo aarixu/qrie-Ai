@@ -71,6 +71,14 @@ export interface FlagSetInput {
   env: string;
 }
 
+/** Clears one school's own value of a school-scoped switch (admin.flag_clear, 0075): the school follows the platform's value again. */
+export interface FlagClearInput {
+  key: string;
+  scopeId: string;
+  reason: string;
+  env: string;
+}
+
 export interface StaffSetInput {
   userId: string;
   role: Me['role'];
@@ -90,6 +98,7 @@ export interface AdminClient {
   today(): Promise<Today>;
   flagList(): Promise<FlagRow[]>;
   flagSet(input: FlagSetInput): Promise<void>;
+  flagClear(input: FlagClearInput): Promise<void>;
   staffList(): Promise<StaffRow[]>;
   staffSet(input: StaffSetInput): Promise<void>;
 }
@@ -143,6 +152,9 @@ export function createAdminClient(t: AdminTransport): AdminClient {
           p_env: i.env,
         }),
       );
+    },
+    async flagClear(i) {
+      await guard(() => t.value('flag_clear', { p_key: i.key, p_scope_id: i.scopeId, p_reason: i.reason, p_env: i.env }));
     },
     staffList: () =>
       guard(async () =>
