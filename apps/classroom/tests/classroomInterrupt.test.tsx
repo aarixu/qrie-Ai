@@ -574,6 +574,38 @@ describe('the mic goes off by itself', () => {
   });
 });
 
+/**
+ * THE BOARD WRITES AS SHE SPEAKS, FROM THE FIRST LINE (integration audit,
+ * 2026-10-11). The board used to draw beat 0 the moment the room mounted, so
+ * she greeted the student over a board already written and the first line's
+ * ink never appeared while she said it.
+ */
+describe('the first line is written as she says it', () => {
+  it('shows a blank board while she greets, and beat 0 draws in as she starts it', async () => {
+    let release: () => void = () => undefined;
+    const tts: TtsAdapter = {
+      speak(text) {
+        spoken.push(text);
+        if (/^(Hi|Welcome back)\b/.test(text)) return new Promise<void>((resolve) => (release = resolve));
+        return new Promise<void>(() => undefined);
+      },
+      cancel() {
+        release();
+      },
+    };
+    const host = await openClass(teaching, tts);
+    const board = (): HTMLElement => host.querySelector('section') as HTMLElement;
+    expect(spoken.some((s) => /^(Hi|Welcome back)\b/.test(s)), 'she is greeting').toBe(true);
+    expect(board().querySelectorAll('[data-element-id]')).toHaveLength(0);
+    await act(async () => {
+      release();
+    });
+    await tick(12);
+    expect(spoken[spoken.length - 1]).toContain(teaching.beats[0].narration);
+    for (const id of teaching.beats[0].show) expect(board().querySelector(`[data-element-id="${id}"]`), id).not.toBeNull();
+  });
+});
+
 describe('the review’s cases (2026-10-02)', () => {
   it('talking over her reply in a doubt: she stops, and what they say goes to her next', async () => {
     const reply = 'Blood carries oxygen in red blood cells.';

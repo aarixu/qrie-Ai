@@ -1100,6 +1100,35 @@ describe('the class-start warm-up', () => {
     expect(answered()).toHaveLength(2);
   });
 
+  /**
+   * THE MIC GOES OFF WITH THE WARM-UP QUESTION IT WAS TURNED ON FOR
+   * (integration audit, 2026-10-11). It stayed lit through her verdict and her
+   * greeting, because only her teaching a beat closed it. Now the last
+   * question closes it once answered; between two questions it stays on (one
+   * tap answers the warm-up, 'asks each due question in turn').
+   */
+  it('turns the mic off once the last question is answered, before her verdict and her greeting', async () => {
+    warm.items = [question];
+    ear.queued = ['4'];
+    const micWhenSaid: Record<string, boolean> = {};
+    const tts: TtsAdapter = {
+      speak(text) {
+        spoken.push(text);
+        micWhenSaid[text] = ear.on;
+        return Promise.resolve();
+      },
+      cancel() {},
+    };
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts });
+    await tick(10);
+    await turnMicOn(host);
+    await tick(10);
+    const verdict = spoken.find((l) => /remembered/i.test(l));
+    expect(verdict, 'her verdict was said').toBeDefined();
+    expect(micWhenSaid[verdict!]).toBe(false);
+    expect(micWhenSaid[lesson.beats[0].narration]).toBe(false);
+  });
+
   it('is not asked on a class picked up where it was left', async () => {
     progressStore.set({ lessons: { [lesson.id]: { beatIndex: 2 } }, lastLessonId: lesson.id } as never);
     warm.items = [question];

@@ -1886,6 +1886,12 @@ export function ClassRoom({
           setAnswerOpen(true);
         }
         setAnswerOpen(false);
+        // The mic goes off with the warm-up it was turned on for, once its last
+        // question is answered: before her verdict and her greeting, so a lit
+        // button never sits through her talking into the class (integration
+        // audit, 2026-10-11). Between two questions it stays on: one tap
+        // answers the whole warm-up, and she is not teaching in between.
+        if (step === items.length - 1 && earReadyRef.current) closeClassEar();
         if (done()) break;
         const answer = options[question.correctIndex];
         if (chosen !== null) ledger.warmedUp(question, chosen, Date.now() - clockFrom);
@@ -1908,6 +1914,8 @@ export function ClassRoom({
     } finally {
       setAnswerOpen(false);
       setWarmingUp(false);
+      // And on every way out of the warm-up (a break, a halt).
+      if (earReadyRef.current) closeClassEar();
     }
     return true;
   };
@@ -2328,11 +2336,20 @@ export function ClassRoom({
       style={sideways ? STAGE_FIT : undefined}
       className={`relative bg-white overflow-hidden ${sideways ? '' : 'w-full aspect-video flex-shrink-0'}`}
     >
-      <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
+      {/* THE BOARD WRITES AS SHE SPEAKS, FROM THE FIRST LINE (integration
+          audit, 2026-10-11). Mounted only once the class has begun: before,
+          beat 0 drew in while the room was joining and she greeted the student
+          over a board already written. Mounted on play(), the Scene draws beat
+          0 in as she starts saying it, and its camera lands on beat 0 at once
+          (an empty set would frame the whole board and pan from it). A resumed
+          class plays and seeks in one run, so it mounts on its beat. */}
+      {classStarted && (
+        <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
+      )}
 
       {/* Whose pictures these are, with the links their licences ask for: a
           small control in the corner, opened on a tap (review, 2026-10-08). */}
-      {!joining && creditsOf(board.sceneLesson).length > 0 && (
+      {!joining && classStarted && creditsOf(board.sceneLesson).length > 0 && (
         <div className="absolute left-2 bottom-2 z-10 max-w-[75%]">
           {showCredits ? (
             <div className="rounded-md bg-white/95 p-2 shadow">
