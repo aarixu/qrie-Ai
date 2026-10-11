@@ -19,11 +19,15 @@ export const staleAmr = () => [{ method: 'totp', timestamp: nowSeconds() - 3600 
 /**
  * A staff member the way the bootstrap and the staff screen make one: an auth
  * user marked provisioned_by = 'staff' (so no solo organisation) with a row in
- * platform_staff. Inserted as the database owner, as a migration would.
+ * platform_staff. Inserted as the database owner with admin.session on, as
+ * those admin functions write it, so it leaves no 'unmanaged-change' row (0075).
  */
 export async function makeStaff(db: PGlite, role: StaffRole, name = `${role} person`): Promise<Staff> {
   const id = await createUser(db, { appMeta: { provisioned_by: 'staff' } });
-  await db.query(`insert into admin.platform_staff (user_id, role, display_name) values ($1, $2, $3)`, [id, role, name]);
+  await db.transaction(async (tx) => {
+    await tx.query(`select set_config('admin.session', 'on', true)`);
+    await tx.query(`insert into admin.platform_staff (user_id, role, display_name) values ($1, $2, $3)`, [id, role, name]);
+  });
   return { id, role };
 }
 

@@ -165,7 +165,8 @@ describe('nothing in wave 2 recreates a seam function without its earlier rules 
     expect(definers('public.claim_relay').at(-1)).toBe('0064'); // plan 4: a switched-off or suspended school is halted
     expect(definers('public.app_config').at(-1)).toBe('0060'); // plan 3: billing state, suspension turns the tutor off
     expect(definers('public.my_app_config').at(-1)).toBe('0064');
-    expect(definers('admin.flag_set').at(-1)).toBe('0053'); // plan 2's R23: tutor.enabled = true is the owner's
+    // plan 2's R23 (tutor.enabled = true is the owner's), kept by 0075, which adds tutor.only_prepared = false.
+    expect(definers('admin.flag_set')).toEqual(['0050', '0053', '0075']);
     expect(definers('admin.set_halt').at(-1)).toBe('0061'); // the stop is open to finance
     expect(definers('admin.privacy_import_refusal')).toEqual(['0063', '0066']); // T2: plan 4's stub, plan 5's gate
     expect(definers('admin.today')).toEqual(['0049', '0062', '0070']);

@@ -31,6 +31,18 @@ const callableBy = async (role: string) =>
     )
   ).rows.map((r) => r.fn);
 
+/** SECURITY DEFINER functions in these schemas that `role` may execute, with no name filter. */
+const definersCallableBy = async (role: string, schemas: string[]) =>
+  (
+    await db.query<{ fn: string }>(
+      `select distinct n.nspname || '.' || p.proname as fn
+         from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = any($2::text[]) and p.prosecdef and has_function_privilege($1, p.oid, 'execute')
+        order by 1`,
+      [role, schemas],
+    )
+  ).rows.map((r) => r.fn);
+
 describe('the admin schema', () => {
   it('has no function an anonymous visitor may call', async () => {
     expect(await callableBy('anon')).toEqual([]);
@@ -83,6 +95,7 @@ describe('the admin schema', () => {
       'admin.erasure_request',
       'admin.erasure_requests',
       'admin.erasure_verify',
+      'admin.flag_clear',
       'admin.flag_list',
       'admin.flag_set',
       'admin.me',
@@ -227,12 +240,43 @@ describe('the admin schema', () => {
     expect(await executable('authenticated', 'lms', 'report_problem')).toBe(true);
   });
 
-  it('exposes only three functions to the public schema for the apps and the outside checkers', async () => {
-    const { rows } = await db.query<{ fn: string }>(
-      `select p.proname as fn from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-        where n.nspname = 'public' and p.proname in ('app_config', 'alert_snapshot', 'audit_head', 'my_app_config')
-          and has_function_privilege('anon', p.oid, 'execute') order by 1`,
-    );
-    expect(rows.map((r) => r.fn)).toEqual(['alert_snapshot', 'app_config', 'audit_head', 'my_app_config']);
+  /**
+   * Every SECURITY DEFINER function outside the admin schema that a browser can
+   * run, with no name filter: one written without its own revoke is callable
+   * by anybody (PostgreSQL grants EXECUTE to PUBLIC) and fails here until it
+   * is added on purpose, in review. The older lanes' entries are listed on
+   * purpose too: provision_solo_org and drop_empty_solo_org are trigger
+   * functions, which refuse a direct call; delete_own_account and is_member
+   * act only on the caller. The lms schema's signed-in list is the LMS lane's
+   * own contract (lms-invariants.test.ts).
+   */
+  it('lets a signed-out visitor run exactly these definer functions outside the admin schema', async () => {
+    expect(await definersCallableBy('anon', ['public', 'lms', 'billing'])).toEqual([
+      'lms.school_brand',
+      'public.alert_snapshot',
+      'public.app_config',
+      'public.audit_head',
+      'public.delete_own_account',
+      'public.drop_empty_solo_org',
+      'public.is_member',
+      'public.my_app_config',
+      'public.provision_solo_org',
+    ]);
+  });
+
+  it('lets a signed-in person run exactly these definer functions in the public and billing schemas', async () => {
+    expect(await definersCallableBy('authenticated', ['public', 'billing'])).toEqual([
+      'public.alert_snapshot',
+      'public.app_config',
+      'public.audit_head',
+      'public.close_learning_session',
+      'public.current_org_id',
+      'public.delete_own_account',
+      'public.drop_empty_solo_org',
+      'public.is_member',
+      'public.my_app_config',
+      'public.provision_solo_org',
+      'public.record_contest_signup',
+    ]);
   });
 });
