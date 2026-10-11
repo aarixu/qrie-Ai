@@ -20,7 +20,6 @@ import { answer, atIst, compute, figures, istDay, lastBlock, lastWeek, metricOf,
 
 let db: PGlite;
 let owner: Staff;
-let ops: Staff;
 let lrn: School;
 let kids: string[];
 let i1: string;
@@ -31,7 +30,6 @@ beforeAll(async () => {
   db = await freshDatabase();
   await setEnvironment(db);
   owner = await makeStaff(db, 'owner', 'Aarav');
-  ops = await makeStaff(db, 'ops', 'Ops person');
   lrn = await buildSchool(db, 'LRN');
   kids = [lrn.kid8a, ...(await addStudents(db, lrn, 'LRN', 10)), lrn.kid8b];
   await db.query(

@@ -15,7 +15,7 @@ export interface MetricDefOver {
   label: string;
   unit: string;
   dayKind: 'india' | 'utc';
-  kind: 'daily' | 'window' | 'snapshot' | 'cohort';
+  kind: 'daily' | 'window' | 'block' | 'snapshot' | 'cohort';
   scope: 'platform' | 'school' | 'both';
   childFigure: boolean;
   total: 'sum' | 'last' | 'none';
