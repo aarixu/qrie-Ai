@@ -26,16 +26,19 @@ import { JUDGE_SYSTEM, describeAsk, parseVerdict, type SpokenAsk } from '@ai-tut
  * Run:  MEASURE_JUDGE=1 npx vitest run tools/measure/tests/judge-thinking.test.ts
  */
 
-const env = Object.fromEntries(
-  fs
-    .readFileSync(path.resolve(process.cwd(), '.env.local'), 'utf8')
-    .split(/\r?\n/)
-    .filter((l) => l.includes('=') && !l.trimStart().startsWith('#'))
-    .map((l) => [l.slice(0, l.indexOf('=')).trim(), l.slice(l.indexOf('=') + 1).trim()]),
-);
-const URL_ = env.VITE_SUPABASE_URL as string;
-const ANON = env.VITE_SUPABASE_ANON_KEY as string;
-const RELAY = env.VITE_RELAY_URL as string;
+const envPath = path.resolve(process.cwd(), '.env.local');
+const env = fs.existsSync(envPath)
+  ? Object.fromEntries(
+      fs
+        .readFileSync(envPath, 'utf8')
+        .split(/\r?\n/)
+        .filter((l) => l.includes('=') && !l.trimStart().startsWith('#'))
+        .map((l) => [l.slice(0, l.indexOf('=')).trim(), l.slice(l.indexOf('=') + 1).trim()]),
+    )
+  : {};
+const URL_ = (env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL || '') as string;
+const ANON = (env.VITE_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '') as string;
+const RELAY = (env.VITE_RELAY_URL || process.env.VITE_RELAY_URL || '') as string;
 
 const MODEL = 'google/gemini-3.7-flash';
 const RATE = 95.6;

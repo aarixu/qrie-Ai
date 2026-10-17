@@ -78,6 +78,9 @@ const ticketResponse = (value: string): Response =>
 
 beforeEach(async () => {
   vi.resetModules();
+  vi.stubEnv('VITE_SUPABASE_URL', 'https://placeholder-project.supabase.co');
+  vi.stubEnv('VITE_SUPABASE_ANON_KEY', 'placeholder-anon-key');
+  vi.stubEnv('VITE_RELAY_URL', 'https://placeholder-project.supabase.co/functions/v1/relay');
   getUser.mockReset();
   getSession.mockReset().mockResolvedValue({ data: { session: { access_token: 'tok-1' } } });
   updateUser.mockReset().mockResolvedValue(attachedTo('a@b.com'));
@@ -107,6 +110,7 @@ let mounted: Root | null = null;
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
   if (mounted) act(() => mounted!.unmount());
   mounted = null;
 });
