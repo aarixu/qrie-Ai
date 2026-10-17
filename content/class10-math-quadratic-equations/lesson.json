@@ -1,0 +1,70 @@
+{
+  "formatVersion": 1,
+  "id": "class10-math-quadratic-equations",
+  "title": "Quadratic Equations",
+  "subtitle": "Class 10 · Mathematics",
+  "language": "en",
+  "topicRef": "class10-mathematics/quadratic-equations/standard-form-and-formula",
+  "canvas": { "w": 1000, "h": 620 },
+  "elements": [
+    { "kind": "title", "id": "t_title", "x": 500, "y": 70, "text": "Quadratic Equations", "sub": "The shape of curves and thrown stones" },
+    { "kind": "note", "id": "n_hook", "x": 120, "y": 180, "w": 280, "text": "When you kick a football, its path through the air forms a curve called a parabola. That curve is governed by a quadratic equation!", "tone": "accent" },
+    { "kind": "formula", "id": "f_standard", "x": 650, "y": 180, "text": "ax^2 + bx + c = 0  (a != 0)" },
+    { "kind": "note", "id": "n_std_rule", "x": 650, "y": 250, "w": 280, "text": "Highest power of x is 2. The coefficient 'a' cannot be 0, otherwise it collapses into a linear equation." },
+
+    { "kind": "box", "id": "b_disc", "x": 120, "y": 320, "w": 260, "h": 90, "label": "DISCRIMINANT\nD = b^2 - 4ac", "tone": "good" },
+    { "kind": "note", "id": "n_disc_cases", "x": 120, "y": 440, "w": 260, "text": "D > 0: Two distinct real roots\nD = 0: Two equal roots\nD < 0: No real roots" },
+
+    { "kind": "formula", "id": "f_formula", "x": 650, "y": 360, "text": "x = (-b +/- sqrt(b^2 - 4ac)) / (2a)" },
+    { "kind": "note", "id": "n_formula_tip", "x": 650, "y": 440, "w": 280, "text": "The Quadratic Formula works every single time — even when middle-term splitting fails!", "tone": "good" },
+
+    { "kind": "note", "id": "n_recap", "x": 500, "y": 550, "w": 400, "text": "Calculate D first to check if solutions exist, then apply the formula. Tap ✋ to ask any doubt!", "tone": "accent" }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "topic": "Why Quadratics Matter",
+      "narration": "Welcome! Whenever you toss a basketball or launch a rocket, its path arcs through the sky in a curve called a parabola. To find when that ball hits the ground, you solve a Quadratic Equation. Let's master it right now.",
+      "show": ["t_title", "n_hook"],
+      "focus": ["n_hook"],
+      "minMs": 2500,
+      "teaches": ["math10-quad-intro"]
+    },
+    {
+      "id": "standard_form",
+      "topic": "The Standard Form",
+      "narration": "Every quadratic equation can be arranged into standard form: a x squared plus b x plus c equals zero. Notice the condition: 'a' can never be zero. If 'a' were zero, the x squared term vanishes and it turns into a simple linear equation.",
+      "show": ["t_title", "n_hook", "f_standard", "n_std_rule"],
+      "focus": ["f_standard", "n_std_rule"],
+      "minMs": 3000,
+      "teaches": ["math10-quad-standard-form"]
+    },
+    {
+      "id": "discriminant",
+      "topic": "The Discriminant D",
+      "narration": "Before solving, always calculate the Discriminant D: b squared minus 4 a c. It tells you the nature of roots in advance. If D is positive, you get two distinct real solutions. If D is zero, exactly one repeated root. If D is negative, no real roots exist.",
+      "show": ["t_title", "f_standard", "b_disc", "n_disc_cases"],
+      "focus": ["b_disc", "n_disc_cases"],
+      "minMs": 3000,
+      "teaches": ["math10-quad-discriminant"]
+    },
+    {
+      "id": "quadratic_formula",
+      "topic": "The Universal Formula",
+      "narration": "And here is the legendary Quadratic Formula: x equals minus b plus or minus square root of D, all divided by 2 a. While factoring by splitting the middle term can get tricky with decimals or square roots, this formula never fails.",
+      "show": ["t_title", "f_standard", "b_disc", "n_disc_cases", "f_formula", "n_formula_tip"],
+      "focus": ["f_formula", "n_formula_tip"],
+      "minMs": 3200,
+      "teaches": ["math10-quad-formula"]
+    },
+    {
+      "id": "recap",
+      "topic": "Recap & Practice",
+      "narration": "To recap: arrange your equation into a x squared plus b x plus c equals 0, compute D equals b squared minus 4 a c, and plug into the formula. If you ever get stuck or have a question, hit the raise hand button and ask me live!",
+      "show": ["t_title", "f_standard", "b_disc", "f_formula", "n_recap"],
+      "focus": ["n_recap"],
+      "minMs": 2500,
+      "checks": ["math10-quad-standard-form", "math10-quad-formula"]
+    }
+  ]
+}

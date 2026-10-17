@@ -33,6 +33,9 @@ const PUBLIC_BY_DESIGN = new Set([
   'VITE_SUPABASE_URL',
   'VITE_SUPABASE_ANON_KEY',
   'VITE_RELAY_URL',
+  'VITE_SENTRY_DSN',
+  'VITE_POSTHOG_KEY',
+  'VITE_POSTHOG_HOST',
 ]);
 
 /** Shapes of the credentials this project uses, for a CI run with no .env. */

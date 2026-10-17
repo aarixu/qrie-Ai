@@ -52,6 +52,7 @@ const Notes = lazy(() => import('./screens/Notes').then((m) => ({ default: m.Not
 const Bookmarks = lazy(() => import('./screens/Bookmarks').then((m) => ({ default: m.Bookmarks })));
 const Achievements = lazy(() => import('./screens/Achievements').then((m) => ({ default: m.Achievements })));
 const SignIn = lazy(() => import('./screens/SignIn').then((m) => ({ default: m.SignIn })));
+const LiveLectureStudio = lazy(() => import('./screens/LiveLectureStudio').then((m) => ({ default: m.LiveLectureStudio })));
 import { ErrorBoundary } from './ui/ErrorBoundary';
 import { Onboarding } from './screens/Onboarding';
 import { Home } from './screens/Home';
@@ -349,6 +350,9 @@ export default function App() {
             <Route path="/lesson/:lessonId" element={<LessonRoute />} />
             {/* Teach me this topic — fetched if somebody has had it, made if not. */}
             <Route path="/class/*" element={<LiveClassRoute />} />
+            {/* Live Lecture Studio Demo for Math & Science */}
+            <Route path="/live" element={<LiveLectureStudio />} />
+            <Route path="/demo" element={<LiveLectureStudio />} />
             {/* The benches are tools, not product. A store reviewer can reach
               any route that exists, so in a production build these do not.
               import.meta.env.DEV is a literal at build time, so the screens

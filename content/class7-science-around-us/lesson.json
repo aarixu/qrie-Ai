@@ -1,0 +1,198 @@
+{
+  "formatVersion": 1,
+  "id": "class7-science-around-us",
+  "title": "Science Around Us",
+  "subtitle": "Class 7 · The Wonderful World of Science",
+  "language": "en",
+  "topicRef": "class7-science/the-wonderful-world-of-science/science-around-us",
+  "canvas": { "w": 1000, "h": 620 },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "t_title",
+      "x": 500,
+      "y": 65,
+      "text": "Science Around Us",
+      "sub": "Observation and Everyday Inquiry"
+    },
+    {
+      "kind": "handwrite",
+      "id": "h_hook",
+      "x": 500,
+      "y": 125,
+      "text": "Why does a hot cup of tea cool down?",
+      "size": 28,
+      "tone": "accent"
+    },
+    {
+      "kind": "diagram",
+      "id": "d_tea_cup",
+      "x": 60,
+      "y": 150,
+      "w": 480,
+      "h": 320,
+      "src": "assets.json",
+      "alt": "Steaming hot cup of tea radiating heat to surroundings",
+      "parts": ["cup_body", "steam", "heat_loss", "temp_gauge"]
+    },
+    {
+      "kind": "note",
+      "id": "n_tea_obs",
+      "x": 570,
+      "y": 180,
+      "w": 360,
+      "text": "Keen Observation:\nSteam rises into the air, and touching the cup feels very hot initially. Over time, its temperature drops to room level (25°C).",
+      "tone": "accent"
+    },
+    {
+      "kind": "note",
+      "id": "n_tea_law",
+      "x": 570,
+      "y": 320,
+      "w": 360,
+      "text": "Scientific Principle:\nHeat energy spontaneously flows from a hotter body into cooler surrounding air until thermal balance is established.",
+      "tone": "good"
+    },
+    {
+      "kind": "diagram",
+      "id": "d_daily_phenomena",
+      "x": 60,
+      "y": 120,
+      "w": 880,
+      "h": 360,
+      "src": "assets.json",
+      "alt": "Daily scientific phenomena: boiling milk, rusting iron, morning dew",
+      "parts": ["card_cooking", "card_rusting", "card_weather"]
+    },
+    {
+      "kind": "note",
+      "id": "n_phenomena_note",
+      "x": 160,
+      "y": 500,
+      "w": 680,
+      "text": "Cooking, rusting, and morning dew are not magic — they are governed by fundamental laws of chemistry, heat transfer, and physical state changes!",
+      "tone": "accent"
+    },
+    {
+      "kind": "box",
+      "id": "b_question_card",
+      "x": 120,
+      "y": 130,
+      "w": 760,
+      "h": 100,
+      "label": "CHECK YOUR INTUITION\nWhen a hot cup of tea cools down on a table, what happened to its heat energy?",
+      "tone": "accent"
+    },
+    {
+      "kind": "diagram",
+      "id": "d_inquiry_cycle",
+      "x": 80,
+      "y": 140,
+      "w": 840,
+      "h": 300,
+      "src": "assets.json",
+      "alt": "Steps of scientific enquiry: observe, question, experiment, discover",
+      "parts": ["step_observe", "step_question", "step_test", "step_discover"]
+    },
+    {
+      "kind": "note",
+      "id": "n_recap",
+      "x": 160,
+      "y": 470,
+      "w": 680,
+      "text": "Science is not confined to a laboratory. It begins the moment you observe ordinary things with an inquiring mind! Raise your hand ✋ if you have any questions.",
+      "tone": "good"
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1_hook",
+      "topic": "The mystery of a cooling cup of tea",
+      "narration": "Welcome to class! Look around you right now. Think about something as simple as leaving a steaming hot cup of tea on your study table. After an hour, it becomes cold. Why? Have you ever stopped to wonder where the heat goes?",
+      "show": ["t_title", "h_hook", "d_tea_cup"],
+      "focus": ["d_tea_cup#cup_body", "d_tea_cup#steam"],
+      "teaches": ["class7-science-the-wonderful-world-of-science-observe-cooking-changes"],
+      "minMs": 3000
+    },
+    {
+      "id": "b2_heat_flow",
+      "topic": "Heat flows to surroundings",
+      "narration": "Notice the steam rising and the temperature dropping from seventy-five degrees down to room temperature. Heat energy doesn't just disappear. It naturally radiates out into the cooler air around the cup until both reach thermal balance.",
+      "show": ["t_title", "d_tea_cup", "n_tea_obs", "n_tea_law"],
+      "focus": ["d_tea_cup#heat_loss", "d_tea_cup#temp_gauge", "n_tea_law"],
+      "teaches": ["class7-science-the-wonderful-world-of-science-classify-daily-phenomena"],
+      "minMs": 3500
+    },
+    {
+      "id": "b3_daily_examples",
+      "topic": "Everyday scientific phenomena",
+      "narration": "Science is happening everywhere around us every single day. Look at these three examples. Boiling milk expands with heat. An iron nail left outside in moist air reacts with oxygen to form brown rust. And overnight, invisible water vapour in the air cools and condenses into sparkling dew drops on leaves.",
+      "show": ["t_title", "d_daily_phenomena", "n_phenomena_note"],
+      "focus": ["d_daily_phenomena#card_cooking", "d_daily_phenomena#card_rusting", "d_daily_phenomena#card_weather"],
+      "teaches": [
+        "class7-science-the-wonderful-world-of-science-observe-rusting",
+        "class7-science-the-wonderful-world-of-science-observe-weather-changes"
+      ],
+      "minMs": 4500
+    },
+    {
+      "id": "b4_check",
+      "topic": "Test your understanding",
+      "narration": "Let's check your intuition. Tap your answer on the screen: when a hot cup of tea cools down on a table, what happened to its heat energy?",
+      "show": ["t_title", "b_question_card", "d_tea_cup"],
+      "focus": ["b_question_card"],
+      "ask": {
+        "question": "When a hot cup of tea cools down on a table, what happened to its heat energy?",
+        "expect": "Heat energy moved from the hotter cup into the cooler surrounding air until they reached balance.",
+        "hint": "Think about energy transfer: does energy vanish, or does it move into the cooler surroundings?",
+        "options": [
+          {
+            "text": "Heat transferred into the cooler surrounding room air",
+            "correct": true,
+            "why": "Heat naturally flows from a hotter object to its cooler surroundings until thermal equilibrium is reached."
+          },
+          {
+            "text": "The heat was destroyed completely inside the cup",
+            "correct": false,
+            "hint": "Remember the law of conservation of energy: heat cannot be destroyed, only transferred elsewhere.",
+            "why": "Heat cannot be destroyed — it simply flowed out into the cooler air."
+          },
+          {
+            "text": "Cold air entered the cup and actively killed the heat",
+            "correct": false,
+            "hint": "Cold is the absence of heat. Cold does not flow in; rather, heat flows out.",
+            "why": "Cold is just the absence of heat — it is the heat energy that leaves the hot tea."
+          }
+        ]
+      },
+      "checks": ["class7-science-the-wonderful-world-of-science-classify-daily-phenomena"],
+      "minMs": 2500
+    },
+    {
+      "id": "b5_enquiry_cycle",
+      "topic": "The four steps of scientific inquiry",
+      "narration": "How do scientists turn simple everyday curiosity into real knowledge? By following four steps: First, observe keen details with your senses. Second, ask why and how. Third, test your idea through simple experiments. And fourth, discover the underlying scientific rule.",
+      "show": ["t_title", "d_inquiry_cycle"],
+      "focus": [
+        "d_inquiry_cycle#step_observe",
+        "d_inquiry_cycle#step_question",
+        "d_inquiry_cycle#step_test",
+        "d_inquiry_cycle#step_discover"
+      ],
+      "teaches": ["class7-science-the-wonderful-world-of-science-list-investigable-events"],
+      "minMs": 4000
+    },
+    {
+      "id": "b6_recap",
+      "topic": "Recap & Ask Doubts",
+      "narration": "So remember: you don't need a lab coat to be a scientist. Look closely at the world around you, question everything, and discover how nature works. If you have any doubt about what we covered today, tap the raise hand button right now!",
+      "show": ["t_title", "d_inquiry_cycle", "n_recap"],
+      "focus": ["n_recap"],
+      "checks": [
+        "class7-science-the-wonderful-world-of-science-observe-cooking-changes",
+        "class7-science-the-wonderful-world-of-science-list-investigable-events"
+      ],
+      "minMs": 3000
+    }
+  ]
+}

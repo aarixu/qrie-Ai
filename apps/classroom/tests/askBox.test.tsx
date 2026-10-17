@@ -66,10 +66,16 @@ async function open(): Promise<HTMLElement> {
  * "Reading…" — so this waits for that word to go, with a bound so a reader
  * that never finishes fails the test rather than hanging it.
  */
-async function settle(host: HTMLElement): Promise<void> {
-  for (let i = 0; i < 40 && host.textContent?.includes('Reading '); i += 1) {
+async function settle(host: HTMLElement, timeoutMs = 3_000): Promise<void> {
+  const start = Date.now();
+  while (host.textContent?.includes('Reading ')) {
+    if (Date.now() - start > timeoutMs) {
+      throw new Error(
+        `File reading did not settle within ${timeoutMs}ms. Current UI text: "${host.textContent?.trim()}"`,
+      );
+    }
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
   }
 }

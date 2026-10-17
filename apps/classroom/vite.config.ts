@@ -320,6 +320,7 @@ export default defineConfig(({ mode }) => {
       ...(env.HTTPS === '1' ? [basicSsl()] : []),
     ],
     build: {
+      chunkSizeWarningLimit: 6000,
       rollupOptions: {
         output: {
           /**

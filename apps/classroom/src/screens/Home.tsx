@@ -175,6 +175,37 @@ export function Home() {
           </div>
         </section>
 
+        {/* Featured Interactive Classroom Card */}
+        <section className="col-span-4 md:col-span-12 mb-2">
+          <div className="bg-gradient-to-r from-[#2c2620] to-[#1e1b17] border border-[#f3b84d]/30 text-white rounded-[24px] p-6 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#f3b84d]/20 border border-[#f3b84d]/40 flex items-center justify-center text-2xl shrink-0">
+                ✨
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#f3b84d] bg-[#f3b84d]/10 px-2 py-0.5 rounded-full border border-[#f3b84d]/20">
+                    Featured Class
+                  </span>
+                  <h3 className="font-headline-md text-lg sm:text-xl font-bold text-white">
+                    Science Around Us: Observation and Everyday Inquiry
+                  </h3>
+                </div>
+                <p className="text-sm text-[#b8ada0]">
+                  Vector blackboard canvas, live intuition checks, and real-time doubt resolution with tutor Meera.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => navigate('/lesson/class7-science-around-us')}
+              className="bg-[#f3b84d] hover:bg-[#e0a53b] text-[#241701] font-bold text-sm px-5 py-2.5 rounded-xl shadow transition-transform active:scale-95 shrink-0 flex items-center gap-2"
+            >
+              <span>Enter Classroom</span>
+              <span>→</span>
+            </button>
+          </div>
+        </section>
+
         {/* Ask her for anything, syllabus or not — typed, or a page they bring. */}
         <section className="col-span-4 md:col-span-12">
           <AskBox />

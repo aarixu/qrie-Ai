@@ -134,6 +134,15 @@
       "subject": "Science",
       "path": "class10-science-life-processes-transportation-in-human-beings/lesson.json",
       "topicRef": "class10-science/life-processes/transportation-in-human-beings"
+    },
+    {
+      "id": "class7-science-around-us",
+      "title": "Science Around Us: Observation and Inquiry",
+      "subtitle": "Class 7 · The Wonderful World of Science",
+      "class": 7,
+      "subject": "Science",
+      "path": "class7-science-around-us/lesson.json",
+      "topicRef": "class7-science/the-wonderful-world-of-science/science-around-us"
     }
   ]
 }

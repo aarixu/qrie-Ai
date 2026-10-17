@@ -1,0 +1,70 @@
+{
+  "formatVersion": 1,
+  "id": "class9-math-pythagoras-theorem",
+  "title": "The Pythagorean Theorem",
+  "subtitle": "Class 9 · Mathematics",
+  "language": "en",
+  "topicRef": "class9-mathematics/triangles/pythagoras-theorem",
+  "canvas": { "w": 1000, "h": 620 },
+  "elements": [
+    { "kind": "title", "id": "t_title", "x": 500, "y": 70, "text": "The Pythagorean Theorem", "sub": "Right Triangles & The Magic of Squares" },
+    { "kind": "note", "id": "n_hook", "x": 120, "y": 180, "w": 280, "text": "Carpenters, architects, and GPS satellites use this 2,500-year-old relationship every day to measure distances accurately.", "tone": "accent" },
+    
+    { "kind": "formula", "id": "f_pyth", "x": 650, "y": 180, "text": "a^2 + b^2 = c^2" },
+    { "kind": "note", "id": "n_hyp", "x": 650, "y": 250, "w": 280, "text": "'c' is the Hypotenuse — the longest side, always directly opposite the 90-degree right angle." },
+
+    { "kind": "box", "id": "b_legs", "x": 120, "y": 320, "w": 260, "h": 85, "label": "LEGS (a & b)\nPerpendicular sides", "tone": "good" },
+    { "kind": "box", "id": "b_hyp", "x": 420, "y": 320, "w": 260, "h": 85, "label": "HYPOTENUSE (c)\nOpposite the 90° angle", "tone": "accent" },
+    { "kind": "arrow", "id": "a_sq", "from": { "x": 380, "y": 360 }, "to": { "x": 420, "y": 360 }, "tone": "good" },
+
+    { "kind": "formula", "id": "f_example", "x": 500, "y": 450, "text": "3^2 + 4^2 = 9 + 16 = 25 = 5^2  (3-4-5 Triplet)" },
+    { "kind": "note", "id": "n_recap", "x": 500, "y": 540, "w": 420, "text": "Square the two shorter sides, add them up, and take the square root to find c. Have a doubt? Tap ✋!", "tone": "accent" }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "topic": "Why Right Triangles Matter",
+      "narration": "Have you ever wondered how construction workers ensure walls meet at an exact ninety degree angle? Or how navigation software calculates your diagonal shortest path? They all rely on the Pythagorean Theorem.",
+      "show": ["t_title", "n_hook"],
+      "focus": ["n_hook"],
+      "minMs": 2500,
+      "teaches": ["math9-pyth-intro"]
+    },
+    {
+      "id": "the_theorem",
+      "topic": "The Fundamental Equation",
+      "narration": "In any right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides. That gives us our famous equation: a squared plus b squared equals c squared.",
+      "show": ["t_title", "f_pyth", "n_hyp"],
+      "focus": ["f_pyth", "n_hyp"],
+      "minMs": 3000,
+      "teaches": ["math9-pyth-formula"]
+    },
+    {
+      "id": "identifying_sides",
+      "topic": "Identifying the Hypotenuse",
+      "narration": "Identifying 'c' correctly is vital. The hypotenuse is always the longest side, sitting straight across from the right angle. The other two perpendicular sides are the legs: a and b.",
+      "show": ["t_title", "f_pyth", "b_legs", "b_hyp", "a_sq"],
+      "focus": ["b_hyp"],
+      "minMs": 2800,
+      "teaches": ["math9-pyth-sides"]
+    },
+    {
+      "id": "example_triplet",
+      "topic": "The 3-4-5 Pythagorean Triplet",
+      "narration": "Let's check a classic example: sides 3 and 4. Three squared is 9, four squared is 16. Nine plus 16 equals 25, which is exactly five squared! 3, 4, 5 is the most famous Pythagorean Triplet in history.",
+      "show": ["t_title", "f_pyth", "b_legs", "b_hyp", "f_example"],
+      "focus": ["f_example"],
+      "minMs": 3000,
+      "teaches": ["math9-pyth-triplets"]
+    },
+    {
+      "id": "recap",
+      "topic": "Recap & Ask Doubts",
+      "narration": "Remember: a squared plus b squared equals c squared. You can use this to find any missing side whenever you have a right angle. Raise your hand if you want me to explain any step!",
+      "show": ["t_title", "f_pyth", "f_example", "n_recap"],
+      "focus": ["n_recap"],
+      "minMs": 2500,
+      "checks": ["math9-pyth-formula"]
+    }
+  ]
+}

@@ -6,10 +6,10 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
-    "@ai-tutor/lesson-format": "*"
+    "@ai-tutor/lesson-format": "*",
+    "three": "^0.185.1"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "three": "^0.185.0"
+    "react": "^19.0.0"
   }
 }
